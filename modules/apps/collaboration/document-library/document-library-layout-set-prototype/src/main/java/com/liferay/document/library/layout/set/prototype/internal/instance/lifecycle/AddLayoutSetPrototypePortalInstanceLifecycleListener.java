@@ -15,7 +15,9 @@
 package com.liferay.document.library.layout.set.prototype.internal.instance.lifecycle;
 
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
+import com.liferay.document.library.configuration.DLConfiguration;
 import com.liferay.document.library.web.constants.DLPortletKeys;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.instance.lifecycle.BasePortalInstanceLifecycleListener;
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -38,7 +40,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -50,6 +54,10 @@ public class AddLayoutSetPrototypePortalInstanceLifecycleListener
 
 	@Override
 	public void portalInstanceRegistered(Company company) throws Exception {
+		if (!_dlConfiguration.addDefaultLayoutSetPrototypes()) {
+			return;
+		}
+
 		long defaultUserId = _userLocalService.getDefaultUserId(
 			company.getCompanyId());
 
@@ -60,6 +68,13 @@ public class AddLayoutSetPrototypePortalInstanceLifecycleListener
 
 		addPrivateSite(
 			company.getCompanyId(), defaultUserId, layoutSetPrototypes);
+	}
+
+	@Activate
+	@Modified
+	protected void activate(Map<String, Object> properties) {
+		_dlConfiguration = ConfigurableUtil.createConfigurable(
+			DLConfiguration.class, properties);
 	}
 
 	protected void addPrivateSite(
@@ -210,6 +225,7 @@ public class AddLayoutSetPrototypePortalInstanceLifecycleListener
 		_userLocalService = userLocalService;
 	}
 
+	private volatile DLConfiguration _dlConfiguration;
 	private LayoutSetPrototypeLocalService _layoutSetPrototypeLocalService;
 	private UserLocalService _userLocalService;
 
