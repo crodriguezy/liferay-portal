@@ -35,8 +35,6 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.filter.TermsFilter;
-import com.liferay.portal.kernel.security.auth.FullNameGenerator;
-import com.liferay.portal.kernel.security.auth.FullNameGeneratorFactory;
 import com.liferay.portal.kernel.service.OrganizationLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -133,6 +131,10 @@ public class UserIndexer extends BaseIndexer<User> {
 			BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
 			SearchContext searchContext)
 		throws Exception {
+
+		if (searchContext.getQueryConfig().isHighlightEnabled()) {
+			addHighlightFieldNames(searchContext);
+		}
 
 		addSearchTerm(searchQuery, searchContext, "city", false);
 		addSearchTerm(searchQuery, searchContext, "country", false);
@@ -233,6 +235,10 @@ public class UserIndexer extends BaseIndexer<User> {
 		}
 	}
 
+	protected void addHighlightFieldNames(SearchContext searchContext) {
+		searchContext.getQueryConfig().addHighlightFieldNames("fullName");
+	}
+
 	@Override
 	protected void doDelete(User user) throws Exception {
 		deleteDocument(user.getCompanyId(), user.getUserId());
@@ -289,19 +295,7 @@ public class UserIndexer extends BaseIndexer<User> {
 		Document document, Locale locale, String snippet,
 		PortletRequest portletRequest, PortletResponse portletResponse) {
 
-		String firstName = document.get("firstName");
-		String middleName = document.get("middleName");
-		String lastName = document.get("lastName");
-
-		FullNameGenerator fullNameGenerator =
-			FullNameGeneratorFactory.getInstance();
-
-		String title = fullNameGenerator.getFullName(
-			firstName, middleName, lastName);
-
-		String content = null;
-
-		return new Summary(title, content);
+		return createSummary(document, "fullName", null);
 	}
 
 	@Override
