@@ -22,6 +22,8 @@ import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.search.highlight.HighlightUtil;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
@@ -299,6 +301,44 @@ public class UserIndexerTest {
 		Assert.assertEquals("open4life", actualUser.getScreenName());
 	}
 
+	@Test
+	public void testUserHighlightedTitle() throws Exception {
+		String firstName = "First";
+		String lastName = "Last";
+
+		String highlightedFragment = "";
+
+		_expectedUser = UserTestUtil.addUser();
+
+		_expectedUser.setFirstName(firstName);
+		_expectedUser.setLastName(lastName);
+
+		_expectedUser = _userLocalService.updateUser(_expectedUser);
+
+		SearchContext searchContext = getSearchContext();
+
+		searchContext.setKeywords(firstName);
+		searchContext.getQueryConfig().setHighlightEnabled(true);
+
+		String summaryTitle = getSummaryTitle(
+			firstName, _expectedUser, searchContext);
+
+		int beginIndex = summaryTitle.indexOf(HighlightUtil.HIGHLIGHT_TAG_OPEN);
+		int endIndex = summaryTitle.indexOf(HighlightUtil.HIGHLIGHT_TAG_CLOSE);
+
+		if ((beginIndex != -1) && (endIndex != -1)) {
+			highlightedFragment = summaryTitle.substring(
+				beginIndex,
+				endIndex + HighlightUtil.HIGHLIGHT_TAG_CLOSE.length());
+		}
+
+		String expectedHighlightedFragment =
+			HighlightUtil.HIGHLIGHT_TAG_OPEN + firstName +
+				HighlightUtil.HIGHLIGHT_TAG_CLOSE;
+
+		Assert.assertEquals(expectedHighlightedFragment, highlightedFragment);
+	}
+
 	protected void assertLength(Hits hits, int length) {
 		Assert.assertEquals(hits.toString(), length, hits.getLength());
 	}
@@ -386,6 +426,35 @@ public class UserIndexerTest {
 		searchContext.setGroupIds(new long[] {TestPropsValues.getGroupId()});
 
 		return searchContext;
+	}
+
+	protected String getSummaryTitle(
+			String keywords, User user, SearchContext searchContext)
+		throws Exception {
+
+		Document expectedDocument = null;
+		Summary summary = null;
+
+		Hits hits = search(searchContext);
+
+		Document[] documents = hits.getDocs();
+
+		for (Document document : documents) {
+			if (document.get(
+					"userId").equals(String.valueOf(user.getUserId()))) {
+
+				expectedDocument = document;
+				break;
+			}
+		}
+
+		if (expectedDocument != null) {
+			summary = _indexer.getSummary(expectedDocument, "", null, null);
+
+			return summary.getTitle();
+		}
+
+		return "";
 	}
 
 	protected User getUser(Document document) throws Exception {
