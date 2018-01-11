@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.IOException;
@@ -63,7 +64,7 @@ public class DDMFormBuilderTopHeadDynamicInclude extends BaseDynamicInclude {
 
 		PrintWriter printWriter = response.getWriter();
 
-		String content = "<link href=\"".concat(themeDisplay.getPortalURL());
+		String content = "<link href=\"".concat(themeDisplay.getCDNBaseURL());
 
 		printWriter.println(content.concat(_postfix));
 	}
