@@ -32,7 +32,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * @author Sergio Gonz√°lez
+ * @author Sergio Gonz·lez
  */
 @Component(immediate = true, service = DynamicInclude.class)
 public class MentionsTopHeadDynamicInclude extends BaseDynamicInclude {
@@ -63,7 +63,7 @@ public class MentionsTopHeadDynamicInclude extends BaseDynamicInclude {
 
 		PrintWriter printWriter = response.getWriter();
 
-		String content = "<link href=\"".concat(themeDisplay.getPortalURL());
+		String content = "<link href=\"".concat(themeDisplay.getCDNBaseURL());
 
 		printWriter.println(content.concat(_postfix));
 	}
