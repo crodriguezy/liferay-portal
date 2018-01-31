@@ -14,11 +14,31 @@
 
 package com.liferay.portal.kernel.dao.orm;
 
+import com.liferay.portal.kernel.util.StringPool;
+
 /**
  * @author Adolfo Pérez
  */
 public enum WildcardMode {
 
-	LEADING, SURROUND, TRAILING
+	public String leadingSqlWildcard() {
+		return _leadingWildcard;
+	}
+
+	public String trailingSqlWildcard() {
+		return _trailingWildcard;
+	}
+
+	private WildcardMode(String leadingWildcard, String trailingWildcard) {
+		_leadingWildcard = leadingWildcard;
+		_trailingWildcard = trailingWildcard;
+	}
+
+	LEADING(StringPool.PERCENT, StringPool.BLANK),
+	SURROUND(StringPool.PERCENT, StringPool.PERCENT),
+	TRAILING(StringPool.BLANK, StringPool.PERCENT);
+
+	private final String _leadingWildcard;
+	private final String _trailingWildcard;
 
 }
