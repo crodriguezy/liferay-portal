@@ -19,18 +19,20 @@ import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceSettings;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
+import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceLocalService;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.util.DDMFormFactory;
+import com.liferay.exportimport.data.handler.base.BaseStagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.ExportImportPathUtil;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
-import com.liferay.exportimport.lar.BaseStagedModelDataHandler;
 import com.liferay.exportimport.staged.model.repository.StagedModelRepository;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
 
+import java.util.List;
 import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
@@ -67,8 +69,16 @@ public class DDMFormInstanceStagedModelDataHandler
 			portletDataContext, formInstance, ddmStructure,
 			PortletDataContext.REFERENCE_TYPE_STRONG);
 
+		List<DDMTemplate> ddmTemplates = ddmStructure.getTemplates();
+
 		Element formInstanceElement = portletDataContext.getExportDataElement(
 			formInstance);
+
+		for (DDMTemplate ddmTemplate : ddmTemplates) {
+			StagedModelDataHandlerUtil.exportReferenceStagedModel(
+				portletDataContext, formInstance, ddmTemplate,
+				PortletDataContext.REFERENCE_TYPE_STRONG);
+		}
 
 		exportFormInstanceSettings(
 			portletDataContext, formInstance, formInstanceElement);
