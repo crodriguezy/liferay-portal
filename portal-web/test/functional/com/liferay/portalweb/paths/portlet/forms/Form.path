@@ -134,7 +134,7 @@
 <!--ADD_FIELD-->
 <tr>
 	<td>ADD_FIELD</td>
-	<td>//div[contains(@class,'col col-md-${key_columnSize}')]//button[contains(@class,'add-button-large')]/span | //div[contains(@class,'portlet-forms')]//button[contains(@class,'lfr-ddm-add-field')]</td>
+	<td>//div[contains(@class,'col col-md-${key_columnSize}')]//button[contains(@class,'add-button-large')]/span | //div[contains(@class,'portlet-forms')]//button[contains(@class,'ddm-add-field')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -249,12 +249,12 @@
 </tr>
 <tr>
 	<td>SIDEBAR_PROPERTIES_TAB</td>
-	<td>//a[contains(@class,'tab') and .='Properties'] | //a[contains(@class,'tab') and .='properties']</td>
+	<td>//a[contains(@class,'tab') and .='Properties']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>SIDEBAR_BASIC_TAB</td>
-	<td>//a[contains(@class,'tab') and .='Basic'] | //a[contains(@class,'tab') and .='basic']</td>
+	<td>//a[contains(@class,'tab') and .='Basic']</td>
 	<td></td>
 </tr>
 <tr>

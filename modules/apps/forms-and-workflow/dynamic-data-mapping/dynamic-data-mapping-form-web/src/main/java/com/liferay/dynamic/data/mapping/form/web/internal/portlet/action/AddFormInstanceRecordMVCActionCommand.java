@@ -15,8 +15,8 @@
 package com.liferay.dynamic.data.mapping.form.web.internal.portlet.action;
 
 import com.liferay.captcha.util.CaptchaUtil;
+import com.liferay.dynamic.data.mapping.constants.DDMPortletKeys;
 import com.liferay.dynamic.data.mapping.form.values.factory.DDMFormValuesFactory;
-import com.liferay.dynamic.data.mapping.form.web.internal.constants.DDMFormPortletKeys;
 import com.liferay.dynamic.data.mapping.form.web.internal.constants.DDMFormWebKeys;
 import com.liferay.dynamic.data.mapping.form.web.internal.notification.DDMFormEmailNotificationSender;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
@@ -24,7 +24,6 @@ import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecord;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecordVersion;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceSettings;
-import com.liferay.dynamic.data.mapping.model.DDMFormInstanceVersion;
 import com.liferay.dynamic.data.mapping.model.DDMFormSuccessPageSettings;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceRecordService;
@@ -60,7 +59,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"javax.portlet.name=" + DDMFormPortletKeys.DYNAMIC_DATA_MAPPING_FORM,
+		"javax.portlet.name=" + DDMPortletKeys.DYNAMIC_DATA_MAPPING_FORM,
 		"mvc.command.name=addFormInstanceRecord"
 	},
 	service = MVCActionCommand.class
@@ -119,17 +118,12 @@ public class AddFormInstanceRecordMVCActionCommand
 					ddmFormInstance.getVersion(),
 					WorkflowConstants.STATUS_DRAFT);
 
-		DDMFormInstanceVersion ddmFormInstanceVersion =
-			ddmFormInstance.getFormInstanceVersion(
-				ddmFormInstance.getVersion());
-
-		DDMFormInstanceRecord ddmFormInstanceRecord = null;
+		DDMFormInstanceRecord ddmFormInstanceRecord;
 
 		if (ddmFormInstanceRecordVersion == null) {
 			ddmFormInstanceRecord =
 				_ddmFormInstanceRecordService.addFormInstanceRecord(
-					groupId, ddmFormInstanceVersion.getFormInstanceVersionId(),
-					ddmFormValues, serviceContext);
+					groupId, formInstanceId, ddmFormValues, serviceContext);
 		}
 		else {
 			ddmFormInstanceRecord =

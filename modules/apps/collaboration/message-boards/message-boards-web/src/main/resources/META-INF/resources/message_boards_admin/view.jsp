@@ -93,7 +93,7 @@ MBListDisplayContext mbListDisplayContext = mbDisplayContextProvider.getMbListDi
 </c:if>
 
 <%
-SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, "cur1", 0, SearchContainer.DEFAULT_DELTA, portletURL, null, "there-are-no-threads-nor-categories");
+SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, "cur1", 0, SearchContainer.DEFAULT_DELTA, portletURL, null, "there-are-no-threads-or-categories");
 
 searchContainer.setId("mbEntries");
 searchContainer.setOrderByCol(orderByCol);
@@ -205,12 +205,12 @@ request.setAttribute("view.jsp-entriesSearchContainer", searchContainer);
 			</c:if>
 
 			<c:if test="<%= enableRSS %>">
-				<liferay-ui:rss
+				<liferay-rss:rss
 					delta="<%= rssDelta %>"
 					displayStyle="<%= rssDisplayStyle %>"
 					feedType="<%= rssFeedType %>"
 					message="rss"
-					url="<%= MBUtil.getRSSURL(plid, 0, 0, groupThreadsUserId, themeDisplay) %>"
+					url="<%= MBRSSUtil.getRSSURL(plid, 0, 0, groupThreadsUserId, themeDisplay) %>"
 				/>
 			</c:if>
 		</div>
