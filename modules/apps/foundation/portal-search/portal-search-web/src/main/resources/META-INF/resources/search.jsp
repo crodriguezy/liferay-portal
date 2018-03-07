@@ -43,7 +43,7 @@ String format = ParamUtil.getString(request, SearchPortletParameterNames.FORMAT)
 		<aui:input name="useAdvancedSearchSyntax" type="hidden" value="<%= searchDisplayContext.isUseAdvancedSearchSyntax() %>" />
 
 		<aui:field-wrapper inlineField="<%= true %>">
-			<aui:button type="submit" icon="icon-search" onClick='<%= renderResponse.getNamespace() + "search(event);" %>' value="search" />
+			<aui:button icon="icon-search" onClick="<%= renderResponse.getNamespace() + "search(event);" %>" type="submit" value="search" />
 		</aui:field-wrapper>
 	</aui:fieldset>
 

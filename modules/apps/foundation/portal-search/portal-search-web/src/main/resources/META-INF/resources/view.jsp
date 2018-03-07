@@ -59,7 +59,7 @@ pageContext.setAttribute("portletURL", portletURL);
 		</c:choose>
 
 		<aui:field-wrapper inlineField="<%= true %>">
-			<button class="btn btn-unstyled text-light" onclick='<%= renderResponse.getNamespace() + "search(event);" %>' type="submit">
+			<button class="btn btn-unstyled text-light" onclick="<%= renderResponse.getNamespace() + "search(event);" %>" type="submit">
 				<liferay-ui:icon cssClass="icon-monospaced" icon="search" markupView="lexicon" />
 			</button>
 		</aui:field-wrapper>
