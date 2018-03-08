@@ -17,17 +17,15 @@
 <%@ include file="/init.jsp" %>
 
 <%
-portletDisplay.setShowBackIcon(true);
-portletDisplay.setURLBack(fragmentDisplayContext.getFragmentCollectionsRedirect());
-
-renderResponse.setTitle(fragmentDisplayContext.getFragmentCollectionTitle());
+PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "collections"), fragmentDisplayContext.getFragmentCollectionsRedirect());
+PortalUtil.addPortletBreadcrumbEntry(request, fragmentDisplayContext.getFragmentCollectionTitle(), null);
 %>
 
 <liferay-ui:error exception="<%= RequiredFragmentEntryException.class %>" message="the-fragment-entry-cannot-be-deleted-because-it-is-required-by-one-or-more-page-templates" />
 
 <clay:navigation-bar
 	inverted="<%= true %>"
-	items="<%= fragmentDisplayContext.getFragmentEntryNavigationItems() %>"
+	items="<%= fragmentDisplayContext.getFragmentCollectionNavigationItems() %>"
 />
 
 <liferay-frontend:management-bar
@@ -52,11 +50,11 @@ renderResponse.setTitle(fragmentDisplayContext.getFragmentCollectionTitle());
 				<liferay-frontend:add-menu-item id="addFragmentEntryMenuItem" title='<%= LanguageUtil.get(request, "add-fragment") %>' url="<%= addFragmentEntryURL.toString() %>" />
 			</liferay-frontend:add-menu>
 
-			<aui:script require="metal-dom/src/all/dom as dom">
+			<aui:script require="metal-dom/src/all/dom as dom,frontend-js-web/liferay/modal/commands/OpenSimpleInputModal.es as modalCommands">
 				function handleAddFragmentEntryMenuItemClick(event) {
 					event.preventDefault();
 
-					Liferay.Util.openSimpleInputModal(
+					modalCommands.openSimpleInputModal(
 						{
 							dialogTitle: '<liferay-ui:message key="add-fragment" />',
 							formSubmitURL: '<%= addFragmentEntryURL %>',
@@ -78,7 +76,7 @@ renderResponse.setTitle(fragmentDisplayContext.getFragmentCollectionTitle());
 
 						event.preventDefault();
 
-						Liferay.Util.openSimpleInputModal({
+						modalCommands.openSimpleInputModal({
 							dialogTitle: '<liferay-ui:message key="rename-fragment" />',
 							formSubmitURL: data.formSubmitUrl,
 							idFieldName: 'id',
@@ -146,6 +144,10 @@ renderResponse.setTitle(fragmentDisplayContext.getFragmentCollectionTitle());
 </liferay-frontend:management-bar>
 
 <aui:form cssClass="container-fluid-1280" name="fm">
+	<div id="breadcrumb">
+		<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showPortletBreadcrumb="<%= true %>" />
+	</div>
+
 	<liferay-ui:search-container
 		id="fragmentEntries"
 		searchContainer="<%= fragmentDisplayContext.getFragmentEntriesSearchContainer() %>"
@@ -155,6 +157,12 @@ renderResponse.setTitle(fragmentDisplayContext.getFragmentCollectionTitle());
 			keyProperty="fragmentEntryId"
 			modelVar="fragmentEntry"
 		>
+			<portlet:renderURL var="editFragmentEntryURL">
+				<portlet:param name="mvcRenderCommandName" value="/fragment/edit_fragment_entry" />
+				<portlet:param name="redirect" value="<%= currentURL %>" />
+				<portlet:param name="fragmentCollectionId" value="<%= String.valueOf(fragmentEntry.getFragmentCollectionId()) %>" />
+				<portlet:param name="fragmentEntryId" value="<%= String.valueOf(fragmentEntry.getFragmentEntryId()) %>" />
+			</portlet:renderURL>
 
 			<%
 			row.setCssClass("entry-card lfr-asset-item " + row.getCssClass());
@@ -174,6 +182,7 @@ renderResponse.setTitle(fragmentDisplayContext.getFragmentCollectionTitle());
 							resultRow="<%= row %>"
 							rowChecker="<%= searchContainer.getRowChecker() %>"
 							title="<%= fragmentEntry.getName() %>"
+							url="<%= editFragmentEntryURL %>"
 						>
 							<liferay-frontend:vertical-card-header>
 
@@ -198,6 +207,7 @@ renderResponse.setTitle(fragmentDisplayContext.getFragmentCollectionTitle());
 							resultRow="<%= row %>"
 							rowChecker="<%= searchContainer.getRowChecker() %>"
 							title="<%= fragmentEntry.getName() %>"
+							url="<%= editFragmentEntryURL %>"
 						>
 							<liferay-frontend:vertical-card-header>
 

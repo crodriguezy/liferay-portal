@@ -15,16 +15,13 @@
 package com.liferay.dynamic.data.mapping.exportimport.staged.model.repository;
 
 import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
-import com.liferay.dynamic.data.mapping.model.DDMFormInstanceVersion;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceLocalService;
-import com.liferay.dynamic.data.mapping.service.DDMFormInstanceVersionLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.dynamic.data.mapping.util.comparator.DDMFormInstanceNameComparator;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelModifiedDateComparator;
 import com.liferay.exportimport.staged.model.repository.StagedModelRepository;
-import com.liferay.exportimport.staged.model.repository.base.BaseStagedModelRepository;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -53,35 +50,29 @@ import org.osgi.service.component.annotations.Reference;
 	}
 )
 public class DDMFormInstanceStagedModelRepository
-	extends BaseStagedModelRepository<DDMFormInstance> {
+	implements StagedModelRepository<DDMFormInstance> {
 
 	@Override
 	public DDMFormInstance addStagedModel(
 			PortletDataContext portletDataContext,
-			DDMFormInstance importedFormInstance)
+			DDMFormInstance ddmFormInstance)
 		throws PortalException {
 
 		long userId = portletDataContext.getUserId(
-			importedFormInstance.getUserUuid());
+			ddmFormInstance.getUserUuid());
 
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
-			importedFormInstance);
+			ddmFormInstance);
 
 		if (portletDataContext.isDataStrategyMirror()) {
-			serviceContext.setUuid(importedFormInstance.getUuid());
+			serviceContext.setUuid(ddmFormInstance.getUuid());
 		}
 
-		DDMFormInstance formInstance =
-			_ddmFormInstanceLocalService.addFormInstance(
-				userId, importedFormInstance.getGroupId(),
-				importedFormInstance.getStructureId(),
-				importedFormInstance.getNameMap(),
-				importedFormInstance.getDescriptionMap(),
-				importedFormInstance.getSettings(), serviceContext);
-
-		formInstance.setVersion(importedFormInstance.getVersion());
-
-		return _ddmFormInstanceLocalService.updateDDMFormInstance(formInstance);
+		return _ddmFormInstanceLocalService.addFormInstance(
+			userId, ddmFormInstance.getGroupId(),
+			ddmFormInstance.getStructureId(), ddmFormInstance.getNameMap(),
+			ddmFormInstance.getDescriptionMap(), ddmFormInstance.getSettings(),
+			serviceContext);
 	}
 
 	@Override
@@ -161,22 +152,6 @@ public class DDMFormInstanceStagedModelRepository
 					StagedModelDataHandlerUtil.exportStagedModel(
 						portletDataContext, ddmFormInstance);
 
-					List<DDMFormInstanceVersion> formInstanceVersions =
-						_ddmFormInstanceVersionLocalService.
-							getFormInstanceVersions(
-								ddmFormInstance.getFormInstanceId());
-
-					for (DDMFormInstanceVersion ddmFormInstanceVersion :
-							formInstanceVersions) {
-
-						StagedModelDataHandlerUtil.exportStagedModel(
-							portletDataContext, ddmFormInstanceVersion);
-
-						StagedModelDataHandlerUtil.exportStagedModel(
-							portletDataContext,
-							ddmFormInstanceVersion.getStructureVersion());
-					}
-
 					StagedModelDataHandlerUtil.exportStagedModel(
 						portletDataContext, ddmFormInstance.getStructure());
 				}
@@ -223,10 +198,6 @@ public class DDMFormInstanceStagedModelRepository
 
 	@Reference
 	private DDMFormInstanceLocalService _ddmFormInstanceLocalService;
-
-	@Reference
-	private DDMFormInstanceVersionLocalService
-		_ddmFormInstanceVersionLocalService;
 
 	@Reference
 	private DDMStructureLocalService _ddmStructureLocalService;

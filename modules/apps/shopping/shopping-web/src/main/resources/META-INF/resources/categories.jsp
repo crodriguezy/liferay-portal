@@ -84,9 +84,7 @@ categoriesSearch.setResults(results);
 boolean showSearch = (categoriesAndItemsCount > 0);
 %>
 
-<liferay-util:include page="/tabs1.jsp" servletContext="<%= application %>">
-	<liferay-util:param name="showSearch" value="<%= String.valueOf(showSearch) %>" />
-</liferay-util:include>
+<liferay-util:include page="/tabs1.jsp" servletContext="<%= application %>" />
 
 <liferay-frontend:management-bar>
 	<liferay-frontend:management-bar-filters>
@@ -101,6 +99,21 @@ boolean showSearch = (categoriesAndItemsCount > 0);
 			orderColumns='<%= new String[] {"name"} %>'
 			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
 		/>
+
+		<c:if test="<%= showSearch %>">
+
+			<%
+			PortletURL searchURL = renderResponse.createRenderURL();
+
+			searchURL.setParameter("tabs1", "categories");
+			%>
+
+			<li>
+				<aui:form action="<%= searchURL.toString() %>" name="searchFm">
+					<liferay-ui:input-search markupView="lexicon" />
+				</aui:form>
+			</li>
+		</c:if>
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-buttons>
@@ -250,14 +263,13 @@ boolean showSearch = (categoriesAndItemsCount > 0);
 									<span><%= currencyFormat.format(curItem.getPrice()) %></span>
 								</c:when>
 								<c:otherwise>
-									<span><%= currencyFormat.format(ShoppingUtil.calculateActualPrice(curItem)) %></span>
+									<span><%= currencyFormat.format(curItem.getPrice() - ShoppingUtil.calculateDiscountPrice(curItem)) %></span>
 								</c:otherwise>
 							</c:choose>
 						</h6>
 					</liferay-ui:search-container-column-text>
 
 					<liferay-ui:search-container-column-jsp
-						cssClass="list-group-item-field"
 						path="/item_action.jsp"
 					/>
 				</c:when>
@@ -316,7 +328,6 @@ boolean showSearch = (categoriesAndItemsCount > 0);
 					</liferay-ui:search-container-column-text>
 
 					<liferay-ui:search-container-column-jsp
-						cssClass="list-group-item-field"
 						path="/category_action.jsp"
 					/>
 				</c:when>

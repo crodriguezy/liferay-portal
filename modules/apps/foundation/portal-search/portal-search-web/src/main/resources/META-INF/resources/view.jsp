@@ -59,12 +59,16 @@ pageContext.setAttribute("portletURL", portletURL);
 		</c:choose>
 
 		<aui:field-wrapper inlineField="<%= true %>">
-			<liferay-ui:icon cssClass="icon-monospaced" icon="search" markupView="lexicon" onClick='<%= renderResponse.getNamespace() + "search();" %>' url="javascript:;" />
+			<button class="btn btn-unstyled text-light" onclick='<%= renderResponse.getNamespace() + "search(event);" %>' type="submit">
+				<liferay-ui:icon cssClass="icon-monospaced" icon="search" markupView="lexicon" />
+			</button>
 		</aui:field-wrapper>
 	</aui:fieldset>
 
 	<aui:script>
-		function <portlet:namespace />search() {
+		function <portlet:namespace />search(event) {
+			event.preventDefault();
+
 			var keywords = document.<portlet:namespace />fm.<portlet:namespace />keywords.value;
 
 			keywords = keywords.replace(/^\s+|\s+$/, '');
