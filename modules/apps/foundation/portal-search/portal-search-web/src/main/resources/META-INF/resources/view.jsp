@@ -31,7 +31,7 @@ portletURL.setWindowState(WindowState.MAXIMIZED);
 pageContext.setAttribute("portletURL", portletURL);
 %>
 
-<aui:form action="<%= portletURL %>" method="get" name="fm" onSubmit='<%= renderResponse.getNamespace() + "search(); event.preventDefault();" %>'>
+<aui:form action="<%= portletURL %>" method="get" name="fm" onSubmit='<%= renderResponse.getNamespace() + "search(event);" %>'>
 	<liferay-portlet:renderURLParams varImpl="portletURL" />
 
 	<aui:fieldset>
