@@ -91,6 +91,12 @@ boolean hasAddOrganizationPermission = PortalPermissionUtil.contains(permissionC
 					orderColumns='<%= new String[] {"name", "type"} %>'
 					portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
 				/>
+
+				<li>
+					<aui:form action="<%= portletURL.toString() %>" name="searchFm">
+						<liferay-ui:input-search markupView="lexicon" />
+					</aui:form>
+				</li>
 			</liferay-frontend:management-bar-filters>
 
 			<liferay-frontend:management-bar-buttons>
@@ -101,14 +107,14 @@ boolean hasAddOrganizationPermission = PortalPermissionUtil.contains(permissionC
 				/>
 
 				<c:if test="<%= hasAddOrganizationPermission %>">
-					<liferay-frontend:add-menu inline="<%= true %>">
+					<liferay-frontend:add-menu>
 						<portlet:renderURL var="viewUsersURL">
 							<portlet:param name="toolbarItem" value="<%= toolbarItem %>" />
 							<portlet:param name="usersListView" value="<%= usersListView %>" />
 						</portlet:renderURL>
 
 						<%
-						for (String organizationType : PropsValues.ORGANIZATIONS_TYPES) {
+						for (String organizationType : OrganizationLocalServiceUtil.getTypes()) {
 						%>
 
 							<portlet:renderURL var="addOrganizationURL">

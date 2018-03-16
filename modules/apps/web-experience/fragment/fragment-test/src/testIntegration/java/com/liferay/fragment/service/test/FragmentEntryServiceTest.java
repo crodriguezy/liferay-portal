@@ -15,7 +15,6 @@
 package com.liferay.fragment.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.fragment.exception.DuplicateFragmentEntryException;
 import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.exception.FragmentEntryNameException;
 import com.liferay.fragment.model.FragmentCollection;
@@ -40,7 +39,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,28 +59,6 @@ public class FragmentEntryServiceTest {
 	@Before
 	public void setUp() throws Exception {
 		_group = GroupTestUtil.addGroup();
-	}
-
-	@Test(expected = DuplicateFragmentEntryException.class)
-	public void testAddDuplicateFragmentEntries() throws Exception {
-		ServiceContext serviceContext =
-			ServiceContextTestUtil.getServiceContext(
-				_group.getGroupId(), TestPropsValues.getUserId());
-
-		FragmentCollection fragmentCollection =
-			FragmentCollectionServiceUtil.addFragmentCollection(
-				_group.getGroupId(), "Fragment Collection", StringPool.BLANK,
-				serviceContext);
-
-		FragmentEntryServiceUtil.addFragmentEntry(
-			_group.getGroupId(), fragmentCollection.getFragmentCollectionId(),
-			"Fragment Entry", WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
-
-		FragmentEntryServiceUtil.addFragmentEntry(
-			_group.getGroupId(), fragmentCollection.getFragmentCollectionId(),
-			"Fragment Entry", WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
 	}
 
 	@Test
@@ -138,23 +114,6 @@ public class FragmentEntryServiceTest {
 			serviceContext);
 	}
 
-	@Test(expected = FragmentEntryContentException.class)
-	public void testAddFragmentEntryWithInvalidHTML() throws Exception {
-		ServiceContext serviceContext =
-			ServiceContextTestUtil.getServiceContext(
-				_group.getGroupId(), TestPropsValues.getUserId());
-
-		FragmentCollection fragmentCollection =
-			FragmentCollectionServiceUtil.addFragmentCollection(
-				_group.getGroupId(), "Fragment Collection", StringPool.BLANK,
-				serviceContext);
-
-		FragmentEntryServiceUtil.addFragmentEntry(
-			_group.getGroupId(), fragmentCollection.getFragmentCollectionId(),
-			"Fragment Entry", null, "<div><broken-tag</div>", null,
-			WorkflowConstants.STATUS_APPROVED, serviceContext);
-	}
-
 	@Test
 	public void testAddFragmentEntryWithMixedHTML() throws Exception {
 		ServiceContext serviceContext =
@@ -202,30 +161,6 @@ public class FragmentEntryServiceTest {
 		FragmentEntryServiceUtil.addFragmentEntry(
 			_group.getGroupId(), fragmentCollection.getFragmentCollectionId(),
 			"Fragment Entry", null, "Text only fragment", null,
-			WorkflowConstants.STATUS_APPROVED, serviceContext);
-	}
-
-	@Ignore
-	@Test
-	public void testAddFragmentEntryWithVoidHTMLElements() throws Exception {
-		ServiceContext serviceContext =
-			ServiceContextTestUtil.getServiceContext(
-				_group.getGroupId(), TestPropsValues.getUserId());
-
-		FragmentCollection fragmentCollection =
-			FragmentCollectionServiceUtil.addFragmentCollection(
-				_group.getGroupId(), "Fragment Collection", StringPool.BLANK,
-				serviceContext);
-
-		String[] htmlVoidElements = {
-			"<area>", "<base>", "<br>", "<col>", "<embed>", "<hr>", "<img>",
-			"<input>", "<link>", "<meta>", "<param>", "<source>", "<track>",
-			"<wbr>"
-		};
-
-		FragmentEntryServiceUtil.addFragmentEntry(
-			_group.getGroupId(), fragmentCollection.getFragmentCollectionId(),
-			"Fragment Entry", null, String.join("\n", htmlVoidElements), null,
 			WorkflowConstants.STATUS_APPROVED, serviceContext);
 	}
 

@@ -32,7 +32,7 @@ String format = ParamUtil.getString(request, SearchPortletParameterNames.FORMAT)
 	<portlet:param name="mvcPath" value="/search.jsp" />
 </liferay-portlet:renderURL>
 
-<aui:form action="<%= searchURL %>" method="get" name="fm" onSubmit="event.preventDefault();">
+<aui:form action="<%= searchURL %>" method="get" name="fm" onSubmit='<%= renderResponse.getNamespace() + "search(event);" %>'>
 	<liferay-portlet:renderURLParams varImpl="searchURL" />
 	<aui:input name="<%= SearchContainer.DEFAULT_CUR_PARAM %>" type="hidden" value="<%= ParamUtil.getInteger(request, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_CUR) %>" />
 	<aui:input name="format" type="hidden" value="<%= format %>" />
@@ -43,7 +43,7 @@ String format = ParamUtil.getString(request, SearchPortletParameterNames.FORMAT)
 		<aui:input name="useAdvancedSearchSyntax" type="hidden" value="<%= searchDisplayContext.isUseAdvancedSearchSyntax() %>" />
 
 		<aui:field-wrapper inlineField="<%= true %>">
-			<aui:button icon="icon-search" onClick='<%= renderResponse.getNamespace() + "search();" %>' value="search" />
+			<aui:button icon="icon-search" onClick='<%= renderResponse.getNamespace() + "search(event);" %>' type="submit" value="search" />
 		</aui:field-wrapper>
 	</aui:fieldset>
 
@@ -77,7 +77,9 @@ String format = ParamUtil.getString(request, SearchPortletParameterNames.FORMAT)
 		window.external.AddSearchProvider('<%= openSearchDescriptionXMLURL.toString() %>');
 	}
 
-	function <portlet:namespace />search() {
+	function <portlet:namespace />search(event) {
+		event.preventDefault();
+
 		var form = AUI.$(document.<portlet:namespace />fm);
 
 		form.fm('<%= SearchContainer.DEFAULT_CUR_PARAM %>').val(1);

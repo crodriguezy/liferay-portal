@@ -14,14 +14,13 @@
 
 package com.liferay.dynamic.data.mapping.form.web.internal.portlet.action;
 
+import com.liferay.dynamic.data.mapping.constants.DDMPortletKeys;
 import com.liferay.dynamic.data.mapping.form.builder.context.DDMFormContextDeserializer;
 import com.liferay.dynamic.data.mapping.form.builder.context.DDMFormContextDeserializerRequest;
-import com.liferay.dynamic.data.mapping.form.web.internal.constants.DDMFormPortletKeys;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecord;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecordVersion;
-import com.liferay.dynamic.data.mapping.model.DDMFormInstanceVersion;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceRecordService;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceRecordVersionLocalService;
@@ -51,7 +50,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"javax.portlet.name=" + DDMFormPortletKeys.DYNAMIC_DATA_MAPPING_FORM,
+		"javax.portlet.name=" + DDMPortletKeys.DYNAMIC_DATA_MAPPING_FORM,
 		"mvc.command.name=addFormInstanceRecord"
 	},
 	service = MVCResourceCommand.class
@@ -111,10 +110,6 @@ public class AddFormInstanceRecordMVCResourceCommand
 		DDMFormInstance ddmFormInstance =
 			_ddmFormInstanceService.getFormInstance(formInstanceId);
 
-		DDMFormInstanceVersion ddmFormInstanceVersion =
-			ddmFormInstance.getFormInstanceVersion(
-				ddmFormInstance.getVersion());
-
 		DDMFormValues ddmFormValues = createDDMFormValues(
 			ddmFormInstance, resourceRequest);
 
@@ -133,9 +128,8 @@ public class AddFormInstanceRecordMVCResourceCommand
 
 		if (ddmFormInstanceRecordVersion == null) {
 			_ddmFormInstanceRecordService.addFormInstanceRecord(
-				ddmFormInstance.getGroupId(),
-				ddmFormInstanceVersion.getFormInstanceVersionId(),
-				ddmFormValues, serviceContext);
+				ddmFormInstance.getGroupId(), formInstanceId, ddmFormValues,
+				serviceContext);
 		}
 		else {
 			_ddmFormInstanceRecordService.updateFormInstanceRecord(

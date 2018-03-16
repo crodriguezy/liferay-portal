@@ -19,10 +19,10 @@
 <%
 LayoutPageTemplateDisplayContext layoutPageTemplateDisplayContext = new LayoutPageTemplateDisplayContext(renderRequest, renderResponse, request);
 
-portletDisplay.setShowBackIcon(true);
-portletDisplay.setURLBack(layoutPageTemplateDisplayContext.getLayoutPageTemplateCollectionRedirect());
+renderResponse.setTitle(LanguageUtil.get(request, "page-templates"));
 
-renderResponse.setTitle(layoutPageTemplateDisplayContext.getLayoutPageTemplateCollectionTitle());
+PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "page-templates"), layoutPageTemplateDisplayContext.getLayoutPageTemplateCollectionRedirect());
+PortalUtil.addPortletBreadcrumbEntry(request, layoutPageTemplateDisplayContext.getLayoutPageTemplateCollectionTitle(), null);
 %>
 
 <clay:navigation-bar
@@ -94,6 +94,10 @@ renderResponse.setTitle(layoutPageTemplateDisplayContext.getLayoutPageTemplateCo
 </portlet:actionURL>
 
 <aui:form action="<%= deleteLayoutPageTemplateEntryURL %>" cssClass="container-fluid-1280" name="fm">
+	<div id="breadcrumb">
+		<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showPortletBreadcrumb="<%= true %>" />
+	</div>
+
 	<liferay-ui:search-container
 		id="layoutPageTemplateEntries"
 		searchContainer="<%= layoutPageTemplateDisplayContext.getLayoutPageTemplateEntriesSearchContainer() %>"
@@ -156,11 +160,11 @@ renderResponse.setTitle(layoutPageTemplateDisplayContext.getLayoutPageTemplateCo
 	<portlet:param name="layoutPageTemplateCollectionId" value="<%= String.valueOf(layoutPageTemplateDisplayContext.getLayoutPageTemplateCollectionId()) %>" />
 </portlet:actionURL>
 
-<aui:script require="metal-dom/src/all/dom as dom">
+<aui:script require="metal-dom/src/all/dom as dom,frontend-js-web/liferay/modal/commands/OpenSimpleInputModal.es as modalCommands">
 	function handleAddLayoutPageTemplateEntryMenuItemClick(event) {
 		event.preventDefault();
 
-		Liferay.Util.openSimpleInputModal(
+		modalCommands.openSimpleInputModal(
 			{
 				dialogTitle: '<liferay-ui:message key="add-page-template" />',
 				formSubmitURL: '<%= addLayoutPageTemplateEntryURL %>',
@@ -182,7 +186,7 @@ renderResponse.setTitle(layoutPageTemplateDisplayContext.getLayoutPageTemplateCo
 
 			event.preventDefault();
 
-			Liferay.Util.openSimpleInputModal(
+			modalCommands.openSimpleInputModal(
 				{
 					dialogTitle: '<liferay-ui:message key="rename-layout-page-template" />',
 					formSubmitURL: data.formSubmitUrl,
