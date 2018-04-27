@@ -55,7 +55,7 @@ int index = 0;
 						<%
 						String defaultRangeCssClass = "text-default";
 
-						if (fieldParamSelection.equals("0")) {
+						if (fieldParamSelection.equals("0") || fieldParamSelection.equals(StringPool.BLANK)) {
 							defaultRangeCssClass = "text-primary";
 						}
 
