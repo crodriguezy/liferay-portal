@@ -20,12 +20,7 @@
 	<portlet:param name="redirect" value="<%= currentURL.toString() %>" />
 </portlet:actionURL>
 
-<aui:form
-	action="<%= deleteBackgroundTasksURL %>"
-	cssClass="<%= processListListViewCss %>"
-	method="get"
-	name="fm"
->
+<aui:form action="<%= deleteBackgroundTasksURL %>" cssClass="<%= processListListViewCss %>" method="get" name="fm">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" />
 	<aui:input name="redirect" type="hidden" value="<%= currentURL.toString() %>" />
 	<aui:input name="deleteBackgroundTaskIds" type="hidden" />
@@ -53,7 +48,13 @@
 
 			if (navigation.equals("all")) {
 				importProcessesCount = BackgroundTaskManagerUtil.getBackgroundTasksCount(new long[] {groupId, liveGroupId}, taskExecutorClassName);
-				importProcesses = BackgroundTaskManagerUtil.getBackgroundTasks(new long[] {groupId, liveGroupId}, taskExecutorClassName, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator());
+
+				if (orderByCol.equals("duration")) {
+					importProcesses = BackgroundTaskManagerUtil.getBackgroundTasksByDuration(new long[] {groupId, liveGroupId}, new String[] {taskExecutorClassName}, searchContainer.getStart(), searchContainer.getEnd(), StringUtil.equalsIgnoreCase("asc", orderByType));
+				}
+				else {
+					importProcesses = BackgroundTaskManagerUtil.getBackgroundTasks(new long[] {groupId, liveGroupId}, taskExecutorClassName, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator());
+				}
 			}
 			else {
 				boolean completed = false;
@@ -63,7 +64,13 @@
 				}
 
 				importProcessesCount = BackgroundTaskManagerUtil.getBackgroundTasksCount(new long[] {groupId, liveGroupId}, taskExecutorClassName, completed);
-				importProcesses = BackgroundTaskManagerUtil.getBackgroundTasks(new long[] {groupId, liveGroupId}, taskExecutorClassName, completed, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator());
+
+				if (orderByCol.equals("duration")) {
+					importProcesses = BackgroundTaskManagerUtil.getBackgroundTasksByDuration(new long[] {groupId, liveGroupId}, new String[] {taskExecutorClassName}, completed, searchContainer.getStart(), searchContainer.getEnd(), StringUtil.equalsIgnoreCase("asc", orderByType));
+				}
+				else {
+					importProcesses = BackgroundTaskManagerUtil.getBackgroundTasks(new long[] {groupId, liveGroupId}, taskExecutorClassName, completed, searchContainer.getStart(), searchContainer.getEnd(), searchContainer.getOrderByComparator());
+				}
 			}
 
 			searchContainer.setResults(importProcesses);
@@ -79,7 +86,9 @@
 		>
 			<c:choose>
 				<c:when test='<%= displayStyle.equals("descriptive") %>'>
-					<liferay-ui:search-container-column-text valign="top">
+					<liferay-ui:search-container-column-text
+						valign="top"
+					>
 						<liferay-ui:user-portrait
 							userId="<%= backgroundTask.getUserId() %>"
 						/>
@@ -156,13 +165,16 @@
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" resultRowSplitter="<%= resultRowSplitter %>" />
+		<liferay-ui:search-iterator
+			displayStyle="<%= displayStyle %>"
+			markupView="lexicon"
+			resultRowSplitter="<%= resultRowSplitter %>"
+		/>
 	</liferay-ui:search-container>
 </aui:form>
 
 <liferay-staging:incomplete-process-message
 	localPublishing="<%= localPublishing %>"
-	taskExecutorClassName="<%= taskExecutorClassName %>"
 />
 
 <aui:script>

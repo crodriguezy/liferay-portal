@@ -37,13 +37,21 @@ data.put("title", title);
 request.setAttribute("edit_site_navigation_menu.jsp-siteNavigationMenuItemId", siteNavigationMenuItem.getSiteNavigationMenuItemId());
 %>
 
-<div class="container-item <%= (siteNavigationMenuItem.getParentSiteNavigationMenuItemId() > 0) ? "container-item--nested" : StringPool.BLANK %>">
+<div class="container-item <%= (siteNavigationMenuItem.getParentSiteNavigationMenuItemId() > 0) ? "container-item--nested" : StringPool.BLANK %>" tabindex="0">
 	<div class="site-navigation-menu-item <%= (selectedSiteNavigationMenuItemId == siteNavigationMenuItemId) ? "selected" : StringPool.BLANK %>" <%= AUIUtil.buildData(data) %>>
 		<liferay-frontend:horizontal-card
 			actionJsp="/site_navigation_menu_item_action.jsp"
 			actionJspServletContext="<%= application %>"
 			text="<%= title %>"
+			url="javascript:;"
 		>
+			<div class="drag-icon">
+				<liferay-ui:icon
+					icon="drag"
+					markupView="lexicon"
+				/>
+			</div>
+
 			<liferay-frontend:horizontal-card-col>
 				<liferay-frontend:horizontal-card-icon
 					icon="<%= siteNavigationMenuItemType.getIcon() %>"

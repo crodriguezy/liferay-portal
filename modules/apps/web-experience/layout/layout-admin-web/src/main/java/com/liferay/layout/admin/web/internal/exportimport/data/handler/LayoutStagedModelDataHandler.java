@@ -40,6 +40,8 @@ import com.liferay.exportimport.kernel.lifecycle.ExportImportLifecycleManager;
 import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.exportimport.lar.PermissionImporter;
+import com.liferay.fragment.model.FragmentEntryLink;
+import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
@@ -91,6 +93,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -294,6 +297,17 @@ public class LayoutStagedModelDataHandler
 				PortletDataContext.REFERENCE_TYPE_DEPENDENCY);
 		}
 
+		List<FragmentEntryLink> fragmentEntryLinks =
+			_fragmentEntryLinkLocalService.getFragmentEntryLinks(
+				layout.getGroupId(), _portal.getClassNameId(Layout.class),
+				layout.getPlid());
+
+		for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
+			StagedModelDataHandlerUtil.exportReferenceStagedModel(
+				portletDataContext, layout, fragmentEntryLink,
+				PortletDataContext.REFERENCE_TYPE_DEPENDENCY);
+		}
+
 		if (layout.isIconImage()) {
 			exportLayoutIconImage(portletDataContext, layout, layoutElement);
 		}
@@ -339,9 +353,16 @@ public class LayoutStagedModelDataHandler
 		boolean privateLayout = GetterUtil.getBoolean(
 			referenceElement.attributeValue("private-layout"));
 
-		Layout existingLayout = null;
+		Layout existingLayout = _layoutLocalService.fetchLayoutByUuidAndGroupId(
+			uuid, groupId, privateLayout);
 
-		existingLayout = fetchMissingReference(uuid, groupId, privateLayout);
+		if ((existingLayout == null) ||
+			(existingLayout.getGroupId() != portletDataContext.getGroupId()) ||
+			(existingLayout.isPrivateLayout() !=
+				portletDataContext.isPrivateLayout())) {
+
+			return;
+		}
 
 		Map<Long, Layout> layouts =
 			(Map<Long, Layout>)portletDataContext.getNewPrimaryKeysMap(
@@ -703,6 +724,8 @@ public class LayoutStagedModelDataHandler
 		}
 
 		importAssets(portletDataContext, layout, importedLayout);
+
+		importFragmentEntryLinks(portletDataContext, layout, importedLayout);
 
 		importLayoutFriendlyURLs(portletDataContext, layout, importedLayout);
 
@@ -1153,6 +1176,32 @@ public class LayoutStagedModelDataHandler
 
 		_layoutLocalService.updateAsset(
 			userId, importedLayout, assetCategoryIds, assetTagNames);
+	}
+
+	protected void importFragmentEntryLinks(
+			PortletDataContext portletDataContext, Layout layout,
+			Layout importedLayout)
+		throws Exception {
+
+		List<Element> fragmentEntryLinkElements =
+			portletDataContext.getReferenceDataElements(
+				layout, FragmentEntryLink.class);
+
+		for (Element fragmentEntryLinkElement : fragmentEntryLinkElements) {
+			String fragmentEntryLinkPath =
+				fragmentEntryLinkElement.attributeValue("path");
+
+			FragmentEntryLink fragmentEntryLink =
+				(FragmentEntryLink)portletDataContext.getZipEntryAsObject(
+					fragmentEntryLinkPath);
+
+			fragmentEntryLink.setClassNameId(
+				_portal.getClassNameId(Layout.class));
+			fragmentEntryLink.setClassPK(importedLayout.getPlid());
+
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, fragmentEntryLink);
+		}
 	}
 
 	protected void importLayoutFriendlyURLs(
@@ -1752,6 +1801,9 @@ public class LayoutStagedModelDataHandler
 	private ExportImportProcessCallbackRegistry
 		_exportImportProcessCallbackRegistry;
 
+	@Reference
+	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
+
 	private GroupLocalService _groupLocalService;
 	private ImageLocalService _imageLocalService;
 	private LayoutFriendlyURLLocalService _layoutFriendlyURLLocalService;
@@ -1763,6 +1815,9 @@ public class LayoutStagedModelDataHandler
 
 	@Reference
 	private PermissionImporter _permissionImporter;
+
+	@Reference
+	private Portal _portal;
 
 	@Reference
 	private PortletDataContextFactory _portletDataContextFactory;

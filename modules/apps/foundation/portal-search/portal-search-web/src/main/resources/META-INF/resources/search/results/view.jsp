@@ -91,6 +91,12 @@ com.liferay.portal.kernel.dao.search.SearchContainer<com.liferay.portal.kernel.s
 		<c:choose>
 			<c:when test="<%= !searchResultSummaryDisplayContext.isTemporarilyUnavailable() %>">
 				<liferay-ui:search-container-column-text>
+					<c:if test="<%= searchResultSummaryDisplayContext.isUserPortraitVisible() %>">
+						<liferay-ui:user-portrait
+							userId="<%= searchResultSummaryDisplayContext.getAssetEntryUserId() %>"
+						/>
+					</c:if>
+
 					<c:if test="<%= searchResultSummaryDisplayContext.isThumbnailVisible() %>">
 						<img alt="blog cover image" class="img-rounded search-result-thumbnail-img" src="<%= searchResultSummaryDisplayContext.getThumbnailURLString() %>" />
 					</c:if>
@@ -119,7 +125,10 @@ com.liferay.portal.kernel.dao.search.SearchContainer<com.liferay.portal.kernel.s
 						<strong><%= searchResultSummaryDisplayContext.getModelResource() %></strong> &#183;
 
 						<c:if test="<%= searchResultSummaryDisplayContext.isLocaleReminderVisible() %>">
-							<liferay-ui:icon image='<%= "../language/" + searchResultSummaryDisplayContext.getLocaleLanguageId() %>' message="<%= searchResultSummaryDisplayContext.getLocaleReminder() %>" />
+							<liferay-ui:icon
+								image='<%= "../language/" + searchResultSummaryDisplayContext.getLocaleLanguageId() %>'
+								message="<%= searchResultSummaryDisplayContext.getLocaleReminder() %>"
+							/>
 						</c:if>
 
 						<c:if test="<%= searchResultSummaryDisplayContext.isCreatorVisible() %>">
@@ -216,7 +225,11 @@ com.liferay.portal.kernel.dao.search.SearchContainer<com.liferay.portal.kernel.s
 	</liferay-ui:search-container-row>
 
 	<aui:form useNamespace="<%= false %>">
-		<liferay-ui:search-iterator displayStyle="descriptive" markupView="lexicon" type="more" />
+		<liferay-ui:search-iterator
+			displayStyle="descriptive"
+			markupView="lexicon"
+			type="more"
+		/>
 	</aui:form>
 </liferay-ui:search-container>
 

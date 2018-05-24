@@ -82,7 +82,7 @@ request.setAttribute(WebKeys.SEARCH_CONTAINER, structureSearch);
 			selectedDisplayStyle="<%= displayStyle %>"
 		/>
 
-		<c:if test="<%= ddmDisplay.isShowAddStructureButton() && DDMStructurePermission.containsAddStruturePermission(permissionChecker, groupId, scopeClassNameId) && !searchRestriction %>">
+		<c:if test="<%= ddmDisplay.isShowAddStructureButton() && DDMStructurePermission.containsAddStructurePermission(permissionChecker, groupId, scopeClassNameId) && !searchRestriction %>">
 			<portlet:renderURL var="viewStructureURL">
 				<portlet:param name="mvcPath" value="/select_structure.jsp" />
 				<portlet:param name="classPK" value="<%= String.valueOf(classPK) %>" />
@@ -95,8 +95,13 @@ request.setAttribute(WebKeys.SEARCH_CONTAINER, structureSearch);
 				<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 			</portlet:renderURL>
 
-			<liferay-frontend:add-menu inline="<%= true %>">
-				<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "add") %>' url="<%= addStructureURL %>" />
+			<liferay-frontend:add-menu
+				inline="<%= true %>"
+			>
+				<liferay-frontend:add-menu-item
+					title='<%= LanguageUtil.get(request, "add") %>'
+					url="<%= addStructureURL %>"
+				/>
 			</liferay-frontend:add-menu>
 		</c:if>
 	</liferay-frontend:management-bar-buttons>
@@ -162,7 +167,10 @@ request.setAttribute(WebKeys.SEARCH_CONTAINER, structureSearch);
 			/>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+		<liferay-ui:search-iterator
+			displayStyle="<%= displayStyle %>"
+			markupView="lexicon"
+		/>
 	</liferay-ui:search-container>
 </aui:form>
 

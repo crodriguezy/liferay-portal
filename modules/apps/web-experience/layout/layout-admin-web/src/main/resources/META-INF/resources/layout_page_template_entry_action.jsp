@@ -22,10 +22,17 @@ ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_
 LayoutPageTemplateEntry layoutPageTemplateEntry = (LayoutPageTemplateEntry)row.getObject();
 %>
 
-<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+<liferay-ui:icon-menu
+	direction="left-side"
+	icon="<%= StringPool.BLANK %>"
+	markupView="lexicon"
+	message="<%= StringPool.BLANK %>"
+	showWhenSingleIcon="<%= true %>"
+>
 	<c:if test="<%= LayoutPageTemplateEntryPermission.contains(permissionChecker, layoutPageTemplateEntry, ActionKeys.UPDATE) %>">
 		<portlet:renderURL var="editLayoutPageTemplateEntryURL">
 			<portlet:param name="mvcPath" value="/edit_layout_page_template_entry.jsp" />
+			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="layoutPageTemplateEntryId" value="<%= String.valueOf(layoutPageTemplateEntry.getLayoutPageTemplateEntryId()) %>" />
 			<portlet:param name="layoutPageTemplateCollectionId" value="<%= String.valueOf(layoutPageTemplateEntry.getLayoutPageTemplateCollectionId()) %>" />
 		</portlet:renderURL>
@@ -38,6 +45,7 @@ LayoutPageTemplateEntry layoutPageTemplateEntry = (LayoutPageTemplateEntry)row.g
 
 	<c:if test="<%= LayoutPageTemplateEntryPermission.contains(permissionChecker, layoutPageTemplateEntry, ActionKeys.UPDATE) %>">
 		<portlet:actionURL name="/layout/update_layout_page_template_entry" var="updateLayoutPageTemplateEntryURL">
+			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="layoutPageTemplateCollectionId" value="<%= String.valueOf(layoutPageTemplateEntry.getLayoutPageTemplateCollectionId()) %>" />
 			<portlet:param name="layoutPageTemplateEntryId" value="<%= String.valueOf(layoutPageTemplateEntry.getLayoutPageTemplateEntryId()) %>" />
 		</portlet:actionURL>
@@ -60,7 +68,7 @@ LayoutPageTemplateEntry layoutPageTemplateEntry = (LayoutPageTemplateEntry)row.g
 
 	<c:if test="<%= LayoutPageTemplateEntryPermission.contains(permissionChecker, layoutPageTemplateEntry, ActionKeys.PERMISSIONS) %>">
 		<liferay-security:permissionsURL
-			modelResource="<%= LayoutPageTemplateCollection.class.getName() %>"
+			modelResource="<%= LayoutPageTemplateEntry.class.getName() %>"
 			modelResourceDescription="<%= layoutPageTemplateEntry.getName() %>"
 			resourcePrimKey="<%= String.valueOf(layoutPageTemplateEntry.getLayoutPageTemplateEntryId()) %>"
 			var="layoutPageTemplateEntryPermissionsURL"

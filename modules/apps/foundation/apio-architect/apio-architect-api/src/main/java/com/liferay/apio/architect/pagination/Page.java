@@ -47,6 +47,7 @@ public class Page<T> {
 		Path path, List<Operation> operations) {
 
 		_resourceName = resourceName;
+
 		_items = pageItems.getItems();
 		_itemsPerPage = pagination.getItemsPerPage();
 		_pageNumber = pagination.getPageNumber();
@@ -79,6 +80,10 @@ public class Page<T> {
 	 * @return the number of the collection's last page
 	 */
 	public int getLastPageNumber() {
+		if (_totalCount == 0) {
+			return 1;
+		}
+
 		return -Math.floorDiv(-_totalCount, _itemsPerPage);
 	}
 

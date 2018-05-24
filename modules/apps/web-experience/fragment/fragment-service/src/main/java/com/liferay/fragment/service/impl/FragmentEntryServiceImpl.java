@@ -18,9 +18,9 @@ import com.liferay.fragment.constants.FragmentActionKeys;
 import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.service.base.FragmentEntryServiceBaseImpl;
+import com.liferay.portal.dao.orm.custom.sql.CustomSQL;
+import com.liferay.portal.kernel.dao.orm.WildcardMode;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionFactory;
@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.security.permission.resource.PortletResourcePer
 import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermissionFactory;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 
 import java.util.List;
 
@@ -147,7 +148,8 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 		long groupId, long fragmentCollectionId, String name) {
 
 		return fragmentEntryPersistence.filterCountByG_FCI_LikeN(
-			groupId, fragmentCollectionId, name);
+			groupId, fragmentCollectionId,
+			_customSQL.keywords(name, WildcardMode.SURROUND)[0]);
 	}
 
 	@Override
@@ -187,7 +189,9 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 		int end, OrderByComparator<FragmentEntry> orderByComparator) {
 
 		return fragmentEntryPersistence.filterFindByG_FCI_LikeN(
-			groupId, fragmentCollectionId, name, start, end, orderByComparator);
+			groupId, fragmentCollectionId,
+			_customSQL.keywords(name, WildcardMode.SURROUND)[0], start, end,
+			orderByComparator);
 	}
 
 	@Override
@@ -227,9 +231,6 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 			serviceContext);
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		FragmentEntryServiceImpl.class);
-
 	private static volatile ModelResourcePermission<FragmentEntry>
 		_fragmentEntryModelResourcePermission =
 			ModelResourcePermissionFactory.getInstance(
@@ -240,5 +241,8 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 			PortletResourcePermissionFactory.getInstance(
 				FragmentEntryServiceImpl.class, "_portletResourcePermission",
 				FragmentConstants.RESOURCE_NAME);
+
+	@ServiceReference(type = CustomSQL.class)
+	private CustomSQL _customSQL;
 
 }

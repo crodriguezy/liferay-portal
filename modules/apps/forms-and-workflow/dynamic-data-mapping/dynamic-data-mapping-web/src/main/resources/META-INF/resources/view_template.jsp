@@ -128,7 +128,7 @@ TemplateSearchTerms templateSearchTerms = (TemplateSearchTerms)templateSearch.ge
 				<%
 				String rowHREF = StringPool.BLANK;
 
-				if (DDMTemplatePermission.contains(permissionChecker, scopeGroupId, template, refererPortletName, ActionKeys.UPDATE)) {
+				if (DDMTemplatePermission.contains(permissionChecker, template, ActionKeys.UPDATE)) {
 					PortletURL rowURL = renderResponse.createRenderURL();
 
 					rowURL.setParameter("mvcPath", "/edit_template.jsp");
@@ -247,7 +247,9 @@ TemplateSearchTerms templateSearchTerms = (TemplateSearchTerms)templateSearch.ge
 				/>
 			</liferay-ui:search-container-row>
 
-			<liferay-ui:search-iterator markupView="lexicon" />
+			<liferay-ui:search-iterator
+				markupView="lexicon"
+			/>
 		</liferay-ui:search-container>
 	</div>
 </aui:form>

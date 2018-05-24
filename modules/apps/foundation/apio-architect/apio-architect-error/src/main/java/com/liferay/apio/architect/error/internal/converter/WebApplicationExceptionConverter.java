@@ -31,13 +31,13 @@ public abstract class WebApplicationExceptionConverter {
 	 * Converts a {@code WebApplicationException} to its {@code APIError}
 	 * representation.
 	 *
-	 * @param  exception the {@code WebApplicationException} to convert
+	 * @param  exception the {@code WebApplicationException} to map
 	 * @return the exception's {@code APIError} representation
 	 */
 	protected APIError convert(WebApplicationException exception) {
 		String description = _getDescription(exception.getMessage());
 
-		return new APIErrorImpl(
+		return new APIError(
 			exception, getTitle(), description, getType(),
 			getStatusType().getStatusCode());
 	}

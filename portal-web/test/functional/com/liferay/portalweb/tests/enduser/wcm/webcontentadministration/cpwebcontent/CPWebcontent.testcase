@@ -55,7 +55,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -82,7 +84,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -109,7 +113,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -136,7 +142,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#viewCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -162,7 +170,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#viewCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -188,7 +198,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#viewCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -207,6 +219,76 @@
 		</for>
 	</command>
 
+	<command name="AddStructureViaLocaleURL" priority="4">
+		<description message="This is a use case for LPS-77387." />
+
+		<property name="test.name.skip.portal.instance" value="CPWebcontent#AddStructureViaLocaleURL" />
+
+		<var method="TestPropsUtil#get('portal.url')" name="portalURL" />
+
+		<execute macro="Navigator#openSpecificURL">
+			<var name="url" value="${portalURL}/en/" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Content" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Web Content" />
+		</execute>
+
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoAdd" />
+
+		<execute function="Pause" locator1="3000" />
+
+		<execute macro="Navigator#ensureLocaleURL">
+			<var name="locale" value="en" />
+		</execute>
+
+		<execute macro="WebContentStructures#addName">
+			<var name="structureName" value="WC Structure Name" />
+		</execute>
+
+		<execute macro="Panel#expandPanel">
+			<var name="panel" value="Details" />
+		</execute>
+
+		<execute macro="PortletEntry#inputDescriptionTextInput">
+			<var name="description" value="WC Structure Description" />
+		</execute>
+
+		<execute function="SelectFrame" value1="relative=top" />
+
+		<execute macro="DynamicDataMapping#addField">
+			<var name="field" value="Text" />
+			<var name="fieldFieldLabel" value="Text" />
+			<var name="fieldName" value="Text" />
+		</execute>
+
+		<execute macro="WebContentStructures#saveCP">
+			<var name="structureName" value="WC Structure Name" />
+		</execute>
+
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Content" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Web Content" />
+		</execute>
+
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
+
+		<execute function="AssertElementNotPresent" locator1="DDMSelectStructure#DDM_STRUCTURE_TABLE_NAME_2">
+			<var name="key_ddlDataDefinitionName" value="WC Structure Name" />
+		</execute>
+	</command>
+
 	<command name="AddStructureWithSeparatorField" priority="4">
 		<description message="This is a use case for LPS-52248." />
 
@@ -216,7 +298,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -239,7 +323,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />
@@ -290,7 +376,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -321,7 +409,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateLanguage" value="ftl" />
@@ -381,7 +471,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#viewCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -411,7 +503,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -438,7 +532,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentNavigator#gotoEditStructure">
 			<var name="structureName" value="WC Structure Name" />
@@ -460,7 +556,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />
@@ -506,8 +604,9 @@
 			<var name="webContentTitle" value="WC WebContent Title" />
 		</execute>
 
-		<execute macro="WebContent#addLocale">
-			<var name="language" value="Spanish (Spain)" />
+		<execute macro="PortletEntry#changeLocale">
+			<var name="fieldName" value="Title" />
+			<var name="locale" value="es-ES" />
 		</execute>
 
 		<execute macro="WebContent#addCP">
@@ -568,7 +667,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -599,7 +700,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />
@@ -668,7 +771,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -693,7 +798,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />
@@ -737,7 +844,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />
@@ -1038,7 +1147,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -1061,7 +1172,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />
@@ -1135,7 +1248,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -1160,7 +1275,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />
@@ -1243,7 +1360,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -1268,7 +1387,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />
@@ -1319,7 +1440,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -1344,7 +1467,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />
@@ -1419,7 +1544,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -1444,7 +1571,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#advancedSearchCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -1463,7 +1592,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />
@@ -1693,13 +1824,19 @@
 	<command name="EditBasicWebContentStructureAndTemplate" priority="4">
 		<property name="testray.component.names" value="Web Content Administration" />
 
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Global" />
+		</execute>
+
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Content" />
 			<var name="panel" value="Site Administration" />
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentNavigator#gotoEditStructure">
 			<var name="structureName" value="Basic Web Content" />
@@ -1721,18 +1858,19 @@
 			<var name="structureName" value="Basic Web Content Edit" />
 		</execute>
 
-		<execute macro="Navigator#openURL" />
-
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Content" />
 			<var name="panel" value="Site Administration" />
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
-		<execute macro="WebContentNavigator#gotoEditTemplate">
-			<var name="templateName" value="Basic Web Content" />
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Edit" />
+			<var name="rowEntry" value="Basic Web Content" />
 		</execute>
 
 		<execute macro="PortletEntry#inputName">
@@ -1740,7 +1878,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Details" />
+			<var name="panel" value="Details" />
 		</execute>
 
 		<execute macro="PortletEntry#inputDescription">
@@ -1753,7 +1891,7 @@
 			</execute>
 		</for>
 
-		<execute macro="PortletEntry#save" />
+		<execute macro="WebContentStructures#saveCP" />
 
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Content" />
@@ -1761,7 +1899,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentNavigator#gotoEditStructure">
 			<var name="structureName" value="Basic Web Content Edit" />
@@ -1800,7 +1940,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -1827,7 +1969,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="LexiconEntry#gotoAdd" />
 
@@ -1836,7 +1980,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Details" />
+			<var name="panel" value="Details" />
 		</execute>
 
 		<execute macro="PortletEntry#inputDescriptionTextInput">
@@ -1866,7 +2010,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#editSubstructureDefaultValuesCP">
 			<var name="editSubstructureFieldNames" value="Text" />
@@ -1902,8 +2048,9 @@
 			<var name="webContentTitle" value="WC WebContent Title" />
 		</execute>
 
-		<execute macro="WebContent#addLocale">
-			<var name="language" value="Spanish (Spain)" />
+		<execute macro="PortletEntry#changeLocale">
+			<var name="fieldName" value="Title" />
+			<var name="locale" value="es-ES" />
 		</execute>
 
 		<execute macro="WebContent#addCP">
@@ -1922,8 +2069,9 @@
 			<var name="webContentTitle" value="WC WebContent Title" />
 		</execute>
 
-		<execute macro="WebContent#selectLocale">
-			<var name="language" value="Spanish (Spain)" />
+		<execute macro="PortletEntry#changeLocale">
+			<var name="fieldName" value="Title" />
+			<var name="locale" value="es-ES" />
 		</execute>
 
 		<execute macro="WebContent#viewCP">
@@ -1977,7 +2125,7 @@
 	</command>
 
 	<command name="EditWebContentViaArticleTitle" priority="5">
-		<property name="portal.acceptance" value="pending" />
+		<property name="portal.acceptance" value="quarantine" />
 		<property name="testray.component.names" value="Web Content Administration" />
 
 		<execute macro="Navigator#openURL" />
@@ -2161,7 +2309,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -2192,7 +2342,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />
@@ -2267,8 +2419,12 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
+		<execute macro="TestCase#getTestName">
+			<return from="testName" name="testName" />
+		</execute>
+
 		<execute macro="LAR#exportPortlet">
-			<var name="larFileName" value="Web_Content.portlet.lar" />
+			<var name="larFileName" value="${testName}_WebContent_portlet.lar" />
 		</execute>
 	</command>
 
@@ -2283,7 +2439,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -2308,7 +2466,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />
@@ -2355,8 +2515,12 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
+		<execute macro="TestCase#getTestName">
+			<return from="testName" name="testName" />
+		</execute>
+
 		<execute macro="LAR#exportPortlet">
-			<var name="larFileName" value="Web_Content.portlet.lar" />
+			<var name="larFileName" value="${testName}_WebContent_portlet.lar" />
 		</execute>
 
 		<execute macro="WebContent#tearDownCP" />
@@ -2389,8 +2553,12 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
+		<execute macro="TestCase#getTestName">
+			<return from="testName" name="testName" />
+		</execute>
+
 		<execute macro="LAR#importPortlet">
-			<var name="larFileName" value="Web_Content.portlet.lar" />
+			<var name="larFileName" value="${testName}_WebContent_portlet.lar" />
 		</execute>
 
 		<execute macro="Navigator#openURL" />
@@ -2414,7 +2582,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#viewCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -2465,7 +2635,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="Test Structure Description" />
@@ -2490,7 +2662,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="Test Template Description" />
@@ -2528,8 +2702,12 @@
 			<var name="webContentTitle" value="WC Title" />
 		</execute>
 
+		<execute macro="TestCase#getTestName">
+			<return from="testName" name="testName" />
+		</execute>
+
 		<execute macro="LAR#exportPortlet">
-			<var name="larFileName" value="Web_Content.portlet.lar" />
+			<var name="larFileName" value="${testName}_WebContent_portlet.lar" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoPortlet">
@@ -2550,7 +2728,7 @@
 
 		<execute macro="LAR#importPortlet">
 			<var name="importValidationMissingItem" value="Linked Page" />
-			<var name="larFileName" value="Web_Content.portlet.lar" />
+			<var name="larFileName" value="${testName}_WebContent_portlet.lar" />
 			<var name="linkedPageName" value="Test Page" />
 			<var name="siteName" value="Site Name" />
 		</execute>
@@ -2958,13 +3136,19 @@
 	<command name="ValidateDDMNavigation" priority="4">
 		<property name="testray.component.names" value="Web Content Administration" />
 
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Global" />
+		</execute>
+
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Content" />
 			<var name="panel" value="Site Administration" />
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentNavigator#gotoManageTemplatesViaStructures">
 			<var name="structureName" value="Basic Web Content" />
@@ -3070,7 +3254,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<for list="1,2,3,4,5,6,7,8,9" param="n">
 			<execute macro="WebContentStructures#addCP">

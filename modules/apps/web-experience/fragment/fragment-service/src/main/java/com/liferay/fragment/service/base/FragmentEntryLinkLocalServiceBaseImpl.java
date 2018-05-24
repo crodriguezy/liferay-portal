@@ -16,8 +16,15 @@ package com.liferay.fragment.service.base;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.exportimport.kernel.lar.ExportImportHelperUtil;
+import com.liferay.exportimport.kernel.lar.ManifestSummary;
+import com.liferay.exportimport.kernel.lar.PortletDataContext;
+import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
+import com.liferay.exportimport.kernel.lar.StagedModelType;
+
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
+import com.liferay.fragment.service.persistence.FragmentEntryLinkFinder;
 import com.liferay.fragment.service.persistence.FragmentEntryLinkPersistence;
 import com.liferay.fragment.service.persistence.FragmentEntryPersistence;
 
@@ -30,8 +37,11 @@ import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DefaultActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
+import com.liferay.portal.kernel.dao.orm.Property;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.PersistedModel;
@@ -41,6 +51,7 @@ import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalServiceImpl;
 import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistry;
 import com.liferay.portal.kernel.service.persistence.UserPersistence;
+import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
@@ -95,6 +106,7 @@ public abstract class FragmentEntryLinkLocalServiceBaseImpl
 	 * @return the new fragment entry link
 	 */
 	@Override
+	@Transactional(enabled = false)
 	public FragmentEntryLink createFragmentEntryLink(long fragmentEntryLinkId) {
 		return fragmentEntryLinkPersistence.create(fragmentEntryLinkId);
 	}
@@ -215,6 +227,19 @@ public abstract class FragmentEntryLinkLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the fragment entry link matching the UUID and group.
+	 *
+	 * @param uuid the fragment entry link's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching fragment entry link, or <code>null</code> if a matching fragment entry link could not be found
+	 */
+	@Override
+	public FragmentEntryLink fetchFragmentEntryLinkByUuidAndGroupId(
+		String uuid, long groupId) {
+		return fragmentEntryLinkPersistence.fetchByUUID_G(uuid, groupId);
+	}
+
+	/**
 	 * Returns the fragment entry link with the primary key.
 	 *
 	 * @param fragmentEntryLinkId the primary key of the fragment entry link
@@ -263,6 +288,74 @@ public abstract class FragmentEntryLinkLocalServiceBaseImpl
 		actionableDynamicQuery.setPrimaryKeyPropertyName("fragmentEntryLinkId");
 	}
 
+	@Override
+	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
+		final PortletDataContext portletDataContext) {
+		final ExportActionableDynamicQuery exportActionableDynamicQuery = new ExportActionableDynamicQuery() {
+				@Override
+				public long performCount() throws PortalException {
+					ManifestSummary manifestSummary = portletDataContext.getManifestSummary();
+
+					StagedModelType stagedModelType = getStagedModelType();
+
+					long modelAdditionCount = super.performCount();
+
+					manifestSummary.addModelAdditionCount(stagedModelType,
+						modelAdditionCount);
+
+					long modelDeletionCount = ExportImportHelperUtil.getModelDeletionCount(portletDataContext,
+							stagedModelType);
+
+					manifestSummary.addModelDeletionCount(stagedModelType,
+						modelDeletionCount);
+
+					return modelAdditionCount;
+				}
+			};
+
+		initActionableDynamicQuery(exportActionableDynamicQuery);
+
+		exportActionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod() {
+				@Override
+				public void addCriteria(DynamicQuery dynamicQuery) {
+					portletDataContext.addDateRangeCriteria(dynamicQuery,
+						"modifiedDate");
+
+					StagedModelType stagedModelType = exportActionableDynamicQuery.getStagedModelType();
+
+					long referrerClassNameId = stagedModelType.getReferrerClassNameId();
+
+					Property classNameIdProperty = PropertyFactoryUtil.forName(
+							"classNameId");
+
+					if ((referrerClassNameId != StagedModelType.REFERRER_CLASS_NAME_ID_ALL) &&
+							(referrerClassNameId != StagedModelType.REFERRER_CLASS_NAME_ID_ANY)) {
+						dynamicQuery.add(classNameIdProperty.eq(
+								stagedModelType.getReferrerClassNameId()));
+					}
+					else if (referrerClassNameId == StagedModelType.REFERRER_CLASS_NAME_ID_ANY) {
+						dynamicQuery.add(classNameIdProperty.isNotNull());
+					}
+				}
+			});
+
+		exportActionableDynamicQuery.setCompanyId(portletDataContext.getCompanyId());
+
+		exportActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<FragmentEntryLink>() {
+				@Override
+				public void performAction(FragmentEntryLink fragmentEntryLink)
+					throws PortalException {
+					StagedModelDataHandlerUtil.exportStagedModel(portletDataContext,
+						fragmentEntryLink);
+				}
+			});
+		exportActionableDynamicQuery.setStagedModelType(new StagedModelType(
+				PortalUtil.getClassNameId(FragmentEntryLink.class.getName()),
+				StagedModelType.REFERRER_CLASS_NAME_ID_ALL));
+
+		return exportActionableDynamicQuery;
+	}
+
 	/**
 	 * @throws PortalException
 	 */
@@ -276,6 +369,51 @@ public abstract class FragmentEntryLinkLocalServiceBaseImpl
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException {
 		return fragmentEntryLinkPersistence.findByPrimaryKey(primaryKeyObj);
+	}
+
+	/**
+	 * Returns all the fragment entry links matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the fragment entry links
+	 * @param companyId the primary key of the company
+	 * @return the matching fragment entry links, or an empty list if no matches were found
+	 */
+	@Override
+	public List<FragmentEntryLink> getFragmentEntryLinksByUuidAndCompanyId(
+		String uuid, long companyId) {
+		return fragmentEntryLinkPersistence.findByUuid_C(uuid, companyId);
+	}
+
+	/**
+	 * Returns a range of fragment entry links matching the UUID and company.
+	 *
+	 * @param uuid the UUID of the fragment entry links
+	 * @param companyId the primary key of the company
+	 * @param start the lower bound of the range of fragment entry links
+	 * @param end the upper bound of the range of fragment entry links (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the range of matching fragment entry links, or an empty list if no matches were found
+	 */
+	@Override
+	public List<FragmentEntryLink> getFragmentEntryLinksByUuidAndCompanyId(
+		String uuid, long companyId, int start, int end,
+		OrderByComparator<FragmentEntryLink> orderByComparator) {
+		return fragmentEntryLinkPersistence.findByUuid_C(uuid, companyId,
+			start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns the fragment entry link matching the UUID and group.
+	 *
+	 * @param uuid the fragment entry link's UUID
+	 * @param groupId the primary key of the group
+	 * @return the matching fragment entry link
+	 * @throws PortalException if a matching fragment entry link could not be found
+	 */
+	@Override
+	public FragmentEntryLink getFragmentEntryLinkByUuidAndGroupId(String uuid,
+		long groupId) throws PortalException {
+		return fragmentEntryLinkPersistence.findByUUID_G(uuid, groupId);
 	}
 
 	/**
@@ -353,6 +491,25 @@ public abstract class FragmentEntryLinkLocalServiceBaseImpl
 	public void setFragmentEntryLinkPersistence(
 		FragmentEntryLinkPersistence fragmentEntryLinkPersistence) {
 		this.fragmentEntryLinkPersistence = fragmentEntryLinkPersistence;
+	}
+
+	/**
+	 * Returns the fragment entry link finder.
+	 *
+	 * @return the fragment entry link finder
+	 */
+	public FragmentEntryLinkFinder getFragmentEntryLinkFinder() {
+		return fragmentEntryLinkFinder;
+	}
+
+	/**
+	 * Sets the fragment entry link finder.
+	 *
+	 * @param fragmentEntryLinkFinder the fragment entry link finder
+	 */
+	public void setFragmentEntryLinkFinder(
+		FragmentEntryLinkFinder fragmentEntryLinkFinder) {
+		this.fragmentEntryLinkFinder = fragmentEntryLinkFinder;
 	}
 
 	/**
@@ -524,6 +681,8 @@ public abstract class FragmentEntryLinkLocalServiceBaseImpl
 	protected FragmentEntryLinkLocalService fragmentEntryLinkLocalService;
 	@BeanReference(type = FragmentEntryLinkPersistence.class)
 	protected FragmentEntryLinkPersistence fragmentEntryLinkPersistence;
+	@BeanReference(type = FragmentEntryLinkFinder.class)
+	protected FragmentEntryLinkFinder fragmentEntryLinkFinder;
 	@ServiceReference(type = com.liferay.counter.kernel.service.CounterLocalService.class)
 	protected com.liferay.counter.kernel.service.CounterLocalService counterLocalService;
 	@BeanReference(type = com.liferay.fragment.service.FragmentEntryLocalService.class)

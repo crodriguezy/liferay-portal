@@ -29,7 +29,8 @@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
 taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
-<%@ page import="com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem" %><%@
+<%@ page import="com.liferay.frontend.taglib.clay.servlet.taglib.util.JSPNavigationItemList" %><%@
+page import="com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem" %><%@
 page import="com.liferay.map.constants.MapProviderWebKeys" %><%@
 page import="com.liferay.petra.string.StringPool" %><%@
 page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
@@ -111,15 +112,18 @@ page import="com.liferay.ratings.kernel.RatingsType" %><%@
 page import="com.liferay.ratings.kernel.display.context.CompanyPortletRatingsDefinitionDisplayContext" %><%@
 page import="com.liferay.ratings.kernel.display.context.GroupPortletRatingsDefinitionDisplayContext" %><%@
 page import="com.liferay.ratings.kernel.transformer.RatingsDataTransformerUtil" %><%@
+page import="com.liferay.site.admin.web.internal.constants.SiteAdminConstants" %><%@
 page import="com.liferay.site.admin.web.internal.constants.SiteAdminPortletKeys" %><%@
 page import="com.liferay.site.admin.web.internal.constants.SiteAdminWebKeys" %><%@
 page import="com.liferay.site.admin.web.internal.display.context.SiteAdminDisplayContext" %><%@
+page import="com.liferay.site.admin.web.internal.display.context.SiteInitializerItemDisplayContext" %><%@
 page import="com.liferay.site.constants.SiteWebKeys" %><%@
 page import="com.liferay.site.util.GroupURLProvider" %><%@
 page import="com.liferay.sites.kernel.util.Sites" %><%@
 page import="com.liferay.sites.kernel.util.SitesUtil" %>
 
 <%@ page import="java.util.ArrayList" %><%@
+page import="java.util.HashMap" %><%@
 page import="java.util.List" %><%@
 page import="java.util.Locale" %><%@
 page import="java.util.Map" %><%@

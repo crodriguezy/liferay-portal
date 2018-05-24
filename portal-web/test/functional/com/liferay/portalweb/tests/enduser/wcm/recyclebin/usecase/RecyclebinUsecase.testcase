@@ -318,14 +318,13 @@
 		</execute>
 
 		<execute macro="MessageboardsThread#viewCP">
-			<var name="mbAttachmentFile" value="Recently Removed Attachment" />
 			<var name="replyCount" value="0" />
 			<var name="threadBody" value="MB Body Edit" />
 			<var name="threadSubject" value="MB Subject" />
 			<var name="userName" value="Test Test" />
 		</execute>
 
-		<execute macro="ProductMenuHelper#closeProductMenu" />
+		<execute macro="PortletEntry#clickEditFromEllipsis" />
 
 		<execute macro="MessageboardsThread#restoreMBAttachmentCP">
 			<var name="mbAttachmentFile" value="Document_1.doc" />
@@ -753,7 +752,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -780,7 +781,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />
@@ -881,7 +884,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#viewCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -1274,13 +1279,13 @@
 
 		<execute macro="MessageboardsCategory#viewCP">
 			<var name="categoryName" value="MB Category Name" />
-			<var name="replyCount" value="2" />
+			<var name="replyCount" value="1" />
 			<var name="subcategoriesNumber" value="0" />
 			<var name="threadsNumber" value="1" />
 		</execute>
 
 		<execute macro="MessageboardsThread#viewCP">
-			<var name="replyCount" value="2" />
+			<var name="replyCount" value="1" />
 			<var name="threadBody" value="MB Body" />
 			<var name="threadSubject" value="MB Subject" />
 			<var name="userName" value="Test Test" />
@@ -1601,8 +1606,9 @@
 			<var name="webContentTitle" value="WC Folder Name" />
 		</execute>
 
-		<execute macro="WebContent#gotoViewSpecificVersionHistoryCP">
-			<var name="webContentTitle" value="Web Content Title Edit Draft" />
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="View History" />
+			<var name="rowEntry" value="Web Content Title Edit Draft" />
 		</execute>
 
 		<execute macro="WebContent#viewSpecificVersionHistoryCP">

@@ -14,14 +14,12 @@
 
 package com.liferay.dynamic.data.mapping.form.web.internal.exportimport.data.handler;
 
+import com.liferay.dynamic.data.mapping.constants.DDMConstants;
 import com.liferay.dynamic.data.mapping.constants.DDMPortletKeys;
-import com.liferay.dynamic.data.mapping.exportimport.staged.model.repository.DDMFormInstanceRecordStagedModelRepository;
-import com.liferay.dynamic.data.mapping.exportimport.staged.model.repository.DDMFormInstanceStagedModelRepository;
 import com.liferay.dynamic.data.mapping.model.DDMDataProviderInstance;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecord;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
-import com.liferay.dynamic.data.mapping.service.permission.DDMFormPermission;
 import com.liferay.exportimport.kernel.lar.BasePortletDataHandler;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.PortletDataHandler;
@@ -29,6 +27,7 @@ import com.liferay.exportimport.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.exportimport.kernel.lar.PortletDataHandlerControl;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelType;
+import com.liferay.exportimport.staged.model.repository.StagedModelRepository;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.xml.Element;
@@ -45,7 +44,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Leonardo Barros
  */
 @Component(
-	property = {"javax.portlet.name=" + DDMPortletKeys.DYNAMIC_DATA_MAPPING_FORM_ADMIN},
+	property = "javax.portlet.name=" + DDMPortletKeys.DYNAMIC_DATA_MAPPING_FORM_ADMIN,
 	service = PortletDataHandler.class
 )
 public class DDMFormAdminPortletDataHandler extends BasePortletDataHandler {
@@ -106,8 +105,7 @@ public class DDMFormAdminPortletDataHandler extends BasePortletDataHandler {
 			PortletPreferences portletPreferences)
 		throws Exception {
 
-		portletDataContext.addPortletPermissions(
-			DDMFormPermission.RESOURCE_NAME);
+		portletDataContext.addPortletPermissions(DDMConstants.RESOURCE_NAME);
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
@@ -136,8 +134,7 @@ public class DDMFormAdminPortletDataHandler extends BasePortletDataHandler {
 			PortletPreferences portletPreferences, String data)
 		throws Exception {
 
-		portletDataContext.importPortletPermissions(
-			DDMFormPermission.RESOURCE_NAME);
+		portletDataContext.importPortletPermissions(DDMConstants.RESOURCE_NAME);
 
 		if (portletDataContext.getBooleanParameter(NAMESPACE, "forms")) {
 			Element formInstancesElement =
@@ -221,7 +218,7 @@ public class DDMFormAdminPortletDataHandler extends BasePortletDataHandler {
 		unbind = "-"
 	)
 	protected void setDDMFormInstanceRecordStagedModelRepository(
-		DDMFormInstanceRecordStagedModelRepository
+		StagedModelRepository<DDMFormInstanceRecord>
 			formInstanceRecordStagedModelRepository) {
 
 		_formInstanceRecordStagedModelRepository =
@@ -233,7 +230,7 @@ public class DDMFormAdminPortletDataHandler extends BasePortletDataHandler {
 		unbind = "-"
 	)
 	protected void setDDMFormInstanceStagedModelRepository(
-		DDMFormInstanceStagedModelRepository
+		StagedModelRepository<DDMFormInstance>
 			formInstanceStagedModelRepository) {
 
 		_formInstanceStagedModelRepository = formInstanceStagedModelRepository;
@@ -244,9 +241,9 @@ public class DDMFormAdminPortletDataHandler extends BasePortletDataHandler {
 		ModuleServiceLifecycle moduleServiceLifecycle) {
 	}
 
-	private DDMFormInstanceRecordStagedModelRepository
+	private StagedModelRepository<DDMFormInstanceRecord>
 		_formInstanceRecordStagedModelRepository;
-	private DDMFormInstanceStagedModelRepository
+	private StagedModelRepository<DDMFormInstance>
 		_formInstanceStagedModelRepository;
 
 }

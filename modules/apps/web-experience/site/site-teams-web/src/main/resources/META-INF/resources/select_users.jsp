@@ -60,20 +60,21 @@ List<User> users = UserLocalServiceUtil.search(company.getCompanyId(), searchTer
 userSearchContainer.setResults(users);
 
 RowChecker rowChecker = new UserTeamChecker(renderResponse, team);
-
-List<NavigationItem> navigationItems = new ArrayList<>();
-
-NavigationItem navigationItem = new NavigationItem();
-
-navigationItem.setActive(true);
-navigationItem.setHref(currentURL);
-navigationItem.setLabel(LanguageUtil.get(request, "users"));
-
-navigationItems.add(navigationItem);
 %>
 
 <clay:navigation-bar
-	items="<%= navigationItems %>"
+	items="<%=
+		new JSPNavigationItemList(pageContext) {
+			{
+				add(
+					navigationItem -> {
+						navigationItem.setActive(true);
+						navigationItem.setHref(currentURL);
+						navigationItem.setLabel(LanguageUtil.get(request, "users"));
+					});
+			}
+		}
+	%>"
 />
 
 <liferay-frontend:management-bar
@@ -97,7 +98,9 @@ navigationItems.add(navigationItem);
 		<c:if test="<%= (usersCount > 0) || searchTerms.isSearch() %>">
 			<li>
 				<aui:form action="<%= portletURL.toString() %>" name="searchFm">
-					<liferay-ui:input-search markupView="lexicon" />
+					<liferay-ui:input-search
+						markupView="lexicon"
+					/>
 				</aui:form>
 			</li>
 		</c:if>
@@ -138,7 +141,10 @@ navigationItems.add(navigationItem);
 			<%@ include file="/user_columns.jspf" %>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+		<liferay-ui:search-iterator
+			displayStyle="<%= displayStyle %>"
+			markupView="lexicon"
+		/>
 	</liferay-ui:search-container>
 </aui:form>
 

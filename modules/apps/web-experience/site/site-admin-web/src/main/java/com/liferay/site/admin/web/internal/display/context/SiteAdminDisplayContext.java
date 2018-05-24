@@ -15,11 +15,13 @@
 package com.liferay.site.admin.web.internal.display.context;
 
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemList;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.GroupConstants;
+import com.liferay.portal.kernel.model.LayoutSetPrototype;
 import com.liferay.portal.kernel.model.MembershipRequestConstants;
 import com.liferay.portal.kernel.model.OrganizationConstants;
 import com.liferay.portal.kernel.model.User;
@@ -33,6 +35,7 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.GroupServiceUtil;
+import com.liferay.portal.kernel.service.LayoutSetPrototypeServiceUtil;
 import com.liferay.portal.kernel.service.MembershipRequestLocalServiceUtil;
 import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserGroupLocalServiceUtil;
@@ -40,6 +43,7 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.GroupPermissionUtil;
 import com.liferay.portal.kernel.service.permission.PortalPermissionUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -48,7 +52,10 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.service.persistence.constants.UserGroupFinderConstants;
 import com.liferay.portlet.usersadmin.search.GroupSearch;
 import com.liferay.site.admin.web.internal.constants.SiteAdminPortletKeys;
+import com.liferay.site.admin.web.internal.display.context.comparator.SiteInitializerNameComparator;
 import com.liferay.site.constants.SiteWebKeys;
+import com.liferay.site.initializer.GroupInitializer;
+import com.liferay.site.initializer.GroupInitializerRegistry;
 import com.liferay.site.util.GroupSearchProvider;
 
 import java.util.ArrayList;
@@ -61,6 +68,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Pavel Savinov
+ * @author Marco Leo
  */
 public class SiteAdminDisplayContext {
 
@@ -73,6 +81,10 @@ public class SiteAdminDisplayContext {
 		_request = request;
 		_liferayPortletRequest = liferayPortletRequest;
 		_liferayPortletResponse = liferayPortletResponse;
+
+		_groupInitializerRegistry =
+			(GroupInitializerRegistry)request.getAttribute(
+				SiteWebKeys.GROUP_INITIALIZER_REGISTRY);
 
 		_groupSearchProvider = (GroupSearchProvider)request.getAttribute(
 			SiteWebKeys.GROUP_SEARCH_PROVIDER);
@@ -137,21 +149,18 @@ public class SiteAdminDisplayContext {
 	}
 
 	public List<NavigationItem> getNavigationItems() {
-		List<NavigationItem> navigationItems = new ArrayList<>();
-
-		NavigationItem entriesNavigationItem = new NavigationItem();
-
-		entriesNavigationItem.setActive(true);
-
-		PortletURL mainURL = _liferayPortletResponse.createRenderURL();
-
-		entriesNavigationItem.setHref(mainURL.toString());
-
-		entriesNavigationItem.setLabel(LanguageUtil.get(_request, "sites"));
-
-		navigationItems.add(entriesNavigationItem);
-
-		return navigationItems;
+		return new NavigationItemList() {
+			{
+				add(
+					navigationItem -> {
+						navigationItem.setActive(true);
+						navigationItem.setHref(
+							_liferayPortletResponse.createRenderURL());
+						navigationItem.setLabel(
+							LanguageUtil.get(_request, "sites"));
+					});
+			}
+		};
 	}
 
 	public int getOrganizationsCount() throws PortalException {
@@ -212,6 +221,46 @@ public class SiteAdminDisplayContext {
 		searchURL.setParameter("displayStyle", getDisplayStyle());
 
 		return searchURL;
+	}
+
+	public List<SiteInitializerItemDisplayContext> getSiteInitializerItems()
+		throws PortalException {
+
+		List<SiteInitializerItemDisplayContext>
+			siteInitializerItemDisplayContexts = new ArrayList<>();
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		List<LayoutSetPrototype> layoutSetPrototypes =
+			LayoutSetPrototypeServiceUtil.search(
+				themeDisplay.getCompanyId(), Boolean.TRUE, null);
+
+		for (LayoutSetPrototype layoutSetPrototype : layoutSetPrototypes) {
+			siteInitializerItemDisplayContexts.add(
+				new SiteInitializerItemDisplayContext(
+					layoutSetPrototype, themeDisplay.getLocale()));
+		}
+
+		List<GroupInitializer> groupInitializers =
+			_groupInitializerRegistry.getGroupInitializers(
+				themeDisplay.getCompanyId());
+
+		for (GroupInitializer groupInitializer : groupInitializers) {
+			SiteInitializerItemDisplayContext
+				siteInitializerItemDisplayContext =
+					new SiteInitializerItemDisplayContext(
+						groupInitializer, themeDisplay.getLocale());
+
+			siteInitializerItemDisplayContexts.add(
+				siteInitializerItemDisplayContext);
+		}
+
+		siteInitializerItemDisplayContexts = ListUtil.sort(
+			siteInitializerItemDisplayContexts,
+			new SiteInitializerNameComparator(true));
+
+		return siteInitializerItemDisplayContexts;
 	}
 
 	public int getUserGroupsCount(Group group) {
@@ -314,6 +363,7 @@ public class SiteAdminDisplayContext {
 	private String _displayStyle;
 	private Group _group;
 	private long _groupId;
+	private final GroupInitializerRegistry _groupInitializerRegistry;
 	private final GroupSearchProvider _groupSearchProvider;
 	private String _keywords;
 	private final LiferayPortletRequest _liferayPortletRequest;

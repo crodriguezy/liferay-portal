@@ -49,13 +49,17 @@ renderResponse.setTitle((ddmDataProviderInstance == null) ? LanguageUtil.get(req
 	<aui:input name="type" type="hidden" value="<%= type %>" />
 	<aui:input name="languageId" type="hidden" value="<%= String.valueOf(themeDisplay.getLanguageId()) %>" />
 
-	<div class="container-fluid-1280">
+	<div class="container-fluid-1280 lfr-ddm-edit-data-provider">
 		<aui:fieldset-group markupView="lexicon">
 			<aui:fieldset>
-				<liferay-util:buffer var="requiredMark">
-					<span class="icon-asterisk text-warning">
-						<span class="hide-accessible"><liferay-ui:message key="required" /></span>
-					</span>
+				<liferay-util:buffer
+					var="requiredMark"
+				>
+					<span class="hide-accessible"><liferay-ui:message key="required" />&nbsp;</span>
+
+					<svg aria-hidden="true" class="lexicon-icon lexicon-icon-asterisk reference-mark">
+						<use xlink:href="<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg#asterisk" />
+					</svg>
 				</liferay-util:buffer>
 
 				<label class="required-warning">

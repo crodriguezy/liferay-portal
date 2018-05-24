@@ -17,9 +17,12 @@ package com.liferay.gradle.plugins.defaults.internal;
 import com.liferay.gradle.plugins.BaseDefaultsPlugin;
 import com.liferay.gradle.plugins.defaults.internal.util.GradlePluginsDefaultsUtil;
 import com.liferay.gradle.plugins.defaults.internal.util.GradleUtil;
+import com.liferay.gradle.plugins.node.NodeExtension;
 import com.liferay.gradle.plugins.node.NodePlugin;
 import com.liferay.gradle.plugins.node.tasks.NpmInstallTask;
 import com.liferay.gradle.plugins.node.tasks.PublishNodeModuleTask;
+import com.liferay.gradle.plugins.util.PortalTools;
+import com.liferay.gradle.util.Validator;
 
 import java.io.File;
 
@@ -28,8 +31,6 @@ import java.util.concurrent.Callable;
 import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.gradle.api.plugins.BasePlugin;
-import org.gradle.api.tasks.Delete;
 import org.gradle.api.tasks.TaskContainer;
 
 /**
@@ -41,8 +42,11 @@ public class NodeDefaultsPlugin extends BaseDefaultsPlugin<NodePlugin> {
 
 	@Override
 	protected void configureDefaults(Project project, NodePlugin nodePlugin) {
-		_configureTaskClean(project);
-		_configureTaskNpmInstall(project);
+		String portalVersion = PortalTools.getPortalVersion(project);
+
+		_configureNode(project, portalVersion);
+		_configureTaskNpmInstall(project, portalVersion);
+
 		_configureTasksPublishNodeModule(project);
 	}
 
@@ -54,23 +58,28 @@ public class NodeDefaultsPlugin extends BaseDefaultsPlugin<NodePlugin> {
 	private NodeDefaultsPlugin() {
 	}
 
-	private void _configureTaskClean(Project project) {
-		boolean cleanNodeModules = Boolean.getBoolean("clean.node.modules");
+	private void _configureNode(Project project, String portalVersion) {
+		if (PortalTools.PORTAL_VERSION_7_0_X.equals(portalVersion)) {
+			NodeExtension nodeExtension = GradleUtil.getExtension(
+				project, NodeExtension.class);
 
-		if (cleanNodeModules) {
-			Delete delete = (Delete)GradleUtil.getTask(
-				project, BasePlugin.CLEAN_TASK_NAME);
-
-			delete.delete("node_modules");
+			nodeExtension.setGlobal(false);
+			nodeExtension.setNodeVersion("6.6.0");
 		}
 	}
 
-	private void _configureTaskNpmInstall(Project project) {
+	private void _configureTaskNpmInstall(
+		Project project, String portalVersion) {
+
 		NpmInstallTask npmInstallTask = (NpmInstallTask)GradleUtil.getTask(
 			project, NodePlugin.NPM_INSTALL_TASK_NAME);
 
 		npmInstallTask.setNodeModulesDigestFile(
 			new File(npmInstallTask.getNodeModulesDir(), ".digest"));
+
+		if (Validator.isNull(portalVersion)) {
+			npmInstallTask.setUseNpmCI(Boolean.TRUE);
+		}
 	}
 
 	private void _configureTaskPublishNodeModule(

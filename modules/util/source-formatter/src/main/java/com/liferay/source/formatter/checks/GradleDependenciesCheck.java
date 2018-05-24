@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.tools.ToolsUtil;
+import com.liferay.source.formatter.checks.util.GradleSourceUtil;
 import com.liferay.source.formatter.checks.util.SourceUtil;
 
 import java.io.File;
@@ -114,6 +115,14 @@ public class GradleDependenciesCheck extends BaseFileCheck {
 			uniqueDependencies.add(dependency);
 		}
 
+		boolean checkScope = false;
+
+		if (isModulesApp(absolutePath, false) && _hasBNDFile(absolutePath) &&
+			!GradleSourceUtil.isSpringBootExecutable(content)) {
+
+			checkScope = true;
+		}
+
 		StringBundler sb = new StringBundler();
 
 		String previousConfiguration = null;
@@ -121,14 +130,14 @@ public class GradleDependenciesCheck extends BaseFileCheck {
 		for (String dependency : uniqueDependencies) {
 			String configuration = _getConfiguration(dependency);
 
-			if (isModulesApp(absolutePath, false) &&
-				_hasBNDFile(absolutePath)) {
+			if (checkScope) {
+				if (!_isTestUtilModule(absolutePath) &&
+					configuration.equals("compile")) {
 
-				if (configuration.equals("compile")) {
 					dependency = StringUtil.replaceFirst(
-						dependency, "compile", "provided");
+						dependency, "compile", "compileOnly");
 				}
-				else if (configuration.equals("provided")) {
+				else if (configuration.equals("compileOnly")) {
 					dependency = StringUtil.removeSubstrings(
 						dependency, "transitive: false, ", "transitive: true,");
 				}
@@ -204,6 +213,20 @@ public class GradleDependenciesCheck extends BaseFileCheck {
 		File file = new File(absolutePath.substring(0, pos + 1) + "bnd.bnd");
 
 		return file.exists();
+	}
+
+	private boolean _isTestUtilModule(String absolutePath) {
+		int x = absolutePath.lastIndexOf(StringPool.SLASH);
+
+		int y = absolutePath.lastIndexOf(StringPool.SLASH, x - 1);
+
+		String moduleName = absolutePath.substring(y + 1, x);
+
+		if (!moduleName.endsWith("-test-util")) {
+			return false;
+		}
+
+		return true;
 	}
 
 	private final Pattern _dependenciesPattern = Pattern.compile(

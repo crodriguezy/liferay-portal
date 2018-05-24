@@ -14,12 +14,13 @@
 
 package com.liferay.exportimport.internal.content.processor;
 
-import com.liferay.document.library.kernel.exception.NoSuchFileEntryException;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.exportimport.content.processor.ExportImportContentProcessor;
+import com.liferay.exportimport.kernel.exception.ExportImportContentProcessorException;
+import com.liferay.exportimport.kernel.exception.ExportImportContentValidationException;
 import com.liferay.exportimport.kernel.lar.ExportImportPathUtil;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
@@ -59,7 +60,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Gergely Mathe
  */
 @Component(
-	immediate = true, property = {"content.processor.type=DLReferences"},
+	immediate = true, property = "content.processor.type=DLReferences",
 	service = ExportImportContentProcessor.class
 )
 public class DLReferencesExportImportContentProcessor
@@ -103,7 +104,7 @@ public class DLReferencesExportImportContentProcessor
 		}
 
 		int endPos = StringUtil.indexOfAny(
-			sb.toString(), _DL_REFERENCE_LEGACY_STOP_CHARS, beginPos + 2);
+			sb.toString(), _DL_REFERENCE_LEGACY_STOP_STRINGS, beginPos + 2);
 
 		if (endPos == -1) {
 			return;
@@ -120,14 +121,14 @@ public class DLReferencesExportImportContentProcessor
 		long groupId, String content, int beginPos, int endPos) {
 
 		boolean legacyURL = true;
-		char[] stopChars = _DL_REFERENCE_LEGACY_STOP_CHARS;
+		String[] stopStrings = _DL_REFERENCE_LEGACY_STOP_STRINGS;
 
 		if (content.startsWith("/documents/", beginPos)) {
 			legacyURL = false;
-			stopChars = _DL_REFERENCE_STOP_CHARS;
+			stopStrings = _DL_REFERENCE_STOP_STRINGS;
 		}
 
-		endPos = StringUtil.indexOfAny(content, stopChars, beginPos, endPos);
+		endPos = StringUtil.indexOfAny(content, stopStrings, beginPos, endPos);
 
 		if (endPos == -1) {
 			return null;
@@ -370,19 +371,23 @@ public class DLReferencesExportImportContentProcessor
 				deleteTimestampParameters(sb, deleteTimestampParametersOffset);
 			}
 			catch (Exception e) {
+				StringBundler exceptionSB = new StringBundler(6);
+
+				exceptionSB.append("Unable to process file entry ");
+				exceptionSB.append(fileEntry.getFileEntryId());
+				exceptionSB.append(" for staged model ");
+				exceptionSB.append(stagedModel.getModelClassName());
+				exceptionSB.append(" with primary key ");
+				exceptionSB.append(stagedModel.getPrimaryKeyObj());
+
+				ExportImportContentProcessorException eicpe =
+					new ExportImportContentProcessorException(
+						exceptionSB.toString(), e);
+
 				if (_log.isDebugEnabled()) {
-					_log.debug(e, e);
+					_log.debug(exceptionSB.toString(), eicpe);
 				}
 				else if (_log.isWarnEnabled()) {
-					StringBundler exceptionSB = new StringBundler(6);
-
-					exceptionSB.append("Unable to process file entry ");
-					exceptionSB.append(fileEntry.getFileEntryId());
-					exceptionSB.append(" for staged model ");
-					exceptionSB.append(stagedModel.getModelClassName());
-					exceptionSB.append(" with primary key ");
-					exceptionSB.append(stagedModel.getPrimaryKeyObj());
-
 					_log.warn(exceptionSB.toString());
 				}
 			}
@@ -437,20 +442,24 @@ public class DLReferencesExportImportContentProcessor
 					classPK);
 			}
 			catch (Exception e) {
+				StringBundler exceptionSB = new StringBundler(6);
+
+				exceptionSB.append("Unable to process file entry ");
+				exceptionSB.append(classPK);
+				exceptionSB.append(" for ");
+				exceptionSB.append(stagedModel.getModelClassName());
+				exceptionSB.append(" with primary key ");
+				exceptionSB.append(stagedModel.getPrimaryKeyObj());
+
+				ExportImportContentProcessorException eicpe =
+					new ExportImportContentProcessorException(
+						exceptionSB.toString(), e);
+
 				if (_log.isDebugEnabled()) {
-					_log.debug(e, e);
+					_log.debug(exceptionSB.toString(), eicpe);
 				}
 				else if (_log.isWarnEnabled()) {
-					StringBundler sb = new StringBundler(6);
-
-					sb.append("Unable to process file entry ");
-					sb.append(classPK);
-					sb.append(" for ");
-					sb.append(stagedModel.getModelClassName());
-					sb.append(" with primary key ");
-					sb.append(stagedModel.getPrimaryKeyObj());
-
-					_log.warn(sb.toString());
+					_log.warn(exceptionSB.toString());
 				}
 			}
 
@@ -578,14 +587,17 @@ public class DLReferencesExportImportContentProcessor
 				FileEntry fileEntry = getFileEntry(dlReferenceParameters);
 
 				if (fileEntry == null) {
-					StringBundler sb = new StringBundler(4);
+					ExportImportContentValidationException eicve =
+						new ExportImportContentValidationException(
+							DLReferencesExportImportContentProcessor.class.
+								getName());
 
-					sb.append("Validation failed for a referenced file entry ");
-					sb.append("because a file entry could not be found with ");
-					sb.append("the following parameters: ");
-					sb.append(dlReferenceParameters);
+					eicve.setDlReferenceParameters(dlReferenceParameters);
+					eicve.setType(
+						ExportImportContentValidationException.
+							FILE_ENTRY_NOT_FOUND);
 
-					throw new NoSuchFileEntryException(sb.toString());
+					throw eicve;
 				}
 
 				endPos = beginPos - 1;
@@ -593,16 +605,20 @@ public class DLReferencesExportImportContentProcessor
 		}
 	}
 
-	private static final char[] _DL_REFERENCE_LEGACY_STOP_CHARS = {
-		CharPool.APOSTROPHE, CharPool.CLOSE_BRACKET, CharPool.CLOSE_CURLY_BRACE,
-		CharPool.CLOSE_PARENTHESIS, CharPool.GREATER_THAN, CharPool.LESS_THAN,
-		CharPool.PIPE, CharPool.QUOTE, CharPool.SPACE
+	private static final String[] _DL_REFERENCE_LEGACY_STOP_STRINGS = {
+		StringPool.APOSTROPHE, StringPool.APOSTROPHE_ENCODED,
+		StringPool.CLOSE_BRACKET, StringPool.CLOSE_CURLY_BRACE,
+		StringPool.CLOSE_PARENTHESIS, StringPool.GREATER_THAN,
+		StringPool.LESS_THAN, StringPool.PIPE, StringPool.QUOTE,
+		StringPool.QUOTE_ENCODED, StringPool.SPACE
 	};
 
-	private static final char[] _DL_REFERENCE_STOP_CHARS = {
-		CharPool.APOSTROPHE, CharPool.CLOSE_BRACKET, CharPool.CLOSE_CURLY_BRACE,
-		CharPool.CLOSE_PARENTHESIS, CharPool.GREATER_THAN, CharPool.LESS_THAN,
-		CharPool.PIPE, CharPool.QUESTION, CharPool.QUOTE, CharPool.SPACE
+	private static final String[] _DL_REFERENCE_STOP_STRINGS = {
+		StringPool.APOSTROPHE, StringPool.APOSTROPHE_ENCODED,
+		StringPool.CLOSE_BRACKET, StringPool.CLOSE_CURLY_BRACE,
+		StringPool.CLOSE_PARENTHESIS, StringPool.GREATER_THAN,
+		StringPool.LESS_THAN, StringPool.PIPE, StringPool.QUESTION,
+		StringPool.QUOTE, StringPool.QUOTE_ENCODED, StringPool.SPACE
 	};
 
 	private static final Log _log = LogFactoryUtil.getLog(

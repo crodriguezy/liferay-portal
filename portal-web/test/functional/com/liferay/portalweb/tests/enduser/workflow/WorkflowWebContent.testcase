@@ -39,7 +39,7 @@
 
 	<command name="ConfigureFolderWorkflow" priority="4">
 		<execute macro="Workflow#configureWorkflowViaFolderInfo">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 		</execute>
 
 		<execute macro="WebContentFolder#addCP">
@@ -49,7 +49,7 @@
 
 		<execute macro="WebContentFolder#configureWorkflowCP">
 			<var name="folderName" value="WC Folder Name" />
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 			<var name="workflowRestriction" value="Default Workflow" />
 		</execute>
 
@@ -61,7 +61,7 @@
 		<execute macro="WebContentFolder#configureWorkflowCP">
 			<var name="folderName" value="WC Folder Name" />
 			<var name="structureName" value="Basic Web Content" />
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 			<var name="workflowRestriction" value="Specific Restrictions" />
 		</execute>
 
@@ -76,7 +76,9 @@
 		<property name="portal.acceptance" value="pending" />
 		<property name="testray.component.names" value="Training" />
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="WC Structure Description" />
@@ -101,7 +103,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="WC Template Description" />
@@ -123,7 +127,7 @@
 		</execute>
 
 		<execute macro="Workflow#configureWorkflowViaFolderInfo">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoPortlet">

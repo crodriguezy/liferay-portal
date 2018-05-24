@@ -183,7 +183,9 @@
 			<var name="portlet" value="Wiki" />
 		</execute>
 
-		<execute macro="WikiPortlet#gotoConfiguration" />
+		<execute macro="LexiconEntry#gotoHeaderMenuItem">
+			<var name="menuItem" value="Configuration" />
+		</execute>
 
 		<execute macro="WikiPortlet#viewConfigurationTabs">
 			<var name="isNotPresent" value="SETUP_DISPLAY_SETTINGS" />
@@ -623,12 +625,18 @@
 		</execute>
 
 		<execute macro="WikiPage#editFrontPagePG">
-			<var name="wikiPageContentEdit"><![CDATA[<script>alert("xss")</script>]]></var>
+			<var name="wikiPageContentEdit"><![CDATA[<script>alert(123);</script>]]></var>
 		</execute>
 
 		<execute function="AssertClick" locator1="Link#EDIT" value1="Edit" />
 
 		<execute function="AssertAlertNotPresent" />
+
+		<var name="actualScript"><![CDATA[<script>alert(123);</script>]]></var>
+		<var name="escapedScript"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
+
+		<execute function="AssertHTMLSourceTextNotPresent" value1="${actualScript}" />
+		<execute function="AssertHTMLSourceTextPresent" value1="${escapedScript}" />
 	</command>
 
 	<command name="ViewWikiDraftPagesViaBreadcrumb" priority="4">

@@ -76,7 +76,7 @@
 	<sql id="com.liferay.message.boards.service.persistence.MBCategoryFinder.findT_ByG_C">
 		<![CDATA[
 			SELECT
-				DISTINCT MBThread.threadId AS modelId, MBThread.modifiedDate AS modifiedDate, MBThread.priority AS priority, '' AS name, 1 AS modelCategory
+				DISTINCT MBThread.threadId AS modelId, MBThread.modifiedDate AS modifiedDate, MBThread.priority AS priority, MBThread.title AS name, 1 AS modelCategory
 			FROM
 				MBThread
 			WHERE
@@ -235,7 +235,8 @@
 				MBThread
 			WHERE
 				(MBThread.groupId = ?) AND
-				(MBThread.categoryId = ?)
+				(MBThread.categoryId = ?) AND
+				([$STATUS$] [$OWNER_USER_ID_AND_OR_CONNECTOR$] [$OWNER_USER_ID$])
 		]]>
 	</sql>
 	<sql id="com.liferay.message.boards.service.persistence.MBThreadFinder.countByG_U_C">
@@ -375,7 +376,8 @@
 				MBThread
 			WHERE
 				(MBThread.groupId = ?) AND
-				(MBThread.categoryId = ?)
+				(MBThread.categoryId = ?) AND
+				([$STATUS$] [$OWNER_USER_ID_AND_OR_CONNECTOR$] [$OWNER_USER_ID$])
 			ORDER BY
 				MBThread.priority DESC,
 				MBThread.lastPostDate DESC

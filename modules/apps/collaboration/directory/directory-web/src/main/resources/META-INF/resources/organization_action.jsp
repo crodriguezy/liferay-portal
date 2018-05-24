@@ -17,8 +17,6 @@
 <%@ include file="/init.jsp" %>
 
 <%
-OrganizationSearch searchContainer = (OrganizationSearch)request.getAttribute("liferay-ui:search:searchContainer");
-
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 
 Organization organization = (Organization)row.getObject();
@@ -26,7 +24,13 @@ Organization organization = (Organization)row.getObject();
 long organizationId = organization.getOrganizationId();
 %>
 
-<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+<liferay-ui:icon-menu
+	direction="left-side"
+	icon="<%= StringPool.BLANK %>"
+	markupView="lexicon"
+	message="<%= StringPool.BLANK %>"
+	showWhenSingleIcon="<%= true %>"
+>
 	<portlet:renderURL var="viewUsersURL">
 		<portlet:param name="mvcRenderCommandName" value="/directory/view" />
 		<portlet:param name="tabs1" value="users" />

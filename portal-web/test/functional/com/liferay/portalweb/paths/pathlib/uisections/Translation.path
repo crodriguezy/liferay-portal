@@ -45,7 +45,7 @@
 </tr>
 <tr>
 	<td>CURRENT_LOCALE</td>
-	<td>//span[contains(.,'${key_localizedLanguage}') and contains(@class,'translation')] | //div[contains(@class,'translation') and //li[contains(@class,'active')]]</td>
+	<td>//div[contains(@class,'localized')]//button[contains(@class,'localized')][*[normalize-space(text())='${key_locale}']]</td>
 	<td></td>
 </tr>
 <tr>
@@ -60,7 +60,7 @@
 </tr>
 <tr>
 	<td>LOCALIZATION_NAME</td>
-	<td>//div[contains(@class,'menu-open')]//a[@data-value='${key_localizationName}']</td>
+	<td>//div[contains(@class,'menu-open')]//a[@data-value='${key_locale}']</td>
 	<td></td>
 </tr>
 <tr>

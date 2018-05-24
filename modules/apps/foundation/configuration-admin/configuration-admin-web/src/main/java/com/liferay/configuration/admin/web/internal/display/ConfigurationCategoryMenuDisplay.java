@@ -14,12 +14,12 @@
 
 package com.liferay.configuration.admin.web.internal.display;
 
-import com.liferay.configuration.admin.web.internal.model.ConfigurationModel;
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -31,7 +31,7 @@ public class ConfigurationCategoryMenuDisplay {
 
 	public ConfigurationCategoryMenuDisplay(
 		ConfigurationCategoryDisplay configurationCategoryDisplay,
-		Set<ConfigurationModel> configurationModels) {
+		Set<ConfigurationEntry> configurationEntries) {
 
 		_configurationCategoryDisplay = configurationCategoryDisplay;
 
@@ -41,8 +41,8 @@ public class ConfigurationCategoryMenuDisplay {
 			scopeKey -> _configurationScopeDisplays.put(
 				scopeKey, new ConfigurationScopeDisplay(scopeKey)));
 
-		for (ConfigurationModel configurationModel : configurationModels) {
-			_addConfigurationModel(configurationModel);
+		for (ConfigurationEntry configurationEntry : configurationEntries) {
+			_addConfigurationEntry(configurationEntry);
 		}
 	}
 
@@ -56,19 +56,46 @@ public class ConfigurationCategoryMenuDisplay {
 		return _configurationScopeDisplays.values();
 	}
 
-	private void _addConfigurationModel(ConfigurationModel configurationModel) {
+	public ConfigurationEntry getFirstConfigurationEntry() {
+		for (ConfigurationScopeDisplay configurationScopeDisplay :
+				_configurationScopeDisplays.values()) {
+
+			List<ConfigurationEntry> configurationEntries =
+				configurationScopeDisplay.getConfigurationEntries();
+
+			if (!configurationEntries.isEmpty()) {
+				return configurationEntries.get(0);
+			}
+		}
+
+		return null;
+	}
+
+	public boolean isEmpty() {
+		for (ConfigurationScopeDisplay configurationScopeDisplay :
+				_configurationScopeDisplays.values()) {
+
+			if (!configurationScopeDisplay.isEmpty()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private void _addConfigurationEntry(ConfigurationEntry configurationEntry) {
 		ConfigurationScopeDisplay configurationScopeDisplay =
-			_configurationScopeDisplays.get(configurationModel.getScope());
+			_configurationScopeDisplays.get(configurationEntry.getScope());
 
 		if (configurationScopeDisplay == null) {
 			configurationScopeDisplay = new ConfigurationScopeDisplay(
-				configurationModel.getScope());
+				configurationEntry.getScope());
 
 			_configurationScopeDisplays.put(
-				configurationModel.getScope(), configurationScopeDisplay);
+				configurationEntry.getScope(), configurationScopeDisplay);
 		}
 
-		configurationScopeDisplay.add(configurationModel);
+		configurationScopeDisplay.add(configurationEntry);
 	}
 
 	private static final String[] _UI_ORDERED_SCOPES = {

@@ -13,12 +13,13 @@
 {template .render}
 	{@param label: string}
 	{@param name: string}
+	{@param pathThemeImages: string}
 	{@param readOnly: bool}
-	{@param required: bool}
 	{@param showAsSwitcher: bool}
 	{@param showLabel: bool}
 	{@param value: ?}
 	{@param visible: bool}
+	{@param? required: bool}
 	{@param? tip: string}
 
 	<div class="form-group{$visible ? '' : ' hide'} liferay-ddm-form-field-checkbox" data-fieldname="{$name}">
@@ -38,20 +39,24 @@
 				</span>
 				<span class="toggle-switch-text toggle-switch-text-right">
 					{if $showLabel}
-						{$label}
+						{$label}{sp}
 					{/if}
 
 					{if $required}
-						<span class="icon-asterisk text-warning"></span>
+						<svg aria-hidden="true" class="lexicon-icon lexicon-icon-asterisk reference-mark">
+							<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#asterisk" />
+						</svg>
 					{/if}
 				</span>
 			</label>
 
-			{if $tip}
-				<span class="form-text">{$tip}</span>
+			{if $showLabel}
+				{if $tip}
+					<span class="form-text">{$tip}</span>
+				{/if}
 			{/if}
 		{else}
-			<div class="custom-control custom-checkbox">
+			<div class="custom-checkbox custom-control">
 				{if $showLabel}
 					<label for="{$name}">
 				{/if}
@@ -68,14 +73,16 @@
 				{if $showLabel}
 					<span class="custom-control-label">
 						<span class="custom-control-label-text">
-							{$label}
+							{$label}{sp}
 						</span>
 					</span>
 				{/if}
 
 				{if $showLabel}
 						{if $required}
-							<span class="icon-asterisk text-warning"></span>
+							<svg aria-hidden="true" class="lexicon-icon lexicon-icon-asterisk reference-mark">
+								<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#asterisk" />
+							</svg>
 						{/if}
 					</label>
 				{/if}
@@ -87,5 +94,27 @@
 				{/if}
 			{/if}
 		{/if}
+
+		{if not $value}
+			{call .hidden_input}
+				{param name: $name /}
+				{param value: $value /}
+			{/call}
+		{/if}
 	</div>
+
+{/template}
+
+/**
+ * Prints hidden input.
+ */
+{template .hidden_input}
+	{@param name: string}
+	{@param value: bool}
+
+	<input id="{$name}"
+		name="{$name}"
+		type="hidden"
+		value="{$value ? 'true' : 'false'}"
+	/>
 {/template}

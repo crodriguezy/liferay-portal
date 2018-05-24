@@ -154,11 +154,7 @@ public class DefaultPortalLDAP implements PortalLDAP {
 		}
 		catch (Exception e) {
 			if (_log.isWarnEnabled()) {
-				_log.warn("Unable to bind to the LDAP server");
-			}
-
-			if (_log.isDebugEnabled()) {
-				_log.debug(e, e);
+				_log.warn("Unable to bind to the LDAP server", e);
 			}
 		}
 
@@ -324,11 +320,11 @@ public class DefaultPortalLDAP implements PortalLDAP {
 			_ldapServerConfigurationProvider.getConfiguration(
 				companyId, ldapServerId);
 
-		String groupsDN = ldapServerConfiguration.groupsDN();
+		String baseDN = ldapServerConfiguration.baseDN();
 		String groupSearchFilter = ldapServerConfiguration.groupSearchFilter();
 
 		return getGroups(
-			companyId, ldapContext, cookie, maxResults, groupsDN,
+			companyId, ldapContext, cookie, maxResults, baseDN,
 			groupSearchFilter, searchResults);
 	}
 
@@ -343,11 +339,11 @@ public class DefaultPortalLDAP implements PortalLDAP {
 			_ldapServerConfigurationProvider.getConfiguration(
 				companyId, ldapServerId);
 
-		String groupsDN = ldapServerConfiguration.groupsDN();
+		String baseDN = ldapServerConfiguration.baseDN();
 		String groupSearchFilter = ldapServerConfiguration.groupSearchFilter();
 
 		return getGroups(
-			companyId, ldapContext, cookie, maxResults, groupsDN,
+			companyId, ldapContext, cookie, maxResults, baseDN,
 			groupSearchFilter, attributeIds, searchResults);
 	}
 

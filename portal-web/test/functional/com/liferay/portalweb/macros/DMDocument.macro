@@ -4,7 +4,7 @@
 
 	<command name="addCategories">
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Categorization" />
+			<var name="panel" value="Categorization" />
 		</execute>
 
 		<execute macro="AssetCategorization#addMultipleCategories">
@@ -138,7 +138,7 @@
 			<isset var="tagNameList" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Categorization" />
+					<var name="panel" value="Categorization" />
 				</execute>
 
 				<for list="${tagNameList}" param="tagName">
@@ -471,7 +471,7 @@
 				<var name="key_categoryName" value="${categoryName}" />
 
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Categorization" />
+					<var name="panel" value="Categorization" />
 				</execute>
 
 				<execute macro="AssetCategorization#addCategory">
@@ -495,7 +495,7 @@
 			<isset var="tagNameList" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Categorization" />
+					<var name="panel" value="Categorization" />
 				</execute>
 
 				<for list="${tagNameList}" param="tagName">
@@ -541,6 +541,25 @@
 		</execute>
 
 		<execute function="AssertClick" locator1="Button#PUBLISH" value1="Publish" />
+
+		<execute function="SelectFrame" locator1="relative=top" />
+	</command>
+
+	<command name="addPGViaAPWithValidationPosition">
+		<execute macro="AssetPublisherPortlet#addAsset">
+			<var name="assetType" value="Basic Document" />
+		</execute>
+
+		<execute macro="DMDocument#editDocument">
+			<var name="dmDocumentDescription" value="${dmDocumentDescription}" />
+			<var name="dmDocumentFile" value="${dmDocumentFile}" />
+			<var name="dmDocumentTitle" value="${dmDocumentTitle}" />
+		</execute>
+
+		<execute function="AssertElementPresent" locator1="Button#CANCEL_GIVEN_POSITION" />
+		<execute function="AssertElementPresent" locator1="Button#PUBLISH_GIVEN_POSITION" />
+
+		<execute macro="Button#clickPublish" />
 
 		<execute function="SelectFrame" locator1="relative=top" />
 	</command>
@@ -634,7 +653,7 @@
 
 	<command name="addRelatedAssetPG">
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Related Assets" />
+			<var name="panel" value="Related Assets" />
 		</execute>
 
 		<var name="key_assetType" value="${assetType}" />
@@ -670,7 +689,7 @@
 		<var name="key_dmDocumentTitle" value="${dmDocumentTitle}" />
 		<var name="key_siteName" value="${siteName}" />
 
-		<execute function="Type" locator1="Search#SEARCH_FIELD" value1="${siteName}" />
+		<execute function="Type" locator1="Search#TEMPLATE_SEARCH_BAR" value1="${siteName}" />
 
 		<execute function="Click" locator1="Search#SEARCH_BUTTON" />
 
@@ -733,10 +752,8 @@
 			</else>
 		</if>
 
-		<execute function="Click" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Cancel Checkout">
-			<var name="key_menuItem" value="Cancel Checkout" />
+		<execute macro="LexiconEntry#gotoHeaderMenuItem">
+			<var name="menuItem" value="Cancel Checkout" />
 		</execute>
 
 		<execute macro="Alert#viewSuccessMessage" />
@@ -749,7 +766,7 @@
 
 		<execute function="AssertTextEquals" locator1="Message#CHECKOUT_SUCCESS" value1="You now have a lock on this document. No one else can edit this document until you unlock it. This lock will automatically expire in 1 day." />
 
-		<execute function="AssertClick#assertTextClick" locator1="Button#CANCEL_CHECKOUT" value1="Cancel Checkout" />
+		<execute function="AssertClick" locator1="Button#CANCEL_CHECKOUT" value1="Cancel Checkout" />
 
 		<execute macro="Alert#viewSuccessMessage" />
 	</command>
@@ -784,10 +801,8 @@
 			</else>
 		</if>
 
-		<execute function="Click" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Checkin">
-			<var name="key_menuItem" value="Checkin" />
+		<execute macro="LexiconEntry#gotoHeaderMenuItem">
+			<var name="menuItem" value="Checkin" />
 		</execute>
 
 		<if>
@@ -827,7 +842,7 @@
 
 		<execute function="AssertTextEquals" locator1="Message#CHECKOUT_SUCCESS" value1="You now have a lock on this document. No one else can edit this document until you unlock it. This lock will automatically expire in 1 day." />
 
-		<execute function="AssertClick#assertTextClick" locator1="Button#CHECKIN" value1="Checkin" />
+		<execute function="AssertClick" locator1="Button#CHECKIN" value1="Checkin" />
 
 		<if>
 			<condition function="IsElementPresent" locator1="Radio#MAJOR_VERSION" />
@@ -925,7 +940,7 @@
 
 		<execute function="AssertClick" locator1="DocumentsAndMedia#DESCRIPTIVE_LIST_DOCUMENT_TITLE" value1="${dmDocumentTitle}" />
 
-		<execute function="AssertClick#assertTextClick" locator1="Button#CHECKOUT" value1="Checkout" />
+		<execute function="AssertClick" locator1="Button#CHECKOUT" value1="Checkout" />
 
 		<execute macro="Alert#viewSuccessMessage" />
 
@@ -978,20 +993,20 @@
 			<var name="dmDocumentTitle" value="${dmDocumentTitle}" />
 		</execute>
 
-		<execute function="AssertClick#assertTextClick" locator1="Button#MOVE_TO_THE_RECYCLE_BIN" value1="Move to the Recycle Bin" />
+		<execute function="AssertClick" locator1="Button#MOVE_TO_THE_RECYCLE_BIN" value1="Move to the Recycle Bin" />
 
 		<execute function="AssertElementPresent" locator1="Message#SUCCESS" />
 	</command>
 
 	<command name="deletePGViaMG">
-		<var name="key_mgDocumentTitle" value="${mgDocumentTitle}" />
-
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
-
-		<execute macro="PortletEntry#clickMoveToRecycleBin" />
+		<execute macro="LexiconEntry#gotoEllipsisMenuItem">
+			<var name="menuItem" value="Move to the Recycle Bin" />
+		</execute>
 
 		<execute function="AssertElementPresent" locator1="Message#SUCCESS" />
-		<execute function="AssertElementNotPresent" locator1="MediaGallery#IMAGE_TITLE" />
+		<execute function="AssertElementNotPresent" locator1="MediaGallery#IMAGE_TITLE">
+			<var name="key_mgDocumentTitle" value="${mgDocumentTitle}" />
+		</execute>
 	</command>
 
 	<command name="deleteViaActionsPG">
@@ -1046,7 +1061,7 @@
 
 		<execute function="AssertClick" locator1="DocumentsAndMedia#DESCRIPTIVE_LIST_DOCUMENT_TITLE" value1="${dmDocumentTitle}" />
 
-		<execute function="AssertClick#assertTextClick" locator1="Button#DOWNLOAD" value1="Download" />
+		<execute function="AssertClick" locator1="Button#DOWNLOAD" value1="Download" />
 	</command>
 
 	<command name="editCmd">
@@ -1093,7 +1108,7 @@
 				<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_2" value1="You cannot modify this document because it was locked by ${userName}" />
 			</then>
 			<else>
-				<execute function="AssertClick#assertTextClick" locator1="Button#EDIT" value1="Edit" />
+				<execute function="AssertClick" locator1="Button#EDIT" value1="Edit" />
 			</else>
 		</if>
 
@@ -1111,7 +1126,7 @@
 				<contains string="${dmDocumentTitleEdit}" substring="{dmDocumentTitleEdit}" />
 			</not>
 			<then>
-				<execute function="Type" locator1="TextInput#TITLE" value1="${dmDocumentTitleEdit}"  />
+				<execute function="Type" locator1="TextInput#TITLE" value1="${dmDocumentTitleEdit}" />
 			</then>
 		</if>
 
@@ -1132,7 +1147,7 @@
 			</not>
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Categorization" />
+					<var name="panel" value="Categorization" />
 				</execute>
 
 				<execute function="Type" locator1="AssetCategorization#TAGS_FIELD" value1="${dmDocumentTagName}" />
@@ -1238,7 +1253,7 @@
 				<contains string="${dmDocumentTitleEdit}" substring="{dmDocumentTitleEdit}" />
 			</not>
 			<then>
-				<execute function="Type" locator1="TextInput#TITLE" value1="${dmDocumentTitleEdit}"  />
+				<execute function="Type" locator1="TextInput#TITLE" value1="${dmDocumentTitleEdit}" />
 			</then>
 		</if>
 
@@ -1248,12 +1263,8 @@
 	</command>
 
 	<command name="editPGViaMG">
-		<var name="key_mgDocumentTitle" value="${mgDocumentTitle}" />
-
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
-
-		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Edit">
-			<var name="key_menuItem" value="Edit" />
+		<execute macro="LexiconEntry#gotoEllipsisMenuItem">
+			<var name="menuItem" value="Edit" />
 		</execute>
 
 		<execute macro="PortletEntry#inputTitle">
@@ -1266,9 +1277,9 @@
 
 		<execute macro="PortletEntry#publish" />
 
-		<var name="key_mgDocumentTitle" value="${mgDocumentTitleEdit}" />
-
-		<execute function="AssertTextEquals" locator1="MediaGallery#IMAGE_TITLE" value1="${mgDocumentTitleEdit}" />
+		<execute function="AssertTextEquals" locator1="MediaGallery#IMAGE_TITLE" value1="${mgDocumentTitleEdit}">
+			<var name="key_mgDocumentTitle" value="${mgDocumentTitleEdit}" />
+		</execute>
 	</command>
 
 	<command name="editSaveAndCheckinPG">
@@ -1691,7 +1702,7 @@
 
 		<execute function="Click" locator1="DocumentsAndMedia#ICON_DOCUMENT_THUMBNAIL" />
 
-		<execute function="AssertClick#assertTextClick" locator1="Button#EDIT" value1="Edit" />
+		<execute function="AssertClick" locator1="Button#EDIT" value1="Edit" />
 
 		<execute macro="PortletEntry#publish" />
 	</command>
@@ -1885,6 +1896,7 @@
 			<var name="dmDocumentDescription" value="${dmDocumentDescription}" />
 			<var name="dmDocumentFileType" value="${dmDocumentFileType}" />
 			<var name="dmDocumentTitle" value="${dmDocumentTitle}" />
+			<var name="dmDocumentType" value="${dmDocumentType}" />
 			<var name="tagName" value="${tagName}" />
 			<var name="tagNameList" value="${tagNameList}" />
 		</execute>
@@ -1926,7 +1938,7 @@
 
 	<command name="viewCategories">
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Categorization" />
+			<var name="panel" value="Categorization" />
 		</execute>
 
 		<for list="${categoryNameList}" param="categoryName">
@@ -1975,7 +1987,7 @@
 
 		<execute function="AssertElementPresent" locator1="Message#SUCCESS" />
 
-		<execute function="AssertClick#assertTextClick" locator1="Button#EDIT" value1="Edit" />
+		<execute function="AssertClick" locator1="Button#EDIT" value1="Edit" />
 
 		<execute function="AssertElementPresent" locator1="Message#SUCCESS" />
 	</command>
@@ -2120,7 +2132,7 @@
 		<execute function="Click" locator1="DocumentsAndMediaDocument#DOCUMENT_DETAILS_DROPDOWN" />
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Automatically Extracted Metadata" />
+			<var name="panel" value="Automatically Extracted Metadata" />
 		</execute>
 	</command>
 
@@ -2417,10 +2429,18 @@
 
 	<command name="viewPG">
 		<var name="key_dmDocumentTitle" value="${dmDocumentTitle}" />
+		<var name="key_dmDocumentType" value="${dmDocumentType}" />
 
 		<execute macro="Portlet#changeDisplayStyle">
 			<var name="displayStyle" value="descriptive" />
 		</execute>
+
+		<if>
+			<isset var="dmDocumentType" />
+			<then>
+				<execute function="AssertTextEquals" locator1="DocumentsAndMedia#DESCRIPTIVE_LIST_DOCUMENT_TYPE" value1="${dmDocumentType}" />
+			</then>
+		</if>
 
 		<execute function="AssertClick" locator1="DocumentsAndMedia#DESCRIPTIVE_LIST_DOCUMENT_TITLE" value1="${dmDocumentTitle}" />
 
@@ -2681,8 +2701,8 @@
 		<execute function="Check" locator1="DocumentsAndMedia#DESCRIPTIVE_LIST_DOCUMENT_CHECKBOX" />
 
 		<execute function="AssertVisible" locator1="Toolbar#MANAGEMENT_BAR_LOCK_ICON_BUTTON" />
-		<execute function="AssertVisible" locator1="Toolbar#MANAGEMENT_BAR_UNLOCK_ICON_BUTTON"  />
-		<execute function="AssertVisible" locator1="Button#MOVE"  />
+		<execute function="AssertVisible" locator1="Toolbar#MANAGEMENT_BAR_UNLOCK_ICON_BUTTON" />
+		<execute function="AssertVisible" locator1="Button#MOVE" />
 		<execute function="AssertVisible" locator1="Button#RECYCLE_BIN" />
 
 		<execute macro="Navigator#gotoSitePage">

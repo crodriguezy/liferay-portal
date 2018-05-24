@@ -81,6 +81,10 @@ public class InputLocalizedTag extends IncludeTag {
 		_formName = formName;
 	}
 
+	public void setHelpMessage(String helpMessage) {
+		_helpMessage = helpMessage;
+	}
+
 	public void setId(String id) {
 		_id = id;
 	}
@@ -127,13 +131,16 @@ public class InputLocalizedTag extends IncludeTag {
 
 		_autoFocus = false;
 		_autoSize = false;
+		_availableLocales = null;
 		_cssClass = null;
+		_defaultLanguageId = null;
 		_disabled = false;
 		_displayWidth = ModelHintsConstants.TEXT_DISPLAY_WIDTH;
 		_editorName = _EDITOR_WYSIWYG_DEFAULT;
 		_fieldPrefix = null;
 		_fieldPrefixSeparator = null;
 		_formName = null;
+		_helpMessage = null;
 		_id = null;
 		_ignoreRequestValue = false;
 		_inputAddon = null;
@@ -199,6 +206,8 @@ public class InputLocalizedTag extends IncludeTag {
 			"liferay-ui:input-localized:fieldPrefixSeparator",
 			_fieldPrefixSeparator);
 		request.setAttribute("liferay-ui:input-localized:formName", formName);
+		request.setAttribute(
+			"liferay-ui:input-localized:helpMessage", _helpMessage);
 		request.setAttribute("liferay-ui:input-localized:id", id);
 		request.setAttribute(
 			"liferay-ui:input-localized:ignoreRequestValue",
@@ -235,6 +244,7 @@ public class InputLocalizedTag extends IncludeTag {
 	private String _fieldPrefix;
 	private String _fieldPrefixSeparator;
 	private String _formName;
+	private String _helpMessage;
 	private String _id;
 	private boolean _ignoreRequestValue;
 	private String _inputAddon;

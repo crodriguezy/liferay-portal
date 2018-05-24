@@ -88,6 +88,7 @@ import com.liferay.portal.kernel.servlet.WrapHttpServletRequestFilter;
 import com.liferay.portal.kernel.servlet.WrapHttpServletResponseFilter;
 import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorConstants;
 import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorEntry;
+import com.liferay.portal.kernel.spring.aop.AdvisedSupport;
 import com.liferay.portal.kernel.struts.StrutsAction;
 import com.liferay.portal.kernel.struts.StrutsPortletAction;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
@@ -154,9 +155,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.Filter;
 import javax.servlet.ServletContext;
-
-import org.springframework.aop.TargetSource;
-import org.springframework.aop.framework.AdvisedSupport;
 
 /**
  * @author Brian Wing Shun Chan
@@ -381,9 +379,10 @@ public class HookHotDeployListener
 			_log.debug(
 				"Portlet locales " + portalProperties.getProperty(LOCALES));
 			_log.debug("Original locales " + PropsUtil.get(LOCALES));
-			_log.debug(
-				"Original locales array length " +
-					PropsUtil.getArray(LOCALES).length);
+
+			String[] locales = PropsUtil.getArray(LOCALES);
+
+			_log.debug("Original locales array length " + locales.length);
 		}
 
 		resetPortalProperties(servletContextName, portalProperties, false);
@@ -1361,9 +1360,10 @@ public class HookHotDeployListener
 			_log.debug(
 				"Portlet locales " + portalProperties.getProperty(LOCALES));
 			_log.debug("Merged locales " + PropsUtil.get(LOCALES));
-			_log.debug(
-				"Merged locales array length " +
-					PropsUtil.getArray(LOCALES).length);
+
+			String[] locales = PropsUtil.getArray(LOCALES);
+
+			_log.debug("Merged locales array length " + locales.length);
 		}
 
 		for (String key : _PROPS_VALUES_OBSOLETE) {
@@ -1839,9 +1839,7 @@ public class HookHotDeployListener
 		AdvisedSupport advisedSupport = ServiceBeanAopProxy.getAdvisedSupport(
 			serviceProxy);
 
-		TargetSource targetSource = advisedSupport.getTargetSource();
-
-		Object previousService = targetSource.getTarget();
+		Object previousService = advisedSupport.getTarget();
 
 		ServiceWrapper<?> serviceWrapper =
 			(ServiceWrapper<?>)serviceImplConstructor.newInstance(
@@ -2312,12 +2310,10 @@ public class HookHotDeployListener
 		AdvisedSupport advisedSupport = ServiceBeanAopProxy.getAdvisedSupport(
 			serviceProxy);
 
-		TargetSource targetSource = advisedSupport.getTargetSource();
-
 		Class<?> proxyClass = serviceProxy.getClass();
 
 		if (ProxyUtil.isProxyClass(proxyClass)) {
-			Object previousService = targetSource.getTarget();
+			Object previousService = advisedSupport.getTarget();
 
 			ServiceWrapper<?> serviceWrapper =
 				(ServiceWrapper<?>)serviceImplConstructor.newInstance(

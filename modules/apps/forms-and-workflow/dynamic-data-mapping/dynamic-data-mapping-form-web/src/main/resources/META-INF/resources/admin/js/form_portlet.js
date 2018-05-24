@@ -153,6 +153,12 @@ AUI.add(
 						if (instance._isFormView()) {
 							instance._eventHandlers.push(
 								instance.after('autosave', instance._afterAutosave),
+								A.one(descriptionEditor.element.$).on('keydown', A.bind('handleDescriptionTitleKeydown', instance)),
+								A.one(descriptionEditor.element.$).on('keyup', A.bind('handleDescriptionTitleCopyAndPaste', instance)),
+								A.one(descriptionEditor.element.$).on('keypress', A.bind('handleDescriptionTitleCopyAndPaste', instance)),
+								A.one(nameEditor.element.$).on('keydown', A.bind('handleEditorTitleKeydown', instance)),
+								A.one(nameEditor.element.$).on('keyup', A.bind('handleEditorTitleCopyAndPaste', instance)),
+								A.one(nameEditor.element.$).on('keypress', A.bind('handleEditorTitleCopyAndPaste', instance)),
 								instance.one('#preview').on('click', A.bind('_onPreviewButtonClick', instance)),
 								instance.one('#publish').on('click', A.bind('_onPublishButtonClick', instance)),
 								instance.one('#publishIcon').on('click', A.bind('_onPublishIconClick', instance)),
@@ -163,7 +169,7 @@ AUI.add(
 							var autosaveInterval = Liferay.DDM.FormSettings.autosaveInterval;
 
 							if (autosaveInterval > 0) {
-								instance._intervalId = setInterval(A.bind('_autosave', instance), autosaveInterval * MINUTE);
+								instance._intervalId = setInterval(A.bind('_autosave', instance, true), autosaveInterval * MINUTE);
 							}
 						}
 					},
@@ -182,6 +188,16 @@ AUI.add(
 						}
 
 						(new A.EventHandle(instance._eventHandlers)).detach();
+					},
+
+					checkEditorLimit: function(e, textLimit) {
+						var instance = this;
+
+						var charCode = (e.which) ? e.which : e.keyCode;
+
+						if (instance.isNotAllowedKey(e, textLimit) && (charCode != 91)) {
+							e.preventDefault();
+						}
 					},
 
 					createCopyPublishFormURLPopover: function() {
@@ -302,6 +318,30 @@ AUI.add(
 						return state;
 					},
 
+					handleDescriptionTitleCopyAndPaste: function(e) {
+						var instance = this;
+
+						return instance.preventCopyAndPaste(e, 100);
+					},
+
+					handleDescriptionTitleKeydown: function(e) {
+						var instance = this;
+
+						return instance.checkEditorLimit(e, 100);
+					},
+
+					handleEditorTitleCopyAndPaste: function(e) {
+						var instance = this;
+
+						return instance.preventCopyAndPaste(e, 120);
+					},
+
+					handleEditorTitleKeydown: function(e) {
+						var instance = this;
+
+						return instance.checkEditorLimit(e, 120);
+					},
+
 					isEmpty: function() {
 						var instance = this;
 
@@ -318,6 +358,16 @@ AUI.add(
 						return count === 0;
 					},
 
+					isNotAllowedKey: function(e, textLimit) {
+						var instance = this;
+
+						var charCode = (e.which) ? e.which : e.keyCode;
+
+						if ((e.currentTarget.text().length >= textLimit) && (e.isModifyingKey(charCode)) && (!e.isKeyInSet(charCode, 'BACKSPACE', 'ESC', 'ENTER'))) {
+							return true;
+						}
+					},
+
 					openConfirmationModal: function(confirm, cancel) {
 						var instance = this;
 
@@ -331,7 +381,7 @@ AUI.add(
 									toolbars: {
 										footer: [
 											{
-												cssClass: 'btn-primary',
+												cssClass: 'btn-secondary',
 												label: Liferay.Language.get('leave'),
 												on: {
 													click: function() {
@@ -340,7 +390,7 @@ AUI.add(
 												}
 											},
 											{
-												cssClass: 'btn-link',
+												cssClass: 'btn-primary',
 												label: Liferay.Language.get('stay'),
 												on: {
 													click: function() {
@@ -352,11 +402,29 @@ AUI.add(
 									},
 									width: 600
 								},
+								id: 'leaveFormDialog',
 								title: Liferay.Language.get('leave-form')
 							}
 						);
 
 						return dialog;
+					},
+
+					preventCopyAndPaste: function(e, textLimit) {
+						var instance = this;
+						var node = e.currentTarget._node;
+
+						if (instance.isNotAllowedKey(e, textLimit)) {
+							e.currentTarget.text(e.currentTarget.text().substr(0, textLimit));
+
+							var range = document.createRange();
+							var sel = window.getSelection();
+
+							range.setStart(node.childNodes[0], node.textContent.length);
+							range.collapse(true);
+							sel.removeAllRanges();
+							sel.addRange(range);
+						}
 					},
 
 					submitForm: function() {
@@ -433,6 +501,15 @@ AUI.add(
 
 						var editingLanguageId = event.newVal;
 
+						var defaultLanguageId = instance.get('defaultLanguageId');
+
+						if (editingLanguageId !== defaultLanguageId) {
+							instance.one('.lfr-ddm-plus-button').addClass('hide');
+						}
+						else {
+							instance.one('.lfr-ddm-plus-button').removeClass('hide');
+						}
+
 						var formBuilder = instance.get('formBuilder');
 
 						instance.set('editingLanguageId', editingLanguageId);
@@ -456,7 +533,7 @@ AUI.add(
 						instance.disableNameEditor();
 					},
 
-					_autosave: function(callback) {
+					_autosave: function(saveAsDraft, callback) {
 						var instance = this;
 
 						callback = callback || EMPTY_FN;
@@ -469,7 +546,9 @@ AUI.add(
 							if (!instance._isSameState(instance.savedState, state)) {
 								var editForm = instance.get('editForm');
 
-								var formData = instance._getFormData(A.IO.stringify(editForm.form));
+								var formData = instance._getFormData(
+									A.IO.stringify(editForm.form), saveAsDraft
+								);
 
 								A.io.request(
 									Liferay.DDM.FormSettings.autosaveURL,
@@ -558,6 +637,17 @@ AUI.add(
 						}
 					},
 
+					_fillRuleDraft: function() {
+						var instance = this;
+
+						var ruleBuilder = instance.get('ruleBuilder');
+						var ruleDraft = ruleBuilder.get('ruleDraft');
+
+						if ((!ruleBuilder.isRuleDraftEmpty(ruleDraft)) || (typeof ruleDraft == 'undefined')) {
+							ruleBuilder.renderRule();
+						}
+					},
+
 					_getDescription: function() {
 						var instance = this;
 
@@ -572,7 +662,7 @@ AUI.add(
 						return window[instance.ns('descriptionEditor')];
 					},
 
-					_getFormData: function(formString) {
+					_getFormData: function(formString, saveAsDraft) {
 						var instance = this;
 
 						var formObject = A.QueryString.parse(formString);
@@ -584,6 +674,8 @@ AUI.add(
 						if (instance._isFormView()) {
 							formObject[instance.ns('published')] = JSON.stringify(instance.get('published'));
 						}
+
+						formObject[instance.ns('saveAsDraft')] = saveAsDraft;
 
 						formString = A.QueryString.stringify(formObject);
 
@@ -753,6 +845,7 @@ AUI.add(
 						var instance = this;
 
 						instance._autosave(
+							true,
 							function() {
 								var previewURL = instance._createPreviewURL();
 
@@ -765,6 +858,7 @@ AUI.add(
 						var instance = this;
 
 						instance._autosave(
+							false,
 							function() {
 								var publishedValue = instance.get('published');
 
@@ -841,6 +935,8 @@ AUI.add(
 						instance._showRuleBuilder();
 
 						instance._addRuleButton();
+
+						instance._fillRuleDraft();
 					},
 
 					_onSaveButtonClick: function(event) {
@@ -937,6 +1033,8 @@ AUI.add(
 
 						A.one('.ddm-form-builder-buttons').removeClass('hide');
 
+						A.one('.lfr-ddm-plus-button').removeClass('hide');
+
 						instance.one('#showForm').addClass('active');
 					},
 
@@ -954,6 +1052,10 @@ AUI.add(
 						}
 						else {
 							ruleBuilder.show();
+						}
+
+						if (!A.one('.form-builder-rule-builder-container')) {
+							A.one('.lfr-ddm-plus-button').addClass('hide');
 						}
 
 						A.one('.portlet-forms').addClass('liferay-ddm-form-rule-builder');

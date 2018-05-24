@@ -7,15 +7,17 @@ import {CancellablePromise} from 'metal-promise/src/promise/Promise';
 /**
  * EventScreen
  *
- * This class inherits from Senna's HtmlScreen. It performs logic that are
- * common to both ActionURLScreen and RenderURLScreen.
- * @review
+ * Inherits from Senna's `HtmlScreen`. It performs logic that is
+ * common to both {@link ActionURLScreen|ActionURLScreen} and 
+ * {@link RenderURLScreen|RenderURLScreen}.
  */
+
 class EventScreen extends HtmlScreen {
+
 	/**
 	 * @inheritDoc
-	 * @review
 	 */
+
 	constructor() {
 		super();
 
@@ -25,9 +27,9 @@ class EventScreen extends HtmlScreen {
 
 	/**
 	 * @inheritDoc
-	 * Exposes the 'screenDispose' event to the Liferay global object.
-	 * @review
+	 * Exposes the `screenDispose` event to the Liferay global object
 	 */
+
 	dispose() {
 		super.dispose();
 
@@ -42,9 +44,9 @@ class EventScreen extends HtmlScreen {
 
 	/**
 	 * @inheritDoc
-	 * Exposes the 'screenActivate' event to the Liferay global object.
-	 * @review
+	 * Exposes the `screenActivate` event to the Liferay global object
 	 */
+
 	activate() {
 		super.activate();
 
@@ -59,8 +61,8 @@ class EventScreen extends HtmlScreen {
 
 	/**
 	 * @inheritDoc
-	 * @review
 	 */
+
 	addCache(content) {
 		super.addCache(content);
 
@@ -68,13 +70,13 @@ class EventScreen extends HtmlScreen {
 	}
 
 	/**
-	 * If we are not submitting a form and we cannot match the redirect path
-	 * to a known route, we try to do a regular navigation to the given path.
-	 * @param  {!String} redirectPath The path to check.
-	 * @review
+	 * Attempts a regular navigation to the given path, if a form is not being 
+	 * submitted and the redirect Path can't be matched to a known route
+	 * @param  {!String} redirectPath The path to check
 	 */
+
 	checkRedirectPath(redirectPath) {
-		var app = Liferay.SPA.app;
+		const app = Liferay.SPA.app;
 
 		if (!globals.capturedFormElement && !app.findRoute(redirectPath)) {
 			window.location.href = redirectPath;
@@ -83,8 +85,8 @@ class EventScreen extends HtmlScreen {
 
 	/**
 	 * @inheritDoc
-	 * @review
 	 */
+
 	deactivate() {
 		super.deactivate();
 
@@ -99,8 +101,8 @@ class EventScreen extends HtmlScreen {
 
 	/**
 	 * @inheritDoc
-	 * @review
 	 */
+
 	beforeScreenFlip() {
 		Liferay.fire(
 			'beforeScreenFlip',
@@ -112,10 +114,10 @@ class EventScreen extends HtmlScreen {
 	}
 
 	/**
-	 * Copies classes and onload event from virtual document to actual
-	 * document on the page.
-	 * @review
+	 * Copies the classes and onload event from the virtual document to the actual
+	 * document on the page
 	 */
+
 	copyBodyAttributes() {
 		const virtualBody = this.virtualDocument.querySelector('body');
 
@@ -125,14 +127,14 @@ class EventScreen extends HtmlScreen {
 
 	/**
 	 * @inheritDoc
-	 * If a language change is detected, we temporarely make all permanent styles
-	 * temporary, so that they are disposed and re-downloaded an re-parsed before
-	 * the screen flips. This is important because the content of our portal and
-	 * theme styles are dynamic and may depend on the displayed language. RTL
-	 * languages, for instance, have diffrent styles.
-	 * @param  {!Array} surfaces The surfaces to evaluate styles from.
-	 * @review
+	 * Temporarily makes all permanent styles temporary when a language change is 
+	 * detected, so that they are disposed, re-downloaded, and re-parsed before
+	 * the screen flips. This is important because the content of the portal and
+	 * theme styles are dynamic and may depend on the displayed language. 
+	 * Right-to-left (RTL) languages, for instance, have diffrent styles.
+	 * @param  {!Array} surfaces The surfaces to evaluate styles from
 	 */
+
 	evaluateStyles(surfaces) {
 		const currentLanguageId = document.querySelector('html').lang.replace('-', '_');
 		const languageId = this.virtualDocument.lang.replace('-', '_');
@@ -149,11 +151,11 @@ class EventScreen extends HtmlScreen {
 
 	/**
 	 * @inheritDoc
-	 * Adds the beforeScreenFlip event to the lifecycle, and exposes the
-	 * 'screenFlip' event to the Liferay global object.
-	 * @param  {!Array} surfaces The surfaces to flip.
-	 * @review
+	 * Adds the `beforeScreenFlip` event to the lifecycle and exposes the
+	 * `screenFlip` event to the Liferay global object
+	 * @param  {!Array} surfaces The surfaces to flip
 	 */
+
 	flip(surfaces) {
 		this.copyBodyAttributes();
 
@@ -176,51 +178,54 @@ class EventScreen extends HtmlScreen {
 
 	/**
 	 * @inheritDoc
-	 * Returns cache if it's not expired or if the cache feature is not diabled.
-	 * @return {!String} The cache contents.
-	 * @review
+	 * Returns the cache if it's not expired or if the cache 
+	 * feature is not disabled
+	 * @return {!String} The cache contents
 	 */
+
 	getCache() {
-		var app = Liferay.SPA.app;
+		let cache = null;
+
+		const app = Liferay.SPA.app;
 
 		if (app.isCacheEnabled() && !app.isScreenCacheExpired(this)) {
-			return super.getCache();
+			cache = super.getCache();
 		}
 
-		return null;
+		return cache;
 	}
 
 	/**
-	 * Returns the timestamp the cache was last modified.
-	 * @return {!Number} cacheLastModified time.
-	 * @review
+	 * Returns the timestamp the cache was last modified
+	 * @return {!Number} `cacheLastModified` time
 	 */
+
 	getCacheLastModified() {
 		return this.cacheLastModified;
 	}
 
 	/**
-	 * Wether or not a given status code is considered valid.
-	 * @param  {!Number} The status code to check.
-	 * @return {!Boolean} True if the given status code is valid.
-	 * @review
+	 * Returns whether a given status code is considered valid
+	 * @param  {!Number} The status code to check
+	 * @return {!Boolean} True if the given status code is valid
 	 */
+
 	isValidResponseStatusCode(statusCode) {
-		var validStatusCodes = Liferay.SPA.app.getValidStatusCodes();
+		const validStatusCodes = Liferay.SPA.app.getValidStatusCodes();
 
 		return (statusCode >= 200 && statusCode <= 500) || (validStatusCodes.indexOf(statusCode) > -1);
 	}
 
 	/**
 	 * @inheritDoc
-	 * @return {!String} The cache contents.
-	 * @review
+	 * @return {!String} The cache contents
 	 */
+
 	load(path) {
 		return super.load(path)
 			.then(
 				(content) => {
-					var redirectPath = this.beforeUpdateHistoryPath(path);
+					const redirectPath = this.beforeUpdateHistoryPath(path);
 
 					this.checkRedirectPath(redirectPath);
 
@@ -239,23 +244,23 @@ class EventScreen extends HtmlScreen {
 	}
 
 	/**
-	 * Method used by {this.evaluateStyles}. Detailed description about
-	 * why this exists is given there. It changes the static properties
-	 * HtmlScreen.selectors.stylesTemporary and HtmlScreen.selectors.stylesPermanent
-	 * temporarely. The action can be undone by {this.restoreSelectors_}
-	 * @param  {!String} currentLanguageId.
-	 * @param  {!String} languageId.
-	 * @review
+	 * The method used by {@link EventScreen#evaluateStyles|evaluateStyles}. This 
+	 * changes the static properties `HtmlScreen.selectors.stylesTemporary` and 
+	 * `HtmlScreen.selectors.stylesPermanent` temporarily. The action can be 
+	 * undone by {@link EventScreen#restoreSelectors_|restoreSelectors_}
+	 * @param  {!String} currentLanguageId
+	 * @param  {!String} languageId
 	 */
+
 	makePermanentSelectorsTemporary_(currentLanguageId, languageId) {
 		HtmlScreen.selectors.stylesTemporary = HtmlScreen.selectors.stylesTemporary
 			.split(',')
 			.concat(
 				HtmlScreen.selectors.stylesPermanent
-				.split(',')
-				.map(
-					item => `${item}[href*="${currentLanguageId}"]`
-				)
+					.split(',')
+					.map(
+						item => `${item}[href*="${currentLanguageId}"]`
+					)
 			)
 			.join();
 
@@ -268,22 +273,22 @@ class EventScreen extends HtmlScreen {
 	}
 
 	/**
-	 * Method used by {this.evaluateStyles}. Detailed description about
-	 * why this exists is given there. It restores the permanent and temporary
-	 * selectors changed by (this.makePermanentSelectorsTemporary_)
-	 * @review
+	 * The method used by {@link EventScreen#evaluateStyles|evaluateStyles}. This
+	 * restores the permanent and temporary selectors changed by 
+	 * {@link EventScreen#makePermanentSelectorsTemporary_|makePermanentSelectorsTemporary_}.
 	 */
+
 	restoreSelectors_() {
 		HtmlScreen.selectors.stylesPermanent = this.stylesPermanentSelector_ || HtmlScreen.selectors.stylesPermanent;
 		HtmlScreen.selectors.stylesTemporary = this.stylesTemporarySelector_ || HtmlScreen.selectors.stylesTemporary;
 	}
 
 	/**
-	 * Executes the document.body.onload every time a navigation happens.
-	 * @review
+	 * Executes the `document.body.onload` event every time a navigation occurs
 	 */
+
 	runBodyOnLoad() {
-		var onLoad = document.body.onload;
+		const onLoad = document.body.onload;
 
 		if (onLoad) {
 			onLoad();

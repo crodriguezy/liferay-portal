@@ -24,6 +24,7 @@ import com.liferay.layout.admin.web.configuration.LayoutAdminWebConfiguration;
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminWebKeys;
 import com.liferay.layout.page.template.exception.DuplicateLayoutPageTemplateCollectionException;
 import com.liferay.layout.page.template.exception.LayoutPageTemplateCollectionNameException;
+import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionService;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.GroupInheritContentException;
 import com.liferay.portal.kernel.exception.ImageTypeException;
@@ -34,6 +35,7 @@ import com.liferay.portal.kernel.exception.LayoutParentLayoutIdException;
 import com.liferay.portal.kernel.exception.LayoutSetVirtualHostException;
 import com.liferay.portal.kernel.exception.LayoutTypeException;
 import com.liferay.portal.kernel.exception.NoSuchGroupException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.RequiredLayoutException;
 import com.liferay.portal.kernel.exception.SitemapChangeFrequencyException;
 import com.liferay.portal.kernel.exception.SitemapIncludeException;
@@ -50,6 +52,7 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.UploadException;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.site.navigation.service.SiteNavigationMenuLocalService;
 
 import java.io.IOException;
 
@@ -94,7 +97,7 @@ import org.osgi.service.component.annotations.Reference;
 		"javax.portlet.supported-public-render-parameter=selPlid",
 		"javax.portlet.supports.mime-type=text/html"
 	},
-	service = {Portlet.class}
+	service = Portlet.class
 )
 public class GroupPagesPortlet extends MVCPortlet {
 
@@ -109,6 +112,8 @@ public class GroupPagesPortlet extends MVCPortlet {
 	protected void doDispatch(
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
+
+		_addDefaultSiteNavigationMenu(renderRequest);
 
 		try {
 			getGroup(renderRequest);
@@ -159,6 +164,10 @@ public class GroupPagesPortlet extends MVCPortlet {
 				LayoutAdminWebKeys.LAYOUT_ADMIN_CONFIGURATION,
 				_layoutAdminWebConfiguration);
 
+			renderRequest.setAttribute(
+				LayoutAdminWebKeys.LAYOUT_PAGE_TEMPLATE_COLLECTION_SERVICE,
+				_layoutPageTemplateCollectionService);
+
 			super.doDispatch(renderRequest, renderResponse);
 		}
 	}
@@ -206,6 +215,31 @@ public class GroupPagesPortlet extends MVCPortlet {
 		return false;
 	}
 
+	private void _addDefaultSiteNavigationMenu(RenderRequest renderRequest) {
+		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		int siteNavigationMenusCount =
+			_siteNavigationMenuLocalService.getSiteNavigationMenusCount(
+				themeDisplay.getScopeGroupId());
+
+		if (siteNavigationMenusCount > 0) {
+			return;
+		}
+
+		try {
+			ServiceContext serviceContext = ServiceContextFactory.getInstance(
+				renderRequest);
+
+			_siteNavigationMenuLocalService.addDefaultSiteNavigationMenu(
+				themeDisplay.getUserId(), themeDisplay.getScopeGroupId(),
+				serviceContext);
+		}
+		catch (PortalException pe) {
+			_log.error("Unable to create default primary navigation menu", pe);
+		}
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		GroupPagesPortlet.class);
 
@@ -219,5 +253,12 @@ public class GroupPagesPortlet extends MVCPortlet {
 	private ItemSelector _itemSelector;
 
 	private volatile LayoutAdminWebConfiguration _layoutAdminWebConfiguration;
+
+	@Reference
+	private LayoutPageTemplateCollectionService
+		_layoutPageTemplateCollectionService;
+
+	@Reference
+	private SiteNavigationMenuLocalService _siteNavigationMenuLocalService;
 
 }

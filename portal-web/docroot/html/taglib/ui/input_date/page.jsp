@@ -128,7 +128,7 @@ else {
 
 </span>
 
-<c:if test="<%= nullable && !required && !showDisableCheckbox %>">
+<c:if test="<%= nullable && !required && showDisableCheckbox %>">
 
 	<%
 	String dateTogglerCheckboxName = TextFormatter.format(dateTogglerCheckboxLabel, TextFormatter.M);
@@ -140,7 +140,7 @@ else {
 		var checkbox = $('#<%= namespace + randomNamespace + dateTogglerCheckboxName %>');
 
 		checkbox.on(
-			'click mouseover',
+			'click',
 			function(event) {
 				var checked = checkbox.prop('checked');
 
@@ -180,26 +180,18 @@ else {
 					calendar: {
 
 						<%
-						String calendarOptions = StringPool.BLANK;
+						String calendarOptions = String.format("headerRenderer: '%s'", LanguageUtil.get(resourceBundle, "b-y"));
 
 						if (lastEnabledDate != null) {
-							calendarOptions += String.format("maximumDate: new Date(%s)", lastEnabledDate.getTime());
+							calendarOptions += StringPool.COMMA + String.format("maximumDate: new Date(%s)", lastEnabledDate.getTime());
 						}
 
 						if (firstEnabledDate != null) {
-							if (Validator.isNotNull(calendarOptions)) {
-								calendarOptions += StringPool.COMMA;
-							}
-
-							calendarOptions += String.format("minimumDate: new Date(%s)", firstEnabledDate.getTime());
+							calendarOptions += StringPool.COMMA + String.format("minimumDate: new Date(%s)", firstEnabledDate.getTime());
 						}
 
 						if (firstDayOfWeek != -1) {
-							if (Validator.isNotNull(calendarOptions)) {
-								calendarOptions += StringPool.COMMA;
-							}
-
-							calendarOptions += String.format("'strings.first_weekday': %d", firstDayOfWeek);
+							calendarOptions += StringPool.COMMA + String.format("'strings.first_weekday': %d", firstDayOfWeek);
 						}
 						%>
 

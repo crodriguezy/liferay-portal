@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.site.navigation.constants.SiteNavigationConstants;
 import com.liferay.site.navigation.exception.SiteNavigationMenuNameException;
+import com.liferay.site.navigation.menu.item.layout.constants.SiteNavigationMenuItemTypeConstants;
 import com.liferay.site.navigation.model.SiteNavigationMenu;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
 import com.liferay.site.navigation.service.base.SiteNavigationMenuLocalServiceBaseImpl;
@@ -97,7 +98,6 @@ public class SiteNavigationMenuLocalServiceImpl
 			siteNavigationMenu.getSiteNavigationMenuId(), false, true, true);
 
 		_updateOldSiteNavigationMenuType(siteNavigationMenu, type);
-		_updateOldSiteNavigationMenuAuto(siteNavigationMenu, auto);
 
 		return siteNavigationMenu;
 	}
@@ -177,9 +177,15 @@ public class SiteNavigationMenuLocalServiceImpl
 	}
 
 	@Override
-	public SiteNavigationMenu fetchAutoSiteNavigationMenu(long groupId) {
+	public SiteNavigationMenu fetchPrimarySiteNavigationMenu(long groupId) {
+		return fetchSiteNavigationMenu(
+			groupId, SiteNavigationConstants.TYPE_PRIMARY);
+	}
+
+	@Override
+	public SiteNavigationMenu fetchSiteNavigationMenu(long groupId, int type) {
 		List<SiteNavigationMenu> siteNavigationMenus =
-			siteNavigationMenuPersistence.findByG_A(groupId, true, 0, 1);
+			siteNavigationMenuPersistence.findByG_T(groupId, type, 0, 1);
 
 		if (siteNavigationMenus.isEmpty()) {
 			return null;
@@ -189,16 +195,8 @@ public class SiteNavigationMenuLocalServiceImpl
 	}
 
 	@Override
-	public SiteNavigationMenu fetchPrimarySiteNavigationMenu(long groupId) {
-		List<SiteNavigationMenu> siteNavigationMenus =
-			siteNavigationMenuPersistence.findByG_T(
-				groupId, SiteNavigationConstants.TYPE_PRIMARY, 0, 1);
-
-		if (siteNavigationMenus.isEmpty()) {
-			return null;
-		}
-
-		return siteNavigationMenus.get(0);
+	public List<SiteNavigationMenu> getAutoSiteNavigationMenus(long groupId) {
+		return siteNavigationMenuPersistence.findByG_A(groupId, true);
 	}
 
 	@Override
@@ -243,7 +241,6 @@ public class SiteNavigationMenuLocalServiceImpl
 			siteNavigationMenuId);
 
 		_updateOldSiteNavigationMenuType(siteNavigationMenu, type);
-		_updateOldSiteNavigationMenuAuto(siteNavigationMenu, auto);
 
 		User user = userLocalService.getUser(userId);
 
@@ -291,19 +288,19 @@ public class SiteNavigationMenuLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
+		SiteNavigationMenuItemType siteNavigationMenuItemType =
+			_siteNavigationMenuItemTypeRegistry.getSiteNavigationMenuItemType(
+				SiteNavigationMenuItemTypeConstants.LAYOUT);
+
+		if (siteNavigationMenuItemType == null) {
+			return;
+		}
+
 		List<Layout> layouts = layoutLocalService.getLayouts(
 			siteNavigationMenu.getGroupId(), false, layoutId);
 
 		for (Layout layout : layouts) {
 			if (layout.isHidden()) {
-				continue;
-			}
-
-			SiteNavigationMenuItemType siteNavigationMenuItemType =
-				_siteNavigationMenuItemTypeRegistry.
-					getSiteNavigationMenuItemTypeByLayoutType(layout.getType());
-
-			if (siteNavigationMenuItemType == null) {
 				continue;
 			}
 
@@ -324,28 +321,6 @@ public class SiteNavigationMenuLocalServiceImpl
 				siteNavigationMenuItem.getSiteNavigationMenuItemId(),
 				layout.getLayoutId(), serviceContext);
 		}
-	}
-
-	private void _updateOldSiteNavigationMenuAuto(
-		SiteNavigationMenu siteNavigationMenu, boolean auto) {
-
-		if (!auto) {
-			return;
-		}
-
-		SiteNavigationMenu autoSiteNavigationMenu = fetchAutoSiteNavigationMenu(
-			siteNavigationMenu.getGroupId());
-
-		if ((autoSiteNavigationMenu == null) ||
-			(autoSiteNavigationMenu.getSiteNavigationMenuId() ==
-				siteNavigationMenu.getSiteNavigationMenuId())) {
-
-			return;
-		}
-
-		autoSiteNavigationMenu.setAuto(false);
-
-		siteNavigationMenuPersistence.update(autoSiteNavigationMenu);
 	}
 
 	private void _updateOldSiteNavigationMenuType(

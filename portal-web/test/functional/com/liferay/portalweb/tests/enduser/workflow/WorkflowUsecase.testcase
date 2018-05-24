@@ -59,7 +59,7 @@
 		</execute>
 
 		<execute macro="Workflow#configureWorkflow">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 			<var name="workflowResourceValue" value="Blogs Entry" />
 		</execute>
 
@@ -300,7 +300,7 @@
 		</execute>
 
 		<execute macro="Workflow#configureWorkflow">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 			<var name="workflowResourceValue" value="Blogs Entry" />
 		</execute>
 
@@ -462,7 +462,7 @@
 		</execute>
 
 		<execute macro="DDLList#addCP">
-			<var name="workflowDefinition" value="Double Approver Definition (Version 1)" />
+			<var name="workflowDefinition" value="Double Approver Definition" />
 		</execute>
 
 		<execute macro="DDLDataDefinition#selectCP" />
@@ -679,7 +679,7 @@
 		</execute>
 
 		<execute macro="Workflow#configureWorkflowViaFolderInfo">
-			<var name="workflowDefinition" value="Category Specific (Version 1)" />
+			<var name="workflowDefinition" value="Category Specific" />
 		</execute>
 
 		<execute macro="WebContentNavigator#gotoAddCP" />
@@ -838,7 +838,7 @@
 		</execute>
 
 		<execute macro="Workflow#configureWorkflow">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 			<var name="workflowResourceValue" value="Wiki Page" />
 		</execute>
 
@@ -1106,7 +1106,7 @@
 		</execute>
 
 		<execute macro="Workflow#configureWorkflow">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 			<var name="workflowResourceValue" value="Blogs Entry" />
 		</execute>
 
@@ -1130,7 +1130,7 @@
 
 		<execute macro="Blogs#addWithWorkflow">
 			<var name="entryContent" value="Blogs Entry Content" />
-			<var name="entrySubtitle" value="Subtitle"  />
+			<var name="entrySubtitle" value="Subtitle" />
 			<var name="entryTitle" value="Blogs Entry Title" />
 		</execute>
 
@@ -1147,7 +1147,9 @@
 			<var name="user" value="Test Test" />
 		</execute>
 
-		<execute macro="Workflow#clickAssignToMeByDetails" />
+		<execute macro="LexiconEntry#gotoEllipsisMenuItem">
+			<var name="menuItem" value="Assign to Me" />
+		</execute>
 
 		<execute macro="Workflow#confirmWorkflowAction" />
 
@@ -1174,7 +1176,9 @@
 			<var name="workflowTask" value="Review" />
 		</execute>
 
-		<execute macro="Workflow#clickApproveByDetails" />
+		<execute macro="LexiconEntry#gotoEllipsisMenuItem">
+			<var name="menuItem" value="Approve" />
+		</execute>
 
 		<execute macro="Workflow#confirmWorkflowAction" />
 
@@ -1227,7 +1231,7 @@
 		</execute>
 
 		<execute macro="Workflow#configureWorkflow">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 			<var name="workflowResourceValue" value="Blogs Entry" />
 		</execute>
 
@@ -1240,7 +1244,7 @@
 		</execute>
 
 		<execute macro="Workflow#configureWorkflowViaFolderInfo">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 		</execute>
 
 		<for list="1,2,3" param="number">
@@ -1341,7 +1345,7 @@
 		</execute>
 
 		<execute macro="Workflow#configureWorkflowViaFolderInfo">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 		</execute>
 
 		<execute macro="Navigator#openURL" />
@@ -1371,13 +1375,23 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="SitePages#addPublicPage">
+			<var name="pageName" value="Site Page" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Configuration" />
 			<var name="panel" value="Site Administration" />
 			<var name="portlet" value="Workflow" />
 		</execute>
 
 		<execute macro="Workflow#configureWorkflow">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 			<var name="workflowResourceValue" value="Calendar Event" />
 		</execute>
 
@@ -1388,7 +1402,7 @@
 		</execute>
 
 		<execute macro="Workflow#viewConfigurationSelected">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 			<var name="workflowResourceValue" value="Calendar Event" />
 		</execute>
 
@@ -1408,7 +1422,7 @@
 		</execute>
 
 		<execute macro="Workflow#configureWorkflow">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 			<var name="workflowResourceValue" value="Blogs Entry" />
 		</execute>
 
@@ -1425,6 +1439,15 @@
 			<var name="workflowResourceValue" value="Blogs Entry" />
 		</execute>
 
+		<execute macro="Workflow#viewConfigurationSelected">
+			<var name="workflowDefinition" value="No Workflow" />
+			<var name="workflowResourceValue" value="Calendar Event" />
+		</execute>
+
+		<execute macro="Navigator#openSiteURL">
+			<var name="siteName" value="New Site" />
+		</execute>
+
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Configuration" />
 			<var name="panel" value="Site Administration" />
@@ -1434,6 +1457,11 @@
 		<execute macro="Workflow#viewConfigurationSelected">
 			<var name="workflowDefinition" value="Single Approver" />
 			<var name="workflowResourceValue" value="Blogs Entry" />
+		</execute>
+
+		<execute macro="Workflow#viewConfigurationSelected">
+			<var name="workflowDefinition" value="Single Approver" />
+			<var name="workflowResourceValue" value="Calendar Event" />
 		</execute>
 	</command>
 
@@ -1456,7 +1484,7 @@
 		</execute>
 
 		<execute macro="Workflow#configureWorkflow">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 			<var name="workflowResourceValue" value="Blogs Entry" />
 		</execute>
 
@@ -1667,7 +1695,7 @@
 		</execute>
 
 		<execute macro="Workflow#configureWorkflowViaFolderInfo">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 		</execute>
 
 		<execute macro="Navigator#openURL" />
@@ -1681,16 +1709,24 @@
 		<execute macro="WebContentNavigator#gotoAddCP" />
 
 		<execute macro="WebContent#addWithWorkflowCP">
-			<var name="webContentContent"><![CDATA[&lt;script&gt;alert("web content article")&lt;/script&gt;]]></var>
+			<var name="webContentContent"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
 			<var name="webContentTitle" value="WC WebContent Title" />
 		</execute>
 
 		<execute macro="WebContent#viewWithWorkflowCP">
-			<var name="webContentContent"><![CDATA[<script>alert("web content article")</script>]]></var>
+			<var name="webContentContent"><![CDATA[<script>alert(123);</script>]]></var>
 			<var name="webContentTitle" value="WC WebContent Title" />
 			<var name="workflowStatus" value="Pending" />
 			<var name="workflowTask" value="Review" />
 		</execute>
+
+		<execute function="AssertAlertNotPresent" />
+
+		<var name="actualScript"><![CDATA[<script>alert(123);</script>]]></var>
+		<var name="escapedScript"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
+
+		<execute function="AssertHTMLSourceTextNotPresent" value1="${actualScript}" />
+		<execute function="AssertHTMLSourceTextPresent" value1="${escapedScript}" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -1704,8 +1740,16 @@
 			<var name="workflowAssetTitle" value="WC WebContent Title" />
 			<var name="workflowAssetType" value="Web Content Article" />
 			<var name="workflowTask" value="Review" />
-			<var name="workflowActivityComment"><![CDATA[<script>alert("web commenting on WC")</script>]]></var>
+			<var name="workflowActivityComment"><![CDATA[<script>alert(123);</script>]]></var>
 		</execute>
+
+		<execute function="AssertAlertNotPresent" />
+
+		<var name="actualScript"><![CDATA[<script>alert(123);</script>]]></var>
+		<var name="escapedScript"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
+
+		<execute function="AssertHTMLSourceTextNotPresent" value1="${actualScript}" />
+		<execute function="AssertHTMLSourceTextPresent" value1="${escapedScript}" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -1719,8 +1763,16 @@
 			<var name="workflowAssetTitle" value="WC WebContent Title" />
 			<var name="workflowAssetType" value="Web Content Article" />
 			<var name="workflowTask" value="Review" />
-			<var name="workflowActivityComment"><![CDATA[<script>alert("approve")</script>]]></var>
+			<var name="workflowActivityComment"><![CDATA[<script>alert(123);</script>]]></var>
 		</execute>
+
+		<execute function="AssertAlertNotPresent" />
+
+		<var name="actualScript"><![CDATA[<script>alert(123);</script>]]></var>
+		<var name="escapedScript"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
+
+		<execute function="AssertHTMLSourceTextNotPresent" value1="${actualScript}" />
+		<execute function="AssertHTMLSourceTextPresent" value1="${escapedScript}" />
 
 		<execute macro="Navigator#openURL" />
 
@@ -1735,9 +1787,17 @@
 		</execute>
 
 		<execute macro="WebContent#viewCP">
-			<var name="webContentContent"><![CDATA[<script>alert("web content article")</script>]]></var>
+			<var name="webContentContent"><![CDATA[<script>alert(123);</script>]]></var>
 			<var name="webContentTitle" value="WC WebContent Title" />
 		</execute>
+
+		<execute function="AssertAlertNotPresent" />
+
+		<var name="actualScript"><![CDATA[<script>alert(123);</script>]]></var>
+		<var name="escapedScript"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
+
+		<execute function="AssertHTMLSourceTextNotPresent" value1="${actualScript}" />
+		<execute function="AssertHTMLSourceTextPresent" value1="${escapedScript}" />
 
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Sites" />
@@ -1769,8 +1829,16 @@
 		</execute>
 
 		<execute macro="WebContent#viewPGViaAP">
-			<var name="webContentContent"><![CDATA[<script>alert("web content article")</script>]]></var>
+			<var name="webContentContent"><![CDATA[<script>alert(123);</script>]]></var>
 			<var name="webContentTitle" value="WC WebContent Title" />
 		</execute>
+
+		<execute function="AssertAlertNotPresent" />
+
+		<var name="actualScript"><![CDATA[<script>alert(123);</script>]]></var>
+		<var name="escapedScript"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
+
+		<execute function="AssertHTMLSourceTextNotPresent" value1="${actualScript}" />
+		<execute function="AssertHTMLSourceTextPresent" value1="${escapedScript}" />
 	</command>
 </definition>

@@ -14,14 +14,13 @@
 
 package com.liferay.jenkins.results.parser;
 
+import java.io.File;
 import java.io.IOException;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -31,82 +30,125 @@ import org.apache.commons.lang.StringUtils;
 public abstract class PortalRepositoryJob extends RepositoryJob {
 
 	@Override
-	public List<String> getBatchNames() {
-		String testBatchNames = portalTestProperies.getProperty(
-			"test.batch.names");
+	public Set<String> getBatchNames() {
+		String testBatchNames = JenkinsResultsParserUtil.getProperty(
+			getPortalTestProperties(), "test.batch.names");
 
-		return getListFromString(testBatchNames);
+		return getSetFromString(testBatchNames);
 	}
 
 	@Override
-	public List<String> getDistTypes() {
-		String testBatchDistAppServers = portalTestProperies.getProperty(
-			"test.batch.dist.app.servers");
+	public Set<String> getDistTypes() {
+		String testBatchDistAppServers = JenkinsResultsParserUtil.getProperty(
+			getPortalTestProperties(), "test.batch.dist.app.servers");
 
-		return getListFromString(testBatchDistAppServers);
+		return getSetFromString(testBatchDistAppServers);
+	}
+
+	@Override
+	public GitWorkingDirectory getGitWorkingDirectory() {
+		if (gitWorkingDirectory != null) {
+			return gitWorkingDirectory;
+		}
+
+		checkRepositoryDir();
+
+		try {
+			gitWorkingDirectory = new PortalGitWorkingDirectory(
+				getBranchName(), repositoryDir.getAbsolutePath());
+		}
+		catch (IOException ioe) {
+			throw new RuntimeException(
+				"Unable to create portal Git working directory " +
+					repositoryDir.getPath(),
+				ioe);
+		}
+
+		return gitWorkingDirectory;
+	}
+
+	public String getPoshiQuery(String testBatchName) {
+		String propertyName = JenkinsResultsParserUtil.combine(
+			"test.batch.run.property.query[", testBatchName, "]");
+
+		Properties portalTestProperties = getPortalTestProperties();
+
+		if (portalTestProperties.containsKey(propertyName)) {
+			String propertyValue = JenkinsResultsParserUtil.getProperty(
+				portalTestProperties, propertyName);
+
+			if ((propertyValue != null) && !propertyValue.isEmpty()) {
+				return propertyValue;
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public void setRepositoryDir(File repositoryDir) {
 	}
 
 	protected PortalRepositoryJob(String jobName) {
 		super(jobName);
 
-		branchName = _getBranchName();
-		gitWorkingDirectory = _getGitWorkingDirectory();
-
-		portalTestProperies = getGitWorkingDirectoryProperties(
-			"test.properties");
+		_findRepositoryDir();
 	}
 
-	protected List<String> getListFromString(String string) {
-		if (string == null) {
-			return Collections.emptyList();
+	protected Properties getPortalTestProperties() {
+		if (portalTestProperties != null) {
+			return portalTestProperties;
 		}
 
-		List<String> list = new ArrayList<>();
+		checkRepositoryDir();
+
+		portalTestProperties = JenkinsResultsParserUtil.getProperties(
+			new File(repositoryDir, "test.properties"));
+
+		return portalTestProperties;
+	}
+
+	protected Set<String> getSetFromString(String string) {
+		if (string == null) {
+			return Collections.emptySet();
+		}
+
+		Set<String> set = new TreeSet<>();
 
 		for (String item : StringUtils.split(string, ",")) {
-			if (list.contains(item) || item.startsWith("#")) {
+			if (item.startsWith("#")) {
 				continue;
 			}
 
-			list.add(item);
+			set.add(item.trim());
 		}
 
-		Collections.sort(list);
-
-		return list;
+		return set;
 	}
 
-	protected final Properties portalTestProperies;
+	protected Properties portalTestProperties;
 
-	private String _getBranchName() {
-		Matcher matcher = _pattern.matcher(jobName);
+	private void _findRepositoryDir() {
+		String branchName = getBranchName();
 
-		if (matcher.find()) {
-			return matcher.group("branchName");
+		Properties buildProperties = null;
+
+		try {
+			buildProperties = JenkinsResultsParserUtil.getBuildProperties();
+		}
+		catch (IOException ioe) {
+			throw new RuntimeException("Unable to get build properties", ioe);
 		}
 
-		return "master";
-	}
-
-	private GitWorkingDirectory _getGitWorkingDirectory() {
-		String branchName = _getBranchName();
-		String workingDirectoryPath = "/opt/dev/projects/github/liferay-portal";
+		String workingDirectoryPath = buildProperties.getProperty(
+			"base.repository.dir") + "/liferay-portal";
 
 		if (!branchName.equals("master")) {
 			workingDirectoryPath = JenkinsResultsParserUtil.combine(
 				workingDirectoryPath, "-", branchName);
 		}
 
-		try {
-			return new GitWorkingDirectory(branchName, workingDirectoryPath);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(
-				"Invalid Git working directory " + workingDirectoryPath, ioe);
-		}
+		super.setRepositoryDir(new File(workingDirectoryPath));
 	}
-
-	private static final Pattern _pattern = Pattern.compile(
-		"[^\\(]+\\((?<branchName>[^\\)]+)\\)");
 
 }

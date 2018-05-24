@@ -41,15 +41,27 @@ String displayStyle = siteNavigationAdminDisplayContext.getDisplayStyle();
 				<portlet:param name="mvcPath" value="/edit_site_navigation_menu.jsp" />
 			</portlet:renderURL>
 
-			<liferay-frontend:add-menu inline="<%= true %>">
-				<liferay-frontend:add-menu-item id="addNavigationMenuMenuItem" title='<%= LanguageUtil.get(request, "add-menu") %>' url="<%= addSiteNavigationMenuURL %>" />
+			<liferay-frontend:add-menu
+				inline="<%= true %>"
+			>
+				<liferay-frontend:add-menu-item
+					id="addNavigationMenuMenuItem"
+					title='<%= LanguageUtil.get(request, "add-menu") %>'
+					url="<%= addSiteNavigationMenuURL %>"
+				/>
 			</liferay-frontend:add-menu>
 		</c:if>
 	</liferay-frontend:management-bar-buttons>
 
 	<liferay-frontend:management-bar-filters>
-		<liferay-frontend:management-bar-navigation label="all">
-			<liferay-frontend:management-bar-filter-item active="<%= true %>" label="all" url="<%= siteNavigationAdminDisplayContext.getPortletURL().toString() %>" />
+		<liferay-frontend:management-bar-navigation
+			label="all"
+		>
+			<liferay-frontend:management-bar-filter-item
+				active="<%= true %>"
+				label="all"
+				url="<%= siteNavigationAdminDisplayContext.getPortletURL().toString() %>"
+			/>
 		</liferay-frontend:management-bar-navigation>
 
 		<liferay-frontend:management-bar-sort
@@ -66,13 +78,20 @@ String displayStyle = siteNavigationAdminDisplayContext.getDisplayStyle();
 			%>
 
 			<aui:form action="<%= portletURL.toString() %>" method="post" name="fm1">
-				<liferay-ui:input-search markupView="lexicon" />
+				<liferay-ui:input-search
+					markupView="lexicon"
+				/>
 			</aui:form>
 		</li>
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-action-buttons>
-		<liferay-frontend:management-bar-button href="javascript:;" icon="trash" id="deleteSelectedSiteNavigationMenus" label="delete" />
+		<liferay-frontend:management-bar-button
+			href="javascript:;"
+			icon="trash"
+			id="deleteSelectedSiteNavigationMenus"
+			label="delete"
+		/>
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 
@@ -90,21 +109,6 @@ String displayStyle = siteNavigationAdminDisplayContext.getDisplayStyle();
 			keyProperty="siteNavigationMenuId"
 			modelVar="siteNavigationMenu"
 		>
-
-			<%
-			String navigation = StringPool.BLANK;
-
-			if (siteNavigationMenu.getType() == SiteNavigationConstants.TYPE_PRIMARY) {
-				navigation = "primary";
-			}
-			else if (siteNavigationMenu.getType() == SiteNavigationConstants.TYPE_SECONDARY) {
-				navigation = "secondary";
-			}
-			else if (siteNavigationMenu.getType() == SiteNavigationConstants.TYPE_SOCIAL) {
-				navigation = "social";
-			}
-			%>
-
 			<portlet:renderURL var="editSiteNavigationMenuURL">
 				<portlet:param name="mvcPath" value="/edit_site_navigation_menu.jsp" />
 				<portlet:param name="redirect" value="<%= currentURL %>" />
@@ -139,7 +143,7 @@ String displayStyle = siteNavigationAdminDisplayContext.getDisplayStyle();
 						</h5>
 
 						<h6 class="text-default">
-							<liferay-ui:message key="<%= navigation %>" />
+							<liferay-ui:message key="<%= siteNavigationMenu.getTypeKey() %>" />
 						</h6>
 					</liferay-ui:search-container-column-text>
 
@@ -175,7 +179,7 @@ String displayStyle = siteNavigationAdminDisplayContext.getDisplayStyle();
 							</liferay-frontend:vertical-card-header>
 
 							<liferay-frontend:vertical-card-footer>
-								<liferay-ui:message key="<%= navigation %>" />
+								<liferay-ui:message key="<%= siteNavigationMenu.getTypeKey() %>" />
 							</liferay-frontend:vertical-card-footer>
 						</liferay-frontend:icon-vertical-card>
 					</liferay-ui:search-container-column-text>
@@ -189,8 +193,14 @@ String displayStyle = siteNavigationAdminDisplayContext.getDisplayStyle();
 					/>
 
 					<liferay-ui:search-container-column-text
-						name="navigation"
-						value="<%= LanguageUtil.get(request, navigation) %>"
+						cssClass="table-cell-content text-center"
+						name="add-new-pages"
+						value='<%= siteNavigationMenu.isAuto() ? LanguageUtil.get(request, "yes") : StringPool.BLANK %>'
+					/>
+
+					<liferay-ui:search-container-column-text
+						name="marked-as"
+						value="<%= LanguageUtil.get(request, siteNavigationMenu.getTypeKey()) %>"
 					/>
 
 					<liferay-ui:search-container-column-text
@@ -210,7 +220,10 @@ String displayStyle = siteNavigationAdminDisplayContext.getDisplayStyle();
 			</c:choose>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+		<liferay-ui:search-iterator
+			displayStyle="<%= displayStyle %>"
+			markupView="lexicon"
+		/>
 	</liferay-ui:search-container>
 </aui:form>
 

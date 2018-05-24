@@ -1344,6 +1344,7 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 		String smallImageURL = entry.getSmallImageURL();
 
 		long deletePreviousSmallImageFileEntryId = 0;
+		long deletePreviousSmallImageId = 0;
 
 		if (smallImageImageSelector != null) {
 			smallImageURL = smallImageImageSelector.getImageURL();
@@ -1359,6 +1360,8 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 
 			deletePreviousSmallImageFileEntryId =
 				entry.getSmallImageFileEntryId();
+
+			deletePreviousSmallImageId = entry.getSmallImageId();
 		}
 
 		validate(smallImageFileEntryId);
@@ -1406,6 +1409,10 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 		if (deletePreviousSmallImageFileEntryId != 0) {
 			PortletFileRepositoryUtil.deletePortletFileEntry(
 				deletePreviousSmallImageFileEntryId);
+		}
+
+		if (deletePreviousSmallImageId != 0) {
+			imageLocalService.deleteImage(deletePreviousSmallImageId);
 		}
 
 		return entry;
@@ -1937,10 +1944,23 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 			"[$BLOGS_ENTRY_CONTENT$]",
 			StringUtil.shorten(HtmlUtil.stripHtml(entry.getContent()), 500),
 			false);
+
+		String description = entry.getDescription();
+
+		if (Validator.isNotNull(description)) {
+			subscriptionSender.setContextAttribute(
+				"[$BLOGS_ENTRY_DESCRIPTION$]", description, false);
+		}
+		else {
+			subscriptionSender.setContextAttribute(
+				"[$BLOGS_ENTRY_DESCRIPTION$]",
+				StringUtil.shorten(HtmlUtil.stripHtml(entry.getContent()), 400),
+				false);
+		}
+
 		subscriptionSender.setContextAttributes(
 			"[$BLOGS_ENTRY_CREATE_DATE$]",
 			Time.getSimpleDate(entry.getCreateDate(), "yyyy/MM/dd"),
-			"[$BLOGS_ENTRY_DESCRIPTION$]", entry.getDescription(),
 			"[$BLOGS_ENTRY_STATUS_BY_USER_NAME$]", entry.getStatusByUserName(),
 			"[$BLOGS_ENTRY_TITLE$]", entryTitle,
 			"[$BLOGS_ENTRY_UPDATE_COMMENT$]",

@@ -53,6 +53,7 @@ import com.liferay.portal.kernel.service.BaseLocalServiceImpl;
 import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistry;
 import com.liferay.portal.kernel.service.persistence.ClassNamePersistence;
 import com.liferay.portal.kernel.service.persistence.UserPersistence;
+import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
@@ -110,6 +111,7 @@ public abstract class FriendlyURLEntryLocalServiceBaseImpl
 	 * @return the new friendly url entry
 	 */
 	@Override
+	@Transactional(enabled = false)
 	public FriendlyURLEntry createFriendlyURLEntry(long friendlyURLEntryId) {
 		return friendlyURLEntryPersistence.create(friendlyURLEntryId);
 	}
@@ -485,7 +487,7 @@ public abstract class FriendlyURLEntryLocalServiceBaseImpl
 				languageId);
 
 		if (friendlyURLEntryLocalization == null) {
-			long friendlyURLEntryLocalizationId = counterLocalService.increment();
+			long friendlyURLEntryLocalizationId = counterLocalService.increment(FriendlyURLEntryLocalization.class.getName());
 
 			friendlyURLEntryLocalization = friendlyURLEntryLocalizationPersistence.create(friendlyURLEntryLocalizationId);
 
@@ -544,13 +546,14 @@ public abstract class FriendlyURLEntryLocalServiceBaseImpl
 			}
 		}
 
+		long batchCounter = counterLocalService.increment(FriendlyURLEntryLocalization.class.getName(),
+				localizedValuesMap.size()) - localizedValuesMap.size();
+
 		for (Map.Entry<String, String[]> entry : localizedValuesMap.entrySet()) {
 			String languageId = entry.getKey();
 			String[] localizedValues = entry.getValue();
 
-			long friendlyURLEntryLocalizationId = counterLocalService.increment();
-
-			FriendlyURLEntryLocalization friendlyURLEntryLocalization = friendlyURLEntryLocalizationPersistence.create(friendlyURLEntryLocalizationId);
+			FriendlyURLEntryLocalization friendlyURLEntryLocalization = friendlyURLEntryLocalizationPersistence.create(++batchCounter);
 
 			friendlyURLEntryLocalization.setFriendlyURLEntryId(friendlyURLEntry.getFriendlyURLEntryId());
 			friendlyURLEntryLocalization.setGroupId(friendlyURLEntry.getGroupId());

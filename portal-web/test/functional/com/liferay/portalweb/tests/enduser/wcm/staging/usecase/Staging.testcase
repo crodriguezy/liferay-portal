@@ -379,7 +379,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Categorization" />
+			<var name="panel" value="Categorization" />
 		</execute>
 
 		<execute macro="BlogsEntry#addTag">
@@ -689,12 +689,10 @@
 			<var name="portlet" value="System Settings" />
 		</execute>
 
-		<execute macro="Navigator#gotoNavItem">
-			<var name="navItem" value="Collaboration" />
-		</execute>
-
-		<execute macro="SystemSettings#editConfiguration">
+		<execute macro="SystemSettings#gotoConfiguration">
+			<var name="configurationCategory" value="Documents and Media" />
 			<var name="configurationName" value="Documents &amp; Media Service" />
+			<var name="configurationScope" value="System Scope" />
 		</execute>
 
 		<execute function="Type" locator1="TextInput#GENERIC_TEXT_INPUT" value1="30000000">
@@ -947,7 +945,7 @@
 		</execute>
 
 		<execute macro="Workflow#configureWorkflow">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 			<var name="workflowResourceValue" value="Page Revision" />
 		</execute>
 
@@ -1007,7 +1005,7 @@
 		</execute>
 
 		<execute macro="Workflow#configureWorkflow">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 			<var name="workflowResourceValue" value="Page Revision" />
 		</execute>
 
@@ -1022,7 +1020,7 @@
 		</execute>
 
 		<execute macro="Workflow#configureWorkflowViaFolderInfo">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 		</execute>
 
 		<execute macro="Navigator#openSiteURL">
@@ -1515,7 +1513,7 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="Navigator#gotoSitePage">
+		<execute macro="Navigator#gotoStagedSitePage">
 			<var name="pageName" value="Staging Test Page" />
 			<var name="siteName" value="Site Name" />
 		</execute>
@@ -1588,8 +1586,12 @@
 			<var name="portlet" value="Workflow" />
 		</execute>
 
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Schemes" />
+		</execute>
+
 		<execute macro="Workflow#configureWorkflow">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 			<var name="workflowResourceValue" value="Blogs Entry" />
 		</execute>
 
@@ -1637,7 +1639,9 @@
 			<var name="user" value="Test Test" />
 		</execute>
 
-		<execute macro="Workflow#clickAssignToMeByDetails" />
+		<execute macro="LexiconEntry#gotoEllipsisMenuItem">
+			<var name="menuItem" value="Assign to Me" />
+		</execute>
 
 		<execute macro="Workflow#confirmWorkflowAction" />
 
@@ -1783,7 +1787,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="Structure Description" />
@@ -1812,7 +1818,9 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoManageTemplates" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Templates" />
+		</execute>
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="Template Description" />
@@ -1903,7 +1911,9 @@
 
 		<execute function="AssertTextEquals#assertPartialText" locator1="WC#ENTRY_DESCRIPTIVE_TITLE_ON_LIVE" value1="Web Content Title" />
 
-		<execute macro="WebContentNavigator#gotoManageStructures" />
+		<execute macro="Navigator#gotoNavItem">
+			<var name="navItem" value="Structures" />
+		</execute>
 
 		<execute macro="WebContentStructures#viewCP">
 			<var name="structureDescription" value="Structure Description" />
@@ -1911,7 +1921,7 @@
 		</execute>
 	</command>
 
-	<command name="StagingWithPublishTemplate" priority="4" >
+	<command name="StagingWithPublishTemplate" priority="4">
 		<execute macro="Navigator#openSiteURL">
 			<var name="siteName" value="Site Name" />
 		</execute>
@@ -2251,7 +2261,7 @@
 			<var name="pageVariationNameMenulistName" value="Test Page Variation Name" />
 		</execute>
 
-		<execute macro="Staging#viewHistoryVersionPG" >
+		<execute macro="Staging#viewHistoryVersionPG">
 			<var name="historyVersion" value="${historyVersion}" />
 		</execute>
 	</command>
@@ -2310,5 +2320,76 @@
 			<var name="pageName2" value="Test Page 1" />
 			<var name="pageName3" value="Test Page 2" />
 		</execute>
+	</command>
+
+	<command name="ViewPublishedContentAfterStagingUndo" priority="4">
+		<execute macro="Navigator#openSiteURL">
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Publishing" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Staging" />
+		</execute>
+
+		<execute macro="Staging#activateStagingCP">
+			<var name="pageVersioningEnabled" value="true" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="Navigator#gotoStagedSitePage">
+			<var name="pageName" value="Staging Test Page" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="Portlet#addPG">
+			<var name="portletName" value="Calendar" />
+		</execute>
+
+		<execute macro="Staging#gotoPublishToLive" />
+
+		<execute macro="Staging#publishToLive" />
+
+		<execute macro="Portlet#addPG">
+			<var name="portletName" value="Wiki" />
+		</execute>
+
+		<execute macro="Staging#gotoPublishToLive" />
+
+		<execute macro="Staging#publishToLive" />
+
+		<execute macro="Portlet#addPG">
+			<var name="portletName" value="Documents and Media" />
+		</execute>
+
+		<execute macro="Staging#gotoPublishToLive" />
+
+		<execute macro="Staging#publishToLive" />
+
+		<execute macro="Portlet#addPG">
+			<var name="portletName" value="Bookmarks" />
+		</execute>
+
+		<execute macro="Staging#undoStagingPageVersioningPG" />
+
+		<execute macro="Portlet#viewNoSpecificPG">
+			<var name="portletName" value="Bookmarks" />
+		</execute>
+
+		<execute macro="Staging#gotoPublishToLive" />
+
+		<execute macro="Staging#publishToLive" />
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Staging Test Page" />
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<for list="Calendar,Wiki,Documents and Media" param="publishedPortlet">
+			<execute macro="Portlet#viewPG">
+				<var name="portletName" value="${publishedPortlet}" />
+			</execute>
+		</for>
 	</command>
 </definition>

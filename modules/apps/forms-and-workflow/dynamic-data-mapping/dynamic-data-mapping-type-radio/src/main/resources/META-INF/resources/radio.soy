@@ -15,6 +15,7 @@
 	{@param label: string}
 	{@param name: string}
 	{@param options: list<[label: string, value: string]>}
+	{@param pathThemeImages: string}
 	{@param readOnly: bool}
 	{@param showLabel: bool}
 	{@param value: string}
@@ -28,22 +29,25 @@
 
 	<div class="form-group {$visible ? '' : 'hide'}"
 		data-fieldname="{$name}">
+		<div>
+			<label for="{$name}">
+				{if $showLabel}
+					{$label}{sp}
+				{/if}
 
-		{if $showLabel}
-			<div>
-				<label for="{$name}">
-					{$label}
+				{if $required}
+					<svg aria-hidden="true" class="lexicon-icon lexicon-icon-asterisk reference-mark">
+						<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#asterisk" />
+					</svg>
+				{/if}
+			</label>
 
-					{if $required}
-						<span class="icon-asterisk text-warning"></span>
-					{/if}
-				</label>
-
+			{if $showLabel}
 				{if $tip}
 					<span class="form-text">{$tip}</span>
 				{/if}
-			</div>
-		{/if}
+			{/if}
+		</div>
 
 		{foreach $option in $options}
 

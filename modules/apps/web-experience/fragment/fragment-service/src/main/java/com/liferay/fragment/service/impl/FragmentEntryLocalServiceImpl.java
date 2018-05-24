@@ -15,6 +15,7 @@
 package com.liferay.fragment.service.impl;
 
 import com.liferay.fragment.exception.DuplicateFragmentEntryKeyException;
+import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.exception.FragmentEntryNameException;
 import com.liferay.fragment.exception.RequiredFragmentEntryException;
 import com.liferay.fragment.model.FragmentEntry;
@@ -24,6 +25,7 @@ import com.liferay.html.preview.model.HtmlPreviewEntry;
 import com.liferay.html.preview.service.HtmlPreviewEntryLocalService;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.ModelHintsUtil;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -363,6 +365,14 @@ public class FragmentEntryLocalServiceImpl
 		if (Validator.isNull(name)) {
 			throw new FragmentEntryNameException("Name must not be null");
 		}
+
+		int nameMaxLength = ModelHintsUtil.getMaxLength(
+			FragmentEntry.class.getName(), "name");
+
+		if (name.length() > nameMaxLength) {
+			throw new FragmentEntryNameException(
+				"Maximum length of name exceeded");
+		}
 	}
 
 	protected void validateContent(String html) throws PortalException {
@@ -407,7 +417,9 @@ public class FragmentEntryLocalServiceImpl
 		return StringPool.BLANK;
 	}
 
-	private String _parseHTMLContent(String html) {
+	private String _parseHTMLContent(String html)
+		throws FragmentEntryContentException {
+
 		Document document = Jsoup.parse(html);
 
 		Document.OutputSettings outputSettings = new Document.OutputSettings();
@@ -418,7 +430,13 @@ public class FragmentEntryLocalServiceImpl
 
 		Element bodyElement = document.body();
 
-		return bodyElement.html();
+		String bodyHtml = bodyElement.html();
+
+		if (Validator.isNull(bodyHtml)) {
+			throw new FragmentEntryContentException();
+		}
+
+		return bodyHtml;
 	}
 
 	private HtmlPreviewEntry _updateHtmlPreviewEntry(

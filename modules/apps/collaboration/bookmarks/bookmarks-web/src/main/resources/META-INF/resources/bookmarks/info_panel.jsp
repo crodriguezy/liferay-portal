@@ -65,11 +65,19 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(entries)) {
 			</h5>
 		</div>
 
-		<aui:nav-bar cssClass="navbar-no-collapse" markupView="lexicon">
-			<aui:nav collapsible="<%= false %>" cssClass="navbar-nav">
-				<aui:nav-item label="details" selected="<%= true %>" />
-			</aui:nav>
-		</aui:nav-bar>
+		<clay:navigation-bar
+			items="<%=
+				new JSPNavigationItemList(pageContext) {
+					{
+						add(
+							navigationItem -> {
+								navigationItem.setActive(true);
+								navigationItem.setLabel(LanguageUtil.get(request, "details"));
+							});
+					}
+				}
+			%>"
+		/>
 
 		<div class="sidebar-body">
 			<dl class="sidebar-block">
@@ -125,11 +133,19 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(entries)) {
 			</h5>
 		</div>
 
-		<aui:nav-bar cssClass="navbar-no-collapse" markupView="lexicon">
-			<aui:nav collapsible="<%= false %>" cssClass="navbar-nav">
-				<aui:nav-item label="details" selected="<%= true %>" />
-			</aui:nav>
-		</aui:nav-bar>
+		<clay:navigation-bar
+			items="<%=
+				new JSPNavigationItemList(pageContext) {
+					{
+						add(
+							navigationItem -> {
+								navigationItem.setActive(true);
+								navigationItem.setLabel(LanguageUtil.get(request, "details"));
+							});
+					}
+				}
+			%>"
+		/>
 
 		<div class="sidebar-body">
 			<dl class="sidebar-block">
@@ -184,7 +200,9 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(entries)) {
 				inTrash="<%= entry.isInTrash() %>"
 			/>
 
-			<liferay-expando:custom-attributes-available className="<%= BookmarksEntry.class.getName() %>">
+			<liferay-expando:custom-attributes-available
+				className="<%= BookmarksEntry.class.getName() %>"
+			>
 				<liferay-expando:custom-attribute-list
 					className="<%= BookmarksEntry.class.getName() %>"
 					classPK="<%= entry.getEntryId() %>"
@@ -212,11 +230,19 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(entries)) {
 			<h4 class="sidebar-title"><liferay-ui:message arguments="<%= folders.size() + entries.size() %>" key="x-items-are-selected" /></h4>
 		</div>
 
-		<aui:nav-bar cssClass="navbar-no-collapse" markupView="lexicon">
-			<aui:nav collapsible="<%= false %>" cssClass="navbar-nav">
-				<aui:nav-item label="details" selected="<%= true %>" />
-			</aui:nav>
-		</aui:nav-bar>
+		<clay:navigation-bar
+			items="<%=
+				new JSPNavigationItemList(pageContext) {
+					{
+						add(
+							navigationItem -> {
+								navigationItem.setActive(true);
+								navigationItem.setLabel(LanguageUtil.get(request, "details"));
+							});
+					}
+				}
+			%>"
+		/>
 
 		<div class="sidebar-body">
 			<h5><liferay-ui:message arguments="<%= folders.size() + entries.size() %>" key="x-items-are-selected" /></h5>

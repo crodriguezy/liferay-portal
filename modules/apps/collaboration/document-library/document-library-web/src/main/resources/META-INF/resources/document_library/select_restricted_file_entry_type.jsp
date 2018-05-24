@@ -17,33 +17,47 @@
 <%@ include file="/document_library/init.jsp" %>
 
 <%
+DLSelectRestrictedFileEntryTypesDisplayContext selectRestrictedFileEntryTypesDisplayContext = new DLSelectRestrictedFileEntryTypesDisplayContext(renderRequest, renderResponse, request);
+
 String eventName = ParamUtil.getString(request, "eventName", liferayPortletResponse.getNamespace() + "selectFileEntryType");
 %>
 
-<liferay-util:include page="/document_library/file_entry_type_toolbar.jsp" servletContext="<%= application %>" />
+<clay:navigation-bar
+	items="<%=
+		new JSPNavigationItemList(pageContext) {
+			{
+				add(
+					navigationItem -> {
+						navigationItem.setActive(true);
+						navigationItem.setLabel(LanguageUtil.get(request, "document-types"));
+					});
+			}
+		}
+	%>"
+/>
 
-<liferay-portlet:renderURL varImpl="portletURL">
-	<portlet:param name="mvcPath" value="/document_library/select_restricted_file_entry_type.jsp" />
-	<portlet:param name="includeBasicFileEntryType" value="<%= Boolean.TRUE.toString() %>" />
-</liferay-portlet:renderURL>
-
-<aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" method="post" name="selectFileEntryTypeFm">
+<aui:form action="<%= selectRestrictedFileEntryTypesDisplayContext.getFormActionURL() %>" cssClass="container-fluid-1280" method="post" name="selectFileEntryTypeFm">
 	<liferay-ui:search-container
-		searchContainer='<%= new SearchContainer(renderRequest, new DisplayTerms(request), new DisplayTerms(request), SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_DELTA, portletURL, null, LanguageUtil.get(request, "there-are-no-results")) %>'
+		searchContainer="<%= selectRestrictedFileEntryTypesDisplayContext.getSearchContainer() %>"
 	>
-		<liferay-ui:search-container-results>
-			<%@ include file="/document_library/file_entry_type_search_results.jspf" %>
-		</liferay-ui:search-container-results>
-
 		<liferay-ui:search-container-row
 			className="com.liferay.document.library.kernel.model.DLFileEntryType"
 			keyProperty="fileEntryTypeId"
 			modelVar="fileEntryType"
 		>
-			<liferay-ui:search-container-column-text
-				name="name"
-				value="<%= HtmlUtil.escape(fileEntryType.getName(locale)) %>"
+			<liferay-ui:search-container-column-icon
+				icon="edit-layout"
 			/>
+
+			<liferay-ui:search-container-column-text
+				colspan="<%= 2 %>"
+			>
+				<h5><%= HtmlUtil.escape(fileEntryType.getName(locale)) %></h5>
+
+				<h6 class="text-default">
+					<span><%= fileEntryType.getDescription(locale) %></span>
+				</h6>
+			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text>
 
@@ -58,7 +72,10 @@ String eventName = ParamUtil.getString(request, "eventName", liferayPortletRespo
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator markupView="lexicon" />
+		<liferay-ui:search-iterator
+			displayStyle="descriptive"
+			markupView="lexicon"
+		/>
 	</liferay-ui:search-container>
 </aui:form>
 

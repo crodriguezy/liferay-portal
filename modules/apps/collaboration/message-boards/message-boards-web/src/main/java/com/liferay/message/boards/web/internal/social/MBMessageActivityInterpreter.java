@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.AggregateResourceBundleLoader;
-import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.ResourceBundleLoaderUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -42,7 +41,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Zsolt Berentey
  */
 @Component(
-	property = {"javax.portlet.name=" + MBPortletKeys.MESSAGE_BOARDS},
+	property = "javax.portlet.name=" + MBPortletKeys.MESSAGE_BOARDS,
 	service = SocialActivityInterpreter.class
 )
 public class MBMessageActivityInterpreter
@@ -51,18 +50,6 @@ public class MBMessageActivityInterpreter
 	@Override
 	public String[] getClassNames() {
 		return _CLASS_NAMES;
-	}
-
-	@Override
-	protected String addNoSuchEntryRedirect(
-			String url, String className, long classPK,
-			ServiceContext serviceContext)
-		throws Exception {
-
-		String viewEntryURL = super.getViewEntryURL(
-			className, classPK, serviceContext);
-
-		return _http.setParameter(url, "noSuchEntryRedirect", viewEntryURL);
 	}
 
 	@Override
@@ -190,9 +177,6 @@ public class MBMessageActivityInterpreter
 	}
 
 	private static final String[] _CLASS_NAMES = {MBMessage.class.getName()};
-
-	@Reference
-	private Http _http;
 
 	@Reference
 	private MBMessageLocalService _mbMessageLocalService;

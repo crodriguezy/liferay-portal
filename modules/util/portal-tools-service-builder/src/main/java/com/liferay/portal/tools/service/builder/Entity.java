@@ -17,6 +17,7 @@ package com.liferay.portal.tools.service.builder;
 import com.liferay.portal.kernel.util.Accessor;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.TextFormatter;
 import com.liferay.portal.kernel.util.Validator;
@@ -92,20 +93,20 @@ public class Entity implements Comparable<Entity> {
 
 	public Entity(String name) {
 		this(
-			null, null, null, null, name, null, null, null, false, false, false,
-			true, null, null, null, null, null, true, false, false, false,
-			false, false, null, null, null, null, null, null, null, null, null,
-			null, false, null);
+			null, null, null, name, null, null, null, false, false, false, true,
+			null, null, null, null, null, true, false, false, false, false,
+			false, null, null, null, null, null, null, null, null, null, null,
+			false, null);
 	}
 
 	public Entity(
-		String packagePath, String apiPackagePath, String portletName,
-		String portletShortName, String name, String humanName, String table,
-		String alias, boolean uuid, boolean uuidAccessor, boolean localService,
-		boolean remoteService, String persistenceClass, String finderClassName,
-		String dataSource, String sessionFactory, String txManager,
-		boolean cacheEnabled, boolean dynamicUpdateEnabled, boolean jsonEnabled,
-		boolean mvccEnabled, boolean trashEnabled, boolean deprecated,
+		String packagePath, String apiPackagePath, String portletShortName,
+		String name, String humanName, String table, String alias, boolean uuid,
+		boolean uuidAccessor, boolean localService, boolean remoteService,
+		String persistenceClass, String finderClassName, String dataSource,
+		String sessionFactory, String txManager, boolean cacheEnabled,
+		boolean dynamicUpdateEnabled, boolean jsonEnabled, boolean mvccEnabled,
+		boolean trashEnabled, boolean deprecated,
 		List<EntityColumn> pkEntityColumns,
 		List<EntityColumn> regularEntityColumns,
 		List<EntityColumn> blobEntityColumns,
@@ -114,11 +115,10 @@ public class Entity implements Comparable<Entity> {
 		List<EntityFinder> entityFinders, List<Entity> referenceEntities,
 		List<String> unresolvedReferenceEntityNames,
 		List<String> txRequiredMethodNames, boolean resourceActionModel,
-		String uadEntityTypeDescription) {
+		String uadTypeDescription) {
 
 		_packagePath = packagePath;
 		_apiPackagePath = apiPackagePath;
-		_portletName = portletName;
 		_portletShortName = portletShortName;
 		_name = name;
 		_table = table;
@@ -145,7 +145,7 @@ public class Entity implements Comparable<Entity> {
 		_unresolvedReferenceEntityNames = unresolvedReferenceEntityNames;
 		_txRequiredMethodNames = txRequiredMethodNames;
 		_resourceActionModel = resourceActionModel;
-		_uadEntityTypeDescription = uadEntityTypeDescription;
+		_uadTypeDescription = uadTypeDescription;
 
 		_humanName = GetterUtil.getString(
 			humanName, ServiceBuilder.toHumanName(name));
@@ -337,12 +337,152 @@ public class Entity implements Comparable<Entity> {
 		return _localizedEntityColumns;
 	}
 
+	public String getModelBaseInterfaceNames() {
+		List<String> interfaceNames = new ArrayList<>();
+
+		if (isAttachedModel()) {
+			interfaceNames.add("AttachedModel");
+		}
+		else if (isTypedModel()) {
+			interfaceNames.add("TypedModel");
+		}
+
+		interfaceNames.add("BaseModel<" + _name + ">");
+
+		if (isContainerModel()) {
+			interfaceNames.add("ContainerModel");
+		}
+
+		if (isLocalizedModel()) {
+			interfaceNames.add("LocalizedModel");
+		}
+
+		if (isMvccEnabled()) {
+			interfaceNames.add("MVCCModel");
+		}
+
+		if (isResourcedModel()) {
+			interfaceNames.add("ResourcedModel");
+		}
+
+		if (isShardedModel()) {
+			interfaceNames.add("ShardedModel");
+		}
+
+		if (isStagedGroupedModel()) {
+			interfaceNames.add("StagedGroupedModel");
+		}
+		else {
+			if (isGroupedModel()) {
+				interfaceNames.add("GroupedModel");
+			}
+
+			if (isStagedAuditedModel()) {
+				interfaceNames.add("StagedAuditedModel");
+			}
+			else {
+				if (isStagedModel()) {
+					interfaceNames.add("StagedModel");
+				}
+
+				if (isAuditedModel() && !isGroupedModel()) {
+					interfaceNames.add("AuditedModel");
+				}
+			}
+		}
+
+		if (isTrashEnabled()) {
+			interfaceNames.add("TrashedModel");
+		}
+
+		if (isWorkflowEnabled()) {
+			interfaceNames.add("WorkflowedModel");
+		}
+
+		interfaceNames.sort(null);
+
+		StringBundler sb = new StringBundler(2 * interfaceNames.size());
+
+		for (String interfaceName : interfaceNames) {
+			sb.append(interfaceName);
+			sb.append(", ");
+		}
+
+		sb.setIndex(sb.index() - 1);
+
+		return sb.toString();
+	}
+
 	public String getName() {
 		return _name;
 	}
 
 	public String getNames() {
 		return TextFormatter.formatPlural(_name);
+	}
+
+	public Set getOverrideColumnNames() {
+		Set<String> overrideColumnName = new HashSet<>();
+
+		if (isAttachedModel()) {
+			overrideColumnName.add("classPK");
+		}
+
+		if (isAuditedModel()) {
+			overrideColumnName.add("companyId");
+			overrideColumnName.add("createDate");
+			overrideColumnName.add("modifiedDate");
+			overrideColumnName.add("userId");
+			overrideColumnName.add("userName");
+			overrideColumnName.add("userUuid");
+		}
+
+		if (isGroupedModel()) {
+			overrideColumnName.add("groupId");
+		}
+
+		if (isMvccEnabled()) {
+			overrideColumnName.add("mvccVersion");
+		}
+
+		if (isShardedModel()) {
+			overrideColumnName.add("companyId");
+		}
+
+		if (isStagedGroupedModel()) {
+			overrideColumnName.add("lastPublishDate");
+		}
+
+		if (isStagedModel()) {
+			overrideColumnName.add("companyId");
+			overrideColumnName.add("createDate");
+			overrideColumnName.add("modifiedDate");
+			overrideColumnName.add("stagedModelType");
+			overrideColumnName.add("uuid");
+		}
+
+		if (isResourcedModel()) {
+			overrideColumnName.add("resourcePrimKey");
+		}
+
+		if (isTrashEnabled()) {
+			overrideColumnName.add("status");
+		}
+
+		if (isTypedModel()) {
+			overrideColumnName.add("className");
+			overrideColumnName.add("classNameId");
+		}
+
+		if (isWorkflowEnabled()) {
+			overrideColumnName.add("status");
+			overrideColumnName.add("statusByUserId");
+			overrideColumnName.add("statusByUserName");
+			overrideColumnName.add("statusByUserUuid");
+			overrideColumnName.add("statusDate");
+		}
+
+		return overrideColumnName;
 	}
 
 	public String getPackagePath() {
@@ -399,10 +539,6 @@ public class Entity implements Comparable<Entity> {
 		EntityColumn entityColumn = _getPKEntityColumn();
 
 		return entityColumn.getNames();
-	}
-
-	public String getPortletName() {
-		return _portletName;
 	}
 
 	public String getPortletShortName() {
@@ -483,8 +619,23 @@ public class Entity implements Comparable<Entity> {
 		return uadAnonymizableEntityColumnsMap;
 	}
 
-	public String getUADEntityTypeDescription() {
-		return _uadEntityTypeDescription;
+	public List<EntityColumn> getUADEntityColumns() {
+		List<EntityColumn> uadEntityColumns = new ArrayList<>();
+
+		uadEntityColumns.add(_getPKEntityColumn());
+
+		Map<String, List<EntityColumn>> uadAnonymizableEntityColumnsMap =
+			getUADAnonymizableEntityColumnsMap();
+
+		for (Map.Entry<String, List<EntityColumn>> entry :
+				uadAnonymizableEntityColumnsMap.entrySet()) {
+
+			uadEntityColumns.addAll(entry.getValue());
+		}
+
+		uadEntityColumns.addAll(getUADNonanonymizableEntityColumns());
+
+		return uadEntityColumns;
 	}
 
 	public List<EntityColumn> getUADNonanonymizableEntityColumns() {
@@ -497,6 +648,10 @@ public class Entity implements Comparable<Entity> {
 		}
 
 		return uadNonanonymizableEntityColumns;
+	}
+
+	public String getUADTypeDescription() {
+		return _uadTypeDescription;
 	}
 
 	public List<String> getUADUserIdColumnNames() {
@@ -1030,7 +1185,6 @@ public class Entity implements Comparable<Entity> {
 	private final String _persistenceClassName;
 	private final List<EntityColumn> _pkEntityColumns;
 	private boolean _portalReference;
-	private final String _portletName;
 	private final String _portletShortName;
 	private final List<Entity> _referenceEntities;
 	private final List<EntityColumn> _regularEntityColumns;
@@ -1042,7 +1196,7 @@ public class Entity implements Comparable<Entity> {
 	private final boolean _trashEnabled;
 	private final String _txManager;
 	private final List<String> _txRequiredMethodNames;
-	private final String _uadEntityTypeDescription;
+	private final String _uadTypeDescription;
 	private List<String> _unresolvedReferenceEntityNames;
 	private final boolean _uuid;
 	private final boolean _uuidAccessor;

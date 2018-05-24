@@ -16,11 +16,9 @@ package com.liferay.user.associated.data.web.internal.portlet.action;
 
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
-import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.JavaConstants;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.user.associated.data.constants.UserAssociatedDataPortletKeys;
 import com.liferay.users.admin.constants.UsersAdminPortletKeys;
 
@@ -38,20 +36,18 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"javax.portlet.name=" + UserAssociatedDataPortletKeys.USER_ASSOCIATED_DATA,
-		"mvc.command.name=/user_associated_data/delete_user"
+		"mvc.command.name=/delete_user"
 	},
 	service = MVCActionCommand.class
 )
-public class DeleteUserMVCActionCommand extends BaseMVCActionCommand {
+public class DeleteUserMVCActionCommand extends BaseUADMVCActionCommand {
 
 	@Override
 	protected void doProcessAction(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long selUserId = ParamUtil.getLong(actionRequest, "selUserId");
-
-		_userLocalService.deleteUser(selUserId);
+		_userLocalService.deleteUser(getSelectedUserId(actionRequest));
 
 		PortletRequest portletRequest =
 			(PortletRequest)actionRequest.getAttribute(

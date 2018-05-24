@@ -21,7 +21,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 /**
  * @author Jürgen Kappler
  */
-@ExtendedObjectClassDefinition(category = "web-experience")
+@ExtendedObjectClassDefinition(category = "web-content")
 @Meta.OCD(
 	id = "com.liferay.journal.web.configuration.JournalWebConfiguration",
 	localization = "content/Language", name = "journal-web-configuration-name"
@@ -89,5 +89,11 @@ public interface JournalWebConfiguration {
 		required = false
 	)
 	public boolean publishVersionHistoryByDefault();
+
+	@Meta.AD(
+		deflt = "false", name = "show-ancestor-scopes-by-default",
+		required = false
+	)
+	public boolean showAncestorScopesByDefault();
 
 }

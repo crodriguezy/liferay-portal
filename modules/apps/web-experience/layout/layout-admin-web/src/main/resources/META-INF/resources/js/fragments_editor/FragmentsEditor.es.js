@@ -1,14 +1,28 @@
 import 'frontend-taglib/contextual_sidebar/ContextualSidebar.es';
 import Component from 'metal-component';
 import Soy from 'metal-soy';
-import debounce from 'metal-debounce';
 import {Config} from 'metal-state';
-import {getUid} from 'metal';
 
-import './sidebar/SidebarAddedFragment.es';
-import './sidebar/SidebarFragmentCollection.es';
+import './dialogs/SelectMappingTypeDialog.es';
+import './sidebar/SidebarAddedFragments.es';
+import './sidebar/SidebarAvailableFragments.es';
+import './sidebar/SidebarMapping.es';
 import FragmentEntryLink from './FragmentEntryLink.es';
 import templates from './FragmentsEditor.soy';
+
+/**
+ * Tab that will show fragmentEntryLinks added to the editor
+ * @review
+ * @type {!{
+ *   id: !string,
+ *   label: !string
+ * }}
+ */
+
+const ADDED_FRAGMENTS_TAB = {
+	id: 'added',
+	label: Liferay.Language.get('added')
+};
 
 /**
  * FragmentsEditor
@@ -23,36 +37,60 @@ class FragmentsEditor extends Component {
 	 */
 
 	created() {
-		this._updatePageTemplate = this._updatePageTemplate.bind(this);
-		this._updatePageTemplate = debounce(this._updatePageTemplate, 300);
+		this._sidebarTabs = this.fragmentEntryLinks.length > 0 ?
+			[...this.sidebarTabs, ADDED_FRAGMENTS_TAB] :
+			[...this.sidebarTabs];
+	}
 
-		this._dirty = true;
-		this._fetchFragmentsContent().then(
-			() => {
-				this._dirty = false;
-			}
-		);
+	/**
+	 * Sends message to delete a single fragment entry link to the server and,
+	 * if success, sets the _dirty property to false.
+	 * @param {!string} fragmentEntryLinkId
+	 * @private
+	 * @review
+	 */
+
+	_deleteFragmentEntryLink(fragmentEntryLinkId) {
+		if (!this._dirty) {
+			this._dirty = true;
+
+			const formData = new FormData();
+
+			formData.append(
+				`${this.portletNamespace}fragmentEntryLinkId`,
+				fragmentEntryLinkId
+			);
+
+			fetch(
+				this.deleteFragmentEntryLinkURL,
+				{
+					body: formData,
+					credentials: 'include',
+					method: 'POST'
+				}
+			).then(
+				() => {
+					this._lastSaveDate = new Date().toLocaleTimeString();
+
+					this._dirty = false;
+				}
+			);
+		}
 	}
 
 	/**
 	 * Fetches a FragmentEntryLink content from the fragment ID and
 	 * fragmentEntryLink ID, returns a promise that resolves into it's content.
-	 * @param {!string} fragmentEntryId
 	 * @param {!string} fragmentEntryLinkId
 	 * @return {Promise<string>}
 	 * @review
 	 */
 
-	_fetchFragmentContent(fragmentEntryId, fragmentEntryLinkId) {
+	_fetchFragmentContent(fragmentEntryLinkId) {
 		const formData = new FormData();
 
 		formData.append(
-			`${this.portletNamespace}fragmentEntryId`,
-			fragmentEntryId
-		);
-
-		formData.append(
-			`${this.portletNamespace}position`,
+			`${this.portletNamespace}fragmentEntryLinkId`,
 			fragmentEntryLinkId
 		);
 
@@ -63,50 +101,54 @@ class FragmentsEditor extends Component {
 				credentials: 'include',
 				method: 'POST'
 			}
-		)
-			.then(response => response.json())
-			.then(response => response.content);
+		).then(
+			response => response.json()
+		).then(
+			response => response.content
+		);
 	}
 
 	/**
-	 * Fetchs all missing fragments contents.
-	 * It returns a promise that is resolved when every fragment
-	 * has been fetched.
-	 * @return {Promise<>}
+	 * Focus a fragmentEntryLink for a given ID
+	 * @param {string} fragmentEntryLinkId
 	 * @review
-	 * @private
 	 */
 
-	_fetchFragmentsContent() {
-		return Promise.all(
-			this.fragmentEntryLinks
-				.filter(
-					fragmentEntryLink =>
-						fragmentEntryLink.fragmentEntryId &&
-						fragmentEntryLink.fragmentEntryLinkId &&
-						!fragmentEntryLink.content
-				)
-				.map(
-					fragmentEntryLink => {
-						return this._fetchFragmentContent(
-							fragmentEntryLink.fragmentEntryId,
-							fragmentEntryLink.fragmentEntryLinkId
-						).then(
-							content => {
-								const index = this.fragmentEntryLinks.findIndex(
-									_fragmentEntryLink =>
-										_fragmentEntryLink.fragmentEntryLinkId ===
-										fragmentEntryLink.fragmentEntryLinkId
-								);
-
-								if (index !== -1) {
-									this.fragmentEntryLinks[index].content = content;
-								}
-							}
-						);
+	_focusFragmentEntryLink(fragmentEntryLinkId) {
+		requestAnimationFrame(
+			() => {
+				const index = this.fragmentEntryLinks.findIndex(
+					_fragmentEntryLink => {
+						return _fragmentEntryLink.fragmentEntryLinkId === fragmentEntryLinkId;
 					}
-				)
+				);
+
+				const fragmentEntryLinkElement = this.refs.fragmentEntryLinks.querySelectorAll(
+					'.fragment-entry-link-wrapper'
+				)[index];
+
+				fragmentEntryLinkElement.focus();
+				fragmentEntryLinkElement.scrollIntoView();
+			}
 		);
+	}
+
+	/**
+	 * Gets a new FragmentEntryLink position.
+	 * @returns {number}
+	 * @private
+	 * @review
+	 */
+
+	_getNewFragmentEntryLinkPosition() {
+		const position = Math.max(
+			0,
+			...this.fragmentEntryLinks.map(
+				fragmentEntryLink => fragmentEntryLink.position
+			)
+		);
+
+		return position + 1;
 	}
 
 	/**
@@ -122,16 +164,14 @@ class FragmentsEditor extends Component {
 
 	_handleEditableChanged(data) {
 		const fragmentEntryLink = this.fragmentEntryLinks.find(
-			fragmentEntryLink =>
-				fragmentEntryLink.fragmentEntryLinkId ===
-				data.fragmentEntryLinkId
+			fragmentEntryLink => fragmentEntryLink.fragmentEntryLinkId === data.fragmentEntryLinkId
 		);
 
 		if (fragmentEntryLink) {
 			fragmentEntryLink.editableValues[data.editableId] = data.value;
 		}
 
-		this._updatePageTemplate();
+		this._updateFragmentEntryLink(fragmentEntryLink);
 	}
 
 	/**
@@ -143,19 +183,99 @@ class FragmentsEditor extends Component {
 	 */
 
 	_handleFragmentCollectionEntryClick(event) {
-		this.fragmentEntryLinks = [
-			...this.fragmentEntryLinks,
-			{
-				config: {},
-				content: '',
-				editableValues: {},
-				fragmentEntryId: event.fragmentEntryId,
-				fragmentEntryLinkId: getUid().toString(),
-				name: event.fragmentName
-			}
-		];
+		if (!this._dirty) {
+			this._dirty = true;
 
-		this._updatePageTemplate();
+			const formData = new FormData();
+			const position = this._getNewFragmentEntryLinkPosition();
+
+			formData.append(
+				`${this.portletNamespace}fragmentId`,
+				event.fragmentEntryId
+			);
+
+			formData.append(
+				`${this.portletNamespace}classNameId`,
+				this.classNameId
+			);
+
+			formData.append(
+				`${this.portletNamespace}classPK`,
+				this.classPK
+			);
+
+			formData.append(
+				`${this.portletNamespace}position`,
+				position
+			);
+
+			fetch(
+				this.addFragmentEntryLinkURL,
+				{
+					body: formData,
+					credentials: 'include',
+					method: 'POST'
+				}
+			).then(
+				response => {
+					return response.json();
+				}
+			).then(
+				response => {
+					if (!response.fragmentEntryLinkId) {
+						throw new Error();
+					}
+
+					this.fragmentEntryLinks = [
+						...this.fragmentEntryLinks,
+						{
+							config: {},
+							content: '',
+							editableValues: {},
+							fragmentEntryId: event.fragmentEntryId,
+							fragmentEntryLinkId: response.fragmentEntryLinkId,
+							name: event.fragmentName,
+							position
+						}
+					];
+
+					this._focusFragmentEntryLink(
+						response.fragmentEntryLinkId
+					);
+
+					return this._fetchFragmentContent(
+						response.fragmentEntryLinkId
+					).then(
+						content => {
+							const index = this.fragmentEntryLinks.findIndex(
+								_fragmentEntryLink => {
+									return _fragmentEntryLink.fragmentEntryLinkId === response.fragmentEntryLinkId;
+								}
+							);
+
+							if (index !== -1) {
+								this.fragmentEntryLinks[index].content = content;
+							}
+						}
+					).then(
+						() => {
+							this._lastSaveDate = new Date().toLocaleTimeString();
+
+							this._dirty = false;
+
+							this._sidebarTabs = [
+								...this.sidebarTabs,
+								ADDED_FRAGMENTS_TAB
+							];
+
+							this._focusFragmentEntryLink(
+								response.fragmentEntryLinkId
+							);
+						}
+					);
+				}
+			);
+		}
 	}
 
 	/**
@@ -171,22 +291,45 @@ class FragmentsEditor extends Component {
 	_handleFragmentMove(data) {
 		const direction = data.direction;
 		const index = this.fragmentEntryLinks.findIndex(
-			fragmentEntryLink =>
-				fragmentEntryLink.fragmentEntryLinkId ===
-				data.fragmentEntryLinkId
+			fragmentEntryLink => fragmentEntryLink.fragmentEntryLinkId === data.fragmentEntryLinkId
 		);
 
 		if (
 			(direction === FragmentEntryLink.MOVE_DIRECTIONS.DOWN && index < this.fragmentEntryLinks.length - 1) ||
 			(direction === FragmentEntryLink.MOVE_DIRECTIONS.UP && index > 0)
 		) {
+			const formData = new FormData();
+
+			formData.append(
+				`${this.portletNamespace}fragmentEntryLinkId1`,
+				this.fragmentEntryLinks[index].fragmentEntryLinkId
+			);
+
+			formData.append(
+				`${this.portletNamespace}fragmentEntryLinkId2`,
+				this.fragmentEntryLinks[index + direction].fragmentEntryLinkId
+			);
+
+			fetch(
+				this.updateFragmentEntryLinksURL,
+				{
+					body: formData,
+					credentials: 'include',
+					method: 'POST'
+				}
+			).then(
+				() => {
+					this._lastSaveDate = new Date().toLocaleTimeString();
+
+					this._dirty = false;
+				}
+			);
+
 			this.fragmentEntryLinks = this._swapListElements(
-				[].slice(this.fragmentEntryLinks),
+				Array.prototype.slice.call(this.fragmentEntryLinks),
 				index,
 				index + direction
 			);
-
-			this._updatePageTemplate();
 		}
 	}
 
@@ -202,9 +345,7 @@ class FragmentsEditor extends Component {
 
 	_handleFragmentRemove(data) {
 		const index = this.fragmentEntryLinks.findIndex(
-			fragmentEntryLink =>
-				fragmentEntryLink.fragmentEntryLinkId ===
-				data.fragmentEntryLinkId
+			fragmentEntryLink => fragmentEntryLink.fragmentEntryLinkId === data.fragmentEntryLinkId
 		);
 
 		if (index !== -1) {
@@ -213,7 +354,12 @@ class FragmentsEditor extends Component {
 				...this.fragmentEntryLinks.slice(index + 1)
 			];
 
-			this._updatePageTemplate();
+			if (this.fragmentEntryLinks.length === 0) {
+				this._sidebarSelectedTab = FragmentsEditor.DEFAULT_TAB_ID;
+				this._sidebarTabs = [...this.sidebarTabs];
+			}
+
+			this._deleteFragmentEntryLink(data.fragmentEntryLinkId);
 		}
 	}
 
@@ -225,6 +371,37 @@ class FragmentsEditor extends Component {
 
 	_handleHideContextualSidebar() {
 		this._contextualSidebarVisible = false;
+	}
+
+	/**
+	 * Callback executed when a mapping type hsa been selected
+	 * @param {{ labels: Array<string> }} event
+	 * @private
+	 * @review
+	 */
+
+	_handleMappingTypeSelected(event) {
+		this.selectedMappingTypeLabel = event.label;
+	}
+
+	/**
+	 * Callback executed when the SelectMappingTypeDialog should be shown
+	 * @review
+	 */
+
+	_handleSelectAssetTypeButtonClick() {
+		this._selectMappingTypeDialogVisible = true;
+	}
+
+	/**
+	 * Callback executed when the SelectMappingTypeDialog visibility changes
+	 * @param {{ newVal: boolean }} change
+	 * @private
+	 * @review
+	 */
+
+	_handleSelectMappingTypeDialogVisibleChanged(change) {
+		this._selectMappingTypeDialogVisible = change.newVal;
 	}
 
 	/**
@@ -263,55 +440,30 @@ class FragmentsEditor extends Component {
 	}
 
 	/**
-	 * Sends all the accumulated changes to the server and, if
+	 * Sends the change of a single fragment entry link to the server and, if
 	 * success, sets the _dirty property to false.
 	 * @private
 	 * @review
 	 */
 
-	_updatePageTemplate() {
+	_updateFragmentEntryLink(fragmentEntryLink) {
 		if (!this._dirty) {
 			this._dirty = true;
 
 			const formData = new FormData();
 
 			formData.append(
-				`${this.portletNamespace}classNameId`,
-				this.classNameId
-			);
-
-			formData.append(`${this.portletNamespace}classPK`, this.classPK);
-
-			const editableValues = {};
-
-			this.fragmentEntryLinks.forEach(
-				(fragmentEntryLink, index) => {
-					Object.keys(fragmentEntryLink.editableValues).forEach(
-						editableId => {
-							editableValues[index] = editableValues[index] || {};
-
-							editableValues[index][editableId] = fragmentEntryLink.editableValues[editableId];
-						}
-					);
-				}
+				`${this.portletNamespace}fragmentEntryLinkId`,
+				fragmentEntryLink.fragmentEntryLinkId
 			);
 
 			formData.append(
 				`${this.portletNamespace}editableValues`,
-				JSON.stringify(editableValues)
-			);
-
-			this.fragmentEntryLinks.forEach(
-				fragment => {
-					formData.append(
-						`${this.portletNamespace}fragmentIds`,
-						fragment.fragmentEntryId
-					);
-				}
+				JSON.stringify(fragmentEntryLink.editableValues)
 			);
 
 			fetch(
-				this.updateURL,
+				this.editFragmentEntryLinkURL,
 				{
 					body: formData,
 					credentials: 'include',
@@ -321,11 +473,7 @@ class FragmentsEditor extends Component {
 				() => {
 					this._lastSaveDate = new Date().toLocaleTimeString();
 
-					this._fetchFragmentsContent().then(
-						() => {
-							this._dirty = false;
-						}
-					);
+					this._dirty = false;
 				}
 			);
 		}
@@ -333,23 +481,13 @@ class FragmentsEditor extends Component {
 }
 
 /**
- * Tabs that can appear inside the sidebar
+ * Default selected tab
  * @review
- * @see FragmentsEditor._sidebarTabs
+ * @static
+ * @type {!string}
  */
 
-const SIDEBAR_TABS = [
-	{
-		id: 'fragments',
-		name: Liferay.Language.get('fragments'),
-		visible: true
-	},
-	{
-		id: 'added',
-		name: Liferay.Language.get('added'),
-		visible: true
-	}
-];
+FragmentsEditor.DEFAULT_TAB_ID = 'available';
 
 /**
  * State definition.
@@ -359,6 +497,17 @@ const SIDEBAR_TABS = [
  */
 
 FragmentsEditor.STATE = {
+
+	/**
+	 * URL for associating fragment entries to the underlying model.
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	addFragmentEntryLinkURL: Config.string().required(),
 
 	/**
 	 * Class name id used for storing changes.
@@ -381,6 +530,39 @@ FragmentsEditor.STATE = {
 	 */
 
 	classPK: Config.string().required(),
+
+	/**
+	 * Default configuration for AlloyEditor instances.
+	 * @default {}
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {object}
+	 */
+
+	defaultEditorConfiguration: Config.object().value({}),
+
+	/**
+	 * URL for removing fragment entries of the underlying model.
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	deleteFragmentEntryLinkURL: Config.string().required(),
+
+	/**
+	 * URL for updating a distinct fragment entries of the editor.
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	editFragmentEntryLinkURL: Config.string().required(),
 
 	/**
 	 * Available entries that can be used, organized by collections.
@@ -409,6 +591,30 @@ FragmentsEditor.STATE = {
 	).required(),
 
 	/**
+	 * URL for obtaining the class types of an asset
+	 * created.
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	getAssetClassTypesURL: Config.string().required(),
+
+	/**
+	 * URL for obtaining the asset types for which asset display pages can be
+	 * created.
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	getAssetDisplayContributorsURL: Config.string().required(),
+
+	/**
 	 * Optional ID provided by the template system.
 	 * @default ''
 	 * @instance
@@ -418,6 +624,17 @@ FragmentsEditor.STATE = {
 	 */
 
 	id: Config.string().value(''),
+
+	/**
+	 * Image selector url
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	imageSelectorURL: Config.string().required(),
 
 	/**
 	 * List of fragment instances being used, the order
@@ -433,11 +650,12 @@ FragmentsEditor.STATE = {
 		Config.shapeOf(
 			{
 				config: Config.object().value({}),
-				content: Config.string().value(''),
+				content: Config.any().value(''),
 				editableValues: Config.object().value({}),
 				fragmentEntryId: Config.string().required(),
 				fragmentEntryLinkId: Config.string().required(),
-				name: Config.string().required()
+				name: Config.string().required(),
+				position: Config.number().required()
 			}
 		)
 	).value([]),
@@ -465,6 +683,48 @@ FragmentsEditor.STATE = {
 	renderFragmentEntryURL: Config.string().required(),
 
 	/**
+	 * Selected mapping type label
+	 * @default {}
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {{
+	 *   subtype: string,
+	 *   type: string
+	 * }}
+	 */
+
+	selectedMappingTypeLabel: Config
+		.shapeOf(
+			{
+				subtype: Config.string().value(''),
+				type: Config.string().value('')
+			}
+		)
+		.value({}),
+
+	/**
+	 * Tabs being shown in sidebar
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!Array<{
+	 * 	 id: string,
+	 * 	 label: string
+	 * }>}
+	 */
+
+	sidebarTabs: Config.arrayOf(
+		Config.shapeOf(
+			{
+				id: Config.string().required(),
+				label: Config.string().required()
+			}
+		)
+	).required(),
+
+	/**
 	 * Path of the available icons.
 	 * @default undefined
 	 * @instance
@@ -476,7 +736,18 @@ FragmentsEditor.STATE = {
 	spritemap: Config.string().required(),
 
 	/**
-	 * URL for updating accumulated changes.
+     * URL for swapping to fragmentEntryLinks.
+     * @default undefined
+     * @instance
+     * @memberOf FragmentsEditor
+     * @review
+     * @type {!string}
+     */
+
+	updateFragmentEntryLinksURL: Config.string().required(),
+
+	/**
+	 * URL for updating the asset type associated to a template.
 	 * @default undefined
 	 * @instance
 	 * @memberOf FragmentsEditor
@@ -484,7 +755,7 @@ FragmentsEditor.STATE = {
 	 * @type {!string}
 	 */
 
-	updateURL: Config.string().required(),
+	updateLayoutPageTemplateEntryAssetTypeURL: Config.string().required(),
 
 	/**
 	 * Allow opening/closing contextual sidebar
@@ -528,34 +799,23 @@ FragmentsEditor.STATE = {
 		.value(''),
 
 	/**
-	 * Tabs being shown in sidebar
-	 * @default SIDEBAR_TABS
+	 * Flag indicating if the SelectMappingTypeDialog should be shown
+	 * @default false
 	 * @instance
 	 * @memberOf FragmentsEditor
 	 * @private
 	 * @review
-	 * @type {Array<{
-	 * 	 id:string,
-	 * 	 name:string,
-	 * 	 visible:boolean
-	 * }>}
+	 * @type {boolean}
 	 */
 
-	_sidebarTabs: Config.arrayOf(
-		Config.shapeOf(
-			{
-				id: Config.string(),
-				name: Config.string(),
-				visible: Config.bool()
-			}
-		)
-	)
+	_selectMappingTypeDialogVisible: Config
+		.bool()
 		.internal()
-		.value(SIDEBAR_TABS),
+		.value(false),
 
 	/**
 	 * Tab selected inside sidebar
-	 * @default SIDEBAR_TABS[0].id
+	 * @default 'fragments'
 	 * @instance
 	 * @memberOf FragmentsEditor
 	 * @private
@@ -563,9 +823,32 @@ FragmentsEditor.STATE = {
 	 * @type {string}
 	 */
 
-	_sidebarSelectedTab: Config.oneOf(SIDEBAR_TABS.map(tab => tab.id))
+	_sidebarSelectedTab: Config
+		.string()
 		.internal()
-		.value(SIDEBAR_TABS[0].id)
+		.value(FragmentsEditor.DEFAULT_TAB_ID),
+
+	/**
+	 * Internal copy of the selected tabs that will be mutated.
+	 * @default []
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @private
+	 * @review
+	 * @type {Array<{
+	 * 	 id: string,
+	 * 	 label: string
+	 * }>}
+	 */
+
+	_sidebarTabs: Config.arrayOf(
+		Config.shapeOf(
+			{
+				id: Config.string().required(),
+				label: Config.string().required()
+			}
+		)
+	).value([])
 };
 
 Soy.register(FragmentsEditor, templates);

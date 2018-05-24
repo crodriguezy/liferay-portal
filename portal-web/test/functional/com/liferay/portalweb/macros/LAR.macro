@@ -209,7 +209,7 @@
 			<isset var="checkContentNameList" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Content" />
+					<var name="panel" value="Content" />
 				</execute>
 
 				<execute function="Select" locator1="Select#EXPORT_IMPORT_CONTENT" value1="Choose Content" />
@@ -226,7 +226,7 @@
 			<equals arg1="${contentDeletion}" arg2="true" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Deletions" />
+					<var name="panel" value="Deletions" />
 				</execute>
 
 				<execute function="Check#checkToggleSwitch" locator1="ToggleSwitch#DELETE_PORTLET_DATA" />
@@ -250,12 +250,12 @@
 	</command>
 
 	<command name="_mirrorWithOverwriting">
-		<execute function="ScrollWebElementIntoView" locator1="Panel#PANEL_HEADING">
-			<var name="key_panelHeading" value="Update Data" />
+		<execute function="ScrollWebElementIntoView" locator1="Panel#PANEL">
+			<var name="key_panel" value="Update Data" />
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Update Data" />
+			<var name="panel" value="Update Data" />
 		</execute>
 
 		<execute function="Click" locator1="ExportImport#UPDATE_DATA_MIRROR_WITH_OVERWRITING_RADIO" />
@@ -397,10 +397,8 @@
 	</command>
 
 	<command name="addExportTemplateCP">
-		<execute function="Click" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Export Templates">
-			<var name="key_menuItem" value="Export Templates" />
+		<execute macro="LexiconEntry#gotoHeaderMenuItem">
+			<var name="menuItem" value="Export Templates" />
 		</execute>
 
 		<execute macro="LexiconEntry#gotoAdd" />
@@ -458,16 +456,6 @@
 		</execute>
 	</command>
 
-	<command name="deleteCurrentAndPreviousProcess">
-		<execute function="Click" locator1="Icon#ROW_VERTICAL_ELLIPSIS">
-			<var name="key_rowEntry" value="${larFileName}" />
-		</execute>
-
-		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM">
-			<var name="key_menuItem" value="Clear" />
-		</execute>
-	</command>
-
 	<command name="downloadLar">
 		<execute function="Click" locator1="SitePagesExport#CURRENT_AND_PREVIOUS_DOWNLOAD" />
 
@@ -498,11 +486,9 @@
 	</command>
 
 	<command name="exportExportTemplateCP">
-		<var name="key_exportTemplateName" value="${exportTemplateName}" />
-
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
-
-		<execute function="Click" locator1="SitePagesExport#EXPORT_TEMPLATES_TABLE_EXPORT_BUTTON" />
+		<execute macro="LexiconEntry#gotoEllipsisMenuItem">
+			<var name="menuItem" value="Export" />
+		</execute>
 
 		<if>
 			<isset var="larFileName" />
@@ -589,14 +575,6 @@
 		</execute>
 	</command>
 
-	<command name="gotoExportTemplateCP">
-		<execute function="Click" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Export Templates">
-			<var name="key_menuItem" value="Export Templates" />
-		</execute>
-	</command>
-
 	<command name="importPortlet">
 		<execute macro="LAR#_gotoExportImport" />
 
@@ -609,9 +587,7 @@
 			<var name="uploadFrom" value="${uploadFrom}" />
 		</execute>
 
-		<execute function="SelectFrame" value1="relative=top" />
-
-		<execute function="Click" locator1="Icon#CLOSE" />
+		<execute macro="IFrame#closeFrame" />
 	</command>
 
 	<command name="importSiteCP">
@@ -647,11 +623,9 @@
 	</command>
 
 	<command name="moveToTheRecycleBinExportTemplate">
-		<var name="key_exportTemplateName" value="${exportTemplateName}" />
-
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
-
-		<execute function="Click" locator1="Link#MOVE_TO_THE_RECYCLING_BIN" />
+		<execute macro="LexiconEntry#gotoEllipsisMenuItem">
+			<var name="menuItem" value="Move to the Recycle Bin" />
+		</execute>
 
 		<execute function="AssertElementPresent" locator1="Message#SUCCESS" />
 	</command>
@@ -664,15 +638,6 @@
 		<var name="key_filterValue" value="Completion Date" />
 
 		<execute function="AssertClick" locator1="Dropdown#FILTER_ORDER_VALUES" value1="Completion Date" />
-	</command>
-
-	<command name="relaunchExport">
-		<var name="key_rowEntry" value="${larFileName}" />
-
-		<execute function="Click" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
-		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM">
-			<var name="key_menuItem" value="Relaunch" />
-		</execute>
 	</command>
 
 	<command name="saveExportTemplateCP">
@@ -695,7 +660,7 @@
 		<execute function="AssertTextEquals" locator1="SitePagesExport#EXPORT_TEMPLATES_TABLE_DESCRIPTION" value1="${exportTemplateDescription}" />
 	</command>
 
-	<command name="setupContentTargeting" >
+	<command name="setupContentTargeting">
 		<if>
 			<equals arg1="${stagingSetup}" arg2="true" />
 			<then>

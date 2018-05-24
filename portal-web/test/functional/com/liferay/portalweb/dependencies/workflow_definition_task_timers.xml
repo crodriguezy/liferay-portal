@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
 
-<workflow-definition xmlns="urn:liferay.com:liferay-workflow_6.2.0"
+<workflow-definition
+	xmlns="urn:liferay.com:liferay-workflow_6.2.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="urn:liferay.com:liferay-workflow_6.2.0 http://www.liferay.com/dtd/liferay-workflow-definition_6_2_0.xsd">
+	xsi:schemaLocation="urn:liferay.com:liferay-workflow_6.2.0 http://www.liferay.com/dtd/liferay-workflow-definition_6_2_0.xsd"
+>
 	<name>Single Approver</name>
 	<description>A single approver can approve a workflow content.</description>
 	<version>1</version>
@@ -138,11 +140,11 @@
 						<script>console.log('lol');</script>
 						<script-language>javascript</script-language>
 						<priority>5</priority>
-						<execution-type>onAssignment</execution-type>
 					</timer-action>
 					<reassignments>
 						<roles>
 							<role>
+								<role-type>organization</role-type>
 								<name>Organization Content Reviewer</name>
 								<auto-create>true</auto-create>
 							</role>
@@ -154,10 +156,10 @@
 						<template>Hello, it is me you are looking for?</template>
 						<template-language>freemarker</template-language>
 						<notification-type>email</notification-type>
-						<execution-type>onAssignment</execution-type>
 						<recipients>
 							<roles>
 								<role>
+									<role-type></role-type>
 									<name>Portal Content Reviewer</name>
 									<auto-create>true</auto-create>
 								</role>
@@ -177,7 +179,6 @@
 						<name>timer 2 action</name>
 						<script>script</script>
 						<script-language>beanshell</script-language>
-						<execution-type>onAssignment</execution-type>\
 					</timer-action>
 				</timer-actions>
 			</task-timer>
@@ -197,6 +198,7 @@
 					<reassignments>
 						<roles>
 							<role>
+								<role-type>site</role-type>
 								<name>Site Content Reviewer</name>
 								<auto-create>true</auto-create>
 							</role>
@@ -222,10 +224,10 @@
 						<template>timer 4 notificaiton desc</template>
 						<template-language>freemarker</template-language>
 						<notification-type>email</notification-type>
-						<execution-type>onAssignment</execution-type>
 						<recipients>
 							<roles>
 								<role>
+									<role-type>organization</role-type>
 									<name>Organization Content Reviewer</name>
 								</role>
 							</roles>
@@ -252,7 +254,6 @@
 						<script>console.log('lol');</script>
 						<script-language>javascript</script-language>
 						<priority>5</priority>
-						<execution-type>onAssignment</execution-type>
 					</timer-action>
 					<timer-action>
 						<name>timer 5 action 2</name>
@@ -260,11 +261,11 @@
 						<script>console.log('lol');</script>
 						<script-language>javascript</script-language>
 						<priority>5</priority>
-						<execution-type>onAssignment</execution-type>
 					</timer-action>
 					<reassignments>
 						<roles>
 							<role>
+								<role-type>organization</role-type>
 								<name>Organization Content Reviewer</name>
 								<auto-create>true</auto-create>
 							</role>
@@ -273,6 +274,7 @@
 					<reassignments>
 						<roles>
 							<role>
+								<role-type>organization</role-type>
 								<name>Organization Content Reviewer</name>
 								<auto-create>true</auto-create>
 							</role>
@@ -284,10 +286,10 @@
 						<template>Hello, it is me you are looking for?</template>
 						<template-language>freemarker</template-language>
 						<notification-type>email</notification-type>
-						<execution-type>onAssignment</execution-type>
 						<recipients>
 							<roles>
 								<role>
+									<role-type></role-type>
 									<name>Portal Content Reviewer</name>
 									<auto-create>true</auto-create>
 								</role>
@@ -300,10 +302,10 @@
 						<template>Hello, it is me you are looking for?</template>
 						<template-language>freemarker</template-language>
 						<notification-type>email</notification-type>
-						<execution-type>onAssignment</execution-type>
 						<recipients>
 							<roles>
 								<role>
+									<role-type></role-type>
 									<name>Portal Content Reviewer</name>
 									<auto-create>true</auto-create>
 								</role>

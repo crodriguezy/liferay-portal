@@ -41,32 +41,31 @@ public class ErasePersonalDataUserActionContributor
 	public String getMessage(PortletRequest portletRequest) {
 		return LanguageUtil.get(
 			getResourceBundle(getLocale(portletRequest)),
-			"erase-personal-data");
+			"delete-personal-data");
 	}
 
 	@Override
 	public String getURL(
 		PortletRequest portletRequest, PortletResponse portletResponse,
-		User user, User selUser) {
+		User user, User selectedUser) {
 
 		LiferayPortletURL liferayPortletURL = PortletURLFactoryUtil.create(
 			portletRequest, UserAssociatedDataPortletKeys.USER_ASSOCIATED_DATA,
 			PortletRequest.RENDER_PHASE);
 
 		liferayPortletURL.setParameter(
-			"p_u_i_d", String.valueOf(selUser.getUserId()));
+			"p_u_i_d", String.valueOf(selectedUser.getUserId()));
 		liferayPortletURL.setParameter(
-			"mvcRenderCommandName",
-			"/user_associated_data/manage_user_associated_data_summary");
+			"mvcRenderCommandName", "/view_uad_summary");
 
 		return liferayPortletURL.toString();
 	}
 
 	@Override
 	public boolean isShow(
-		PortletRequest portletRequest, User user, User selUser) {
+		PortletRequest portletRequest, User user, User selectedUser) {
 
-		if (_omniadmin.isOmniadmin(selUser)) {
+		if (_omniadmin.isOmniadmin(selectedUser)) {
 			return false;
 		}
 

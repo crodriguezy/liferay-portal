@@ -32,10 +32,11 @@ import org.osgi.service.component.annotations.Component;
  * methods of any of the routes builders.
  *
  * <p>
- * This provider is mandatory in order to use {@link
- * com.liferay.apio.architect.representor.Representor.Builder.FirstStep#addLocalizedString(
- * String, java.util.function.BiFunction)} (String, BiFunction)} when declaring
- * a {@link com.liferay.apio.architect.representor.Representor}.
+ * This provider is mandatory in order to use {@code
+ * Representor.Builder#addLocalizedStringByLocale(String, BiFunction)} and
+ * {@code Representor.Builder#addLocalizedStringByLanguage(String, BiFunction)}
+ * methods when declaring a {@link
+ * com.liferay.apio.architect.representor.Representor}.
  * </p>
  *
  * @author Alejandro Hernández

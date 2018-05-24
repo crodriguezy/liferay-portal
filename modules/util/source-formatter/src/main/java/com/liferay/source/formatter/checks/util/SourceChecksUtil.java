@@ -18,6 +18,7 @@ import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.source.formatter.SourceFormatterMessage;
 import com.liferay.source.formatter.checks.FileCheck;
 import com.liferay.source.formatter.checks.GradleFileCheck;
@@ -42,6 +43,8 @@ import java.lang.reflect.Constructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -53,18 +56,19 @@ public class SourceChecksUtil {
 
 	public static List<SourceCheck> getSourceChecks(
 			SourceFormatterConfiguration sourceFormatterConfiguration,
-			String sourceProcessorName, boolean portalSource,
-			boolean subrepository, boolean includeModuleChecks)
+			String sourceProcessorName, Map<String, Properties> propertiesMap,
+			boolean portalSource, boolean subrepository,
+			boolean includeModuleChecks)
 		throws Exception {
 
 		List<SourceCheck> sourceChecks = _getSourceChecks(
-			sourceFormatterConfiguration, sourceProcessorName, portalSource,
-			subrepository, includeModuleChecks);
+			sourceFormatterConfiguration, sourceProcessorName, propertiesMap,
+			portalSource, subrepository, includeModuleChecks);
 
 		sourceChecks.addAll(
 			_getSourceChecks(
-				sourceFormatterConfiguration, "all", includeModuleChecks,
-				subrepository, includeModuleChecks));
+				sourceFormatterConfiguration, "all", propertiesMap,
+				includeModuleChecks, subrepository, includeModuleChecks));
 
 		return sourceChecks;
 	}
@@ -192,8 +196,9 @@ public class SourceChecksUtil {
 
 	private static List<SourceCheck> _getSourceChecks(
 			SourceFormatterConfiguration sourceFormatterConfiguration,
-			String sourceProcessorName, boolean portalSource,
-			boolean subrepository, boolean includeModuleChecks)
+			String sourceProcessorName, Map<String, Properties> propertiesMap,
+			boolean portalSource, boolean subrepository,
+			boolean includeModuleChecks)
 		throws Exception {
 
 		List<SourceCheck> sourceChecks = new ArrayList<>();
@@ -248,19 +253,35 @@ public class SourceChecksUtil {
 				continue;
 			}
 
+			Class<?> clazz = sourceCheck.getClass();
+
 			for (String attributeName :
 					sourceCheckConfiguration.attributeNames()) {
 
-				for (String attributeValue :
-						sourceCheckConfiguration.getAttributeValues(
-							attributeName)) {
+				List<String> values =
+					sourceCheckConfiguration.getAttributeValues(attributeName);
 
-					BeanUtils.setProperty(
-						sourceCheck, attributeName, attributeValue);
+				for (String value : values) {
+					BeanUtils.setProperty(sourceCheck, attributeName, value);
 				}
 			}
 
-			sourceChecks.add(sourceCheck);
+			List<String> attributeNames = SourceFormatterUtil.getAttributeNames(
+				CheckType.SOURCE_CHECK, clazz.getSimpleName(), propertiesMap);
+
+			for (String attributeName : attributeNames) {
+				String value = SourceFormatterUtil.getPropertyValue(
+					attributeName, CheckType.SOURCE_CHECK,
+					clazz.getSimpleName(), propertiesMap);
+
+				if (Validator.isNotNull(value)) {
+					BeanUtils.setProperty(sourceCheck, attributeName, value);
+				}
+			}
+
+			if (sourceCheck.isEnabled()) {
+				sourceChecks.add(sourceCheck);
+			}
 		}
 
 		return sourceChecks;

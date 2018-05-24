@@ -23,7 +23,7 @@ import com.liferay.portal.kernel.template.TemplateHandler;
 import com.liferay.portal.kernel.template.TemplateVariableGroup;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
-import com.liferay.portlet.display.template.PortletDisplayTemplateConstants;
+import com.liferay.portlet.display.template.constants.PortletDisplayTemplateConstants;
 import com.liferay.wiki.constants.WikiPortletKeys;
 import com.liferay.wiki.model.WikiPage;
 import com.liferay.wiki.service.WikiNodeLocalService;
@@ -42,7 +42,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Juan Fernández
  */
 @Component(
-	immediate = true, property = {"javax.portlet.name=" + WikiPortletKeys.WIKI},
+	immediate = true, property = "javax.portlet.name=" + WikiPortletKeys.WIKI,
 	service = TemplateHandler.class
 )
 public class WikiPortletDisplayTemplateHandler

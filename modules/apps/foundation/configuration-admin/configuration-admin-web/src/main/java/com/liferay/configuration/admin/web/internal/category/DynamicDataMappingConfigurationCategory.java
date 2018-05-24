@@ -26,22 +26,24 @@ public class DynamicDataMappingConfigurationCategory
 	implements ConfigurationCategory {
 
 	@Override
-	public String getCategorySetKey() {
-		return _CATEGORY_SET_KEY;
+	public String getCategoryIcon() {
+		return _CATEGORY_ICON;
 	}
 
 	@Override
-	public String getIcon() {
-		return "dynamic-data-list";
+	public String getCategoryKey() {
+		return _CATEGORY_KEY;
 	}
 
 	@Override
-	public String getKey() {
-		return _KEY;
+	public String getCategorySection() {
+		return _CATEGORY_SECTION;
 	}
 
-	private static final String _CATEGORY_SET_KEY = "content-management";
+	private static final String _CATEGORY_ICON = "dynamic-data-list";
 
-	private static final String _KEY = "dynamic-data-mapping";
+	private static final String _CATEGORY_KEY = "dynamic-data-mapping";
+
+	private static final String _CATEGORY_SECTION = "content-management";
 
 }

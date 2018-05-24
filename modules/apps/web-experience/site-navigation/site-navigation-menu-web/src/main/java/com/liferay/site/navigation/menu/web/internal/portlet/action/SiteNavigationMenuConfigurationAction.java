@@ -15,12 +15,12 @@
 package com.liferay.site.navigation.menu.web.internal.portlet.action;
 
 import com.liferay.item.selector.ItemSelector;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.ConfigurationAction;
 import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
 import com.liferay.portal.kernel.settings.ModifiableSettings;
 import com.liferay.portal.kernel.settings.Settings;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.display.template.PortletDisplayTemplate;
 import com.liferay.site.navigation.menu.web.internal.constants.SiteNavigationMenuPortletKeys;
@@ -51,7 +51,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"javax.portlet.name=" + SiteNavigationMenuPortletKeys.SITE_NAVIGATION_MENU},
+	property = "javax.portlet.name=" + SiteNavigationMenuPortletKeys.SITE_NAVIGATION_MENU,
 	service = ConfigurationAction.class
 )
 public class SiteNavigationMenuConfigurationAction
@@ -84,6 +84,8 @@ public class SiteNavigationMenuConfigurationAction
 
 		ModifiableSettings modifiableSettings =
 			settings.getModifiableSettings();
+
+		modifiableSettings.reset("included-layouts");
 
 		String rootMenuItemType = modifiableSettings.getValue(
 			"rootMenuItemType", StringPool.BLANK);

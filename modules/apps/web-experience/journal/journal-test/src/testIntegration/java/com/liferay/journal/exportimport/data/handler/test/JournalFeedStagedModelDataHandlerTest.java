@@ -23,7 +23,6 @@ import com.liferay.dynamic.data.mapping.test.util.DDMStructureTestUtil;
 import com.liferay.dynamic.data.mapping.test.util.DDMTemplateTestUtil;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
 import com.liferay.exportimport.test.util.lar.BaseStagedModelDataHandlerTestCase;
-import com.liferay.journal.exportimport.data.handler.JournalFeedStagedModelDataHandler;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalFeed;
 import com.liferay.journal.service.JournalFeedLocalServiceUtil;
@@ -87,9 +86,9 @@ public class JournalFeedStagedModelDataHandlerTest
 
 		LayoutLocalServiceUtil.addLayout(
 			TestPropsValues.getUserId(), liveGroup.getGroupId(),
-			_layout.getPrivateLayout(), _layout.getParentLayoutId(),
+			_layout.isPrivateLayout(), _layout.getParentLayoutId(),
 			_layout.getName(), _layout.getTitle(), _layout.getDescription(),
-			_layout.getType(), _layout.getHidden(), _layout.getFriendlyURL(),
+			_layout.getType(), _layout.isHidden(), _layout.getFriendlyURL(),
 			serviceContext);
 
 		CompanyThreadLocal.setCompanyId(TestPropsValues.getCompanyId());
@@ -141,7 +140,8 @@ public class JournalFeedStagedModelDataHandlerTest
 	public void testCleanStagedModelDataHandler() throws Exception {
 		try (CaptureAppender captureAppender =
 				Log4JLoggerTestUtil.configureLog4JLogger(
-					JournalFeedStagedModelDataHandler.class.getName(),
+					"com.liferay.journal.internal.exportimport.data.handler." +
+						"JournalFeedStagedModelDataHandler",
 					Level.WARN)) {
 
 			super.testCleanStagedModelDataHandler();
@@ -205,7 +205,8 @@ public class JournalFeedStagedModelDataHandlerTest
 	public void testStagedModelDataHandler() throws Exception {
 		try (CaptureAppender captureAppender =
 				Log4JLoggerTestUtil.configureLog4JLogger(
-					JournalFeedStagedModelDataHandler.class.getName(),
+					"com.liferay.journal.internal.exportimport.data.handler." +
+						"JournalFeedStagedModelDataHandler",
 					Level.WARN)) {
 
 			super.testStagedModelDataHandler();

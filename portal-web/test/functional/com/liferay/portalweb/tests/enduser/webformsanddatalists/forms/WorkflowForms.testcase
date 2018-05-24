@@ -72,7 +72,7 @@
 		<execute macro="FormsAdminNavigator#gotoSettings" />
 
 		<execute macro="Form#configureWorkflow">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 		</execute>
 
 		<execute macro="Form#save" />
@@ -212,12 +212,15 @@
 			<var name="portlet" value="Forms" />
 		</execute>
 
-		<execute macro="FormsAdminNavigator#gotoEdit" />
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Edit" />
+			<var name="rowEntry" value="Created Form Name" />
+		</execute>
 
 		<execute macro="FormsAdminNavigator#gotoSettings" />
 
 		<execute macro="Form#configureWorkflow">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 		</execute>
 
 		<execute macro="Form#save" />
@@ -429,7 +432,7 @@
 		<execute macro="FormsAdminNavigator#gotoSettings" />
 
 		<execute macro="Form#configureWorkflow">
-			<var name="workflowDefinition" value="Single Approver (Version 1)" />
+			<var name="workflowDefinition" value="Single Approver" />
 		</execute>
 
 		<execute macro="Form#save" />

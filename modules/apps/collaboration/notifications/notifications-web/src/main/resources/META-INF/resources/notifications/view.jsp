@@ -21,6 +21,10 @@ String navigation = ParamUtil.getString(request, "navigation", "all");
 
 boolean actionRequired = ParamUtil.getBoolean(request, "actionRequired");
 
+if (actionRequired) {
+	navigation = "unread";
+}
+
 String orderByCol = "date";
 String orderByType = ParamUtil.getString(request, "orderByType", "desc");
 
@@ -41,29 +45,29 @@ PortletURL navigationURL = PortletURLUtil.clone(currentURLObj, renderResponse);
 navigationURL.setParameter(SearchContainer.DEFAULT_CUR_PARAM, "0");
 %>
 
-<aui:nav-bar markupView="lexicon">
-	<aui:nav cssClass="navbar-nav">
-		<liferay-portlet:renderURL var="viewNotificationsURL">
-			<liferay-portlet:param name="actionRequired" value="<%= StringPool.FALSE %>" />
-		</liferay-portlet:renderURL>
+<clay:navigation-bar
+	inverted="<%= true %>"
+	items="<%=
+		new JSPNavigationItemList(pageContext) {
+			{
+				add(
+					navigationItem -> {
+						navigationItem.setActive(!actionRequired);
+						navigationItem.setHref(renderResponse.createRenderURL(), "actionRequired", StringPool.FALSE);
+						navigationItem.setLabel(LanguageUtil.format(request, "notifications-list-x", UserNotificationEventLocalServiceUtil.getDeliveredUserNotificationEventsCount(themeDisplay.getUserId(), UserNotificationDeliveryConstants.TYPE_WEBSITE, true, false)));
+					});
 
-		<aui:nav-item
-			href="<%= viewNotificationsURL %>"
-			label='<%= LanguageUtil.format(request, "notifications-list-x", String.valueOf(UserNotificationEventLocalServiceUtil.getDeliveredUserNotificationEventsCount(themeDisplay.getUserId(), UserNotificationDeliveryConstants.TYPE_WEBSITE, true, false))) %>'
-			selected="<%= !actionRequired %>"
-		/>
+				add(
+					navigationItem -> {
 
-		<liferay-portlet:renderURL var="viewRequestsURL">
-			<liferay-portlet:param name="actionRequired" value="<%= StringPool.TRUE %>" />
-		</liferay-portlet:renderURL>
-
-		<aui:nav-item
-			href="<%= viewRequestsURL %>"
-			label='<%= LanguageUtil.format(request, "requests-list-x", String.valueOf(UserNotificationEventLocalServiceUtil.getDeliveredUserNotificationEventsCount(themeDisplay.getUserId(), UserNotificationDeliveryConstants.TYPE_WEBSITE, true, true))) %>'
-			selected="<%= actionRequired %>"
-		/>
-	</aui:nav>
-</aui:nav-bar>
+						navigationItem.setActive(actionRequired);
+						navigationItem.setHref(renderResponse.createRenderURL(), "actionRequired", StringPool.TRUE);
+						navigationItem.setLabel(LanguageUtil.format(request, "requests-list-x", String.valueOf(UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEventsCount(themeDisplay.getUserId(), UserNotificationDeliveryConstants.TYPE_WEBSITE, true, false))));
+					});
+			}
+		}
+	%>"
+/>
 
 <liferay-frontend:management-bar
 	disabled="<%= NotificationsUtil.getAllNotificationsCount(themeDisplay.getUserId(), actionRequired) == 0 %>"
@@ -81,7 +85,7 @@ navigationURL.setParameter(SearchContainer.DEFAULT_CUR_PARAM, "0");
 	<liferay-frontend:management-bar-filters>
 
 		<%
-		String[] navigationKeys = {"all"};
+		String[] navigationKeys = {"unread"};
 
 		if (!actionRequired) {
 			navigationKeys = new String[] {"all", "unread", "read"};
@@ -103,11 +107,24 @@ navigationURL.setParameter(SearchContainer.DEFAULT_CUR_PARAM, "0");
 
 	<liferay-frontend:management-bar-action-buttons>
 		<c:if test="<%= !actionRequired %>">
-			<liferay-frontend:management-bar-button href='<%= "javascript:" + renderResponse.getNamespace() + "markNotificationsAsRead();" %>' icon="envelope-open" label="mark-as-read" />
-			<liferay-frontend:management-bar-button href='<%= "javascript:" + renderResponse.getNamespace() + "markNotificationsAsUnread();" %>' icon="envelope-closed" label="mark-as-unread" />
+			<liferay-frontend:management-bar-button
+				href='<%= "javascript:" + renderResponse.getNamespace() + "markNotificationsAsRead();" %>'
+				icon="envelope-open"
+				label="mark-as-read"
+			/>
+
+			<liferay-frontend:management-bar-button
+				href='<%= "javascript:" + renderResponse.getNamespace() + "markNotificationsAsUnread();" %>'
+				icon="envelope-closed"
+				label="mark-as-unread"
+			/>
 		</c:if>
 
-		<liferay-frontend:management-bar-button href='<%= "javascript:" + renderResponse.getNamespace() + "deleteAllNotifications();" %>' icon="times" label="delete" />
+		<liferay-frontend:management-bar-button
+			href='<%= "javascript:" + renderResponse.getNamespace() + "deleteAllNotifications();" %>'
+			icon="times"
+			label="delete"
+		/>
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 
@@ -115,7 +132,7 @@ navigationURL.setParameter(SearchContainer.DEFAULT_CUR_PARAM, "0");
 	<aui:form action="<%= currentURL %>" method="get" name="fm">
 		<div class="user-notifications">
 			<liferay-ui:search-container
-				rowChecker="<%= new EmptyOnClickRowChecker(renderResponse) %>"
+				rowChecker="<%= new UserNotificationEventRowChecker(renderResponse) %>"
 				searchContainer="<%= notificationsSearchContainer %>"
 			>
 				<liferay-ui:search-container-row
@@ -123,10 +140,24 @@ navigationURL.setParameter(SearchContainer.DEFAULT_CUR_PARAM, "0");
 					keyProperty="userNotificationEventId"
 					modelVar="userNotificationEvent"
 				>
+
+					<%
+					Map<String, Object> rowData = new HashMap<String, Object>();
+
+					UserNotificationFeedEntry userNotificationFeedEntry = UserNotificationManagerUtil.interpret(StringPool.BLANK, userNotificationEvent, ServiceContextFactory.getInstance(request));
+
+					rowData.put("userNotificationFeedEntry", userNotificationFeedEntry);
+
+					row.setData(rowData);
+					%>
+
 					<%@ include file="/notifications/user_notification_entry.jspf" %>
 				</liferay-ui:search-container-row>
 
-				<liferay-ui:search-iterator displayStyle="descriptive" markupView="lexicon" />
+				<liferay-ui:search-iterator
+					displayStyle="descriptive"
+					markupView="lexicon"
+				/>
 			</liferay-ui:search-container>
 		</div>
 	</aui:form>
@@ -182,7 +213,9 @@ navigationURL.setParameter(SearchContainer.DEFAULT_CUR_PARAM, "0");
 								if (notificationContainer) {
 									var markAsReadURL = notificationContainer.one('a').attr('href');
 
-									A.io.request(markAsReadURL);
+									form.attr('method', 'post');
+
+									submitForm(form, markAsReadURL);
 
 									notificationContainer.remove();
 								}
@@ -205,7 +238,7 @@ navigationURL.setParameter(SearchContainer.DEFAULT_CUR_PARAM, "0");
 			notice = new Liferay.Notice(
 				{
 					closeText: false,
-					content: '<liferay-ui:message key="an-unexpected-error-occurred"/><button class="close" type="button">&times;</button>',
+					content: '<liferay-ui:message key="an-unexpected-error-occurred" /><button class="close" type="button">&times;</button>',
 					timeout: 5000,
 					toggleText: false,
 					type: 'warning',

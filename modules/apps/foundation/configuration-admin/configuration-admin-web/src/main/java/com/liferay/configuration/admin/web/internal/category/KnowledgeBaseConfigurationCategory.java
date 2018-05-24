@@ -26,17 +26,17 @@ public class KnowledgeBaseConfigurationCategory
 	implements ConfigurationCategory {
 
 	@Override
-	public String getCategorySetKey() {
-		return _CATEGORY_SET_KEY;
+	public String getCategoryKey() {
+		return _CATEGORY_KEY;
 	}
 
 	@Override
-	public String getKey() {
-		return _KEY;
+	public String getCategorySection() {
+		return _CATEGORY_SECTION;
 	}
 
-	private static final String _CATEGORY_SET_KEY = "content-management";
+	private static final String _CATEGORY_KEY = "knowledge-base";
 
-	private static final String _KEY = "knowledge-base";
+	private static final String _CATEGORY_SECTION = "content-management";
 
 }

@@ -14,12 +14,12 @@
 
 package com.liferay.journal.web.social;
 
+import com.liferay.journal.constants.JournalActivityKeys;
 import com.liferay.journal.constants.JournalPortletKeys;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.service.JournalArticleLocalService;
-import com.liferay.journal.social.JournalActivityKeys;
 import com.liferay.journal.web.util.JournalResourceBundleLoader;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
@@ -43,7 +43,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Zsolt Berentey
  */
 @Component(
-	property = {"javax.portlet.name=" + JournalPortletKeys.JOURNAL},
+	property = "javax.portlet.name=" + JournalPortletKeys.JOURNAL,
 	service = SocialActivityInterpreter.class
 )
 public class JournalArticleActivityInterpreter

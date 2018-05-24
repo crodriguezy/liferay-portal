@@ -20,6 +20,8 @@
 DLConfiguration dlConfiguration = ConfigurationProviderUtil.getSystemConfiguration(DLConfiguration.class);
 %>
 
+<liferay-ui:success key='<%= portletDisplay.getId() + "filesImported" %>' message='<%= LanguageUtil.get(resourceBundle, "the-files-were-imported-correctly") %>' />
+
 <liferay-ui:error exception="<%= DuplicateFragmentCollectionKeyException.class %>">
 
 	<%
@@ -28,6 +30,8 @@ DLConfiguration dlConfiguration = ConfigurationProviderUtil.getSystemConfigurati
 
 	<liferay-ui:message arguments="<%= dfcke.getMessage() %>" key="a-fragment-collection-with-the-key-x-already-exists" />
 </liferay-ui:error>
+
+<liferay-ui:error exception="<%= InvalidFragmentCollectionFileException.class %>" message="selected-file-does-not-contain-fragment-collections" />
 
 <div class="lfr-dynamic-uploader" id="<portlet:namespace />uploaderContainer">
 	<div class="container-fluid-1280">
@@ -43,6 +47,7 @@ DLConfiguration dlConfiguration = ConfigurationProviderUtil.getSystemConfigurati
 					<portlet:actionURL name="/fragment/import_fragment_collections" var="importFragmentCollectionsURL">
 						<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.IMPORT %>" />
 						<portlet:param name="redirect" value="<%= currentURL %>" />
+						<portlet:param name="portletResource" value="<%= portletDisplay.getId() %>" />
 					</portlet:actionURL>
 
 					<aui:form action="<%= importFragmentCollectionsURL %>" method="post" name="fm2" onSubmit='<%= "event.preventDefault(); " + liferayPortletResponse.getNamespace() + "importMultipleFiles();" %>'>

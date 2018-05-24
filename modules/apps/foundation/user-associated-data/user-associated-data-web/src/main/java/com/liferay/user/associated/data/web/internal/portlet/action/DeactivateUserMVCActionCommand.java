@@ -14,10 +14,16 @@
 
 package com.liferay.user.associated.data.web.internal.portlet.action;
 
-import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.portlet.bridges.mvc.BaseTransactionalMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
+import com.liferay.portal.kernel.service.GroupLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserGroupLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
-import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.user.associated.data.constants.UserAssociatedDataPortletKeys;
 
 import javax.portlet.ActionRequest;
@@ -33,25 +39,41 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"javax.portlet.name=" + UserAssociatedDataPortletKeys.USER_ASSOCIATED_DATA,
-		"mvc.command.name=/user_associated_data/deactivate_user"
+		"mvc.command.name=/deactivate_user"
 	},
 	service = MVCActionCommand.class
 )
-public class DeactivateUserMVCActionCommand extends BaseMVCActionCommand {
+public class DeactivateUserMVCActionCommand
+	extends BaseTransactionalMVCActionCommand {
 
 	@Override
-	protected void doProcessAction(
+	protected void doTransactionalCommand(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long selUserId = ParamUtil.getLong(actionRequest, "selUserId");
+		User selectedUser = _portal.getSelectedUser(actionRequest);
 
-		_userLocalService.deactivateUser(selUserId, false);
+		_userGroupLocalService.clearUserUserGroups(selectedUser.getUserId());
 
-		String redirect = ParamUtil.getString(actionRequest, "redirect");
+		_userLocalService.updateStatus(
+			selectedUser.getUserId(), WorkflowConstants.STATUS_INACTIVE,
+			new ServiceContext());
 
-		sendRedirect(actionRequest, actionResponse, redirect);
+		Group group = selectedUser.getGroup();
+
+		group.setActive(true);
+
+		_groupLocalService.updateGroup(group);
 	}
+
+	@Reference
+	private GroupLocalService _groupLocalService;
+
+	@Reference
+	private Portal _portal;
+
+	@Reference
+	private UserGroupLocalService _userGroupLocalService;
 
 	@Reference
 	private UserLocalService _userLocalService;

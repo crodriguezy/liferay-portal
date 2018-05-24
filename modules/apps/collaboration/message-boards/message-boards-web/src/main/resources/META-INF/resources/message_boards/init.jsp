@@ -58,6 +58,7 @@ page import="com.liferay.message.boards.constants.MBCategoryConstants" %><%@
 page import="com.liferay.message.boards.constants.MBConstants" %><%@
 page import="com.liferay.message.boards.constants.MBMessageConstants" %><%@
 page import="com.liferay.message.boards.constants.MBPortletKeys" %><%@
+page import="com.liferay.message.boards.display.context.MBAdminListDisplayContext" %><%@
 page import="com.liferay.message.boards.display.context.MBHomeDisplayContext" %><%@
 page import="com.liferay.message.boards.display.context.MBListDisplayContext" %><%@
 page import="com.liferay.message.boards.exception.BannedUserException" %><%@
@@ -95,8 +96,8 @@ page import="com.liferay.message.boards.service.MBThreadFlagLocalServiceUtil" %>
 page import="com.liferay.message.boards.service.MBThreadLocalServiceUtil" %><%@
 page import="com.liferay.message.boards.service.MBThreadServiceUtil" %><%@
 page import="com.liferay.message.boards.settings.MBGroupServiceSettings" %><%@
-page import="com.liferay.message.boards.util.comparator.CategoryTitleComparator" %><%@
-page import="com.liferay.message.boards.util.comparator.MessageCreateDateComparator" %><%@
+page import="com.liferay.message.boards.util.comparator.MBObjectsModifiedDateComparator" %><%@
+page import="com.liferay.message.boards.util.comparator.MBObjectsTitleComparator" %><%@
 page import="com.liferay.message.boards.util.comparator.ThreadModifiedDateComparator" %><%@
 page import="com.liferay.message.boards.web.internal.dao.search.MBResultRowSplitter" %><%@
 page import="com.liferay.message.boards.web.internal.display.MBCategoryDisplay" %><%@
@@ -225,9 +226,6 @@ boolean enableRSS = mbGroupServiceSettings.isEnableRSS();
 int rssDelta = mbGroupServiceSettings.getRSSDelta();
 String rssDisplayStyle = mbGroupServiceSettings.getRSSDisplayStyle();
 String rssFeedType = mbGroupServiceSettings.getRSSFeedType();
-
-boolean childrenMessagesTaggable = true;
-boolean showSearch = true;
 
 MBWebComponentProvider mbWebComponentProvider = MBWebComponentProvider.getMBWebComponentProvider();
 

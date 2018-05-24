@@ -26,11 +26,6 @@ int roleType = (Integer)request.getAttribute("edit_roles.jsp-roleType");
 PortletURL portletURL = (PortletURL)request.getAttribute("edit_roles.jsp-portletURL");
 %>
 
-<div class="alert alert-info">
-	<liferay-ui:message arguments='<%= new String[] {"1", "2"} %>' key="step-x-of-x" translateArguments="<%= false %>" />
-	<liferay-ui:message key="choose-a-role" />
-</div>
-
 <liferay-ui:search-container
 	searchContainer="<%= new RoleSearch(renderRequest, portletURL) %>"
 >
@@ -85,5 +80,7 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_roles.jsp-portlet
 		/>
 	</liferay-ui:search-container-row>
 
-	<liferay-ui:search-iterator markupView="lexicon" />
+	<liferay-ui:search-iterator
+		markupView="lexicon"
+	/>
 </liferay-ui:search-container>

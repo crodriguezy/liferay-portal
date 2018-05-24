@@ -95,7 +95,7 @@
 		</execute>
 
 		<execute macro="User#editDetailsViaMyAccount">
-			<var name="userLastNameEdit"><![CDATA[<script>document.write("XSS"); window.stop();</script>]]></var>
+			<var name="userLastNameEdit"><![CDATA[<script>alert(123);</script>]]></var>
 		</execute>
 
 		<execute macro="Navigator#openURL" />
@@ -116,10 +116,16 @@
 		</execute>
 
 		<execute function="AssertElementNotPresent" locator1="//body[.='XSS']" />
+
+		<var name="actualScript"><![CDATA[<script>alert(123);</script>]]></var>
+		<var name="escapedScript"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
+
+		<execute function="AssertHTMLSourceTextNotPresent" value1="${actualScript}" />
+		<execute function="AssertHTMLSourceTextPresent" value1="${escapedScript}" />
 	</command>
 
 	<command name="ViewControlPanelNoXSS" priority="5">
-		<var name="siteName"><![CDATA[<script>document.write("XSS"); window.stop();</script>]]></var>
+		<var name="siteName"><![CDATA[<script>alert(123);</script>]]></var>
 
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Sites" />
@@ -147,7 +153,13 @@
 
 		<execute function="AssertElementNotPresent" locator1="//body[.='XSS']" />
 
-		<execute function="AssertTextEquals" locator1="Portlet#HEADER" value1="Pages" />
+		<var name="actualScript"><![CDATA[<script>alert(123);</script>]]></var>
+		<var name="escapedScript"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
+
+		<execute function="AssertHTMLSourceTextNotPresent" value1="${actualScript}" />
+		<execute function="AssertHTMLSourceTextPresent" value1="${escapedScript}" />
+
+		<execute function="AssertTextEquals" locator1="Portlet#HEADER" value1="Site Pages" />
 
 		<var name="key_siteName" value="${siteName}" />
 
@@ -179,6 +191,30 @@
 		</execute>
 
 		<execute function="AssertAlertNotPresent" />
+	</command>
+
+	<command name="ViewLDAPNoXSS" priority="5">
+		<description message="This is a use case for LPS-59198." />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Configuration" />
+			<var name="panel" value="Control Panel" />
+			<var name="portlet" value="Instance Settings" />
+		</execute>
+
+		<execute macro="PortalSettingsNavigator#gotoLDAP" />
+
+		<execute macro="PortalSettings#addLDAPServer">
+			<var name="LDAPServerName"><![CDATA[<script>alert(123);</script>]]></var>
+		</execute>
+
+		<execute function="AssertAlertNotPresent" />
+
+		<var name="actualScript"><![CDATA[<script>alert(123);</script>]]></var>
+		<var name="escapedScript"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
+
+		<execute function="AssertHTMLSourceTextNotPresent" value1="${actualScript}" />
+		<execute function="AssertHTMLSourceTextPresent" value1="${escapedScript}" />
 	</command>
 
 	<command name="ViewLiferayPortletListNoXSS" priority="5">
@@ -225,11 +261,11 @@
 		</execute>
 
 		<execute macro="SitePages#addPublicPage">
-			<var name="pageName"><![CDATA[<script>document.write("XSS"); window.stop();</script>]]></var>
+			<var name="pageName"><![CDATA[<script>alert(123);</script>]]></var>
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
-			<var name="pageName"><![CDATA[<script>document.write("XSS"); window.stop();</script>]]></var>
+			<var name="pageName"><![CDATA[<script>alert(123);</script>]]></var>
 		</execute>
 
 		<execute macro="Portlet#addPG">
@@ -241,7 +277,13 @@
 			<var name="portletOption" value="Look and Feel Configuration" />
 		</execute>
 
-		<execute function="AssertElementNotPresent" locator1="//body[.='XSS']" />
+		<execute function="AssertElementNotPresent" locator1="//body[.='123']" />
+
+		<var name="actualScript"><![CDATA[<script>alert(123);</script>]]></var>
+		<var name="escapedScript"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
+
+		<execute function="AssertHTMLSourceTextNotPresent" value1="${actualScript}" />
+		<execute function="AssertHTMLSourceTextPresent" value1="${escapedScript}" />
 	</command>
 
 	<command name="ViewMobileDeviceRulesNoXSS" priority="5">
@@ -275,7 +317,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Mobile Device Rules" />
+			<var name="panel" value="Mobile Device Rules" />
 		</execute>
 
 		<execute macro="Page#disableMobileDeviceRulesAreInheritedFromPublicPages" />
@@ -285,10 +327,16 @@
 		</execute>
 
 		<execute function="AssertElementNotPresent" locator1="//body[.='123']" />
+
+		<var name="actualScript"><![CDATA[<script>alert(123);</script>]]></var>
+		<var name="escapedScript"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
+
+		<execute function="AssertHTMLSourceTextNotPresent" value1="${actualScript}" />
+		<execute function="AssertHTMLSourceTextPresent" value1="${escapedScript}" />
 	</command>
 
 	<command name="ViewRecycleBinNoXSS" priority="5">
-		<var name="entryTitle"><![CDATA[<script>document.write("XSS"); window.stop();</script>]]></var>
+		<var name="entryTitle"><![CDATA[<script>alert(123);</script>]]></var>
 
 		<execute macro="Navigator#openURL" />
 
@@ -342,7 +390,13 @@
 			<var name="assetType" value="Blogs Entry" />
 		</execute>
 
-		<execute function="AssertElementNotPresent" locator1="//body[.='XSS']" />
+		<execute function="AssertElementNotPresent" locator1="//body[.='123']" />
+
+		<var name="actualScript"><![CDATA[<script>alert(123);</script>]]></var>
+		<var name="escapedScript"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
+
+		<execute function="AssertHTMLSourceTextNotPresent" value1="${actualScript}" />
+		<execute function="AssertHTMLSourceTextPresent" value1="${escapedScript}" />
 	</command>
 
 	<command name="ViewRolesNoXSS" priority="4">
@@ -353,7 +407,7 @@
 		</execute>
 
 		<execute macro="Role#add">
-			<var name="roleTitle"><![CDATA[<script>document.write("XSS"); window.stop();</script>]]></var>
+			<var name="roleTitle"><![CDATA[<script>alert(123);</script>]]></var>
 		</execute>
 
 		<execute macro="ProductMenu#gotoPortlet">
@@ -363,7 +417,7 @@
 		</execute>
 
 		<execute macro="Role#viewCP">
-			<var name="roleTitle"><![CDATA[<script>document.write("XSS"); window.stop();</script>]]></var>
+			<var name="roleTitle"><![CDATA[<script>alert(123);</script>]]></var>
 			<var name="roleType" value="Regular" />
 		</execute>
 
@@ -377,7 +431,13 @@
 			<var name="portletName" value="Sign In" />
 		</execute>
 
-		<execute function="AssertElementNotPresent" locator1="//body[.='XSS']" />
+		<execute function="AssertElementNotPresent" locator1="//body[.='123']" />
+
+		<var name="actualScript"><![CDATA[<script>alert(123);</script>]]></var>
+		<var name="escapedScript"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
+
+		<execute function="AssertHTMLSourceTextNotPresent" value1="${actualScript}" />
+		<execute function="AssertHTMLSourceTextPresent" value1="${escapedScript}" />
 	</command>
 
 	<command name="ViewURLValidateNoXSS" priority="5">
@@ -462,9 +522,9 @@
 		</execute>
 
 		<execute macro="User#editDetailsViaMyAccount">
-			<var name="userFirstNameEdit"><![CDATA[<script>document.write("XSS"); window.stop();</script>]]></var>
-			<var name="userLastNameEdit"><![CDATA[<script>document.write("XSS"); window.stop();</script>]]></var>
-			<var name="userMiddleNameEdit"><![CDATA[<script>document.write("XSS"); window.stop();</script>]]></var>
+			<var name="userFirstNameEdit"><![CDATA[<script>alert(123);</script>]]></var>
+			<var name="userLastNameEdit"><![CDATA[<script>alert(123);</script>]]></var>
+			<var name="userMiddleNameEdit"><![CDATA[<script>alert(123);</script>]]></var>
 		</execute>
 
 		<execute macro="Navigator#openURL" />
@@ -489,5 +549,11 @@
 		</execute>
 
 		<execute function="AssertElementNotPresent" locator1="//body[.='XSS']" />
+
+		<var name="actualScript"><![CDATA[<script>alert(123);</script>]]></var>
+		<var name="escapedScript"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
+
+		<execute function="AssertHTMLSourceTextNotPresent" value1="${actualScript}" />
+		<execute function="AssertHTMLSourceTextPresent" value1="${escapedScript}" />
 	</command>
 </definition>

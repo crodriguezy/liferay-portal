@@ -16,7 +16,8 @@ package com.liferay.friendly.url.service;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.osgi.util.ServiceTrackerFactory;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -255,6 +256,13 @@ public class FriendlyURLEntryLocalServiceUtil {
 	}
 
 	public static com.liferay.friendly.url.model.FriendlyURLEntryLocalization fetchFriendlyURLEntryLocalization(
+		long groupId, long classNameId, java.lang.String urlTitle) {
+		return getService()
+				   .fetchFriendlyURLEntryLocalization(groupId, classNameId,
+			urlTitle);
+	}
+
+	public static com.liferay.friendly.url.model.FriendlyURLEntryLocalization fetchFriendlyURLEntryLocalization(
 		long friendlyURLEntryId, java.lang.String languageId) {
 		return getService()
 				   .fetchFriendlyURLEntryLocalization(friendlyURLEntryId,
@@ -470,6 +478,17 @@ public class FriendlyURLEntryLocalServiceUtil {
 		return _serviceTracker.getService();
 	}
 
-	private static ServiceTracker<FriendlyURLEntryLocalService, FriendlyURLEntryLocalService> _serviceTracker =
-		ServiceTrackerFactory.open(FriendlyURLEntryLocalService.class);
+	private static ServiceTracker<FriendlyURLEntryLocalService, FriendlyURLEntryLocalService> _serviceTracker;
+
+	static {
+		Bundle bundle = FrameworkUtil.getBundle(FriendlyURLEntryLocalService.class);
+
+		ServiceTracker<FriendlyURLEntryLocalService, FriendlyURLEntryLocalService> serviceTracker =
+			new ServiceTracker<FriendlyURLEntryLocalService, FriendlyURLEntryLocalService>(bundle.getBundleContext(),
+				FriendlyURLEntryLocalService.class, null);
+
+		serviceTracker.open();
+
+		_serviceTracker = serviceTracker;
+	}
 }

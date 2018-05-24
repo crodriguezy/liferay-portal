@@ -97,7 +97,7 @@ if (ddmDisplay.getTitle(locale) != null) {
 				<%
 				String rowHREF = StringPool.BLANK;
 
-				if (DDMStructurePermission.contains(permissionChecker, structure, refererPortletName, ActionKeys.UPDATE)) {
+				if (DDMStructurePermission.contains(permissionChecker, structure, ActionKeys.UPDATE)) {
 					PortletURL rowURL = renderResponse.createRenderURL();
 
 					rowURL.setParameter("mvcPath", "/edit_structure.jsp");
@@ -169,7 +169,9 @@ if (ddmDisplay.getTitle(locale) != null) {
 				/>
 			</liferay-ui:search-container-row>
 
-			<liferay-ui:search-iterator markupView="lexicon" />
+			<liferay-ui:search-iterator
+				markupView="lexicon"
+			/>
 		</liferay-ui:search-container>
 	</div>
 </aui:form>

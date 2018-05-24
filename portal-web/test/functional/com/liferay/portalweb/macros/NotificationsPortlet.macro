@@ -1,10 +1,10 @@
 <definition>
 	<command name="disableUserDeliveries">
 		<var name="key_contentType" value="${contentType}" />
-		<var name="key_panelHeading" value="${contentType}" />
+		<var name="key_panel" value="${contentType}" />
 
 		<if>
-			<condition function="IsElementPresent" locator1="Panel#PANEL_HEADING_COLLAPSED" />
+			<condition function="IsElementPresent" locator1="Panel#PANEL_COLLAPSED" />
 			<then>
 				<execute function="AssertClick#assertTextClickAt" locator1="Notifications#NOTIFICATION_DELIVERY_PANEL" value1="${contentType}" />
 			</then>
@@ -39,10 +39,8 @@
 			<var name="portlet" value="Notifications" />
 		</execute>
 
-		<execute function="Click" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Configuration">
-			<var name="key_menuItem" value="Configuration" />
+		<execute macro="LexiconEntry#gotoHeaderMenuItem">
+			<var name="menuItem" value="Configuration" />
 		</execute>
 	</command>
 
@@ -53,13 +51,13 @@
 
 		<execute macro="NotificationsPortlet#gotoNotificationDelivery" />
 
-		<for list="${actionList}" param="actionType" >
+		<for list="${actionList}" param="actionType">
 			<var name="key_actionType" value="${actionType}" />
 
-			<for list="${contentList}" param="contentType" >
+			<for list="${contentList}" param="contentType">
 				<var name="key_contentType" value="${contentType}" />
 
-				<for list="${notificationList}" param="notificationType" >
+				<for list="${notificationList}" param="notificationType">
 					<var name="key_notificationType" value="${notificationType}" />
 
 					<execute function="Check" locator1="Notifications#NOTIFICATION_DELIVERY_CHECKBOX" />

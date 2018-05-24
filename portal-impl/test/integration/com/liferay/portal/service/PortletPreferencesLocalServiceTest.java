@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.service.PortletPreferencesLocalService;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceWrapper;
 import com.liferay.portal.kernel.service.ServiceWrapper;
+import com.liferay.portal.kernel.spring.aop.AdvisedSupport;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
@@ -51,9 +52,6 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
-
-import org.springframework.aop.TargetSource;
-import org.springframework.aop.framework.AdvisedSupport;
 
 /**
  * @author Cristina González
@@ -574,11 +572,11 @@ public class PortletPreferencesLocalServiceTest {
 			portletPreferencesList.toString(), 1,
 			portletPreferencesList.size());
 
-		PortletPreferencesImpl portletPreferenesImpl =
+		PortletPreferencesImpl portletPreferencesImpl =
 			PortletPreferencesImplTestUtil.toPortletPreferencesImpl(
 				portletPreferencesList.get(0));
 
-		assertOwner(_layout.getGroup(), portletPreferenesImpl);
+		assertOwner(_layout.getGroup(), portletPreferencesImpl);
 	}
 
 	@Test
@@ -813,11 +811,11 @@ public class PortletPreferencesLocalServiceTest {
 			portletPreferencesList.toString(), 1,
 			portletPreferencesList.size());
 
-		PortletPreferencesImpl portletPreferenesImpl =
+		PortletPreferencesImpl portletPreferencesImpl =
 			PortletPreferencesImplTestUtil.toPortletPreferencesImpl(
 				portletPreferencesList.get(0));
 
-		assertOwner(_layout, portletPreferenesImpl);
+		assertOwner(_layout, portletPreferencesImpl);
 	}
 
 	@Test
@@ -1147,11 +1145,11 @@ public class PortletPreferencesLocalServiceTest {
 			portletPreferencesList.toString(), 1,
 			portletPreferencesList.size());
 
-		PortletPreferencesImpl portletPreferenesImpl =
+		PortletPreferencesImpl portletPreferencesImpl =
 			PortletPreferencesImplTestUtil.toPortletPreferencesImpl(
 				portletPreferencesList.get(0));
 
-		assertOwner(_layout, portletPreferenesImpl);
+		assertOwner(_layout, portletPreferencesImpl);
 
 		Group group = GroupTestUtil.addGroup();
 
@@ -1502,9 +1500,7 @@ public class PortletPreferencesLocalServiceTest {
 		AdvisedSupport advisedSupport = ServiceBeanAopProxy.getAdvisedSupport(
 			PortletPreferencesLocalServiceUtil.getService());
 
-		TargetSource targetSource = advisedSupport.getTargetSource();
-
-		Object previousService = targetSource.getTarget();
+		Object previousService = advisedSupport.getTarget();
 
 		ServiceWrapper<PortletPreferencesLocalService> serviceWrapper =
 			new TestPortletPreferencesLocalServiceWrapper(

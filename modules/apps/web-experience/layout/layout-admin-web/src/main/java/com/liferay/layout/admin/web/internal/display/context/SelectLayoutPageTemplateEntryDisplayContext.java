@@ -16,7 +16,6 @@ package com.liferay.layout.admin.web.internal.display.context;
 
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemList;
-import com.liferay.layout.page.template.constants.LayoutPageTemplateCollectionTypeConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionServiceUtil;
@@ -104,6 +103,33 @@ public class SelectLayoutPageTemplateEntryDisplayContext {
 	public List<NavigationItem> getNavigationItems() throws PortalException {
 		return new NavigationItemList() {
 			{
+				List<LayoutPageTemplateCollection>
+					layoutPageTemplateCollections =
+						LayoutPageTemplateCollectionServiceUtil.
+							getLayoutPageTemplateCollections(
+								_themeDisplay.getScopeGroupId());
+
+				for (LayoutPageTemplateCollection layoutPageTemplateCollection :
+						layoutPageTemplateCollections) {
+
+					long layoutPageTemplateCollectionId =
+						layoutPageTemplateCollection.
+							getLayoutPageTemplateCollectionId();
+
+					add(
+						navigationItem -> {
+							navigationItem.setActive(
+								getLayoutPageTemplateCollectionId() ==
+									layoutPageTemplateCollectionId);
+							navigationItem.setHref(
+								_layoutsAdminDisplayContext.
+									getSelectLayoutPageTemplateEntryURL(
+										layoutPageTemplateCollectionId));
+							navigationItem.setLabel(
+								layoutPageTemplateCollection.getName());
+						});
+				}
+
 				String basicPagesURL =
 					_layoutsAdminDisplayContext.
 						getSelectLayoutPageTemplateEntryURL(
@@ -131,35 +157,6 @@ public class SelectLayoutPageTemplateEntryDisplayContext {
 						navigationItem.setLabel(
 							LanguageUtil.get(_request, "global-templates"));
 					});
-
-				List<LayoutPageTemplateCollection>
-					layoutPageTemplateCollections =
-						LayoutPageTemplateCollectionServiceUtil.
-							getLayoutPageTemplateCollections(
-								_themeDisplay.getScopeGroupId(),
-								LayoutPageTemplateCollectionTypeConstants.
-									TYPE_BASIC);
-
-				for (LayoutPageTemplateCollection layoutPageTemplateCollection :
-						layoutPageTemplateCollections) {
-
-					long layoutPageTemplateCollectionId =
-						layoutPageTemplateCollection.
-							getLayoutPageTemplateCollectionId();
-
-					add(
-						navigationItem -> {
-							navigationItem.setActive(
-								getLayoutPageTemplateCollectionId() ==
-									layoutPageTemplateCollectionId);
-							navigationItem.setHref(
-								_layoutsAdminDisplayContext.
-									getSelectLayoutPageTemplateEntryURL(
-										layoutPageTemplateCollectionId));
-							navigationItem.setLabel(
-								layoutPageTemplateCollection.getName());
-						});
-				}
 			}
 		};
 	}
@@ -214,6 +211,14 @@ public class SelectLayoutPageTemplateEntryDisplayContext {
 		}
 
 		return true;
+	}
+
+	public boolean isContentPages() {
+		if (getLayoutPageTemplateCollectionId() != 0) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public boolean isGlobalTemplates() {

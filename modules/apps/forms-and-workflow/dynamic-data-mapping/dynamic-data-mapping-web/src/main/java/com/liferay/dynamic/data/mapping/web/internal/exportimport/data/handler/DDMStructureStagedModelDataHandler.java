@@ -70,7 +70,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"javax.portlet.name=" + DDMPortletKeys.DYNAMIC_DATA_MAPPING},
+	property = "javax.portlet.name=" + DDMPortletKeys.DYNAMIC_DATA_MAPPING,
 	service = StagedModelDataHandler.class
 )
 public class DDMStructureStagedModelDataHandler
@@ -521,7 +521,7 @@ public class DDMStructureStagedModelDataHandler
 				DDMDataProviderInstance.class);
 
 		for (String ddmDataProviderInstanceId : ddmDataProviderInstanceIds) {
-			long oldDDMDataProviderInstanceId = Long.parseLong(
+			long oldDDMDataProviderInstanceId = GetterUtil.getLong(
 				ddmDataProviderInstanceId);
 
 			long newDDMDataProviderInstanceId = MapUtil.getLong(

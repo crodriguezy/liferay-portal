@@ -53,7 +53,7 @@ public class RSSAction extends BaseRSSStrutsAction {
 
 		Layout layout = themeDisplay.getLayout();
 
-		long plid = ParamUtil.getLong(request, "p_l_id");
+		long plid = ParamUtil.getLong(request, "plid");
 
 		if (plid == LayoutConstants.DEFAULT_PLID) {
 			plid = themeDisplay.getPlid();
@@ -126,14 +126,14 @@ public class RSSAction extends BaseRSSStrutsAction {
 			WebKeys.THEME_DISPLAY);
 
 		BlogsGroupServiceOverriddenConfiguration
-			blogsGroupServiceOverridenConfiguration =
+			blogsGroupServiceOverriddenConfiguration =
 				_configurationProvider.getConfiguration(
 					BlogsGroupServiceOverriddenConfiguration.class,
 					new GroupServiceSettingsLocator(
 						themeDisplay.getSiteGroupId(),
 						BlogsConstants.SERVICE_NAME));
 
-		return blogsGroupServiceOverridenConfiguration.enableRss();
+		return blogsGroupServiceOverriddenConfiguration.enableRss();
 	}
 
 	@Reference(unbind = "-")

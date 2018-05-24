@@ -16,13 +16,14 @@ package com.liferay.blogs.web.internal.configuration;
 
 import aQute.bnd.annotation.metatype.Meta;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
 
 /**
  * @author Sergio González
  */
 @ExtendedObjectClassDefinition(
-	category = "collaboration",
+	category = "blogs",
 	scope = ExtendedObjectClassDefinition.Scope.PORTLET_INSTANCE
 )
 @Meta.OCD(
@@ -66,14 +67,14 @@ public interface BlogsPortletInstanceConfiguration {
 	public String pageDelta();
 
 	@Meta.AD(
-		deflt = "menu", name = "social-bookmarks-display-style",
+		deflt = "inline", name = "social-bookmarks-display-style",
 		required = false
 	)
 	public String socialBookmarksDisplayStyle();
 
 	@Meta.AD(
-		deflt = "${server-property://com.liferay.portal/social.bookmark.types}",
-		name = "social-bookmarks-types", required = false
+		deflt = StringPool.STAR, name = "social-bookmarks-types",
+		required = false
 	)
 	public String socialBookmarksTypes();
 

@@ -48,14 +48,15 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PersistenceTestRule;
 import com.liferay.portal.test.rule.TransactionalTestRule;
 
+import java.io.ByteArrayInputStream;
 import java.io.Serializable;
+
+import java.math.BigDecimal;
 
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
-import java.io.ByteArrayInputStream;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -261,6 +262,8 @@ public class ${entity.name}PersistenceTest {
 					RandomTestUtil.nextInt()
 				<#elseif stringUtil.equals(entityColumn.type, "long")>
 					RandomTestUtil.nextLong()
+				<#elseif stringUtil.equals(entityColumn.type, "BigDecimal")>
+					new BigDecimal(RandomTestUtil.nextDouble())
 				<#elseif stringUtil.equals(entityColumn.type, "Date")>
 					RandomTestUtil.nextDate()
 				<#elseif stringUtil.equals(entityColumn.type, "Blob")>
@@ -290,6 +293,8 @@ public class ${entity.name}PersistenceTest {
 				Blob existing${entityColumn.methodName} = existing${entity.name}.get${entityColumn.methodName}();
 
 				Assert.assertTrue(Arrays.equals(existing${entityColumn.methodName}.getBytes(1, (int)existing${entityColumn.methodName}.length()), new${entityColumn.methodName}Bytes));
+			<#elseif stringUtil.equals(entityColumn.type, "boolean")>
+				Assert.assertEquals(existing${entity.name}.is${entityColumn.methodName}(), new${entity.name}.is${entityColumn.methodName}());
 			<#elseif stringUtil.equals(entityColumn.type, "Date")>
 				Assert.assertEquals(Time.getShortTimestamp(existing${entity.name}.get${entityColumn.methodName}()), Time.getShortTimestamp(new${entity.name}.get${entityColumn.methodName}()));
 			<#elseif stringUtil.equals(entityColumn.type, "double")>
@@ -1077,6 +1082,8 @@ public class ${entity.name}PersistenceTest {
 					RandomTestUtil.nextInt()
 				<#elseif stringUtil.equals(entityColumn.type, "long")>
 					RandomTestUtil.nextLong()
+				<#elseif stringUtil.equals(entityColumn.type, "BigDecimal")>
+					new BigDecimal(RandomTestUtil.nextDouble())
 				<#elseif stringUtil.equals(entityColumn.type, "Blob")>
 					${entityColumn.name}Blob
 				<#elseif stringUtil.equals(entityColumn.type, "Date")>

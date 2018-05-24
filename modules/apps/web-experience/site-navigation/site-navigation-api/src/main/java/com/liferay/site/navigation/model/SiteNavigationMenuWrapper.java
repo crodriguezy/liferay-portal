@@ -67,7 +67,7 @@ public class SiteNavigationMenuWrapper implements SiteNavigationMenu,
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("name", getName());
 		attributes.put("type", getType());
-		attributes.put("auto", getAuto());
+		attributes.put("auto", isAuto());
 
 		return attributes;
 	}
@@ -245,6 +245,11 @@ public class SiteNavigationMenuWrapper implements SiteNavigationMenu,
 		return _siteNavigationMenu.getType();
 	}
 
+	@Override
+	public java.lang.String getTypeKey() {
+		return _siteNavigationMenu.getTypeKey();
+	}
+
 	/**
 	* Returns the user ID of this site navigation menu.
 	*
@@ -303,6 +308,11 @@ public class SiteNavigationMenuWrapper implements SiteNavigationMenu,
 	@Override
 	public boolean isNew() {
 		return _siteNavigationMenu.isNew();
+	}
+
+	@Override
+	public boolean isPrimary() {
+		return _siteNavigationMenu.isPrimary();
 	}
 
 	@Override

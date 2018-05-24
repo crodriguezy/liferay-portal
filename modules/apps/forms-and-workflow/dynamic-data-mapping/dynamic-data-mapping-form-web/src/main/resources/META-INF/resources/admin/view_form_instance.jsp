@@ -45,6 +45,12 @@ portletURL.setParameter("displayStyle", displayStyle);
 					<portlet:param name="displayStyle" value="<%= displayStyle %>" />
 				</portlet:renderURL>
 
+				<%
+				if (!ddmFormAdminDisplayContext.isShowEditFormInstanceIcon(formInstance)) {
+					rowURL = null;
+				}
+				%>
+
 				<c:choose>
 					<c:when test='<%= displayStyle.equals("descriptive") %>'>
 						<liferay-ui:search-container-column-icon
@@ -88,7 +94,10 @@ portletURL.setParameter("displayStyle", displayStyle);
 				</c:choose>
 			</liferay-ui:search-container-row>
 
-			<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+			<liferay-ui:search-iterator
+				displayStyle="<%= displayStyle %>"
+				markupView="lexicon"
+			/>
 		</liferay-ui:search-container>
 	</aui:form>
 </div>

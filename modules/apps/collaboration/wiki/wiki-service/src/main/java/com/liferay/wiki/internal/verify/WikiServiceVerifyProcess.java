@@ -21,11 +21,8 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.verify.VerifyProcess;
-import com.liferay.portal.verify.VerifyResourcePermissions;
 import com.liferay.portal.verify.VerifyUUID;
-import com.liferay.wiki.internal.verify.model.WikiNodeVerifiableModel;
 import com.liferay.wiki.internal.verify.model.WikiPageResourceVerifiableModel;
-import com.liferay.wiki.internal.verify.model.WikiPageVerifiableModel;
 import com.liferay.wiki.model.WikiPage;
 import com.liferay.wiki.model.WikiPageResource;
 import com.liferay.wiki.service.WikiPageLocalService;
@@ -43,8 +40,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Iván Zaera
  */
 @Component(
-	immediate = true,
-	property = {"verify.process.name=com.liferay.wiki.service"},
+	immediate = true, property = "verify.process.name=com.liferay.wiki.service",
 	service = VerifyProcess.class
 )
 public class WikiServiceVerifyProcess extends VerifyProcess {
@@ -53,7 +49,6 @@ public class WikiServiceVerifyProcess extends VerifyProcess {
 	protected void doVerify() throws Exception {
 		verifyCreateDate();
 		verifyNoAssetPages();
-		verifyResourcedModels();
 		verifyUUIDModels();
 	}
 
@@ -149,13 +144,6 @@ public class WikiServiceVerifyProcess extends VerifyProcess {
 		}
 	}
 
-	protected void verifyResourcedModels() throws Exception {
-		try (LoggingTimer loggingTimer = new LoggingTimer()) {
-			_verifyResourcePermissions.verify(new WikiNodeVerifiableModel());
-			_verifyResourcePermissions.verify(new WikiPageVerifiableModel());
-		}
-	}
-
 	protected void verifyUUIDModels() throws Exception {
 		try (LoggingTimer loggingTimer = new LoggingTimer()) {
 			VerifyUUID.verify(new WikiPageResourceVerifiableModel());
@@ -165,8 +153,6 @@ public class WikiServiceVerifyProcess extends VerifyProcess {
 	private static final Log _log = LogFactoryUtil.getLog(
 		WikiServiceVerifyProcess.class);
 
-	private final VerifyResourcePermissions _verifyResourcePermissions =
-		new VerifyResourcePermissions();
 	private WikiPageLocalService _wikiPageLocalService;
 	private WikiPageResourceLocalService _wikiPageResourceLocalService;
 

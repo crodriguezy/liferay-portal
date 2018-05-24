@@ -209,6 +209,8 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 
 			if (cmd.equals(Constants.ADD)) {
 				user = addUser(actionRequest);
+
+				SessionMessages.add(actionRequest, "userAdded");
 			}
 			else if (cmd.equals(Constants.DEACTIVATE) ||
 					 cmd.equals(Constants.DELETE) ||
@@ -498,7 +500,7 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 			User.class.getName(), actionRequest);
 
 		user = _userService.updateUser(
-			user.getUserId(), oldPassword, null, null, user.getPasswordReset(),
+			user.getUserId(), oldPassword, null, null, user.isPasswordReset(),
 			null, null, screenName, emailAddress, facebookId, user.getOpenId(),
 			!deleteLogo, portraitBytes, languageId, user.getTimeZoneId(),
 			user.getGreeting(), comments, firstName, middleName, lastName,

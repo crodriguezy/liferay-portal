@@ -43,6 +43,7 @@ import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.service.Base${sessionTypeName}ServiceImpl;
 import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistry;
 import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistryUtil;
+import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.InfrastructureUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -177,6 +178,7 @@ import ${apiPackagePath}.service.${entity.name}${sessionTypeName}Service;
 		 * @return the new ${entity.humanName}
 		 */
 		@Override
+		@Transactional(enabled = false)
 		public ${entity.name} create${entity.name}(${entity.PKClassName} ${entity.PKVarName}) {
 			return ${entity.varName}Persistence.create(${entity.PKVarName});
 		}
@@ -1007,7 +1009,7 @@ import ${apiPackagePath}.service.${entity.name}${sessionTypeName}Service;
 			${localizedEntity.name} ${localizedEntity.varName} = ${localizedEntity.varName}Persistence.fetchBy${pkEntityColumn.methodName}_LanguageId(${entity.varName}.get${pkEntityColumn.methodName}(), languageId);
 
 			if (${localizedEntity.varName} == null) {
-				long ${localizedEntity.varName}Id = counterLocalService.increment();
+				long ${localizedEntity.varName}Id = counterLocalService.increment(${localizedEntity.name}.class.getName());
 
 				${localizedEntity.varName} = ${localizedEntity.varName}Persistence.create(${localizedEntity.varName}Id);
 
@@ -1080,13 +1082,13 @@ import ${apiPackagePath}.service.${entity.name}${sessionTypeName}Service;
 				}
 			}
 
+			long batchCounter = counterLocalService.increment(${localizedEntity.name}.class.getName(), localizedValuesMap.size()) - localizedValuesMap.size();
+
 			for (Map.Entry<String, String[]> entry : localizedValuesMap.entrySet()) {
 				String languageId = entry.getKey();
 				String[] localizedValues = entry.getValue();
 
-				long ${localizedEntity.PKVarName} = counterLocalService.increment();
-
-				${localizedEntity.name} ${localizedEntity.varName} = ${localizedEntity.varName}Persistence.create(${localizedEntity.PKVarName});
+				${localizedEntity.name} ${localizedEntity.varName} = ${localizedEntity.varName}Persistence.create(++batchCounter);
 
 				<#list entity.entityColumns as entityColumn>
 					<#if localizedEntity.hasEntityColumn(entityColumn.name) && !stringUtil.equals(entityColumn.name, "mvccVersion")>

@@ -74,11 +74,6 @@ public interface LayoutPageTemplateCollectionLocalService
 
 	public LayoutPageTemplateCollection addLayoutPageTemplateCollection(
 		long userId, long groupId, java.lang.String name,
-		java.lang.String description, int type, ServiceContext serviceContext)
-		throws PortalException;
-
-	public LayoutPageTemplateCollection addLayoutPageTemplateCollection(
-		long userId, long groupId, java.lang.String name,
 		java.lang.String description, ServiceContext serviceContext)
 		throws PortalException;
 
@@ -88,6 +83,7 @@ public interface LayoutPageTemplateCollectionLocalService
 	* @param layoutPageTemplateCollectionId the primary key for the new layout page template collection
 	* @return the new layout page template collection
 	*/
+	@Transactional(enabled = false)
 	public LayoutPageTemplateCollection createLayoutPageTemplateCollection(
 		long layoutPageTemplateCollectionId);
 

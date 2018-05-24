@@ -2,6 +2,14 @@
 	cursor: pointer;
 }
 
+.lfr-form-content .sheet {
+	padding-bottom: 1.5em;
+
+	.taglib-page-iterator .lfr-pagination-buttons {
+		margin-top: 0.5em;
+	}
+}
+
 .ddm-form-builder-buttons .icon-spinner,
 .lfr-ddm-form-pagination-controls .icon-spinner,
 .ddm-form-settings-modal .btn-toolbar-button .icon-spinner {
@@ -166,6 +174,10 @@
 		margin-left: 4px;
 	}
 
+	.input-group-container .input-group-addon {
+		background-color: #E7E7ED;
+	}
+
 	.lfr-ddm-form-field-validation .row {
 		margin: 0;
 	}
@@ -237,10 +249,14 @@
 			}
 		}
 
-		.alloy-editor.alloy-editor-placeholder,
 		.ddm-form-name,
 		.ddm-form-description {
 			color: #869CAD;
+		}
+
+		.alloy-editor.alloy-editor-placeholder {
+			color: #000;
+			font-weight: 500;
 		}
 
 		.alloy-editor.alloy-editor-placeholder:empty:not(:focus) {

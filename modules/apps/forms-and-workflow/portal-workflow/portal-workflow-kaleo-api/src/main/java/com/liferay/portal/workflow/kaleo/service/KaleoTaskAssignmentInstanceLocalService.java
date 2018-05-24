@@ -101,13 +101,14 @@ public interface KaleoTaskAssignmentInstanceLocalService
 	* @param kaleoTaskAssignmentInstanceId the primary key for the new kaleo task assignment instance
 	* @return the new kaleo task assignment instance
 	*/
+	@Transactional(enabled = false)
 	public KaleoTaskAssignmentInstance createKaleoTaskAssignmentInstance(
 		long kaleoTaskAssignmentInstanceId);
 
 	public void deleteCompanyKaleoTaskAssignmentInstances(long companyId);
 
 	public void deleteKaleoDefinitionVersionKaleoTaskAssignmentInstances(
-		long kaleoDefintionId);
+		long kaleoDefinitionId);
 
 	public void deleteKaleoInstanceKaleoTaskAssignmentInstances(
 		long kaleoInstanceId);

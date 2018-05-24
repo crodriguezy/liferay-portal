@@ -14,8 +14,6 @@
 
 package com.liferay.configuration.admin.web.internal.display;
 
-import com.liferay.configuration.admin.web.internal.model.ConfigurationModel;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,19 +26,23 @@ public class ConfigurationScopeDisplay {
 		_scope = scope;
 	}
 
-	public void add(ConfigurationModel configurationModel) {
-		_configurationModels.add(configurationModel);
+	public void add(ConfigurationEntry configurationEntry) {
+		_configurationEntries.add(configurationEntry);
 	}
 
-	public List<ConfigurationModel> getConfigurationModels() {
-		return _configurationModels;
+	public List<ConfigurationEntry> getConfigurationEntries() {
+		return _configurationEntries;
 	}
 
 	public String getScope() {
 		return _scope;
 	}
 
-	private List<ConfigurationModel> _configurationModels = new ArrayList<>();
+	public boolean isEmpty() {
+		return _configurationEntries.isEmpty();
+	}
+
+	private List<ConfigurationEntry> _configurationEntries = new ArrayList<>();
 	private final String _scope;
 
 }

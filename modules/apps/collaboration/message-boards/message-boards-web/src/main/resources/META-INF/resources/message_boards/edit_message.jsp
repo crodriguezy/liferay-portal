@@ -19,8 +19,6 @@
 <%
 String redirect = ParamUtil.getString(request, "redirect");
 
-String referringPortletResource = ParamUtil.getString(request, "referringPortletResource");
-
 MBMessage message = (MBMessage)request.getAttribute(WebKeys.MESSAGE_BOARDS_MESSAGE);
 
 long messageId = BeanParamUtil.getLong(message, request, "messageId");
@@ -116,15 +114,7 @@ if (portletTitleBasedNavigation) {
 
 <div <%= portletTitleBasedNavigation ? "class=\"container-fluid-1280\"" : StringPool.BLANK %> id='<%= renderResponse.getNamespace() + "mbEditPageContainer" %>'>
 	<c:if test="<%= !portletTitleBasedNavigation %>">
-		<c:if test="<%= Validator.isNull(referringPortletResource) %>">
-			<liferay-util:include page="/message_boards/top_links.jsp" servletContext="<%= application %>" />
-		</c:if>
-
-		<liferay-ui:header
-			backURL="<%= redirect %>"
-			localizeTitle="<%= (message == null) %>"
-			title="<%= headerTitle %>"
-		/>
+		<h3><%= headerTitle %></h3>
 	</c:if>
 
 	<portlet:actionURL name="/message_boards/edit_message" var="editMessageURL">
@@ -223,7 +213,9 @@ if (portletTitleBasedNavigation) {
 				</aui:field-wrapper>
 			</aui:fieldset>
 
-			<liferay-expando:custom-attributes-available className="<%= MBMessage.class.getName() %>">
+			<liferay-expando:custom-attributes-available
+				className="<%= MBMessage.class.getName() %>"
+			>
 				<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="custom-fields">
 					<liferay-expando:custom-attribute-list
 						className="<%= MBMessage.class.getName() %>"
@@ -281,7 +273,12 @@ if (portletTitleBasedNavigation) {
 										<portlet:param name="fileName" value="<%= fileEntry.getTitle() %>" />
 									</liferay-portlet:actionURL>
 
-									<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>">
+									<liferay-ui:icon-menu
+										direction="left-side"
+										icon="<%= StringPool.BLANK %>"
+										markupView="lexicon"
+										message="<%= StringPool.BLANK %>"
+									>
 										<liferay-ui:icon-delete
 											trash="<%= trashHelper.isTrashEnabled(scopeGroupId) %>"
 											url="<%= deleteURL %>"
@@ -290,13 +287,15 @@ if (portletTitleBasedNavigation) {
 								</liferay-ui:search-container-column-text>
 							</liferay-ui:search-container-row>
 
-							<liferay-ui:search-iterator markupView="lexicon" />
+							<liferay-ui:search-iterator
+								markupView="lexicon"
+							/>
 						</liferay-ui:search-container>
 					</c:if>
 				</aui:fieldset>
 			</c:if>
 
-			<c:if test="<%= (curParentMessage == null) || childrenMessagesTaggable %>">
+			<c:if test="<%= (curParentMessage == null) %>">
 				<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="categorization">
 					<aui:input name="tags" type="assetTags" />
 				</aui:fieldset>
@@ -395,7 +394,9 @@ if (portletTitleBasedNavigation) {
 			<c:if test="<%= (message == null) && captchaConfiguration.messageBoardsEditMessageCaptchaEnabled() %>">
 				<portlet:resourceURL id="/message_boards/captcha" var="captchaURL" />
 
-				<liferay-captcha:captcha url="<%= captchaURL %>" />
+				<liferay-captcha:captcha
+					url="<%= captchaURL %>"
+				/>
 			</c:if>
 		</aui:fieldset-group>
 

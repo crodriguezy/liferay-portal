@@ -69,7 +69,13 @@
 
 			<execute macro="SitePages#addPublicPage">
 				<var name="pageName" value="${portlet} Full Page Application" />
+				<var name="sitePageType" value="Full Page Application" />
+			</execute>
+
+			<execute macro="SitePages#configurePage">
+				<var name="pageName" value="${portlet} Full Page Application" />
 				<var name="portlet" value="${portlet}" />
+				<var name="privacy" value="Public" />
 				<var name="sitePageType" value="Full Page Application" />
 			</execute>
 
@@ -80,20 +86,20 @@
 			<if>
 				<equals arg1="${portlet}" arg2="Dynamic Data Mapping Form" />
 				<then>
-					<execute function="AssertTextEquals" locator1="Home#PAGE_COLUMN_PORTLET_COLUMN_1_PORTLET_TITLE" value1="Form">
+					<execute function="AssertTextEquals#assertTextCaseInsensitive" locator1="Home#PAGE_COLUMN_PORTLET_COLUMN_1_PORTLET_TITLE" value1="Form">
 						<var name="key_portletTitleName" value="Form" />
 					</execute>
 				</then>
 				<elseif>
 					<equals arg1="${portlet}" arg2="RSS" />
 					<then>
-						<execute function="AssertTextEquals" locator1="Home#PAGE_COLUMN_PORTLET_COLUMN_1_PORTLET_TITLE" value1="RSS Publisher">
+						<execute function="AssertTextEquals#assertTextCaseInsensitive" locator1="Home#PAGE_COLUMN_PORTLET_COLUMN_1_PORTLET_TITLE" value1="RSS Publisher">
 							<var name="key_portletTitleName" value="RSS Publisher" />
 						</execute>
 					</then>
 				</elseif>
 				<else>
-					<execute function="AssertTextEquals" locator1="Home#PAGE_COLUMN_PORTLET_COLUMN_1_PORTLET_TITLE" value1="${portlet}">
+					<execute function="AssertTextEquals#assertTextCaseInsensitive" locator1="Home#PAGE_COLUMN_PORTLET_COLUMN_1_PORTLET_TITLE" value1="${portlet}">
 						<var name="key_portletTitleName" value="${portlet}" />
 					</execute>
 				</else>
@@ -108,11 +114,13 @@
 
 		<execute macro="NavigationMenu#gotoAddPage" />
 
-		<execute macro="PortletEntry#inputName">
-			<var name="name" value="Test Page Name" />
+		<execute macro="SitePages#_addPage">
+			<var name="pageName" value="Test Page Name" />
 		</execute>
 
-		<execute macro="Page#saveAddPage" />
+		<execute macro="Navigator#gotoPage">
+			<var name="pageName" value="Test Page Name" />
+		</execute>
 
 		<execute function="AssertLocation" value1="${portalURL}/web/guest/test-page-name" />
 	</command>
@@ -154,14 +162,14 @@
 			<var name="pageName" value="Site Page" />
 		</execute>
 
-		<for list="Site Child Page 1,Site Child Page 2,Site Child Page 3" param="childPageName" >
+		<for list="Site Child Page 1,Site Child Page 2,Site Child Page 3" param="childPageName">
 			<execute macro="SitePages#addPublicChildPage">
 				<var name="childPageName" value="${childPageName}" />
 				<var name="parentPageName" value="Site Page" />
 			</execute>
 		</for>
 
-		<for list="Site Child Page 1,Site Child Page 2,Site Child Page 3" param="childPageName" >
+		<for list="Site Child Page 1,Site Child Page 2,Site Child Page 3" param="childPageName">
 			<execute macro="Page#view">
 				<var name="depth" value="1" />
 				<var name="pageName" value="${childPageName}" />
@@ -205,12 +213,10 @@
 			<var name="url" value="${portalURL}/group/site-name/site-child-page" />
 		</execute>
 
-		<execute macro="ProductMenu#gotoPrivatePages" />
-
 		<execute macro="Page#view">
 			<var name="depth" value="1" />
 			<var name="pageName" value="Site Child Page" />
-			<var name="privacy" value="Public" />
+			<var name="privacy" value="Private" />
 		</execute>
 	</command>
 
@@ -881,6 +887,7 @@
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="Site Page" />
+			<var name="sitePageType" value="Embedded" />
 		</execute>
 
 		<execute macro="Navigator#gotoSitePage">

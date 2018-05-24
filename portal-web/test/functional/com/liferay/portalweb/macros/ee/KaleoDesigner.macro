@@ -68,7 +68,7 @@
 		<if>
 			<equals arg1="${nodeType}" arg2="task" />
 			<then>
-				<var name="sourceXML" >
+				<var name="sourceXML">
 <![CDATA[
 <?xml version="1.0"?>
 <workflow-definition xmlns="urn:liferay.com:liferay-workflow_6.2.0"${line.separator} xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"${line.separator} xsi:schemaLocation="urn:liferay.com:liferay-workflow_6.2.0 http://www.liferay.com/dtd/liferay-workflow-definition_6_2_0.xsd">${line.separator}
@@ -90,7 +90,7 @@
 			</then>
 		</if>
 
-		<execute function="AssertClick" locator1="KaleoDesignerEditWorkflow#SOURCE_KALEO_XML_TAB" value1="Source (Kaleo XML)" />
+		<execute function="AssertClick" locator1="KaleoDesignerEditWorkflow#SOURCE_KALEO_XML_TAB" value1="Source" />
 
 		<execute function="Pause" locator1="1000" />
 
@@ -124,7 +124,7 @@
 	</command>
 
 	<command name="addSourceXMLBasicDefinition">
-		<var name="sourceXML" >
+		<var name="sourceXML">
 <![CDATA[
 <?xml version="1.0"?>
 <workflow-definition${line.separator} xmlns="urn:liferay.com:liferay-workflow_6.2.0"${line.separator} xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"${line.separator} xsi:schemaLocation="urn:liferay.com:liferay-workflow_6.2.0 http://www.liferay.com/dtd/liferay-workflow-definition_6_2_0.xsd">${line.separator}
@@ -178,7 +178,7 @@
 </workflow-definition>
 ]]>
 		</var>
-		<execute function="AssertClick" locator1="KaleoDesignerEditWorkflow#SOURCE_KALEO_XML_TAB" value1="Source (Kaleo XML)" />
+		<execute function="AssertClick" locator1="KaleoDesignerEditWorkflow#SOURCE_KALEO_XML_TAB" value1="Source" />
 
 		<execute function="Pause" locator1="1000" />
 
@@ -485,7 +485,7 @@
 	</command>
 
 	<command name="editSourceXML">
-		<execute function="AssertClick" locator1="KaleoDesignerEditWorkflow#SOURCE_KALEO_XML_TAB" value1="Source (Kaleo XML)" />
+		<execute function="AssertClick" locator1="KaleoDesignerEditWorkflow#SOURCE_KALEO_XML_TAB" value1="Source" />
 
 		<var name="key_line" value="${line}" />
 
@@ -497,7 +497,7 @@
 	</command>
 
 	<command name="eraseDefinitionViaSourceXML">
-		<execute function="AssertClick" locator1="KaleoDesignerEditWorkflow#SOURCE_KALEO_XML_TAB" value1="Source (Kaleo XML)" />
+		<execute function="AssertClick" locator1="KaleoDesignerEditWorkflow#SOURCE_KALEO_XML_TAB" value1="Source" />
 
 		<execute function="Pause" locator1="1000" />
 
@@ -774,7 +774,7 @@
 	</command>
 
 	<command name="viewSourceXMLTab">
-		<execute function="AssertClick" locator1="KaleoDesignerEditWorkflow#SOURCE_KALEO_XML_TAB" value1="Source (Kaleo XML)" />
+		<execute function="AssertClick" locator1="KaleoDesignerEditWorkflow#SOURCE_KALEO_XML_TAB" value1="Source" />
 
 		<execute function="Pause" locator1="1000" />
 	</command>

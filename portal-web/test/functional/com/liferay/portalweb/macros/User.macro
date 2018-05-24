@@ -224,7 +224,7 @@
 	</command>
 
 	<command name="addMultipleCP">
-		<for list="${usersEmailsList}" param="userEmail" >
+		<for list="${usersEmailsList}" param="userEmail">
 			<var name="userEmailAddress" value="${userEmail}" />
 			<var method="StringUtil#replace('${userEmail}', '@liferay.com', '')" name="userName" />
 
@@ -610,7 +610,7 @@
 		</if>
 	</command>
 
-	<command name="advancedSearchViaMySitesDirectoryPG" >
+	<command name="advancedSearchViaMySitesDirectoryPG">
 		<execute function="Click" locator1="NavBar#SEARCH_TOGGLE_ADVANCED" />
 
 		<if>
@@ -667,7 +667,7 @@
 		</if>
 	</command>
 
-	<command name="advancedSearchViaPortalDirectoryPG" >
+	<command name="advancedSearchViaPortalDirectoryPG">
 		<execute function="Click" locator1="NavBar#SEARCH_TOGGLE_ADVANCED" />
 
 		<if>
@@ -724,7 +724,7 @@
 		</if>
 	</command>
 
-	<command name="advancedSearchViaSiteMembersDirectoryPG" >
+	<command name="advancedSearchViaSiteMembersDirectoryPG">
 		<execute function="Click" locator1="NavBar#SEARCH_TOGGLE_ADVANCED" />
 
 		<if>
@@ -1052,7 +1052,7 @@
 				<then>
 					<var name="key_userScreenName" value="${userScreenName}" />
 
-					<execute function="Check#checkAll" locator1="Checkbox#SELECT_ALL" />
+					<execute macro="PortletEntry#selectAll" />
 
 					<execute function="AssertClickNoError" locator1="Button#DEACTIVATE" value1="Deactivate" />
 
@@ -1076,11 +1076,13 @@
 					<execute function="Confirm" value1="Are you sure you want to deactivate the selected users?" />
 
 					<execute macro="Alert#viewSuccessMessage" />
+
+					<execute function="AssertElementNotPresent" locator1="UsersAndOrganizations#USER_TABLE_NAME">
+						<var name="key_userScreenName" value="${screenName}" />
+					</execute>
 				</then>
 			</elseif>
 		</if>
-
-		<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="No users were found." />
 	</command>
 
 	<command name="deleteCP">
@@ -1122,7 +1124,7 @@
 		<if>
 			<isset var="userTagList" />
 			<then>
-				<for list="${userTagList}" param="userTag" >
+				<for list="${userTagList}" param="userTag">
 					<var name="key_userTag" value="${userTag}" />
 
 					<execute function="Click" locator1="AssetCategorization#TAG_REMOVE" />
@@ -1353,7 +1355,7 @@
 		<execute macro="UserNavigator#gotoDisplaySettings" />
 
 		<if>
-			<condition function="IsTextNotEqual" locator1="UsersAndOrganizationsEditUser#DISPLAY_SETTINGS_AMERICA_TIME_ZONE_SELECT" value1="(UTC -07:00) Pacific Daylight Time"  />
+			<condition function="IsTextNotEqual" locator1="UsersAndOrganizationsEditUser#DISPLAY_SETTINGS_AMERICA_TIME_ZONE_SELECT" value1="(UTC -07:00) Pacific Daylight Time" />
 			<then>
 				<execute function="Select" locator1="UsersAndOrganizationsEditUser#DISPLAY_SETTINGS_TIME_ZONE_SELECT" value1="(UTC -08:00) Pacific Standard Time" />
 			</then>
@@ -1369,7 +1371,7 @@
 		<execute macro="UserNavigator#gotoDisplaySettings" />
 
 		<if>
-			<condition function="IsTextNotEqual" locator1="UsersAndOrganizationsEditUser#DISPLAY_SETTINGS_AMERICA_TIME_ZONE_SELECT" value1="(UTC -07:00) Pacific Daylight Time"  />
+			<condition function="IsTextNotEqual" locator1="UsersAndOrganizationsEditUser#DISPLAY_SETTINGS_AMERICA_TIME_ZONE_SELECT" value1="(UTC -07:00) Pacific Daylight Time" />
 			<then>
 				<execute function="AssertSelectedLabel" locator1="UsersAndOrganizationsEditUser#DISPLAY_SETTINGS_TIME_ZONE_SELECT" value1="(UTC -08:00) Pacific Standard Time" />
 			</then>
@@ -1583,6 +1585,12 @@
 				<equals arg1="${localization}" arg2="ZH" />
 				<then>
 					<var name="signIn" value="登录" />
+				</then>
+			</elseif>
+			<elseif>
+				<equals arg1="${localization}" arg2="ES" />
+				<then>
+					<var name="signIn" value="Acceder" />
 				</then>
 			</elseif>
 			<else>
@@ -2115,7 +2123,7 @@
 		<if>
 			<condition function="IsElementPresent" locator1="ContentRow#ENTRY_CONTENT_ROW_1" />
 			<then>
-				<execute function="Check#checkAll" locator1="Checkbox#SELECT_ALL" />
+				<execute macro="PortletEntry#selectAll" />
 
 				<execute function="AssertClickNoError" locator1="Button#DEACTIVATE" value1="Deactivate" />
 
@@ -2134,7 +2142,7 @@
 		<if>
 			<condition function="IsElementPresent" locator1="ContentRow#ENTRY_CONTENT_ROW_1" />
 			<then>
-				<execute function="Check#checkAll" locator1="Checkbox#SELECT_ALL" />
+				<execute macro="PortletEntry#selectAll" />
 
 				<execute function="Click" locator1="Icon#DELETE" />
 
@@ -2165,7 +2173,7 @@
 		<if>
 			<condition function="IsElementPresent" locator1="ContentRow#ENTRY_CONTENT_ROW_1" />
 			<then>
-				<execute function="Check#checkAll" locator1="Checkbox#SELECT_ALL" />
+				<execute macro="PortletEntry#selectAll" />
 
 				<execute function="AssertClickNoError" locator1="Button#DEACTIVATE" value1="Deactivate" />
 
@@ -2184,7 +2192,7 @@
 		<if>
 			<condition function="IsElementPresent" locator1="ContentRow#ENTRY_CONTENT_ROW_1" />
 			<then>
-				<execute function="Check#checkAll" locator1="Checkbox#SELECT_ALL" />
+				<execute macro="PortletEntry#selectAll" />
 
 				<execute function="AssertClickNoError" locator1="Button#DELETE" value1="Delete" />
 

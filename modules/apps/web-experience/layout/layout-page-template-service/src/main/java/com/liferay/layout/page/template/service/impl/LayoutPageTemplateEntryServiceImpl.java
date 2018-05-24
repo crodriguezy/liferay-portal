@@ -20,6 +20,8 @@ import com.liferay.layout.page.template.constants.LayoutPageTemplateConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.base.LayoutPageTemplateEntryServiceBaseImpl;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.dao.orm.custom.sql.CustomSQL;
+import com.liferay.portal.kernel.dao.orm.WildcardMode;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -40,6 +42,21 @@ import java.util.List;
  */
 public class LayoutPageTemplateEntryServiceImpl
 	extends LayoutPageTemplateEntryServiceBaseImpl {
+
+	@Override
+	public LayoutPageTemplateEntry addLayoutPageTemplateEntry(
+			long groupId, long layoutPageTemplateCollectionId, String name,
+			int type, long[] fragmentEntryIds, ServiceContext serviceContext)
+		throws PortalException {
+
+		_portletResourcePermission.check(
+			getPermissionChecker(), groupId,
+			LayoutPageTemplateActionKeys.ADD_LAYOUT_PAGE_TEMPLATE_ENTRY);
+
+		return layoutPageTemplateEntryLocalService.addLayoutPageTemplateEntry(
+			getUserId(), groupId, layoutPageTemplateCollectionId, name, type,
+			fragmentEntryIds, serviceContext);
+	}
 
 	@Override
 	public LayoutPageTemplateEntry addLayoutPageTemplateEntry(
@@ -104,6 +121,14 @@ public class LayoutPageTemplateEntryServiceImpl
 	}
 
 	@Override
+	public LayoutPageTemplateEntry fetchDefaultLayoutPageTemplateEntry(
+		long groupId, long classNameId, long classTypeId) {
+
+		return layoutPageTemplateEntryPersistence.fetchByG_C_C_D_First(
+			groupId, classNameId, classTypeId, true, null);
+	}
+
+	@Override
 	public LayoutPageTemplateEntry fetchLayoutPageTemplateEntry(
 			long layoutPageTemplateEntryId)
 		throws PortalException {
@@ -139,6 +164,16 @@ public class LayoutPageTemplateEntryServiceImpl
 
 	@Override
 	public List<LayoutPageTemplateEntry> getLayoutPageTemplateEntries(
+			long groupId, int type, int start, int end,
+			OrderByComparator<LayoutPageTemplateEntry> orderByComparator)
+		throws PortalException {
+
+		return layoutPageTemplateEntryPersistence.filterFindByG_T(
+			groupId, type, start, end, orderByComparator);
+	}
+
+	@Override
+	public List<LayoutPageTemplateEntry> getLayoutPageTemplateEntries(
 			long groupId, long layoutPageTemplateCollectionId, int start,
 			int end)
 		throws PortalException {
@@ -166,8 +201,25 @@ public class LayoutPageTemplateEntryServiceImpl
 		OrderByComparator<LayoutPageTemplateEntry> orderByComparator) {
 
 		return layoutPageTemplateEntryPersistence.filterFindByG_L_LikeN(
-			groupId, layoutPageTemplateCollectionId, name, start, end,
+			groupId, layoutPageTemplateCollectionId,
+			_customSQL.keywords(name, WildcardMode.SURROUND)[0], start, end,
 			orderByComparator);
+	}
+
+	@Override
+	public List<LayoutPageTemplateEntry> getLayoutPageTemplateEntries(
+		long groupId, String name, int type, int start, int end,
+		OrderByComparator<LayoutPageTemplateEntry> orderByComparator) {
+
+		return layoutPageTemplateEntryPersistence.filterFindByG_T_LikeN(
+			groupId, _customSQL.keywords(name, WildcardMode.SURROUND)[0], type,
+			start, end, orderByComparator);
+	}
+
+	@Override
+	public int getLayoutPageTemplateEntriesCount(long groupId, int type) {
+		return layoutPageTemplateEntryPersistence.filterCountByG_T(
+			groupId, type);
 	}
 
 	@Override
@@ -183,7 +235,44 @@ public class LayoutPageTemplateEntryServiceImpl
 		long groupId, long layoutPageTemplateFolder, String name) {
 
 		return layoutPageTemplateEntryPersistence.filterCountByG_L_LikeN(
-			groupId, layoutPageTemplateFolder, name);
+			groupId, layoutPageTemplateFolder,
+			_customSQL.keywords(name, WildcardMode.SURROUND)[0]);
+	}
+
+	@Override
+	public int getLayoutPageTemplateEntriesCount(
+		long groupId, String name, int type) {
+
+		return layoutPageTemplateEntryPersistence.filterCountByG_T_LikeN(
+			groupId, _customSQL.keywords(name, WildcardMode.SURROUND)[0], type);
+	}
+
+	@Override
+	public LayoutPageTemplateEntry updateLayoutPageTemplateEntry(
+			long layoutPageTemplateEntryId, boolean defaultTemplate)
+		throws PortalException {
+
+		_layoutPageTemplateEntryModelResourcePermission.check(
+			getPermissionChecker(), layoutPageTemplateEntryId,
+			ActionKeys.UPDATE);
+
+		return layoutPageTemplateEntryLocalService.
+			updateLayoutPageTemplateEntry(
+				layoutPageTemplateEntryId, defaultTemplate);
+	}
+
+	@Override
+	public LayoutPageTemplateEntry updateLayoutPageTemplateEntry(
+			long layoutPageTemplateEntryId, long classNameId, long classTypeId)
+		throws PortalException {
+
+		_layoutPageTemplateEntryModelResourcePermission.check(
+			getPermissionChecker(), layoutPageTemplateEntryId,
+			ActionKeys.UPDATE);
+
+		return layoutPageTemplateEntryLocalService.
+			updateLayoutPageTemplateEntry(
+				layoutPageTemplateEntryId, classNameId, classTypeId);
 	}
 
 	@Override
@@ -245,6 +334,9 @@ public class LayoutPageTemplateEntryServiceImpl
 				LayoutPageTemplateEntryServiceImpl.class,
 				"_portletResourcePermission",
 				LayoutPageTemplateConstants.RESOURCE_NAME);
+
+	@ServiceReference(type = CustomSQL.class)
+	private CustomSQL _customSQL;
 
 	@ServiceReference(type = FragmentEntryService.class)
 	private FragmentEntryService _fragmentEntryService;

@@ -272,12 +272,10 @@
 			<var name="portlet" value="System Settings" />
 		</execute>
 
-		<execute macro="Navigator#gotoNavItem">
-			<var name="navItem" value="Collaboration" />
-		</execute>
-
-		<execute macro="SystemSettings#editConfiguration">
+		<execute macro="SystemSettings#gotoConfiguration">
+			<var name="configurationCategory" value="Documents and Media" />
 			<var name="configurationName" value="Documents &amp; Media Service" />
+			<var name="configurationScope" value="System Scope" />
 		</execute>
 
 		<execute function="Type" locator1="TextInput#GENERIC_TEXT_INPUT" value1="300000">
@@ -804,11 +802,11 @@
 			<var name="pageName" value="Documents and Media Page" />
 		</execute>
 
-		<execute function="AssertClick" locator1="DocumentsAndMedia#DESCRIPTIVE_LIST_DOCUMENT_TITLE" value1="Document1">
-			<var name="key_dmDocumentTitle" value="Document1" />
+		<execute macro="LexiconEntry#gotoEntry">
+			<var name="rowEntry" value="Document1" />
 		</execute>
 
-		<execute function="AssertClick#assertTextClick" locator1="Button#EDIT" value1="Edit" />
+		<execute function="AssertClick" locator1="Button#EDIT" value1="Edit" />
 
 		<while>
 			<condition function="IsElementPresent" locator1="AssetCategorization#TAGS_REMOVE_ICON_GENERIC" />
@@ -2039,7 +2037,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Categorization" />
+			<var name="panel" value="Categorization" />
 		</execute>
 
 		<execute function="AssertTextEquals" locator1="AssetCategorization#CATEGORY" value1="Category Name">

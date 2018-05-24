@@ -22,7 +22,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
  * @author Juergen Kappler
  */
 @ExtendedObjectClassDefinition(
-	category = "web-experience",
+	category = "navigation",
 	scope = ExtendedObjectClassDefinition.Scope.PORTLET_INSTANCE
 )
 @Meta.OCD(
@@ -71,6 +71,9 @@ public interface SiteNavigationMenuPortletInstanceConfiguration {
 	@Meta.AD(name = "root-layout-uuid", required = false)
 	public String rootLayoutUuid();
 
+	@Meta.AD(deflt = "1", name = "site-navigation-menu-type", required = false)
+	public int siteNavigationMenuType();
+
 	@Meta.AD(deflt = "0", name = "display-depth", required = false)
 	public int displayDepth();
 
@@ -81,7 +84,7 @@ public interface SiteNavigationMenuPortletInstanceConfiguration {
 	 * @deprecated As of 2.0.0, replaced by {@link #expandedLevels()}
 	 */
 	@Deprecated
-	@Meta.AD(deflt = "current", name = "included-layouts", required = false)
+	@Meta.AD(name = "included-layouts", required = false)
 	public String includedLayouts();
 
 	@Meta.AD(deflt = "preview", name = "preview", required = false)

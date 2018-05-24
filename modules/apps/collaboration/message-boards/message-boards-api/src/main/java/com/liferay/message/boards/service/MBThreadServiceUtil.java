@@ -16,7 +16,8 @@ package com.liferay.message.boards.service;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.osgi.util.ServiceTrackerFactory;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -131,8 +132,21 @@ public class MBThreadServiceUtil {
 		return getService().getThreads(groupId, categoryId, status, start, end);
 	}
 
+	public static java.util.List<com.liferay.message.boards.model.MBThread> getThreads(
+		long groupId, long categoryId,
+		com.liferay.portal.kernel.dao.orm.QueryDefinition<com.liferay.message.boards.model.MBThread> queryDefinition)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getThreads(groupId, categoryId, queryDefinition);
+	}
+
 	public static int getThreadsCount(long groupId, long categoryId, int status) {
 		return getService().getThreadsCount(groupId, categoryId, status);
+	}
+
+	public static int getThreadsCount(long groupId, long categoryId,
+		com.liferay.portal.kernel.dao.orm.QueryDefinition<com.liferay.message.boards.model.MBThread> queryDefinition)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getThreadsCount(groupId, categoryId, queryDefinition);
 	}
 
 	public static com.liferay.portal.kernel.lock.Lock lockThread(long threadId)
@@ -194,6 +208,16 @@ public class MBThreadServiceUtil {
 		return _serviceTracker.getService();
 	}
 
-	private static ServiceTracker<MBThreadService, MBThreadService> _serviceTracker =
-		ServiceTrackerFactory.open(MBThreadService.class);
+	private static ServiceTracker<MBThreadService, MBThreadService> _serviceTracker;
+
+	static {
+		Bundle bundle = FrameworkUtil.getBundle(MBThreadService.class);
+
+		ServiceTracker<MBThreadService, MBThreadService> serviceTracker = new ServiceTracker<MBThreadService, MBThreadService>(bundle.getBundleContext(),
+				MBThreadService.class, null);
+
+		serviceTracker.open();
+
+		_serviceTracker = serviceTracker;
+	}
 }

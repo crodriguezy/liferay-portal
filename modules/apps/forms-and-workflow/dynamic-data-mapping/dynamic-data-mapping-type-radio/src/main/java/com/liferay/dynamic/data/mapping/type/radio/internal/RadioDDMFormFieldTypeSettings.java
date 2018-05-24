@@ -81,7 +81,7 @@ public interface RadioDDMFormFieldTypeSettings
 
 	@DDMFormField(
 		label = "%inline", predefinedValue = "true",
-		properties = {"showAsSwitcher=true"}
+		properties = "showAsSwitcher=true"
 	)
 	public boolean inline();
 
@@ -93,10 +93,10 @@ public interface RadioDDMFormFieldTypeSettings
 	@DDMFormField(
 		label = "%predefined-value",
 		properties = {
-			"inline=true", "placeholder=%enter-a-default-value",
+			"placeholder=%enter-a-default-value",
 			"tooltip=%enter-a-default-value-that-is-submitted-if-no-other-value-is-entered"
 		},
-		type = "radio"
+		type = "select"
 	)
 	@Override
 	public LocalizedValue predefinedValue();

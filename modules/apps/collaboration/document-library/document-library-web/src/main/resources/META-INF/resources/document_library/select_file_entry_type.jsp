@@ -28,11 +28,19 @@ portletURL.setParameter("mvcPath", "/document_library/select_file_entry_type.jsp
 portletURL.setParameter("eventName", eventName);
 %>
 
-<aui:nav-bar markupView="lexicon">
-	<aui:nav cssClass="navbar-nav">
-		<aui:nav-item label="document-types" selected="<%= true %>" />
-	</aui:nav>
-</aui:nav-bar>
+<clay:navigation-bar
+	items="<%=
+		new JSPNavigationItemList(pageContext) {
+			{
+				add(
+					navigationItem -> {
+						navigationItem.setActive(true);
+						navigationItem.setLabel(LanguageUtil.get(request, "document-types"));
+					});
+			}
+		}
+	%>"
+/>
 
 <aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" method="post" name="selectFileEntryTypeFm">
 	<liferay-ui:search-container
@@ -75,7 +83,10 @@ portletURL.setParameter("eventName", eventName);
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator displayStyle="descriptive" markupView="lexicon" />
+		<liferay-ui:search-iterator
+			displayStyle="descriptive"
+			markupView="lexicon"
+		/>
 	</liferay-ui:search-container>
 </aui:form>
 

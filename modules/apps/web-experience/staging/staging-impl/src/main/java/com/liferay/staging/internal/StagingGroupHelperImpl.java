@@ -116,7 +116,7 @@ public class StagingGroupHelperImpl implements StagingGroupHelper {
 
 			HttpPrincipal httpPrincipal = new HttpPrincipal(
 				remoteURL, user.getLogin(), user.getPassword(),
-				user.getPasswordEncrypted());
+				user.isPasswordEncrypted());
 
 			long remoteGroupId = GetterUtil.getLong(
 				_getTypeSettingsProperty(group, "remoteGroupId"));
@@ -253,7 +253,7 @@ public class StagingGroupHelperImpl implements StagingGroupHelper {
 
 	@Override
 	public boolean isStagedPortlet(Group group, String portletId) {
-		if (!isLiveGroup(group)) {
+		if (!isStagingGroup(group) && !isLiveGroup(group)) {
 			return false;
 		}
 
@@ -293,22 +293,6 @@ public class StagingGroupHelperImpl implements StagingGroupHelper {
 	@Override
 	public boolean isStagingOrLiveGroup(long groupId) {
 		return isStagingOrLiveGroup(_fetchGroup(groupId));
-	}
-
-	@Override
-	public boolean isStagingPortlet(Group group, String portletId) {
-		if (!isStagingGroup(group)) {
-			return false;
-		}
-
-		return group.isStagedPortlet(portletId);
-	}
-
-	@Override
-	public boolean isStagingPortlet(long groupId, String portletId) {
-		Group group = _fetchGroup(groupId);
-
-		return isStagingPortlet(group, portletId);
 	}
 
 	private Group _fetchGroup(long groupId) {

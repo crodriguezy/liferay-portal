@@ -1,9 +1,7 @@
 <definition>
 	<command name="adaptAllImages">
-		<execute function="Click" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Adapt All Images">
-			<var name="key_menuItem" value="Adapt All Images" />
+		<execute macro="LexiconEntry#gotoHeaderMenuItem">
+			<var name="menuItem" value="Adapt All Images" />
 		</execute>
 
 		<execute macro="Alert#viewSuccessMessage" />
@@ -83,6 +81,12 @@
 					<execute macro="Alert#viewErrorMessage">
 						<var name="errorMessage" value="Please enter a max width or max height value larger than 0." />
 					</execute>
+				</then>
+			</elseif>
+			<elseif>
+				<isset var="noDimensions" />
+				<then>
+					<execute function="AssertTextEquals" locator1="Message#REQUIRED_INFO" value1="At least one value is required." />
 				</then>
 			</elseif>
 			<else>
@@ -186,7 +190,7 @@
 						<contains string="${maxHeightEdit}" substring="{maxHeightEdit}" />
 					</not>
 					<then>
-						<execute function="Type" locator1="TextInput#MAX_HEIGHT" value1="${maxHeightEdit}"  />
+						<execute function="Type" locator1="TextInput#MAX_HEIGHT" value1="${maxHeightEdit}" />
 					</then>
 				</if>
 
@@ -195,7 +199,7 @@
 						<contains string="${maxWidthEdit}" substring="{maxWidthEdit}" />
 					</not>
 					<then>
-						<execute function="Type" locator1="TextInput#MAX_WIDTH" value1="${maxWidthEdit}"  />
+						<execute function="Type" locator1="TextInput#MAX_WIDTH" value1="${maxWidthEdit}" />
 					</then>
 				</if>
 
@@ -206,13 +210,23 @@
 					<then>
 						<execute function="Click" locator1="Radio#CUSTOM_URL" />
 
-						<execute function="Type" locator1="TextInput#IMAGE_ID" value1="${imageIDEdit}"  />
+						<execute function="Type" locator1="TextInput#IMAGE_ID" value1="${imageIDEdit}" />
 					</then>
 				</if>
 			</else>
 		</if>
 
-		<execute macro="PortletEntry#save" />
+		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
+
+		<if>
+			<isset var="noDimensions" />
+			<then>
+				<execute function="AssertTextEquals" locator1="Message#REQUIRED_INFO" value1="At least one value is required." />
+			</then>
+			<else>
+				<execute macro="Alert#viewSuccessMessage" />
+			</else>
+		</if>
 	</command>
 
 	<command name="enableImageResolution">
@@ -294,5 +308,7 @@
 		<var name="key_numberOfAdaptedImages" value="${numberOfAdaptedImages}" />
 
 		<execute function="AssertTextEquals" locator1="AdaptiveMediaTable#IMAGE_INFO_DETAILS_ADAPTED_IMAGES" value1="${numberOfAdaptedImages}" />
+
+		<execute function="Click" locator1="AdaptiveMediaTable#INFO_ICON" />
 	</command>
 </definition>

@@ -27,6 +27,7 @@ import org.apache.http.nio.reactor.IOReactorException;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,12 @@ public class JSONWebServiceClientImpl extends BaseJSONWebServiceClientImpl {
 		setHostPort(Integer.parseInt(_getString("hostPort", properties)));
 		setKeyStore((KeyStore)properties.get("keyStore"));
 		setLogin(_getString("login", properties));
+
+		if (properties.containsKey("maxAttempts")) {
+			setMaxAttempts(
+				Integer.parseInt(_getString("maxAttempts", properties)));
+		}
+
 		setPassword(_getString("password", properties));
 		setProtocol(_getString("protocol", properties));
 
@@ -71,6 +78,11 @@ public class JSONWebServiceClientImpl extends BaseJSONWebServiceClientImpl {
 	@Override
 	public void afterPropertiesSet() throws IOReactorException {
 		super.afterPropertiesSet();
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		super.destroy();
 	}
 
 	@Override

@@ -14,7 +14,11 @@
 
 package com.liferay.jenkins.results.parser;
 
-import java.util.List;
+import java.io.File;
+
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author Michael Hashimoto
@@ -32,33 +36,105 @@ public class PortalAcceptancePullRequestJob extends PortalRepositoryJob {
 	}
 
 	@Override
-	public List<String> getBatchNames() {
-		String testBatchNames = portalTestProperies.getProperty(
-			"test.batch.names[" + _testSuiteName + "]");
+	public Set<String> getBatchNames() {
+		Properties portalTestProperties = getPortalTestProperties();
+
+		String testBatchNames = JenkinsResultsParserUtil.getProperty(
+			portalTestProperties, "test.batch.names[" + _testSuiteName + "]");
 
 		if (testBatchNames == null) {
-			testBatchNames = portalTestProperies.getProperty(
-				"test.batch.names");
+			testBatchNames = JenkinsResultsParserUtil.getProperty(
+				portalTestProperties, "test.batch.names");
 		}
 
-		return getListFromString(testBatchNames);
+		Set<String> testBatchNamesSet = getSetFromString(testBatchNames);
+
+		if (_isPortalWebOnly()) {
+			String[] portalWebOnlyBatchNameMarkers =
+				{"compile-jsp", "functional", "portal-web", "source-format"};
+
+			Set<String> portalWebOnlyBatchNamesSet = new TreeSet<>();
+
+			for (String testBatchName : testBatchNamesSet) {
+				for (String portalWebOnlyBatchNameMarker :
+						portalWebOnlyBatchNameMarkers) {
+
+					if (testBatchName.contains(portalWebOnlyBatchNameMarker)) {
+						portalWebOnlyBatchNamesSet.add(testBatchName);
+
+						break;
+					}
+				}
+			}
+
+			return portalWebOnlyBatchNamesSet;
+		}
+
+		return testBatchNamesSet;
 	}
 
 	@Override
-	public List<String> getDistTypes() {
-		String testBatchDistAppServers = portalTestProperies.getProperty(
+	public Set<String> getDistTypes() {
+		Properties portalTestProperties = getPortalTestProperties();
+
+		String testBatchDistAppServers = JenkinsResultsParserUtil.getProperty(
+			portalTestProperties,
 			"test.batch.dist.app.servers[" + _testSuiteName + "]");
 
 		if (testBatchDistAppServers == null) {
-			testBatchDistAppServers = portalTestProperies.getProperty(
-				"test.batch.dist.app.servers");
+			testBatchDistAppServers = JenkinsResultsParserUtil.getProperty(
+				portalTestProperties, "test.batch.dist.app.servers");
 		}
 
-		return getListFromString(testBatchDistAppServers);
+		return getSetFromString(testBatchDistAppServers);
+	}
+
+	@Override
+	public String getPoshiQuery(String testBatchName) {
+		String[] propertyNames = {
+			JenkinsResultsParserUtil.combine(
+				"test.batch.run.property.query[", testBatchName, "][",
+				_testSuiteName, "]"),
+
+			JenkinsResultsParserUtil.combine(
+				"test.batch.run.property.query[", testBatchName, "]")
+		};
+
+		Properties portalTestProperties = getPortalTestProperties();
+
+		for (String propertyName : propertyNames) {
+			if (portalTestProperties.containsKey(propertyName)) {
+				String propertyValue = JenkinsResultsParserUtil.getProperty(
+					portalTestProperties, propertyName);
+
+				if ((propertyValue != null) && !propertyValue.isEmpty()) {
+					return propertyValue;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	public String getTestSuiteName() {
 		return _testSuiteName;
+	}
+
+	private boolean _isPortalWebOnly() {
+		GitWorkingDirectory gitWorkingDirectory = getGitWorkingDirectory();
+
+		File portalWebDirectory = new File(
+			gitWorkingDirectory.getWorkingDirectory(), "portal-web");
+
+		for (File modifiedFile : gitWorkingDirectory.getModifiedFilesList()) {
+			if (!JenkinsResultsParserUtil.isFileInDirectory(
+					portalWebDirectory, modifiedFile)) {
+
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	private final String _testSuiteName;

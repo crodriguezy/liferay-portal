@@ -15,6 +15,7 @@
 package com.liferay.fragment.web.internal.portlet.action;
 
 import com.liferay.fragment.constants.FragmentPortletKeys;
+import com.liferay.fragment.exception.InvalidFragmentEntryFileException;
 import com.liferay.fragment.web.internal.constatns.ExportImportConstants;
 import com.liferay.fragment.web.internal.portlet.util.ImportUtil;
 import com.liferay.petra.string.StringPool;
@@ -24,6 +25,7 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.Constants;
@@ -138,6 +140,10 @@ public class ImportFragmentEntriesMVCActionCommand
 				ZipReader zipReader = ZipReaderFactoryUtil.getZipReader(
 					tempFileEntry.getContentStream());
 
+				if (_importUtil.isValidFragmentCollectionsFile(zipReader)) {
+					throw new InvalidFragmentEntryFileException();
+				}
+
 				_importUtil.importFragmentEntries(
 					actionRequest, zipReader, fragmentCollectionId,
 					StringPool.BLANK, overwrite);
@@ -145,6 +151,14 @@ public class ImportFragmentEntriesMVCActionCommand
 				TempFileEntryUtil.deleteTempFileEntry(
 					tempFileEntry.getFileEntryId());
 			}
+
+			String portletResource = ParamUtil.getString(
+				actionRequest, "portletResource");
+
+			SessionMessages.add(
+				actionRequest, portletResource + "filesImported");
+
+			addSuccessMessage(actionRequest, actionResponse);
 		}
 		catch (Exception e) {
 			SessionErrors.add(actionRequest, e.getClass(), e);

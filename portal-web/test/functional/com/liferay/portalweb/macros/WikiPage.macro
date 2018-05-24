@@ -48,7 +48,7 @@
 		<execute function="AssertClick" locator1="Link#EDIT" value1="Edit" />
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Attachments" />
+			<var name="panel" value="Attachments" />
 		</execute>
 
 		<execute function="AssertVisible" locator1="Button#SELECT_FILES" />
@@ -224,7 +224,7 @@
 			<equals arg1="${creoleSource}" arg2="true" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Configuration" />
+					<var name="panel" value="Configuration" />
 				</execute>
 
 				<execute function="Select#pauseSelect" locator1="Wiki#ADD_PAGE_FORMAT_DROPDOWN" value1="Creole" />
@@ -237,7 +237,7 @@
 				<equals arg1="${htmlSource}" arg2="true" />
 				<then>
 					<execute macro="Panel#expandPanel">
-						<var name="panelHeading" value="Configuration" />
+						<var name="panel" value="Configuration" />
 					</execute>
 
 					<execute function="SelectNoError#pauseSelect" locator1="Wiki#ADD_PAGE_FORMAT_DROPDOWN" value1="HTML" />
@@ -310,7 +310,7 @@
 
 		<execute function="Click" locator1="Button#PUBLISH_LOCALIZED" />
 
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS_LOCALIZED" value1="${successMessage}" />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="${successMessage}" />
 
 		<execute function="AssertElementPresent" locator1="//html[@dir='${textDirection}']" />
 
@@ -432,7 +432,7 @@
 			<isset var="customFieldText" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Custom Fields" />
+					<var name="panel" value="Custom Fields" />
 				</execute>
 
 				<execute function="Type" locator1="TextInput#CUSTOM_FIELD" value1="${customFieldText}" />
@@ -446,7 +446,7 @@
 
 	<command name="addTagPGCmd">
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Categorization" />
+			<var name="panel" value="Categorization" />
 		</execute>
 
 		<if>
@@ -803,7 +803,7 @@
 			<isset var="customFieldTextEdit" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Custom Fields" />
+					<var name="panel" value="Custom Fields" />
 				</execute>
 
 				<execute function="Type" locator1="TextInput#CUSTOM_FIELD" value1="${customFieldTextEdit}" />
@@ -927,7 +927,7 @@
 		<execute macro="AlloyEditor#clickContentField" />
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Configuration" />
+			<var name="panel" value="Configuration" />
 		</execute>
 
 		<execute function="Select" locator1="Wiki#ADD_PAGE_FORMAT_DROPDOWN" value1="Creole" />
@@ -1008,7 +1008,7 @@
 		<execute function="AssertClick" locator1="Link#EDIT" value1="Edit" />
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Attachments" />
+			<var name="panel" value="Attachments" />
 		</execute>
 
 		<var name="key_attachmentFileName" value="${attachmentFileName}" />
@@ -1062,10 +1062,8 @@
 	</command>
 
 	<command name="renameWikiPageCP">
-		<execute function="Click" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Move">
-			<var name="key_menuItem" value="Move" />
+		<execute macro="LexiconEntry#gotoHeaderMenuItem">
+			<var name="menuItem" value="Move" />
 		</execute>
 
 		<execute function="AssertTextEquals" locator1="Portlet#H3_HEADER" value1="${wikiPageTitle}" />
@@ -1211,9 +1209,9 @@
 		<while>
 			<condition function="IsTextNotEqual" locator1="WikiTable#ALL_PAGES_REVISION" value1="1.0 (Minor Edit)" />
 			<then>
-				<execute function="Click" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
-
-				<execute macro="PortletEntry#clickMoveToRecycleBin" />
+				<execute macro="LexiconEntry#gotoEllipsisMenuItem">
+					<var name="menuItem" value="Move to the Recycle Bin" />
+				</execute>
 
 				<execute function="AssertElementPresent" locator1="Message#SUCCESS" />
 			</then>
@@ -1260,7 +1258,7 @@
 		<execute function="AssertClick" locator1="Link#EDIT" value1="Edit" />
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Attachments" />
+			<var name="panel" value="Attachments" />
 		</execute>
 
 		<execute function="AssertTextEquals" locator1="Wiki#ATTACHMENT_TABLE_FILE_NAME" value1="${attachmentFileName}" />
@@ -1348,7 +1346,7 @@
 		</if>
 	</command>
 
-	<command name="viewCustomADTSocialPG" >
+	<command name="viewCustomADTSocialPG">
 		<execute function="AssertClick" locator1="WikiTable#NAVIGATION_FRONTPAGE" value1="FrontPage" />
 
 		<execute function="AssertTextEquals" locator1="Portlet#H1_HEADER" value1="FrontPage" />
@@ -1359,10 +1357,12 @@
 		<execute function="AssertElementPresent" locator1="Wiki#ADT_SOCIAL_LAST_MODIFIED_MESSAGE" />
 		<execute function="AssertElementPresent" locator1="Icon#DETAILS" />
 		<execute function="AssertElementPresent" locator1="Icon#PRINT" />
-		<execute function="AssertElementPresent" locator1="SocialBookmarks#TWITTER" />
-		<execute function="AssertElementPresent" locator1="SocialBookmarks#GOOGLE_PLUS" />
 		<execute function="AssertElementPresent" locator1="Ratings#YOUR_RATING_LABEL" />
 		<execute function="AssertElementPresent" locator1="Ratings#AVERAGE_LABEL" />
+
+		<execute macro="SocialBookmarks#viewBookmarkIcons">
+			<var name="socialBookmarks" value="Facebook,LinkedIn,Twitter" />
+		</execute>
 	</command>
 
 	<command name="viewDefaultPGViaWD">

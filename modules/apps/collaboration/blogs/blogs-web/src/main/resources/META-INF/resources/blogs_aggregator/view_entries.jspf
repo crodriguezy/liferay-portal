@@ -64,12 +64,14 @@
 		delta="<%= rssDelta %>"
 		displayStyle="<%= rssDisplayStyle %>"
 		feedType="<%= rssFeedType %>"
-		url='<%= themeDisplay.getPathMain() + "/blogs/rss?p_l_id=" + plid + rssURLParams %>'
+		url='<%= themeDisplay.getPathMain() + "/blogs/rss?plid=" + plid + rssURLParams %>'
 	/>
 </c:if>
 
 <c:if test="<%= !results.isEmpty() %>">
 	<div class="search-container">
-		<liferay-ui:search-paginator searchContainer="<%= searchContainer %>" />
+		<liferay-ui:search-paginator
+			searchContainer="<%= searchContainer %>"
+		/>
 	</div>
 </c:if>

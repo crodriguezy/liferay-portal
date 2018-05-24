@@ -45,20 +45,21 @@ organizationSearch.setTotal(organizationsCount);
 List<Organization> organizations = OrganizationLocalServiceUtil.search(company.getCompanyId(), parentOrganizationId, searchTerms.getKeywords(), searchTerms.getType(), searchTerms.getRegionIdObj(), searchTerms.getCountryIdObj(), organizationParams, organizationSearch.getStart(), organizationSearch.getEnd(), organizationSearch.getOrderByComparator());
 
 organizationSearch.setResults(organizations);
-
-List<NavigationItem> navigationItems = new ArrayList<>();
-
-NavigationItem navigationItem = new NavigationItem();
-
-navigationItem.setActive(true);
-navigationItem.setHref(currentURL);
-navigationItem.setLabel(LanguageUtil.get(request, "organizations"));
-
-navigationItems.add(navigationItem);
 %>
 
 <clay:navigation-bar
-	items="<%= navigationItems %>"
+	items="<%=
+		new JSPNavigationItemList(pageContext) {
+			{
+				add(
+					navigationItem -> {
+						navigationItem.setActive(true);
+						navigationItem.setHref(currentURL);
+						navigationItem.setLabel(LanguageUtil.get(request, "organizations"));
+					});
+			}
+		}
+	%>"
 />
 
 <liferay-frontend:management-bar
@@ -95,7 +96,10 @@ navigationItems.add(navigationItem);
 		<c:if test="<%= (organizationsCount > 0) || searchTerms.isSearch() %>">
 			<li>
 				<aui:form action="<%= viewOrganizationsURL.toString() %>" name="searchFm">
-					<liferay-ui:input-search autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" markupView="lexicon" />
+					<liferay-ui:input-search
+						autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>"
+						markupView="lexicon"
+					/>
 				</aui:form>
 			</li>
 		</c:if>
@@ -122,7 +126,10 @@ navigationItems.add(navigationItem);
 			<%@ include file="/organization_columns.jspf" %>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+		<liferay-ui:search-iterator
+			displayStyle="<%= displayStyle %>"
+			markupView="lexicon"
+		/>
 	</liferay-ui:search-container>
 </aui:form>
 

@@ -17,10 +17,6 @@
 <%@ include file="/document_library/init.jsp" %>
 
 <%
-String redirect = ParamUtil.getString(request, "redirect");
-
-boolean showHistoryActions = ParamUtil.getBoolean(request, "showHistoryActions", true);
-
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 
 FileVersion fileVersion = null;
@@ -35,4 +31,6 @@ else {
 DLViewFileEntryHistoryDisplayContext dlViewFileEntryHistoryDisplayContext = dlDisplayContextProvider.getDLViewFileEntryHistoryDisplayContext(request, response, fileVersion);
 %>
 
-<liferay-ui:menu menu="<%= dlViewFileEntryHistoryDisplayContext.getMenu() %>" />
+<liferay-ui:menu
+	menu="<%= dlViewFileEntryHistoryDisplayContext.getMenu() %>"
+/>

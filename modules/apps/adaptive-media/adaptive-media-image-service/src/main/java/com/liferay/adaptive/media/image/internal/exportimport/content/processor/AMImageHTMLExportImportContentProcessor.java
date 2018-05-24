@@ -37,7 +37,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Adolfo Pérez
  * @author Alejandro Tardín
  */
-@Component(property = {"adaptive.media.format=html"})
+@Component(property = "adaptive.media.format=html")
 public class AMImageHTMLExportImportContentProcessor
 	implements ExportImportContentProcessor<String> {
 
@@ -165,6 +165,8 @@ public class AMImageHTMLExportImportContentProcessor
 				Element imgElement = imgElements.first();
 
 				imgElement.removeAttr(_ATTRIBUTE_NAME_EXPORT_IMPORT_PATH);
+				imgElement.attr(
+					"data-fileEntryId", String.valueOf(fileEntryId));
 
 				Element picture = _parseNode(
 					_amImageHTMLTagFactory.create(

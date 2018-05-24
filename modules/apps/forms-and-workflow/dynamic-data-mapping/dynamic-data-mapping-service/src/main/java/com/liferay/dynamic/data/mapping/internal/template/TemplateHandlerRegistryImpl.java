@@ -14,14 +14,15 @@
 
 package com.liferay.dynamic.data.mapping.internal.template;
 
+import com.liferay.dynamic.data.mapping.internal.util.ResourceBundleLoaderProvider;
 import com.liferay.dynamic.data.mapping.kernel.DDMTemplate;
 import com.liferay.dynamic.data.mapping.kernel.DDMTemplateManager;
-import com.liferay.dynamic.data.mapping.service.permission.DDMTemplatePermission;
 import com.liferay.portal.instance.lifecycle.BasePortalInstanceLifecycleListener;
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
@@ -46,7 +47,9 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -192,13 +195,16 @@ public class TemplateHandlerRegistryImpl implements TemplateHandlerRegistry {
 	}
 
 	@Reference(unbind = "-")
-	protected void setDDMTemplatePermission(
-		DDMTemplatePermission ddmTemplatePermission) {
-	}
-
-	@Reference(unbind = "-")
 	protected void setGroupLocalService(GroupLocalService groupLocalService) {
 		_groupLocalService = groupLocalService;
+	}
+
+	@Reference(
+		target = "(model.class.name=com.liferay.dynamic.data.mapping.model.DDMTemplate)",
+		unbind = "-"
+	)
+	protected void setModelResourcePermission(
+		ModelResourcePermission<DDMTemplate> modelResourcePermission) {
 	}
 
 	@Reference(unbind = "-")
@@ -210,6 +216,9 @@ public class TemplateHandlerRegistryImpl implements TemplateHandlerRegistry {
 	protected void setUserLocalService(UserLocalService userLocalService) {
 		_userLocalService = userLocalService;
 	}
+
+	@Reference
+	protected ResourceBundleLoaderProvider resourceBundleLoaderProvider;
 
 	private BundleContext _bundleContext;
 	private final Map<Long, TemplateHandler> _classNameIdTemplateHandlers =
@@ -260,15 +269,23 @@ public class TemplateHandlerRegistryImpl implements TemplateHandlerRegistry {
 					continue;
 				}
 
+				ResourceBundleLoader resourceBundleLoader = null;
+
 				Class<?> clazz = _templateHandler.getClass();
 
-				ClassLoader classLoader = clazz.getClassLoader();
+				Bundle bundle = FrameworkUtil.getBundle(clazz);
 
-				ResourceBundleLoader resourceBundleLoader =
-					new AggregateResourceBundleLoader(
+				if (bundle != null) {
+					resourceBundleLoader =
+						resourceBundleLoaderProvider.getResourceBundleLoader(
+							bundle.getSymbolicName());
+				}
+				else {
+					resourceBundleLoader = new AggregateResourceBundleLoader(
 						ResourceBundleUtil.getResourceBundleLoader(
-							"content.Language", classLoader),
+							"content.Language", clazz.getClassLoader()),
 						LanguageResources.RESOURCE_BUNDLE_LOADER);
+				}
 
 				Map<Locale, String> nameMap = getLocalizationMap(
 					resourceBundleLoader, group.getGroupId(),
@@ -288,7 +305,8 @@ public class TemplateHandlerRegistryImpl implements TemplateHandlerRegistry {
 				String scriptFileName = templateElement.elementText(
 					"script-file");
 
-				String script = StringUtil.read(classLoader, scriptFileName);
+				String script = StringUtil.read(
+					clazz.getClassLoader(), scriptFileName);
 
 				boolean cacheable = GetterUtil.getBoolean(
 					templateElement.elementText("cacheable"));

@@ -33,7 +33,7 @@ import com.liferay.portal.kernel.template.TemplateHandler;
 import com.liferay.portal.kernel.template.TemplateVariableGroup;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
-import com.liferay.portlet.display.template.PortletDisplayTemplateConstants;
+import com.liferay.portlet.display.template.constants.PortletDisplayTemplateConstants;
 
 import java.util.Locale;
 import java.util.Map;
@@ -47,9 +47,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {
-		"javax.portlet.name=" + AssetDisplayTemplatePortletKeys.ASSET_DISPLAY_TEMPLATE
-	},
+	property = "javax.portlet.name=" + AssetDisplayTemplatePortletKeys.ASSET_DISPLAY_TEMPLATE,
 	service = TemplateHandler.class
 )
 public class AssetDisplayTemplatePortletDisplayTemplateHandler

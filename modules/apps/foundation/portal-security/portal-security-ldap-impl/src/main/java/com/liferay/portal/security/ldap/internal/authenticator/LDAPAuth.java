@@ -71,7 +71,7 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
  * @author Josef Sustacek
  */
 @Component(
-	immediate = true, property = {"key=auth.pipeline.pre"},
+	immediate = true, property = "key=auth.pipeline.pre",
 	service = Authenticator.class
 )
 public class LDAPAuth implements Authenticator {
@@ -193,8 +193,8 @@ public class LDAPAuth implements Authenticator {
 				ldapAuthResult.setResponseControl(responseControls);
 			}
 			catch (Exception e) {
-				if (_log.isDebugEnabled()) {
-					_log.debug(
+				if (_log.isWarnEnabled()) {
+					_log.warn(
 						StringBundler.concat(
 							"Failed to bind to the LDAP server with userDN ",
 							userDN, " and password ", password),

@@ -23,7 +23,7 @@ import com.liferay.portal.security.sso.token.security.auth.TokenLocation;
  * @author Michael C. Han
  * @author Mika Koivisto
  */
-@ExtendedObjectClassDefinition(category = "foundation")
+@ExtendedObjectClassDefinition(category = "sso")
 @Meta.OCD(
 	id = "com.liferay.portal.security.sso.token.internal.configuration.TokenConfiguration",
 	localization = "content/Language", name = "token-configuration-name"
@@ -47,9 +47,20 @@ public interface TokenConfiguration {
 
 	@Meta.AD(
 		deflt = "REQUEST_HEADER", description = "token-location-help",
-		name = "token-location", required = false
+		name = "token-location",
+		optionLabels = {
+			"token-location-" + TokenLocation.COOKIE,
+			"token-location-" + TokenLocation.REQUEST,
+			"token-location-" + TokenLocation.REQUEST_HEADER,
+			"token-location-" + TokenLocation.SESSION
+		},
+		optionValues = {
+			TokenLocation.COOKIE, TokenLocation.REQUEST,
+			TokenLocation.REQUEST_HEADER, TokenLocation.SESSION
+		},
+		required = false
 	)
-	public TokenLocation tokenLocation();
+	public String tokenLocation();
 
 	@Meta.AD(
 		deflt = "SMIDENTITY|SMSESSION",

@@ -289,8 +289,24 @@
 	}
 }
 
+.process-status {
+	text-transform: uppercase;
+}
+
 .range-options {
 	margin-right: 5%;
+}
+
+.staging-checkbox-description {
+	font-weight: normal;
+}
+
+.staging-checkbox-suggestion {
+	font-weight: normal;
+}
+
+.staging-checkbox-warning {
+	font-weight: normal;
 }
 
 .tree-node-content {

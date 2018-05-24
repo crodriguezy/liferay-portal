@@ -25,7 +25,7 @@
 		</if>
 	</tear-down>
 
-	<command name="AddBlogsEntryWithImageViaBlogsImages" priority="4" >
+	<command name="AddBlogsEntryWithImageViaBlogsImages" priority="4">
 		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="Navigation" />
 			<var name="panel" value="Site Administration" />
@@ -229,7 +229,7 @@
 		</execute>
 
 		<execute macro="LanguagePortlet#selectLanguagePG">
-			<var name="language" value="Hebrew (Israel)" />
+			<var name="locale" value="iw-il" />
 		</execute>
 
 		<execute macro="WikiPage#addLocalizedFrontPagePG">
@@ -249,7 +249,7 @@
 		</execute>
 
 		<execute macro="LanguagePortlet#selectLanguagePG">
-			<var name="language" value="English (United States)" />
+			<var name="locale" value="en-us" />
 		</execute>
 	</command>
 </definition>

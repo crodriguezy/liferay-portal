@@ -66,7 +66,7 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 				</div>
 
 				<div class="toolbar-group-field">
-					<button class="btn btn-link publish-icon <%= (formInstance == null) ? "hide" : "" %>" data-original-title="<liferay-ui:message key="copy-url" />" id="<portlet:namespace />publishIcon" type="button" title="<liferay-ui:message key="copy-url" />">
+					<button class="btn btn-link publish-icon <%= (formInstance == null) ? "hide" : "" %>" data-original-title="<liferay-ui:message key="copy-url" />" id="<portlet:namespace />publishIcon" title="<liferay-ui:message key="copy-url" />" type="button">
 						<svg class="lexicon-icon">
 							<use xlink:href="<%= ddmFormAdminDisplayContext.getLexiconIconsPath() %>link" />
 						</svg>
@@ -77,12 +77,7 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 	</div>
 
 	<div class="container-fluid-1280">
-		<aui:translation-manager
-			availableLocales="<%= availableLocales %>"
-			changeableDefaultLanguage="<%= false %>"
-			defaultLanguageId="<%= defaultLanguageId %>"
-			id="translationManager"
-		/>
+		<aui:translation-manager availableLocales="<%= availableLocales %>" changeableDefaultLanguage="<%= false %>" defaultLanguageId="<%= defaultLanguageId %>" id="translationManager" />
 	</div>
 
 	<aui:form action="<%= saveFormInstanceURL %>" cssClass="ddm-form-builder-form" enctype="multipart/form-data" method="post" name="editForm">
@@ -145,9 +140,7 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 
 		<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="publishFormInstance" var="publishFormInstanceURL" />
 
-		<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="saveFormInstance" var="autoSaveFormInstanceURL">
-			<portlet:param name="autoSave" value="<%= Boolean.TRUE.toString() %>" />
-		</liferay-portlet:resourceURL>
+		<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="saveFormInstance" var="autoSaveFormInstanceURL" />
 
 		<liferay-form:ddm-form-builder
 			ddmStructureId="<%= ddmFormAdminDisplayContext.getDDMStructureId() %>"

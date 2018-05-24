@@ -31,10 +31,7 @@ import com.liferay.source.formatter.util.SourceFormatterUtil;
 
 import java.io.File;
 
-import java.net.URL;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -69,6 +66,11 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	}
 
 	@Override
+	public boolean isEnabled() {
+		return _enabled;
+	}
+
+	@Override
 	public boolean isModulesCheck() {
 		return false;
 	}
@@ -85,6 +87,11 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	@Override
 	public void setBaseDirName(String baseDirName) {
 		_baseDirName = baseDirName;
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		_enabled = enabled;
 	}
 
 	@Override
@@ -222,17 +229,7 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	}
 
 	protected String getContent(String fileName, int level) throws Exception {
-		File file = getFile(fileName, level);
-
-		if (file != null) {
-			String content = FileUtil.read(file);
-
-			if (Validator.isNotNull(content)) {
-				return content;
-			}
-		}
-
-		return StringPool.BLANK;
+		return SourceFormatterUtil.getContent(_baseDirName, fileName, level);
 	}
 
 	protected Document getCustomSQLDocument(
@@ -277,11 +274,11 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	}
 
 	protected List<String> getFileNames(
-			String basedir, String[] excludes, String[] includes)
+			String baseDirName, String[] excludes, String[] includes)
 		throws Exception {
 
 		return SourceFormatterUtil.scanForFiles(
-			basedir, excludes, includes, _sourceFormatterExcludes, true);
+			baseDirName, excludes, includes, _sourceFormatterExcludes, true);
 	}
 
 	protected int getLeadingTabCount(String line) {
@@ -366,29 +363,11 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	}
 
 	protected String getPortalContent(String fileName) throws Exception {
-		String content = getContent(fileName, ToolsUtil.PORTAL_MAX_DIR_LEVEL);
+		String portalBranchName = SourceFormatterUtil.getPropertyValue(
+			SourceFormatterUtil.GIT_LIFERAY_PORTAL_BRANCH, _propertiesMap);
 
-		if (Validator.isNotNull(content)) {
-			return content;
-		}
-
-		String portalBranchName = _getPortalBranchName();
-
-		if (portalBranchName == null) {
-			return null;
-		}
-
-		try {
-			URL url = new URL(
-				StringBundler.concat(
-					_GIT_LIFERAY_PORTAL_URL, portalBranchName, StringPool.SLASH,
-					fileName));
-
-			return StringUtil.read(url.openStream());
-		}
-		catch (Exception e) {
-			return null;
-		}
+		return SourceFormatterUtil.getPortalContent(
+			_baseDirName, portalBranchName, fileName);
 	}
 
 	protected Document getPortalCustomSQLDocument() throws Exception {
@@ -600,21 +579,6 @@ public abstract class BaseSourceCheck implements SourceCheck {
 		return _portalSource;
 	}
 
-	protected boolean isReadOnly(String absolutePath) {
-
-		// This method should only be called temporarily by checks with new
-		// logic. After all source in all subrepositories has been changed
-		// according to new formatting rules, the call should be reverted.
-
-		for (String readOnlyDirName : _readOnlyDirNames) {
-			if (absolutePath.contains(readOnlyDirName)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	protected boolean isSubrepository() {
 		return _subrepository;
 	}
@@ -669,35 +633,8 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	protected static final String RUN_OUTSIDE_PORTAL_EXCLUDES =
 		"run.outside.portal.excludes";
 
-	private String _getPortalBranchName() {
-		for (Map.Entry<String, Properties> entry : _propertiesMap.entrySet()) {
-			Properties properties = entry.getValue();
-
-			String portalBranchName = properties.getProperty(
-				_GIT_LIFERAY_PORTAL_BRANCH);
-
-			if (portalBranchName != null) {
-				return portalBranchName;
-			}
-		}
-
-		return null;
-	}
-
-	private static final String _GIT_LIFERAY_PORTAL_BRANCH =
-		"git.liferay.portal.branch";
-
-	private static final String _GIT_LIFERAY_PORTAL_URL =
-		"https://raw.githubusercontent.com/liferay/liferay-portal/";
-
-	private static final List<String> _readOnlyDirNames = Arrays.asList(
-		"/modules/apps/adaptive-media/", "/modules/apps/analytics/",
-		"/modules/apps/forms-and-workflow/dynamic-data-mapping/",
-		"/modules/apps/forms-and-workflow/portal-workflow/",
-		"/modules/apps/foundation/vulcan/",
-		"/modules/apps/web-experience/journal/", "/modules/private/apps/");
-
 	private String _baseDirName;
+	private boolean _enabled = true;
 	private int _maxLineLength;
 	private List<String> _pluginsInsideModulesDirectoryNames;
 	private boolean _portalSource;

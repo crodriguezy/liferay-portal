@@ -1,5 +1,6 @@
 <definition component-name="portal-search">
 	<property name="portal.release" value="true" />
+	<property name="portal.suite.search.engine" value="solr" />
 	<property name="portal.upstream" value="true" />
 	<property name="solr.enabled" value="true" />
 	<property name="testray.main.component.name" value="Web Search" />
@@ -95,7 +96,7 @@
 			<var name="url" value="${searchURL}" />
 		</execute>
 
-		<execute function="AssertTextEquals" locator1="SearchBar#SEARCH_FIELD" value1="Potato" />
+		<execute function="AssertTextEquals" locator1="Search#SEARCH_BAR" value1="Potato" />
 
 		<execute macro="SearchPortlet#viewSearchResultsPG">
 			<var name="searchAssetTitle" value="Potato Blog" />
@@ -1335,7 +1336,7 @@
 		</execute>
 
 		<execute macro="MessageboardsThread#addPG">
-			<var name="threadBody"><![CDATA[<script>alert("Liferay Alert")</script>]]></var>
+			<var name="threadBody"><![CDATA[<script>alert(123);</script>]]></var>
 			<var name="threadSubject" value="Thread Subject" />
 		</execute>
 
@@ -1346,8 +1347,14 @@
 		<execute macro="SearchPortlet#viewSearchResultPG">
 			<var name="searchAssetTitle" value="Thread Subject" />
 			<var name="searchAssetType" value="Message Boards Message" />
-			<var name="searchAssetSummary"><![CDATA[<script>alert("Liferay Alert")</script>]]></var>
+			<var name="searchAssetSummary"><![CDATA[<script>alert(123);</script>]]></var>
 		</execute>
+
+		<var name="actualScript"><![CDATA[<script>alert(123);</script>]]></var>
+		<var name="escapedScript"><![CDATA[&lt;script&gt;alert(123);&lt;/script&gt;]]></var>
+
+		<execute function="AssertHTMLSourceTextNotPresent" value1="${actualScript}" />
+		<execute function="AssertHTMLSourceTextPresent" value1="${escapedScript}" />
 	</command>
 
 	<command name="ViewSearchResultForLongURL" priority="4">
@@ -1601,7 +1608,7 @@
 
 		<var method="TestPropsUtil#get('portal.url')" name="portalURL" />
 
-		<execute function="AssertLocation" value1="${portalURL}/web/guest/search-page?q=Blogs%20Entry%20Title" />
+		<execute function="AssertLocation" value1="${portalURL}/web/guest/search-page?q=Blogs+Entry+Title" />
 
 		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Search Page" />
@@ -1616,13 +1623,13 @@
 			<var name="searchTerm" value="Blogs Entry Title" />
 		</execute>
 
-		<execute function="AssertLocation" value1="${portalURL}/web/guest/search-page?keywordparameter=Blogs%20Entry%20Title" />
+		<execute function="AssertLocation" value1="${portalURL}/web/guest/search-page?keywordparameter=Blogs+Entry+Title" />
 
 		<execute macro="SearchFacetPortlet#checkFacetOption">
 			<var name="facetOption" value="Blogs Entry" />
 		</execute>
 
-		<execute function="AssertLocation" value1="${portalURL}/web/guest/search-page?keywordparameter=Blogs%20Entry%20Title&amp;type=com.liferay.blogs.model.BlogsEntry" />
+		<execute function="AssertLocation" value1="${portalURL}/web/guest/search-page?keywordparameter=Blogs+Entry+Title&amp;type=com.liferay.blogs.model.BlogsEntry" />
 	</command>
 
 	<command name="ViewURLChangesWithUpdatedSearchAndScopeParameters" priority="4">

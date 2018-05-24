@@ -19,6 +19,7 @@ import aQute.bnd.annotation.ProviderType;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,8 +33,15 @@ public class FragmentEntryLinkSoap implements Serializable {
 	public static FragmentEntryLinkSoap toSoapModel(FragmentEntryLink model) {
 		FragmentEntryLinkSoap soapModel = new FragmentEntryLinkSoap();
 
+		soapModel.setUuid(model.getUuid());
 		soapModel.setFragmentEntryLinkId(model.getFragmentEntryLinkId());
 		soapModel.setGroupId(model.getGroupId());
+		soapModel.setCompanyId(model.getCompanyId());
+		soapModel.setUserId(model.getUserId());
+		soapModel.setUserName(model.getUserName());
+		soapModel.setCreateDate(model.getCreateDate());
+		soapModel.setModifiedDate(model.getModifiedDate());
+		soapModel.setOriginalFragmentEntryLinkId(model.getOriginalFragmentEntryLinkId());
 		soapModel.setFragmentEntryId(model.getFragmentEntryId());
 		soapModel.setClassNameId(model.getClassNameId());
 		soapModel.setClassPK(model.getClassPK());
@@ -42,6 +50,8 @@ public class FragmentEntryLinkSoap implements Serializable {
 		soapModel.setJs(model.getJs());
 		soapModel.setEditableValues(model.getEditableValues());
 		soapModel.setPosition(model.getPosition());
+		soapModel.setLastPropagationDate(model.getLastPropagationDate());
+		soapModel.setNamespace(model.getNamespace());
 
 		return soapModel;
 	}
@@ -97,6 +107,14 @@ public class FragmentEntryLinkSoap implements Serializable {
 		setFragmentEntryLinkId(pk);
 	}
 
+	public String getUuid() {
+		return _uuid;
+	}
+
+	public void setUuid(String uuid) {
+		_uuid = uuid;
+	}
+
 	public long getFragmentEntryLinkId() {
 		return _fragmentEntryLinkId;
 	}
@@ -111,6 +129,54 @@ public class FragmentEntryLinkSoap implements Serializable {
 
 	public void setGroupId(long groupId) {
 		_groupId = groupId;
+	}
+
+	public long getCompanyId() {
+		return _companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		_companyId = companyId;
+	}
+
+	public long getUserId() {
+		return _userId;
+	}
+
+	public void setUserId(long userId) {
+		_userId = userId;
+	}
+
+	public String getUserName() {
+		return _userName;
+	}
+
+	public void setUserName(String userName) {
+		_userName = userName;
+	}
+
+	public Date getCreateDate() {
+		return _createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		_createDate = createDate;
+	}
+
+	public Date getModifiedDate() {
+		return _modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		_modifiedDate = modifiedDate;
+	}
+
+	public long getOriginalFragmentEntryLinkId() {
+		return _originalFragmentEntryLinkId;
+	}
+
+	public void setOriginalFragmentEntryLinkId(long originalFragmentEntryLinkId) {
+		_originalFragmentEntryLinkId = originalFragmentEntryLinkId;
 	}
 
 	public long getFragmentEntryId() {
@@ -177,8 +243,31 @@ public class FragmentEntryLinkSoap implements Serializable {
 		_position = position;
 	}
 
+	public Date getLastPropagationDate() {
+		return _lastPropagationDate;
+	}
+
+	public void setLastPropagationDate(Date lastPropagationDate) {
+		_lastPropagationDate = lastPropagationDate;
+	}
+
+	public String getNamespace() {
+		return _namespace;
+	}
+
+	public void setNamespace(String namespace) {
+		_namespace = namespace;
+	}
+
+	private String _uuid;
 	private long _fragmentEntryLinkId;
 	private long _groupId;
+	private long _companyId;
+	private long _userId;
+	private String _userName;
+	private Date _createDate;
+	private Date _modifiedDate;
+	private long _originalFragmentEntryLinkId;
 	private long _fragmentEntryId;
 	private long _classNameId;
 	private long _classPK;
@@ -187,4 +276,6 @@ public class FragmentEntryLinkSoap implements Serializable {
 	private String _js;
 	private String _editableValues;
 	private int _position;
+	private Date _lastPropagationDate;
+	private String _namespace;
 }

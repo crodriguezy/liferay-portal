@@ -16,12 +16,17 @@ package com.liferay.site.navigation.type;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
 
 import java.io.IOException;
 
 import java.util.Locale;
+
+import javax.portlet.PortletURL;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,11 +36,53 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface SiteNavigationMenuItemType {
 
+	public default PortletURL getAddURL(
+		RenderRequest renderRequest, RenderResponse renderResponse) {
+
+		return null;
+	}
+
 	public default String getIcon() {
 		return "magic";
 	}
 
 	public String getLabel(Locale locale);
+
+	public default Layout getLayout(
+		SiteNavigationMenuItem siteNavigationMenuItem) {
+
+		return null;
+	}
+
+	public default String getRegularURL(
+			HttpServletRequest request,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws Exception {
+
+		return StringPool.BLANK;
+	}
+
+	public default String getResetLayoutURL(
+			HttpServletRequest request,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws Exception {
+
+		return StringPool.BLANK;
+	}
+
+	public default String getResetMaxStateURL(
+			HttpServletRequest request,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws Exception {
+
+		return StringPool.BLANK;
+	}
+
+	public default String getTarget(
+		SiteNavigationMenuItem siteNavigationMenuItem) {
+
+		return StringPool.BLANK;
+	}
 
 	public String getTitle(
 		SiteNavigationMenuItem siteNavigationMenuItem, Locale locale);
@@ -48,10 +95,40 @@ public interface SiteNavigationMenuItemType {
 		return layout.getTypeSettings();
 	}
 
-	public String getURL(
-			HttpServletRequest request,
-			SiteNavigationMenuItem siteNavigationMenuItem)
-		throws PortalException;
+	public default String getUnescapedName(
+		SiteNavigationMenuItem siteNavigationMenuItem, String languageId) {
+
+		return getTitle(
+			siteNavigationMenuItem, LanguageUtil.getLocale(languageId));
+	}
+
+	public default String iconURL(
+		SiteNavigationMenuItem siteNavigationMenuItem, String pathImage) {
+
+		return StringPool.BLANK;
+	}
+
+	public default boolean isBrowsable(
+		SiteNavigationMenuItem siteNavigationMenuItem) {
+
+		return false;
+	}
+
+	public default boolean isChildSelected(
+			boolean selectable, SiteNavigationMenuItem siteNavigationMenuItem,
+			Layout curLayout)
+		throws PortalException {
+
+		return false;
+	}
+
+	public default boolean isSelected(
+			boolean selectable, SiteNavigationMenuItem siteNavigationMenuItem,
+			Layout curLayout)
+		throws Exception {
+
+		return false;
+	}
 
 	public default void renderAddPage(
 			HttpServletRequest request, HttpServletResponse response)

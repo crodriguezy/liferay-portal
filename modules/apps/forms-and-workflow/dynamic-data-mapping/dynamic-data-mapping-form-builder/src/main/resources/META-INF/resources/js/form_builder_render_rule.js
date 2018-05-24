@@ -32,6 +32,10 @@ AUI.add(
 						value: []
 					},
 
+					ruleStored: {
+						value: false
+					},
+
 					strings: {
 						value: {
 							actions: Liferay.Language.get('actions'),
@@ -96,6 +100,8 @@ AUI.add(
 						boundingBox.delegate('click', A.bind(instance._handleDeleteActionClick, instance), '.action-card-delete');
 						boundingBox.delegate('click', A.bind(instance._handleSaveClick, instance), '.form-builder-rule-settings-save');
 
+						A.one('body').delegate('click', A.bind(instance._handleFormBuilderClick, instance), '#' + Liferay.DDM.Settings.portletNamespace + 'showForm');
+
 						instance.after(instance._toggleDeleteActionButton, instance, '_addAction');
 						instance.after(instance._validateRule, instance, '_addCondition');
 
@@ -159,6 +165,8 @@ AUI.add(
 						instance._renderActions(rule.actions);
 
 						instance._validateRule();
+
+						instance.set('ruleStored', false);
 
 						instance._updateLogicOperatorEnableState();
 
@@ -254,34 +262,55 @@ AUI.add(
 					_getActionOptions: function() {
 						var instance = this;
 
+						var actions = [];
+						var pages = instance.get('pages');
 						var strings = instance.get('strings');
 
-						return [
+						actions.push(
 							{
 								label: strings.show,
 								value: 'show'
-							},
+							}
+						);
+
+						actions.push(
 							{
 								label: strings.enable,
 								value: 'enable'
-							},
+							}
+						);
+
+						actions.push(
 							{
 								label: strings.require,
 								value: 'require'
-							},
+							}
+						);
+
+						actions.push(
 							{
 								label: strings.autofill,
 								value: 'auto-fill'
-							},
-							{
-								label: strings.jumpToPage,
-								value: 'jump-to-page'
-							},
+							}
+						);
+
+						if (pages.length > 2) {
+							actions.push(
+								{
+									label: strings.jumpToPage,
+									value: 'jump-to-page'
+								}
+							);
+						}
+
+						actions.push(
 							{
 								label: strings.calculate,
 								value: 'calculate'
 							}
-						];
+						);
+
+						return actions;
 					},
 
 					_getActions: function() {
@@ -312,19 +341,19 @@ AUI.add(
 					_getConditionSelectedFieldsPage: function() {
 						var instance = this;
 
-						var fields = [];
+						var pages = [];
 
 						for (var conditionKey in instance._conditions) {
 							if (!!conditionKey.match('-condition-second-operand-select') || !!conditionKey.match('-condition-first-operand')) {
 								var fieldName = instance._getSelectFieldFirstValue(instance._conditions[conditionKey]);
 
 								if (fieldName && fieldName != 'user') {
-									fields.push(instance._getFieldPageIndex(fieldName));
+									pages.push(instance._getFieldPageIndex(fieldName));
 								}
 							}
 						}
 
-						return fields;
+						return pages;
 					},
 
 					_getFieldDataType: function(fieldName) {
@@ -468,6 +497,8 @@ AUI.add(
 						instance.fire(
 							'cancelRule'
 						);
+
+						instance.set('ruleStored', true);
 					},
 
 					_handleDeleteActionClick: function(event) {
@@ -502,6 +533,29 @@ AUI.add(
 						instance._validateRule();
 					},
 
+					_handleFormBuilderClick: function() {
+						var instance = this;
+
+						var actions = {};
+						var conditions = {};
+						var logicalOperator = '';
+
+						if (!instance.get('ruleStored')) {
+							actions = instance._getActions();
+							conditions = instance._getConditions();
+							logicalOperator = instance.get('logicOperator');
+						}
+
+						instance.fire(
+							'saveRuleDraft',
+							{
+								actions: actions,
+								conditions: conditions,
+								'logical-operator': logicalOperator
+							}
+						);
+					},
+
 					_handleSaveClick: function() {
 						var instance = this;
 
@@ -517,6 +571,8 @@ AUI.add(
 								'logical-operator': instance.get('logicOperator')
 							}
 						);
+
+						instance.set('ruleStored', true);
 					},
 
 					_isButtonEnabled: function() {

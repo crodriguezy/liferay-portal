@@ -22,7 +22,13 @@ ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_
 FragmentEntry fragmentEntry = (FragmentEntry)row.getObject();
 %>
 
-<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+<liferay-ui:icon-menu
+	direction="left-side"
+	icon="<%= StringPool.BLANK %>"
+	markupView="lexicon"
+	message="<%= StringPool.BLANK %>"
+	showWhenSingleIcon="<%= true %>"
+>
 	<c:if test="<%= FragmentEntryPermission.contains(permissionChecker, fragmentEntry, ActionKeys.UPDATE) %>">
 		<portlet:renderURL var="editFragmentEntryURL">
 			<portlet:param name="mvcRenderCommandName" value="/fragment/edit_fragment_entry" />
@@ -84,6 +90,20 @@ FragmentEntry fragmentEntry = (FragmentEntry)row.getObject();
 		message="export"
 		url="<%= exportFragmentEntriesURL %>"
 	/>
+
+	<c:if test="<%= fragmentEntry.getUsageCount() > 0 %>">
+		<portlet:renderURL var="viewFragmentEntryUsagesURL">
+			<portlet:param name="mvcRenderCommandName" value="/fragment/view_fragment_entry_usages" />
+			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="fragmentCollectionId" value="<%= String.valueOf(fragmentEntry.getFragmentCollectionId()) %>" />
+			<portlet:param name="fragmentEntryId" value="<%= String.valueOf(fragmentEntry.getFragmentEntryId()) %>" />
+		</portlet:renderURL>
+
+		<liferay-ui:icon
+			message="view-usages"
+			url="<%= viewFragmentEntryUsagesURL %>"
+		/>
+	</c:if>
 
 	<c:if test="<%= FragmentEntryPermission.contains(permissionChecker, fragmentEntry, ActionKeys.DELETE) %>">
 		<portlet:actionURL name="/fragment/delete_fragment_entries" var="deleteFragmentEntryURL">

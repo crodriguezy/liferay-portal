@@ -35,7 +35,7 @@
 </tr>
 <tr>
 	<td>ADD_CATEGORY</td>
-	<td>//span[contains(.,'Add Category')]</td>
+	<td>//a[contains(.,'Add Category')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -104,11 +104,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>ADD_SUBCATEGORY</td>
-	<td>//span[contains(.,'Add Subcategory')]</td>
-	<td></td>
-</tr>
-<tr>
 	<td>ADD_SUBFOLDER</td>
 	<td>//a[contains(.,'Add Subfolder')]</td>
 	<td></td>
@@ -165,17 +160,12 @@
 </tr>
 <tr>
 	<td>BROWSE</td>
-	<td>//input[contains(@id,'file')]</td>
+	<td>//fieldset[contains(@class,'fieldset')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>BROWSE_IMAGE</td>
 	<td>//button[contains(@class,'browse-image')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>CALCULATE</td>
-	<td>//button[contains(.,'Calculate')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -191,6 +181,11 @@
 <tr>
 	<td>CANCEL_EFFECTS</td>
 	<td>//div[contains(@class,'controls-container') and contains(@class,'open')]//button[contains(@class,'btn') and contains(.,'Cancel')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>CANCEL_GIVEN_POSITION</td>
+	<td>//div[contains(@class,'lfr-form-content')]/../div/a[contains(@class,'cancel') and contains(@class,'btn')] | //button[contains(.,'Cancel')] | //a[contains(@class,'btn') and contains(.,'Cancel')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -359,6 +354,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>EDIT_ROW</td>
+	<td>//*[@data-qa-id='row' and contains(.,'${key_rowEntry}')]//*[normalize-space(text())='Edit']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>ENTER</td>
 	<td>//button[contains(.,'Enter')]</td>
 	<td></td>
@@ -370,7 +370,7 @@
 </tr>
 <tr>
 	<td>EDITOR_SWITCH</td>
-	<td>//button[contains(@id,'EditorSwitch') and contains(@class,'editor-view')]</td>
+	<td>//div[@class='alloy-editor-switch']/button[contains(@id,'EditorSwitch') and contains(@class,'editor-view')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -394,18 +394,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>FIND</td>
-	<td>//button[contains(.,'Find')]</td>
-	<td></td>
-</tr>
-<tr>
 	<td>FINISH_CONFIGURATION</td>
 	<td>//button[contains(.,'Finish Configuration')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>GENERATE</td>
-	<td>//button[contains(.,'Generate')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -455,7 +445,7 @@
 </tr>
 <tr>
 	<td>LOCALIZATION</td>
-	<td>//div[label[contains(.,'${key_fieldName}')]]//div[contains(@class,'localized')]//button</td>
+	<td>//div[label[contains(.,'${key_fieldName}')]]//div[contains(@class,'localized')]//button[contains(@class,'localized')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -484,13 +474,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>MOVE_THREAD</td>
-	<td>//button[contains(.,'Move Thread')]</td>
+	<td>MOVE_TO_THE_RECYCLE_BIN</td>
+	<td>//a[contains(@class,'btn') and contains(.,'Move to the Recycle Bin')] | //button[contains(.,'Move to the Recycle Bin')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>MOVE_TO_THE_RECYCLE_BIN</td>
-	<td>//a[contains(@class,'btn') and contains(.,'Move to the Recycle Bin')] | //button[contains(.,'Move to the Recycle Bin')]</td>
+	<td>NEW_THREAD</td>
+	<td>//a[contains(.,'New Thread')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -525,17 +515,12 @@
 </tr>
 <tr>
 	<td>PLUS</td>
-	<td>//*[@data-qa-id='addButton'] | //a[contains(@class,'btn') and span[contains(@class,'icon-plus')]] | //button[span[contains(@class,'icon-plus')]]</td>
+	<td>//*[@data-qa-id='addButton'] | //a[contains(@class,'btn') and @aria-label='add'] | //a[contains(@class,'btn') and *[contains(@class,'icon-plus')]] | //button[*[contains(@class,'icon-plus')]]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>POST</td>
 	<td>//div[@class='button-holder']/button[contains(@id,'MicroblogsPortlet')]/span[contains(.,'Post')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>POST_NEW_THREAD</td>
-	<td>//span[contains(.,'Post New Thread')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -551,6 +536,11 @@
 <tr>
 	<td>PUBLISH</td>
 	<td>//button[span[contains(.,'Publish')]]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>PUBLISH_GIVEN_POSITION</td>
+	<td>//div[contains(@class,'lfr-form-content')]/../div/button[span[contains(.,'Publish')]]</td>
 	<td></td>
 </tr>
 <tr>
@@ -731,11 +721,6 @@
 <tr>
 	<td>SEND_PASSWORD_RESET_LINK</td>
 	<td>//button[contains(.,'Send Password Reset Link')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>SHARE</td>
-	<td>//button[contains(.,'Share')]</td>
 	<td></td>
 </tr>
 <tr>

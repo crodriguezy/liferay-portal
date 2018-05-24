@@ -570,28 +570,8 @@ public interface UserLocalService extends BaseLocalService,
 	* @param userId the primary key for the new user
 	* @return the new user
 	*/
+	@Transactional(enabled = false)
 	public User createUser(long userId);
-
-	/**
-	* Sets the user's status to inactive. This will also deactivate their
-	* personal site.
-	*
-	* @param userId the primary key of the user
-	* @throws PortalException
-	*/
-	public void deactivateUser(long userId) throws PortalException;
-
-	/**
-	* Sets the user's status to inactive. Can also optionally deactivate the
-	* user's personal site.
-	*
-	* @param userId the primary key of the user
-	* @param deactivateSite whether the user's personal site should be
-	      deactivated
-	* @throws PortalException
-	*/
-	public void deactivateUser(long userId, boolean deactivateSite)
-		throws PortalException;
 
 	/**
 	* Decrypts the user's primary key and password from their encrypted forms.
@@ -1598,16 +1578,6 @@ public interface UserLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public User loadGetDefaultUser(long companyId) throws PortalException;
-
-	/**
-	* Deletes and re-creates the user's group.  This is useful for clearing all
-	* personal data from the user's personal site, and essentially resets the
-	* group back to the same state as when the user was first created.
-	*
-	* @param userId the primary key of the user
-	* @throws PortalException
-	*/
-	public void resetUserGroup(long userId) throws PortalException;
 
 	/**
 	* Returns an ordered range of all the users who match the keywords and

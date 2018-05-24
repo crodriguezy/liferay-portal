@@ -21,6 +21,7 @@
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
 taglib uri="http://liferay.com/tld/clay" prefix="clay" %><%@
 taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
+taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
 taglib uri="http://liferay.com/tld/security" prefix="liferay-security" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
@@ -32,14 +33,22 @@ page import="com.liferay.fragment.exception.DuplicateFragmentCollectionKeyExcept
 page import="com.liferay.fragment.exception.DuplicateFragmentEntryKeyException" %><%@
 page import="com.liferay.fragment.exception.FragmentCollectionNameException" %><%@
 page import="com.liferay.fragment.exception.FragmentEntryContentException" %><%@
+page import="com.liferay.fragment.exception.InvalidFragmentCollectionFileException" %><%@
+page import="com.liferay.fragment.exception.InvalidFragmentEntryFileException" %><%@
 page import="com.liferay.fragment.exception.RequiredFragmentEntryException" %><%@
 page import="com.liferay.fragment.model.FragmentCollection" %><%@
 page import="com.liferay.fragment.model.FragmentEntry" %><%@
+page import="com.liferay.fragment.model.FragmentEntryLink" %><%@
+page import="com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil" %><%@
+page import="com.liferay.fragment.service.FragmentEntryLocalServiceUtil" %><%@
+page import="com.liferay.fragment.util.FragmentEntryRenderUtil" %><%@
 page import="com.liferay.fragment.web.internal.constatns.ExportImportConstants" %><%@
 page import="com.liferay.fragment.web.internal.display.context.FragmentDisplayContext" %><%@
+page import="com.liferay.fragment.web.internal.display.context.FragmentEntryLinkDisplayContext" %><%@
 page import="com.liferay.fragment.web.internal.security.permission.resource.FragmentCollectionPermission" %><%@
 page import="com.liferay.fragment.web.internal.security.permission.resource.FragmentEntryPermission" %><%@
 page import="com.liferay.petra.string.StringPool" %><%@
+page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.module.configuration.ConfigurationProviderUtil" %><%@
 page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
@@ -59,7 +68,11 @@ page import="com.liferay.taglib.search.ResultRow" %>
 
 <%@ page import="java.util.Date" %><%@
 page import="java.util.HashMap" %><%@
-page import="java.util.Map" %>
+page import="java.util.Map" %><%@
+page import="java.util.Objects" %>
+
+<%@ page import="javax.portlet.PortletMode" %><%@
+page import="javax.portlet.PortletURL" %>
 
 <liferay-frontend:defineObjects />
 

@@ -17,10 +17,14 @@ package com.liferay.layout.admin.web.internal.display.context;
 import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.StagingUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemList;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.admin.web.configuration.LayoutAdminWebConfiguration;
 import com.liferay.layout.admin.web.constants.LayoutAdminDisplayStyleKeys;
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminWebKeys;
+import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
+import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionService;
+import com.liferay.layout.page.template.util.comparator.LayoutPageTemplateCollectionNameComparator;
 import com.liferay.layout.util.comparator.LayoutCreateDateComparator;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -60,9 +64,10 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.LayoutDescription;
 import com.liferay.portal.util.LayoutListUtil;
 import com.liferay.portlet.layoutsadmin.display.context.GroupDisplayContextHelper;
+import com.liferay.site.navigation.model.SiteNavigationMenu;
+import com.liferay.site.navigation.service.SiteNavigationMenuLocalServiceUtil;
 import com.liferay.taglib.security.PermissionsURLTag;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -70,6 +75,8 @@ import java.util.Objects;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Eudaldo Alonso
@@ -86,11 +93,22 @@ public class LayoutsAdminDisplayContext {
 		_themeDisplay = (ThemeDisplay)liferayPortletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		_groupDisplayContextHelper = new GroupDisplayContextHelper(
-			PortalUtil.getHttpServletRequest(liferayPortletRequest));
+		_request = PortalUtil.getHttpServletRequest(_liferayPortletRequest);
+
+		_groupDisplayContextHelper = new GroupDisplayContextHelper(_request);
 
 		_liferayPortletRequest.setAttribute(
 			WebKeys.LAYOUT_DESCRIPTIONS, getLayoutDescriptions());
+	}
+
+	public String getAutoSiteNavigationMenuNames() {
+		List<SiteNavigationMenu> siteNavigationMenus =
+			SiteNavigationMenuLocalServiceUtil.getAutoSiteNavigationMenus(
+				_themeDisplay.getScopeGroupId());
+
+		return ListUtil.toString(
+			siteNavigationMenus, SiteNavigationMenu.NAME_ACCESSOR,
+			StringPool.COMMA_AND_SPACE);
 	}
 
 	public JSONArray getBreadcrumbEntriesJSONArray() throws PortalException {
@@ -242,6 +260,37 @@ public class LayoutsAdminDisplayContext {
 		return editLayoutURL.toString();
 	}
 
+	public long getFirstLayoutPageTemplateCollectionId()
+		throws PortalException {
+
+		LayoutPageTemplateCollectionService
+			layoutPageTemplateCollectionService =
+				(LayoutPageTemplateCollectionService)_liferayPortletRequest.
+					getAttribute(
+						LayoutAdminWebKeys.
+							LAYOUT_PAGE_TEMPLATE_COLLECTION_SERVICE);
+
+		LayoutPageTemplateCollectionNameComparator
+			layoutPageTemplateCollectionNameComparator =
+				new LayoutPageTemplateCollectionNameComparator(true);
+
+		List<LayoutPageTemplateCollection> layoutPageTemplateCollections =
+			layoutPageTemplateCollectionService.
+				getLayoutPageTemplateCollections(
+					getGroupId(), QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+					layoutPageTemplateCollectionNameComparator);
+
+		if (ListUtil.isNotEmpty(layoutPageTemplateCollections)) {
+			LayoutPageTemplateCollection layoutPageTemplateCollection =
+				layoutPageTemplateCollections.get(0);
+
+			return layoutPageTemplateCollection.
+				getLayoutPageTemplateCollectionId();
+		}
+
+		return 0;
+	}
+
 	public Group getGroup() {
 		return _groupDisplayContextHelper.getGroup();
 	}
@@ -306,14 +355,6 @@ public class LayoutsAdminDisplayContext {
 		SearchContainer layoutsSearchContainer = new SearchContainer(
 			_liferayPortletRequest, getPortletURL(), null, emptyResultMessage);
 
-		if (isShowAddRootLayoutButton()) {
-			layoutsSearchContainer.setEmptyResultsMessageCssClass(
-				"there-are-no-layouts.-you-can-add-a-layout-by-clicking-the-" +
-					"plus-button-on-the-bottom-right-corner");
-			layoutsSearchContainer.setEmptyResultsMessageCssClass(
-				"taglib-empty-result-message-header-has-plus-btn");
-		}
-
 		layoutsSearchContainer.setOrderByCol(getOrderByCol());
 
 		OrderByComparator orderByComparator = _getOrderByComparator();
@@ -368,40 +409,39 @@ public class LayoutsAdminDisplayContext {
 	}
 
 	public List<NavigationItem> getNavigationItems() {
-		List<NavigationItem> navigationItems = new ArrayList<>();
+		return new NavigationItemList() {
+			{
+				add(
+					navigationItem -> {
+						navigationItem.setActive(
+							Objects.equals(getTabs1(), "pages"));
+						navigationItem.setHref(
+							getPortletURL(), "tabs1", "pages");
+						navigationItem.setLabel(
+							LanguageUtil.get(_request, "pages"));
+					});
 
-		NavigationItem pagesNavigationItem = new NavigationItem();
+				add(
+					navigationItem -> {
+						navigationItem.setActive(
+							Objects.equals(getTabs1(), "page-templates"));
+						navigationItem.setHref(
+							getPortletURL(), "tabs1", "page-templates");
+						navigationItem.setLabel(
+							LanguageUtil.get(_request, "page-templates"));
+					});
 
-		pagesNavigationItem.setActive(Objects.equals(getTabs1(), "pages"));
-
-		PortletURL pagesURL = getPortletURL();
-
-		pagesURL.setParameter("tabs1", "pages");
-
-		pagesNavigationItem.setHref(pagesURL.toString());
-
-		pagesNavigationItem.setLabel(
-			LanguageUtil.get(_themeDisplay.getLocale(), "pages"));
-
-		navigationItems.add(pagesNavigationItem);
-
-		NavigationItem pageTemplatesNavigationItem = new NavigationItem();
-
-		pageTemplatesNavigationItem.setActive(
-			Objects.equals(getTabs1(), "page-templates"));
-
-		PortletURL pageTemplatesURL = getPortletURL();
-
-		pageTemplatesURL.setParameter("tabs1", "page-templates");
-
-		pageTemplatesNavigationItem.setHref(pageTemplatesURL.toString());
-
-		pageTemplatesNavigationItem.setLabel(
-			LanguageUtil.get(_themeDisplay.getLocale(), "page-templates"));
-
-		navigationItems.add(pageTemplatesNavigationItem);
-
-		return navigationItems;
+				add(
+					navigationItem -> {
+						navigationItem.setActive(
+							Objects.equals(getTabs1(), "display-pages"));
+						navigationItem.setHref(
+							getPortletURL(), "tabs1", "display-pages");
+						navigationItem.setLabel(
+							LanguageUtil.get(_request, "display-pages"));
+					});
+			}
+		};
 	}
 
 	public String[] getNavigationKeys() {
@@ -514,7 +554,8 @@ public class LayoutsAdminDisplayContext {
 			return _redirect;
 		}
 
-		_redirect = ParamUtil.getString(_liferayPortletRequest, "redirect");
+		_redirect = ParamUtil.getString(
+			_liferayPortletRequest, "redirect", _themeDisplay.getURLCurrent());
 
 		return _redirect;
 	}
@@ -546,8 +587,9 @@ public class LayoutsAdminDisplayContext {
 			privateLayout, _themeDisplay.getLocale());
 	}
 
-	public String getSelectLayoutPageTemplateEntryURL() {
-		return getSelectLayoutPageTemplateEntryURL(0);
+	public String getSelectLayoutPageTemplateEntryURL() throws PortalException {
+		return getSelectLayoutPageTemplateEntryURL(
+			getFirstLayoutPageTemplateCollectionId());
 	}
 
 	public String getSelectLayoutPageTemplateEntryURL(
@@ -573,7 +615,9 @@ public class LayoutsAdminDisplayContext {
 		selectLayoutPageTemplateEntryURL.setParameter(
 			"mvcPath", "/select_layout_page_template_entry.jsp");
 		selectLayoutPageTemplateEntryURL.setParameter(
-			"redirect", _themeDisplay.getURLCurrent());
+			"navigation", getNavigation());
+		selectLayoutPageTemplateEntryURL.setParameter(
+			"redirect", getRedirect());
 		selectLayoutPageTemplateEntryURL.setParameter(
 			"backURL", _themeDisplay.getURLCurrent());
 		selectLayoutPageTemplateEntryURL.setParameter(
@@ -895,7 +939,9 @@ public class LayoutsAdminDisplayContext {
 		if (showAddChildPageAction(layout)) {
 			jsonObject.put(
 				"addURL",
-				getSelectLayoutPageTemplateEntryURL(0, layout.getPlid()));
+				getSelectLayoutPageTemplateEntryURL(
+					getFirstLayoutPageTemplateCollectionId(),
+					layout.getPlid()));
 		}
 
 		if (showConfigureAction(layout)) {
@@ -990,7 +1036,7 @@ public class LayoutsAdminDisplayContext {
 			layoutJSONObject.put("active", _isActive(layout.getPlid()));
 
 			int childLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
-				getGroup(), isPrivatePages(), layout.getLayoutId());
+				getSelGroup(), isPrivatePages(), layout.getLayoutId());
 
 			layoutJSONObject.put("hasChild", childLayoutsCount > 0);
 
@@ -1065,6 +1111,7 @@ public class LayoutsAdminDisplayContext {
 	private Long _parentLayoutId;
 	private Boolean _privateLayout;
 	private String _redirect;
+	private final HttpServletRequest _request;
 	private String _rootNodeName;
 	private Layout _selLayout;
 	private LayoutSet _selLayoutSet;

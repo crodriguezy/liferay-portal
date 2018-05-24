@@ -25,22 +25,24 @@ import org.osgi.service.component.annotations.Component;
 public class MessagingConfigurationCategory implements ConfigurationCategory {
 
 	@Override
-	public String getCategorySetKey() {
-		return _CATEGORY_SET_KEY;
+	public String getCategoryIcon() {
+		return _CATEGORY_ICON;
 	}
 
 	@Override
-	public String getIcon() {
-		return "message-boards";
+	public String getCategoryKey() {
+		return _CATEGORY_KEY;
 	}
 
 	@Override
-	public String getKey() {
-		return _KEY;
+	public String getCategorySection() {
+		return _CATEGORY_SECTION;
 	}
 
-	private static final String _CATEGORY_SET_KEY = "social";
+	private static final String _CATEGORY_ICON = "message-boards";
 
-	private static final String _KEY = "messaging";
+	private static final String _CATEGORY_KEY = "messaging";
+
+	private static final String _CATEGORY_SECTION = "social";
 
 }

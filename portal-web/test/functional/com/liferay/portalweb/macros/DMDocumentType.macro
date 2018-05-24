@@ -11,7 +11,7 @@
 		</execute>
 
 		<execute macro="Panel#expandPanel">
-			<var name="panelHeading" value="Main Metadata Fields" />
+			<var name="panel" value="Main Metadata Fields" />
 		</execute>
 
 		<for list="${dmDocumentTypeFieldNames}" param="dmDocumentTypeFieldName">
@@ -26,7 +26,7 @@
 			<isset var="metadataSetName" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Additional Metadata Fields" />
+					<var name="panel" value="Additional Metadata Fields" />
 				</execute>
 
 				<execute macro="DMDocumentType#selectPGMetadataSet">
@@ -69,14 +69,14 @@
 		<if>
 			<isset var="dmDocumentTypeNameEdit" />
 			<then>
-				<execute function="Type#clickAtType" locator1="DocumentsAndMediaEditDocumentType#NAME_FIELD" value1="${dmDocumentTypeNameEdit}"  />
+				<execute function="Type#clickAtType" locator1="DocumentsAndMediaEditDocumentType#NAME_FIELD" value1="${dmDocumentTypeNameEdit}" />
 			</then>
 		</if>
 
 		<if>
 			<isset var="dmDocumentTypeDescriptionEdit" />
 			<then>
-				<execute function="Type" locator1="DocumentsAndMediaEditDocumentType#DETAILS_DESCRIPTION_FIELD" value1="${dmDocumentTypeDescriptionEdit}"  />
+				<execute function="Type" locator1="DocumentsAndMediaEditDocumentType#DETAILS_DESCRIPTION_FIELD" value1="${dmDocumentTypeDescriptionEdit}" />
 			</then>
 		</if>
 
@@ -84,7 +84,7 @@
 			<isset var="dmDocumentTypeFieldRequiredEdit" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Main Metadata Fields" />
+					<var name="panel" value="Main Metadata Fields" />
 				</execute>
 
 				<execute macro="DynamicDataMapping#editFieldSettings">
@@ -99,7 +99,7 @@
 			<isset var="dmDocumentTypeFieldNames" />
 			<then>
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Main Metadata Fields" />
+					<var name="panel" value="Main Metadata Fields" />
 				</execute>
 
 				<for list="${dmDocumentTypeFieldNames}" param="dmDocumentTypeFieldName">
@@ -120,7 +120,7 @@
 				<var name="key_metadataSetName" value="${metadataSetName}" />
 
 				<execute macro="Panel#expandPanel">
-					<var name="panelHeading" value="Additional Metadata Fields" />
+					<var name="panel" value="Additional Metadata Fields" />
 				</execute>
 
 				<execute function="AssertClick" locator1="DocumentsAndMediaEditDocumentType#REMOVE_METADATA_SET_BUTTON" value1="Remove" />

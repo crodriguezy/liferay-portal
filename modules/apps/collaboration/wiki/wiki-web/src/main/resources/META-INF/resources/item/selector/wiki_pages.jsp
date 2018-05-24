@@ -64,13 +64,21 @@ else {
 	}
 </style>
 
-<liferay-frontend:management-bar>
-	<liferay-frontend:management-bar-filters>
-		<li>
-			<liferay-item-selector:search />
-		</li>
-	</liferay-frontend:management-bar-filters>
-</liferay-frontend:management-bar>
+<%
+PortletURL searchBaseURL = PortletURLUtil.clone(currentURLObj, liferayPortletResponse);
+
+searchBaseURL.setParameter("resetCur", Boolean.TRUE.toString());
+
+String searchURL = HttpUtil.removeParameter(searchBaseURL.toString(), liferayPortletResponse.getNamespace() + "keywords");
+%>
+
+<clay:management-toolbar
+	clearResultsURL="<%= searchURL %>"
+	searchActionURL="<%= searchURL %>"
+	selectable="<%= false %>"
+	showCreationMenu="<%= false %>"
+	totalItems="<%= wikiPagesSearchContainer.getTotal() %>"
+/>
 
 <div class="container-fluid-1280 lfr-item-viewer" id="<portlet:namespace />wikiPagesSelectorContainer">
 	<liferay-ui:search-container
@@ -88,9 +96,13 @@ else {
 			keyProperty="pageId"
 			modelVar="curPage"
 		>
-			<liferay-ui:search-container-column-icon icon="wiki-page" />
+			<liferay-ui:search-container-column-icon
+				icon="wiki-page"
+			/>
 
-			<liferay-ui:search-container-column-text colspan="<%= 2 %>">
+			<liferay-ui:search-container-column-text
+				colspan="<%= 2 %>"
+			>
 
 				<%
 				Date modifiedDate = curPage.getModifiedDate();
@@ -125,7 +137,11 @@ else {
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator displayStyle="descriptive" markupView="lexicon" searchContainer="<%= wikiPagesSearchContainer %>" />
+		<liferay-ui:search-iterator
+			displayStyle="descriptive"
+			markupView="lexicon"
+			searchContainer="<%= wikiPagesSearchContainer %>"
+		/>
 	</liferay-ui:search-container>
 </div>
 

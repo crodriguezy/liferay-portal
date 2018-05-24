@@ -29,7 +29,7 @@ import com.liferay.portal.kernel.template.TemplateHandler;
 import com.liferay.portal.kernel.template.TemplateVariableGroup;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
-import com.liferay.portlet.display.template.PortletDisplayTemplateConstants;
+import com.liferay.portlet.display.template.constants.PortletDisplayTemplateConstants;
 
 import java.util.List;
 import java.util.Locale;
@@ -44,9 +44,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {
-		"javax.portlet.name=" + AssetCategoriesNavigationPortletKeys.ASSET_CATEGORIES_NAVIGATION
-	},
+	property = "javax.portlet.name=" + AssetCategoriesNavigationPortletKeys.ASSET_CATEGORIES_NAVIGATION,
 	service = TemplateHandler.class
 )
 public class AssetCategoriesNavigationPortletDisplayTemplateHandler

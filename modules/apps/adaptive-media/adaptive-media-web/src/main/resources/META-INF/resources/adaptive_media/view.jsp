@@ -59,8 +59,13 @@ List<AMImageConfigurationEntry> selectedConfigurationEntries = (List)request.get
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 		</portlet:renderURL>
 
-		<liferay-frontend:add-menu inline="<%= true %>">
-			<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "add-image-resolution") %>' url="<%= addImageConfigurationEntryURL %>" />
+		<liferay-frontend:add-menu
+			inline="<%= true %>"
+		>
+			<liferay-frontend:add-menu-item
+				title='<%= LanguageUtil.get(request, "add-image-resolution") %>'
+				url="<%= addImageConfigurationEntryURL %>"
+			/>
 		</liferay-frontend:add-menu>
 	</liferay-frontend:management-bar-buttons>
 
@@ -252,7 +257,10 @@ PortletURL portletURL = renderResponse.createRenderURL();
 					/>
 				</liferay-ui:search-container-row>
 
-				<liferay-ui:search-iterator displayStyle="list" markupView="lexicon" />
+				<liferay-ui:search-iterator
+					displayStyle="list"
+					markupView="lexicon"
+				/>
 			</liferay-ui:search-container>
 		</aui:form>
 	</div>
@@ -260,9 +268,9 @@ PortletURL portletURL = renderResponse.createRenderURL();
 
 <aui:script>
 	function <portlet:namespace />deleteImageConfigurationEntries() {
-		if (confirm('<%= UnicodeLanguageUtil.get(request, "are-you-sure-you-want-to-delete-the-selected-entries") %>')) {
-			var form = AUI.$(document.<portlet:namespace />fm);
+		var form = document.querySelector('#<portlet:namespace />fm');
 
+		if (form && confirm('<liferay-ui:message key="are-you-sure-you-want-to-delete-the-selected-entries" />')) {
 			submitForm(form);
 		}
 	}

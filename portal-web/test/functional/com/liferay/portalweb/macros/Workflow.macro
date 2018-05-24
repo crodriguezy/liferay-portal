@@ -19,33 +19,28 @@
 	</command>
 
 	<command name="_tearDownWorkflow">
-		<var name="key_rowEntry" value="Knowledge Base Article" />
 		<var name="noWorkflow" value="No Workflow" />
 
 		<if>
 			<condition function="IsElementPresent" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
 			<then>
-				<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
-
-				<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Edit">
-					<var name="key_menuItem" value="Edit" />
+				<execute macro="LexiconEntry#gotoEntryMenuItem">
+					<var name="menuItem" value="Edit" />
+					<var name="rowEntry" value="Knowledge Base Article" />
 				</execute>
 
-				<var name="key_workflowResourceValue" value="Knowledge Base Article" />
-
-				<execute function="Select" locator1="WorkflowConfiguration#RESOURCE_TABLE_SELECT" value1="${noWorkflow}"  />
+				<execute function="Select" locator1="WorkflowConfiguration#RESOURCE_TABLE_SELECT" value1="${noWorkflow}">
+					<var name="key_workflowResourceValue" value="Knowledge Base Article" />
+				</execute>
 
 				<execute macro="Button#clickSave" />
 			</then>
 		</if>
 
 		<for list="Blogs Entry,Calendar Event,Comment,Message Boards Message,Page Revision,Wiki Page" param="workflowResourceValue">
-			<var name="key_rowEntry" value="${workflowResourceValue}" />
-
-			<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
-
-			<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Edit">
-				<var name="key_menuItem" value="Edit" />
+			<execute macro="LexiconEntry#gotoEntryMenuItem">
+				<var name="menuItem" value="Edit" />
+				<var name="rowEntry" value="${workflowResourceValue}" />
 			</execute>
 
 			<var name="key_workflowResourceValue" value="${workflowResourceValue}" />
@@ -161,10 +156,8 @@
 			<var name="workflowTask" value="${workflowTask}" />
 		</execute>
 
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Approve">
-			<var name="key_menuItem" value="Approve" />
+		<execute macro="LexiconEntry#gotoEllipsisMenuItem">
+			<var name="menuItem" value="Approve" />
 		</execute>
 
 		<execute macro="Workflow#confirmWorkflowAction" />
@@ -178,9 +171,9 @@
 	</command>
 
 	<command name="assignByDetails">
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MyWorkflowTasksTask#MENU_ASSIGN" value1="Assign to..." />
+		<execute macro="LexiconEntry#gotoEllipsisMenuItem">
+			<var name="menuItem" value="Assign to..." />
+		</execute>
 
 		<execute function="AssertTextEquals" locator1="MyWorkflowTasks#DIALOG_BOX_TITLE" value1="Assign to..." />
 
@@ -259,7 +252,9 @@
 			<var name="workflowTask" value="${workflowTask}" />
 		</execute>
 
-		<execute macro="Workflow#clickAssignToMeByDetails" />
+		<execute macro="LexiconEntry#gotoEllipsisMenuItem">
+			<var name="menuItem" value="Assign to Me" />
+		</execute>
 
 		<execute macro="Workflow#confirmWorkflowAction" />
 
@@ -273,34 +268,20 @@
 		</execute>
 	</command>
 
-	<command name="clickApproveByDetails">
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MyWorkflowTasksTask#MENU_APPROVE" value1="Approve" />
-	</command>
-
-	<command name="clickAssignToMeByDetails">
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MyWorkflowTasksTask#MENU_ASSIGN_TO_ME" value1="Assign to Me" />
-	</command>
-
 	<command name="configureWorkflow">
-		<var name="key_rowEntry" value="${workflowResourceValue}" />
-
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
-
-		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Edit">
-			<var name="key_menuItem" value="Edit" />
+		<execute function="AssertClick" locator1="Button#EDIT_ROW" value1="Edit">
+			<var name="key_rowEntry" value="${workflowResourceValue}" />
 		</execute>
 
-		<execute function="AssertTextEquals" locator1="Portlet#HEADER" value1="${workflowResourceValue}" />
+		<execute function="Select" locator1="WorkflowConfiguration#RESOURCE_TABLE_SELECT" value1="${workflowDefinition}">
+			<var name="key_workflowResourceValue" value="${workflowResourceValue}" />
+		</execute>
 
-		<var name="key_workflowResourceValue" value="${workflowResourceValue}" />
+		<execute function="AssertClick" locator1="WorkflowConfiguration#RESOURCE_TABLE_SAVE" value1="Save">
+			<var name="key_workflowResourceValue" value="${workflowResourceValue}" />
+		</execute>
 
-		<execute function="Select" locator1="WorkflowConfiguration#RESOURCE_TABLE_SELECT" value1="${workflowDefinition}" />
-
-		<execute macro="PortletEntry#save" />
+		<execute macro="Alert#viewSuccessMessage" />
 
 		<execute macro="Workflow#viewConfigurationSelected">
 			<var name="workflowDefinition" value="${workflowDefinition}" />
@@ -311,10 +292,8 @@
 	<command name="configureWorkflowViaFolderInfo">
 		<execute function="Click" locator1="Icon#INFO" />
 
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Edit">
-			<var name="key_menuItem" value="Edit" />
+		<execute macro="LexiconEntry#gotoEllipsisMenuItem">
+			<var name="menuItem" value="Edit" />
 		</execute>
 
 		<execute function="Select" locator1="AssetWorkflow#ALL_STRUCTURES_WORKFLOW_SELECT" value1="${workflowDefinition}" />
@@ -323,10 +302,8 @@
 	</command>
 
 	<command name="configureWorkflowViaPortlet">
-		<execute function="Click" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Edit">
-			<var name="key_menuItem" value="Edit" />
+		<execute macro="LexiconEntry#gotoHeaderMenuItem">
+			<var name="menuItem" value="Edit" />
 		</execute>
 
 		<execute function="Select" locator1="AssetWorkflow#ALL_STRUCTURES_WORKFLOW_SELECT" value1="${workflowDefinition}" />
@@ -391,12 +368,9 @@
 	</command>
 
 	<command name="gotoEditWorkflowDefinition">
-		<var name="key_rowEntry" value="${workflowDefinitionTitle}" />
-
-		<execute function="Click" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Edit">
-			<var name="key_menuItem" value="Edit" />
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Edit" />
+			<var name="rowEntry" value="${workflowDefinitionTitle}" />
 		</execute>
 	</command>
 
@@ -539,10 +513,8 @@
 			<var name="workflowTask" value="${workflowTask}" />
 		</execute>
 
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Reject">
-			<var name="key_menuItem" value="Reject" />
+		<execute macro="LexiconEntry#gotoEllipsisMenuItem">
+			<var name="menuItem" value="Reject" />
 		</execute>
 
 		<execute macro="Workflow#confirmWorkflowAction" />
@@ -599,10 +571,8 @@
 			<var name="workflowTask" value="${workflowTask}" />
 		</execute>
 
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Resubmit">
-			<var name="key_menuItem" value="Resubmit" />
+		<execute macro="LexiconEntry#gotoEllipsisMenuItem">
+			<var name="menuItem" value="Resubmit" />
 		</execute>
 
 		<execute macro="Workflow#confirmWorkflowAction" />
@@ -634,18 +604,14 @@
 
 		<execute macro="Workflow#_tearDownWorkflow" />
 
-		<var name="key_rowEntry" value="User" />
-		<var name="noWorkflow" value="No Workflow" />
-
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#ROW_VERTICAL_ELLIPSIS" />
-
-		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Edit">
-			<var name="key_menuItem" value="Edit" />
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Edit" />
+			<var name="rowEntry" value="User" />
 		</execute>
 
-		<var name="key_workflowResourceValue" value="User" />
-
-		<execute function="Select" locator1="WorkflowConfiguration#RESOURCE_TABLE_SELECT" value1="${noWorkflow}" />
+		<execute function="Select" locator1="WorkflowConfiguration#RESOURCE_TABLE_SELECT" value1="No Workflow">
+			<var name="key_workflowResourceValue" value="User" />
+		</execute>
 
 		<execute macro="Button#clickSave" />
 	</command>
@@ -835,6 +801,14 @@
 		</if>
 
 		<execute function="UploadCommonFile#uploadCommonFileHiddenNoMouseOver" locator1="WorkflowUpload#FILE_UPLOAD" value1="${workflowDefinitionFile}" />
+
+		<execute function="AssertVisible" locator1="Message#SUCCESS" />
+
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS_3" value1="Definition imported successfully." />
+
+		<execute macro="Alert#_closeMessage">
+			<var name="messageType" value="SUCCESS" />
+		</execute>
 
 		<execute macro="PortletEntry#publish" />
 
@@ -1226,12 +1200,8 @@
 
 		<execute macro="Workflow#_gotoPendingFilter" />
 
-		<var name="key_workflowAssetTitle" value="${workflowAssetTitle}" />
-
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Withdraw Submission">
-			<var name="key_menuItem" value="Withdraw Submission" />
+		<execute macro="LexiconEntry#gotoEllipsisMenuItem">
+			<var name="menuItem" value="Withdraw Submission" />
 		</execute>
 
 		<execute macro="Workflow#waitForSuccessMessageHide" />
@@ -1258,10 +1228,8 @@
 			<var name="workflowDefinition" value="${workflowDefinition}" />
 		</execute>
 
-		<execute function="Click#waitForMenuToggleJSClick" locator1="Icon#BODY_VERTICAL_ELLIPSIS" />
-
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Withdraw Submission">
-			<var name="key_menuItem" value="Withdraw Submission" />
+		<execute macro="LexiconEntry#gotoEllipsisMenuItem">
+			<var name="menuItem" value="Withdraw Submission" />
 		</execute>
 
 		<execute macro="Workflow#waitForSuccessMessageHide" />

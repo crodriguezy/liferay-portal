@@ -21,46 +21,28 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "collect
 PortalUtil.addPortletBreadcrumbEntry(request, fragmentItemSelectorViewDisplayContext.getFragmentCollectionTitle(), null);
 %>
 
-<liferay-frontend:management-bar
+<clay:management-toolbar
+	clearResultsURL="<%= fragmentItemSelectorViewDisplayContext.getClearResultsURL() %>"
+	componentId="fragmentItemSelectorFragmentEntriesManagementToolbar"
+	filterItems="<%= fragmentItemSelectorViewDisplayContext.getFilterItemsDropdownItems() %>"
+	searchActionURL="<%= fragmentItemSelectorViewDisplayContext.getSearchActionURL() %>"
 	searchContainerId="fragmentEntries"
->
-	<liferay-frontend:management-bar-buttons>
-		<liferay-frontend:management-bar-display-buttons
-			displayViews='<%= new String[] {"icon"} %>'
-			portletURL="<%= fragmentItemSelectorViewDisplayContext.getPortletURL() %>"
-			selectedDisplayStyle="<%= fragmentItemSelectorViewDisplayContext.getDisplayStyle() %>"
-		/>
-	</liferay-frontend:management-bar-buttons>
-
-	<liferay-frontend:management-bar-filters>
-		<liferay-frontend:management-bar-navigation
-			navigationKeys='<%= new String[] {"all"} %>'
-			portletURL="<%= fragmentItemSelectorViewDisplayContext.getPortletURL() %>"
-		/>
-
-		<liferay-frontend:management-bar-sort
-			orderByCol="<%= fragmentItemSelectorViewDisplayContext.getOrderByCol() %>"
-			orderByType="<%= fragmentItemSelectorViewDisplayContext.getOrderByType() %>"
-			orderColumns="<%= fragmentItemSelectorViewDisplayContext.getOrderColumns() %>"
-			portletURL="<%= fragmentItemSelectorViewDisplayContext.getPortletURL() %>"
-		/>
-
-		<li>
-
-			<%
-			PortletURL portletURL = fragmentItemSelectorViewDisplayContext.getPortletURL();
-			%>
-
-			<aui:form action="<%= portletURL.toString() %>" method="post" name="fm1">
-				<liferay-ui:input-search markupView="lexicon" />
-			</aui:form>
-		</li>
-	</liferay-frontend:management-bar-filters>
-</liferay-frontend:management-bar>
+	searchFormName="searchFm"
+	selectable="<%= false %>"
+	sortingOrder="<%= fragmentItemSelectorViewDisplayContext.getOrderByType() %>"
+	sortingURL="<%= fragmentItemSelectorViewDisplayContext.getSortingURL() %>"
+	totalItems="<%= fragmentItemSelectorViewDisplayContext.getFragmentEntriesTotalItems() %>"
+	viewTypes="<%= fragmentItemSelectorViewDisplayContext.getViewTypeItems() %>"
+/>
 
 <aui:form cssClass="container-fluid-1280" name="fm">
 	<div id="breadcrumb">
-		<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showPortletBreadcrumb="<%= true %>" />
+		<liferay-ui:breadcrumb
+			showCurrentGroup="<%= false %>"
+			showGuestGroup="<%= false %>"
+			showLayout="<%= false %>"
+			showPortletBreadcrumb="<%= true %>"
+		/>
 	</div>
 
 	<liferay-ui:search-container
@@ -80,7 +62,7 @@ PortalUtil.addPortletBreadcrumbEntry(request, fragmentItemSelectorViewDisplayCon
 
 			Map<String, Object> data = new HashMap<String, Object>();
 
-			data.put("fragmentEntryId", fragmentEntry.getFragmentEntryId());
+			data.put("fragment-entry-id", fragmentEntry.getFragmentEntryId());
 			data.put("name", fragmentEntry.getName());
 			%>
 
@@ -137,7 +119,10 @@ PortalUtil.addPortletBreadcrumbEntry(request, fragmentItemSelectorViewDisplayCon
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator displayStyle="<%= fragmentItemSelectorViewDisplayContext.getDisplayStyle() %>" markupView="lexicon" />
+		<liferay-ui:search-iterator
+			displayStyle="<%= fragmentItemSelectorViewDisplayContext.getDisplayStyle() %>"
+			markupView="lexicon"
+		/>
 	</liferay-ui:search-container>
 </aui:form>
 

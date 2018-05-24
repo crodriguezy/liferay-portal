@@ -78,12 +78,14 @@ import com.liferay.dynamic.data.mapping.model.impl.DDMStructureVersionModelImpl;
 import com.liferay.dynamic.data.mapping.model.impl.DDMTemplateLinkModelImpl;
 import com.liferay.dynamic.data.mapping.model.impl.DDMTemplateModelImpl;
 import com.liferay.dynamic.data.mapping.storage.StorageType;
+import com.liferay.friendly.url.model.FriendlyURLEntryLocalization;
 import com.liferay.friendly.url.model.FriendlyURLEntryLocalizationModel;
 import com.liferay.friendly.url.model.FriendlyURLEntryMappingModel;
 import com.liferay.friendly.url.model.FriendlyURLEntryModel;
 import com.liferay.friendly.url.model.impl.FriendlyURLEntryLocalizationModelImpl;
 import com.liferay.friendly.url.model.impl.FriendlyURLEntryMappingModelImpl;
 import com.liferay.friendly.url.model.impl.FriendlyURLEntryModelImpl;
+import com.liferay.journal.constants.JournalActivityKeys;
 import com.liferay.journal.constants.JournalPortletKeys;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleConstants;
@@ -95,7 +97,6 @@ import com.liferay.journal.model.impl.JournalArticleLocalizationModelImpl;
 import com.liferay.journal.model.impl.JournalArticleModelImpl;
 import com.liferay.journal.model.impl.JournalArticleResourceModelImpl;
 import com.liferay.journal.model.impl.JournalContentSearchModelImpl;
-import com.liferay.journal.social.JournalActivityKeys;
 import com.liferay.message.boards.constants.MBCategoryConstants;
 import com.liferay.message.boards.constants.MBMessageConstants;
 import com.liferay.message.boards.constants.MBPortletKeys;
@@ -154,6 +155,8 @@ import com.liferay.portal.kernel.model.RoleConstants;
 import com.liferay.portal.kernel.model.RoleModel;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserModel;
+import com.liferay.portal.kernel.model.UserNotificationDeliveryConstants;
+import com.liferay.portal.kernel.model.UserNotificationDeliveryModel;
 import com.liferay.portal.kernel.model.VirtualHostModel;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactory;
@@ -190,6 +193,7 @@ import com.liferay.portal.model.impl.ReleaseModelImpl;
 import com.liferay.portal.model.impl.ResourcePermissionModelImpl;
 import com.liferay.portal.model.impl.RoleModelImpl;
 import com.liferay.portal.model.impl.UserModelImpl;
+import com.liferay.portal.model.impl.UserNotificationDeliveryModelImpl;
 import com.liferay.portal.model.impl.VirtualHostModelImpl;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.PortletPreferencesFactoryImpl;
@@ -1438,6 +1442,15 @@ public class DataFactory {
 
 		counterModels.add(counterModel);
 
+		// FriendlyURLEntryLocalization
+
+		counterModel = new CounterModelImpl();
+
+		counterModel.setName(FriendlyURLEntryLocalization.class.getName());
+		counterModel.setCurrentId(_counter.get());
+
+		counterModels.add(counterModel);
+
 		// ResourcePermission
 
 		counterModel = new CounterModelImpl();
@@ -1791,13 +1804,13 @@ public class DataFactory {
 	}
 
 	public List<DLFileEntryModel> newDlFileEntryModels(
-		DLFolderModel dlFolerModel) {
+		DLFolderModel dlFolderModel) {
 
 		List<DLFileEntryModel> dlFileEntryModels = new ArrayList<>(
 			_maxDLFileEntryCount);
 
 		for (int i = 1; i <= _maxDLFileEntryCount; i++) {
-			dlFileEntryModels.add(newDlFileEntryModel(dlFolerModel, i));
+			dlFileEntryModels.add(newDlFileEntryModel(dlFolderModel, i));
 		}
 
 		return dlFileEntryModels;
@@ -2810,6 +2823,24 @@ public class DataFactory {
 		return userModels;
 	}
 
+	public UserNotificationDeliveryModel newUserNotificationDeliveryModel(
+		String portletId) {
+
+		UserNotificationDeliveryModel userNotificationDeliveryModel =
+			new UserNotificationDeliveryModelImpl();
+
+		userNotificationDeliveryModel.setUserNotificationDeliveryId(
+			_counter.get());
+		userNotificationDeliveryModel.setCompanyId(_companyId);
+		userNotificationDeliveryModel.setUserId(_sampleUserId);
+		userNotificationDeliveryModel.setPortletId(portletId);
+		userNotificationDeliveryModel.setDeliveryType(
+			UserNotificationDeliveryConstants.TYPE_WEBSITE);
+		userNotificationDeliveryModel.setDeliver(true);
+
+		return userNotificationDeliveryModel;
+	}
+
 	public List<WikiNodeModel> newWikiNodeModels(long groupId) {
 		List<WikiNodeModel> wikiNodeModels = new ArrayList<>(_maxWikiNodeCount);
 
@@ -3248,20 +3279,20 @@ public class DataFactory {
 	}
 
 	protected DLFileEntryModel newDlFileEntryModel(
-		DLFolderModel dlFolerModel, int index) {
+		DLFolderModel dlFolderModel, int index) {
 
 		DLFileEntryModel dlFileEntryModel = new DLFileEntryModelImpl();
 
 		dlFileEntryModel.setUuid(SequentialUUID.generate());
 		dlFileEntryModel.setFileEntryId(_counter.get());
-		dlFileEntryModel.setGroupId(dlFolerModel.getGroupId());
+		dlFileEntryModel.setGroupId(dlFolderModel.getGroupId());
 		dlFileEntryModel.setCompanyId(_companyId);
 		dlFileEntryModel.setUserId(_sampleUserId);
 		dlFileEntryModel.setUserName(_SAMPLE_USER_NAME);
 		dlFileEntryModel.setCreateDate(nextFutureDate());
 		dlFileEntryModel.setModifiedDate(nextFutureDate());
-		dlFileEntryModel.setRepositoryId(dlFolerModel.getRepositoryId());
-		dlFileEntryModel.setFolderId(dlFolerModel.getFolderId());
+		dlFileEntryModel.setRepositoryId(dlFolderModel.getRepositoryId());
+		dlFileEntryModel.setFolderId(dlFolderModel.getFolderId());
 		dlFileEntryModel.setName("TestFile" + index);
 		dlFileEntryModel.setFileName("TestFile" + index + ".txt");
 		dlFileEntryModel.setExtension("txt");

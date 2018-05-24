@@ -7,15 +7,16 @@ import utils from 'senna/src/utils/utils';
 /**
  * ActionURLScreen
  *
- * This class inherits from EventScreen. It's the screen used for all
+ * Inherits from {@link EventScreen|EventScreen}. The screen used for all
  * requests made to ActionURLs.
- * @review
  */
+
 class ActionURLScreen extends EventScreen {
+
 	/**
 	 * @inheritDoc
-	 * @review
 	 */
+
 	constructor() {
 		super();
 
@@ -24,13 +25,15 @@ class ActionURLScreen extends EventScreen {
 
 	/**
 	 * @inheritDoc
-	 * When an action request (form submission) redirects, we make
-	 * sure that the final url has the lifecycle RENDER (p_p_lifecycle=0).
+	 * Ensures that an action request (form submission) redirect's final
+	 * URL has the lifecycle RENDER `p_p_lifecycle=0`
 	 * @return {!String} The request path
-	 * @review
 	 */
+
 	getRequestPath() {
-		var request = this.getRequest();
+		let requestPath = null;
+
+		let request = this.getRequest();
 
 		if (request) {
 			let uri = new Uri(super.getRequestPath());
@@ -39,10 +42,10 @@ class ActionURLScreen extends EventScreen {
 				uri.setParameterValue('p_p_lifecycle', '0');
 			}
 
-			return utils.getUrlPath(uri.toString());
+			requestPath = utils.getUrlPath(uri.toString());
 		}
 
-		return null;
+		return requestPath;
 	}
 }
 

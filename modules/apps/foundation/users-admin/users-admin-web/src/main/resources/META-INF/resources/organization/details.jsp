@@ -23,8 +23,6 @@ Organization organization = OrganizationServiceUtil.fetchOrganization(organizati
 
 long parentOrganizationId = ParamUtil.getLong(request, "parentOrganizationSearchContainerPrimaryKeys", (organization != null) ? organization.getParentOrganizationId() : OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID);
 
-String parentOrganizationName = ParamUtil.getString(request, "parentOrganizationName");
-
 if (parentOrganizationId <= 0) {
 	parentOrganizationId = OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID;
 
@@ -49,7 +47,9 @@ if (organization != null) {
 User selUser = (User)request.getAttribute("user.selUser");
 %>
 
-<liferay-util:buffer var="removeOrganizationIcon">
+<liferay-util:buffer
+	var="removeOrganizationIcon"
+>
 	<liferay-ui:icon
 		iconCssClass="icon-remove"
 		label="<%= true %>"
@@ -57,7 +57,10 @@ User selUser = (User)request.getAttribute("user.selUser");
 	/>
 </liferay-util:buffer>
 
-<liferay-ui:error-marker key="<%= WebKeys.ERROR_SECTION %>" value="details" />
+<liferay-ui:error-marker
+	key="<%= WebKeys.ERROR_SECTION %>"
+	value="details"
+/>
 
 <aui:model-context bean="<%= organization %>" model="<%= Organization.class %>" />
 
@@ -160,8 +163,6 @@ if ((organization == null) && (parentOrganizationId == OrganizationConstants.DEF
 if (parentOrganizationId != OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID) {
 	try {
 		parentOrganization = OrganizationLocalServiceUtil.getOrganization(parentOrganizationId);
-
-		parentOrganizationName = parentOrganization.getName();
 	}
 	catch (NoSuchOrganizationException nsoe) {
 	}
@@ -218,7 +219,10 @@ if (parentOrganization != null) {
 		</liferay-ui:search-container-column-text>
 	</liferay-ui:search-container-row>
 
-	<liferay-ui:search-iterator markupView="lexicon" paginate="<%= false %>" />
+	<liferay-ui:search-iterator
+		markupView="lexicon"
+		paginate="<%= false %>"
+	/>
 </liferay-ui:search-container>
 
 <liferay-ui:icon

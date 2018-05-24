@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
-import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -72,6 +71,20 @@ public abstract class BaseWorkflowDefinitionMVCActionCommand
 		}
 	}
 
+	protected void addDefaultTitle(Map<Locale, String> titleMap) {
+		Locale defaultLocale = LocaleUtil.getDefault();
+
+		if (Validator.isNull(titleMap.get(defaultLocale))) {
+			ResourceBundle resourceBundle =
+				resourceBundleLoader.loadResourceBundle(defaultLocale);
+
+			String defaultTitle = LanguageUtil.get(
+				resourceBundle, "untitled-workflow");
+
+			titleMap.put(defaultLocale, defaultTitle);
+		}
+	}
+
 	@Override
 	protected void addSuccessMessage(
 		ActionRequest actionRequest, ActionResponse actionResponse) {
@@ -107,6 +120,8 @@ public abstract class BaseWorkflowDefinitionMVCActionCommand
 			return null;
 		}
 
+		addDefaultTitle(titleMap);
+
 		String value = StringPool.BLANK;
 
 		for (Locale locale : LanguageUtil.getAvailableLocales()) {
@@ -135,9 +150,6 @@ public abstract class BaseWorkflowDefinitionMVCActionCommand
 
 		this.resourceBundleLoader = resourceBundleLoader;
 	}
-
-	@Reference
-	protected Portal portal;
 
 	protected ResourceBundleLoader resourceBundleLoader;
 

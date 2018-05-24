@@ -22,7 +22,13 @@ ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_
 DLFileEntryType fileEntryType = (DLFileEntryType)row.getObject();
 %>
 
-<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+<liferay-ui:icon-menu
+	direction="left-side"
+	icon="<%= StringPool.BLANK %>"
+	markupView="lexicon"
+	message="<%= StringPool.BLANK %>"
+	showWhenSingleIcon="<%= true %>"
+>
 	<c:if test="<%= DLFileEntryTypePermission.contains(permissionChecker, fileEntryType, ActionKeys.UPDATE) %>">
 		<portlet:renderURL var="editURL">
 			<portlet:param name="mvcRenderCommandName" value="/document_library/edit_file_entry_type" />
@@ -60,6 +66,16 @@ DLFileEntryType fileEntryType = (DLFileEntryType)row.getObject();
 			<portlet:param name="fileEntryTypeId" value="<%= String.valueOf(fileEntryType.getFileEntryTypeId()) %>" />
 		</portlet:actionURL>
 
-		<liferay-ui:icon-delete url="<%= deleteURL %>" />
+		<liferay-ui:icon-delete
+			url="<%= deleteURL %>"
+		/>
+	</c:if>
+
+	<c:if test="<%= portletName.equals(DLPortletKeys.DOCUMENT_LIBRARY_ADMIN) %>">
+		<liferay-export-import-changeset:publish-entity-menu-item
+			className="<%= DLFileEntryType.class.getName() %>"
+			groupId="<%= fileEntryType.getGroupId() %>"
+			uuid="<%= fileEntryType.getUuid() %>"
+		/>
 	</c:if>
 </liferay-ui:icon-menu>

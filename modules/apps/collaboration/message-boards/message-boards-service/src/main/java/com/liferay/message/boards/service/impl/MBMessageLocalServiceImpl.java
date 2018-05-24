@@ -26,6 +26,7 @@ import com.liferay.message.boards.exception.MessageBodyException;
 import com.liferay.message.boards.exception.MessageSubjectException;
 import com.liferay.message.boards.exception.NoSuchThreadException;
 import com.liferay.message.boards.exception.RequiredMessageException;
+import com.liferay.message.boards.internal.util.MBDiscussionSubcriptionSender;
 import com.liferay.message.boards.internal.util.MBMailUtil;
 import com.liferay.message.boards.internal.util.MBSubscriptionSender;
 import com.liferay.message.boards.internal.util.MBUtil;
@@ -129,6 +130,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
@@ -320,6 +322,7 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			message.setPriority(priority);
 		}
 
+		message.setSubject(subject);
 		message.setAllowPingbacks(allowPingbacks);
 		message.setStatus(WorkflowConstants.STATUS_DRAFT);
 		message.setStatusByUserId(user.getUserId());
@@ -371,7 +374,6 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 		message.setThreadId(thread.getThreadId());
 		message.setRootMessageId(thread.getRootMessageId());
 		message.setParentMessageId(parentMessageId);
-		message.setSubject(subject);
 		message.setBody(body);
 		message.setFormat(format);
 		message.setAnonymous(anonymous);
@@ -1030,6 +1032,7 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 
 			try {
 				String subject = String.valueOf(classPK);
+
 				//String body = subject;
 
 				message = addDiscussionMessage(
@@ -1626,6 +1629,7 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 		MBMessage message = mbMessagePersistence.findByPrimaryKey(messageId);
 
 		int oldStatus = message.getStatus();
+		String oldSubject = message.getSubject();
 
 		Date modifiedDate = serviceContext.getModifiedDate(null);
 		subject = ModelHintsUtil.trimString(
@@ -1760,6 +1764,12 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			mbThreadLocalService.updateMBThread(thread);
 
 			updatePriorities(thread.getThreadId(), priority);
+		}
+
+		if (message.isRoot() && !Objects.equals(subject, oldSubject)) {
+			thread.setTitle(subject);
+
+			mbThreadLocalService.updateMBThread(thread);
 		}
 
 		// Asset
@@ -1962,7 +1972,7 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 
 	protected String getBody(String subject, String body) {
 		if (Validator.isNull(body)) {
-			return subject;
+			return HtmlUtil.escape(subject);
 		}
 
 		return body;
@@ -2154,13 +2164,6 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			long userId, MBMessage message, ServiceContext serviceContext)
 		throws PortalException {
 
-		if (!PrefsPropsUtil.getBoolean(
-				message.getCompanyId(),
-				PropsKeys.DISCUSSION_EMAIL_COMMENTS_ADDED_ENABLED)) {
-
-			return;
-		}
-
 		MBDiscussion mbDiscussion =
 			mbDiscussionLocalService.getThreadDiscussion(message.getThreadId());
 
@@ -2190,7 +2193,8 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 		String body = PrefsPropsUtil.getContent(
 			message.getCompanyId(), PropsKeys.DISCUSSION_EMAIL_BODY);
 
-		SubscriptionSender subscriptionSender = new SubscriptionSender();
+		SubscriptionSender subscriptionSender =
+			new MBDiscussionSubcriptionSender();
 
 		subscriptionSender.setBody(body);
 		subscriptionSender.setCompanyId(message.getCompanyId());
@@ -2649,7 +2653,7 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 		Group group, Locale locale) {
 
 		try {
-			return LanguageUtil.get(locale, "message-boards-home") + " - " +
+			return LanguageUtil.get(locale, "home") + " - " +
 				group.getDescriptiveName(locale);
 		}
 		catch (PortalException pe) {
@@ -2658,7 +2662,7 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 					group.getGroupId(),
 				pe);
 
-			return LanguageUtil.get(locale, "message-boards-home");
+			return LanguageUtil.get(locale, "home");
 		}
 	}
 

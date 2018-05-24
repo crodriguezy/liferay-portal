@@ -22,8 +22,10 @@ import static com.liferay.apio.architect.operation.Method.PUT;
 
 import static javax.ws.rs.core.Response.noContent;
 
+import com.liferay.apio.architect.consumer.throwable.ThrowableConsumer;
 import com.liferay.apio.architect.endpoint.PageEndpoint;
-import com.liferay.apio.architect.function.ThrowableFunction;
+import com.liferay.apio.architect.form.Body;
+import com.liferay.apio.architect.function.throwable.ThrowableFunction;
 import com.liferay.apio.architect.functional.Try;
 import com.liferay.apio.architect.identifier.Identifier;
 import com.liferay.apio.architect.pagination.Page;
@@ -35,7 +37,6 @@ import com.liferay.apio.architect.routes.NestedCollectionRoutes;
 import com.liferay.apio.architect.single.model.SingleModel;
 import com.liferay.apio.architect.uri.Path;
 
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
@@ -74,7 +75,7 @@ public class PageEndpointImpl<T, S> implements PageEndpoint<T> {
 	}
 
 	@Override
-	public Try<SingleModel<T>> addCollectionItem(Map<String, Object> body) {
+	public Try<SingleModel<T>> addCollectionItem(Body body) {
 		Try<CollectionRoutes<T>> collectionRoutesTry = Try.fromOptional(
 			_collectionRoutesSupplier::get, notFound(_name));
 
@@ -83,14 +84,14 @@ public class PageEndpointImpl<T, S> implements PageEndpoint<T> {
 			notAllowed(POST, _name)
 		).map(
 			function -> function.apply(_httpServletRequest)
-		).map(
+		).flatMap(
 			function -> function.apply(body)
 		);
 	}
 
 	@Override
 	public Try<SingleModel<T>> addNestedCollectionItem(
-		String id, String nestedName, Map<String, Object> body) {
+		String id, String nestedName, Body body) {
 
 		Try<NestedCollectionRoutes<T, Object>> nestedCollectionRoutesTry =
 			Try.fromOptional(
@@ -106,7 +107,7 @@ public class PageEndpointImpl<T, S> implements PageEndpoint<T> {
 
 				return singleModelTry.mapOptional(
 					_getIdentifierFunction(nestedName)
-				).map(
+				).flatMap(
 					identifier -> function.apply(
 						_httpServletRequest
 					).apply(
@@ -123,19 +124,19 @@ public class PageEndpointImpl<T, S> implements PageEndpoint<T> {
 	}
 
 	@Override
-	public Response deleteCollectionItem(String id) {
+	public Response deleteCollectionItem(String id) throws Exception {
 		Try<ItemRoutes<T, S>> itemRoutesTry = Try.fromOptional(
 			_itemRoutesSupplier::get, notFound(_name));
 
-		itemRoutesTry.mapOptional(
+		ThrowableConsumer<S> throwableConsumer = itemRoutesTry.mapOptional(
 			ItemRoutes::getDeleteConsumerOptional, notAllowed(DELETE, _name, id)
-		).ifSuccess(
-			function -> function.apply(
-				_httpServletRequest
-			).accept(
-				_identifierFunction.apply(new Path(_name, id))
-			)
-		);
+		).map(
+			function -> function.apply(_httpServletRequest)
+		).getUnchecked();
+
+		Path path = new Path(_name, id);
+
+		throwableConsumer.accept(_identifierFunction.apply(path));
 
 		return noContent().build();
 	}
@@ -152,7 +153,7 @@ public class PageEndpointImpl<T, S> implements PageEndpoint<T> {
 
 		return collectionRoutesTry.mapOptional(
 			CollectionRoutes::getGetPageFunctionOptional, notFound(_name)
-		).map(
+		).flatMap(
 			function -> function.apply(_httpServletRequest)
 		);
 	}
@@ -185,7 +186,7 @@ public class PageEndpointImpl<T, S> implements PageEndpoint<T> {
 					optional -> optional.map(pageFunction)
 				);
 			}
-		).map(
+		).flatMap(
 			Optional::get
 		).mapFailMatching(
 			NoSuchElementException.class, notFound(id, nestedName)
@@ -193,16 +194,14 @@ public class PageEndpointImpl<T, S> implements PageEndpoint<T> {
 	}
 
 	@Override
-	public Try<SingleModel<T>> updateCollectionItem(
-		String id, Map<String, Object> body) {
-
+	public Try<SingleModel<T>> updateCollectionItem(String id, Body body) {
 		Try<ItemRoutes<T, S>> itemRoutesTry = Try.fromOptional(
 			_itemRoutesSupplier::get, notFound(_name, id));
 
 		return itemRoutesTry.mapOptional(
 			ItemRoutes::getUpdateItemFunctionOptional,
 			notAllowed(PUT, _name, id)
-		).map(
+		).flatMap(
 			function -> function.apply(
 				_httpServletRequest
 			).compose(
@@ -224,10 +223,9 @@ public class PageEndpointImpl<T, S> implements PageEndpoint<T> {
 
 			String className = relatedIdentifierClass.getName();
 
-			Optional<Class<Identifier>> optional =
-				_identifierClassFunction.apply(nestedName);
-
-			return optional.map(
+			return _identifierClassFunction.apply(
+				nestedName
+			).map(
 				Class::getName
 			).map(
 				className::equals
@@ -240,22 +238,19 @@ public class PageEndpointImpl<T, S> implements PageEndpoint<T> {
 	private ThrowableFunction<SingleModel<T>, Optional<Object>>
 		_getIdentifierFunction(String nestedName) {
 
-		return parentSingleModel -> {
-			Optional<Representor<T, Object>> optional =
-				_representorSupplier.get();
+		Optional<Representor<T, Object>> optional = _representorSupplier.get();
 
-			return optional.map(
-				Representor::getRelatedCollections
-			).filter(
-				stream -> stream.anyMatch(
-					_getFilterRelatedCollectionPredicate(nestedName))
-			).flatMap(
-				__ -> _representorSupplier.get()
-			).map(
-				representor -> representor.getIdentifier(
-					parentSingleModel.getModel())
-			);
-		};
+		return parentSingleModel -> optional.map(
+			Representor::getRelatedCollections
+		).filter(
+			stream -> stream.anyMatch(
+				_getFilterRelatedCollectionPredicate(nestedName))
+		).flatMap(
+			__ -> _representorSupplier.get()
+		).map(
+			representor -> representor.getIdentifier(
+				parentSingleModel.getModel())
+		);
 	}
 
 	private final Supplier<Optional<CollectionRoutes<T>>>
