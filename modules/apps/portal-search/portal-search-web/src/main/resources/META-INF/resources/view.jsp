@@ -34,8 +34,6 @@ pageContext.setAttribute("portletURL", portletURL);
 <aui:form action="<%= portletURL %>" method="get" name="fm" onSubmit='<%= renderResponse.getNamespace() + "search(); event.preventDefault();" %>'>
 	<liferay-portlet:renderURLParams varImpl="portletURL" />
 
-	<button type="submit" style="display:none"></button>
-
 	<aui:fieldset>
 		<aui:input cssClass="search-input search-portlet-keywords-input" inlineField="<%= true %>" label="" name="keywords" placeholder="search" size="30" title="search" type="text" value="<%= HtmlUtil.escapeAttribute(searchDisplayContext.getKeywords()) %>" />
 
@@ -64,7 +62,9 @@ pageContext.setAttribute("portletURL", portletURL);
 		</c:choose>
 
 		<aui:field-wrapper inlineField="<%= true %>">
-			<aui:button type="submit" icon="search" cssClass="icon-monospaced" onClick='<%= renderResponse.getNamespace() + "search(event);" %>'/>
+			<button class="btn btn-unstyled text-light" onclick='<%= renderResponse.getNamespace() + "search(event);" %>' type="submit">
+				<liferay-ui:icon cssClass="icon-monospaced" icon="search" markupView="lexicon" />
+			</button>
 		</aui:field-wrapper>
 	</aui:fieldset>
 
