@@ -30,6 +30,12 @@ public int countBy${entityFinder.name}(
 			FINDER_PATH_WITH_PAGINATION_COUNT_BY_${entityFinder.name?upper_case};
 		</#if>
 
+	<#list entityColumns as entityColumn>
+		<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+			${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
+		</#if>
+	</#list>
+
 	Object[] finderArgs = new Object[] {
 		<#list entityColumns as entityColumn>
 			<#if stringUtil.equals(entityColumn.type, "Date")>
@@ -121,12 +127,18 @@ public int countBy${entityFinder.name}(
 							ArrayUtil.unique(${entityColumn.names});
 						</#if>
 
-					<#if stringUtil.equals(entityColumn.type, "String")>
+					<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+						ArrayUtil.apply(${entityColumn.names}, StringUtil.NULL_TO_EMPTY);
+					</#if>
+
+					<#if stringUtil.equals(entityColumn.type, "String") && !entityColumn.isConvertNull()>
 						Arrays.sort(${entityColumn.names}, NULL_SAFE_STRING_COMPARATOR);
 					<#else>
 						Arrays.sort(${entityColumn.names});
 					</#if>
 				}
+			<#elseif stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+				${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
 			</#if>
 		</#list>
 
@@ -226,12 +238,18 @@ public int countBy${entityFinder.name}(
 							ArrayUtil.unique(${entityColumn.names});
 						</#if>
 
-					<#if stringUtil.equals(entityColumn.type, "String")>
+					<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+						ArrayUtil.apply(${entityColumn.names}, StringUtil.NULL_TO_EMPTY);
+					</#if>
+
+					<#if stringUtil.equals(entityColumn.type, "String") && !entityColumn.isConvertNull()>
 						Arrays.sort(${entityColumn.names}, NULL_SAFE_STRING_COMPARATOR);
 					<#else>
 						Arrays.sort(${entityColumn.names});
 					</#if>
 				}
+			<#elseif stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+				${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
 			</#if>
 		</#list>
 
