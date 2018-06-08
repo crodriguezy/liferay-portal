@@ -31,7 +31,9 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 /**
@@ -44,6 +46,9 @@ import java.util.regex.Pattern;
  * @author Hugo Huijser
  */
 public class StringUtil {
+
+	public static final Function<String, String> NULL_TO_EMPTY =
+		value -> Objects.toString(value, StringPool.BLANK);
 
 	/**
 	 * Adds string <code>add</code> to string <code>s</code> resulting in a

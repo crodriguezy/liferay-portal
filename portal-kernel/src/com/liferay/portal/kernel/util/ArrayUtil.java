@@ -35,6 +35,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Function;
 
 /**
  * @author Brian Wing Shun Chan
@@ -353,6 +354,14 @@ public class ArrayUtil {
 		System.arraycopy(array2, 0, newArray, array1.length, array2.length);
 
 		return newArray;
+	}
+
+	public static <T> T[] apply(T[] array, Function<T, T> function) {
+		for (int i = 0; i < array.length; i++) {
+			array[i] = function.apply(array[i]);
+		}
+
+		return array;
 	}
 
 	public static boolean[] clone(boolean[] array) {
