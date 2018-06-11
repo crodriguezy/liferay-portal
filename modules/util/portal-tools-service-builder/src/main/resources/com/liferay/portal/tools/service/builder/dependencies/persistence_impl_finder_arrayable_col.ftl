@@ -3,15 +3,20 @@
 <#if entityColumn_has_next || (entityFinder.where?? && validator.isNotNull(entityFinder.getWhere()))>
 	<#assign hasConjunction = true />
 </#if>
-
-if (${entityColumn.name} == null) {
-	<#if hasConjunction>
-		query.append(_FINDER_COLUMN_${entityFinder.name?upper_case}_${entityColumn.name?upper_case}_4${finderFieldSuffix});
-	<#else>
-		query.append(_FINDER_COLUMN_${entityFinder.name?upper_case}_${entityColumn.name?upper_case}_1${finderFieldSuffix});
-	</#if>
-}
-else if (${entityColumn.name}.equals("")) {
+<#if !(stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull())>
+	if (${entityColumn.name} == null) {
+		<#if hasConjunction>
+			query.append(_FINDER_COLUMN_${entityFinder.name?upper_case}_${entityColumn.name?upper_case}_4${finderFieldSuffix});
+		<#else>
+			query.append(_FINDER_COLUMN_${entityFinder.name?upper_case}_${entityColumn.name?upper_case}_1${finderFieldSuffix});
+		</#if>
+	}
+</#if>
+<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+	if (${entityColumn.name}.equals("")) {
+<#else>
+	else if (${entityColumn.name}.equals("")) {
+</#if>
 	<#if hasConjunction>
 		query.append(_FINDER_COLUMN_${entityFinder.name?upper_case}_${entityColumn.name?upper_case}_6${finderFieldSuffix});
 	<#else>
