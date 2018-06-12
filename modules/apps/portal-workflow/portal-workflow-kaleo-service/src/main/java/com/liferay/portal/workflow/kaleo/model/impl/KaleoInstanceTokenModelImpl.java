@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoInstanceToken service. Represents a row in the &quot;KaleoInstanceToken&quot; database table, with each column mapped to a property of this class.
@@ -362,17 +363,12 @@ public class KaleoInstanceTokenModelImpl extends BaseModelImpl<KaleoInstanceToke
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -479,32 +475,22 @@ public class KaleoInstanceTokenModelImpl extends BaseModelImpl<KaleoInstanceToke
 
 	@Override
 	public String getCurrentKaleoNodeName() {
-		if (_currentKaleoNodeName == null) {
-			return "";
-		}
-		else {
-			return _currentKaleoNodeName;
-		}
+		return _currentKaleoNodeName;
 	}
 
 	@Override
 	public void setCurrentKaleoNodeName(String currentKaleoNodeName) {
-		_currentKaleoNodeName = currentKaleoNodeName;
+		_currentKaleoNodeName = Objects.toString(currentKaleoNodeName, "");
 	}
 
 	@Override
 	public String getClassName() {
-		if (_className == null) {
-			return "";
-		}
-		else {
-			return _className;
-		}
+		return _className;
 	}
 
 	@Override
 	public void setClassName(String className) {
-		_className = className;
+		_className = Objects.toString(className, "");
 	}
 
 	@Override

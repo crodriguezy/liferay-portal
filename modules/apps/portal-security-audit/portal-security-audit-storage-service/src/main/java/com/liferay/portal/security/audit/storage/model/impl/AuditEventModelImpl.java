@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the AuditEvent service. Represents a row in the &quot;Audit_AuditEvent&quot; database table, with each column mapped to a property of this class.
@@ -396,17 +397,12 @@ public class AuditEventModelImpl extends BaseModelImpl<AuditEvent>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -425,113 +421,78 @@ public class AuditEventModelImpl extends BaseModelImpl<AuditEvent>
 	@JSON
 	@Override
 	public String getEventType() {
-		if (_eventType == null) {
-			return "";
-		}
-		else {
-			return _eventType;
-		}
+		return _eventType;
 	}
 
 	@Override
 	public void setEventType(String eventType) {
-		_eventType = eventType;
+		_eventType = Objects.toString(eventType, "");
 	}
 
 	@JSON
 	@Override
 	public String getClassName() {
-		if (_className == null) {
-			return "";
-		}
-		else {
-			return _className;
-		}
+		return _className;
 	}
 
 	@Override
 	public void setClassName(String className) {
-		_className = className;
+		_className = Objects.toString(className, "");
 	}
 
 	@JSON
 	@Override
 	public String getClassPK() {
-		if (_classPK == null) {
-			return "";
-		}
-		else {
-			return _classPK;
-		}
+		return _classPK;
 	}
 
 	@Override
 	public void setClassPK(String classPK) {
-		_classPK = classPK;
+		_classPK = Objects.toString(classPK, "");
 	}
 
 	@JSON
 	@Override
 	public String getMessage() {
-		if (_message == null) {
-			return "";
-		}
-		else {
-			return _message;
-		}
+		return _message;
 	}
 
 	@Override
 	public void setMessage(String message) {
-		_message = message;
+		_message = Objects.toString(message, "");
 	}
 
 	@JSON
 	@Override
 	public String getClientHost() {
-		if (_clientHost == null) {
-			return "";
-		}
-		else {
-			return _clientHost;
-		}
+		return _clientHost;
 	}
 
 	@Override
 	public void setClientHost(String clientHost) {
-		_clientHost = clientHost;
+		_clientHost = Objects.toString(clientHost, "");
 	}
 
 	@JSON
 	@Override
 	public String getClientIP() {
-		if (_clientIP == null) {
-			return "";
-		}
-		else {
-			return _clientIP;
-		}
+		return _clientIP;
 	}
 
 	@Override
 	public void setClientIP(String clientIP) {
-		_clientIP = clientIP;
+		_clientIP = Objects.toString(clientIP, "");
 	}
 
 	@JSON
 	@Override
 	public String getServerName() {
-		if (_serverName == null) {
-			return "";
-		}
-		else {
-			return _serverName;
-		}
+		return _serverName;
 	}
 
 	@Override
 	public void setServerName(String serverName) {
-		_serverName = serverName;
+		_serverName = Objects.toString(serverName, "");
 	}
 
 	@JSON
@@ -548,33 +509,23 @@ public class AuditEventModelImpl extends BaseModelImpl<AuditEvent>
 	@JSON
 	@Override
 	public String getSessionID() {
-		if (_sessionID == null) {
-			return "";
-		}
-		else {
-			return _sessionID;
-		}
+		return _sessionID;
 	}
 
 	@Override
 	public void setSessionID(String sessionID) {
-		_sessionID = sessionID;
+		_sessionID = Objects.toString(sessionID, "");
 	}
 
 	@JSON
 	@Override
 	public String getAdditionalInfo() {
-		if (_additionalInfo == null) {
-			return "";
-		}
-		else {
-			return _additionalInfo;
-		}
+		return _additionalInfo;
 	}
 
 	@Override
 	public void setAdditionalInfo(String additionalInfo) {
-		_additionalInfo = additionalInfo;
+		_additionalInfo = Objects.toString(additionalInfo, "");
 	}
 
 	public long getColumnBitmask() {

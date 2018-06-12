@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the CalendarNotificationTemplate service. Represents a row in the &quot;CalendarNotificationTemplate&quot; database table, with each column mapped to a property of this class.
@@ -349,12 +350,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -363,7 +359,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -458,17 +454,12 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -525,12 +516,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getNotificationType() {
-		if (_notificationType == null) {
-			return "";
-		}
-		else {
-			return _notificationType;
-		}
+		return _notificationType;
 	}
 
 	@Override
@@ -541,7 +527,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 			_originalNotificationType = _notificationType;
 		}
 
-		_notificationType = notificationType;
+		_notificationType = Objects.toString(notificationType, "");
 	}
 
 	public String getOriginalNotificationType() {
@@ -551,28 +537,19 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getNotificationTypeSettings() {
-		if (_notificationTypeSettings == null) {
-			return "";
-		}
-		else {
-			return _notificationTypeSettings;
-		}
+		return _notificationTypeSettings;
 	}
 
 	@Override
 	public void setNotificationTypeSettings(String notificationTypeSettings) {
-		_notificationTypeSettings = notificationTypeSettings;
+		_notificationTypeSettings = Objects.toString(notificationTypeSettings,
+				"");
 	}
 
 	@JSON
 	@Override
 	public String getNotificationTemplateType() {
-		if (_notificationTemplateType == null) {
-			return "";
-		}
-		else {
-			return _notificationTemplateType;
-		}
+		return _notificationTemplateType;
 	}
 
 	@Override
@@ -583,7 +560,8 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 			_originalNotificationTemplateType = _notificationTemplateType;
 		}
 
-		_notificationTemplateType = notificationTemplateType;
+		_notificationTemplateType = Objects.toString(notificationTemplateType,
+				"");
 	}
 
 	public String getOriginalNotificationTemplateType() {
@@ -593,33 +571,23 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@JSON
 	@Override
 	public String getSubject() {
-		if (_subject == null) {
-			return "";
-		}
-		else {
-			return _subject;
-		}
+		return _subject;
 	}
 
 	@Override
 	public void setSubject(String subject) {
-		_subject = subject;
+		_subject = Objects.toString(subject, "");
 	}
 
 	@JSON
 	@Override
 	public String getBody() {
-		if (_body == null) {
-			return "";
-		}
-		else {
-			return _body;
-		}
+		return _body;
 	}
 
 	@Override
 	public void setBody(String body) {
-		_body = body;
+		_body = Objects.toString(body, "");
 	}
 
 	@JSON

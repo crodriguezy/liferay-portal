@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SyncDevice service. Represents a row in the &quot;SyncDevice&quot; database table, with each column mapped to a property of this class.
@@ -311,12 +312,7 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -325,7 +321,7 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -408,12 +404,7 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
@@ -424,7 +415,7 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 			_originalUserName = _userName;
 		}
 
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	public String getOriginalUserName() {
@@ -462,17 +453,12 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 	@JSON
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return _type;
 	}
 
 	@Override
 	public void setType(String type) {
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	@JSON
@@ -500,17 +486,12 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 	@JSON
 	@Override
 	public String getHostname() {
-		if (_hostname == null) {
-			return "";
-		}
-		else {
-			return _hostname;
-		}
+		return _hostname;
 	}
 
 	@Override
 	public void setHostname(String hostname) {
-		_hostname = hostname;
+		_hostname = Objects.toString(hostname, "");
 	}
 
 	@JSON

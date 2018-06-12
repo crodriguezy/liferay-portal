@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoAction service. Represents a row in the &quot;KaleoAction&quot; database table, with each column mapped to a property of this class.
@@ -376,17 +377,12 @@ public class KaleoActionModelImpl extends BaseModelImpl<KaleoAction>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -417,12 +413,7 @@ public class KaleoActionModelImpl extends BaseModelImpl<KaleoAction>
 
 	@Override
 	public String getKaleoClassName() {
-		if (_kaleoClassName == null) {
-			return "";
-		}
-		else {
-			return _kaleoClassName;
-		}
+		return _kaleoClassName;
 	}
 
 	@Override
@@ -433,7 +424,7 @@ public class KaleoActionModelImpl extends BaseModelImpl<KaleoAction>
 			_originalKaleoClassName = _kaleoClassName;
 		}
 
-		_kaleoClassName = kaleoClassName;
+		_kaleoClassName = Objects.toString(kaleoClassName, "");
 	}
 
 	public String getOriginalKaleoClassName() {
@@ -486,57 +477,37 @@ public class KaleoActionModelImpl extends BaseModelImpl<KaleoAction>
 
 	@Override
 	public String getKaleoNodeName() {
-		if (_kaleoNodeName == null) {
-			return "";
-		}
-		else {
-			return _kaleoNodeName;
-		}
+		return _kaleoNodeName;
 	}
 
 	@Override
 	public void setKaleoNodeName(String kaleoNodeName) {
-		_kaleoNodeName = kaleoNodeName;
+		_kaleoNodeName = Objects.toString(kaleoNodeName, "");
 	}
 
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
 	public String getExecutionType() {
-		if (_executionType == null) {
-			return "";
-		}
-		else {
-			return _executionType;
-		}
+		return _executionType;
 	}
 
 	@Override
@@ -547,7 +518,7 @@ public class KaleoActionModelImpl extends BaseModelImpl<KaleoAction>
 			_originalExecutionType = _executionType;
 		}
 
-		_executionType = executionType;
+		_executionType = Objects.toString(executionType, "");
 	}
 
 	public String getOriginalExecutionType() {
@@ -556,47 +527,32 @@ public class KaleoActionModelImpl extends BaseModelImpl<KaleoAction>
 
 	@Override
 	public String getScript() {
-		if (_script == null) {
-			return "";
-		}
-		else {
-			return _script;
-		}
+		return _script;
 	}
 
 	@Override
 	public void setScript(String script) {
-		_script = script;
+		_script = Objects.toString(script, "");
 	}
 
 	@Override
 	public String getScriptLanguage() {
-		if (_scriptLanguage == null) {
-			return "";
-		}
-		else {
-			return _scriptLanguage;
-		}
+		return _scriptLanguage;
 	}
 
 	@Override
 	public void setScriptLanguage(String scriptLanguage) {
-		_scriptLanguage = scriptLanguage;
+		_scriptLanguage = Objects.toString(scriptLanguage, "");
 	}
 
 	@Override
 	public String getScriptRequiredContexts() {
-		if (_scriptRequiredContexts == null) {
-			return "";
-		}
-		else {
-			return _scriptRequiredContexts;
-		}
+		return _scriptRequiredContexts;
 	}
 
 	@Override
 	public void setScriptRequiredContexts(String scriptRequiredContexts) {
-		_scriptRequiredContexts = scriptRequiredContexts;
+		_scriptRequiredContexts = Objects.toString(scriptRequiredContexts, "");
 	}
 
 	@Override

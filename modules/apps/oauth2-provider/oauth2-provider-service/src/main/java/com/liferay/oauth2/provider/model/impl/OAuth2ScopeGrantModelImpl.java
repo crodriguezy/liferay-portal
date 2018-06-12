@@ -37,6 +37,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the OAuth2ScopeGrant service. Represents a row in the &quot;OAuth2ScopeGrant&quot; database table, with each column mapped to a property of this class.
@@ -263,12 +264,7 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 
 	@Override
 	public String getApplicationName() {
-		if (_applicationName == null) {
-			return "";
-		}
-		else {
-			return _applicationName;
-		}
+		return _applicationName;
 	}
 
 	@Override
@@ -279,7 +275,7 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 			_originalApplicationName = _applicationName;
 		}
 
-		_applicationName = applicationName;
+		_applicationName = Objects.toString(applicationName, "");
 	}
 
 	public String getOriginalApplicationName() {
@@ -288,12 +284,7 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 
 	@Override
 	public String getBundleSymbolicName() {
-		if (_bundleSymbolicName == null) {
-			return "";
-		}
-		else {
-			return _bundleSymbolicName;
-		}
+		return _bundleSymbolicName;
 	}
 
 	@Override
@@ -304,7 +295,7 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 			_originalBundleSymbolicName = _bundleSymbolicName;
 		}
 
-		_bundleSymbolicName = bundleSymbolicName;
+		_bundleSymbolicName = Objects.toString(bundleSymbolicName, "");
 	}
 
 	public String getOriginalBundleSymbolicName() {
@@ -313,12 +304,7 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 
 	@Override
 	public String getScope() {
-		if (_scope == null) {
-			return "";
-		}
-		else {
-			return _scope;
-		}
+		return _scope;
 	}
 
 	@Override
@@ -329,7 +315,7 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 			_originalScope = _scope;
 		}
 
-		_scope = scope;
+		_scope = Objects.toString(scope, "");
 	}
 
 	public String getOriginalScope() {

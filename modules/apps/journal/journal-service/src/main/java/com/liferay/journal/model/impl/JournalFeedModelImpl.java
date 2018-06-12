@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the JournalFeed service. Represents a row in the &quot;JournalFeed&quot; database table, with each column mapped to a property of this class.
@@ -422,12 +423,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -436,7 +432,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -530,17 +526,12 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -574,12 +565,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getFeedId() {
-		if (_feedId == null) {
-			return "";
-		}
-		else {
-			return _feedId;
-		}
+		return _feedId;
 	}
 
 	@Override
@@ -590,7 +576,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 			_originalFeedId = _feedId;
 		}
 
-		_feedId = feedId;
+		_feedId = Objects.toString(feedId, "");
 	}
 
 	public String getOriginalFeedId() {
@@ -600,81 +586,56 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
 	@Override
 	public String getDDMStructureKey() {
-		if (_DDMStructureKey == null) {
-			return "";
-		}
-		else {
-			return _DDMStructureKey;
-		}
+		return _DDMStructureKey;
 	}
 
 	@Override
 	public void setDDMStructureKey(String DDMStructureKey) {
-		_DDMStructureKey = DDMStructureKey;
+		_DDMStructureKey = Objects.toString(DDMStructureKey, "");
 	}
 
 	@JSON
 	@Override
 	public String getDDMTemplateKey() {
-		if (_DDMTemplateKey == null) {
-			return "";
-		}
-		else {
-			return _DDMTemplateKey;
-		}
+		return _DDMTemplateKey;
 	}
 
 	@Override
 	public void setDDMTemplateKey(String DDMTemplateKey) {
-		_DDMTemplateKey = DDMTemplateKey;
+		_DDMTemplateKey = Objects.toString(DDMTemplateKey, "");
 	}
 
 	@JSON
 	@Override
 	public String getDDMRendererTemplateKey() {
-		if (_DDMRendererTemplateKey == null) {
-			return "";
-		}
-		else {
-			return _DDMRendererTemplateKey;
-		}
+		return _DDMRendererTemplateKey;
 	}
 
 	@Override
 	public void setDDMRendererTemplateKey(String DDMRendererTemplateKey) {
-		_DDMRendererTemplateKey = DDMRendererTemplateKey;
+		_DDMRendererTemplateKey = Objects.toString(DDMRendererTemplateKey, "");
 	}
 
 	@JSON
@@ -691,97 +652,67 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@JSON
 	@Override
 	public String getOrderByCol() {
-		if (_orderByCol == null) {
-			return "";
-		}
-		else {
-			return _orderByCol;
-		}
+		return _orderByCol;
 	}
 
 	@Override
 	public void setOrderByCol(String orderByCol) {
-		_orderByCol = orderByCol;
+		_orderByCol = Objects.toString(orderByCol, "");
 	}
 
 	@JSON
 	@Override
 	public String getOrderByType() {
-		if (_orderByType == null) {
-			return "";
-		}
-		else {
-			return _orderByType;
-		}
+		return _orderByType;
 	}
 
 	@Override
 	public void setOrderByType(String orderByType) {
-		_orderByType = orderByType;
+		_orderByType = Objects.toString(orderByType, "");
 	}
 
 	@JSON
 	@Override
 	public String getTargetLayoutFriendlyUrl() {
-		if (_targetLayoutFriendlyUrl == null) {
-			return "";
-		}
-		else {
-			return _targetLayoutFriendlyUrl;
-		}
+		return _targetLayoutFriendlyUrl;
 	}
 
 	@Override
 	public void setTargetLayoutFriendlyUrl(String targetLayoutFriendlyUrl) {
-		_targetLayoutFriendlyUrl = targetLayoutFriendlyUrl;
+		_targetLayoutFriendlyUrl = Objects.toString(targetLayoutFriendlyUrl, "");
 	}
 
 	@JSON
 	@Override
 	public String getTargetPortletId() {
-		if (_targetPortletId == null) {
-			return "";
-		}
-		else {
-			return _targetPortletId;
-		}
+		return _targetPortletId;
 	}
 
 	@Override
 	public void setTargetPortletId(String targetPortletId) {
-		_targetPortletId = targetPortletId;
+		_targetPortletId = Objects.toString(targetPortletId, "");
 	}
 
 	@JSON
 	@Override
 	public String getContentField() {
-		if (_contentField == null) {
-			return "";
-		}
-		else {
-			return _contentField;
-		}
+		return _contentField;
 	}
 
 	@Override
 	public void setContentField(String contentField) {
-		_contentField = contentField;
+		_contentField = Objects.toString(contentField, "");
 	}
 
 	@JSON
 	@Override
 	public String getFeedFormat() {
-		if (_feedFormat == null) {
-			return "";
-		}
-		else {
-			return _feedFormat;
-		}
+		return _feedFormat;
 	}
 
 	@Override
 	public void setFeedFormat(String feedFormat) {
-		_feedFormat = feedFormat;
+		_feedFormat = Objects.toString(feedFormat, "");
 	}
 
 	@JSON

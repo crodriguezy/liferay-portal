@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the WeDeployAuthApp service. Represents a row in the &quot;WeDeployAuth_WeDeployAuthApp&quot; database table, with each column mapped to a property of this class.
@@ -336,17 +337,12 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -380,28 +376,18 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
 	@Override
 	public String getRedirectURI() {
-		if (_redirectURI == null) {
-			return "";
-		}
-		else {
-			return _redirectURI;
-		}
+		return _redirectURI;
 	}
 
 	@Override
@@ -412,7 +398,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 			_originalRedirectURI = _redirectURI;
 		}
 
-		_redirectURI = redirectURI;
+		_redirectURI = Objects.toString(redirectURI, "");
 	}
 
 	public String getOriginalRedirectURI() {
@@ -422,12 +408,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 	@JSON
 	@Override
 	public String getClientId() {
-		if (_clientId == null) {
-			return "";
-		}
-		else {
-			return _clientId;
-		}
+		return _clientId;
 	}
 
 	@Override
@@ -438,7 +419,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 			_originalClientId = _clientId;
 		}
 
-		_clientId = clientId;
+		_clientId = Objects.toString(clientId, "");
 	}
 
 	public String getOriginalClientId() {
@@ -448,12 +429,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 	@JSON
 	@Override
 	public String getClientSecret() {
-		if (_clientSecret == null) {
-			return "";
-		}
-		else {
-			return _clientSecret;
-		}
+		return _clientSecret;
 	}
 
 	@Override
@@ -464,7 +440,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 			_originalClientSecret = _clientSecret;
 		}
 
-		_clientSecret = clientSecret;
+		_clientSecret = Objects.toString(clientSecret, "");
 	}
 
 	public String getOriginalClientSecret() {

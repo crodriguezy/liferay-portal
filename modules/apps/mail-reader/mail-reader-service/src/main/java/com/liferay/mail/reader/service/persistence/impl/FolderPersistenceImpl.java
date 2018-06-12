@@ -662,6 +662,8 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 	@Override
 	public Folder fetchByA_F(long accountId, String fullName,
 		boolean retrieveFromCache) {
+		fullName = Objects.toString(fullName, "");
+
 		Object[] finderArgs = new Object[] { accountId, fullName };
 
 		Object result = null;
@@ -689,10 +691,7 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 
 			boolean bindFullName = false;
 
-			if (fullName == null) {
-				query.append(_FINDER_COLUMN_A_F_FULLNAME_1);
-			}
-			else if (fullName.equals("")) {
+			if (fullName.equals("")) {
 				query.append(_FINDER_COLUMN_A_F_FULLNAME_3);
 			}
 			else {
@@ -787,6 +786,8 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 	public int countByA_F(long accountId, String fullName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_A_F;
 
+		fullName = Objects.toString(fullName, "");
+
 		Object[] finderArgs = new Object[] { accountId, fullName };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -800,10 +801,7 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 
 			boolean bindFullName = false;
 
-			if (fullName == null) {
-				query.append(_FINDER_COLUMN_A_F_FULLNAME_1);
-			}
-			else if (fullName.equals("")) {
+			if (fullName.equals("")) {
 				query.append(_FINDER_COLUMN_A_F_FULLNAME_3);
 			}
 			else {
@@ -847,7 +845,6 @@ public class FolderPersistenceImpl extends BasePersistenceImpl<Folder>
 	}
 
 	private static final String _FINDER_COLUMN_A_F_ACCOUNTID_2 = "folder.accountId = ? AND ";
-	private static final String _FINDER_COLUMN_A_F_FULLNAME_1 = "folder.fullName IS NULL";
 	private static final String _FINDER_COLUMN_A_F_FULLNAME_2 = "folder.fullName = ?";
 	private static final String _FINDER_COLUMN_A_F_FULLNAME_3 = "(folder.fullName IS NULL OR folder.fullName = '')";
 

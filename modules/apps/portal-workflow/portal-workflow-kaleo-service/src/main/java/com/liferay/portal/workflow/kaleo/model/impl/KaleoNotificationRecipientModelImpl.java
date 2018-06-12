@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoNotificationRecipient service. Represents a row in the &quot;KaleoNotificationRecipient&quot; database table, with each column mapped to a property of this class.
@@ -373,17 +374,12 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -458,17 +454,12 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getRecipientClassName() {
-		if (_recipientClassName == null) {
-			return "";
-		}
-		else {
-			return _recipientClassName;
-		}
+		return _recipientClassName;
 	}
 
 	@Override
 	public void setRecipientClassName(String recipientClassName) {
-		_recipientClassName = recipientClassName;
+		_recipientClassName = Objects.toString(recipientClassName, "");
 	}
 
 	@Override
@@ -493,77 +484,53 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public String getRecipientScript() {
-		if (_recipientScript == null) {
-			return "";
-		}
-		else {
-			return _recipientScript;
-		}
+		return _recipientScript;
 	}
 
 	@Override
 	public void setRecipientScript(String recipientScript) {
-		_recipientScript = recipientScript;
+		_recipientScript = Objects.toString(recipientScript, "");
 	}
 
 	@Override
 	public String getRecipientScriptLanguage() {
-		if (_recipientScriptLanguage == null) {
-			return "";
-		}
-		else {
-			return _recipientScriptLanguage;
-		}
+		return _recipientScriptLanguage;
 	}
 
 	@Override
 	public void setRecipientScriptLanguage(String recipientScriptLanguage) {
-		_recipientScriptLanguage = recipientScriptLanguage;
+		_recipientScriptLanguage = Objects.toString(recipientScriptLanguage, "");
 	}
 
 	@Override
 	public String getRecipientScriptContexts() {
-		if (_recipientScriptContexts == null) {
-			return "";
-		}
-		else {
-			return _recipientScriptContexts;
-		}
+		return _recipientScriptContexts;
 	}
 
 	@Override
 	public void setRecipientScriptContexts(String recipientScriptContexts) {
-		_recipientScriptContexts = recipientScriptContexts;
+		_recipientScriptContexts = Objects.toString(recipientScriptContexts, "");
 	}
 
 	@Override
 	public String getAddress() {
-		if (_address == null) {
-			return "";
-		}
-		else {
-			return _address;
-		}
+		return _address;
 	}
 
 	@Override
 	public void setAddress(String address) {
-		_address = address;
+		_address = Objects.toString(address, "");
 	}
 
 	@Override
 	public String getNotificationReceptionType() {
-		if (_notificationReceptionType == null) {
-			return "";
-		}
-		else {
-			return _notificationReceptionType;
-		}
+		return _notificationReceptionType;
 	}
 
 	@Override
 	public void setNotificationReceptionType(String notificationReceptionType) {
-		_notificationReceptionType = notificationReceptionType;
+		_notificationReceptionType = Objects.toString(notificationReceptionType,
+				"");
 	}
 
 	public long getColumnBitmask() {

@@ -53,6 +53,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the WikiPage service. Represents a row in the &quot;WikiPage&quot; database table, with each column mapped to a property of this class.
@@ -444,12 +445,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -458,7 +454,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -592,17 +588,12 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -659,12 +650,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return _title;
 	}
 
 	@Override
@@ -675,7 +661,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 			_originalTitle = _title;
 		}
 
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	public String getOriginalTitle() {
@@ -725,44 +711,29 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getContent() {
-		if (_content == null) {
-			return "";
-		}
-		else {
-			return _content;
-		}
+		return _content;
 	}
 
 	@Override
 	public void setContent(String content) {
-		_content = content;
+		_content = Objects.toString(content, "");
 	}
 
 	@JSON
 	@Override
 	public String getSummary() {
-		if (_summary == null) {
-			return "";
-		}
-		else {
-			return _summary;
-		}
+		return _summary;
 	}
 
 	@Override
 	public void setSummary(String summary) {
-		_summary = summary;
+		_summary = Objects.toString(summary, "");
 	}
 
 	@JSON
 	@Override
 	public String getFormat() {
-		if (_format == null) {
-			return "";
-		}
-		else {
-			return _format;
-		}
+		return _format;
 	}
 
 	@Override
@@ -773,7 +744,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 			_originalFormat = _format;
 		}
 
-		_format = format;
+		_format = Objects.toString(format, "");
 	}
 
 	public String getOriginalFormat() {
@@ -812,12 +783,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getParentTitle() {
-		if (_parentTitle == null) {
-			return "";
-		}
-		else {
-			return _parentTitle;
-		}
+		return _parentTitle;
 	}
 
 	@Override
@@ -828,7 +794,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 			_originalParentTitle = _parentTitle;
 		}
 
-		_parentTitle = parentTitle;
+		_parentTitle = Objects.toString(parentTitle, "");
 	}
 
 	public String getOriginalParentTitle() {
@@ -838,12 +804,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getRedirectTitle() {
-		if (_redirectTitle == null) {
-			return "";
-		}
-		else {
-			return _redirectTitle;
-		}
+		return _redirectTitle;
 	}
 
 	@Override
@@ -854,7 +815,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 			_originalRedirectTitle = _redirectTitle;
 		}
 
-		_redirectTitle = redirectTitle;
+		_redirectTitle = Objects.toString(redirectTitle, "");
 	}
 
 	public String getOriginalRedirectTitle() {
@@ -925,17 +886,12 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return _statusByUserName;
 	}
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON

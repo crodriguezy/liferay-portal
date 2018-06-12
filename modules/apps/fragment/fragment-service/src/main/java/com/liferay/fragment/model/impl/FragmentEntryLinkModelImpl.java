@@ -45,6 +45,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the FragmentEntryLink service. Represents a row in the &quot;FragmentEntryLink&quot; database table, with each column mapped to a property of this class.
@@ -332,12 +333,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -346,7 +342,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -435,17 +431,12 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -572,62 +563,42 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public String getCss() {
-		if (_css == null) {
-			return "";
-		}
-		else {
-			return _css;
-		}
+		return _css;
 	}
 
 	@Override
 	public void setCss(String css) {
-		_css = css;
+		_css = Objects.toString(css, "");
 	}
 
 	@Override
 	public String getHtml() {
-		if (_html == null) {
-			return "";
-		}
-		else {
-			return _html;
-		}
+		return _html;
 	}
 
 	@Override
 	public void setHtml(String html) {
-		_html = html;
+		_html = Objects.toString(html, "");
 	}
 
 	@Override
 	public String getJs() {
-		if (_js == null) {
-			return "";
-		}
-		else {
-			return _js;
-		}
+		return _js;
 	}
 
 	@Override
 	public void setJs(String js) {
-		_js = js;
+		_js = Objects.toString(js, "");
 	}
 
 	@Override
 	public String getEditableValues() {
-		if (_editableValues == null) {
-			return "";
-		}
-		else {
-			return _editableValues;
-		}
+		return _editableValues;
 	}
 
 	@Override
 	public void setEditableValues(String editableValues) {
-		_editableValues = editableValues;
+		_editableValues = Objects.toString(editableValues, "");
 	}
 
 	@Override
@@ -654,17 +625,12 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public String getNamespace() {
-		if (_namespace == null) {
-			return "";
-		}
-		else {
-			return _namespace;
-		}
+		return _namespace;
 	}
 
 	@Override
 	public void setNamespace(String namespace) {
-		_namespace = namespace;
+		_namespace = Objects.toString(namespace, "");
 	}
 
 	@Override

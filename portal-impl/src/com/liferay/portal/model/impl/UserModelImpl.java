@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the User service. Represents a row in the &quot;User_&quot; database table, with each column mapped to a property of this class.
@@ -690,12 +691,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -704,7 +700,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -714,12 +710,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getExternalReferenceCode() {
-		if (_externalReferenceCode == null) {
-			return "";
-		}
-		else {
-			return _externalReferenceCode;
-		}
+		return _externalReferenceCode;
 	}
 
 	@Override
@@ -730,7 +721,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 			_originalExternalReferenceCode = _externalReferenceCode;
 		}
 
-		_externalReferenceCode = externalReferenceCode;
+		_externalReferenceCode = Objects.toString(externalReferenceCode, "");
 	}
 
 	public String getOriginalExternalReferenceCode() {
@@ -902,17 +893,12 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON(include = false)
 	@Override
 	public String getPassword() {
-		if (_password == null) {
-			return "";
-		}
-		else {
-			return _password;
-		}
+		return _password;
 	}
 
 	@Override
 	public void setPassword(String password) {
-		_password = password;
+		_password = Objects.toString(password, "");
 	}
 
 	@JSON(include = false)
@@ -961,49 +947,34 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON(include = false)
 	@Override
 	public String getDigest() {
-		if (_digest == null) {
-			return "";
-		}
-		else {
-			return _digest;
-		}
+		return _digest;
 	}
 
 	@Override
 	public void setDigest(String digest) {
-		_digest = digest;
+		_digest = Objects.toString(digest, "");
 	}
 
 	@JSON
 	@Override
 	public String getReminderQueryQuestion() {
-		if (_reminderQueryQuestion == null) {
-			return "";
-		}
-		else {
-			return _reminderQueryQuestion;
-		}
+		return _reminderQueryQuestion;
 	}
 
 	@Override
 	public void setReminderQueryQuestion(String reminderQueryQuestion) {
-		_reminderQueryQuestion = reminderQueryQuestion;
+		_reminderQueryQuestion = Objects.toString(reminderQueryQuestion, "");
 	}
 
 	@JSON
 	@Override
 	public String getReminderQueryAnswer() {
-		if (_reminderQueryAnswer == null) {
-			return "";
-		}
-		else {
-			return _reminderQueryAnswer;
-		}
+		return _reminderQueryAnswer;
 	}
 
 	@Override
 	public void setReminderQueryAnswer(String reminderQueryAnswer) {
-		_reminderQueryAnswer = reminderQueryAnswer;
+		_reminderQueryAnswer = Objects.toString(reminderQueryAnswer, "");
 	}
 
 	@JSON
@@ -1020,12 +991,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getScreenName() {
-		if (_screenName == null) {
-			return "";
-		}
-		else {
-			return _screenName;
-		}
+		return _screenName;
 	}
 
 	@Override
@@ -1036,7 +1002,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 			_originalScreenName = _screenName;
 		}
 
-		_screenName = screenName;
+		_screenName = Objects.toString(screenName, "");
 	}
 
 	public String getOriginalScreenName() {
@@ -1046,12 +1012,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getEmailAddress() {
-		if (_emailAddress == null) {
-			return "";
-		}
-		else {
-			return _emailAddress;
-		}
+		return _emailAddress;
 	}
 
 	@Override
@@ -1062,7 +1023,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 			_originalEmailAddress = _emailAddress;
 		}
 
-		_emailAddress = emailAddress;
+		_emailAddress = Objects.toString(emailAddress, "");
 	}
 
 	public String getOriginalEmailAddress() {
@@ -1095,12 +1056,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getGoogleUserId() {
-		if (_googleUserId == null) {
-			return "";
-		}
-		else {
-			return _googleUserId;
-		}
+		return _googleUserId;
 	}
 
 	@Override
@@ -1111,7 +1067,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 			_originalGoogleUserId = _googleUserId;
 		}
 
-		_googleUserId = googleUserId;
+		_googleUserId = Objects.toString(googleUserId, "");
 	}
 
 	public String getOriginalGoogleUserId() {
@@ -1132,12 +1088,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getOpenId() {
-		if (_openId == null) {
-			return "";
-		}
-		else {
-			return _openId;
-		}
+		return _openId;
 	}
 
 	@Override
@@ -1148,7 +1099,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 			_originalOpenId = _openId;
 		}
 
-		_openId = openId;
+		_openId = Objects.toString(openId, "");
 	}
 
 	public String getOriginalOpenId() {
@@ -1181,129 +1132,89 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getLanguageId() {
-		if (_languageId == null) {
-			return "";
-		}
-		else {
-			return _languageId;
-		}
+		return _languageId;
 	}
 
 	@Override
 	public void setLanguageId(String languageId) {
-		_languageId = languageId;
+		_languageId = Objects.toString(languageId, "");
 	}
 
 	@JSON
 	@Override
 	public String getTimeZoneId() {
-		if (_timeZoneId == null) {
-			return "";
-		}
-		else {
-			return _timeZoneId;
-		}
+		return _timeZoneId;
 	}
 
 	@Override
 	public void setTimeZoneId(String timeZoneId) {
-		_timeZoneId = timeZoneId;
+		_timeZoneId = Objects.toString(timeZoneId, "");
 	}
 
 	@JSON
 	@Override
 	public String getGreeting() {
-		if (_greeting == null) {
-			return "";
-		}
-		else {
-			return _greeting;
-		}
+		return _greeting;
 	}
 
 	@Override
 	public void setGreeting(String greeting) {
-		_greeting = greeting;
+		_greeting = Objects.toString(greeting, "");
 	}
 
 	@JSON
 	@Override
 	public String getComments() {
-		if (_comments == null) {
-			return "";
-		}
-		else {
-			return _comments;
-		}
+		return _comments;
 	}
 
 	@Override
 	public void setComments(String comments) {
-		_comments = comments;
+		_comments = Objects.toString(comments, "");
 	}
 
 	@JSON
 	@Override
 	public String getFirstName() {
-		if (_firstName == null) {
-			return "";
-		}
-		else {
-			return _firstName;
-		}
+		return _firstName;
 	}
 
 	@Override
 	public void setFirstName(String firstName) {
-		_firstName = firstName;
+		_firstName = Objects.toString(firstName, "");
 	}
 
 	@JSON
 	@Override
 	public String getMiddleName() {
-		if (_middleName == null) {
-			return "";
-		}
-		else {
-			return _middleName;
-		}
+		return _middleName;
 	}
 
 	@Override
 	public void setMiddleName(String middleName) {
-		_middleName = middleName;
+		_middleName = Objects.toString(middleName, "");
 	}
 
 	@JSON
 	@Override
 	public String getLastName() {
-		if (_lastName == null) {
-			return "";
-		}
-		else {
-			return _lastName;
-		}
+		return _lastName;
 	}
 
 	@Override
 	public void setLastName(String lastName) {
-		_lastName = lastName;
+		_lastName = Objects.toString(lastName, "");
 	}
 
 	@JSON
 	@Override
 	public String getJobTitle() {
-		if (_jobTitle == null) {
-			return "";
-		}
-		else {
-			return _jobTitle;
-		}
+		return _jobTitle;
 	}
 
 	@Override
 	public void setJobTitle(String jobTitle) {
-		_jobTitle = jobTitle;
+		_jobTitle = Objects.toString(jobTitle, "");
 	}
 
 	@JSON
@@ -1320,17 +1231,12 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getLoginIP() {
-		if (_loginIP == null) {
-			return "";
-		}
-		else {
-			return _loginIP;
-		}
+		return _loginIP;
 	}
 
 	@Override
 	public void setLoginIP(String loginIP) {
-		_loginIP = loginIP;
+		_loginIP = Objects.toString(loginIP, "");
 	}
 
 	@JSON
@@ -1347,17 +1253,12 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@JSON
 	@Override
 	public String getLastLoginIP() {
-		if (_lastLoginIP == null) {
-			return "";
-		}
-		else {
-			return _lastLoginIP;
-		}
+		return _lastLoginIP;
 	}
 
 	@Override
 	public void setLastLoginIP(String lastLoginIP) {
-		_lastLoginIP = lastLoginIP;
+		_lastLoginIP = Objects.toString(lastLoginIP, "");
 	}
 
 	@JSON

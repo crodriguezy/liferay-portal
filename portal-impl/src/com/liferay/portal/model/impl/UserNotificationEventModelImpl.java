@@ -39,6 +39,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the UserNotificationEvent service. Represents a row in the &quot;UserNotificationEvent&quot; database table, with each column mapped to a property of this class.
@@ -274,12 +275,7 @@ public class UserNotificationEventModelImpl extends BaseModelImpl<UserNotificati
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -288,7 +284,7 @@ public class UserNotificationEventModelImpl extends BaseModelImpl<UserNotificati
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -367,12 +363,7 @@ public class UserNotificationEventModelImpl extends BaseModelImpl<UserNotificati
 
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return _type;
 	}
 
 	@Override
@@ -383,7 +374,7 @@ public class UserNotificationEventModelImpl extends BaseModelImpl<UserNotificati
 			_originalType = _type;
 		}
 
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	public String getOriginalType() {
@@ -463,17 +454,12 @@ public class UserNotificationEventModelImpl extends BaseModelImpl<UserNotificati
 
 	@Override
 	public String getPayload() {
-		if (_payload == null) {
-			return "";
-		}
-		else {
-			return _payload;
-		}
+		return _payload;
 	}
 
 	@Override
 	public void setPayload(String payload) {
-		_payload = payload;
+		_payload = Objects.toString(payload, "");
 	}
 
 	@Override

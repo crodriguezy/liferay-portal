@@ -40,6 +40,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Status service. Represents a row in the &quot;Chat_Status&quot; database table, with each column mapped to a property of this class.
@@ -326,32 +327,22 @@ public class StatusModelImpl extends BaseModelImpl<Status>
 
 	@Override
 	public String getActivePanelIds() {
-		if (_activePanelIds == null) {
-			return "";
-		}
-		else {
-			return _activePanelIds;
-		}
+		return _activePanelIds;
 	}
 
 	@Override
 	public void setActivePanelIds(String activePanelIds) {
-		_activePanelIds = activePanelIds;
+		_activePanelIds = Objects.toString(activePanelIds, "");
 	}
 
 	@Override
 	public String getMessage() {
-		if (_message == null) {
-			return "";
-		}
-		else {
-			return _message;
-		}
+		return _message;
 	}
 
 	@Override
 	public void setMessage(String message) {
-		_message = message;
+		_message = Objects.toString(message, "");
 	}
 
 	@Override

@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the AssetCategoryProperty service. Represents a row in the &quot;AssetCategoryProperty&quot; database table, with each column mapped to a property of this class.
@@ -341,17 +342,12 @@ public class AssetCategoryPropertyModelImpl extends BaseModelImpl<AssetCategoryP
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -408,12 +404,7 @@ public class AssetCategoryPropertyModelImpl extends BaseModelImpl<AssetCategoryP
 	@JSON
 	@Override
 	public String getKey() {
-		if (_key == null) {
-			return "";
-		}
-		else {
-			return _key;
-		}
+		return _key;
 	}
 
 	@Override
@@ -424,7 +415,7 @@ public class AssetCategoryPropertyModelImpl extends BaseModelImpl<AssetCategoryP
 			_originalKey = _key;
 		}
 
-		_key = key;
+		_key = Objects.toString(key, "");
 	}
 
 	public String getOriginalKey() {
@@ -434,17 +425,12 @@ public class AssetCategoryPropertyModelImpl extends BaseModelImpl<AssetCategoryP
 	@JSON
 	@Override
 	public String getValue() {
-		if (_value == null) {
-			return "";
-		}
-		else {
-			return _value;
-		}
+		return _value;
 	}
 
 	@Override
 	public void setValue(String value) {
-		_value = value;
+		_value = Objects.toString(value, "");
 	}
 
 	public long getColumnBitmask() {

@@ -43,6 +43,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the RepositoryEntry service. Represents a row in the &quot;RepositoryEntry&quot; database table, with each column mapped to a property of this class.
@@ -275,12 +276,7 @@ public class RepositoryEntryModelImpl extends BaseModelImpl<RepositoryEntry>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -289,7 +285,7 @@ public class RepositoryEntryModelImpl extends BaseModelImpl<RepositoryEntry>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -378,17 +374,12 @@ public class RepositoryEntryModelImpl extends BaseModelImpl<RepositoryEntry>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -441,12 +432,7 @@ public class RepositoryEntryModelImpl extends BaseModelImpl<RepositoryEntry>
 
 	@Override
 	public String getMappedId() {
-		if (_mappedId == null) {
-			return "";
-		}
-		else {
-			return _mappedId;
-		}
+		return _mappedId;
 	}
 
 	@Override
@@ -457,7 +443,7 @@ public class RepositoryEntryModelImpl extends BaseModelImpl<RepositoryEntry>
 			_originalMappedId = _mappedId;
 		}
 
-		_mappedId = mappedId;
+		_mappedId = Objects.toString(mappedId, "");
 	}
 
 	public String getOriginalMappedId() {

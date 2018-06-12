@@ -36,6 +36,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the ResourceAction service. Represents a row in the &quot;ResourceAction&quot; database table, with each column mapped to a property of this class.
@@ -202,12 +203,7 @@ public class ResourceActionModelImpl extends BaseModelImpl<ResourceAction>
 
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
@@ -218,7 +214,7 @@ public class ResourceActionModelImpl extends BaseModelImpl<ResourceAction>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -227,12 +223,7 @@ public class ResourceActionModelImpl extends BaseModelImpl<ResourceAction>
 
 	@Override
 	public String getActionId() {
-		if (_actionId == null) {
-			return "";
-		}
-		else {
-			return _actionId;
-		}
+		return _actionId;
 	}
 
 	@Override
@@ -243,7 +234,7 @@ public class ResourceActionModelImpl extends BaseModelImpl<ResourceAction>
 			_originalActionId = _actionId;
 		}
 
-		_actionId = actionId;
+		_actionId = Objects.toString(actionId, "");
 	}
 
 	public String getOriginalActionId() {

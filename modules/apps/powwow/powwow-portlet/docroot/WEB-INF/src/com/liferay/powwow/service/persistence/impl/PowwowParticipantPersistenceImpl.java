@@ -921,6 +921,8 @@ public class PowwowParticipantPersistenceImpl extends BasePersistenceImpl<Powwow
 	@Override
 	public PowwowParticipant fetchByPMI_EA(long powwowMeetingId,
 		String emailAddress, boolean retrieveFromCache) {
+		emailAddress = Objects.toString(emailAddress, "");
+
 		Object[] finderArgs = new Object[] { powwowMeetingId, emailAddress };
 
 		Object result = null;
@@ -949,10 +951,7 @@ public class PowwowParticipantPersistenceImpl extends BasePersistenceImpl<Powwow
 
 			boolean bindEmailAddress = false;
 
-			if (emailAddress == null) {
-				query.append(_FINDER_COLUMN_PMI_EA_EMAILADDRESS_1);
-			}
-			else if (emailAddress.equals("")) {
+			if (emailAddress.equals("")) {
 				query.append(_FINDER_COLUMN_PMI_EA_EMAILADDRESS_3);
 			}
 			else {
@@ -1037,6 +1036,8 @@ public class PowwowParticipantPersistenceImpl extends BasePersistenceImpl<Powwow
 	public int countByPMI_EA(long powwowMeetingId, String emailAddress) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_PMI_EA;
 
+		emailAddress = Objects.toString(emailAddress, "");
+
 		Object[] finderArgs = new Object[] { powwowMeetingId, emailAddress };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1050,10 +1051,7 @@ public class PowwowParticipantPersistenceImpl extends BasePersistenceImpl<Powwow
 
 			boolean bindEmailAddress = false;
 
-			if (emailAddress == null) {
-				query.append(_FINDER_COLUMN_PMI_EA_EMAILADDRESS_1);
-			}
-			else if (emailAddress.equals("")) {
+			if (emailAddress.equals("")) {
 				query.append(_FINDER_COLUMN_PMI_EA_EMAILADDRESS_3);
 			}
 			else {
@@ -1097,7 +1095,6 @@ public class PowwowParticipantPersistenceImpl extends BasePersistenceImpl<Powwow
 	}
 
 	private static final String _FINDER_COLUMN_PMI_EA_POWWOWMEETINGID_2 = "powwowParticipant.powwowMeetingId = ? AND ";
-	private static final String _FINDER_COLUMN_PMI_EA_EMAILADDRESS_1 = "powwowParticipant.emailAddress IS NULL";
 	private static final String _FINDER_COLUMN_PMI_EA_EMAILADDRESS_2 = "powwowParticipant.emailAddress = ?";
 	private static final String _FINDER_COLUMN_PMI_EA_EMAILADDRESS_3 = "(powwowParticipant.emailAddress IS NULL OR powwowParticipant.emailAddress = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_PMI_T = new FinderPath(PowwowParticipantModelImpl.ENTITY_CACHE_ENABLED,

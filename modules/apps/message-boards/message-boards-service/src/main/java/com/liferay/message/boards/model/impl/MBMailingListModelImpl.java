@@ -44,6 +44,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the MBMailingList service. Represents a row in the &quot;MBMailingList&quot; database table, with each column mapped to a property of this class.
@@ -382,12 +383,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -396,7 +392,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -485,17 +481,12 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -548,47 +539,32 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getEmailAddress() {
-		if (_emailAddress == null) {
-			return "";
-		}
-		else {
-			return _emailAddress;
-		}
+		return _emailAddress;
 	}
 
 	@Override
 	public void setEmailAddress(String emailAddress) {
-		_emailAddress = emailAddress;
+		_emailAddress = Objects.toString(emailAddress, "");
 	}
 
 	@Override
 	public String getInProtocol() {
-		if (_inProtocol == null) {
-			return "";
-		}
-		else {
-			return _inProtocol;
-		}
+		return _inProtocol;
 	}
 
 	@Override
 	public void setInProtocol(String inProtocol) {
-		_inProtocol = inProtocol;
+		_inProtocol = Objects.toString(inProtocol, "");
 	}
 
 	@Override
 	public String getInServerName() {
-		if (_inServerName == null) {
-			return "";
-		}
-		else {
-			return _inServerName;
-		}
+		return _inServerName;
 	}
 
 	@Override
 	public void setInServerName(String inServerName) {
-		_inServerName = inServerName;
+		_inServerName = Objects.toString(inServerName, "");
 	}
 
 	@Override
@@ -618,32 +594,22 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getInUserName() {
-		if (_inUserName == null) {
-			return "";
-		}
-		else {
-			return _inUserName;
-		}
+		return _inUserName;
 	}
 
 	@Override
 	public void setInUserName(String inUserName) {
-		_inUserName = inUserName;
+		_inUserName = Objects.toString(inUserName, "");
 	}
 
 	@Override
 	public String getInPassword() {
-		if (_inPassword == null) {
-			return "";
-		}
-		else {
-			return _inPassword;
-		}
+		return _inPassword;
 	}
 
 	@Override
 	public void setInPassword(String inPassword) {
-		_inPassword = inPassword;
+		_inPassword = Objects.toString(inPassword, "");
 	}
 
 	@Override
@@ -658,17 +624,12 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getOutEmailAddress() {
-		if (_outEmailAddress == null) {
-			return "";
-		}
-		else {
-			return _outEmailAddress;
-		}
+		return _outEmailAddress;
 	}
 
 	@Override
 	public void setOutEmailAddress(String outEmailAddress) {
-		_outEmailAddress = outEmailAddress;
+		_outEmailAddress = Objects.toString(outEmailAddress, "");
 	}
 
 	@Override
@@ -688,17 +649,12 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getOutServerName() {
-		if (_outServerName == null) {
-			return "";
-		}
-		else {
-			return _outServerName;
-		}
+		return _outServerName;
 	}
 
 	@Override
 	public void setOutServerName(String outServerName) {
-		_outServerName = outServerName;
+		_outServerName = Objects.toString(outServerName, "");
 	}
 
 	@Override
@@ -728,32 +684,22 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public String getOutUserName() {
-		if (_outUserName == null) {
-			return "";
-		}
-		else {
-			return _outUserName;
-		}
+		return _outUserName;
 	}
 
 	@Override
 	public void setOutUserName(String outUserName) {
-		_outUserName = outUserName;
+		_outUserName = Objects.toString(outUserName, "");
 	}
 
 	@Override
 	public String getOutPassword() {
-		if (_outPassword == null) {
-			return "";
-		}
-		else {
-			return _outPassword;
-		}
+		return _outPassword;
 	}
 
 	@Override
 	public void setOutPassword(String outPassword) {
-		_outPassword = outPassword;
+		_outPassword = Objects.toString(outPassword, "");
 	}
 
 	@Override

@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the PowwowMeeting service. Represents a row in the &quot;PowwowMeeting&quot; database table, with each column mapped to a property of this class.
@@ -424,17 +425,12 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -493,81 +489,56 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
 	@Override
 	public String getProviderType() {
-		if (_providerType == null) {
-			return "";
-		}
-		else {
-			return _providerType;
-		}
+		return _providerType;
 	}
 
 	@Override
 	public void setProviderType(String providerType) {
-		_providerType = providerType;
+		_providerType = Objects.toString(providerType, "");
 	}
 
 	@JSON
 	@Override
 	public String getProviderTypeMetadata() {
-		if (_providerTypeMetadata == null) {
-			return "";
-		}
-		else {
-			return _providerTypeMetadata;
-		}
+		return _providerTypeMetadata;
 	}
 
 	@Override
 	public void setProviderTypeMetadata(String providerTypeMetadata) {
-		_providerTypeMetadata = providerTypeMetadata;
+		_providerTypeMetadata = Objects.toString(providerTypeMetadata, "");
 	}
 
 	@JSON
 	@Override
 	public String getLanguageId() {
-		if (_languageId == null) {
-			return "";
-		}
-		else {
-			return _languageId;
-		}
+		return _languageId;
 	}
 
 	@Override
 	public void setLanguageId(String languageId) {
-		_languageId = languageId;
+		_languageId = Objects.toString(languageId, "");
 	}
 
 	@JSON

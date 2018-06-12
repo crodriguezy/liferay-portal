@@ -183,6 +183,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		name = Objects.toString(name, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -226,10 +228,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_NAME_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_NAME_NAME_3);
 			}
 			else {
@@ -444,6 +443,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		ResourcePermission resourcePermission, String name,
 		OrderByComparator<ResourcePermission> orderByComparator,
 		boolean previous) {
+		name = Objects.toString(name, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -459,10 +460,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_NAME_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_NAME_NAME_3);
 		}
 		else {
@@ -584,6 +582,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 	public int countByName(String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_NAME;
 
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { name };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -595,10 +595,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_NAME_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_NAME_NAME_3);
 			}
 			else {
@@ -639,7 +636,6 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_NAME_NAME_1 = "resourcePermission.name IS NULL";
 	private static final String _FINDER_COLUMN_NAME_NAME_2 = "resourcePermission.name = ?";
 	private static final String _FINDER_COLUMN_NAME_NAME_3 = "(resourcePermission.name IS NULL OR resourcePermission.name = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_SCOPE = new FinderPath(ResourcePermissionModelImpl.ENTITY_CACHE_ENABLED,
@@ -2009,6 +2005,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		primKey = Objects.toString(primKey, "");
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_LIKEP;
 		finderArgs = new Object[] {
 				companyId, primKey,
@@ -2053,10 +2051,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindPrimKey = false;
 
-			if (primKey == null) {
-				query.append(_FINDER_COLUMN_C_LIKEP_PRIMKEY_1);
-			}
-			else if (primKey.equals("")) {
+			if (primKey.equals("")) {
 				query.append(_FINDER_COLUMN_C_LIKEP_PRIMKEY_3);
 			}
 			else {
@@ -2285,6 +2280,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		ResourcePermission resourcePermission, long companyId, String primKey,
 		OrderByComparator<ResourcePermission> orderByComparator,
 		boolean previous) {
+		primKey = Objects.toString(primKey, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -2302,10 +2299,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 		boolean bindPrimKey = false;
 
-		if (primKey == null) {
-			query.append(_FINDER_COLUMN_C_LIKEP_PRIMKEY_1);
-		}
-		else if (primKey.equals("")) {
+		if (primKey.equals("")) {
 			query.append(_FINDER_COLUMN_C_LIKEP_PRIMKEY_3);
 		}
 		else {
@@ -2431,6 +2425,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 	public int countByC_LikeP(long companyId, String primKey) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_C_LIKEP;
 
+		primKey = Objects.toString(primKey, "");
+
 		Object[] finderArgs = new Object[] { companyId, primKey };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -2444,10 +2440,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindPrimKey = false;
 
-			if (primKey == null) {
-				query.append(_FINDER_COLUMN_C_LIKEP_PRIMKEY_1);
-			}
-			else if (primKey.equals("")) {
+			if (primKey.equals("")) {
 				query.append(_FINDER_COLUMN_C_LIKEP_PRIMKEY_3);
 			}
 			else {
@@ -2491,7 +2484,6 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 	}
 
 	private static final String _FINDER_COLUMN_C_LIKEP_COMPANYID_2 = "resourcePermission.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_LIKEP_PRIMKEY_1 = "resourcePermission.primKey IS NULL";
 	private static final String _FINDER_COLUMN_C_LIKEP_PRIMKEY_2 = "resourcePermission.primKey LIKE ?";
 	private static final String _FINDER_COLUMN_C_LIKEP_PRIMKEY_3 = "(resourcePermission.primKey IS NULL OR resourcePermission.primKey LIKE '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_N_S = new FinderPath(ResourcePermissionModelImpl.ENTITY_CACHE_ENABLED,
@@ -2607,6 +2599,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		name = Objects.toString(name, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -2658,10 +2652,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_C_N_S_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_C_N_S_NAME_3);
 			}
 			else {
@@ -2905,6 +2896,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		ResourcePermission resourcePermission, long companyId, String name,
 		int scope, OrderByComparator<ResourcePermission> orderByComparator,
 		boolean previous) {
+		name = Objects.toString(name, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -2922,10 +2915,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_C_N_S_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_C_N_S_NAME_3);
 		}
 		else {
@@ -3057,6 +3047,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 	public int countByC_N_S(long companyId, String name, int scope) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_N_S;
 
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { companyId, name, scope };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -3070,10 +3062,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_C_N_S_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_C_N_S_NAME_3);
 			}
 			else {
@@ -3121,7 +3110,6 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 	}
 
 	private static final String _FINDER_COLUMN_C_N_S_COMPANYID_2 = "resourcePermission.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_N_S_NAME_1 = "resourcePermission.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_C_N_S_NAME_2 = "resourcePermission.name = ? AND ";
 	private static final String _FINDER_COLUMN_C_N_S_NAME_3 = "(resourcePermission.name IS NULL OR resourcePermission.name = '') AND ";
 	private static final String _FINDER_COLUMN_C_N_S_SCOPE_2 = "resourcePermission.scope = ?";
@@ -3238,6 +3226,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		primKey = Objects.toString(primKey, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -3292,10 +3282,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindPrimKey = false;
 
-			if (primKey == null) {
-				query.append(_FINDER_COLUMN_C_S_P_PRIMKEY_1);
-			}
-			else if (primKey.equals("")) {
+			if (primKey.equals("")) {
 				query.append(_FINDER_COLUMN_C_S_P_PRIMKEY_3);
 			}
 			else {
@@ -3538,6 +3525,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		String primKey,
 		OrderByComparator<ResourcePermission> orderByComparator,
 		boolean previous) {
+		primKey = Objects.toString(primKey, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -3557,10 +3546,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 		boolean bindPrimKey = false;
 
-		if (primKey == null) {
-			query.append(_FINDER_COLUMN_C_S_P_PRIMKEY_1);
-		}
-		else if (primKey.equals("")) {
+		if (primKey.equals("")) {
 			query.append(_FINDER_COLUMN_C_S_P_PRIMKEY_3);
 		}
 		else {
@@ -3690,6 +3676,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 	public int countByC_S_P(long companyId, int scope, String primKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_S_P;
 
+		primKey = Objects.toString(primKey, "");
+
 		Object[] finderArgs = new Object[] { companyId, scope, primKey };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -3705,10 +3693,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindPrimKey = false;
 
-			if (primKey == null) {
-				query.append(_FINDER_COLUMN_C_S_P_PRIMKEY_1);
-			}
-			else if (primKey.equals("")) {
+			if (primKey.equals("")) {
 				query.append(_FINDER_COLUMN_C_S_P_PRIMKEY_3);
 			}
 			else {
@@ -3755,7 +3740,6 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 	private static final String _FINDER_COLUMN_C_S_P_COMPANYID_2 = "resourcePermission.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_S_P_SCOPE_2 = "resourcePermission.scope = ? AND ";
-	private static final String _FINDER_COLUMN_C_S_P_PRIMKEY_1 = "resourcePermission.primKey IS NULL";
 	private static final String _FINDER_COLUMN_C_S_P_PRIMKEY_2 = "resourcePermission.primKey = ?";
 	private static final String _FINDER_COLUMN_C_S_P_PRIMKEY_3 = "(resourcePermission.primKey IS NULL OR resourcePermission.primKey = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_N_S_P = new FinderPath(ResourcePermissionModelImpl.ENTITY_CACHE_ENABLED,
@@ -3877,6 +3861,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		name = Objects.toString(name, "");
+		primKey = Objects.toString(primKey, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -3930,10 +3917,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_C_N_S_P_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_C_N_S_P_NAME_3);
 			}
 			else {
@@ -3946,10 +3930,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindPrimKey = false;
 
-			if (primKey == null) {
-				query.append(_FINDER_COLUMN_C_N_S_P_PRIMKEY_1);
-			}
-			else if (primKey.equals("")) {
+			if (primKey.equals("")) {
 				query.append(_FINDER_COLUMN_C_N_S_P_PRIMKEY_3);
 			}
 			else {
@@ -4211,6 +4192,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		int scope, String primKey,
 		OrderByComparator<ResourcePermission> orderByComparator,
 		boolean previous) {
+		name = Objects.toString(name, "");
+		primKey = Objects.toString(primKey, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -4228,10 +4212,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_C_N_S_P_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_C_N_S_P_NAME_3);
 		}
 		else {
@@ -4244,10 +4225,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 		boolean bindPrimKey = false;
 
-		if (primKey == null) {
-			query.append(_FINDER_COLUMN_C_N_S_P_PRIMKEY_1);
-		}
-		else if (primKey.equals("")) {
+		if (primKey.equals("")) {
 			query.append(_FINDER_COLUMN_C_N_S_P_PRIMKEY_3);
 		}
 		else {
@@ -4385,6 +4363,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		String primKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_N_S_P;
 
+		name = Objects.toString(name, "");
+		primKey = Objects.toString(primKey, "");
+
 		Object[] finderArgs = new Object[] { companyId, name, scope, primKey };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -4398,10 +4379,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_C_N_S_P_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_C_N_S_P_NAME_3);
 			}
 			else {
@@ -4414,10 +4392,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindPrimKey = false;
 
-			if (primKey == null) {
-				query.append(_FINDER_COLUMN_C_N_S_P_PRIMKEY_1);
-			}
-			else if (primKey.equals("")) {
+			if (primKey.equals("")) {
 				query.append(_FINDER_COLUMN_C_N_S_P_PRIMKEY_3);
 			}
 			else {
@@ -4467,11 +4442,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 	}
 
 	private static final String _FINDER_COLUMN_C_N_S_P_COMPANYID_2 = "resourcePermission.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_N_S_P_NAME_1 = "resourcePermission.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_C_N_S_P_NAME_2 = "resourcePermission.name = ? AND ";
 	private static final String _FINDER_COLUMN_C_N_S_P_NAME_3 = "(resourcePermission.name IS NULL OR resourcePermission.name = '') AND ";
 	private static final String _FINDER_COLUMN_C_N_S_P_SCOPE_2 = "resourcePermission.scope = ? AND ";
-	private static final String _FINDER_COLUMN_C_N_S_P_PRIMKEY_1 = "resourcePermission.primKey IS NULL";
 	private static final String _FINDER_COLUMN_C_N_S_P_PRIMKEY_2 = "resourcePermission.primKey = ?";
 	private static final String _FINDER_COLUMN_C_N_S_P_PRIMKEY_3 = "(resourcePermission.primKey IS NULL OR resourcePermission.primKey = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_N_S_P_R =
@@ -4627,6 +4600,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		String name, int scope, String primKey, long[] roleIds, int start,
 		int end, OrderByComparator<ResourcePermission> orderByComparator,
 		boolean retrieveFromCache) {
+		name = Objects.toString(name, "");
+		primKey = Objects.toString(primKey, "");
+
 		if (roleIds == null) {
 			roleIds = new long[0];
 		}
@@ -4744,10 +4720,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_C_N_S_P_R_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_C_N_S_P_R_NAME_3);
 		}
 		else {
@@ -4760,10 +4733,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 		boolean bindPrimKey = false;
 
-		if (primKey == null) {
-			query.append(_FINDER_COLUMN_C_N_S_P_R_PRIMKEY_1);
-		}
-		else if (primKey.equals("")) {
+		if (primKey.equals("")) {
 			query.append(_FINDER_COLUMN_C_N_S_P_R_PRIMKEY_3);
 		}
 		else {
@@ -4922,6 +4892,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 	@Override
 	public ResourcePermission fetchByC_N_S_P_R(long companyId, String name,
 		int scope, String primKey, long roleId, boolean retrieveFromCache) {
+		name = Objects.toString(name, "");
+		primKey = Objects.toString(primKey, "");
+
 		Object[] finderArgs = new Object[] {
 				companyId, name, scope, primKey, roleId
 			};
@@ -4954,10 +4927,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_C_N_S_P_R_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_C_N_S_P_R_NAME_3);
 			}
 			else {
@@ -4970,10 +4940,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindPrimKey = false;
 
-			if (primKey == null) {
-				query.append(_FINDER_COLUMN_C_N_S_P_R_PRIMKEY_1);
-			}
-			else if (primKey.equals("")) {
+			if (primKey.equals("")) {
 				query.append(_FINDER_COLUMN_C_N_S_P_R_PRIMKEY_3);
 			}
 			else {
@@ -5077,6 +5044,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		String primKey, long roleId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_N_S_P_R;
 
+		name = Objects.toString(name, "");
+		primKey = Objects.toString(primKey, "");
+
 		Object[] finderArgs = new Object[] {
 				companyId, name, scope, primKey, roleId
 			};
@@ -5092,10 +5062,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_C_N_S_P_R_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_C_N_S_P_R_NAME_3);
 			}
 			else {
@@ -5108,10 +5075,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindPrimKey = false;
 
-			if (primKey == null) {
-				query.append(_FINDER_COLUMN_C_N_S_P_R_PRIMKEY_1);
-			}
-			else if (primKey.equals("")) {
+			if (primKey.equals("")) {
 				query.append(_FINDER_COLUMN_C_N_S_P_R_PRIMKEY_3);
 			}
 			else {
@@ -5177,6 +5141,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 	@Override
 	public int countByC_N_S_P_R(long companyId, String name, int scope,
 		String primKey, long[] roleIds) {
+		name = Objects.toString(name, "");
+		primKey = Objects.toString(primKey, "");
+
 		if (roleIds == null) {
 			roleIds = new long[0];
 		}
@@ -5238,10 +5205,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_C_N_S_P_R_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_C_N_S_P_R_NAME_3);
 		}
 		else {
@@ -5254,10 +5218,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 		boolean bindPrimKey = false;
 
-		if (primKey == null) {
-			query.append(_FINDER_COLUMN_C_N_S_P_R_PRIMKEY_1);
-		}
-		else if (primKey.equals("")) {
+		if (primKey.equals("")) {
 			query.append(_FINDER_COLUMN_C_N_S_P_R_PRIMKEY_3);
 		}
 		else {
@@ -5317,11 +5278,9 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 	}
 
 	private static final String _FINDER_COLUMN_C_N_S_P_R_COMPANYID_2 = "resourcePermission.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_N_S_P_R_NAME_1 = "resourcePermission.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_C_N_S_P_R_NAME_2 = "resourcePermission.name = ? AND ";
 	private static final String _FINDER_COLUMN_C_N_S_P_R_NAME_3 = "(resourcePermission.name IS NULL OR resourcePermission.name = '') AND ";
 	private static final String _FINDER_COLUMN_C_N_S_P_R_SCOPE_2 = "resourcePermission.scope = ? AND ";
-	private static final String _FINDER_COLUMN_C_N_S_P_R_PRIMKEY_1 = "resourcePermission.primKey IS NULL AND ";
 	private static final String _FINDER_COLUMN_C_N_S_P_R_PRIMKEY_2 = "resourcePermission.primKey = ? AND ";
 	private static final String _FINDER_COLUMN_C_N_S_P_R_PRIMKEY_3 = "(resourcePermission.primKey IS NULL OR resourcePermission.primKey = '') AND ";
 	private static final String _FINDER_COLUMN_C_N_S_P_R_ROLEID_2 = "resourcePermission.roleId = ?";
@@ -5473,6 +5432,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		name = Objects.toString(name, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -5529,10 +5490,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_C_N_S_P_R_V_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_C_N_S_P_R_V_NAME_3);
 			}
 			else {
@@ -5835,6 +5793,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		int scope, long primKeyId, long roleId, boolean viewActionId,
 		OrderByComparator<ResourcePermission> orderByComparator,
 		boolean previous) {
+		name = Objects.toString(name, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -5852,10 +5812,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_C_N_S_P_R_V_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_C_N_S_P_R_V_NAME_3);
 		}
 		else {
@@ -6072,6 +6029,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		boolean viewActionId, int start, int end,
 		OrderByComparator<ResourcePermission> orderByComparator,
 		boolean retrieveFromCache) {
+		name = Objects.toString(name, "");
+
 		if (roleIds == null) {
 			roleIds = new long[0];
 		}
@@ -6186,10 +6145,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_C_N_S_P_R_V_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_C_N_S_P_R_V_NAME_3);
 		}
 		else {
@@ -6312,6 +6268,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 		long primKeyId, long roleId, boolean viewActionId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_N_S_P_R_V;
 
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] {
 				companyId, name, scope, primKeyId, roleId, viewActionId
 			};
@@ -6327,10 +6285,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_C_N_S_P_R_V_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_C_N_S_P_R_V_NAME_3);
 			}
 			else {
@@ -6403,6 +6358,8 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 	@Override
 	public int countByC_N_S_P_R_V(long companyId, String name, int scope,
 		long primKeyId, long[] roleIds, boolean viewActionId) {
+		name = Objects.toString(name, "");
+
 		if (roleIds == null) {
 			roleIds = new long[0];
 		}
@@ -6466,10 +6423,7 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_C_N_S_P_R_V_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_C_N_S_P_R_V_NAME_3);
 		}
 		else {
@@ -6537,7 +6491,6 @@ public class ResourcePermissionPersistenceImpl extends BasePersistenceImpl<Resou
 	}
 
 	private static final String _FINDER_COLUMN_C_N_S_P_R_V_COMPANYID_2 = "resourcePermission.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_N_S_P_R_V_NAME_1 = "resourcePermission.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_C_N_S_P_R_V_NAME_2 = "resourcePermission.name = ? AND ";
 	private static final String _FINDER_COLUMN_C_N_S_P_R_V_NAME_3 = "(resourcePermission.name IS NULL OR resourcePermission.name = '') AND ";
 	private static final String _FINDER_COLUMN_C_N_S_P_R_V_SCOPE_2 = "resourcePermission.scope = ? AND ";

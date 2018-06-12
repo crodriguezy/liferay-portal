@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -340,12 +341,7 @@ public class AssetVocabularyModelImpl extends BaseModelImpl<AssetVocabulary>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -354,7 +350,7 @@ public class AssetVocabularyModelImpl extends BaseModelImpl<AssetVocabulary>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -364,12 +360,7 @@ public class AssetVocabularyModelImpl extends BaseModelImpl<AssetVocabulary>
 	@JSON
 	@Override
 	public String getExternalReferenceCode() {
-		if (_externalReferenceCode == null) {
-			return "";
-		}
-		else {
-			return _externalReferenceCode;
-		}
+		return _externalReferenceCode;
 	}
 
 	@Override
@@ -380,7 +371,7 @@ public class AssetVocabularyModelImpl extends BaseModelImpl<AssetVocabulary>
 			_originalExternalReferenceCode = _externalReferenceCode;
 		}
 
-		_externalReferenceCode = externalReferenceCode;
+		_externalReferenceCode = Objects.toString(externalReferenceCode, "");
 	}
 
 	public String getOriginalExternalReferenceCode() {
@@ -474,17 +465,12 @@ public class AssetVocabularyModelImpl extends BaseModelImpl<AssetVocabulary>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -518,12 +504,7 @@ public class AssetVocabularyModelImpl extends BaseModelImpl<AssetVocabulary>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
@@ -534,7 +515,7 @@ public class AssetVocabularyModelImpl extends BaseModelImpl<AssetVocabulary>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -544,12 +525,7 @@ public class AssetVocabularyModelImpl extends BaseModelImpl<AssetVocabulary>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return _title;
 	}
 
 	@Override
@@ -597,7 +573,7 @@ public class AssetVocabularyModelImpl extends BaseModelImpl<AssetVocabulary>
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@Override
@@ -643,12 +619,7 @@ public class AssetVocabularyModelImpl extends BaseModelImpl<AssetVocabulary>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
@@ -696,7 +667,7 @@ public class AssetVocabularyModelImpl extends BaseModelImpl<AssetVocabulary>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -746,17 +717,12 @@ public class AssetVocabularyModelImpl extends BaseModelImpl<AssetVocabulary>
 	@JSON
 	@Override
 	public String getSettings() {
-		if (_settings == null) {
-			return "";
-		}
-		else {
-			return _settings;
-		}
+		return _settings;
 	}
 
 	@Override
 	public void setSettings(String settings) {
-		_settings = settings;
+		_settings = Objects.toString(settings, "");
 	}
 
 	@JSON

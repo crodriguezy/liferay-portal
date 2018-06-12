@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the OAuth2Authorization service. Represents a row in the &quot;OAuth2Authorization&quot; database table, with each column mapped to a property of this class.
@@ -427,17 +428,12 @@ public class OAuth2AuthorizationModelImpl extends BaseModelImpl<OAuth2Authorizat
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -485,17 +481,12 @@ public class OAuth2AuthorizationModelImpl extends BaseModelImpl<OAuth2Authorizat
 
 	@Override
 	public String getAccessTokenContent() {
-		if (_accessTokenContent == null) {
-			return "";
-		}
-		else {
-			return _accessTokenContent;
-		}
+		return _accessTokenContent;
 	}
 
 	@Override
 	public void setAccessTokenContent(String accessTokenContent) {
-		_accessTokenContent = accessTokenContent;
+		_accessTokenContent = Objects.toString(accessTokenContent, "");
 	}
 
 	@Override
@@ -542,32 +533,22 @@ public class OAuth2AuthorizationModelImpl extends BaseModelImpl<OAuth2Authorizat
 
 	@Override
 	public String getRemoteIPInfo() {
-		if (_remoteIPInfo == null) {
-			return "";
-		}
-		else {
-			return _remoteIPInfo;
-		}
+		return _remoteIPInfo;
 	}
 
 	@Override
 	public void setRemoteIPInfo(String remoteIPInfo) {
-		_remoteIPInfo = remoteIPInfo;
+		_remoteIPInfo = Objects.toString(remoteIPInfo, "");
 	}
 
 	@Override
 	public String getRefreshTokenContent() {
-		if (_refreshTokenContent == null) {
-			return "";
-		}
-		else {
-			return _refreshTokenContent;
-		}
+		return _refreshTokenContent;
 	}
 
 	@Override
 	public void setRefreshTokenContent(String refreshTokenContent) {
-		_refreshTokenContent = refreshTokenContent;
+		_refreshTokenContent = Objects.toString(refreshTokenContent, "");
 	}
 
 	@Override

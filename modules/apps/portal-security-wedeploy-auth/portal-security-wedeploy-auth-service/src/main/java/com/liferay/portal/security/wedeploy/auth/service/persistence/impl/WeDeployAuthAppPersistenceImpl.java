@@ -162,6 +162,9 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 	@Override
 	public WeDeployAuthApp fetchByRU_CI(String redirectURI, String clientId,
 		boolean retrieveFromCache) {
+		redirectURI = Objects.toString(redirectURI, "");
+		clientId = Objects.toString(clientId, "");
+
 		Object[] finderArgs = new Object[] { redirectURI, clientId };
 
 		Object result = null;
@@ -187,10 +190,7 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 
 			boolean bindRedirectURI = false;
 
-			if (redirectURI == null) {
-				query.append(_FINDER_COLUMN_RU_CI_REDIRECTURI_1);
-			}
-			else if (redirectURI.equals("")) {
+			if (redirectURI.equals("")) {
 				query.append(_FINDER_COLUMN_RU_CI_REDIRECTURI_3);
 			}
 			else {
@@ -201,10 +201,7 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 
 			boolean bindClientId = false;
 
-			if (clientId == null) {
-				query.append(_FINDER_COLUMN_RU_CI_CLIENTID_1);
-			}
-			else if (clientId.equals("")) {
+			if (clientId.equals("")) {
 				query.append(_FINDER_COLUMN_RU_CI_CLIENTID_3);
 			}
 			else {
@@ -301,6 +298,9 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 	public int countByRU_CI(String redirectURI, String clientId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_RU_CI;
 
+		redirectURI = Objects.toString(redirectURI, "");
+		clientId = Objects.toString(clientId, "");
+
 		Object[] finderArgs = new Object[] { redirectURI, clientId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -312,10 +312,7 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 
 			boolean bindRedirectURI = false;
 
-			if (redirectURI == null) {
-				query.append(_FINDER_COLUMN_RU_CI_REDIRECTURI_1);
-			}
-			else if (redirectURI.equals("")) {
+			if (redirectURI.equals("")) {
 				query.append(_FINDER_COLUMN_RU_CI_REDIRECTURI_3);
 			}
 			else {
@@ -326,10 +323,7 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 
 			boolean bindClientId = false;
 
-			if (clientId == null) {
-				query.append(_FINDER_COLUMN_RU_CI_CLIENTID_1);
-			}
-			else if (clientId.equals("")) {
+			if (clientId.equals("")) {
 				query.append(_FINDER_COLUMN_RU_CI_CLIENTID_3);
 			}
 			else {
@@ -374,10 +368,8 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_RU_CI_REDIRECTURI_1 = "weDeployAuthApp.redirectURI IS NULL AND ";
 	private static final String _FINDER_COLUMN_RU_CI_REDIRECTURI_2 = "weDeployAuthApp.redirectURI = ? AND ";
 	private static final String _FINDER_COLUMN_RU_CI_REDIRECTURI_3 = "(weDeployAuthApp.redirectURI IS NULL OR weDeployAuthApp.redirectURI = '') AND ";
-	private static final String _FINDER_COLUMN_RU_CI_CLIENTID_1 = "weDeployAuthApp.clientId IS NULL";
 	private static final String _FINDER_COLUMN_RU_CI_CLIENTID_2 = "weDeployAuthApp.clientId = ?";
 	private static final String _FINDER_COLUMN_RU_CI_CLIENTID_3 = "(weDeployAuthApp.clientId IS NULL OR weDeployAuthApp.clientId = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_CI_CS = new FinderPath(WeDeployAuthAppModelImpl.ENTITY_CACHE_ENABLED,
@@ -451,6 +443,9 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 	@Override
 	public WeDeployAuthApp fetchByCI_CS(String clientId, String clientSecret,
 		boolean retrieveFromCache) {
+		clientId = Objects.toString(clientId, "");
+		clientSecret = Objects.toString(clientSecret, "");
+
 		Object[] finderArgs = new Object[] { clientId, clientSecret };
 
 		Object result = null;
@@ -477,10 +472,7 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 
 			boolean bindClientId = false;
 
-			if (clientId == null) {
-				query.append(_FINDER_COLUMN_CI_CS_CLIENTID_1);
-			}
-			else if (clientId.equals("")) {
+			if (clientId.equals("")) {
 				query.append(_FINDER_COLUMN_CI_CS_CLIENTID_3);
 			}
 			else {
@@ -491,10 +483,7 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 
 			boolean bindClientSecret = false;
 
-			if (clientSecret == null) {
-				query.append(_FINDER_COLUMN_CI_CS_CLIENTSECRET_1);
-			}
-			else if (clientSecret.equals("")) {
+			if (clientSecret.equals("")) {
 				query.append(_FINDER_COLUMN_CI_CS_CLIENTSECRET_3);
 			}
 			else {
@@ -591,6 +580,9 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 	public int countByCI_CS(String clientId, String clientSecret) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_CI_CS;
 
+		clientId = Objects.toString(clientId, "");
+		clientSecret = Objects.toString(clientSecret, "");
+
 		Object[] finderArgs = new Object[] { clientId, clientSecret };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -602,10 +594,7 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 
 			boolean bindClientId = false;
 
-			if (clientId == null) {
-				query.append(_FINDER_COLUMN_CI_CS_CLIENTID_1);
-			}
-			else if (clientId.equals("")) {
+			if (clientId.equals("")) {
 				query.append(_FINDER_COLUMN_CI_CS_CLIENTID_3);
 			}
 			else {
@@ -616,10 +605,7 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 
 			boolean bindClientSecret = false;
 
-			if (clientSecret == null) {
-				query.append(_FINDER_COLUMN_CI_CS_CLIENTSECRET_1);
-			}
-			else if (clientSecret.equals("")) {
+			if (clientSecret.equals("")) {
 				query.append(_FINDER_COLUMN_CI_CS_CLIENTSECRET_3);
 			}
 			else {
@@ -664,10 +650,8 @@ public class WeDeployAuthAppPersistenceImpl extends BasePersistenceImpl<WeDeploy
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_CI_CS_CLIENTID_1 = "weDeployAuthApp.clientId IS NULL AND ";
 	private static final String _FINDER_COLUMN_CI_CS_CLIENTID_2 = "weDeployAuthApp.clientId = ? AND ";
 	private static final String _FINDER_COLUMN_CI_CS_CLIENTID_3 = "(weDeployAuthApp.clientId IS NULL OR weDeployAuthApp.clientId = '') AND ";
-	private static final String _FINDER_COLUMN_CI_CS_CLIENTSECRET_1 = "weDeployAuthApp.clientSecret IS NULL";
 	private static final String _FINDER_COLUMN_CI_CS_CLIENTSECRET_2 = "weDeployAuthApp.clientSecret = ?";
 	private static final String _FINDER_COLUMN_CI_CS_CLIENTSECRET_3 = "(weDeployAuthApp.clientSecret IS NULL OR weDeployAuthApp.clientSecret = '')";
 

@@ -192,6 +192,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -235,10 +237,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -449,6 +448,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	protected Organization getByUuid_PrevAndNext(Session session,
 		Organization organization, String uuid,
 		OrderByComparator<Organization> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -464,10 +465,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_UUID_3);
 		}
 		else {
@@ -610,6 +608,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	@Override
 	public List<Organization> filterFindByUuid(String uuid, int start, int end,
 		OrderByComparator<Organization> orderByComparator) {
+		uuid = Objects.toString(uuid, "");
+
 		if (!InlineSQLHelperUtil.isEnabled()) {
 			return findByUuid(uuid, start, end, orderByComparator);
 		}
@@ -633,10 +633,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_UUID_1_SQL);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_UUID_3_SQL);
 		}
 		else {
@@ -751,6 +748,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	protected Organization filterGetByUuid_PrevAndNext(Session session,
 		Organization organization, String uuid,
 		OrderByComparator<Organization> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -771,10 +770,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_UUID_1_SQL);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_UUID_3_SQL);
 		}
 		else {
@@ -926,6 +922,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -937,10 +935,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -989,6 +984,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	 */
 	@Override
 	public int filterCountByUuid(String uuid) {
+		uuid = Objects.toString(uuid, "");
+
 		if (!InlineSQLHelperUtil.isEnabled()) {
 			return countByUuid(uuid);
 		}
@@ -999,10 +996,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_UUID_1_SQL);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_UUID_3_SQL);
 		}
 		else {
@@ -1043,10 +1037,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "organization.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "organization.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(organization.uuid IS NULL OR organization.uuid = '')";
-	private static final String _FINDER_COLUMN_UUID_UUID_1_SQL = "organization.uuid_ IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2_SQL = "organization.uuid_ = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3_SQL = "(organization.uuid_ IS NULL OR organization.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
@@ -1146,6 +1138,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -1194,10 +1188,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1427,6 +1418,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	protected Organization getByUuid_C_PrevAndNext(Session session,
 		Organization organization, String uuid, long companyId,
 		OrderByComparator<Organization> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1442,10 +1435,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 		}
 		else {
@@ -1597,6 +1587,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	@Override
 	public List<Organization> filterFindByUuid_C(String uuid, long companyId,
 		int start, int end, OrderByComparator<Organization> orderByComparator) {
+		uuid = Objects.toString(uuid, "");
+
 		if (!InlineSQLHelperUtil.isEnabled(companyId, 0)) {
 			return findByUuid_C(uuid, companyId, start, end, orderByComparator);
 		}
@@ -1620,10 +1612,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_C_UUID_1_SQL);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_3_SQL);
 		}
 		else {
@@ -1744,6 +1733,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	protected Organization filterGetByUuid_C_PrevAndNext(Session session,
 		Organization organization, String uuid, long companyId,
 		OrderByComparator<Organization> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1764,10 +1755,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_C_UUID_1_SQL);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_3_SQL);
 		}
 		else {
@@ -1925,6 +1913,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1936,10 +1926,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1993,6 +1980,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	 */
 	@Override
 	public int filterCountByUuid_C(String uuid, long companyId) {
+		uuid = Objects.toString(uuid, "");
+
 		if (!InlineSQLHelperUtil.isEnabled(companyId, 0)) {
 			return countByUuid_C(uuid, companyId);
 		}
@@ -2003,10 +1992,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_C_UUID_1_SQL);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_3_SQL);
 		}
 		else {
@@ -2051,10 +2037,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		}
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "organization.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "organization.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(organization.uuid IS NULL OR organization.uuid = '') AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1_SQL = "organization.uuid_ IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2_SQL = "organization.uuid_ = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3_SQL = "(organization.uuid_ IS NULL OR organization.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "organization.companyId = ?";
@@ -4810,6 +4794,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		treePath = Objects.toString(treePath, "");
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_T;
 		finderArgs = new Object[] {
 				companyId, treePath,
@@ -4854,10 +4840,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 			boolean bindTreePath = false;
 
-			if (treePath == null) {
-				query.append(_FINDER_COLUMN_C_T_TREEPATH_1);
-			}
-			else if (treePath.equals("")) {
+			if (treePath.equals("")) {
 				query.append(_FINDER_COLUMN_C_T_TREEPATH_3);
 			}
 			else {
@@ -5085,6 +5068,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	protected Organization getByC_T_PrevAndNext(Session session,
 		Organization organization, long companyId, String treePath,
 		OrderByComparator<Organization> orderByComparator, boolean previous) {
+		treePath = Objects.toString(treePath, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -5102,10 +5087,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		boolean bindTreePath = false;
 
-		if (treePath == null) {
-			query.append(_FINDER_COLUMN_C_T_TREEPATH_1);
-		}
-		else if (treePath.equals("")) {
+		if (treePath.equals("")) {
 			query.append(_FINDER_COLUMN_C_T_TREEPATH_3);
 		}
 		else {
@@ -5255,6 +5237,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	@Override
 	public List<Organization> filterFindByC_T(long companyId, String treePath,
 		int start, int end, OrderByComparator<Organization> orderByComparator) {
+		treePath = Objects.toString(treePath, "");
+
 		if (!InlineSQLHelperUtil.isEnabled(companyId, 0)) {
 			return findByC_T(companyId, treePath, start, end, orderByComparator);
 		}
@@ -5280,10 +5264,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		boolean bindTreePath = false;
 
-		if (treePath == null) {
-			query.append(_FINDER_COLUMN_C_T_TREEPATH_1);
-		}
-		else if (treePath.equals("")) {
+		if (treePath.equals("")) {
 			query.append(_FINDER_COLUMN_C_T_TREEPATH_3);
 		}
 		else {
@@ -5402,6 +5383,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	protected Organization filterGetByC_T_PrevAndNext(Session session,
 		Organization organization, long companyId, String treePath,
 		OrderByComparator<Organization> orderByComparator, boolean previous) {
+		treePath = Objects.toString(treePath, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -5424,10 +5407,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		boolean bindTreePath = false;
 
-		if (treePath == null) {
-			query.append(_FINDER_COLUMN_C_T_TREEPATH_1);
-		}
-		else if (treePath.equals("")) {
+		if (treePath.equals("")) {
 			query.append(_FINDER_COLUMN_C_T_TREEPATH_3);
 		}
 		else {
@@ -5583,6 +5563,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	public int countByC_T(long companyId, String treePath) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_C_T;
 
+		treePath = Objects.toString(treePath, "");
+
 		Object[] finderArgs = new Object[] { companyId, treePath };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -5596,10 +5578,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 			boolean bindTreePath = false;
 
-			if (treePath == null) {
-				query.append(_FINDER_COLUMN_C_T_TREEPATH_1);
-			}
-			else if (treePath.equals("")) {
+			if (treePath.equals("")) {
 				query.append(_FINDER_COLUMN_C_T_TREEPATH_3);
 			}
 			else {
@@ -5651,6 +5630,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	 */
 	@Override
 	public int filterCountByC_T(long companyId, String treePath) {
+		treePath = Objects.toString(treePath, "");
+
 		if (!InlineSQLHelperUtil.isEnabled(companyId, 0)) {
 			return countByC_T(companyId, treePath);
 		}
@@ -5663,10 +5644,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 		boolean bindTreePath = false;
 
-		if (treePath == null) {
-			query.append(_FINDER_COLUMN_C_T_TREEPATH_1);
-		}
-		else if (treePath.equals("")) {
+		if (treePath.equals("")) {
 			query.append(_FINDER_COLUMN_C_T_TREEPATH_3);
 		}
 		else {
@@ -5710,7 +5688,6 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	}
 
 	private static final String _FINDER_COLUMN_C_T_COMPANYID_2 = "organization.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_T_TREEPATH_1 = "organization.treePath IS NULL";
 	private static final String _FINDER_COLUMN_C_T_TREEPATH_2 = "organization.treePath LIKE ?";
 	private static final String _FINDER_COLUMN_C_T_TREEPATH_3 = "(organization.treePath IS NULL OR organization.treePath LIKE '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_N = new FinderPath(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
@@ -5783,6 +5760,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	@Override
 	public Organization fetchByC_N(long companyId, String name,
 		boolean retrieveFromCache) {
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { companyId, name };
 
 		Object result = null;
@@ -5810,10 +5789,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_C_N_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_C_N_NAME_3);
 			}
 			else {
@@ -5897,6 +5873,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	public int countByC_N(long companyId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_N;
 
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { companyId, name };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -5910,10 +5888,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_C_N_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_C_N_NAME_3);
 			}
 			else {
@@ -5957,7 +5932,6 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	}
 
 	private static final String _FINDER_COLUMN_C_N_COMPANYID_2 = "organization.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_N_NAME_1 = "organization.name IS NULL";
 	private static final String _FINDER_COLUMN_C_N_NAME_2 = "organization.name = ?";
 	private static final String _FINDER_COLUMN_C_N_NAME_3 = "(organization.name IS NULL OR organization.name = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_O_C_P = new FinderPath(OrganizationModelImpl.ENTITY_CACHE_ENABLED,
@@ -6650,6 +6624,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	@Override
 	public Organization fetchByC_ERC(long companyId,
 		String externalReferenceCode, boolean retrieveFromCache) {
+		externalReferenceCode = Objects.toString(externalReferenceCode, "");
+
 		Object[] finderArgs = new Object[] { companyId, externalReferenceCode };
 
 		Object result = null;
@@ -6678,10 +6654,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 			boolean bindExternalReferenceCode = false;
 
-			if (externalReferenceCode == null) {
-				query.append(_FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_1);
-			}
-			else if (externalReferenceCode.equals("")) {
+			if (externalReferenceCode.equals("")) {
 				query.append(_FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_3);
 			}
 			else {
@@ -6776,6 +6749,8 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	public int countByC_ERC(long companyId, String externalReferenceCode) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_ERC;
 
+		externalReferenceCode = Objects.toString(externalReferenceCode, "");
+
 		Object[] finderArgs = new Object[] { companyId, externalReferenceCode };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -6789,10 +6764,7 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 
 			boolean bindExternalReferenceCode = false;
 
-			if (externalReferenceCode == null) {
-				query.append(_FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_1);
-			}
-			else if (externalReferenceCode.equals("")) {
+			if (externalReferenceCode.equals("")) {
 				query.append(_FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_3);
 			}
 			else {
@@ -6836,7 +6808,6 @@ public class OrganizationPersistenceImpl extends BasePersistenceImpl<Organizatio
 	}
 
 	private static final String _FINDER_COLUMN_C_ERC_COMPANYID_2 = "organization.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_1 = "organization.externalReferenceCode IS NULL";
 	private static final String _FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_2 = "organization.externalReferenceCode = ?";
 	private static final String _FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_3 = "(organization.externalReferenceCode IS NULL OR organization.externalReferenceCode = '')";
 

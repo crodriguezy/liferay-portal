@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Gadget service. Represents a row in the &quot;OpenSocial_Gadget&quot; database table, with each column mapped to a property of this class.
@@ -278,12 +279,7 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -292,7 +288,7 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -364,30 +360,20 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
 	public void setName(String name) {
 		_columnBitmask = -1L;
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
 	@Override
 	public String getUrl() {
-		if (_url == null) {
-			return "";
-		}
-		else {
-			return _url;
-		}
+		return _url;
 	}
 
 	@Override
@@ -398,7 +384,7 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 			_originalUrl = _url;
 		}
 
-		_url = url;
+		_url = Objects.toString(url, "");
 	}
 
 	public String getOriginalUrl() {
@@ -408,17 +394,12 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 	@JSON
 	@Override
 	public String getPortletCategoryNames() {
-		if (_portletCategoryNames == null) {
-			return "";
-		}
-		else {
-			return _portletCategoryNames;
-		}
+		return _portletCategoryNames;
 	}
 
 	@Override
 	public void setPortletCategoryNames(String portletCategoryNames) {
-		_portletCategoryNames = portletCategoryNames;
+		_portletCategoryNames = Objects.toString(portletCategoryNames, "");
 	}
 
 	@JSON

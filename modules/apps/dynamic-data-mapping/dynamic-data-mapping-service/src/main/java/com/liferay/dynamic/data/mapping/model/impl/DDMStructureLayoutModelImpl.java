@@ -44,6 +44,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the DDMStructureLayout service. Represents a row in the &quot;DDMStructureLayout&quot; database table, with each column mapped to a property of this class.
@@ -237,12 +238,7 @@ public class DDMStructureLayoutModelImpl extends BaseModelImpl<DDMStructureLayou
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -251,7 +247,7 @@ public class DDMStructureLayoutModelImpl extends BaseModelImpl<DDMStructureLayou
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -340,17 +336,12 @@ public class DDMStructureLayoutModelImpl extends BaseModelImpl<DDMStructureLayou
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -403,17 +394,12 @@ public class DDMStructureLayoutModelImpl extends BaseModelImpl<DDMStructureLayou
 
 	@Override
 	public String getDefinition() {
-		if (_definition == null) {
-			return "";
-		}
-		else {
-			return _definition;
-		}
+		return _definition;
 	}
 
 	@Override
 	public void setDefinition(String definition) {
-		_definition = definition;
+		_definition = Objects.toString(definition, "");
 	}
 
 	public com.liferay.dynamic.data.mapping.model.DDMFormLayout getDDMFormLayout() {

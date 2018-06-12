@@ -37,6 +37,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Module service. Represents a row in the &quot;Marketplace_Module&quot; database table, with each column mapped to a property of this class.
@@ -205,12 +206,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -219,7 +215,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -282,12 +278,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 
 	@Override
 	public String getBundleSymbolicName() {
-		if (_bundleSymbolicName == null) {
-			return "";
-		}
-		else {
-			return _bundleSymbolicName;
-		}
+		return _bundleSymbolicName;
 	}
 
 	@Override
@@ -298,7 +289,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 			_originalBundleSymbolicName = _bundleSymbolicName;
 		}
 
-		_bundleSymbolicName = bundleSymbolicName;
+		_bundleSymbolicName = Objects.toString(bundleSymbolicName, "");
 	}
 
 	public String getOriginalBundleSymbolicName() {
@@ -307,12 +298,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 
 	@Override
 	public String getBundleVersion() {
-		if (_bundleVersion == null) {
-			return "";
-		}
-		else {
-			return _bundleVersion;
-		}
+		return _bundleVersion;
 	}
 
 	@Override
@@ -323,7 +309,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 			_originalBundleVersion = _bundleVersion;
 		}
 
-		_bundleVersion = bundleVersion;
+		_bundleVersion = Objects.toString(bundleVersion, "");
 	}
 
 	public String getOriginalBundleVersion() {
@@ -332,12 +318,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 
 	@Override
 	public String getContextName() {
-		if (_contextName == null) {
-			return "";
-		}
-		else {
-			return _contextName;
-		}
+		return _contextName;
 	}
 
 	@Override
@@ -348,7 +329,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 			_originalContextName = _contextName;
 		}
 
-		_contextName = contextName;
+		_contextName = Objects.toString(contextName, "");
 	}
 
 	public String getOriginalContextName() {

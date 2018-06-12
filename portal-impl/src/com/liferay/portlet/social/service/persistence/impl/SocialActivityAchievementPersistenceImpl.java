@@ -1253,6 +1253,8 @@ public class SocialActivityAchievementPersistenceImpl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		name = Objects.toString(name, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -1304,10 +1306,7 @@ public class SocialActivityAchievementPersistenceImpl
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_N_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_NAME_3);
 			}
 			else {
@@ -1538,6 +1537,8 @@ public class SocialActivityAchievementPersistenceImpl
 		String name,
 		OrderByComparator<SocialActivityAchievement> orderByComparator,
 		boolean previous) {
+		name = Objects.toString(name, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1555,10 +1556,7 @@ public class SocialActivityAchievementPersistenceImpl
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_G_N_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_G_N_NAME_3);
 		}
 		else {
@@ -1684,6 +1682,8 @@ public class SocialActivityAchievementPersistenceImpl
 	public int countByG_N(long groupId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N;
 
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { groupId, name };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1697,10 +1697,7 @@ public class SocialActivityAchievementPersistenceImpl
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_N_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_NAME_3);
 			}
 			else {
@@ -1744,7 +1741,6 @@ public class SocialActivityAchievementPersistenceImpl
 	}
 
 	private static final String _FINDER_COLUMN_G_N_GROUPID_2 = "socialActivityAchievement.groupId = ? AND ";
-	private static final String _FINDER_COLUMN_G_N_NAME_1 = "socialActivityAchievement.name IS NULL";
 	private static final String _FINDER_COLUMN_G_N_NAME_2 = "socialActivityAchievement.name = ?";
 	private static final String _FINDER_COLUMN_G_N_NAME_3 = "(socialActivityAchievement.name IS NULL OR socialActivityAchievement.name = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_F = new FinderPath(SocialActivityAchievementModelImpl.ENTITY_CACHE_ENABLED,
@@ -2389,6 +2385,8 @@ public class SocialActivityAchievementPersistenceImpl
 	@Override
 	public SocialActivityAchievement fetchByG_U_N(long groupId, long userId,
 		String name, boolean retrieveFromCache) {
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { groupId, userId, name };
 
 		Object result = null;
@@ -2419,10 +2417,7 @@ public class SocialActivityAchievementPersistenceImpl
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_U_N_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_U_N_NAME_3);
 			}
 			else {
@@ -2511,6 +2506,8 @@ public class SocialActivityAchievementPersistenceImpl
 	public int countByG_U_N(long groupId, long userId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_U_N;
 
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { groupId, userId, name };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -2526,10 +2523,7 @@ public class SocialActivityAchievementPersistenceImpl
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_U_N_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_U_N_NAME_3);
 			}
 			else {
@@ -2576,7 +2570,6 @@ public class SocialActivityAchievementPersistenceImpl
 
 	private static final String _FINDER_COLUMN_G_U_N_GROUPID_2 = "socialActivityAchievement.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_U_N_USERID_2 = "socialActivityAchievement.userId = ? AND ";
-	private static final String _FINDER_COLUMN_G_U_N_NAME_1 = "socialActivityAchievement.name IS NULL";
 	private static final String _FINDER_COLUMN_G_U_N_NAME_2 = "socialActivityAchievement.name = ?";
 	private static final String _FINDER_COLUMN_G_U_N_NAME_3 = "(socialActivityAchievement.name IS NULL OR socialActivityAchievement.name = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_U_F = new FinderPath(SocialActivityAchievementModelImpl.ENTITY_CACHE_ENABLED,

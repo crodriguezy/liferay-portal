@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -318,12 +319,7 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -332,7 +328,7 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -403,17 +399,12 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -447,17 +438,13 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 	@JSON
 	@Override
 	public String getAllowedServiceSignatures() {
-		if (_allowedServiceSignatures == null) {
-			return "";
-		}
-		else {
-			return _allowedServiceSignatures;
-		}
+		return _allowedServiceSignatures;
 	}
 
 	@Override
 	public void setAllowedServiceSignatures(String allowedServiceSignatures) {
-		_allowedServiceSignatures = allowedServiceSignatures;
+		_allowedServiceSignatures = Objects.toString(allowedServiceSignatures,
+				"");
 	}
 
 	@JSON
@@ -509,12 +496,7 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
@@ -525,7 +507,7 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -535,12 +517,7 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return _title;
 	}
 
 	@Override
@@ -588,7 +565,7 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@Override

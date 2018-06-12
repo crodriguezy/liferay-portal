@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoTaskAssignmentInstance service. Represents a row in the &quot;KaleoTaskAssignmentInstance&quot; database table, with each column mapped to a property of this class.
@@ -386,17 +387,12 @@ public class KaleoTaskAssignmentInstanceModelImpl extends BaseModelImpl<KaleoTas
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -513,27 +509,17 @@ public class KaleoTaskAssignmentInstanceModelImpl extends BaseModelImpl<KaleoTas
 
 	@Override
 	public String getKaleoTaskName() {
-		if (_kaleoTaskName == null) {
-			return "";
-		}
-		else {
-			return _kaleoTaskName;
-		}
+		return _kaleoTaskName;
 	}
 
 	@Override
 	public void setKaleoTaskName(String kaleoTaskName) {
-		_kaleoTaskName = kaleoTaskName;
+		_kaleoTaskName = Objects.toString(kaleoTaskName, "");
 	}
 
 	@Override
 	public String getAssigneeClassName() {
-		if (_assigneeClassName == null) {
-			return "";
-		}
-		else {
-			return _assigneeClassName;
-		}
+		return _assigneeClassName;
 	}
 
 	@Override
@@ -544,7 +530,7 @@ public class KaleoTaskAssignmentInstanceModelImpl extends BaseModelImpl<KaleoTas
 			_originalAssigneeClassName = _assigneeClassName;
 		}
 
-		_assigneeClassName = assigneeClassName;
+		_assigneeClassName = Objects.toString(assigneeClassName, "");
 	}
 
 	public String getOriginalAssigneeClassName() {

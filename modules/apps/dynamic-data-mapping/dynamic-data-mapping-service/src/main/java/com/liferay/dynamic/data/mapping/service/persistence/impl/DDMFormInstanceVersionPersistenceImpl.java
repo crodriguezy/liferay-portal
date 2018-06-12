@@ -687,6 +687,8 @@ public class DDMFormInstanceVersionPersistenceImpl extends BasePersistenceImpl<D
 	@Override
 	public DDMFormInstanceVersion fetchByF_V(long formInstanceId,
 		String version, boolean retrieveFromCache) {
+		version = Objects.toString(version, "");
+
 		Object[] finderArgs = new Object[] { formInstanceId, version };
 
 		Object result = null;
@@ -714,10 +716,7 @@ public class DDMFormInstanceVersionPersistenceImpl extends BasePersistenceImpl<D
 
 			boolean bindVersion = false;
 
-			if (version == null) {
-				query.append(_FINDER_COLUMN_F_V_VERSION_1);
-			}
-			else if (version.equals("")) {
+			if (version.equals("")) {
 				query.append(_FINDER_COLUMN_F_V_VERSION_3);
 			}
 			else {
@@ -802,6 +801,8 @@ public class DDMFormInstanceVersionPersistenceImpl extends BasePersistenceImpl<D
 	public int countByF_V(long formInstanceId, String version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_F_V;
 
+		version = Objects.toString(version, "");
+
 		Object[] finderArgs = new Object[] { formInstanceId, version };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -815,10 +816,7 @@ public class DDMFormInstanceVersionPersistenceImpl extends BasePersistenceImpl<D
 
 			boolean bindVersion = false;
 
-			if (version == null) {
-				query.append(_FINDER_COLUMN_F_V_VERSION_1);
-			}
-			else if (version.equals("")) {
+			if (version.equals("")) {
 				query.append(_FINDER_COLUMN_F_V_VERSION_3);
 			}
 			else {
@@ -862,7 +860,6 @@ public class DDMFormInstanceVersionPersistenceImpl extends BasePersistenceImpl<D
 	}
 
 	private static final String _FINDER_COLUMN_F_V_FORMINSTANCEID_2 = "ddmFormInstanceVersion.formInstanceId = ? AND ";
-	private static final String _FINDER_COLUMN_F_V_VERSION_1 = "ddmFormInstanceVersion.version IS NULL";
 	private static final String _FINDER_COLUMN_F_V_VERSION_2 = "ddmFormInstanceVersion.version = ?";
 	private static final String _FINDER_COLUMN_F_V_VERSION_3 = "(ddmFormInstanceVersion.version IS NULL OR ddmFormInstanceVersion.version = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_F_S = new FinderPath(DDMFormInstanceVersionModelImpl.ENTITY_CACHE_ENABLED,

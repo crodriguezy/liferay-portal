@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoTimerInstanceToken service. Represents a row in the &quot;KaleoTimerInstanceToken&quot; database table, with each column mapped to a property of this class.
@@ -386,17 +387,12 @@ public class KaleoTimerInstanceTokenModelImpl extends BaseModelImpl<KaleoTimerIn
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -427,17 +423,12 @@ public class KaleoTimerInstanceTokenModelImpl extends BaseModelImpl<KaleoTimerIn
 
 	@Override
 	public String getKaleoClassName() {
-		if (_kaleoClassName == null) {
-			return "";
-		}
-		else {
-			return _kaleoClassName;
-		}
+		return _kaleoClassName;
 	}
 
 	@Override
 	public void setKaleoClassName(String kaleoClassName) {
-		_kaleoClassName = kaleoClassName;
+		_kaleoClassName = Objects.toString(kaleoClassName, "");
 	}
 
 	@Override
@@ -538,17 +529,12 @@ public class KaleoTimerInstanceTokenModelImpl extends BaseModelImpl<KaleoTimerIn
 
 	@Override
 	public String getKaleoTimerName() {
-		if (_kaleoTimerName == null) {
-			return "";
-		}
-		else {
-			return _kaleoTimerName;
-		}
+		return _kaleoTimerName;
 	}
 
 	@Override
 	public void setKaleoTimerName(String kaleoTimerName) {
-		_kaleoTimerName = kaleoTimerName;
+		_kaleoTimerName = Objects.toString(kaleoTimerName, "");
 	}
 
 	@Override
@@ -643,17 +629,12 @@ public class KaleoTimerInstanceTokenModelImpl extends BaseModelImpl<KaleoTimerIn
 
 	@Override
 	public String getWorkflowContext() {
-		if (_workflowContext == null) {
-			return "";
-		}
-		else {
-			return _workflowContext;
-		}
+		return _workflowContext;
 	}
 
 	@Override
 	public void setWorkflowContext(String workflowContext) {
-		_workflowContext = workflowContext;
+		_workflowContext = Objects.toString(workflowContext, "");
 	}
 
 	public long getColumnBitmask() {

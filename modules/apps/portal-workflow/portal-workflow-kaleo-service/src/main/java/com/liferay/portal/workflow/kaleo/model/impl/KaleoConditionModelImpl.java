@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoCondition service. Represents a row in the &quot;KaleoCondition&quot; database table, with each column mapped to a property of this class.
@@ -322,17 +323,12 @@ public class KaleoConditionModelImpl extends BaseModelImpl<KaleoCondition>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -407,47 +403,32 @@ public class KaleoConditionModelImpl extends BaseModelImpl<KaleoCondition>
 
 	@Override
 	public String getScript() {
-		if (_script == null) {
-			return "";
-		}
-		else {
-			return _script;
-		}
+		return _script;
 	}
 
 	@Override
 	public void setScript(String script) {
-		_script = script;
+		_script = Objects.toString(script, "");
 	}
 
 	@Override
 	public String getScriptLanguage() {
-		if (_scriptLanguage == null) {
-			return "";
-		}
-		else {
-			return _scriptLanguage;
-		}
+		return _scriptLanguage;
 	}
 
 	@Override
 	public void setScriptLanguage(String scriptLanguage) {
-		_scriptLanguage = scriptLanguage;
+		_scriptLanguage = Objects.toString(scriptLanguage, "");
 	}
 
 	@Override
 	public String getScriptRequiredContexts() {
-		if (_scriptRequiredContexts == null) {
-			return "";
-		}
-		else {
-			return _scriptRequiredContexts;
-		}
+		return _scriptRequiredContexts;
 	}
 
 	@Override
 	public void setScriptRequiredContexts(String scriptRequiredContexts) {
-		_scriptRequiredContexts = scriptRequiredContexts;
+		_scriptRequiredContexts = Objects.toString(scriptRequiredContexts, "");
 	}
 
 	public long getColumnBitmask() {

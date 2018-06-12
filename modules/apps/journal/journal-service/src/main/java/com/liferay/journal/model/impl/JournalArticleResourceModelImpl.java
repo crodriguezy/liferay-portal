@@ -37,6 +37,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the JournalArticleResource service. Represents a row in the &quot;JournalArticleResource&quot; database table, with each column mapped to a property of this class.
@@ -185,12 +186,7 @@ public class JournalArticleResourceModelImpl extends BaseModelImpl<JournalArticl
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -199,7 +195,7 @@ public class JournalArticleResourceModelImpl extends BaseModelImpl<JournalArticl
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -262,12 +258,7 @@ public class JournalArticleResourceModelImpl extends BaseModelImpl<JournalArticl
 
 	@Override
 	public String getArticleId() {
-		if (_articleId == null) {
-			return "";
-		}
-		else {
-			return _articleId;
-		}
+		return _articleId;
 	}
 
 	@Override
@@ -278,7 +269,7 @@ public class JournalArticleResourceModelImpl extends BaseModelImpl<JournalArticl
 			_originalArticleId = _articleId;
 		}
 
-		_articleId = articleId;
+		_articleId = Objects.toString(articleId, "");
 	}
 
 	public String getOriginalArticleId() {

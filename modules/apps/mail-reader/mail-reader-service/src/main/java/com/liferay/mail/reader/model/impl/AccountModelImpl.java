@@ -41,6 +41,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Account service. Represents a row in the &quot;Mail_Account&quot; database table, with each column mapped to a property of this class.
@@ -433,17 +434,12 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -474,12 +470,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getAddress() {
-		if (_address == null) {
-			return "";
-		}
-		else {
-			return _address;
-		}
+		return _address;
 	}
 
 	@Override
@@ -490,7 +481,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 			_originalAddress = _address;
 		}
 
-		_address = address;
+		_address = Objects.toString(address, "");
 	}
 
 	public String getOriginalAddress() {
@@ -499,47 +490,32 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getPersonalName() {
-		if (_personalName == null) {
-			return "";
-		}
-		else {
-			return _personalName;
-		}
+		return _personalName;
 	}
 
 	@Override
 	public void setPersonalName(String personalName) {
-		_personalName = personalName;
+		_personalName = Objects.toString(personalName, "");
 	}
 
 	@Override
 	public String getProtocol() {
-		if (_protocol == null) {
-			return "";
-		}
-		else {
-			return _protocol;
-		}
+		return _protocol;
 	}
 
 	@Override
 	public void setProtocol(String protocol) {
-		_protocol = protocol;
+		_protocol = Objects.toString(protocol, "");
 	}
 
 	@Override
 	public String getIncomingHostName() {
-		if (_incomingHostName == null) {
-			return "";
-		}
-		else {
-			return _incomingHostName;
-		}
+		return _incomingHostName;
 	}
 
 	@Override
 	public void setIncomingHostName(String incomingHostName) {
-		_incomingHostName = incomingHostName;
+		_incomingHostName = Objects.toString(incomingHostName, "");
 	}
 
 	@Override
@@ -569,17 +545,12 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getOutgoingHostName() {
-		if (_outgoingHostName == null) {
-			return "";
-		}
-		else {
-			return _outgoingHostName;
-		}
+		return _outgoingHostName;
 	}
 
 	@Override
 	public void setOutgoingHostName(String outgoingHostName) {
-		_outgoingHostName = outgoingHostName;
+		_outgoingHostName = Objects.toString(outgoingHostName, "");
 	}
 
 	@Override
@@ -609,32 +580,22 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getLogin() {
-		if (_login == null) {
-			return "";
-		}
-		else {
-			return _login;
-		}
+		return _login;
 	}
 
 	@Override
 	public void setLogin(String login) {
-		_login = login;
+		_login = Objects.toString(login, "");
 	}
 
 	@Override
 	public String getPassword() {
-		if (_password == null) {
-			return "";
-		}
-		else {
-			return _password;
-		}
+		return _password;
 	}
 
 	@Override
 	public void setPassword(String password) {
-		_password = password;
+		_password = Objects.toString(password, "");
 	}
 
 	@Override
@@ -654,17 +615,12 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getSignature() {
-		if (_signature == null) {
-			return "";
-		}
-		else {
-			return _signature;
-		}
+		return _signature;
 	}
 
 	@Override
 	public void setSignature(String signature) {
-		_signature = signature;
+		_signature = Objects.toString(signature, "");
 	}
 
 	@Override
@@ -684,17 +640,12 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public String getFolderPrefix() {
-		if (_folderPrefix == null) {
-			return "";
-		}
-		else {
-			return _folderPrefix;
-		}
+		return _folderPrefix;
 	}
 
 	@Override
 	public void setFolderPrefix(String folderPrefix) {
-		_folderPrefix = folderPrefix;
+		_folderPrefix = Objects.toString(folderPrefix, "");
 	}
 
 	@Override

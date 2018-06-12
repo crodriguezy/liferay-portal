@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the DDLRecordVersion service. Represents a row in the &quot;DDLRecordVersion&quot; database table, with each column mapped to a property of this class.
@@ -424,17 +425,12 @@ public class DDLRecordVersionModelImpl extends BaseModelImpl<DDLRecordVersion>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -485,12 +481,7 @@ public class DDLRecordVersionModelImpl extends BaseModelImpl<DDLRecordVersion>
 	@JSON
 	@Override
 	public String getRecordSetVersion() {
-		if (_recordSetVersion == null) {
-			return "";
-		}
-		else {
-			return _recordSetVersion;
-		}
+		return _recordSetVersion;
 	}
 
 	@Override
@@ -501,7 +492,7 @@ public class DDLRecordVersionModelImpl extends BaseModelImpl<DDLRecordVersion>
 			_originalRecordSetVersion = _recordSetVersion;
 		}
 
-		_recordSetVersion = recordSetVersion;
+		_recordSetVersion = Objects.toString(recordSetVersion, "");
 	}
 
 	public String getOriginalRecordSetVersion() {
@@ -534,12 +525,7 @@ public class DDLRecordVersionModelImpl extends BaseModelImpl<DDLRecordVersion>
 	@JSON
 	@Override
 	public String getVersion() {
-		if (_version == null) {
-			return "";
-		}
-		else {
-			return _version;
-		}
+		return _version;
 	}
 
 	@Override
@@ -550,7 +536,7 @@ public class DDLRecordVersionModelImpl extends BaseModelImpl<DDLRecordVersion>
 			_originalVersion = _version;
 		}
 
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	public String getOriginalVersion() {
@@ -621,17 +607,12 @@ public class DDLRecordVersionModelImpl extends BaseModelImpl<DDLRecordVersion>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return _statusByUserName;
 	}
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON

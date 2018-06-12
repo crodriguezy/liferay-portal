@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Company service. Represents a row in the &quot;Company&quot; database table, with each column mapped to a property of this class.
@@ -326,12 +327,7 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 	@JSON
 	@Override
 	public String getWebId() {
-		if (_webId == null) {
-			return "";
-		}
-		else {
-			return _webId;
-		}
+		return _webId;
 	}
 
 	@Override
@@ -342,7 +338,7 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 			_originalWebId = _webId;
 		}
 
-		_webId = webId;
+		_webId = Objects.toString(webId, "");
 	}
 
 	public String getOriginalWebId() {
@@ -352,28 +348,18 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 	@JSON
 	@Override
 	public String getKey() {
-		if (_key == null) {
-			return "";
-		}
-		else {
-			return _key;
-		}
+		return _key;
 	}
 
 	@Override
 	public void setKey(String key) {
-		_key = key;
+		_key = Objects.toString(key, "");
 	}
 
 	@JSON
 	@Override
 	public String getMx() {
-		if (_mx == null) {
-			return "";
-		}
-		else {
-			return _mx;
-		}
+		return _mx;
 	}
 
 	@Override
@@ -384,7 +370,7 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 			_originalMx = _mx;
 		}
 
-		_mx = mx;
+		_mx = Objects.toString(mx, "");
 	}
 
 	public String getOriginalMx() {
@@ -394,17 +380,12 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 	@JSON
 	@Override
 	public String getHomeURL() {
-		if (_homeURL == null) {
-			return "";
-		}
-		else {
-			return _homeURL;
-		}
+		return _homeURL;
 	}
 
 	@Override
 	public void setHomeURL(String homeURL) {
-		_homeURL = homeURL;
+		_homeURL = Objects.toString(homeURL, "");
 	}
 
 	@JSON

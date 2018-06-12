@@ -704,6 +704,8 @@ public class UserNotificationDeliveryPersistenceImpl extends BasePersistenceImpl
 	public UserNotificationDelivery fetchByU_P_C_N_D(long userId,
 		String portletId, long classNameId, int notificationType,
 		int deliveryType, boolean retrieveFromCache) {
+		portletId = Objects.toString(portletId, "");
+
 		Object[] finderArgs = new Object[] {
 				userId, portletId, classNameId, notificationType, deliveryType
 			};
@@ -737,10 +739,7 @@ public class UserNotificationDeliveryPersistenceImpl extends BasePersistenceImpl
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_U_P_C_N_D_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_U_P_C_N_D_PORTLETID_3);
 			}
 			else {
@@ -846,6 +845,8 @@ public class UserNotificationDeliveryPersistenceImpl extends BasePersistenceImpl
 		long classNameId, int notificationType, int deliveryType) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_U_P_C_N_D;
 
+		portletId = Objects.toString(portletId, "");
+
 		Object[] finderArgs = new Object[] {
 				userId, portletId, classNameId, notificationType, deliveryType
 			};
@@ -861,10 +862,7 @@ public class UserNotificationDeliveryPersistenceImpl extends BasePersistenceImpl
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_U_P_C_N_D_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_U_P_C_N_D_PORTLETID_3);
 			}
 			else {
@@ -920,7 +918,6 @@ public class UserNotificationDeliveryPersistenceImpl extends BasePersistenceImpl
 	}
 
 	private static final String _FINDER_COLUMN_U_P_C_N_D_USERID_2 = "userNotificationDelivery.userId = ? AND ";
-	private static final String _FINDER_COLUMN_U_P_C_N_D_PORTLETID_1 = "userNotificationDelivery.portletId IS NULL AND ";
 	private static final String _FINDER_COLUMN_U_P_C_N_D_PORTLETID_2 = "userNotificationDelivery.portletId = ? AND ";
 	private static final String _FINDER_COLUMN_U_P_C_N_D_PORTLETID_3 = "(userNotificationDelivery.portletId IS NULL OR userNotificationDelivery.portletId = '') AND ";
 	private static final String _FINDER_COLUMN_U_P_C_N_D_CLASSNAMEID_2 = "userNotificationDelivery.classNameId = ? AND ";

@@ -156,6 +156,8 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 	 */
 	@Override
 	public MemberRequest fetchByKey(String key, boolean retrieveFromCache) {
+		key = Objects.toString(key, "");
+
 		Object[] finderArgs = new Object[] { key };
 
 		Object result = null;
@@ -180,10 +182,7 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 
 			boolean bindKey = false;
 
-			if (key == null) {
-				query.append(_FINDER_COLUMN_KEY_KEY_1);
-			}
-			else if (key.equals("")) {
+			if (key.equals("")) {
 				query.append(_FINDER_COLUMN_KEY_KEY_3);
 			}
 			else {
@@ -274,6 +273,8 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 	public int countByKey(String key) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_KEY;
 
+		key = Objects.toString(key, "");
+
 		Object[] finderArgs = new Object[] { key };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -285,10 +286,7 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 
 			boolean bindKey = false;
 
-			if (key == null) {
-				query.append(_FINDER_COLUMN_KEY_KEY_1);
-			}
-			else if (key.equals("")) {
+			if (key.equals("")) {
 				query.append(_FINDER_COLUMN_KEY_KEY_3);
 			}
 			else {
@@ -329,7 +327,6 @@ public class MemberRequestPersistenceImpl extends BasePersistenceImpl<MemberRequ
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_KEY_KEY_1 = "memberRequest.key IS NULL";
 	private static final String _FINDER_COLUMN_KEY_KEY_2 = "memberRequest.key = ?";
 	private static final String _FINDER_COLUMN_KEY_KEY_3 = "(memberRequest.key IS NULL OR memberRequest.key = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_RECEIVERUSERID =

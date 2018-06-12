@@ -50,6 +50,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the DLFileVersion service. Represents a row in the &quot;DLFileVersion&quot; database table, with each column mapped to a property of this class.
@@ -478,12 +479,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -492,7 +488,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -586,17 +582,12 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -689,60 +680,40 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getTreePath() {
-		if (_treePath == null) {
-			return "";
-		}
-		else {
-			return _treePath;
-		}
+		return _treePath;
 	}
 
 	@Override
 	public void setTreePath(String treePath) {
-		_treePath = treePath;
+		_treePath = Objects.toString(treePath, "");
 	}
 
 	@JSON
 	@Override
 	public String getFileName() {
-		if (_fileName == null) {
-			return "";
-		}
-		else {
-			return _fileName;
-		}
+		return _fileName;
 	}
 
 	@Override
 	public void setFileName(String fileName) {
-		_fileName = fileName;
+		_fileName = Objects.toString(fileName, "");
 	}
 
 	@JSON
 	@Override
 	public String getExtension() {
-		if (_extension == null) {
-			return "";
-		}
-		else {
-			return _extension;
-		}
+		return _extension;
 	}
 
 	@Override
 	public void setExtension(String extension) {
-		_extension = extension;
+		_extension = Objects.toString(extension, "");
 	}
 
 	@JSON
 	@Override
 	public String getMimeType() {
-		if (_mimeType == null) {
-			return "";
-		}
-		else {
-			return _mimeType;
-		}
+		return _mimeType;
 	}
 
 	@Override
@@ -753,7 +724,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 			_originalMimeType = _mimeType;
 		}
 
-		_mimeType = mimeType;
+		_mimeType = Objects.toString(mimeType, "");
 	}
 
 	public String getOriginalMimeType() {
@@ -763,12 +734,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return _title;
 	}
 
 	@Override
@@ -779,7 +745,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 			_originalTitle = _title;
 		}
 
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	public String getOriginalTitle() {
@@ -789,49 +755,34 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
 	@Override
 	public String getChangeLog() {
-		if (_changeLog == null) {
-			return "";
-		}
-		else {
-			return _changeLog;
-		}
+		return _changeLog;
 	}
 
 	@Override
 	public void setChangeLog(String changeLog) {
-		_changeLog = changeLog;
+		_changeLog = Objects.toString(changeLog, "");
 	}
 
 	@JSON
 	@Override
 	public String getExtraSettings() {
-		if (_extraSettings == null) {
-			return "";
-		}
-		else {
-			return _extraSettings;
-		}
+		return _extraSettings;
 	}
 
 	@Override
 	public void setExtraSettings(String extraSettings) {
-		_extraSettings = extraSettings;
+		_extraSettings = Objects.toString(extraSettings, "");
 	}
 
 	@JSON
@@ -848,12 +799,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getVersion() {
-		if (_version == null) {
-			return "";
-		}
-		else {
-			return _version;
-		}
+		return _version;
 	}
 
 	@Override
@@ -864,7 +810,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 			_originalVersion = _version;
 		}
 
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	public String getOriginalVersion() {
@@ -885,17 +831,12 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getChecksum() {
-		if (_checksum == null) {
-			return "";
-		}
-		else {
-			return _checksum;
-		}
+		return _checksum;
 	}
 
 	@Override
 	public void setChecksum(String checksum) {
-		_checksum = checksum;
+		_checksum = Objects.toString(checksum, "");
 	}
 
 	@JSON
@@ -962,17 +903,12 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return _statusByUserName;
 	}
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON

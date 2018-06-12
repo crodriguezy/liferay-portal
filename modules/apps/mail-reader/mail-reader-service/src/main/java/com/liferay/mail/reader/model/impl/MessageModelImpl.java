@@ -42,6 +42,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Message service. Represents a row in the &quot;Mail_Message&quot; database table, with each column mapped to a property of this class.
@@ -382,17 +383,12 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -455,62 +451,42 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getSender() {
-		if (_sender == null) {
-			return "";
-		}
-		else {
-			return _sender;
-		}
+		return _sender;
 	}
 
 	@Override
 	public void setSender(String sender) {
-		_sender = sender;
+		_sender = Objects.toString(sender, "");
 	}
 
 	@Override
 	public String getTo() {
-		if (_to == null) {
-			return "";
-		}
-		else {
-			return _to;
-		}
+		return _to;
 	}
 
 	@Override
 	public void setTo(String to) {
-		_to = to;
+		_to = Objects.toString(to, "");
 	}
 
 	@Override
 	public String getCc() {
-		if (_cc == null) {
-			return "";
-		}
-		else {
-			return _cc;
-		}
+		return _cc;
 	}
 
 	@Override
 	public void setCc(String cc) {
-		_cc = cc;
+		_cc = Objects.toString(cc, "");
 	}
 
 	@Override
 	public String getBcc() {
-		if (_bcc == null) {
-			return "";
-		}
-		else {
-			return _bcc;
-		}
+		return _bcc;
 	}
 
 	@Override
 	public void setBcc(String bcc) {
-		_bcc = bcc;
+		_bcc = Objects.toString(bcc, "");
 	}
 
 	@Override
@@ -527,62 +503,42 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getSubject() {
-		if (_subject == null) {
-			return "";
-		}
-		else {
-			return _subject;
-		}
+		return _subject;
 	}
 
 	@Override
 	public void setSubject(String subject) {
-		_subject = subject;
+		_subject = Objects.toString(subject, "");
 	}
 
 	@Override
 	public String getPreview() {
-		if (_preview == null) {
-			return "";
-		}
-		else {
-			return _preview;
-		}
+		return _preview;
 	}
 
 	@Override
 	public void setPreview(String preview) {
-		_preview = preview;
+		_preview = Objects.toString(preview, "");
 	}
 
 	@Override
 	public String getBody() {
-		if (_body == null) {
-			return "";
-		}
-		else {
-			return _body;
-		}
+		return _body;
 	}
 
 	@Override
 	public void setBody(String body) {
-		_body = body;
+		_body = Objects.toString(body, "");
 	}
 
 	@Override
 	public String getFlags() {
-		if (_flags == null) {
-			return "";
-		}
-		else {
-			return _flags;
-		}
+		return _flags;
 	}
 
 	@Override
 	public void setFlags(String flags) {
-		_flags = flags;
+		_flags = Objects.toString(flags, "");
 	}
 
 	@Override
@@ -619,17 +575,12 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public String getContentType() {
-		if (_contentType == null) {
-			return "";
-		}
-		else {
-			return _contentType;
-		}
+		return _contentType;
 	}
 
 	@Override
 	public void setContentType(String contentType) {
-		_contentType = contentType;
+		_contentType = Objects.toString(contentType, "");
 	}
 
 	public long getColumnBitmask() {

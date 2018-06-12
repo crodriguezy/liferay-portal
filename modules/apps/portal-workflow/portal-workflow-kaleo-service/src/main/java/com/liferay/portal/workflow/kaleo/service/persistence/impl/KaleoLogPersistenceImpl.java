@@ -2250,6 +2250,8 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		type = Objects.toString(type, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -2300,10 +2302,7 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 
 			boolean bindType = false;
 
-			if (type == null) {
-				query.append(_FINDER_COLUMN_KITI_T_TYPE_1);
-			}
-			else if (type.equals("")) {
+			if (type.equals("")) {
 				query.append(_FINDER_COLUMN_KITI_T_TYPE_3);
 			}
 			else {
@@ -2531,6 +2530,8 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 	protected KaleoLog getByKITI_T_PrevAndNext(Session session,
 		KaleoLog kaleoLog, long kaleoInstanceTokenId, String type,
 		OrderByComparator<KaleoLog> orderByComparator, boolean previous) {
+		type = Objects.toString(type, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -2548,10 +2549,7 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 
 		boolean bindType = false;
 
-		if (type == null) {
-			query.append(_FINDER_COLUMN_KITI_T_TYPE_1);
-		}
-		else if (type.equals("")) {
+		if (type.equals("")) {
 			query.append(_FINDER_COLUMN_KITI_T_TYPE_3);
 		}
 		else {
@@ -2677,6 +2675,8 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 	public int countByKITI_T(long kaleoInstanceTokenId, String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_KITI_T;
 
+		type = Objects.toString(type, "");
+
 		Object[] finderArgs = new Object[] { kaleoInstanceTokenId, type };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -2690,10 +2690,7 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 
 			boolean bindType = false;
 
-			if (type == null) {
-				query.append(_FINDER_COLUMN_KITI_T_TYPE_1);
-			}
-			else if (type.equals("")) {
+			if (type.equals("")) {
 				query.append(_FINDER_COLUMN_KITI_T_TYPE_3);
 			}
 			else {
@@ -2737,7 +2734,6 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 	}
 
 	private static final String _FINDER_COLUMN_KITI_T_KALEOINSTANCETOKENID_2 = "kaleoLog.kaleoInstanceTokenId = ? AND ";
-	private static final String _FINDER_COLUMN_KITI_T_TYPE_1 = "kaleoLog.type IS NULL";
 	private static final String _FINDER_COLUMN_KITI_T_TYPE_2 = "kaleoLog.type = ?";
 	private static final String _FINDER_COLUMN_KITI_T_TYPE_3 = "(kaleoLog.type IS NULL OR kaleoLog.type = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_KCN_KCPK_KITI_T =
@@ -2862,6 +2858,9 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		kaleoClassName = Objects.toString(kaleoClassName, "");
+		type = Objects.toString(type, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -2915,10 +2914,7 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 
 			boolean bindKaleoClassName = false;
 
-			if (kaleoClassName == null) {
-				query.append(_FINDER_COLUMN_KCN_KCPK_KITI_T_KALEOCLASSNAME_1);
-			}
-			else if (kaleoClassName.equals("")) {
+			if (kaleoClassName.equals("")) {
 				query.append(_FINDER_COLUMN_KCN_KCPK_KITI_T_KALEOCLASSNAME_3);
 			}
 			else {
@@ -2933,10 +2929,7 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 
 			boolean bindType = false;
 
-			if (type == null) {
-				query.append(_FINDER_COLUMN_KCN_KCPK_KITI_T_TYPE_1);
-			}
-			else if (type.equals("")) {
+			if (type.equals("")) {
 				query.append(_FINDER_COLUMN_KCN_KCPK_KITI_T_TYPE_3);
 			}
 			else {
@@ -3202,6 +3195,9 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 		KaleoLog kaleoLog, String kaleoClassName, long kaleoClassPK,
 		long kaleoInstanceTokenId, String type,
 		OrderByComparator<KaleoLog> orderByComparator, boolean previous) {
+		kaleoClassName = Objects.toString(kaleoClassName, "");
+		type = Objects.toString(type, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -3217,10 +3213,7 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 
 		boolean bindKaleoClassName = false;
 
-		if (kaleoClassName == null) {
-			query.append(_FINDER_COLUMN_KCN_KCPK_KITI_T_KALEOCLASSNAME_1);
-		}
-		else if (kaleoClassName.equals("")) {
+		if (kaleoClassName.equals("")) {
 			query.append(_FINDER_COLUMN_KCN_KCPK_KITI_T_KALEOCLASSNAME_3);
 		}
 		else {
@@ -3235,10 +3228,7 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 
 		boolean bindType = false;
 
-		if (type == null) {
-			query.append(_FINDER_COLUMN_KCN_KCPK_KITI_T_TYPE_1);
-		}
-		else if (type.equals("")) {
+		if (type.equals("")) {
 			query.append(_FINDER_COLUMN_KCN_KCPK_KITI_T_TYPE_3);
 		}
 		else {
@@ -3377,6 +3367,9 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 		long kaleoInstanceTokenId, String type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_KCN_KCPK_KITI_T;
 
+		kaleoClassName = Objects.toString(kaleoClassName, "");
+		type = Objects.toString(type, "");
+
 		Object[] finderArgs = new Object[] {
 				kaleoClassName, kaleoClassPK, kaleoInstanceTokenId, type
 			};
@@ -3390,10 +3383,7 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 
 			boolean bindKaleoClassName = false;
 
-			if (kaleoClassName == null) {
-				query.append(_FINDER_COLUMN_KCN_KCPK_KITI_T_KALEOCLASSNAME_1);
-			}
-			else if (kaleoClassName.equals("")) {
+			if (kaleoClassName.equals("")) {
 				query.append(_FINDER_COLUMN_KCN_KCPK_KITI_T_KALEOCLASSNAME_3);
 			}
 			else {
@@ -3408,10 +3398,7 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 
 			boolean bindType = false;
 
-			if (type == null) {
-				query.append(_FINDER_COLUMN_KCN_KCPK_KITI_T_TYPE_1);
-			}
-			else if (type.equals("")) {
+			if (type.equals("")) {
 				query.append(_FINDER_COLUMN_KCN_KCPK_KITI_T_TYPE_3);
 			}
 			else {
@@ -3460,13 +3447,11 @@ public class KaleoLogPersistenceImpl extends BasePersistenceImpl<KaleoLog>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_KCN_KCPK_KITI_T_KALEOCLASSNAME_1 = "kaleoLog.kaleoClassName IS NULL AND ";
 	private static final String _FINDER_COLUMN_KCN_KCPK_KITI_T_KALEOCLASSNAME_2 = "kaleoLog.kaleoClassName = ? AND ";
 	private static final String _FINDER_COLUMN_KCN_KCPK_KITI_T_KALEOCLASSNAME_3 = "(kaleoLog.kaleoClassName IS NULL OR kaleoLog.kaleoClassName = '') AND ";
 	private static final String _FINDER_COLUMN_KCN_KCPK_KITI_T_KALEOCLASSPK_2 = "kaleoLog.kaleoClassPK = ? AND ";
 	private static final String _FINDER_COLUMN_KCN_KCPK_KITI_T_KALEOINSTANCETOKENID_2 =
 		"kaleoLog.kaleoInstanceTokenId = ? AND ";
-	private static final String _FINDER_COLUMN_KCN_KCPK_KITI_T_TYPE_1 = "kaleoLog.type IS NULL";
 	private static final String _FINDER_COLUMN_KCN_KCPK_KITI_T_TYPE_2 = "kaleoLog.type = ?";
 	private static final String _FINDER_COLUMN_KCN_KCPK_KITI_T_TYPE_3 = "(kaleoLog.type IS NULL OR kaleoLog.type = '')";
 

@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Repository service. Represents a row in the &quot;Repository&quot; database table, with each column mapped to a property of this class.
@@ -363,12 +364,7 @@ public class RepositoryModelImpl extends BaseModelImpl<Repository>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -377,7 +373,7 @@ public class RepositoryModelImpl extends BaseModelImpl<Repository>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -471,17 +467,12 @@ public class RepositoryModelImpl extends BaseModelImpl<Repository>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -546,12 +537,7 @@ public class RepositoryModelImpl extends BaseModelImpl<Repository>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
@@ -562,7 +548,7 @@ public class RepositoryModelImpl extends BaseModelImpl<Repository>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -572,28 +558,18 @@ public class RepositoryModelImpl extends BaseModelImpl<Repository>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
 	@Override
 	public String getPortletId() {
-		if (_portletId == null) {
-			return "";
-		}
-		else {
-			return _portletId;
-		}
+		return _portletId;
 	}
 
 	@Override
@@ -604,7 +580,7 @@ public class RepositoryModelImpl extends BaseModelImpl<Repository>
 			_originalPortletId = _portletId;
 		}
 
-		_portletId = portletId;
+		_portletId = Objects.toString(portletId, "");
 	}
 
 	public String getOriginalPortletId() {
@@ -614,17 +590,12 @@ public class RepositoryModelImpl extends BaseModelImpl<Repository>
 	@JSON
 	@Override
 	public String getTypeSettings() {
-		if (_typeSettings == null) {
-			return "";
-		}
-		else {
-			return _typeSettings;
-		}
+		return _typeSettings;
 	}
 
 	@Override
 	public void setTypeSettings(String typeSettings) {
-		_typeSettings = typeSettings;
+		_typeSettings = Objects.toString(typeSettings, "");
 	}
 
 	@JSON

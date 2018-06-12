@@ -202,6 +202,12 @@ that may or may not be enforced with a unique index at the database level. Case
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		<#list entityColumns as entityColumn>
+			<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+				${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
+			</#if>
+		</#list>
+
 		<#if !entityFinder.hasCustomComparator()>
 			if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) && (orderByComparator == null)) {
 				pagination = false;
@@ -553,6 +559,11 @@ that may or may not be enforced with a unique index at the database level. Case
 			</#list>
 
 			OrderByComparator<${entity.name}> orderByComparator, boolean previous) {
+			<#list entityColumns as entityColumn>
+				<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+					${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
+				</#if>
+			</#list>
 
 			<#include "persistence_impl_get_by_prev_and_next_query.ftl">
 
@@ -670,6 +681,12 @@ that may or may not be enforced with a unique index at the database level. Case
 		</#list>
 
 		int start, int end, OrderByComparator<${entity.name}> orderByComparator) {
+			<#list entityColumns as entityColumn>
+				<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+					${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
+				</#if>
+			</#list>
+
 			<#if entityFinder.hasEntityColumn("groupId")>
 				if (!InlineSQLHelperUtil.isEnabled(groupId)) {
 			<#elseif entityFinder.hasEntityColumn("companyId")>
@@ -872,6 +889,11 @@ that may or may not be enforced with a unique index at the database level. Case
 				</#list>
 
 				OrderByComparator<${entity.name}> orderByComparator, boolean previous) {
+				<#list entityColumns as entityColumn>
+					<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+						${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
+					</#if>
+				</#list>
 
 				<#if entity.isPermissionedModel()>
 					<#include "persistence_impl_get_by_prev_and_next_query.ftl">
@@ -1200,12 +1222,18 @@ that may or may not be enforced with a unique index at the database level. Case
 									ArrayUtil.unique(${entityColumn.names});
 								</#if>
 
+							<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+								ArrayUtil.apply(${entityColumn.names}, StringUtil.NULL_TO_EMPTY);
+							</#if>
+
 							<#if stringUtil.equals(entityColumn.type, "String")>
 								Arrays.sort(${entityColumn.names}, NULL_SAFE_STRING_COMPARATOR);
 							<#else>
 								Arrays.sort(${entityColumn.names});
 							</#if>
 						}
+					<#elseif stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+						${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
 					</#if>
 				</#list>
 
@@ -1515,12 +1543,18 @@ that may or may not be enforced with a unique index at the database level. Case
 							ArrayUtil.unique(${entityColumn.names});
 						</#if>
 
+					<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+						ArrayUtil.apply(${entityColumn.names}, StringUtil.NULL_TO_EMPTY);
+					</#if>
+
 					<#if stringUtil.equals(entityColumn.type, "String")>
 						Arrays.sort(${entityColumn.names}, NULL_SAFE_STRING_COMPARATOR);
 					<#else>
 						Arrays.sort(${entityColumn.names});
 					</#if>
 				}
+			<#elseif stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+				${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
 			</#if>
 		</#list>
 
@@ -1868,12 +1902,18 @@ that may or may not be enforced with a unique index at the database level. Case
 							ArrayUtil.unique(${entityColumn.names});
 						</#if>
 
+					<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+						ArrayUtil.apply(${entityColumn.names}, StringUtil.NULL_TO_EMPTY);
+					</#if>
+
 					<#if stringUtil.equals(entityColumn.type, "String")>
 						Arrays.sort(${entityColumn.names}, NULL_SAFE_STRING_COMPARATOR);
 					<#else>
 						Arrays.sort(${entityColumn.names});
 					</#if>
 				}
+			<#elseif stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+				${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
 			</#if>
 		</#list>
 
@@ -2222,6 +2262,12 @@ that may or may not be enforced with a unique index at the database level. Case
 	</#list>
 
 	boolean retrieveFromCache) {
+		<#list entityColumns as entityColumn>
+			<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+				${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
+			</#if>
+		</#list>
+
 		Object[] finderArgs = new Object[] {
 			<#list entityColumns as entityColumn>
 				<#if stringUtil.equals(entityColumn.type, "Date")>

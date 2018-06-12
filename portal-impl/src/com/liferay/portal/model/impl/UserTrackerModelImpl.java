@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the UserTracker service. Represents a row in the &quot;UserTracker&quot; database table, with each column mapped to a property of this class.
@@ -313,12 +314,7 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 
 	@Override
 	public String getSessionId() {
-		if (_sessionId == null) {
-			return "";
-		}
-		else {
-			return _sessionId;
-		}
+		return _sessionId;
 	}
 
 	@Override
@@ -329,7 +325,7 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 			_originalSessionId = _sessionId;
 		}
 
-		_sessionId = sessionId;
+		_sessionId = Objects.toString(sessionId, "");
 	}
 
 	public String getOriginalSessionId() {
@@ -338,47 +334,32 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 
 	@Override
 	public String getRemoteAddr() {
-		if (_remoteAddr == null) {
-			return "";
-		}
-		else {
-			return _remoteAddr;
-		}
+		return _remoteAddr;
 	}
 
 	@Override
 	public void setRemoteAddr(String remoteAddr) {
-		_remoteAddr = remoteAddr;
+		_remoteAddr = Objects.toString(remoteAddr, "");
 	}
 
 	@Override
 	public String getRemoteHost() {
-		if (_remoteHost == null) {
-			return "";
-		}
-		else {
-			return _remoteHost;
-		}
+		return _remoteHost;
 	}
 
 	@Override
 	public void setRemoteHost(String remoteHost) {
-		_remoteHost = remoteHost;
+		_remoteHost = Objects.toString(remoteHost, "");
 	}
 
 	@Override
 	public String getUserAgent() {
-		if (_userAgent == null) {
-			return "";
-		}
-		else {
-			return _userAgent;
-		}
+		return _userAgent;
 	}
 
 	@Override
 	public void setUserAgent(String userAgent) {
-		_userAgent = userAgent;
+		_userAgent = Objects.toString(userAgent, "");
 	}
 
 	public long getColumnBitmask() {

@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoInstance service. Represents a row in the &quot;KaleoInstance&quot; database table, with each column mapped to a property of this class.
@@ -378,17 +379,12 @@ public class KaleoInstanceModelImpl extends BaseModelImpl<KaleoInstance>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -441,12 +437,7 @@ public class KaleoInstanceModelImpl extends BaseModelImpl<KaleoInstance>
 
 	@Override
 	public String getKaleoDefinitionName() {
-		if (_kaleoDefinitionName == null) {
-			return "";
-		}
-		else {
-			return _kaleoDefinitionName;
-		}
+		return _kaleoDefinitionName;
 	}
 
 	@Override
@@ -457,7 +448,7 @@ public class KaleoInstanceModelImpl extends BaseModelImpl<KaleoInstance>
 			_originalKaleoDefinitionName = _kaleoDefinitionName;
 		}
 
-		_kaleoDefinitionName = kaleoDefinitionName;
+		_kaleoDefinitionName = Objects.toString(kaleoDefinitionName, "");
 	}
 
 	public String getOriginalKaleoDefinitionName() {
@@ -498,12 +489,7 @@ public class KaleoInstanceModelImpl extends BaseModelImpl<KaleoInstance>
 
 	@Override
 	public String getClassName() {
-		if (_className == null) {
-			return "";
-		}
-		else {
-			return _className;
-		}
+		return _className;
 	}
 
 	@Override
@@ -514,7 +500,7 @@ public class KaleoInstanceModelImpl extends BaseModelImpl<KaleoInstance>
 			_originalClassName = _className;
 		}
 
-		_className = className;
+		_className = Objects.toString(className, "");
 	}
 
 	public String getOriginalClassName() {
@@ -592,17 +578,12 @@ public class KaleoInstanceModelImpl extends BaseModelImpl<KaleoInstance>
 
 	@Override
 	public String getWorkflowContext() {
-		if (_workflowContext == null) {
-			return "";
-		}
-		else {
-			return _workflowContext;
-		}
+		return _workflowContext;
 	}
 
 	@Override
 	public void setWorkflowContext(String workflowContext) {
-		_workflowContext = workflowContext;
+		_workflowContext = Objects.toString(workflowContext, "");
 	}
 
 	public long getColumnBitmask() {

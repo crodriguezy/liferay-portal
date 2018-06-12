@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the MembershipRequest service. Represents a row in the &quot;MembershipRequest&quot; database table, with each column mapped to a property of this class.
@@ -406,33 +407,23 @@ public class MembershipRequestModelImpl extends BaseModelImpl<MembershipRequest>
 	@JSON
 	@Override
 	public String getComments() {
-		if (_comments == null) {
-			return "";
-		}
-		else {
-			return _comments;
-		}
+		return _comments;
 	}
 
 	@Override
 	public void setComments(String comments) {
-		_comments = comments;
+		_comments = Objects.toString(comments, "");
 	}
 
 	@JSON
 	@Override
 	public String getReplyComments() {
-		if (_replyComments == null) {
-			return "";
-		}
-		else {
-			return _replyComments;
-		}
+		return _replyComments;
 	}
 
 	@Override
 	public void setReplyComments(String replyComments) {
-		_replyComments = replyComments;
+		_replyComments = Objects.toString(replyComments, "");
 	}
 
 	@JSON

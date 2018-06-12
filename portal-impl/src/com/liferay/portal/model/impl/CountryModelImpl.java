@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Country service. Represents a row in the &quot;Country&quot; database table, with each column mapped to a property of this class.
@@ -294,12 +295,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
@@ -310,7 +306,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -320,12 +316,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 	@JSON
 	@Override
 	public String getA2() {
-		if (_a2 == null) {
-			return "";
-		}
-		else {
-			return _a2;
-		}
+		return _a2;
 	}
 
 	@Override
@@ -336,7 +327,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 			_originalA2 = _a2;
 		}
 
-		_a2 = a2;
+		_a2 = Objects.toString(a2, "");
 	}
 
 	public String getOriginalA2() {
@@ -346,12 +337,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 	@JSON
 	@Override
 	public String getA3() {
-		if (_a3 == null) {
-			return "";
-		}
-		else {
-			return _a3;
-		}
+		return _a3;
 	}
 
 	@Override
@@ -362,7 +348,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 			_originalA3 = _a3;
 		}
 
-		_a3 = a3;
+		_a3 = Objects.toString(a3, "");
 	}
 
 	public String getOriginalA3() {
@@ -372,33 +358,23 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 	@JSON
 	@Override
 	public String getNumber() {
-		if (_number == null) {
-			return "";
-		}
-		else {
-			return _number;
-		}
+		return _number;
 	}
 
 	@Override
 	public void setNumber(String number) {
-		_number = number;
+		_number = Objects.toString(number, "");
 	}
 
 	@JSON
 	@Override
 	public String getIdd() {
-		if (_idd == null) {
-			return "";
-		}
-		else {
-			return _idd;
-		}
+		return _idd;
 	}
 
 	@Override
 	public void setIdd(String idd) {
-		_idd = idd;
+		_idd = Objects.toString(idd, "");
 	}
 
 	@JSON

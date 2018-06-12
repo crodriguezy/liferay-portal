@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -388,12 +389,7 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -402,7 +398,7 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -496,17 +492,12 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -539,17 +530,12 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 	@JSON
 	@Override
 	public String getVersionUserName() {
-		if (_versionUserName == null) {
-			return "";
-		}
-		else {
-			return _versionUserName;
-		}
+		return _versionUserName;
 	}
 
 	@Override
 	public void setVersionUserName(String versionUserName) {
-		_versionUserName = versionUserName;
+		_versionUserName = Objects.toString(versionUserName, "");
 	}
 
 	@JSON
@@ -594,12 +580,7 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 	@JSON
 	@Override
 	public String getRecordSetKey() {
-		if (_recordSetKey == null) {
-			return "";
-		}
-		else {
-			return _recordSetKey;
-		}
+		return _recordSetKey;
 	}
 
 	@Override
@@ -610,7 +591,7 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 			_originalRecordSetKey = _recordSetKey;
 		}
 
-		_recordSetKey = recordSetKey;
+		_recordSetKey = Objects.toString(recordSetKey, "");
 	}
 
 	public String getOriginalRecordSetKey() {
@@ -620,28 +601,18 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 	@JSON
 	@Override
 	public String getVersion() {
-		if (_version == null) {
-			return "";
-		}
-		else {
-			return _version;
-		}
+		return _version;
 	}
 
 	@Override
 	public void setVersion(String version) {
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
@@ -689,7 +660,7 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -735,12 +706,7 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
@@ -788,7 +754,7 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -860,17 +826,12 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 	@JSON
 	@Override
 	public String getSettings() {
-		if (_settings == null) {
-			return "";
-		}
-		else {
-			return _settings;
-		}
+		return _settings;
 	}
 
 	@Override
 	public void setSettings(String settings) {
-		_settings = settings;
+		_settings = Objects.toString(settings, "");
 	}
 
 	@JSON

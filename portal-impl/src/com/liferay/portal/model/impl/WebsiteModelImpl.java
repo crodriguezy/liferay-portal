@@ -49,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Website service. Represents a row in the &quot;Website&quot; database table, with each column mapped to a property of this class.
@@ -345,12 +346,7 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -359,7 +355,7 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -442,17 +438,12 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -554,17 +545,12 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 	@JSON
 	@Override
 	public String getUrl() {
-		if (_url == null) {
-			return "";
-		}
-		else {
-			return _url;
-		}
+		return _url;
 	}
 
 	@Override
 	public void setUrl(String url) {
-		_url = url;
+		_url = Objects.toString(url, "");
 	}
 
 	@JSON

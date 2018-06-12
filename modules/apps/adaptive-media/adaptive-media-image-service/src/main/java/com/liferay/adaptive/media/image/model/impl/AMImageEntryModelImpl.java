@@ -38,6 +38,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the AMImageEntry service. Represents a row in the &quot;AMImageEntry&quot; database table, with each column mapped to a property of this class.
@@ -241,12 +242,7 @@ public class AMImageEntryModelImpl extends BaseModelImpl<AMImageEntry>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -255,7 +251,7 @@ public class AMImageEntryModelImpl extends BaseModelImpl<AMImageEntry>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -328,12 +324,7 @@ public class AMImageEntryModelImpl extends BaseModelImpl<AMImageEntry>
 
 	@Override
 	public String getConfigurationUuid() {
-		if (_configurationUuid == null) {
-			return "";
-		}
-		else {
-			return _configurationUuid;
-		}
+		return _configurationUuid;
 	}
 
 	@Override
@@ -344,7 +335,7 @@ public class AMImageEntryModelImpl extends BaseModelImpl<AMImageEntry>
 			_originalConfigurationUuid = _configurationUuid;
 		}
 
-		_configurationUuid = configurationUuid;
+		_configurationUuid = Objects.toString(configurationUuid, "");
 	}
 
 	public String getOriginalConfigurationUuid() {
@@ -375,17 +366,12 @@ public class AMImageEntryModelImpl extends BaseModelImpl<AMImageEntry>
 
 	@Override
 	public String getMimeType() {
-		if (_mimeType == null) {
-			return "";
-		}
-		else {
-			return _mimeType;
-		}
+		return _mimeType;
 	}
 
 	@Override
 	public void setMimeType(String mimeType) {
-		_mimeType = mimeType;
+		_mimeType = Objects.toString(mimeType, "");
 	}
 
 	@Override

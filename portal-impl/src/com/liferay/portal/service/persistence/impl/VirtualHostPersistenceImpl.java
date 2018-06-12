@@ -150,6 +150,8 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 	@Override
 	public VirtualHost fetchByHostname(String hostname,
 		boolean retrieveFromCache) {
+		hostname = Objects.toString(hostname, "");
+
 		Object[] finderArgs = new Object[] { hostname };
 
 		Object result = null;
@@ -174,10 +176,7 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 
 			boolean bindHostname = false;
 
-			if (hostname == null) {
-				query.append(_FINDER_COLUMN_HOSTNAME_HOSTNAME_1);
-			}
-			else if (hostname.equals("")) {
+			if (hostname.equals("")) {
 				query.append(_FINDER_COLUMN_HOSTNAME_HOSTNAME_3);
 			}
 			else {
@@ -258,6 +257,8 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 	public int countByHostname(String hostname) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_HOSTNAME;
 
+		hostname = Objects.toString(hostname, "");
+
 		Object[] finderArgs = new Object[] { hostname };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -269,10 +270,7 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 
 			boolean bindHostname = false;
 
-			if (hostname == null) {
-				query.append(_FINDER_COLUMN_HOSTNAME_HOSTNAME_1);
-			}
-			else if (hostname.equals("")) {
+			if (hostname.equals("")) {
 				query.append(_FINDER_COLUMN_HOSTNAME_HOSTNAME_3);
 			}
 			else {
@@ -313,7 +311,6 @@ public class VirtualHostPersistenceImpl extends BasePersistenceImpl<VirtualHost>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_HOSTNAME_HOSTNAME_1 = "virtualHost.hostname IS NULL";
 	private static final String _FINDER_COLUMN_HOSTNAME_HOSTNAME_2 = "virtualHost.hostname = ?";
 	private static final String _FINDER_COLUMN_HOSTNAME_HOSTNAME_3 = "(virtualHost.hostname IS NULL OR virtualHost.hostname = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_L = new FinderPath(VirtualHostModelImpl.ENTITY_CACHE_ENABLED,

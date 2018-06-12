@@ -41,6 +41,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Entry service. Represents a row in the &quot;Contacts_Entry&quot; database table, with each column mapped to a property of this class.
@@ -299,17 +300,12 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -340,29 +336,19 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 
 	@Override
 	public String getFullName() {
-		if (_fullName == null) {
-			return "";
-		}
-		else {
-			return _fullName;
-		}
+		return _fullName;
 	}
 
 	@Override
 	public void setFullName(String fullName) {
 		_columnBitmask = -1L;
 
-		_fullName = fullName;
+		_fullName = Objects.toString(fullName, "");
 	}
 
 	@Override
 	public String getEmailAddress() {
-		if (_emailAddress == null) {
-			return "";
-		}
-		else {
-			return _emailAddress;
-		}
+		return _emailAddress;
 	}
 
 	@Override
@@ -373,7 +359,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 			_originalEmailAddress = _emailAddress;
 		}
 
-		_emailAddress = emailAddress;
+		_emailAddress = Objects.toString(emailAddress, "");
 	}
 
 	public String getOriginalEmailAddress() {
@@ -382,17 +368,12 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 
 	@Override
 	public String getComments() {
-		if (_comments == null) {
-			return "";
-		}
-		else {
-			return _comments;
-		}
+		return _comments;
 	}
 
 	@Override
 	public void setComments(String comments) {
-		_comments = comments;
+		_comments = Objects.toString(comments, "");
 	}
 
 	public long getColumnBitmask() {

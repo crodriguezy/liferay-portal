@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -472,12 +473,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -486,7 +482,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -681,12 +677,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	@JSON
 	@Override
 	public String getTreePath() {
-		if (_treePath == null) {
-			return "";
-		}
-		else {
-			return _treePath;
-		}
+		return _treePath;
 	}
 
 	@Override
@@ -697,7 +688,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 			_originalTreePath = _treePath;
 		}
 
-		_treePath = treePath;
+		_treePath = Objects.toString(treePath, "");
 	}
 
 	public String getOriginalTreePath() {
@@ -707,12 +698,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	@JSON
 	@Override
 	public String getGroupKey() {
-		if (_groupKey == null) {
-			return "";
-		}
-		else {
-			return _groupKey;
-		}
+		return _groupKey;
 	}
 
 	@Override
@@ -723,7 +709,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 			_originalGroupKey = _groupKey;
 		}
 
-		_groupKey = groupKey;
+		_groupKey = Objects.toString(groupKey, "");
 	}
 
 	public String getOriginalGroupKey() {
@@ -733,12 +719,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
@@ -788,7 +769,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	public void setName(String name) {
 		_columnBitmask = -1L;
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -834,12 +815,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
@@ -887,7 +863,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -960,17 +936,12 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	@JSON
 	@Override
 	public String getTypeSettings() {
-		if (_typeSettings == null) {
-			return "";
-		}
-		else {
-			return _typeSettings;
-		}
+		return _typeSettings;
 	}
 
 	@Override
 	public void setTypeSettings(String typeSettings) {
-		_typeSettings = typeSettings;
+		_typeSettings = Objects.toString(typeSettings, "");
 	}
 
 	@JSON
@@ -1004,12 +975,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	@JSON
 	@Override
 	public String getFriendlyURL() {
-		if (_friendlyURL == null) {
-			return "";
-		}
-		else {
-			return _friendlyURL;
-		}
+		return _friendlyURL;
 	}
 
 	@Override
@@ -1020,7 +986,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 			_originalFriendlyURL = _friendlyURL;
 		}
 
-		_friendlyURL = friendlyURL;
+		_friendlyURL = Objects.toString(friendlyURL, "");
 	}
 
 	public String getOriginalFriendlyURL() {
