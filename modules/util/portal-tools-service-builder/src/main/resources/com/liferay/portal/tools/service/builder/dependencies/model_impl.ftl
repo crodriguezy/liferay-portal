@@ -92,6 +92,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Function;
@@ -637,33 +638,24 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 
 		@Override
 		public ${entityColumn.genericizedType} get${entityColumn.methodName}() {
-			<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
-				if (_${entityColumn.name} == null) {
-					return "";
+			<#if stringUtil.equals(entityColumn.type, "Blob") && entityColumn.lazy>
+				if (_${entityColumn.name}BlobModel == null) {
+					try {
+						_${entityColumn.name}BlobModel = ${entity.name}LocalServiceUtil.get${entityColumn.methodName}BlobModel(getPrimaryKey());
+					}
+					catch (Exception e) {
+					}
 				}
-				else {
-					return _${entityColumn.name};
+
+				Blob blob = null;
+
+				if (_${entityColumn.name}BlobModel != null) {
+					blob = _${entityColumn.name}BlobModel.get${entityColumn.methodName}Blob();
 				}
+
+				return blob;
 			<#else>
-				<#if stringUtil.equals(entityColumn.type, "Blob") && entityColumn.lazy>
-					if (_${entityColumn.name}BlobModel == null) {
-						try {
-							_${entityColumn.name}BlobModel = ${entity.name}LocalServiceUtil.get${entityColumn.methodName}BlobModel(getPrimaryKey());
-						}
-						catch (Exception e) {
-						}
-					}
-
-					Blob blob = null;
-
-					if (_${entityColumn.name}BlobModel != null) {
-						blob = _${entityColumn.name}BlobModel.get${entityColumn.methodName}Blob();
-					}
-
-					return blob;
-				<#else>
-					return _${entityColumn.name};
-				</#if>
+				return _${entityColumn.name};
 			</#if>
 		}
 
@@ -737,7 +729,11 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 					}
 				</#if>
 
-				_uuid = uuid;
+				<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+					_uuid = Objects.toString(uuid, "");
+				<#else>
+					_uuid = uuid;
+				</#if>
 			<#else>
 				<#if entity.hasEntityColumn("createDate", "Date") && entity.hasEntityColumn("modifiedDate", "Date") && stringUtil.equals(entityColumn.name, "modifiedDate")>
 					_setModifiedDate = true;
@@ -770,6 +766,8 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 					else {
 						_${entityColumn.name}BlobModel.set${entityColumn.methodName}Blob(${entityColumn.name});
 					}
+				<#elseif stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+					_${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
 				<#else>
 					_${entityColumn.name} = ${entityColumn.name};
 				</#if>
