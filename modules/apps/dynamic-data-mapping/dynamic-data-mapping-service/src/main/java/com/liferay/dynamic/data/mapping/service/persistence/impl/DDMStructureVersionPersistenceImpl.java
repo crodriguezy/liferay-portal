@@ -676,6 +676,8 @@ public class DDMStructureVersionPersistenceImpl extends BasePersistenceImpl<DDMS
 	@Override
 	public DDMStructureVersion fetchByS_V(long structureId, String version,
 		boolean retrieveFromCache) {
+		version = Objects.toString(version, "");
+
 		Object[] finderArgs = new Object[] { structureId, version };
 
 		Object result = null;
@@ -703,10 +705,7 @@ public class DDMStructureVersionPersistenceImpl extends BasePersistenceImpl<DDMS
 
 			boolean bindVersion = false;
 
-			if (version == null) {
-				query.append(_FINDER_COLUMN_S_V_VERSION_1);
-			}
-			else if (version.equals("")) {
+			if (version.equals("")) {
 				query.append(_FINDER_COLUMN_S_V_VERSION_3);
 			}
 			else {
@@ -790,6 +789,8 @@ public class DDMStructureVersionPersistenceImpl extends BasePersistenceImpl<DDMS
 	public int countByS_V(long structureId, String version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_S_V;
 
+		version = Objects.toString(version, "");
+
 		Object[] finderArgs = new Object[] { structureId, version };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -803,10 +804,7 @@ public class DDMStructureVersionPersistenceImpl extends BasePersistenceImpl<DDMS
 
 			boolean bindVersion = false;
 
-			if (version == null) {
-				query.append(_FINDER_COLUMN_S_V_VERSION_1);
-			}
-			else if (version.equals("")) {
+			if (version.equals("")) {
 				query.append(_FINDER_COLUMN_S_V_VERSION_3);
 			}
 			else {
@@ -850,7 +848,6 @@ public class DDMStructureVersionPersistenceImpl extends BasePersistenceImpl<DDMS
 	}
 
 	private static final String _FINDER_COLUMN_S_V_STRUCTUREID_2 = "ddmStructureVersion.structureId = ? AND ";
-	private static final String _FINDER_COLUMN_S_V_VERSION_1 = "ddmStructureVersion.version IS NULL";
 	private static final String _FINDER_COLUMN_S_V_VERSION_2 = "ddmStructureVersion.version = ?";
 	private static final String _FINDER_COLUMN_S_V_VERSION_3 = "(ddmStructureVersion.version IS NULL OR ddmStructureVersion.version = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_S_S = new FinderPath(DDMStructureVersionModelImpl.ENTITY_CACHE_ENABLED,

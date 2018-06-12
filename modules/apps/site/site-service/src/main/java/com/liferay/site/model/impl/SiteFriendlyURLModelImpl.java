@@ -44,6 +44,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SiteFriendlyURL service. Represents a row in the &quot;SiteFriendlyURL&quot; database table, with each column mapped to a property of this class.
@@ -247,12 +248,7 @@ public class SiteFriendlyURLModelImpl extends BaseModelImpl<SiteFriendlyURL>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -261,7 +257,7 @@ public class SiteFriendlyURLModelImpl extends BaseModelImpl<SiteFriendlyURL>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -328,17 +324,12 @@ public class SiteFriendlyURLModelImpl extends BaseModelImpl<SiteFriendlyURL>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -391,12 +382,7 @@ public class SiteFriendlyURLModelImpl extends BaseModelImpl<SiteFriendlyURL>
 
 	@Override
 	public String getFriendlyURL() {
-		if (_friendlyURL == null) {
-			return "";
-		}
-		else {
-			return _friendlyURL;
-		}
+		return _friendlyURL;
 	}
 
 	@Override
@@ -407,7 +393,7 @@ public class SiteFriendlyURLModelImpl extends BaseModelImpl<SiteFriendlyURL>
 			_originalFriendlyURL = _friendlyURL;
 		}
 
-		_friendlyURL = friendlyURL;
+		_friendlyURL = Objects.toString(friendlyURL, "");
 	}
 
 	public String getOriginalFriendlyURL() {
@@ -416,12 +402,7 @@ public class SiteFriendlyURLModelImpl extends BaseModelImpl<SiteFriendlyURL>
 
 	@Override
 	public String getLanguageId() {
-		if (_languageId == null) {
-			return "";
-		}
-		else {
-			return _languageId;
-		}
+		return _languageId;
 	}
 
 	@Override
@@ -432,7 +413,7 @@ public class SiteFriendlyURLModelImpl extends BaseModelImpl<SiteFriendlyURL>
 			_originalLanguageId = _languageId;
 		}
 
-		_languageId = languageId;
+		_languageId = Objects.toString(languageId, "");
 	}
 
 	public String getOriginalLanguageId() {

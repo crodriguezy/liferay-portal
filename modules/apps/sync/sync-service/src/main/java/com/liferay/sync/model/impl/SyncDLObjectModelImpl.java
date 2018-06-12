@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SyncDLObject service. Represents a row in the &quot;SyncDLObject&quot; database table, with each column mapped to a property of this class.
@@ -521,17 +522,12 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -617,12 +613,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON(include = false)
 	@Override
 	public String getTreePath() {
-		if (_treePath == null) {
-			return "";
-		}
-		else {
-			return _treePath;
-		}
+		return _treePath;
 	}
 
 	@Override
@@ -633,7 +624,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 			_originalTreePath = _treePath;
 		}
 
-		_treePath = treePath;
+		_treePath = Objects.toString(treePath, "");
 	}
 
 	public String getOriginalTreePath() {
@@ -643,108 +634,73 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
 	@Override
 	public String getExtension() {
-		if (_extension == null) {
-			return "";
-		}
-		else {
-			return _extension;
-		}
+		return _extension;
 	}
 
 	@Override
 	public void setExtension(String extension) {
-		_extension = extension;
+		_extension = Objects.toString(extension, "");
 	}
 
 	@JSON
 	@Override
 	public String getMimeType() {
-		if (_mimeType == null) {
-			return "";
-		}
-		else {
-			return _mimeType;
-		}
+		return _mimeType;
 	}
 
 	@Override
 	public void setMimeType(String mimeType) {
-		_mimeType = mimeType;
+		_mimeType = Objects.toString(mimeType, "");
 	}
 
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
 	@Override
 	public String getChangeLog() {
-		if (_changeLog == null) {
-			return "";
-		}
-		else {
-			return _changeLog;
-		}
+		return _changeLog;
 	}
 
 	@Override
 	public void setChangeLog(String changeLog) {
-		_changeLog = changeLog;
+		_changeLog = Objects.toString(changeLog, "");
 	}
 
 	@JSON
 	@Override
 	public String getExtraSettings() {
-		if (_extraSettings == null) {
-			return "";
-		}
-		else {
-			return _extraSettings;
-		}
+		return _extraSettings;
 	}
 
 	@Override
 	public void setExtraSettings(String extraSettings) {
-		_extraSettings = extraSettings;
+		_extraSettings = Objects.toString(extraSettings, "");
 	}
 
 	@JSON
 	@Override
 	public String getVersion() {
-		if (_version == null) {
-			return "";
-		}
-		else {
-			return _version;
-		}
+		return _version;
 	}
 
 	@Override
@@ -755,7 +711,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 			_originalVersion = _version;
 		}
 
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	public String getOriginalVersion() {
@@ -787,28 +743,18 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getChecksum() {
-		if (_checksum == null) {
-			return "";
-		}
-		else {
-			return _checksum;
-		}
+		return _checksum;
 	}
 
 	@Override
 	public void setChecksum(String checksum) {
-		_checksum = checksum;
+		_checksum = Objects.toString(checksum, "");
 	}
 
 	@JSON
 	@Override
 	public String getEvent() {
-		if (_event == null) {
-			return "";
-		}
-		else {
-			return _event;
-		}
+		return _event;
 	}
 
 	@Override
@@ -819,7 +765,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 			_originalEvent = _event;
 		}
 
-		_event = event;
+		_event = Objects.toString(event, "");
 	}
 
 	public String getOriginalEvent() {
@@ -829,17 +775,12 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getLanTokenKey() {
-		if (_lanTokenKey == null) {
-			return "";
-		}
-		else {
-			return _lanTokenKey;
-		}
+		return _lanTokenKey;
 	}
 
 	@Override
 	public void setLanTokenKey(String lanTokenKey) {
-		_lanTokenKey = lanTokenKey;
+		_lanTokenKey = Objects.toString(lanTokenKey, "");
 	}
 
 	@JSON(include = false)
@@ -894,28 +835,18 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getLockUserName() {
-		if (_lockUserName == null) {
-			return "";
-		}
-		else {
-			return _lockUserName;
-		}
+		return _lockUserName;
 	}
 
 	@Override
 	public void setLockUserName(String lockUserName) {
-		_lockUserName = lockUserName;
+		_lockUserName = Objects.toString(lockUserName, "");
 	}
 
 	@JSON
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return _type;
 	}
 
 	@Override
@@ -926,7 +857,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 			_originalType = _type;
 		}
 
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	public String getOriginalType() {
@@ -959,17 +890,12 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	@JSON
 	@Override
 	public String getTypeUuid() {
-		if (_typeUuid == null) {
-			return "";
-		}
-		else {
-			return _typeUuid;
-		}
+		return _typeUuid;
 	}
 
 	@Override
 	public void setTypeUuid(String typeUuid) {
-		_typeUuid = typeUuid;
+		_typeUuid = Objects.toString(typeUuid, "");
 	}
 
 	public long getColumnBitmask() {

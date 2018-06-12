@@ -41,6 +41,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the PowwowServer service. Represents a row in the &quot;PowwowServer&quot; database table, with each column mapped to a property of this class.
@@ -296,17 +297,12 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -337,29 +333,19 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
 	public void setName(String name) {
 		_columnBitmask = -1L;
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
 	public String getProviderType() {
-		if (_providerType == null) {
-			return "";
-		}
-		else {
-			return _providerType;
-		}
+		return _providerType;
 	}
 
 	@Override
@@ -370,7 +356,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 			_originalProviderType = _providerType;
 		}
 
-		_providerType = providerType;
+		_providerType = Objects.toString(providerType, "");
 	}
 
 	public String getOriginalProviderType() {
@@ -379,47 +365,32 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public String getUrl() {
-		if (_url == null) {
-			return "";
-		}
-		else {
-			return _url;
-		}
+		return _url;
 	}
 
 	@Override
 	public void setUrl(String url) {
-		_url = url;
+		_url = Objects.toString(url, "");
 	}
 
 	@Override
 	public String getApiKey() {
-		if (_apiKey == null) {
-			return "";
-		}
-		else {
-			return _apiKey;
-		}
+		return _apiKey;
 	}
 
 	@Override
 	public void setApiKey(String apiKey) {
-		_apiKey = apiKey;
+		_apiKey = Objects.toString(apiKey, "");
 	}
 
 	@Override
 	public String getSecret() {
-		if (_secret == null) {
-			return "";
-		}
-		else {
-			return _secret;
-		}
+		return _secret;
 	}
 
 	@Override
 	public void setSecret(String secret) {
-		_secret = secret;
+		_secret = Objects.toString(secret, "");
 	}
 
 	@Override

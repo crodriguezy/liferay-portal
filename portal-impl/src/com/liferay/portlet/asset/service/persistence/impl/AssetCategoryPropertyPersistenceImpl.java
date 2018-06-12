@@ -1225,6 +1225,8 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		key = Objects.toString(key, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -1275,10 +1277,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 
 			boolean bindKey = false;
 
-			if (key == null) {
-				query.append(_FINDER_COLUMN_C_K_KEY_1);
-			}
-			else if (key.equals("")) {
+			if (key.equals("")) {
 				query.append(_FINDER_COLUMN_C_K_KEY_3);
 			}
 			else {
@@ -1507,6 +1506,8 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 		AssetCategoryProperty assetCategoryProperty, long companyId,
 		String key, OrderByComparator<AssetCategoryProperty> orderByComparator,
 		boolean previous) {
+		key = Objects.toString(key, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1524,10 +1525,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 
 		boolean bindKey = false;
 
-		if (key == null) {
-			query.append(_FINDER_COLUMN_C_K_KEY_1);
-		}
-		else if (key.equals("")) {
+		if (key.equals("")) {
 			query.append(_FINDER_COLUMN_C_K_KEY_3);
 		}
 		else {
@@ -1653,6 +1651,8 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 	public int countByC_K(long companyId, String key) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_K;
 
+		key = Objects.toString(key, "");
+
 		Object[] finderArgs = new Object[] { companyId, key };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1666,10 +1666,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 
 			boolean bindKey = false;
 
-			if (key == null) {
-				query.append(_FINDER_COLUMN_C_K_KEY_1);
-			}
-			else if (key.equals("")) {
+			if (key.equals("")) {
 				query.append(_FINDER_COLUMN_C_K_KEY_3);
 			}
 			else {
@@ -1713,7 +1710,6 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 	}
 
 	private static final String _FINDER_COLUMN_C_K_COMPANYID_2 = "assetCategoryProperty.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_K_KEY_1 = "assetCategoryProperty.key IS NULL";
 	private static final String _FINDER_COLUMN_C_K_KEY_2 = "assetCategoryProperty.key = ?";
 	private static final String _FINDER_COLUMN_C_K_KEY_3 = "(assetCategoryProperty.key IS NULL OR assetCategoryProperty.key = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_CA_K = new FinderPath(AssetCategoryPropertyModelImpl.ENTITY_CACHE_ENABLED,
@@ -1788,6 +1784,8 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 	@Override
 	public AssetCategoryProperty fetchByCA_K(long categoryId, String key,
 		boolean retrieveFromCache) {
+		key = Objects.toString(key, "");
+
 		Object[] finderArgs = new Object[] { categoryId, key };
 
 		Object result = null;
@@ -1815,10 +1813,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 
 			boolean bindKey = false;
 
-			if (key == null) {
-				query.append(_FINDER_COLUMN_CA_K_KEY_1);
-			}
-			else if (key.equals("")) {
+			if (key.equals("")) {
 				query.append(_FINDER_COLUMN_CA_K_KEY_3);
 			}
 			else {
@@ -1902,6 +1897,8 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 	public int countByCA_K(long categoryId, String key) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_CA_K;
 
+		key = Objects.toString(key, "");
+
 		Object[] finderArgs = new Object[] { categoryId, key };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1915,10 +1912,7 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 
 			boolean bindKey = false;
 
-			if (key == null) {
-				query.append(_FINDER_COLUMN_CA_K_KEY_1);
-			}
-			else if (key.equals("")) {
+			if (key.equals("")) {
 				query.append(_FINDER_COLUMN_CA_K_KEY_3);
 			}
 			else {
@@ -1962,7 +1956,6 @@ public class AssetCategoryPropertyPersistenceImpl extends BasePersistenceImpl<As
 	}
 
 	private static final String _FINDER_COLUMN_CA_K_CATEGORYID_2 = "assetCategoryProperty.categoryId = ? AND ";
-	private static final String _FINDER_COLUMN_CA_K_KEY_1 = "assetCategoryProperty.key IS NULL";
 	private static final String _FINDER_COLUMN_CA_K_KEY_2 = "assetCategoryProperty.key = ?";
 	private static final String _FINDER_COLUMN_CA_K_KEY_3 = "(assetCategoryProperty.key IS NULL OR assetCategoryProperty.key = '')";
 

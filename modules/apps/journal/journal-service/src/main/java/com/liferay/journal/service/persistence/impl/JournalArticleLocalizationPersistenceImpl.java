@@ -679,6 +679,8 @@ public class JournalArticleLocalizationPersistenceImpl
 	@Override
 	public JournalArticleLocalization fetchByA_L(long articlePK,
 		String languageId, boolean retrieveFromCache) {
+		languageId = Objects.toString(languageId, "");
+
 		Object[] finderArgs = new Object[] { articlePK, languageId };
 
 		Object result = null;
@@ -707,10 +709,7 @@ public class JournalArticleLocalizationPersistenceImpl
 
 			boolean bindLanguageId = false;
 
-			if (languageId == null) {
-				query.append(_FINDER_COLUMN_A_L_LANGUAGEID_1);
-			}
-			else if (languageId.equals("")) {
+			if (languageId.equals("")) {
 				query.append(_FINDER_COLUMN_A_L_LANGUAGEID_3);
 			}
 			else {
@@ -795,6 +794,8 @@ public class JournalArticleLocalizationPersistenceImpl
 	public int countByA_L(long articlePK, String languageId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_A_L;
 
+		languageId = Objects.toString(languageId, "");
+
 		Object[] finderArgs = new Object[] { articlePK, languageId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -808,10 +809,7 @@ public class JournalArticleLocalizationPersistenceImpl
 
 			boolean bindLanguageId = false;
 
-			if (languageId == null) {
-				query.append(_FINDER_COLUMN_A_L_LANGUAGEID_1);
-			}
-			else if (languageId.equals("")) {
+			if (languageId.equals("")) {
 				query.append(_FINDER_COLUMN_A_L_LANGUAGEID_3);
 			}
 			else {
@@ -855,7 +853,6 @@ public class JournalArticleLocalizationPersistenceImpl
 	}
 
 	private static final String _FINDER_COLUMN_A_L_ARTICLEPK_2 = "journalArticleLocalization.articlePK = ? AND ";
-	private static final String _FINDER_COLUMN_A_L_LANGUAGEID_1 = "journalArticleLocalization.languageId IS NULL";
 	private static final String _FINDER_COLUMN_A_L_LANGUAGEID_2 = "journalArticleLocalization.languageId = ?";
 	private static final String _FINDER_COLUMN_A_L_LANGUAGEID_3 = "(journalArticleLocalization.languageId IS NULL OR journalArticleLocalization.languageId = '')";
 

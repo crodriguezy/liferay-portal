@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoLog service. Represents a row in the &quot;KaleoLog&quot; database table, with each column mapped to a property of this class.
@@ -496,17 +497,12 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -537,12 +533,7 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public String getKaleoClassName() {
-		if (_kaleoClassName == null) {
-			return "";
-		}
-		else {
-			return _kaleoClassName;
-		}
+		return _kaleoClassName;
 	}
 
 	@Override
@@ -553,7 +544,7 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 			_originalKaleoClassName = _kaleoClassName;
 		}
 
-		_kaleoClassName = kaleoClassName;
+		_kaleoClassName = Objects.toString(kaleoClassName, "");
 	}
 
 	public String getOriginalKaleoClassName() {
@@ -672,17 +663,12 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public String getKaleoNodeName() {
-		if (_kaleoNodeName == null) {
-			return "";
-		}
-		else {
-			return _kaleoNodeName;
-		}
+		return _kaleoNodeName;
 	}
 
 	@Override
 	public void setKaleoNodeName(String kaleoNodeName) {
-		_kaleoNodeName = kaleoNodeName;
+		_kaleoNodeName = Objects.toString(kaleoNodeName, "");
 	}
 
 	@Override
@@ -712,32 +698,22 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public String getKaleoActionName() {
-		if (_kaleoActionName == null) {
-			return "";
-		}
-		else {
-			return _kaleoActionName;
-		}
+		return _kaleoActionName;
 	}
 
 	@Override
 	public void setKaleoActionName(String kaleoActionName) {
-		_kaleoActionName = kaleoActionName;
+		_kaleoActionName = Objects.toString(kaleoActionName, "");
 	}
 
 	@Override
 	public String getKaleoActionDescription() {
-		if (_kaleoActionDescription == null) {
-			return "";
-		}
-		else {
-			return _kaleoActionDescription;
-		}
+		return _kaleoActionDescription;
 	}
 
 	@Override
 	public void setKaleoActionDescription(String kaleoActionDescription) {
-		_kaleoActionDescription = kaleoActionDescription;
+		_kaleoActionDescription = Objects.toString(kaleoActionDescription, "");
 	}
 
 	@Override
@@ -752,32 +728,23 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public String getPreviousKaleoNodeName() {
-		if (_previousKaleoNodeName == null) {
-			return "";
-		}
-		else {
-			return _previousKaleoNodeName;
-		}
+		return _previousKaleoNodeName;
 	}
 
 	@Override
 	public void setPreviousKaleoNodeName(String previousKaleoNodeName) {
-		_previousKaleoNodeName = previousKaleoNodeName;
+		_previousKaleoNodeName = Objects.toString(previousKaleoNodeName, "");
 	}
 
 	@Override
 	public String getPreviousAssigneeClassName() {
-		if (_previousAssigneeClassName == null) {
-			return "";
-		}
-		else {
-			return _previousAssigneeClassName;
-		}
+		return _previousAssigneeClassName;
 	}
 
 	@Override
 	public void setPreviousAssigneeClassName(String previousAssigneeClassName) {
-		_previousAssigneeClassName = previousAssigneeClassName;
+		_previousAssigneeClassName = Objects.toString(previousAssigneeClassName,
+				"");
 	}
 
 	@Override
@@ -792,17 +759,13 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public String getCurrentAssigneeClassName() {
-		if (_currentAssigneeClassName == null) {
-			return "";
-		}
-		else {
-			return _currentAssigneeClassName;
-		}
+		return _currentAssigneeClassName;
 	}
 
 	@Override
 	public void setCurrentAssigneeClassName(String currentAssigneeClassName) {
-		_currentAssigneeClassName = currentAssigneeClassName;
+		_currentAssigneeClassName = Objects.toString(currentAssigneeClassName,
+				"");
 	}
 
 	@Override
@@ -817,12 +780,7 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return _type;
 	}
 
 	@Override
@@ -833,7 +791,7 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 			_originalType = _type;
 		}
 
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	public String getOriginalType() {
@@ -842,17 +800,12 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public String getComment() {
-		if (_comment == null) {
-			return "";
-		}
-		else {
-			return _comment;
-		}
+		return _comment;
 	}
 
 	@Override
 	public void setComment(String comment) {
-		_comment = comment;
+		_comment = Objects.toString(comment, "");
 	}
 
 	@Override
@@ -887,17 +840,12 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public String getWorkflowContext() {
-		if (_workflowContext == null) {
-			return "";
-		}
-		else {
-			return _workflowContext;
-		}
+		return _workflowContext;
 	}
 
 	@Override
 	public void setWorkflowContext(String workflowContext) {
-		_workflowContext = workflowContext;
+		_workflowContext = Objects.toString(workflowContext, "");
 	}
 
 	public long getColumnBitmask() {

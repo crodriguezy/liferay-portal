@@ -37,6 +37,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the UserTrackerPath service. Represents a row in the &quot;UserTrackerPath&quot; database table, with each column mapped to a property of this class.
@@ -243,17 +244,12 @@ public class UserTrackerPathModelImpl extends BaseModelImpl<UserTrackerPath>
 
 	@Override
 	public String getPath() {
-		if (_path == null) {
-			return "";
-		}
-		else {
-			return _path;
-		}
+		return _path;
 	}
 
 	@Override
 	public void setPath(String path) {
-		_path = path;
+		_path = Objects.toString(path, "");
 	}
 
 	@Override

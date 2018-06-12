@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Region service. Represents a row in the &quot;Region&quot; database table, with each column mapped to a property of this class.
@@ -287,12 +288,7 @@ public class RegionModelImpl extends BaseModelImpl<Region>
 	@JSON
 	@Override
 	public String getRegionCode() {
-		if (_regionCode == null) {
-			return "";
-		}
-		else {
-			return _regionCode;
-		}
+		return _regionCode;
 	}
 
 	@Override
@@ -303,7 +299,7 @@ public class RegionModelImpl extends BaseModelImpl<Region>
 			_originalRegionCode = _regionCode;
 		}
 
-		_regionCode = regionCode;
+		_regionCode = Objects.toString(regionCode, "");
 	}
 
 	public String getOriginalRegionCode() {
@@ -313,19 +309,14 @@ public class RegionModelImpl extends BaseModelImpl<Region>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
 	public void setName(String name) {
 		_columnBitmask = -1L;
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON

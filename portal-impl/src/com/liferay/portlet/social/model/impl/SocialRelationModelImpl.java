@@ -37,6 +37,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SocialRelation service. Represents a row in the &quot;SocialRelation&quot; database table, with each column mapped to a property of this class.
@@ -204,12 +205,7 @@ public class SocialRelationModelImpl extends BaseModelImpl<SocialRelation>
 
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -218,7 +214,7 @@ public class SocialRelationModelImpl extends BaseModelImpl<SocialRelation>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {

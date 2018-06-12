@@ -3881,6 +3881,8 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		content = Objects.toString(content, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -3934,10 +3936,7 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 
 			boolean bindContent = false;
 
-			if (content == null) {
-				query.append(_FINDER_COLUMN_F_T_C_CONTENT_1);
-			}
-			else if (content.equals("")) {
+			if (content.equals("")) {
 				query.append(_FINDER_COLUMN_F_T_C_CONTENT_3);
 			}
 			else {
@@ -4177,6 +4176,8 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 	protected Entry getByF_T_C_PrevAndNext(Session session, Entry entry,
 		long fromUserId, long toUserId, String content,
 		OrderByComparator<Entry> orderByComparator, boolean previous) {
+		content = Objects.toString(content, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -4196,10 +4197,7 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 
 		boolean bindContent = false;
 
-		if (content == null) {
-			query.append(_FINDER_COLUMN_F_T_C_CONTENT_1);
-		}
-		else if (content.equals("")) {
+		if (content.equals("")) {
 			query.append(_FINDER_COLUMN_F_T_C_CONTENT_3);
 		}
 		else {
@@ -4329,6 +4327,8 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 	public int countByF_T_C(long fromUserId, long toUserId, String content) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_F_T_C;
 
+		content = Objects.toString(content, "");
+
 		Object[] finderArgs = new Object[] { fromUserId, toUserId, content };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -4344,10 +4344,7 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 
 			boolean bindContent = false;
 
-			if (content == null) {
-				query.append(_FINDER_COLUMN_F_T_C_CONTENT_1);
-			}
-			else if (content.equals("")) {
+			if (content.equals("")) {
 				query.append(_FINDER_COLUMN_F_T_C_CONTENT_3);
 			}
 			else {
@@ -4394,7 +4391,6 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 
 	private static final String _FINDER_COLUMN_F_T_C_FROMUSERID_2 = "entry.fromUserId = ? AND ";
 	private static final String _FINDER_COLUMN_F_T_C_TOUSERID_2 = "entry.toUserId = ? AND ";
-	private static final String _FINDER_COLUMN_F_T_C_CONTENT_1 = "entry.content IS NULL";
 	private static final String _FINDER_COLUMN_F_T_C_CONTENT_2 = "entry.content = ?";
 	private static final String _FINDER_COLUMN_F_T_C_CONTENT_3 = "(entry.content IS NULL OR entry.content = '')";
 

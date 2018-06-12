@@ -2033,6 +2033,8 @@ public class LVEntryLocalizationVersionPersistenceImpl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		languageId = Objects.toString(languageId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -2084,10 +2086,7 @@ public class LVEntryLocalizationVersionPersistenceImpl
 
 			boolean bindLanguageId = false;
 
-			if (languageId == null) {
-				query.append(_FINDER_COLUMN_LVENTRYID_LANGUAGEID_LANGUAGEID_1);
-			}
-			else if (languageId.equals("")) {
+			if (languageId.equals("")) {
 				query.append(_FINDER_COLUMN_LVENTRYID_LANGUAGEID_LANGUAGEID_3);
 			}
 			else {
@@ -2323,6 +2322,8 @@ public class LVEntryLocalizationVersionPersistenceImpl
 		long lvEntryId, String languageId,
 		OrderByComparator<LVEntryLocalizationVersion> orderByComparator,
 		boolean previous) {
+		languageId = Objects.toString(languageId, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -2340,10 +2341,7 @@ public class LVEntryLocalizationVersionPersistenceImpl
 
 		boolean bindLanguageId = false;
 
-		if (languageId == null) {
-			query.append(_FINDER_COLUMN_LVENTRYID_LANGUAGEID_LANGUAGEID_1);
-		}
-		else if (languageId.equals("")) {
+		if (languageId.equals("")) {
 			query.append(_FINDER_COLUMN_LVENTRYID_LANGUAGEID_LANGUAGEID_3);
 		}
 		else {
@@ -2470,6 +2468,8 @@ public class LVEntryLocalizationVersionPersistenceImpl
 	public int countByLvEntryId_LanguageId(long lvEntryId, String languageId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_LVENTRYID_LANGUAGEID;
 
+		languageId = Objects.toString(languageId, "");
+
 		Object[] finderArgs = new Object[] { lvEntryId, languageId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -2483,10 +2483,7 @@ public class LVEntryLocalizationVersionPersistenceImpl
 
 			boolean bindLanguageId = false;
 
-			if (languageId == null) {
-				query.append(_FINDER_COLUMN_LVENTRYID_LANGUAGEID_LANGUAGEID_1);
-			}
-			else if (languageId.equals("")) {
+			if (languageId.equals("")) {
 				query.append(_FINDER_COLUMN_LVENTRYID_LANGUAGEID_LANGUAGEID_3);
 			}
 			else {
@@ -2530,8 +2527,6 @@ public class LVEntryLocalizationVersionPersistenceImpl
 	}
 
 	private static final String _FINDER_COLUMN_LVENTRYID_LANGUAGEID_LVENTRYID_2 = "lvEntryLocalizationVersion.lvEntryId = ? AND ";
-	private static final String _FINDER_COLUMN_LVENTRYID_LANGUAGEID_LANGUAGEID_1 =
-		"lvEntryLocalizationVersion.languageId IS NULL";
 	private static final String _FINDER_COLUMN_LVENTRYID_LANGUAGEID_LANGUAGEID_2 =
 		"lvEntryLocalizationVersion.languageId = ?";
 	private static final String _FINDER_COLUMN_LVENTRYID_LANGUAGEID_LANGUAGEID_3 =
@@ -2628,6 +2623,8 @@ public class LVEntryLocalizationVersionPersistenceImpl
 	public LVEntryLocalizationVersion fetchByLvEntryId_LanguageId_Version(
 		long lvEntryId, String languageId, int version,
 		boolean retrieveFromCache) {
+		languageId = Objects.toString(languageId, "");
+
 		Object[] finderArgs = new Object[] { lvEntryId, languageId, version };
 
 		Object result = null;
@@ -2657,10 +2654,7 @@ public class LVEntryLocalizationVersionPersistenceImpl
 
 			boolean bindLanguageId = false;
 
-			if (languageId == null) {
-				query.append(_FINDER_COLUMN_LVENTRYID_LANGUAGEID_VERSION_LANGUAGEID_1);
-			}
-			else if (languageId.equals("")) {
+			if (languageId.equals("")) {
 				query.append(_FINDER_COLUMN_LVENTRYID_LANGUAGEID_VERSION_LANGUAGEID_3);
 			}
 			else {
@@ -2754,6 +2748,8 @@ public class LVEntryLocalizationVersionPersistenceImpl
 		String languageId, int version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_LVENTRYID_LANGUAGEID_VERSION;
 
+		languageId = Objects.toString(languageId, "");
+
 		Object[] finderArgs = new Object[] { lvEntryId, languageId, version };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -2767,10 +2763,7 @@ public class LVEntryLocalizationVersionPersistenceImpl
 
 			boolean bindLanguageId = false;
 
-			if (languageId == null) {
-				query.append(_FINDER_COLUMN_LVENTRYID_LANGUAGEID_VERSION_LANGUAGEID_1);
-			}
-			else if (languageId.equals("")) {
+			if (languageId.equals("")) {
 				query.append(_FINDER_COLUMN_LVENTRYID_LANGUAGEID_VERSION_LANGUAGEID_3);
 			}
 			else {
@@ -2819,8 +2812,6 @@ public class LVEntryLocalizationVersionPersistenceImpl
 
 	private static final String _FINDER_COLUMN_LVENTRYID_LANGUAGEID_VERSION_LVENTRYID_2 =
 		"lvEntryLocalizationVersion.lvEntryId = ? AND ";
-	private static final String _FINDER_COLUMN_LVENTRYID_LANGUAGEID_VERSION_LANGUAGEID_1 =
-		"lvEntryLocalizationVersion.languageId IS NULL AND ";
 	private static final String _FINDER_COLUMN_LVENTRYID_LANGUAGEID_VERSION_LANGUAGEID_2 =
 		"lvEntryLocalizationVersion.languageId = ? AND ";
 	private static final String _FINDER_COLUMN_LVENTRYID_LANGUAGEID_VERSION_LANGUAGEID_3 =

@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Contact service. Represents a row in the &quot;Contact_&quot; database table, with each column mapped to a property of this class.
@@ -553,17 +554,12 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -697,65 +693,45 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getEmailAddress() {
-		if (_emailAddress == null) {
-			return "";
-		}
-		else {
-			return _emailAddress;
-		}
+		return _emailAddress;
 	}
 
 	@Override
 	public void setEmailAddress(String emailAddress) {
-		_emailAddress = emailAddress;
+		_emailAddress = Objects.toString(emailAddress, "");
 	}
 
 	@JSON
 	@Override
 	public String getFirstName() {
-		if (_firstName == null) {
-			return "";
-		}
-		else {
-			return _firstName;
-		}
+		return _firstName;
 	}
 
 	@Override
 	public void setFirstName(String firstName) {
-		_firstName = firstName;
+		_firstName = Objects.toString(firstName, "");
 	}
 
 	@JSON
 	@Override
 	public String getMiddleName() {
-		if (_middleName == null) {
-			return "";
-		}
-		else {
-			return _middleName;
-		}
+		return _middleName;
 	}
 
 	@Override
 	public void setMiddleName(String middleName) {
-		_middleName = middleName;
+		_middleName = Objects.toString(middleName, "");
 	}
 
 	@JSON
 	@Override
 	public String getLastName() {
-		if (_lastName == null) {
-			return "";
-		}
-		else {
-			return _lastName;
-		}
+		return _lastName;
 	}
 
 	@Override
 	public void setLastName(String lastName) {
-		_lastName = lastName;
+		_lastName = Objects.toString(lastName, "");
 	}
 
 	@JSON
@@ -811,161 +787,111 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	@JSON
 	@Override
 	public String getSmsSn() {
-		if (_smsSn == null) {
-			return "";
-		}
-		else {
-			return _smsSn;
-		}
+		return _smsSn;
 	}
 
 	@Override
 	public void setSmsSn(String smsSn) {
-		_smsSn = smsSn;
+		_smsSn = Objects.toString(smsSn, "");
 	}
 
 	@JSON
 	@Override
 	public String getFacebookSn() {
-		if (_facebookSn == null) {
-			return "";
-		}
-		else {
-			return _facebookSn;
-		}
+		return _facebookSn;
 	}
 
 	@Override
 	public void setFacebookSn(String facebookSn) {
-		_facebookSn = facebookSn;
+		_facebookSn = Objects.toString(facebookSn, "");
 	}
 
 	@JSON
 	@Override
 	public String getJabberSn() {
-		if (_jabberSn == null) {
-			return "";
-		}
-		else {
-			return _jabberSn;
-		}
+		return _jabberSn;
 	}
 
 	@Override
 	public void setJabberSn(String jabberSn) {
-		_jabberSn = jabberSn;
+		_jabberSn = Objects.toString(jabberSn, "");
 	}
 
 	@JSON
 	@Override
 	public String getSkypeSn() {
-		if (_skypeSn == null) {
-			return "";
-		}
-		else {
-			return _skypeSn;
-		}
+		return _skypeSn;
 	}
 
 	@Override
 	public void setSkypeSn(String skypeSn) {
-		_skypeSn = skypeSn;
+		_skypeSn = Objects.toString(skypeSn, "");
 	}
 
 	@JSON
 	@Override
 	public String getTwitterSn() {
-		if (_twitterSn == null) {
-			return "";
-		}
-		else {
-			return _twitterSn;
-		}
+		return _twitterSn;
 	}
 
 	@Override
 	public void setTwitterSn(String twitterSn) {
-		_twitterSn = twitterSn;
+		_twitterSn = Objects.toString(twitterSn, "");
 	}
 
 	@JSON
 	@Override
 	public String getEmployeeStatusId() {
-		if (_employeeStatusId == null) {
-			return "";
-		}
-		else {
-			return _employeeStatusId;
-		}
+		return _employeeStatusId;
 	}
 
 	@Override
 	public void setEmployeeStatusId(String employeeStatusId) {
-		_employeeStatusId = employeeStatusId;
+		_employeeStatusId = Objects.toString(employeeStatusId, "");
 	}
 
 	@JSON
 	@Override
 	public String getEmployeeNumber() {
-		if (_employeeNumber == null) {
-			return "";
-		}
-		else {
-			return _employeeNumber;
-		}
+		return _employeeNumber;
 	}
 
 	@Override
 	public void setEmployeeNumber(String employeeNumber) {
-		_employeeNumber = employeeNumber;
+		_employeeNumber = Objects.toString(employeeNumber, "");
 	}
 
 	@JSON
 	@Override
 	public String getJobTitle() {
-		if (_jobTitle == null) {
-			return "";
-		}
-		else {
-			return _jobTitle;
-		}
+		return _jobTitle;
 	}
 
 	@Override
 	public void setJobTitle(String jobTitle) {
-		_jobTitle = jobTitle;
+		_jobTitle = Objects.toString(jobTitle, "");
 	}
 
 	@JSON
 	@Override
 	public String getJobClass() {
-		if (_jobClass == null) {
-			return "";
-		}
-		else {
-			return _jobClass;
-		}
+		return _jobClass;
 	}
 
 	@Override
 	public void setJobClass(String jobClass) {
-		_jobClass = jobClass;
+		_jobClass = Objects.toString(jobClass, "");
 	}
 
 	@JSON
 	@Override
 	public String getHoursOfOperation() {
-		if (_hoursOfOperation == null) {
-			return "";
-		}
-		else {
-			return _hoursOfOperation;
-		}
+		return _hoursOfOperation;
 	}
 
 	@Override
 	public void setHoursOfOperation(String hoursOfOperation) {
-		_hoursOfOperation = hoursOfOperation;
+		_hoursOfOperation = Objects.toString(hoursOfOperation, "");
 	}
 
 	public long getColumnBitmask() {

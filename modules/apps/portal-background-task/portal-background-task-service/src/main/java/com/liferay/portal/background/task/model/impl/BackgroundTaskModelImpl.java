@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the BackgroundTask service. Represents a row in the &quot;BackgroundTask&quot; database table, with each column mapped to a property of this class.
@@ -448,17 +449,12 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -494,12 +490,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
@@ -510,7 +501,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -520,28 +511,18 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 	@JSON
 	@Override
 	public String getServletContextNames() {
-		if (_servletContextNames == null) {
-			return "";
-		}
-		else {
-			return _servletContextNames;
-		}
+		return _servletContextNames;
 	}
 
 	@Override
 	public void setServletContextNames(String servletContextNames) {
-		_servletContextNames = servletContextNames;
+		_servletContextNames = Objects.toString(servletContextNames, "");
 	}
 
 	@JSON
 	@Override
 	public String getTaskExecutorClassName() {
-		if (_taskExecutorClassName == null) {
-			return "";
-		}
-		else {
-			return _taskExecutorClassName;
-		}
+		return _taskExecutorClassName;
 	}
 
 	@Override
@@ -552,7 +533,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 			_originalTaskExecutorClassName = _taskExecutorClassName;
 		}
 
-		_taskExecutorClassName = taskExecutorClassName;
+		_taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
 	}
 
 	public String getOriginalTaskExecutorClassName() {
@@ -636,17 +617,12 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 	@JSON
 	@Override
 	public String getStatusMessage() {
-		if (_statusMessage == null) {
-			return "";
-		}
-		else {
-			return _statusMessage;
-		}
+		return _statusMessage;
 	}
 
 	@Override
 	public void setStatusMessage(String statusMessage) {
-		_statusMessage = statusMessage;
+		_statusMessage = Objects.toString(statusMessage, "");
 	}
 
 	public long getColumnBitmask() {

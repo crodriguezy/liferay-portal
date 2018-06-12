@@ -2389,6 +2389,8 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 	@Override
 	public SocialActivitySetting fetchByG_C_A_N(long groupId, long classNameId,
 		int activityType, String name, boolean retrieveFromCache) {
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] {
 				groupId, classNameId, activityType, name
 			};
@@ -2424,10 +2426,7 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_C_A_N_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_C_A_N_NAME_3);
 			}
 			else {
@@ -2534,6 +2533,8 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 		String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_C_A_N;
 
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] {
 				groupId, classNameId, activityType, name
 			};
@@ -2553,10 +2554,7 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_C_A_N_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_C_A_N_NAME_3);
 			}
 			else {
@@ -2606,7 +2604,6 @@ public class SocialActivitySettingPersistenceImpl extends BasePersistenceImpl<So
 	private static final String _FINDER_COLUMN_G_C_A_N_GROUPID_2 = "socialActivitySetting.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_A_N_CLASSNAMEID_2 = "socialActivitySetting.classNameId = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_A_N_ACTIVITYTYPE_2 = "socialActivitySetting.activityType = ? AND ";
-	private static final String _FINDER_COLUMN_G_C_A_N_NAME_1 = "socialActivitySetting.name IS NULL";
 	private static final String _FINDER_COLUMN_G_C_A_N_NAME_2 = "socialActivitySetting.name = ?";
 	private static final String _FINDER_COLUMN_G_C_A_N_NAME_3 = "(socialActivitySetting.name IS NULL OR socialActivitySetting.name = '')";
 

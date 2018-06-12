@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoTimer service. Represents a row in the &quot;KaleoTimer&quot; database table, with each column mapped to a property of this class.
@@ -354,17 +355,12 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -395,12 +391,7 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public String getKaleoClassName() {
-		if (_kaleoClassName == null) {
-			return "";
-		}
-		else {
-			return _kaleoClassName;
-		}
+		return _kaleoClassName;
 	}
 
 	@Override
@@ -411,7 +402,7 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 			_originalKaleoClassName = _kaleoClassName;
 		}
 
-		_kaleoClassName = kaleoClassName;
+		_kaleoClassName = Objects.toString(kaleoClassName, "");
 	}
 
 	public String getOriginalKaleoClassName() {
@@ -452,17 +443,12 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -494,17 +480,12 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -519,17 +500,12 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public String getScale() {
-		if (_scale == null) {
-			return "";
-		}
-		else {
-			return _scale;
-		}
+		return _scale;
 	}
 
 	@Override
 	public void setScale(String scale) {
-		_scale = scale;
+		_scale = Objects.toString(scale, "");
 	}
 
 	@Override
@@ -544,17 +520,12 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public String getRecurrenceScale() {
-		if (_recurrenceScale == null) {
-			return "";
-		}
-		else {
-			return _recurrenceScale;
-		}
+		return _recurrenceScale;
 	}
 
 	@Override
 	public void setRecurrenceScale(String recurrenceScale) {
-		_recurrenceScale = recurrenceScale;
+		_recurrenceScale = Objects.toString(recurrenceScale, "");
 	}
 
 	public long getColumnBitmask() {

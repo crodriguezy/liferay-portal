@@ -54,6 +54,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the MBMessage service. Represents a row in the &quot;MBMessage&quot; database table, with each column mapped to a property of this class.
@@ -465,12 +466,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -479,7 +475,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -587,17 +583,12 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -779,49 +770,34 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@JSON
 	@Override
 	public String getSubject() {
-		if (_subject == null) {
-			return "";
-		}
-		else {
-			return _subject;
-		}
+		return _subject;
 	}
 
 	@Override
 	public void setSubject(String subject) {
-		_subject = subject;
+		_subject = Objects.toString(subject, "");
 	}
 
 	@JSON
 	@Override
 	public String getBody() {
-		if (_body == null) {
-			return "";
-		}
-		else {
-			return _body;
-		}
+		return _body;
 	}
 
 	@Override
 	public void setBody(String body) {
-		_body = body;
+		_body = Objects.toString(body, "");
 	}
 
 	@JSON
 	@Override
 	public String getFormat() {
-		if (_format == null) {
-			return "";
-		}
-		else {
-			return _format;
-		}
+		return _format;
 	}
 
 	@Override
 	public void setFormat(String format) {
-		_format = format;
+		_format = Objects.toString(format, "");
 	}
 
 	@JSON
@@ -962,17 +938,12 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return _statusByUserName;
 	}
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON

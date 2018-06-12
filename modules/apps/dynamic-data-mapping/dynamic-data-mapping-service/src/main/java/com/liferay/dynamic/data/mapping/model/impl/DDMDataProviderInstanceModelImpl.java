@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -320,12 +321,7 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -334,7 +330,7 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -428,17 +424,12 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -472,12 +463,7 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
@@ -525,7 +511,7 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -571,12 +557,7 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
@@ -624,7 +605,7 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -674,33 +655,23 @@ public class DDMDataProviderInstanceModelImpl extends BaseModelImpl<DDMDataProvi
 	@JSON
 	@Override
 	public String getDefinition() {
-		if (_definition == null) {
-			return "";
-		}
-		else {
-			return _definition;
-		}
+		return _definition;
 	}
 
 	@Override
 	public void setDefinition(String definition) {
-		_definition = definition;
+		_definition = Objects.toString(definition, "");
 	}
 
 	@JSON
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return _type;
 	}
 
 	@Override
 	public void setType(String type) {
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	@Override

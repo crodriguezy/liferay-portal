@@ -41,6 +41,7 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -360,17 +361,12 @@ public class LVEntryModelImpl extends BaseModelImpl<LVEntry>
 
 	@Override
 	public String getDefaultLanguageId() {
-		if (_defaultLanguageId == null) {
-			return "";
-		}
-		else {
-			return _defaultLanguageId;
-		}
+		return _defaultLanguageId;
 	}
 
 	@Override
 	public void setDefaultLanguageId(String defaultLanguageId) {
-		_defaultLanguageId = defaultLanguageId;
+		_defaultLanguageId = Objects.toString(defaultLanguageId, "");
 	}
 
 	@Override

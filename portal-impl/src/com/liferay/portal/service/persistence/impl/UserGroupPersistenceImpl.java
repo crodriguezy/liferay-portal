@@ -193,6 +193,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -236,10 +238,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -450,6 +449,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	protected UserGroup getByUuid_PrevAndNext(Session session,
 		UserGroup userGroup, String uuid,
 		OrderByComparator<UserGroup> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -465,10 +466,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_UUID_3);
 		}
 		else {
@@ -611,6 +609,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	@Override
 	public List<UserGroup> filterFindByUuid(String uuid, int start, int end,
 		OrderByComparator<UserGroup> orderByComparator) {
+		uuid = Objects.toString(uuid, "");
+
 		if (!InlineSQLHelperUtil.isEnabled()) {
 			return findByUuid(uuid, start, end, orderByComparator);
 		}
@@ -634,10 +634,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_UUID_1_SQL);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_UUID_3_SQL);
 		}
 		else {
@@ -749,6 +746,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	protected UserGroup filterGetByUuid_PrevAndNext(Session session,
 		UserGroup userGroup, String uuid,
 		OrderByComparator<UserGroup> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -769,10 +768,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_UUID_1_SQL);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_UUID_3_SQL);
 		}
 		else {
@@ -923,6 +919,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -934,10 +932,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -986,6 +981,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	 */
 	@Override
 	public int filterCountByUuid(String uuid) {
+		uuid = Objects.toString(uuid, "");
+
 		if (!InlineSQLHelperUtil.isEnabled()) {
 			return countByUuid(uuid);
 		}
@@ -996,10 +993,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_UUID_1_SQL);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_UUID_3_SQL);
 		}
 		else {
@@ -1039,10 +1033,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 		}
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "userGroup.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "userGroup.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(userGroup.uuid IS NULL OR userGroup.uuid = '')";
-	private static final String _FINDER_COLUMN_UUID_UUID_1_SQL = "userGroup.uuid_ IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2_SQL = "userGroup.uuid_ = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3_SQL = "(userGroup.uuid_ IS NULL OR userGroup.uuid_ = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(UserGroupModelImpl.ENTITY_CACHE_ENABLED,
@@ -1142,6 +1134,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -1190,10 +1184,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1422,6 +1413,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	protected UserGroup getByUuid_C_PrevAndNext(Session session,
 		UserGroup userGroup, String uuid, long companyId,
 		OrderByComparator<UserGroup> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1437,10 +1430,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 		}
 		else {
@@ -1592,6 +1582,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	@Override
 	public List<UserGroup> filterFindByUuid_C(String uuid, long companyId,
 		int start, int end, OrderByComparator<UserGroup> orderByComparator) {
+		uuid = Objects.toString(uuid, "");
+
 		if (!InlineSQLHelperUtil.isEnabled(companyId, 0)) {
 			return findByUuid_C(uuid, companyId, start, end, orderByComparator);
 		}
@@ -1615,10 +1607,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_C_UUID_1_SQL);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_3_SQL);
 		}
 		else {
@@ -1737,6 +1726,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	protected UserGroup filterGetByUuid_C_PrevAndNext(Session session,
 		UserGroup userGroup, String uuid, long companyId,
 		OrderByComparator<UserGroup> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1757,10 +1748,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_C_UUID_1_SQL);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_3_SQL);
 		}
 		else {
@@ -1917,6 +1905,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1928,10 +1918,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1985,6 +1972,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	 */
 	@Override
 	public int filterCountByUuid_C(String uuid, long companyId) {
+		uuid = Objects.toString(uuid, "");
+
 		if (!InlineSQLHelperUtil.isEnabled(companyId, 0)) {
 			return countByUuid_C(uuid, companyId);
 		}
@@ -1995,10 +1984,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_C_UUID_1_SQL);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_3_SQL);
 		}
 		else {
@@ -2042,10 +2028,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 		}
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "userGroup.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "userGroup.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(userGroup.uuid IS NULL OR userGroup.uuid = '') AND ";
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1_SQL = "userGroup.uuid_ IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2_SQL = "userGroup.uuid_ = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3_SQL = "(userGroup.uuid_ IS NULL OR userGroup.uuid_ = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "userGroup.companyId = ?";
@@ -3897,6 +3881,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	@Override
 	public UserGroup fetchByC_N(long companyId, String name,
 		boolean retrieveFromCache) {
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { companyId, name };
 
 		Object result = null;
@@ -3924,10 +3910,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_C_N_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_C_N_NAME_3);
 			}
 			else {
@@ -4011,6 +3994,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	public int countByC_N(long companyId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_N;
 
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { companyId, name };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -4024,10 +4009,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_C_N_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_C_N_NAME_3);
 			}
 			else {
@@ -4071,7 +4053,6 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	}
 
 	private static final String _FINDER_COLUMN_C_N_COMPANYID_2 = "userGroup.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_N_NAME_1 = "userGroup.name IS NULL";
 	private static final String _FINDER_COLUMN_C_N_NAME_2 = "lower(userGroup.name) = ?";
 	private static final String _FINDER_COLUMN_C_N_NAME_3 = "(userGroup.name IS NULL OR userGroup.name = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_ERC = new FinderPath(UserGroupModelImpl.ENTITY_CACHE_ENABLED,
@@ -4144,6 +4125,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	@Override
 	public UserGroup fetchByC_ERC(long companyId, String externalReferenceCode,
 		boolean retrieveFromCache) {
+		externalReferenceCode = Objects.toString(externalReferenceCode, "");
+
 		Object[] finderArgs = new Object[] { companyId, externalReferenceCode };
 
 		Object result = null;
@@ -4172,10 +4155,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 			boolean bindExternalReferenceCode = false;
 
-			if (externalReferenceCode == null) {
-				query.append(_FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_1);
-			}
-			else if (externalReferenceCode.equals("")) {
+			if (externalReferenceCode.equals("")) {
 				query.append(_FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_3);
 			}
 			else {
@@ -4270,6 +4250,8 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	public int countByC_ERC(long companyId, String externalReferenceCode) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_ERC;
 
+		externalReferenceCode = Objects.toString(externalReferenceCode, "");
+
 		Object[] finderArgs = new Object[] { companyId, externalReferenceCode };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -4283,10 +4265,7 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 
 			boolean bindExternalReferenceCode = false;
 
-			if (externalReferenceCode == null) {
-				query.append(_FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_1);
-			}
-			else if (externalReferenceCode.equals("")) {
+			if (externalReferenceCode.equals("")) {
 				query.append(_FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_3);
 			}
 			else {
@@ -4330,7 +4309,6 @@ public class UserGroupPersistenceImpl extends BasePersistenceImpl<UserGroup>
 	}
 
 	private static final String _FINDER_COLUMN_C_ERC_COMPANYID_2 = "userGroup.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_1 = "userGroup.externalReferenceCode IS NULL";
 	private static final String _FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_2 = "userGroup.externalReferenceCode = ?";
 	private static final String _FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_3 = "(userGroup.externalReferenceCode IS NULL OR userGroup.externalReferenceCode = '')";
 

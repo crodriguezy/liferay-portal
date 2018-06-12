@@ -695,6 +695,8 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 	@Override
 	public FriendlyURLEntryLocalization fetchByFriendlyURLEntryId_LanguageId(
 		long friendlyURLEntryId, String languageId, boolean retrieveFromCache) {
+		languageId = Objects.toString(languageId, "");
+
 		Object[] finderArgs = new Object[] { friendlyURLEntryId, languageId };
 
 		Object result = null;
@@ -723,10 +725,7 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 
 			boolean bindLanguageId = false;
 
-			if (languageId == null) {
-				query.append(_FINDER_COLUMN_FRIENDLYURLENTRYID_LANGUAGEID_LANGUAGEID_1);
-			}
-			else if (languageId.equals("")) {
+			if (languageId.equals("")) {
 				query.append(_FINDER_COLUMN_FRIENDLYURLENTRYID_LANGUAGEID_LANGUAGEID_3);
 			}
 			else {
@@ -814,6 +813,8 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 		String languageId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_FRIENDLYURLENTRYID_LANGUAGEID;
 
+		languageId = Objects.toString(languageId, "");
+
 		Object[] finderArgs = new Object[] { friendlyURLEntryId, languageId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -827,10 +828,7 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 
 			boolean bindLanguageId = false;
 
-			if (languageId == null) {
-				query.append(_FINDER_COLUMN_FRIENDLYURLENTRYID_LANGUAGEID_LANGUAGEID_1);
-			}
-			else if (languageId.equals("")) {
+			if (languageId.equals("")) {
 				query.append(_FINDER_COLUMN_FRIENDLYURLENTRYID_LANGUAGEID_LANGUAGEID_3);
 			}
 			else {
@@ -875,8 +873,6 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 
 	private static final String _FINDER_COLUMN_FRIENDLYURLENTRYID_LANGUAGEID_FRIENDLYURLENTRYID_2 =
 		"friendlyURLEntryLocalization.friendlyURLEntryId = ? AND ";
-	private static final String _FINDER_COLUMN_FRIENDLYURLENTRYID_LANGUAGEID_LANGUAGEID_1 =
-		"friendlyURLEntryLocalization.languageId IS NULL";
 	private static final String _FINDER_COLUMN_FRIENDLYURLENTRYID_LANGUAGEID_LANGUAGEID_2 =
 		"friendlyURLEntryLocalization.languageId = ?";
 	private static final String _FINDER_COLUMN_FRIENDLYURLENTRYID_LANGUAGEID_LANGUAGEID_3 =
@@ -969,6 +965,8 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 	@Override
 	public FriendlyURLEntryLocalization fetchByG_C_U(long groupId,
 		long classNameId, String urlTitle, boolean retrieveFromCache) {
+		urlTitle = Objects.toString(urlTitle, "");
+
 		Object[] finderArgs = new Object[] { groupId, classNameId, urlTitle };
 
 		Object result = null;
@@ -1000,10 +998,7 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 
 			boolean bindUrlTitle = false;
 
-			if (urlTitle == null) {
-				query.append(_FINDER_COLUMN_G_C_U_URLTITLE_1);
-			}
-			else if (urlTitle.equals("")) {
+			if (urlTitle.equals("")) {
 				query.append(_FINDER_COLUMN_G_C_U_URLTITLE_3);
 			}
 			else {
@@ -1093,6 +1088,8 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 	public int countByG_C_U(long groupId, long classNameId, String urlTitle) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_C_U;
 
+		urlTitle = Objects.toString(urlTitle, "");
+
 		Object[] finderArgs = new Object[] { groupId, classNameId, urlTitle };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1108,10 +1105,7 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 
 			boolean bindUrlTitle = false;
 
-			if (urlTitle == null) {
-				query.append(_FINDER_COLUMN_G_C_U_URLTITLE_1);
-			}
-			else if (urlTitle.equals("")) {
+			if (urlTitle.equals("")) {
 				query.append(_FINDER_COLUMN_G_C_U_URLTITLE_3);
 			}
 			else {
@@ -1158,7 +1152,6 @@ public class FriendlyURLEntryLocalizationPersistenceImpl
 
 	private static final String _FINDER_COLUMN_G_C_U_GROUPID_2 = "friendlyURLEntryLocalization.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_C_U_CLASSNAMEID_2 = "friendlyURLEntryLocalization.classNameId = ? AND ";
-	private static final String _FINDER_COLUMN_G_C_U_URLTITLE_1 = "friendlyURLEntryLocalization.urlTitle IS NULL";
 	private static final String _FINDER_COLUMN_G_C_U_URLTITLE_2 = "friendlyURLEntryLocalization.urlTitle = ?";
 	private static final String _FINDER_COLUMN_G_C_U_URLTITLE_3 = "(friendlyURLEntryLocalization.urlTitle IS NULL OR friendlyURLEntryLocalization.urlTitle = '')";
 

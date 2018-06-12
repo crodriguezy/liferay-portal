@@ -41,6 +41,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the UserNotificationDelivery service. Represents a row in the &quot;UserNotificationDelivery&quot; database table, with each column mapped to a property of this class.
@@ -296,12 +297,7 @@ public class UserNotificationDeliveryModelImpl extends BaseModelImpl<UserNotific
 
 	@Override
 	public String getPortletId() {
-		if (_portletId == null) {
-			return "";
-		}
-		else {
-			return _portletId;
-		}
+		return _portletId;
 	}
 
 	@Override
@@ -312,7 +308,7 @@ public class UserNotificationDeliveryModelImpl extends BaseModelImpl<UserNotific
 			_originalPortletId = _portletId;
 		}
 
-		_portletId = portletId;
+		_portletId = Objects.toString(portletId, "");
 	}
 
 	public String getOriginalPortletId() {

@@ -36,6 +36,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the PortalPreferences service. Represents a row in the &quot;PortalPreferences&quot; database table, with each column mapped to a property of this class.
@@ -246,17 +247,12 @@ public class PortalPreferencesModelImpl extends BaseModelImpl<PortalPreferences>
 
 	@Override
 	public String getPreferences() {
-		if (_preferences == null) {
-			return "";
-		}
-		else {
-			return _preferences;
-		}
+		return _preferences;
 	}
 
 	@Override
 	public void setPreferences(String preferences) {
-		_preferences = preferences;
+		_preferences = Objects.toString(preferences, "");
 	}
 
 	public long getColumnBitmask() {

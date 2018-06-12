@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the OAuth2Application service. Represents a row in the &quot;OAuth2Application&quot; database table, with each column mapped to a property of this class.
@@ -430,17 +431,12 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -486,28 +482,18 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	@JSON
 	@Override
 	public String getAllowedGrantTypes() {
-		if (_allowedGrantTypes == null) {
-			return "";
-		}
-		else {
-			return _allowedGrantTypes;
-		}
+		return _allowedGrantTypes;
 	}
 
 	@Override
 	public void setAllowedGrantTypes(String allowedGrantTypes) {
-		_allowedGrantTypes = allowedGrantTypes;
+		_allowedGrantTypes = Objects.toString(allowedGrantTypes, "");
 	}
 
 	@JSON
 	@Override
 	public String getClientId() {
-		if (_clientId == null) {
-			return "";
-		}
-		else {
-			return _clientId;
-		}
+		return _clientId;
 	}
 
 	@Override
@@ -518,7 +504,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 			_originalClientId = _clientId;
 		}
 
-		_clientId = clientId;
+		_clientId = Objects.toString(clientId, "");
 	}
 
 	public String getOriginalClientId() {
@@ -539,65 +525,45 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	@JSON
 	@Override
 	public String getClientSecret() {
-		if (_clientSecret == null) {
-			return "";
-		}
-		else {
-			return _clientSecret;
-		}
+		return _clientSecret;
 	}
 
 	@Override
 	public void setClientSecret(String clientSecret) {
-		_clientSecret = clientSecret;
+		_clientSecret = Objects.toString(clientSecret, "");
 	}
 
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
 	@Override
 	public String getFeatures() {
-		if (_features == null) {
-			return "";
-		}
-		else {
-			return _features;
-		}
+		return _features;
 	}
 
 	@Override
 	public void setFeatures(String features) {
-		_features = features;
+		_features = Objects.toString(features, "");
 	}
 
 	@JSON
 	@Override
 	public String getHomePageURL() {
-		if (_homePageURL == null) {
-			return "";
-		}
-		else {
-			return _homePageURL;
-		}
+		return _homePageURL;
 	}
 
 	@Override
 	public void setHomePageURL(String homePageURL) {
-		_homePageURL = homePageURL;
+		_homePageURL = Objects.toString(homePageURL, "");
 	}
 
 	@JSON
@@ -614,49 +580,34 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
 	@Override
 	public String getPrivacyPolicyURL() {
-		if (_privacyPolicyURL == null) {
-			return "";
-		}
-		else {
-			return _privacyPolicyURL;
-		}
+		return _privacyPolicyURL;
 	}
 
 	@Override
 	public void setPrivacyPolicyURL(String privacyPolicyURL) {
-		_privacyPolicyURL = privacyPolicyURL;
+		_privacyPolicyURL = Objects.toString(privacyPolicyURL, "");
 	}
 
 	@JSON
 	@Override
 	public String getRedirectURIs() {
-		if (_redirectURIs == null) {
-			return "";
-		}
-		else {
-			return _redirectURIs;
-		}
+		return _redirectURIs;
 	}
 
 	@Override
 	public void setRedirectURIs(String redirectURIs) {
-		_redirectURIs = redirectURIs;
+		_redirectURIs = Objects.toString(redirectURIs, "");
 	}
 
 	public long getColumnBitmask() {

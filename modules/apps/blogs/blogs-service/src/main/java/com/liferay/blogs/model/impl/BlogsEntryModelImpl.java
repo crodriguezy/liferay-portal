@@ -54,6 +54,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the BlogsEntry service. Represents a row in the &quot;BlogsEntry&quot; database table, with each column mapped to a property of this class.
@@ -492,12 +493,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -506,7 +502,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -612,17 +608,12 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -658,44 +649,29 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return _title;
 	}
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@JSON
 	@Override
 	public String getSubtitle() {
-		if (_subtitle == null) {
-			return "";
-		}
-		else {
-			return _subtitle;
-		}
+		return _subtitle;
 	}
 
 	@Override
 	public void setSubtitle(String subtitle) {
-		_subtitle = subtitle;
+		_subtitle = Objects.toString(subtitle, "");
 	}
 
 	@JSON
 	@Override
 	public String getUrlTitle() {
-		if (_urlTitle == null) {
-			return "";
-		}
-		else {
-			return _urlTitle;
-		}
+		return _urlTitle;
 	}
 
 	@Override
@@ -706,7 +682,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 			_originalUrlTitle = _urlTitle;
 		}
 
-		_urlTitle = urlTitle;
+		_urlTitle = Objects.toString(urlTitle, "");
 	}
 
 	public String getOriginalUrlTitle() {
@@ -716,33 +692,23 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
 	@Override
 	public String getContent() {
-		if (_content == null) {
-			return "";
-		}
-		else {
-			return _content;
-		}
+		return _content;
 	}
 
 	@Override
 	public void setContent(String content) {
-		_content = content;
+		_content = Objects.toString(content, "");
 	}
 
 	@JSON
@@ -803,33 +769,23 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getTrackbacks() {
-		if (_trackbacks == null) {
-			return "";
-		}
-		else {
-			return _trackbacks;
-		}
+		return _trackbacks;
 	}
 
 	@Override
 	public void setTrackbacks(String trackbacks) {
-		_trackbacks = trackbacks;
+		_trackbacks = Objects.toString(trackbacks, "");
 	}
 
 	@JSON
 	@Override
 	public String getCoverImageCaption() {
-		if (_coverImageCaption == null) {
-			return "";
-		}
-		else {
-			return _coverImageCaption;
-		}
+		return _coverImageCaption;
 	}
 
 	@Override
 	public void setCoverImageCaption(String coverImageCaption) {
-		_coverImageCaption = coverImageCaption;
+		_coverImageCaption = Objects.toString(coverImageCaption, "");
 	}
 
 	@JSON
@@ -846,17 +802,12 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getCoverImageURL() {
-		if (_coverImageURL == null) {
-			return "";
-		}
-		else {
-			return _coverImageURL;
-		}
+		return _coverImageURL;
 	}
 
 	@Override
 	public void setCoverImageURL(String coverImageURL) {
-		_coverImageURL = coverImageURL;
+		_coverImageURL = Objects.toString(coverImageURL, "");
 	}
 
 	@JSON
@@ -901,17 +852,12 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getSmallImageURL() {
-		if (_smallImageURL == null) {
-			return "";
-		}
-		else {
-			return _smallImageURL;
-		}
+		return _smallImageURL;
 	}
 
 	@Override
 	public void setSmallImageURL(String smallImageURL) {
-		_smallImageURL = smallImageURL;
+		_smallImageURL = Objects.toString(smallImageURL, "");
 	}
 
 	@JSON
@@ -978,17 +924,12 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return _statusByUserName;
 	}
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON

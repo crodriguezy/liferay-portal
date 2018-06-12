@@ -691,6 +691,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		portletId = Objects.toString(portletId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -735,10 +737,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_3);
 			}
 			else {
@@ -954,6 +953,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		PortletPreferences portletPreferences, String portletId,
 		OrderByComparator<PortletPreferences> orderByComparator,
 		boolean previous) {
+		portletId = Objects.toString(portletId, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -969,10 +970,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 		boolean bindPortletId = false;
 
-		if (portletId == null) {
-			query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_1);
-		}
-		else if (portletId.equals("")) {
+		if (portletId.equals("")) {
 			query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_3);
 		}
 		else {
@@ -1094,6 +1092,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	public int countByPortletId(String portletId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_PORTLETID;
 
+		portletId = Objects.toString(portletId, "");
+
 		Object[] finderArgs = new Object[] { portletId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1105,10 +1105,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_PORTLETID_PORTLETID_3);
 			}
 			else {
@@ -1149,7 +1146,6 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_PORTLETID_PORTLETID_1 = "portletPreferences.portletId IS NULL";
 	private static final String _FINDER_COLUMN_PORTLETID_PORTLETID_2 = "portletPreferences.portletId = ?";
 	private static final String _FINDER_COLUMN_PORTLETID_PORTLETID_3 = "(portletPreferences.portletId IS NULL OR portletPreferences.portletId = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_O_P = new FinderPath(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
@@ -1252,6 +1248,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		portletId = Objects.toString(portletId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -1303,10 +1301,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_O_P_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_O_P_PORTLETID_3);
 			}
 			else {
@@ -1535,6 +1530,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		PortletPreferences portletPreferences, int ownerType, String portletId,
 		OrderByComparator<PortletPreferences> orderByComparator,
 		boolean previous) {
+		portletId = Objects.toString(portletId, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1552,10 +1549,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 		boolean bindPortletId = false;
 
-		if (portletId == null) {
-			query.append(_FINDER_COLUMN_O_P_PORTLETID_1);
-		}
-		else if (portletId.equals("")) {
+		if (portletId.equals("")) {
 			query.append(_FINDER_COLUMN_O_P_PORTLETID_3);
 		}
 		else {
@@ -1681,6 +1675,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	public int countByO_P(int ownerType, String portletId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_O_P;
 
+		portletId = Objects.toString(portletId, "");
+
 		Object[] finderArgs = new Object[] { ownerType, portletId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1694,10 +1690,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_O_P_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_O_P_PORTLETID_3);
 			}
 			else {
@@ -1741,7 +1734,6 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	}
 
 	private static final String _FINDER_COLUMN_O_P_OWNERTYPE_2 = "portletPreferences.ownerType = ? AND ";
-	private static final String _FINDER_COLUMN_O_P_PORTLETID_1 = "portletPreferences.portletId IS NULL";
 	private static final String _FINDER_COLUMN_O_P_PORTLETID_2 = "portletPreferences.portletId = ?";
 	private static final String _FINDER_COLUMN_O_P_PORTLETID_3 = "(portletPreferences.portletId IS NULL OR portletPreferences.portletId = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_P_P = new FinderPath(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
@@ -1843,6 +1835,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		portletId = Objects.toString(portletId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -1894,10 +1888,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_P_P_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_P_P_PORTLETID_3);
 			}
 			else {
@@ -2126,6 +2117,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		PortletPreferences portletPreferences, long plid, String portletId,
 		OrderByComparator<PortletPreferences> orderByComparator,
 		boolean previous) {
+		portletId = Objects.toString(portletId, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -2143,10 +2136,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 		boolean bindPortletId = false;
 
-		if (portletId == null) {
-			query.append(_FINDER_COLUMN_P_P_PORTLETID_1);
-		}
-		else if (portletId.equals("")) {
+		if (portletId.equals("")) {
 			query.append(_FINDER_COLUMN_P_P_PORTLETID_3);
 		}
 		else {
@@ -2272,6 +2262,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	public int countByP_P(long plid, String portletId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_P_P;
 
+		portletId = Objects.toString(portletId, "");
+
 		Object[] finderArgs = new Object[] { plid, portletId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -2285,10 +2277,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_P_P_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_P_P_PORTLETID_3);
 			}
 			else {
@@ -2332,7 +2321,6 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	}
 
 	private static final String _FINDER_COLUMN_P_P_PLID_2 = "portletPreferences.plid = ? AND ";
-	private static final String _FINDER_COLUMN_P_P_PORTLETID_1 = "portletPreferences.portletId IS NULL";
 	private static final String _FINDER_COLUMN_P_P_PORTLETID_2 = "portletPreferences.portletId = ?";
 	private static final String _FINDER_COLUMN_P_P_PORTLETID_3 = "(portletPreferences.portletId IS NULL OR portletPreferences.portletId = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_O_O_P = new FinderPath(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
@@ -3036,6 +3024,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		portletId = Objects.toString(portletId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -3090,10 +3080,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_O_O_PI_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_O_O_PI_PORTLETID_3);
 			}
 			else {
@@ -3341,6 +3328,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		String portletId,
 		OrderByComparator<PortletPreferences> orderByComparator,
 		boolean previous) {
+		portletId = Objects.toString(portletId, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -3360,10 +3349,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 		boolean bindPortletId = false;
 
-		if (portletId == null) {
-			query.append(_FINDER_COLUMN_O_O_PI_PORTLETID_1);
-		}
-		else if (portletId.equals("")) {
+		if (portletId.equals("")) {
 			query.append(_FINDER_COLUMN_O_O_PI_PORTLETID_3);
 		}
 		else {
@@ -3493,6 +3479,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	public int countByO_O_PI(long ownerId, int ownerType, String portletId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_O_O_PI;
 
+		portletId = Objects.toString(portletId, "");
+
 		Object[] finderArgs = new Object[] { ownerId, ownerType, portletId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -3508,10 +3496,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_O_O_PI_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_O_O_PI_PORTLETID_3);
 			}
 			else {
@@ -3558,7 +3543,6 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 	private static final String _FINDER_COLUMN_O_O_PI_OWNERID_2 = "portletPreferences.ownerId = ? AND ";
 	private static final String _FINDER_COLUMN_O_O_PI_OWNERTYPE_2 = "portletPreferences.ownerType = ? AND ";
-	private static final String _FINDER_COLUMN_O_O_PI_PORTLETID_1 = "portletPreferences.portletId IS NULL";
 	private static final String _FINDER_COLUMN_O_O_PI_PORTLETID_2 = "portletPreferences.portletId = ?";
 	private static final String _FINDER_COLUMN_O_O_PI_PORTLETID_3 = "(portletPreferences.portletId IS NULL OR portletPreferences.portletId = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_O_P_P = new FinderPath(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
@@ -3674,6 +3658,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		portletId = Objects.toString(portletId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -3728,10 +3714,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_O_P_P_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_O_P_P_PORTLETID_3);
 			}
 			else {
@@ -3978,6 +3961,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		String portletId,
 		OrderByComparator<PortletPreferences> orderByComparator,
 		boolean previous) {
+		portletId = Objects.toString(portletId, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -3997,10 +3982,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 		boolean bindPortletId = false;
 
-		if (portletId == null) {
-			query.append(_FINDER_COLUMN_O_P_P_PORTLETID_1);
-		}
-		else if (portletId.equals("")) {
+		if (portletId.equals("")) {
 			query.append(_FINDER_COLUMN_O_P_P_PORTLETID_3);
 		}
 		else {
@@ -4130,6 +4112,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	public int countByO_P_P(int ownerType, long plid, String portletId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_O_P_P;
 
+		portletId = Objects.toString(portletId, "");
+
 		Object[] finderArgs = new Object[] { ownerType, plid, portletId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -4145,10 +4129,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_O_P_P_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_O_P_P_PORTLETID_3);
 			}
 			else {
@@ -4195,7 +4176,6 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 	private static final String _FINDER_COLUMN_O_P_P_OWNERTYPE_2 = "portletPreferences.ownerType = ? AND ";
 	private static final String _FINDER_COLUMN_O_P_P_PLID_2 = "portletPreferences.plid = ? AND ";
-	private static final String _FINDER_COLUMN_O_P_P_PORTLETID_1 = "portletPreferences.portletId IS NULL";
 	private static final String _FINDER_COLUMN_O_P_P_PORTLETID_2 = "portletPreferences.portletId = ?";
 	private static final String _FINDER_COLUMN_O_P_P_PORTLETID_3 = "(portletPreferences.portletId IS NULL OR portletPreferences.portletId = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_O_O_LIKEP =
@@ -4307,6 +4287,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		portletId = Objects.toString(portletId, "");
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_O_O_LIKEP;
 		finderArgs = new Object[] {
 				companyId, ownerId, ownerType, portletId,
@@ -4357,10 +4339,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_C_O_O_LIKEP_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_C_O_O_LIKEP_PORTLETID_3);
 			}
 			else {
@@ -4623,6 +4602,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		int ownerType, String portletId,
 		OrderByComparator<PortletPreferences> orderByComparator,
 		boolean previous) {
+		portletId = Objects.toString(portletId, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -4644,10 +4625,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 		boolean bindPortletId = false;
 
-		if (portletId == null) {
-			query.append(_FINDER_COLUMN_C_O_O_LIKEP_PORTLETID_1);
-		}
-		else if (portletId.equals("")) {
+		if (portletId.equals("")) {
 			query.append(_FINDER_COLUMN_C_O_O_LIKEP_PORTLETID_3);
 		}
 		else {
@@ -4784,6 +4762,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		String portletId) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_C_O_O_LIKEP;
 
+		portletId = Objects.toString(portletId, "");
+
 		Object[] finderArgs = new Object[] {
 				companyId, ownerId, ownerType, portletId
 			};
@@ -4803,10 +4783,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_C_O_O_LIKEP_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_C_O_O_LIKEP_PORTLETID_3);
 			}
 			else {
@@ -4856,7 +4833,6 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	private static final String _FINDER_COLUMN_C_O_O_LIKEP_COMPANYID_2 = "portletPreferences.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_O_O_LIKEP_OWNERID_2 = "portletPreferences.ownerId = ? AND ";
 	private static final String _FINDER_COLUMN_C_O_O_LIKEP_OWNERTYPE_2 = "portletPreferences.ownerType = ? AND ";
-	private static final String _FINDER_COLUMN_C_O_O_LIKEP_PORTLETID_1 = "portletPreferences.portletId IS NULL";
 	private static final String _FINDER_COLUMN_C_O_O_LIKEP_PORTLETID_2 = "portletPreferences.portletId LIKE ?";
 	private static final String _FINDER_COLUMN_C_O_O_LIKEP_PORTLETID_3 = "(portletPreferences.portletId IS NULL OR portletPreferences.portletId LIKE '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_O_O_P_P = new FinderPath(PortletPreferencesModelImpl.ENTITY_CACHE_ENABLED,
@@ -4952,6 +4928,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	@Override
 	public PortletPreferences fetchByO_O_P_P(long ownerId, int ownerType,
 		long plid, String portletId, boolean retrieveFromCache) {
+		portletId = Objects.toString(portletId, "");
+
 		Object[] finderArgs = new Object[] { ownerId, ownerType, plid, portletId };
 
 		Object result = null;
@@ -4985,10 +4963,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_O_O_P_P_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_O_O_P_P_PORTLETID_3);
 			}
 			else {
@@ -5083,6 +5058,8 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 		String portletId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_O_O_P_P;
 
+		portletId = Objects.toString(portletId, "");
+
 		Object[] finderArgs = new Object[] { ownerId, ownerType, plid, portletId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -5100,10 +5077,7 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_O_O_P_P_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_O_O_P_P_PORTLETID_3);
 			}
 			else {
@@ -5153,7 +5127,6 @@ public class PortletPreferencesPersistenceImpl extends BasePersistenceImpl<Portl
 	private static final String _FINDER_COLUMN_O_O_P_P_OWNERID_2 = "portletPreferences.ownerId = ? AND ";
 	private static final String _FINDER_COLUMN_O_O_P_P_OWNERTYPE_2 = "portletPreferences.ownerType = ? AND ";
 	private static final String _FINDER_COLUMN_O_O_P_P_PLID_2 = "portletPreferences.plid = ? AND ";
-	private static final String _FINDER_COLUMN_O_O_P_P_PORTLETID_1 = "portletPreferences.portletId IS NULL";
 	private static final String _FINDER_COLUMN_O_O_P_P_PORTLETID_2 = "portletPreferences.portletId = ?";
 	private static final String _FINDER_COLUMN_O_O_P_P_PORTLETID_3 = "(portletPreferences.portletId IS NULL OR portletPreferences.portletId = '')";
 

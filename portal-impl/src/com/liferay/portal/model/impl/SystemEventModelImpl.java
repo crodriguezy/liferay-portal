@@ -43,6 +43,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SystemEvent service. Represents a row in the &quot;SystemEvent&quot; database table, with each column mapped to a property of this class.
@@ -360,17 +361,12 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -451,17 +447,12 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 
 	@Override
 	public String getClassUuid() {
-		if (_classUuid == null) {
-			return "";
-		}
-		else {
-			return _classUuid;
-		}
+		return _classUuid;
 	}
 
 	@Override
 	public void setClassUuid(String classUuid) {
-		_classUuid = classUuid;
+		_classUuid = Objects.toString(classUuid, "");
 	}
 
 	@Override
@@ -530,17 +521,12 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 
 	@Override
 	public String getExtraData() {
-		if (_extraData == null) {
-			return "";
-		}
-		else {
-			return _extraData;
-		}
+		return _extraData;
 	}
 
 	@Override
 	public void setExtraData(String extraData) {
-		_extraData = extraData;
+		_extraData = Objects.toString(extraData, "");
 	}
 
 	public long getColumnBitmask() {

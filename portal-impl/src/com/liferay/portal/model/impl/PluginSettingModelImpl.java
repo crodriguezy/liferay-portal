@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the PluginSetting service. Represents a row in the &quot;PluginSetting&quot; database table, with each column mapped to a property of this class.
@@ -297,12 +298,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 	@JSON
 	@Override
 	public String getPluginId() {
-		if (_pluginId == null) {
-			return "";
-		}
-		else {
-			return _pluginId;
-		}
+		return _pluginId;
 	}
 
 	@Override
@@ -313,7 +309,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 			_originalPluginId = _pluginId;
 		}
 
-		_pluginId = pluginId;
+		_pluginId = Objects.toString(pluginId, "");
 	}
 
 	public String getOriginalPluginId() {
@@ -323,12 +319,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 	@JSON
 	@Override
 	public String getPluginType() {
-		if (_pluginType == null) {
-			return "";
-		}
-		else {
-			return _pluginType;
-		}
+		return _pluginType;
 	}
 
 	@Override
@@ -339,7 +330,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 			_originalPluginType = _pluginType;
 		}
 
-		_pluginType = pluginType;
+		_pluginType = Objects.toString(pluginType, "");
 	}
 
 	public String getOriginalPluginType() {
@@ -349,17 +340,12 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 	@JSON
 	@Override
 	public String getRoles() {
-		if (_roles == null) {
-			return "";
-		}
-		else {
-			return _roles;
-		}
+		return _roles;
 	}
 
 	@Override
 	public void setRoles(String roles) {
-		_roles = roles;
+		_roles = Objects.toString(roles, "");
 	}
 
 	@JSON

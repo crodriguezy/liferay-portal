@@ -186,6 +186,8 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		buildNamespace = Objects.toString(buildNamespace, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -234,10 +236,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 			boolean bindBuildNamespace = false;
 
-			if (buildNamespace == null) {
-				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_1);
-			}
-			else if (buildNamespace.equals("")) {
+			if (buildNamespace.equals("")) {
 				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3);
 			}
 			else {
@@ -453,6 +452,8 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 		Session session, ServiceComponent serviceComponent,
 		String buildNamespace,
 		OrderByComparator<ServiceComponent> orderByComparator, boolean previous) {
+		buildNamespace = Objects.toString(buildNamespace, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -468,10 +469,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 		boolean bindBuildNamespace = false;
 
-		if (buildNamespace == null) {
-			query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_1);
-		}
-		else if (buildNamespace.equals("")) {
+		if (buildNamespace.equals("")) {
 			query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3);
 		}
 		else {
@@ -593,6 +591,8 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 	public int countByBuildNamespace(String buildNamespace) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_BUILDNAMESPACE;
 
+		buildNamespace = Objects.toString(buildNamespace, "");
+
 		Object[] finderArgs = new Object[] { buildNamespace };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -604,10 +604,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 			boolean bindBuildNamespace = false;
 
-			if (buildNamespace == null) {
-				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_1);
-			}
-			else if (buildNamespace.equals("")) {
+			if (buildNamespace.equals("")) {
 				query.append(_FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3);
 			}
 			else {
@@ -648,7 +645,6 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_1 = "serviceComponent.buildNamespace IS NULL";
 	private static final String _FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_2 = "serviceComponent.buildNamespace = ?";
 	private static final String _FINDER_COLUMN_BUILDNAMESPACE_BUILDNAMESPACE_3 = "(serviceComponent.buildNamespace IS NULL OR serviceComponent.buildNamespace = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_BNS_BNU = new FinderPath(ServiceComponentModelImpl.ENTITY_CACHE_ENABLED,
@@ -724,6 +720,8 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 	@Override
 	public ServiceComponent fetchByBNS_BNU(String buildNamespace,
 		long buildNumber, boolean retrieveFromCache) {
+		buildNamespace = Objects.toString(buildNamespace, "");
+
 		Object[] finderArgs = new Object[] { buildNamespace, buildNumber };
 
 		Object result = null;
@@ -750,10 +748,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 			boolean bindBuildNamespace = false;
 
-			if (buildNamespace == null) {
-				query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_1);
-			}
-			else if (buildNamespace.equals("")) {
+			if (buildNamespace.equals("")) {
 				query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_3);
 			}
 			else {
@@ -841,6 +836,8 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 	public int countByBNS_BNU(String buildNamespace, long buildNumber) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_BNS_BNU;
 
+		buildNamespace = Objects.toString(buildNamespace, "");
+
 		Object[] finderArgs = new Object[] { buildNamespace, buildNumber };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -852,10 +849,7 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 
 			boolean bindBuildNamespace = false;
 
-			if (buildNamespace == null) {
-				query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_1);
-			}
-			else if (buildNamespace.equals("")) {
+			if (buildNamespace.equals("")) {
 				query.append(_FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_3);
 			}
 			else {
@@ -900,7 +894,6 @@ public class ServiceComponentPersistenceImpl extends BasePersistenceImpl<Service
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_1 = "serviceComponent.buildNamespace IS NULL AND ";
 	private static final String _FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_2 = "serviceComponent.buildNamespace = ? AND ";
 	private static final String _FINDER_COLUMN_BNS_BNU_BUILDNAMESPACE_3 = "(serviceComponent.buildNamespace IS NULL OR serviceComponent.buildNamespace = '') AND ";
 	private static final String _FINDER_COLUMN_BNS_BNU_BUILDNUMBER_2 = "serviceComponent.buildNumber = ?";

@@ -41,6 +41,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the OAuthToken service. Represents a row in the &quot;OpenSocial_OAuthToken&quot; database table, with each column mapped to a property of this class.
@@ -329,17 +330,12 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -370,12 +366,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getGadgetKey() {
-		if (_gadgetKey == null) {
-			return "";
-		}
-		else {
-			return _gadgetKey;
-		}
+		return _gadgetKey;
 	}
 
 	@Override
@@ -386,7 +377,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 			_originalGadgetKey = _gadgetKey;
 		}
 
-		_gadgetKey = gadgetKey;
+		_gadgetKey = Objects.toString(gadgetKey, "");
 	}
 
 	public String getOriginalGadgetKey() {
@@ -395,12 +386,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getServiceName() {
-		if (_serviceName == null) {
-			return "";
-		}
-		else {
-			return _serviceName;
-		}
+		return _serviceName;
 	}
 
 	@Override
@@ -411,7 +397,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 			_originalServiceName = _serviceName;
 		}
 
-		_serviceName = serviceName;
+		_serviceName = Objects.toString(serviceName, "");
 	}
 
 	public String getOriginalServiceName() {
@@ -442,27 +428,17 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getAccessToken() {
-		if (_accessToken == null) {
-			return "";
-		}
-		else {
-			return _accessToken;
-		}
+		return _accessToken;
 	}
 
 	@Override
 	public void setAccessToken(String accessToken) {
-		_accessToken = accessToken;
+		_accessToken = Objects.toString(accessToken, "");
 	}
 
 	@Override
 	public String getTokenName() {
-		if (_tokenName == null) {
-			return "";
-		}
-		else {
-			return _tokenName;
-		}
+		return _tokenName;
 	}
 
 	@Override
@@ -473,7 +449,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 			_originalTokenName = _tokenName;
 		}
 
-		_tokenName = tokenName;
+		_tokenName = Objects.toString(tokenName, "");
 	}
 
 	public String getOriginalTokenName() {
@@ -482,32 +458,22 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public String getTokenSecret() {
-		if (_tokenSecret == null) {
-			return "";
-		}
-		else {
-			return _tokenSecret;
-		}
+		return _tokenSecret;
 	}
 
 	@Override
 	public void setTokenSecret(String tokenSecret) {
-		_tokenSecret = tokenSecret;
+		_tokenSecret = Objects.toString(tokenSecret, "");
 	}
 
 	@Override
 	public String getSessionHandle() {
-		if (_sessionHandle == null) {
-			return "";
-		}
-		else {
-			return _sessionHandle;
-		}
+		return _sessionHandle;
 	}
 
 	@Override
 	public void setSessionHandle(String sessionHandle) {
-		_sessionHandle = sessionHandle;
+		_sessionHandle = Objects.toString(sessionHandle, "");
 	}
 
 	@Override

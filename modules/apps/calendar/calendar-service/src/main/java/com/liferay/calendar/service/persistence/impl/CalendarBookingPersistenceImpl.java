@@ -190,6 +190,8 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -233,10 +235,7 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -449,6 +448,8 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 	protected CalendarBooking getByUuid_PrevAndNext(Session session,
 		CalendarBooking calendarBooking, String uuid,
 		OrderByComparator<CalendarBooking> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -464,10 +465,7 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_UUID_3);
 		}
 		else {
@@ -589,6 +587,8 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -600,10 +600,7 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -644,7 +641,6 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "calendarBooking.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "calendarBooking.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(calendarBooking.uuid IS NULL OR calendarBooking.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(CalendarBookingModelImpl.ENTITY_CACHE_ENABLED,
@@ -718,6 +714,8 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 	@Override
 	public CalendarBooking fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, groupId };
 
 		Object result = null;
@@ -743,10 +741,7 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
 			}
 			else {
@@ -832,6 +827,8 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -843,10 +840,7 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
 			}
 			else {
@@ -891,7 +885,6 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "calendarBooking.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "calendarBooking.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(calendarBooking.uuid IS NULL OR calendarBooking.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "calendarBooking.groupId = ?";
@@ -996,6 +989,8 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -1044,10 +1039,7 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1277,6 +1269,8 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 	protected CalendarBooking getByUuid_C_PrevAndNext(Session session,
 		CalendarBooking calendarBooking, String uuid, long companyId,
 		OrderByComparator<CalendarBooking> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1292,10 +1286,7 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 		}
 		else {
@@ -1423,6 +1414,8 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1434,10 +1427,7 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1482,7 +1472,6 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "calendarBooking.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "calendarBooking.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(calendarBooking.uuid IS NULL OR calendarBooking.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "calendarBooking.companyId = ?";
@@ -3878,6 +3867,8 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 	@Override
 	public CalendarBooking fetchByC_V(long calendarId, String vEventUid,
 		boolean retrieveFromCache) {
+		vEventUid = Objects.toString(vEventUid, "");
+
 		Object[] finderArgs = new Object[] { calendarId, vEventUid };
 
 		Object result = null;
@@ -3905,10 +3896,7 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 
 			boolean bindVEventUid = false;
 
-			if (vEventUid == null) {
-				query.append(_FINDER_COLUMN_C_V_VEVENTUID_1);
-			}
-			else if (vEventUid.equals("")) {
+			if (vEventUid.equals("")) {
 				query.append(_FINDER_COLUMN_C_V_VEVENTUID_3);
 			}
 			else {
@@ -3992,6 +3980,8 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 	public int countByC_V(long calendarId, String vEventUid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_V;
 
+		vEventUid = Objects.toString(vEventUid, "");
+
 		Object[] finderArgs = new Object[] { calendarId, vEventUid };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -4005,10 +3995,7 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 
 			boolean bindVEventUid = false;
 
-			if (vEventUid == null) {
-				query.append(_FINDER_COLUMN_C_V_VEVENTUID_1);
-			}
-			else if (vEventUid.equals("")) {
+			if (vEventUid.equals("")) {
 				query.append(_FINDER_COLUMN_C_V_VEVENTUID_3);
 			}
 			else {
@@ -4052,7 +4039,6 @@ public class CalendarBookingPersistenceImpl extends BasePersistenceImpl<Calendar
 	}
 
 	private static final String _FINDER_COLUMN_C_V_CALENDARID_2 = "calendarBooking.calendarId = ? AND ";
-	private static final String _FINDER_COLUMN_C_V_VEVENTUID_1 = "calendarBooking.vEventUid IS NULL";
 	private static final String _FINDER_COLUMN_C_V_VEVENTUID_2 = "calendarBooking.vEventUid = ?";
 	private static final String _FINDER_COLUMN_C_V_VEVENTUID_3 = "(calendarBooking.vEventUid IS NULL OR calendarBooking.vEventUid = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_S = new FinderPath(CalendarBookingModelImpl.ENTITY_CACHE_ENABLED,

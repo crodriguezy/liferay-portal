@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoTaskAssignment service. Represents a row in the &quot;KaleoTaskAssignment&quot; database table, with each column mapped to a property of this class.
@@ -372,17 +373,12 @@ public class KaleoTaskAssignmentModelImpl extends BaseModelImpl<KaleoTaskAssignm
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -413,12 +409,7 @@ public class KaleoTaskAssignmentModelImpl extends BaseModelImpl<KaleoTaskAssignm
 
 	@Override
 	public String getKaleoClassName() {
-		if (_kaleoClassName == null) {
-			return "";
-		}
-		else {
-			return _kaleoClassName;
-		}
+		return _kaleoClassName;
 	}
 
 	@Override
@@ -429,7 +420,7 @@ public class KaleoTaskAssignmentModelImpl extends BaseModelImpl<KaleoTaskAssignm
 			_originalKaleoClassName = _kaleoClassName;
 		}
 
-		_kaleoClassName = kaleoClassName;
+		_kaleoClassName = Objects.toString(kaleoClassName, "");
 	}
 
 	public String getOriginalKaleoClassName() {
@@ -492,12 +483,7 @@ public class KaleoTaskAssignmentModelImpl extends BaseModelImpl<KaleoTaskAssignm
 
 	@Override
 	public String getAssigneeClassName() {
-		if (_assigneeClassName == null) {
-			return "";
-		}
-		else {
-			return _assigneeClassName;
-		}
+		return _assigneeClassName;
 	}
 
 	@Override
@@ -508,7 +494,7 @@ public class KaleoTaskAssignmentModelImpl extends BaseModelImpl<KaleoTaskAssignm
 			_originalAssigneeClassName = _assigneeClassName;
 		}
 
-		_assigneeClassName = assigneeClassName;
+		_assigneeClassName = Objects.toString(assigneeClassName, "");
 	}
 
 	public String getOriginalAssigneeClassName() {
@@ -527,63 +513,44 @@ public class KaleoTaskAssignmentModelImpl extends BaseModelImpl<KaleoTaskAssignm
 
 	@Override
 	public String getAssigneeActionId() {
-		if (_assigneeActionId == null) {
-			return "";
-		}
-		else {
-			return _assigneeActionId;
-		}
+		return _assigneeActionId;
 	}
 
 	@Override
 	public void setAssigneeActionId(String assigneeActionId) {
-		_assigneeActionId = assigneeActionId;
+		_assigneeActionId = Objects.toString(assigneeActionId, "");
 	}
 
 	@Override
 	public String getAssigneeScript() {
-		if (_assigneeScript == null) {
-			return "";
-		}
-		else {
-			return _assigneeScript;
-		}
+		return _assigneeScript;
 	}
 
 	@Override
 	public void setAssigneeScript(String assigneeScript) {
-		_assigneeScript = assigneeScript;
+		_assigneeScript = Objects.toString(assigneeScript, "");
 	}
 
 	@Override
 	public String getAssigneeScriptLanguage() {
-		if (_assigneeScriptLanguage == null) {
-			return "";
-		}
-		else {
-			return _assigneeScriptLanguage;
-		}
+		return _assigneeScriptLanguage;
 	}
 
 	@Override
 	public void setAssigneeScriptLanguage(String assigneeScriptLanguage) {
-		_assigneeScriptLanguage = assigneeScriptLanguage;
+		_assigneeScriptLanguage = Objects.toString(assigneeScriptLanguage, "");
 	}
 
 	@Override
 	public String getAssigneeScriptRequiredContexts() {
-		if (_assigneeScriptRequiredContexts == null) {
-			return "";
-		}
-		else {
-			return _assigneeScriptRequiredContexts;
-		}
+		return _assigneeScriptRequiredContexts;
 	}
 
 	@Override
 	public void setAssigneeScriptRequiredContexts(
 		String assigneeScriptRequiredContexts) {
-		_assigneeScriptRequiredContexts = assigneeScriptRequiredContexts;
+		_assigneeScriptRequiredContexts = Objects.toString(assigneeScriptRequiredContexts,
+				"");
 	}
 
 	public long getColumnBitmask() {

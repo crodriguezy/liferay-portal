@@ -39,6 +39,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the UserIdMapper service. Represents a row in the &quot;UserIdMapper&quot; database table, with each column mapped to a property of this class.
@@ -272,12 +273,7 @@ public class UserIdMapperModelImpl extends BaseModelImpl<UserIdMapper>
 
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return _type;
 	}
 
 	@Override
@@ -288,7 +284,7 @@ public class UserIdMapperModelImpl extends BaseModelImpl<UserIdMapper>
 			_originalType = _type;
 		}
 
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	public String getOriginalType() {
@@ -297,27 +293,17 @@ public class UserIdMapperModelImpl extends BaseModelImpl<UserIdMapper>
 
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
 	public String getExternalUserId() {
-		if (_externalUserId == null) {
-			return "";
-		}
-		else {
-			return _externalUserId;
-		}
+		return _externalUserId;
 	}
 
 	@Override
@@ -328,7 +314,7 @@ public class UserIdMapperModelImpl extends BaseModelImpl<UserIdMapper>
 			_originalExternalUserId = _externalUserId;
 		}
 
-		_externalUserId = externalUserId;
+		_externalUserId = Objects.toString(externalUserId, "");
 	}
 
 	public String getOriginalExternalUserId() {

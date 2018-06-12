@@ -1031,6 +1031,8 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 	@Override
 	public OAuth2Application fetchByC_C(long companyId, String clientId,
 		boolean retrieveFromCache) {
+		clientId = Objects.toString(clientId, "");
+
 		Object[] finderArgs = new Object[] { companyId, clientId };
 
 		Object result = null;
@@ -1058,10 +1060,7 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 
 			boolean bindClientId = false;
 
-			if (clientId == null) {
-				query.append(_FINDER_COLUMN_C_C_CLIENTID_1);
-			}
-			else if (clientId.equals("")) {
+			if (clientId.equals("")) {
 				query.append(_FINDER_COLUMN_C_C_CLIENTID_3);
 			}
 			else {
@@ -1156,6 +1155,8 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 	public int countByC_C(long companyId, String clientId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_C;
 
+		clientId = Objects.toString(clientId, "");
+
 		Object[] finderArgs = new Object[] { companyId, clientId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1169,10 +1170,7 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 
 			boolean bindClientId = false;
 
-			if (clientId == null) {
-				query.append(_FINDER_COLUMN_C_C_CLIENTID_1);
-			}
-			else if (clientId.equals("")) {
+			if (clientId.equals("")) {
 				query.append(_FINDER_COLUMN_C_C_CLIENTID_3);
 			}
 			else {
@@ -1216,7 +1214,6 @@ public class OAuth2ApplicationPersistenceImpl extends BasePersistenceImpl<OAuth2
 	}
 
 	private static final String _FINDER_COLUMN_C_C_COMPANYID_2 = "oAuth2Application.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_C_CLIENTID_1 = "oAuth2Application.clientId IS NULL";
 	private static final String _FINDER_COLUMN_C_C_CLIENTID_2 = "oAuth2Application.clientId = ?";
 	private static final String _FINDER_COLUMN_C_C_CLIENTID_3 = "(oAuth2Application.clientId IS NULL OR oAuth2Application.clientId = '')";
 

@@ -186,6 +186,8 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -229,10 +231,7 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -448,6 +447,8 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 		DDMFormInstanceRecord ddmFormInstanceRecord, String uuid,
 		OrderByComparator<DDMFormInstanceRecord> orderByComparator,
 		boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -463,10 +464,7 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_UUID_3);
 		}
 		else {
@@ -588,6 +586,8 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -599,10 +599,7 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -643,7 +640,6 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "ddmFormInstanceRecord.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "ddmFormInstanceRecord.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(ddmFormInstanceRecord.uuid IS NULL OR ddmFormInstanceRecord.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(DDMFormInstanceRecordModelImpl.ENTITY_CACHE_ENABLED,
@@ -718,6 +714,8 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 	@Override
 	public DDMFormInstanceRecord fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, groupId };
 
 		Object result = null;
@@ -743,10 +741,7 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
 			}
 			else {
@@ -832,6 +827,8 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -843,10 +840,7 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
 			}
 			else {
@@ -891,7 +885,6 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "ddmFormInstanceRecord.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "ddmFormInstanceRecord.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(ddmFormInstanceRecord.uuid IS NULL OR ddmFormInstanceRecord.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "ddmFormInstanceRecord.groupId = ?";
@@ -995,6 +988,8 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -1043,10 +1038,7 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1281,6 +1273,8 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 		long companyId,
 		OrderByComparator<DDMFormInstanceRecord> orderByComparator,
 		boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1296,10 +1290,7 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 		}
 		else {
@@ -1427,6 +1418,8 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1438,10 +1431,7 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1486,7 +1476,6 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "ddmFormInstanceRecord.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "ddmFormInstanceRecord.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(ddmFormInstanceRecord.uuid IS NULL OR ddmFormInstanceRecord.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "ddmFormInstanceRecord.companyId = ?";
@@ -3181,6 +3170,8 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		formInstanceVersion = Objects.toString(formInstanceVersion, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -3232,10 +3223,7 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 
 			boolean bindFormInstanceVersion = false;
 
-			if (formInstanceVersion == null) {
-				query.append(_FINDER_COLUMN_F_F_FORMINSTANCEVERSION_1);
-			}
-			else if (formInstanceVersion.equals("")) {
+			if (formInstanceVersion.equals("")) {
 				query.append(_FINDER_COLUMN_F_F_FORMINSTANCEVERSION_3);
 			}
 			else {
@@ -3471,6 +3459,8 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 		String formInstanceVersion,
 		OrderByComparator<DDMFormInstanceRecord> orderByComparator,
 		boolean previous) {
+		formInstanceVersion = Objects.toString(formInstanceVersion, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -3488,10 +3478,7 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 
 		boolean bindFormInstanceVersion = false;
 
-		if (formInstanceVersion == null) {
-			query.append(_FINDER_COLUMN_F_F_FORMINSTANCEVERSION_1);
-		}
-		else if (formInstanceVersion.equals("")) {
+		if (formInstanceVersion.equals("")) {
 			query.append(_FINDER_COLUMN_F_F_FORMINSTANCEVERSION_3);
 		}
 		else {
@@ -3618,6 +3605,8 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 	public int countByF_F(long formInstanceId, String formInstanceVersion) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_F_F;
 
+		formInstanceVersion = Objects.toString(formInstanceVersion, "");
+
 		Object[] finderArgs = new Object[] { formInstanceId, formInstanceVersion };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -3631,10 +3620,7 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 
 			boolean bindFormInstanceVersion = false;
 
-			if (formInstanceVersion == null) {
-				query.append(_FINDER_COLUMN_F_F_FORMINSTANCEVERSION_1);
-			}
-			else if (formInstanceVersion.equals("")) {
+			if (formInstanceVersion.equals("")) {
 				query.append(_FINDER_COLUMN_F_F_FORMINSTANCEVERSION_3);
 			}
 			else {
@@ -3678,7 +3664,6 @@ public class DDMFormInstanceRecordPersistenceImpl extends BasePersistenceImpl<DD
 	}
 
 	private static final String _FINDER_COLUMN_F_F_FORMINSTANCEID_2 = "ddmFormInstanceRecord.formInstanceId = ? AND ";
-	private static final String _FINDER_COLUMN_F_F_FORMINSTANCEVERSION_1 = "ddmFormInstanceRecord.formInstanceVersion IS NULL";
 	private static final String _FINDER_COLUMN_F_F_FORMINSTANCEVERSION_2 = "ddmFormInstanceRecord.formInstanceVersion = ?";
 	private static final String _FINDER_COLUMN_F_F_FORMINSTANCEVERSION_3 = "(ddmFormInstanceRecord.formInstanceVersion IS NULL OR ddmFormInstanceRecord.formInstanceVersion = '')";
 

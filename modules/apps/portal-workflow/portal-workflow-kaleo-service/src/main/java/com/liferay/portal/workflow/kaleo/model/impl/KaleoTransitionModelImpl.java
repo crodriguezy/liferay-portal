@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoTransition service. Represents a row in the &quot;KaleoTransition&quot; database table, with each column mapped to a property of this class.
@@ -361,17 +362,12 @@ public class KaleoTransitionModelImpl extends BaseModelImpl<KaleoTransition>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -446,12 +442,7 @@ public class KaleoTransitionModelImpl extends BaseModelImpl<KaleoTransition>
 
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
@@ -462,7 +453,7 @@ public class KaleoTransitionModelImpl extends BaseModelImpl<KaleoTransition>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -471,17 +462,12 @@ public class KaleoTransitionModelImpl extends BaseModelImpl<KaleoTransition>
 
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -496,17 +482,12 @@ public class KaleoTransitionModelImpl extends BaseModelImpl<KaleoTransition>
 
 	@Override
 	public String getSourceKaleoNodeName() {
-		if (_sourceKaleoNodeName == null) {
-			return "";
-		}
-		else {
-			return _sourceKaleoNodeName;
-		}
+		return _sourceKaleoNodeName;
 	}
 
 	@Override
 	public void setSourceKaleoNodeName(String sourceKaleoNodeName) {
-		_sourceKaleoNodeName = sourceKaleoNodeName;
+		_sourceKaleoNodeName = Objects.toString(sourceKaleoNodeName, "");
 	}
 
 	@Override
@@ -521,17 +502,12 @@ public class KaleoTransitionModelImpl extends BaseModelImpl<KaleoTransition>
 
 	@Override
 	public String getTargetKaleoNodeName() {
-		if (_targetKaleoNodeName == null) {
-			return "";
-		}
-		else {
-			return _targetKaleoNodeName;
-		}
+		return _targetKaleoNodeName;
 	}
 
 	@Override
 	public void setTargetKaleoNodeName(String targetKaleoNodeName) {
-		_targetKaleoNodeName = targetKaleoNodeName;
+		_targetKaleoNodeName = Objects.toString(targetKaleoNodeName, "");
 	}
 
 	@Override

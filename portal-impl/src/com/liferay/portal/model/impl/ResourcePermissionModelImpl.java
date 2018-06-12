@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the ResourcePermission service. Represents a row in the &quot;ResourcePermission&quot; database table, with each column mapped to a property of this class.
@@ -342,12 +343,7 @@ public class ResourcePermissionModelImpl extends BaseModelImpl<ResourcePermissio
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
@@ -358,7 +354,7 @@ public class ResourcePermissionModelImpl extends BaseModelImpl<ResourcePermissio
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -391,12 +387,7 @@ public class ResourcePermissionModelImpl extends BaseModelImpl<ResourcePermissio
 	@JSON
 	@Override
 	public String getPrimKey() {
-		if (_primKey == null) {
-			return "";
-		}
-		else {
-			return _primKey;
-		}
+		return _primKey;
 	}
 
 	@Override
@@ -407,7 +398,7 @@ public class ResourcePermissionModelImpl extends BaseModelImpl<ResourcePermissio
 			_originalPrimKey = _primKey;
 		}
 
-		_primKey = primKey;
+		_primKey = Objects.toString(primKey, "");
 	}
 
 	public String getOriginalPrimKey() {

@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoTaskForm service. Represents a row in the &quot;KaleoTaskForm&quot; database table, with each column mapped to a property of this class.
@@ -393,17 +394,12 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -500,47 +496,32 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public String getKaleoTaskName() {
-		if (_kaleoTaskName == null) {
-			return "";
-		}
-		else {
-			return _kaleoTaskName;
-		}
+		return _kaleoTaskName;
 	}
 
 	@Override
 	public void setKaleoTaskName(String kaleoTaskName) {
-		_kaleoTaskName = kaleoTaskName;
+		_kaleoTaskName = Objects.toString(kaleoTaskName, "");
 	}
 
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -555,17 +536,12 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public String getFormDefinition() {
-		if (_formDefinition == null) {
-			return "";
-		}
-		else {
-			return _formDefinition;
-		}
+		return _formDefinition;
 	}
 
 	@Override
 	public void setFormDefinition(String formDefinition) {
-		_formDefinition = formDefinition;
+		_formDefinition = Objects.toString(formDefinition, "");
 	}
 
 	@Override
@@ -590,12 +566,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public String getFormUuid() {
-		if (_formUuid == null) {
-			return "";
-		}
-		else {
-			return _formUuid;
-		}
+		return _formUuid;
 	}
 
 	@Override
@@ -606,7 +577,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 			_originalFormUuid = _formUuid;
 		}
 
-		_formUuid = formUuid;
+		_formUuid = Objects.toString(formUuid, "");
 	}
 
 	public String getOriginalFormUuid() {
@@ -615,17 +586,12 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public String getMetadata() {
-		if (_metadata == null) {
-			return "";
-		}
-		else {
-			return _metadata;
-		}
+		return _metadata;
 	}
 
 	@Override
 	public void setMetadata(String metadata) {
-		_metadata = metadata;
+		_metadata = Objects.toString(metadata, "");
 	}
 
 	@Override

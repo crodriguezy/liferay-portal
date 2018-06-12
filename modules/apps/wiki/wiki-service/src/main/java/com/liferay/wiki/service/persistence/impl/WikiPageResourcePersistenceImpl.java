@@ -182,6 +182,8 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -225,10 +227,7 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -441,6 +440,8 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 	protected WikiPageResource getByUuid_PrevAndNext(Session session,
 		WikiPageResource wikiPageResource, String uuid,
 		OrderByComparator<WikiPageResource> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -456,10 +457,7 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_UUID_3);
 		}
 		else {
@@ -581,6 +579,8 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -592,10 +592,7 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -636,7 +633,6 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "wikiPageResource.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "wikiPageResource.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(wikiPageResource.uuid IS NULL OR wikiPageResource.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(WikiPageResourceModelImpl.ENTITY_CACHE_ENABLED,
@@ -710,6 +706,8 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 	@Override
 	public WikiPageResource fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, groupId };
 
 		Object result = null;
@@ -735,10 +733,7 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
 			}
 			else {
@@ -824,6 +819,8 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -835,10 +832,7 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
 			}
 			else {
@@ -883,7 +877,6 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "wikiPageResource.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "wikiPageResource.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(wikiPageResource.uuid IS NULL OR wikiPageResource.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "wikiPageResource.groupId = ?";
@@ -987,6 +980,8 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -1035,10 +1030,7 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1268,6 +1260,8 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 	protected WikiPageResource getByUuid_C_PrevAndNext(Session session,
 		WikiPageResource wikiPageResource, String uuid, long companyId,
 		OrderByComparator<WikiPageResource> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1283,10 +1277,7 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 		}
 		else {
@@ -1414,6 +1405,8 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1425,10 +1418,7 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1473,7 +1463,6 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "wikiPageResource.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "wikiPageResource.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(wikiPageResource.uuid IS NULL OR wikiPageResource.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "wikiPageResource.companyId = ?";
@@ -1547,6 +1536,8 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 	@Override
 	public WikiPageResource fetchByN_T(long nodeId, String title,
 		boolean retrieveFromCache) {
+		title = Objects.toString(title, "");
+
 		Object[] finderArgs = new Object[] { nodeId, title };
 
 		Object result = null;
@@ -1574,10 +1565,7 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 
 			boolean bindTitle = false;
 
-			if (title == null) {
-				query.append(_FINDER_COLUMN_N_T_TITLE_1);
-			}
-			else if (title.equals("")) {
+			if (title.equals("")) {
 				query.append(_FINDER_COLUMN_N_T_TITLE_3);
 			}
 			else {
@@ -1661,6 +1649,8 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 	public int countByN_T(long nodeId, String title) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_N_T;
 
+		title = Objects.toString(title, "");
+
 		Object[] finderArgs = new Object[] { nodeId, title };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1674,10 +1664,7 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 
 			boolean bindTitle = false;
 
-			if (title == null) {
-				query.append(_FINDER_COLUMN_N_T_TITLE_1);
-			}
-			else if (title.equals("")) {
+			if (title.equals("")) {
 				query.append(_FINDER_COLUMN_N_T_TITLE_3);
 			}
 			else {
@@ -1721,7 +1708,6 @@ public class WikiPageResourcePersistenceImpl extends BasePersistenceImpl<WikiPag
 	}
 
 	private static final String _FINDER_COLUMN_N_T_NODEID_2 = "wikiPageResource.nodeId = ? AND ";
-	private static final String _FINDER_COLUMN_N_T_TITLE_1 = "wikiPageResource.title IS NULL";
 	private static final String _FINDER_COLUMN_N_T_TITLE_2 = "wikiPageResource.title = ?";
 	private static final String _FINDER_COLUMN_N_T_TITLE_3 = "(wikiPageResource.title IS NULL OR wikiPageResource.title = '')";
 

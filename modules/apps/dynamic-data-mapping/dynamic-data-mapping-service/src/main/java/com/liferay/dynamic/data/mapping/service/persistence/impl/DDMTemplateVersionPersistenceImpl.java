@@ -671,6 +671,8 @@ public class DDMTemplateVersionPersistenceImpl extends BasePersistenceImpl<DDMTe
 	@Override
 	public DDMTemplateVersion fetchByT_V(long templateId, String version,
 		boolean retrieveFromCache) {
+		version = Objects.toString(version, "");
+
 		Object[] finderArgs = new Object[] { templateId, version };
 
 		Object result = null;
@@ -698,10 +700,7 @@ public class DDMTemplateVersionPersistenceImpl extends BasePersistenceImpl<DDMTe
 
 			boolean bindVersion = false;
 
-			if (version == null) {
-				query.append(_FINDER_COLUMN_T_V_VERSION_1);
-			}
-			else if (version.equals("")) {
+			if (version.equals("")) {
 				query.append(_FINDER_COLUMN_T_V_VERSION_3);
 			}
 			else {
@@ -785,6 +784,8 @@ public class DDMTemplateVersionPersistenceImpl extends BasePersistenceImpl<DDMTe
 	public int countByT_V(long templateId, String version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_T_V;
 
+		version = Objects.toString(version, "");
+
 		Object[] finderArgs = new Object[] { templateId, version };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -798,10 +799,7 @@ public class DDMTemplateVersionPersistenceImpl extends BasePersistenceImpl<DDMTe
 
 			boolean bindVersion = false;
 
-			if (version == null) {
-				query.append(_FINDER_COLUMN_T_V_VERSION_1);
-			}
-			else if (version.equals("")) {
+			if (version.equals("")) {
 				query.append(_FINDER_COLUMN_T_V_VERSION_3);
 			}
 			else {
@@ -845,7 +843,6 @@ public class DDMTemplateVersionPersistenceImpl extends BasePersistenceImpl<DDMTe
 	}
 
 	private static final String _FINDER_COLUMN_T_V_TEMPLATEID_2 = "ddmTemplateVersion.templateId = ? AND ";
-	private static final String _FINDER_COLUMN_T_V_VERSION_1 = "ddmTemplateVersion.version IS NULL";
 	private static final String _FINDER_COLUMN_T_V_VERSION_2 = "ddmTemplateVersion.version = ?";
 	private static final String _FINDER_COLUMN_T_V_VERSION_3 = "(ddmTemplateVersion.version IS NULL OR ddmTemplateVersion.version = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_T_S = new FinderPath(DDMTemplateVersionModelImpl.ENTITY_CACHE_ENABLED,

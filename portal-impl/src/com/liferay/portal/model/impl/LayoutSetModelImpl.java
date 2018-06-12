@@ -41,6 +41,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the LayoutSet service. Represents a row in the &quot;LayoutSet&quot; database table, with each column mapped to a property of this class.
@@ -473,49 +474,34 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 	@JSON
 	@Override
 	public String getThemeId() {
-		if (_themeId == null) {
-			return "";
-		}
-		else {
-			return _themeId;
-		}
+		return _themeId;
 	}
 
 	@Override
 	public void setThemeId(String themeId) {
-		_themeId = themeId;
+		_themeId = Objects.toString(themeId, "");
 	}
 
 	@JSON
 	@Override
 	public String getColorSchemeId() {
-		if (_colorSchemeId == null) {
-			return "";
-		}
-		else {
-			return _colorSchemeId;
-		}
+		return _colorSchemeId;
 	}
 
 	@Override
 	public void setColorSchemeId(String colorSchemeId) {
-		_colorSchemeId = colorSchemeId;
+		_colorSchemeId = Objects.toString(colorSchemeId, "");
 	}
 
 	@JSON
 	@Override
 	public String getCss() {
-		if (_css == null) {
-			return "";
-		}
-		else {
-			return _css;
-		}
+		return _css;
 	}
 
 	@Override
 	public void setCss(String css) {
-		_css = css;
+		_css = Objects.toString(css, "");
 	}
 
 	@JSON
@@ -532,28 +518,18 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 	@JSON
 	@Override
 	public String getSettings() {
-		if (_settings == null) {
-			return "";
-		}
-		else {
-			return _settings;
-		}
+		return _settings;
 	}
 
 	@Override
 	public void setSettings(String settings) {
-		_settings = settings;
+		_settings = Objects.toString(settings, "");
 	}
 
 	@JSON
 	@Override
 	public String getLayoutSetPrototypeUuid() {
-		if (_layoutSetPrototypeUuid == null) {
-			return "";
-		}
-		else {
-			return _layoutSetPrototypeUuid;
-		}
+		return _layoutSetPrototypeUuid;
 	}
 
 	@Override
@@ -564,7 +540,7 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 			_originalLayoutSetPrototypeUuid = _layoutSetPrototypeUuid;
 		}
 
-		_layoutSetPrototypeUuid = layoutSetPrototypeUuid;
+		_layoutSetPrototypeUuid = Objects.toString(layoutSetPrototypeUuid, "");
 	}
 
 	public String getOriginalLayoutSetPrototypeUuid() {

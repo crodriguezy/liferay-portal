@@ -1225,6 +1225,8 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		kaleoClassName = Objects.toString(kaleoClassName, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -1274,10 +1276,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 
 			boolean bindKaleoClassName = false;
 
-			if (kaleoClassName == null) {
-				query.append(_FINDER_COLUMN_KCN_KCPK_KALEOCLASSNAME_1);
-			}
-			else if (kaleoClassName.equals("")) {
+			if (kaleoClassName.equals("")) {
 				query.append(_FINDER_COLUMN_KCN_KCPK_KALEOCLASSNAME_3);
 			}
 			else {
@@ -1507,6 +1506,8 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	protected KaleoAction getByKCN_KCPK_PrevAndNext(Session session,
 		KaleoAction kaleoAction, String kaleoClassName, long kaleoClassPK,
 		OrderByComparator<KaleoAction> orderByComparator, boolean previous) {
+		kaleoClassName = Objects.toString(kaleoClassName, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1522,10 +1523,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 
 		boolean bindKaleoClassName = false;
 
-		if (kaleoClassName == null) {
-			query.append(_FINDER_COLUMN_KCN_KCPK_KALEOCLASSNAME_1);
-		}
-		else if (kaleoClassName.equals("")) {
+		if (kaleoClassName.equals("")) {
 			query.append(_FINDER_COLUMN_KCN_KCPK_KALEOCLASSNAME_3);
 		}
 		else {
@@ -1653,6 +1651,8 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 	public int countByKCN_KCPK(String kaleoClassName, long kaleoClassPK) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_KCN_KCPK;
 
+		kaleoClassName = Objects.toString(kaleoClassName, "");
+
 		Object[] finderArgs = new Object[] { kaleoClassName, kaleoClassPK };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1664,10 +1664,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 
 			boolean bindKaleoClassName = false;
 
-			if (kaleoClassName == null) {
-				query.append(_FINDER_COLUMN_KCN_KCPK_KALEOCLASSNAME_1);
-			}
-			else if (kaleoClassName.equals("")) {
+			if (kaleoClassName.equals("")) {
 				query.append(_FINDER_COLUMN_KCN_KCPK_KALEOCLASSNAME_3);
 			}
 			else {
@@ -1712,7 +1709,6 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_KCN_KCPK_KALEOCLASSNAME_1 = "kaleoAction.kaleoClassName IS NULL AND ";
 	private static final String _FINDER_COLUMN_KCN_KCPK_KALEOCLASSNAME_2 = "kaleoAction.kaleoClassName = ? AND ";
 	private static final String _FINDER_COLUMN_KCN_KCPK_KALEOCLASSNAME_3 = "(kaleoAction.kaleoClassName IS NULL OR kaleoAction.kaleoClassName = '') AND ";
 	private static final String _FINDER_COLUMN_KCN_KCPK_KALEOCLASSPK_2 = "kaleoAction.kaleoClassPK = ?";
@@ -1831,6 +1827,9 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		kaleoClassName = Objects.toString(kaleoClassName, "");
+		executionType = Objects.toString(executionType, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -1884,10 +1883,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 
 			boolean bindKaleoClassName = false;
 
-			if (kaleoClassName == null) {
-				query.append(_FINDER_COLUMN_KCN_KCPK_ET_KALEOCLASSNAME_1);
-			}
-			else if (kaleoClassName.equals("")) {
+			if (kaleoClassName.equals("")) {
 				query.append(_FINDER_COLUMN_KCN_KCPK_ET_KALEOCLASSNAME_3);
 			}
 			else {
@@ -1900,10 +1896,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 
 			boolean bindExecutionType = false;
 
-			if (executionType == null) {
-				query.append(_FINDER_COLUMN_KCN_KCPK_ET_EXECUTIONTYPE_1);
-			}
-			else if (executionType.equals("")) {
+			if (executionType.equals("")) {
 				query.append(_FINDER_COLUMN_KCN_KCPK_ET_EXECUTIONTYPE_3);
 			}
 			else {
@@ -2154,6 +2147,9 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 		KaleoAction kaleoAction, String kaleoClassName, long kaleoClassPK,
 		String executionType, OrderByComparator<KaleoAction> orderByComparator,
 		boolean previous) {
+		kaleoClassName = Objects.toString(kaleoClassName, "");
+		executionType = Objects.toString(executionType, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -2169,10 +2165,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 
 		boolean bindKaleoClassName = false;
 
-		if (kaleoClassName == null) {
-			query.append(_FINDER_COLUMN_KCN_KCPK_ET_KALEOCLASSNAME_1);
-		}
-		else if (kaleoClassName.equals("")) {
+		if (kaleoClassName.equals("")) {
 			query.append(_FINDER_COLUMN_KCN_KCPK_ET_KALEOCLASSNAME_3);
 		}
 		else {
@@ -2185,10 +2178,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 
 		boolean bindExecutionType = false;
 
-		if (executionType == null) {
-			query.append(_FINDER_COLUMN_KCN_KCPK_ET_EXECUTIONTYPE_1);
-		}
-		else if (executionType.equals("")) {
+		if (executionType.equals("")) {
 			query.append(_FINDER_COLUMN_KCN_KCPK_ET_EXECUTIONTYPE_3);
 		}
 		else {
@@ -2323,6 +2313,9 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 		String executionType) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_KCN_KCPK_ET;
 
+		kaleoClassName = Objects.toString(kaleoClassName, "");
+		executionType = Objects.toString(executionType, "");
+
 		Object[] finderArgs = new Object[] {
 				kaleoClassName, kaleoClassPK, executionType
 			};
@@ -2336,10 +2329,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 
 			boolean bindKaleoClassName = false;
 
-			if (kaleoClassName == null) {
-				query.append(_FINDER_COLUMN_KCN_KCPK_ET_KALEOCLASSNAME_1);
-			}
-			else if (kaleoClassName.equals("")) {
+			if (kaleoClassName.equals("")) {
 				query.append(_FINDER_COLUMN_KCN_KCPK_ET_KALEOCLASSNAME_3);
 			}
 			else {
@@ -2352,10 +2342,7 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 
 			boolean bindExecutionType = false;
 
-			if (executionType == null) {
-				query.append(_FINDER_COLUMN_KCN_KCPK_ET_EXECUTIONTYPE_1);
-			}
-			else if (executionType.equals("")) {
+			if (executionType.equals("")) {
 				query.append(_FINDER_COLUMN_KCN_KCPK_ET_EXECUTIONTYPE_3);
 			}
 			else {
@@ -2402,11 +2389,9 @@ public class KaleoActionPersistenceImpl extends BasePersistenceImpl<KaleoAction>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_KCN_KCPK_ET_KALEOCLASSNAME_1 = "kaleoAction.kaleoClassName IS NULL AND ";
 	private static final String _FINDER_COLUMN_KCN_KCPK_ET_KALEOCLASSNAME_2 = "kaleoAction.kaleoClassName = ? AND ";
 	private static final String _FINDER_COLUMN_KCN_KCPK_ET_KALEOCLASSNAME_3 = "(kaleoAction.kaleoClassName IS NULL OR kaleoAction.kaleoClassName = '') AND ";
 	private static final String _FINDER_COLUMN_KCN_KCPK_ET_KALEOCLASSPK_2 = "kaleoAction.kaleoClassPK = ? AND ";
-	private static final String _FINDER_COLUMN_KCN_KCPK_ET_EXECUTIONTYPE_1 = "kaleoAction.executionType IS NULL";
 	private static final String _FINDER_COLUMN_KCN_KCPK_ET_EXECUTIONTYPE_2 = "kaleoAction.executionType = ?";
 	private static final String _FINDER_COLUMN_KCN_KCPK_ET_EXECUTIONTYPE_3 = "(kaleoAction.executionType IS NULL OR kaleoAction.executionType = '')";
 

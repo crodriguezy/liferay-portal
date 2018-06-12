@@ -190,6 +190,8 @@ public class PowwowServerPersistenceImpl extends BasePersistenceImpl<PowwowServe
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		providerType = Objects.toString(providerType, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -239,10 +241,7 @@ public class PowwowServerPersistenceImpl extends BasePersistenceImpl<PowwowServe
 
 			boolean bindProviderType = false;
 
-			if (providerType == null) {
-				query.append(_FINDER_COLUMN_PT_A_PROVIDERTYPE_1);
-			}
-			else if (providerType.equals("")) {
+			if (providerType.equals("")) {
 				query.append(_FINDER_COLUMN_PT_A_PROVIDERTYPE_3);
 			}
 			else {
@@ -472,6 +471,8 @@ public class PowwowServerPersistenceImpl extends BasePersistenceImpl<PowwowServe
 	protected PowwowServer getByPT_A_PrevAndNext(Session session,
 		PowwowServer powwowServer, String providerType, boolean active,
 		OrderByComparator<PowwowServer> orderByComparator, boolean previous) {
+		providerType = Objects.toString(providerType, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -487,10 +488,7 @@ public class PowwowServerPersistenceImpl extends BasePersistenceImpl<PowwowServe
 
 		boolean bindProviderType = false;
 
-		if (providerType == null) {
-			query.append(_FINDER_COLUMN_PT_A_PROVIDERTYPE_1);
-		}
-		else if (providerType.equals("")) {
+		if (providerType.equals("")) {
 			query.append(_FINDER_COLUMN_PT_A_PROVIDERTYPE_3);
 		}
 		else {
@@ -618,6 +616,8 @@ public class PowwowServerPersistenceImpl extends BasePersistenceImpl<PowwowServe
 	public int countByPT_A(String providerType, boolean active) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_PT_A;
 
+		providerType = Objects.toString(providerType, "");
+
 		Object[] finderArgs = new Object[] { providerType, active };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -629,10 +629,7 @@ public class PowwowServerPersistenceImpl extends BasePersistenceImpl<PowwowServe
 
 			boolean bindProviderType = false;
 
-			if (providerType == null) {
-				query.append(_FINDER_COLUMN_PT_A_PROVIDERTYPE_1);
-			}
-			else if (providerType.equals("")) {
+			if (providerType.equals("")) {
 				query.append(_FINDER_COLUMN_PT_A_PROVIDERTYPE_3);
 			}
 			else {
@@ -677,7 +674,6 @@ public class PowwowServerPersistenceImpl extends BasePersistenceImpl<PowwowServe
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_PT_A_PROVIDERTYPE_1 = "powwowServer.providerType IS NULL AND ";
 	private static final String _FINDER_COLUMN_PT_A_PROVIDERTYPE_2 = "powwowServer.providerType = ? AND ";
 	private static final String _FINDER_COLUMN_PT_A_PROVIDERTYPE_3 = "(powwowServer.providerType IS NULL OR powwowServer.providerType = '') AND ";
 	private static final String _FINDER_COLUMN_PT_A_ACTIVE_2 = "powwowServer.active = ?";

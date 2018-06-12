@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoTaskFormInstance service. Represents a row in the &quot;KaleoTaskFormInstance&quot; database table, with each column mapped to a property of this class.
@@ -372,17 +373,12 @@ public class KaleoTaskFormInstanceModelImpl extends BaseModelImpl<KaleoTaskFormI
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -523,17 +519,12 @@ public class KaleoTaskFormInstanceModelImpl extends BaseModelImpl<KaleoTaskFormI
 
 	@Override
 	public String getFormValues() {
-		if (_formValues == null) {
-			return "";
-		}
-		else {
-			return _formValues;
-		}
+		return _formValues;
 	}
 
 	@Override
 	public void setFormValues(String formValues) {
-		_formValues = formValues;
+		_formValues = Objects.toString(formValues, "");
 	}
 
 	@Override
@@ -558,32 +549,22 @@ public class KaleoTaskFormInstanceModelImpl extends BaseModelImpl<KaleoTaskFormI
 
 	@Override
 	public String getFormValueEntryUuid() {
-		if (_formValueEntryUuid == null) {
-			return "";
-		}
-		else {
-			return _formValueEntryUuid;
-		}
+		return _formValueEntryUuid;
 	}
 
 	@Override
 	public void setFormValueEntryUuid(String formValueEntryUuid) {
-		_formValueEntryUuid = formValueEntryUuid;
+		_formValueEntryUuid = Objects.toString(formValueEntryUuid, "");
 	}
 
 	@Override
 	public String getMetadata() {
-		if (_metadata == null) {
-			return "";
-		}
-		else {
-			return _metadata;
-		}
+		return _metadata;
 	}
 
 	@Override
 	public void setMetadata(String metadata) {
-		_metadata = metadata;
+		_metadata = Objects.toString(metadata, "");
 	}
 
 	public long getColumnBitmask() {

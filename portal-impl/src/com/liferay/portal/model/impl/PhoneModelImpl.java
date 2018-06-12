@@ -49,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Phone service. Represents a row in the &quot;Phone&quot; database table, with each column mapped to a property of this class.
@@ -344,12 +345,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -358,7 +354,7 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -441,17 +437,12 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -553,33 +544,23 @@ public class PhoneModelImpl extends BaseModelImpl<Phone> implements PhoneModel {
 	@JSON
 	@Override
 	public String getNumber() {
-		if (_number == null) {
-			return "";
-		}
-		else {
-			return _number;
-		}
+		return _number;
 	}
 
 	@Override
 	public void setNumber(String number) {
-		_number = number;
+		_number = Objects.toString(number, "");
 	}
 
 	@JSON
 	@Override
 	public String getExtension() {
-		if (_extension == null) {
-			return "";
-		}
-		else {
-			return _extension;
-		}
+		return _extension;
 	}
 
 	@Override
 	public void setExtension(String extension) {
-		_extension = extension;
+		_extension = Objects.toString(extension, "");
 	}
 
 	@JSON

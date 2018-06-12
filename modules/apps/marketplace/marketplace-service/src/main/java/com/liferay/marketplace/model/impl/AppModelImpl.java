@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the App service. Represents a row in the &quot;Marketplace_App&quot; database table, with each column mapped to a property of this class.
@@ -330,12 +331,7 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -344,7 +340,7 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -415,17 +411,12 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -482,44 +473,29 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return _title;
 	}
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
 	@Override
 	public String getCategory() {
-		if (_category == null) {
-			return "";
-		}
-		else {
-			return _category;
-		}
+		return _category;
 	}
 
 	@Override
@@ -530,7 +506,7 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 			_originalCategory = _category;
 		}
 
-		_category = category;
+		_category = Objects.toString(category, "");
 	}
 
 	public String getOriginalCategory() {
@@ -540,33 +516,23 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 	@JSON
 	@Override
 	public String getIconURL() {
-		if (_iconURL == null) {
-			return "";
-		}
-		else {
-			return _iconURL;
-		}
+		return _iconURL;
 	}
 
 	@Override
 	public void setIconURL(String iconURL) {
-		_iconURL = iconURL;
+		_iconURL = Objects.toString(iconURL, "");
 	}
 
 	@JSON
 	@Override
 	public String getVersion() {
-		if (_version == null) {
-			return "";
-		}
-		else {
-			return _version;
-		}
+		return _version;
 	}
 
 	@Override
 	public void setVersion(String version) {
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	@JSON

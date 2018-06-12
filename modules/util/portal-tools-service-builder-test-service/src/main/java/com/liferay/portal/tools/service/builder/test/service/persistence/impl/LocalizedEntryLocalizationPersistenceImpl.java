@@ -691,6 +691,8 @@ public class LocalizedEntryLocalizationPersistenceImpl
 	@Override
 	public LocalizedEntryLocalization fetchByLocalizedEntryId_LanguageId(
 		long localizedEntryId, String languageId, boolean retrieveFromCache) {
+		languageId = Objects.toString(languageId, "");
+
 		Object[] finderArgs = new Object[] { localizedEntryId, languageId };
 
 		Object result = null;
@@ -719,10 +721,7 @@ public class LocalizedEntryLocalizationPersistenceImpl
 
 			boolean bindLanguageId = false;
 
-			if (languageId == null) {
-				query.append(_FINDER_COLUMN_LOCALIZEDENTRYID_LANGUAGEID_LANGUAGEID_1);
-			}
-			else if (languageId.equals("")) {
+			if (languageId.equals("")) {
 				query.append(_FINDER_COLUMN_LOCALIZEDENTRYID_LANGUAGEID_LANGUAGEID_3);
 			}
 			else {
@@ -810,6 +809,8 @@ public class LocalizedEntryLocalizationPersistenceImpl
 		String languageId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_LOCALIZEDENTRYID_LANGUAGEID;
 
+		languageId = Objects.toString(languageId, "");
+
 		Object[] finderArgs = new Object[] { localizedEntryId, languageId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -823,10 +824,7 @@ public class LocalizedEntryLocalizationPersistenceImpl
 
 			boolean bindLanguageId = false;
 
-			if (languageId == null) {
-				query.append(_FINDER_COLUMN_LOCALIZEDENTRYID_LANGUAGEID_LANGUAGEID_1);
-			}
-			else if (languageId.equals("")) {
+			if (languageId.equals("")) {
 				query.append(_FINDER_COLUMN_LOCALIZEDENTRYID_LANGUAGEID_LANGUAGEID_3);
 			}
 			else {
@@ -871,8 +869,6 @@ public class LocalizedEntryLocalizationPersistenceImpl
 
 	private static final String _FINDER_COLUMN_LOCALIZEDENTRYID_LANGUAGEID_LOCALIZEDENTRYID_2 =
 		"localizedEntryLocalization.localizedEntryId = ? AND ";
-	private static final String _FINDER_COLUMN_LOCALIZEDENTRYID_LANGUAGEID_LANGUAGEID_1 =
-		"localizedEntryLocalization.languageId IS NULL";
 	private static final String _FINDER_COLUMN_LOCALIZEDENTRYID_LANGUAGEID_LANGUAGEID_2 =
 		"localizedEntryLocalization.languageId = ?";
 	private static final String _FINDER_COLUMN_LOCALIZEDENTRYID_LANGUAGEID_LANGUAGEID_3 =

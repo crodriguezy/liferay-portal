@@ -47,6 +47,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Organization service. Represents a row in the &quot;Organization_&quot; database table, with each column mapped to a property of this class.
@@ -412,12 +413,7 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -426,7 +422,7 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -436,12 +432,7 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 	@JSON
 	@Override
 	public String getExternalReferenceCode() {
-		if (_externalReferenceCode == null) {
-			return "";
-		}
-		else {
-			return _externalReferenceCode;
-		}
+		return _externalReferenceCode;
 	}
 
 	@Override
@@ -452,7 +443,7 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 			_originalExternalReferenceCode = _externalReferenceCode;
 		}
 
-		_externalReferenceCode = externalReferenceCode;
+		_externalReferenceCode = Objects.toString(externalReferenceCode, "");
 	}
 
 	public String getOriginalExternalReferenceCode() {
@@ -535,17 +526,12 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -602,12 +588,7 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 	@JSON
 	@Override
 	public String getTreePath() {
-		if (_treePath == null) {
-			return "";
-		}
-		else {
-			return _treePath;
-		}
+		return _treePath;
 	}
 
 	@Override
@@ -618,7 +599,7 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 			_originalTreePath = _treePath;
 		}
 
-		_treePath = treePath;
+		_treePath = Objects.toString(treePath, "");
 	}
 
 	public String getOriginalTreePath() {
@@ -628,12 +609,7 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
@@ -644,7 +620,7 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -654,17 +630,12 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 	@JSON
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return _type;
 	}
 
 	@Override
 	public void setType(String type) {
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	@JSON
@@ -720,17 +691,12 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 	@JSON
 	@Override
 	public String getComments() {
-		if (_comments == null) {
-			return "";
-		}
-		else {
-			return _comments;
-		}
+		return _comments;
 	}
 
 	@Override
 	public void setComments(String comments) {
-		_comments = comments;
+		_comments = Objects.toString(comments, "");
 	}
 
 	@JSON

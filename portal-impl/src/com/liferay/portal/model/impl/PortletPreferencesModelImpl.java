@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the PortletPreferences service. Represents a row in the &quot;PortletPreferences&quot; database table, with each column mapped to a property of this class.
@@ -379,12 +380,7 @@ public class PortletPreferencesModelImpl extends BaseModelImpl<PortletPreference
 	@JSON
 	@Override
 	public String getPortletId() {
-		if (_portletId == null) {
-			return "";
-		}
-		else {
-			return _portletId;
-		}
+		return _portletId;
 	}
 
 	@Override
@@ -395,7 +391,7 @@ public class PortletPreferencesModelImpl extends BaseModelImpl<PortletPreference
 			_originalPortletId = _portletId;
 		}
 
-		_portletId = portletId;
+		_portletId = Objects.toString(portletId, "");
 	}
 
 	public String getOriginalPortletId() {
@@ -405,17 +401,12 @@ public class PortletPreferencesModelImpl extends BaseModelImpl<PortletPreference
 	@JSON
 	@Override
 	public String getPreferences() {
-		if (_preferences == null) {
-			return "";
-		}
-		else {
-			return _preferences;
-		}
+		return _preferences;
 	}
 
 	@Override
 	public void setPreferences(String preferences) {
-		_preferences = preferences;
+		_preferences = Objects.toString(preferences, "");
 	}
 
 	public long getColumnBitmask() {

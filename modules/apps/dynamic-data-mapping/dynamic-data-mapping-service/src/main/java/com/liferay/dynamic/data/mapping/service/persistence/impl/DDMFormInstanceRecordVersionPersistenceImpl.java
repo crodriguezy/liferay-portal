@@ -721,6 +721,8 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		formInstanceVersion = Objects.toString(formInstanceVersion, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -772,10 +774,7 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 
 			boolean bindFormInstanceVersion = false;
 
-			if (formInstanceVersion == null) {
-				query.append(_FINDER_COLUMN_F_F_FORMINSTANCEVERSION_1);
-			}
-			else if (formInstanceVersion.equals("")) {
+			if (formInstanceVersion.equals("")) {
 				query.append(_FINDER_COLUMN_F_F_FORMINSTANCEVERSION_3);
 			}
 			else {
@@ -1013,6 +1012,8 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 		long formInstanceId, String formInstanceVersion,
 		OrderByComparator<DDMFormInstanceRecordVersion> orderByComparator,
 		boolean previous) {
+		formInstanceVersion = Objects.toString(formInstanceVersion, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1030,10 +1031,7 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 
 		boolean bindFormInstanceVersion = false;
 
-		if (formInstanceVersion == null) {
-			query.append(_FINDER_COLUMN_F_F_FORMINSTANCEVERSION_1);
-		}
-		else if (formInstanceVersion.equals("")) {
+		if (formInstanceVersion.equals("")) {
 			query.append(_FINDER_COLUMN_F_F_FORMINSTANCEVERSION_3);
 		}
 		else {
@@ -1160,6 +1158,8 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 	public int countByF_F(long formInstanceId, String formInstanceVersion) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_F_F;
 
+		formInstanceVersion = Objects.toString(formInstanceVersion, "");
+
 		Object[] finderArgs = new Object[] { formInstanceId, formInstanceVersion };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1173,10 +1173,7 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 
 			boolean bindFormInstanceVersion = false;
 
-			if (formInstanceVersion == null) {
-				query.append(_FINDER_COLUMN_F_F_FORMINSTANCEVERSION_1);
-			}
-			else if (formInstanceVersion.equals("")) {
+			if (formInstanceVersion.equals("")) {
 				query.append(_FINDER_COLUMN_F_F_FORMINSTANCEVERSION_3);
 			}
 			else {
@@ -1220,7 +1217,6 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 	}
 
 	private static final String _FINDER_COLUMN_F_F_FORMINSTANCEID_2 = "ddmFormInstanceRecordVersion.formInstanceId = ? AND ";
-	private static final String _FINDER_COLUMN_F_F_FORMINSTANCEVERSION_1 = "ddmFormInstanceRecordVersion.formInstanceVersion IS NULL";
 	private static final String _FINDER_COLUMN_F_F_FORMINSTANCEVERSION_2 = "ddmFormInstanceRecordVersion.formInstanceVersion = ?";
 	private static final String _FINDER_COLUMN_F_F_FORMINSTANCEVERSION_3 = "(ddmFormInstanceRecordVersion.formInstanceVersion IS NULL OR ddmFormInstanceRecordVersion.formInstanceVersion = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_F_V = new FinderPath(DDMFormInstanceRecordVersionModelImpl.ENTITY_CACHE_ENABLED,
@@ -1297,6 +1293,8 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 	@Override
 	public DDMFormInstanceRecordVersion fetchByF_V(long formInstanceRecordId,
 		String version, boolean retrieveFromCache) {
+		version = Objects.toString(version, "");
+
 		Object[] finderArgs = new Object[] { formInstanceRecordId, version };
 
 		Object result = null;
@@ -1325,10 +1323,7 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 
 			boolean bindVersion = false;
 
-			if (version == null) {
-				query.append(_FINDER_COLUMN_F_V_VERSION_1);
-			}
-			else if (version.equals("")) {
+			if (version.equals("")) {
 				query.append(_FINDER_COLUMN_F_V_VERSION_3);
 			}
 			else {
@@ -1413,6 +1408,8 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 	public int countByF_V(long formInstanceRecordId, String version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_F_V;
 
+		version = Objects.toString(version, "");
+
 		Object[] finderArgs = new Object[] { formInstanceRecordId, version };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1426,10 +1423,7 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 
 			boolean bindVersion = false;
 
-			if (version == null) {
-				query.append(_FINDER_COLUMN_F_V_VERSION_1);
-			}
-			else if (version.equals("")) {
+			if (version.equals("")) {
 				query.append(_FINDER_COLUMN_F_V_VERSION_3);
 			}
 			else {
@@ -1473,7 +1467,6 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 	}
 
 	private static final String _FINDER_COLUMN_F_V_FORMINSTANCERECORDID_2 = "ddmFormInstanceRecordVersion.formInstanceRecordId = ? AND ";
-	private static final String _FINDER_COLUMN_F_V_VERSION_1 = "ddmFormInstanceRecordVersion.version IS NULL";
 	private static final String _FINDER_COLUMN_F_V_VERSION_2 = "ddmFormInstanceRecordVersion.version = ?";
 	private static final String _FINDER_COLUMN_F_V_VERSION_3 = "(ddmFormInstanceRecordVersion.version IS NULL OR ddmFormInstanceRecordVersion.version = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_F_S = new FinderPath(DDMFormInstanceRecordVersionModelImpl.ENTITY_CACHE_ENABLED,
@@ -2159,6 +2152,8 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		formInstanceVersion = Objects.toString(formInstanceVersion, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -2216,10 +2211,7 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 
 			boolean bindFormInstanceVersion = false;
 
-			if (formInstanceVersion == null) {
-				query.append(_FINDER_COLUMN_U_F_F_S_FORMINSTANCEVERSION_1);
-			}
-			else if (formInstanceVersion.equals("")) {
+			if (formInstanceVersion.equals("")) {
 				query.append(_FINDER_COLUMN_U_F_F_S_FORMINSTANCEVERSION_3);
 			}
 			else {
@@ -2488,6 +2480,8 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 		long formInstanceId, String formInstanceVersion, int status,
 		OrderByComparator<DDMFormInstanceRecordVersion> orderByComparator,
 		boolean previous) {
+		formInstanceVersion = Objects.toString(formInstanceVersion, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -2507,10 +2501,7 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 
 		boolean bindFormInstanceVersion = false;
 
-		if (formInstanceVersion == null) {
-			query.append(_FINDER_COLUMN_U_F_F_S_FORMINSTANCEVERSION_1);
-		}
-		else if (formInstanceVersion.equals("")) {
+		if (formInstanceVersion.equals("")) {
 			query.append(_FINDER_COLUMN_U_F_F_S_FORMINSTANCEVERSION_3);
 		}
 		else {
@@ -2649,6 +2640,8 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 		String formInstanceVersion, int status) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_U_F_F_S;
 
+		formInstanceVersion = Objects.toString(formInstanceVersion, "");
+
 		Object[] finderArgs = new Object[] {
 				userId, formInstanceId, formInstanceVersion, status
 			};
@@ -2666,10 +2659,7 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 
 			boolean bindFormInstanceVersion = false;
 
-			if (formInstanceVersion == null) {
-				query.append(_FINDER_COLUMN_U_F_F_S_FORMINSTANCEVERSION_1);
-			}
-			else if (formInstanceVersion.equals("")) {
+			if (formInstanceVersion.equals("")) {
 				query.append(_FINDER_COLUMN_U_F_F_S_FORMINSTANCEVERSION_3);
 			}
 			else {
@@ -2720,7 +2710,6 @@ public class DDMFormInstanceRecordVersionPersistenceImpl
 
 	private static final String _FINDER_COLUMN_U_F_F_S_USERID_2 = "ddmFormInstanceRecordVersion.userId = ? AND ";
 	private static final String _FINDER_COLUMN_U_F_F_S_FORMINSTANCEID_2 = "ddmFormInstanceRecordVersion.formInstanceId = ? AND ";
-	private static final String _FINDER_COLUMN_U_F_F_S_FORMINSTANCEVERSION_1 = "ddmFormInstanceRecordVersion.formInstanceVersion IS NULL AND ";
 	private static final String _FINDER_COLUMN_U_F_F_S_FORMINSTANCEVERSION_2 = "ddmFormInstanceRecordVersion.formInstanceVersion = ? AND ";
 	private static final String _FINDER_COLUMN_U_F_F_S_FORMINSTANCEVERSION_3 = "(ddmFormInstanceRecordVersion.formInstanceVersion IS NULL OR ddmFormInstanceRecordVersion.formInstanceVersion = '') AND ";
 	private static final String _FINDER_COLUMN_U_F_F_S_STATUS_2 = "ddmFormInstanceRecordVersion.status = ?";

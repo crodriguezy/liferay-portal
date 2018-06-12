@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Account service. Represents a row in the &quot;Account_&quot; database table, with each column mapped to a property of this class.
@@ -410,17 +411,12 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -465,145 +461,100 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
 	@Override
 	public String getLegalName() {
-		if (_legalName == null) {
-			return "";
-		}
-		else {
-			return _legalName;
-		}
+		return _legalName;
 	}
 
 	@Override
 	public void setLegalName(String legalName) {
-		_legalName = legalName;
+		_legalName = Objects.toString(legalName, "");
 	}
 
 	@JSON
 	@Override
 	public String getLegalId() {
-		if (_legalId == null) {
-			return "";
-		}
-		else {
-			return _legalId;
-		}
+		return _legalId;
 	}
 
 	@Override
 	public void setLegalId(String legalId) {
-		_legalId = legalId;
+		_legalId = Objects.toString(legalId, "");
 	}
 
 	@JSON
 	@Override
 	public String getLegalType() {
-		if (_legalType == null) {
-			return "";
-		}
-		else {
-			return _legalType;
-		}
+		return _legalType;
 	}
 
 	@Override
 	public void setLegalType(String legalType) {
-		_legalType = legalType;
+		_legalType = Objects.toString(legalType, "");
 	}
 
 	@JSON
 	@Override
 	public String getSicCode() {
-		if (_sicCode == null) {
-			return "";
-		}
-		else {
-			return _sicCode;
-		}
+		return _sicCode;
 	}
 
 	@Override
 	public void setSicCode(String sicCode) {
-		_sicCode = sicCode;
+		_sicCode = Objects.toString(sicCode, "");
 	}
 
 	@JSON
 	@Override
 	public String getTickerSymbol() {
-		if (_tickerSymbol == null) {
-			return "";
-		}
-		else {
-			return _tickerSymbol;
-		}
+		return _tickerSymbol;
 	}
 
 	@Override
 	public void setTickerSymbol(String tickerSymbol) {
-		_tickerSymbol = tickerSymbol;
+		_tickerSymbol = Objects.toString(tickerSymbol, "");
 	}
 
 	@JSON
 	@Override
 	public String getIndustry() {
-		if (_industry == null) {
-			return "";
-		}
-		else {
-			return _industry;
-		}
+		return _industry;
 	}
 
 	@Override
 	public void setIndustry(String industry) {
-		_industry = industry;
+		_industry = Objects.toString(industry, "");
 	}
 
 	@JSON
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return _type;
 	}
 
 	@Override
 	public void setType(String type) {
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	@JSON
 	@Override
 	public String getSize() {
-		if (_size == null) {
-			return "";
-		}
-		else {
-			return _size;
-		}
+		return _size;
 	}
 
 	@Override
 	public void setSize(String size) {
-		_size = size;
+		_size = Objects.toString(size, "");
 	}
 
 	@Override

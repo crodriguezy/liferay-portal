@@ -49,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the FragmentEntry service. Represents a row in the &quot;FragmentEntry&quot; database table, with each column mapped to a property of this class.
@@ -394,12 +395,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -408,7 +404,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -502,17 +498,12 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -569,12 +560,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getFragmentEntryKey() {
-		if (_fragmentEntryKey == null) {
-			return "";
-		}
-		else {
-			return _fragmentEntryKey;
-		}
+		return _fragmentEntryKey;
 	}
 
 	@Override
@@ -585,7 +571,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 			_originalFragmentEntryKey = _fragmentEntryKey;
 		}
 
-		_fragmentEntryKey = fragmentEntryKey;
+		_fragmentEntryKey = Objects.toString(fragmentEntryKey, "");
 	}
 
 	public String getOriginalFragmentEntryKey() {
@@ -595,12 +581,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
@@ -611,7 +592,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -621,49 +602,34 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getCss() {
-		if (_css == null) {
-			return "";
-		}
-		else {
-			return _css;
-		}
+		return _css;
 	}
 
 	@Override
 	public void setCss(String css) {
-		_css = css;
+		_css = Objects.toString(css, "");
 	}
 
 	@JSON
 	@Override
 	public String getHtml() {
-		if (_html == null) {
-			return "";
-		}
-		else {
-			return _html;
-		}
+		return _html;
 	}
 
 	@Override
 	public void setHtml(String html) {
-		_html = html;
+		_html = Objects.toString(html, "");
 	}
 
 	@JSON
 	@Override
 	public String getJs() {
-		if (_js == null) {
-			return "";
-		}
-		else {
-			return _js;
-		}
+		return _js;
 	}
 
 	@Override
 	public void setJs(String js) {
-		_js = js;
+		_js = Objects.toString(js, "");
 	}
 
 	@JSON
@@ -741,17 +707,12 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@JSON
 	@Override
 	public String getStatusByUserName() {
-		if (_statusByUserName == null) {
-			return "";
-		}
-		else {
-			return _statusByUserName;
-		}
+		return _statusByUserName;
 	}
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON

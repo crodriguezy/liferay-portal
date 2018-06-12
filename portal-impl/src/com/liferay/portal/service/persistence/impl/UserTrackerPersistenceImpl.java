@@ -1184,6 +1184,8 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		sessionId = Objects.toString(sessionId, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -1227,10 +1229,7 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 
 			boolean bindSessionId = false;
 
-			if (sessionId == null) {
-				query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_1);
-			}
-			else if (sessionId.equals("")) {
+			if (sessionId.equals("")) {
 				query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_3);
 			}
 			else {
@@ -1444,6 +1443,8 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 	protected UserTracker getBySessionId_PrevAndNext(Session session,
 		UserTracker userTracker, String sessionId,
 		OrderByComparator<UserTracker> orderByComparator, boolean previous) {
+		sessionId = Objects.toString(sessionId, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1459,10 +1460,7 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 
 		boolean bindSessionId = false;
 
-		if (sessionId == null) {
-			query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_1);
-		}
-		else if (sessionId.equals("")) {
+		if (sessionId.equals("")) {
 			query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_3);
 		}
 		else {
@@ -1584,6 +1582,8 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 	public int countBySessionId(String sessionId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_SESSIONID;
 
+		sessionId = Objects.toString(sessionId, "");
+
 		Object[] finderArgs = new Object[] { sessionId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1595,10 +1595,7 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 
 			boolean bindSessionId = false;
 
-			if (sessionId == null) {
-				query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_1);
-			}
-			else if (sessionId.equals("")) {
+			if (sessionId.equals("")) {
 				query.append(_FINDER_COLUMN_SESSIONID_SESSIONID_3);
 			}
 			else {
@@ -1639,7 +1636,6 @@ public class UserTrackerPersistenceImpl extends BasePersistenceImpl<UserTracker>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_SESSIONID_SESSIONID_1 = "userTracker.sessionId IS NULL";
 	private static final String _FINDER_COLUMN_SESSIONID_SESSIONID_2 = "userTracker.sessionId = ?";
 	private static final String _FINDER_COLUMN_SESSIONID_SESSIONID_3 = "(userTracker.sessionId IS NULL OR userTracker.sessionId = '')";
 

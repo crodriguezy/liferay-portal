@@ -693,6 +693,8 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		layoutSetPrototypeUuid = Objects.toString(layoutSetPrototypeUuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -741,10 +743,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 			boolean bindLayoutSetPrototypeUuid = false;
 
-			if (layoutSetPrototypeUuid == null) {
-				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_1);
-			}
-			else if (layoutSetPrototypeUuid.equals("")) {
+			if (layoutSetPrototypeUuid.equals("")) {
 				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3);
 			}
 			else {
@@ -963,6 +962,8 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 	protected LayoutSet getByLayoutSetPrototypeUuid_PrevAndNext(
 		Session session, LayoutSet layoutSet, String layoutSetPrototypeUuid,
 		OrderByComparator<LayoutSet> orderByComparator, boolean previous) {
+		layoutSetPrototypeUuid = Objects.toString(layoutSetPrototypeUuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -978,10 +979,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 		boolean bindLayoutSetPrototypeUuid = false;
 
-		if (layoutSetPrototypeUuid == null) {
-			query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_1);
-		}
-		else if (layoutSetPrototypeUuid.equals("")) {
+		if (layoutSetPrototypeUuid.equals("")) {
 			query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3);
 		}
 		else {
@@ -1104,6 +1102,8 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 	public int countByLayoutSetPrototypeUuid(String layoutSetPrototypeUuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_LAYOUTSETPROTOTYPEUUID;
 
+		layoutSetPrototypeUuid = Objects.toString(layoutSetPrototypeUuid, "");
+
 		Object[] finderArgs = new Object[] { layoutSetPrototypeUuid };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1115,10 +1115,7 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 
 			boolean bindLayoutSetPrototypeUuid = false;
 
-			if (layoutSetPrototypeUuid == null) {
-				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_1);
-			}
-			else if (layoutSetPrototypeUuid.equals("")) {
+			if (layoutSetPrototypeUuid.equals("")) {
 				query.append(_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3);
 			}
 			else {
@@ -1159,8 +1156,6 @@ public class LayoutSetPersistenceImpl extends BasePersistenceImpl<LayoutSet>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_1 =
-		"layoutSet.layoutSetPrototypeUuid IS NULL";
 	private static final String _FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_2 =
 		"layoutSet.layoutSetPrototypeUuid = ?";
 	private static final String _FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3 =

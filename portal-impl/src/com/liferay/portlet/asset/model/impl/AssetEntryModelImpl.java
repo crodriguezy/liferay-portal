@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -578,17 +579,12 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -688,12 +684,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	@JSON
 	@Override
 	public String getClassUuid() {
-		if (_classUuid == null) {
-			return "";
-		}
-		else {
-			return _classUuid;
-		}
+		return _classUuid;
 	}
 
 	@Override
@@ -704,7 +695,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 			_originalClassUuid = _classUuid;
 		}
 
-		_classUuid = classUuid;
+		_classUuid = Objects.toString(classUuid, "");
 	}
 
 	public String getOriginalClassUuid() {
@@ -835,28 +826,18 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	@JSON
 	@Override
 	public String getMimeType() {
-		if (_mimeType == null) {
-			return "";
-		}
-		else {
-			return _mimeType;
-		}
+		return _mimeType;
 	}
 
 	@Override
 	public void setMimeType(String mimeType) {
-		_mimeType = mimeType;
+		_mimeType = Objects.toString(mimeType, "");
 	}
 
 	@JSON
 	@Override
 	public String getTitle() {
-		if (_title == null) {
-			return "";
-		}
-		else {
-			return _title;
-		}
+		return _title;
 	}
 
 	@Override
@@ -904,7 +885,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@Override
@@ -950,12 +931,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
@@ -1003,7 +979,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -1053,12 +1029,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	@JSON
 	@Override
 	public String getSummary() {
-		if (_summary == null) {
-			return "";
-		}
-		else {
-			return _summary;
-		}
+		return _summary;
 	}
 
 	@Override
@@ -1106,7 +1077,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 
 	@Override
 	public void setSummary(String summary) {
-		_summary = summary;
+		_summary = Objects.toString(summary, "");
 	}
 
 	@Override
@@ -1153,28 +1124,18 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	@JSON
 	@Override
 	public String getUrl() {
-		if (_url == null) {
-			return "";
-		}
-		else {
-			return _url;
-		}
+		return _url;
 	}
 
 	@Override
 	public void setUrl(String url) {
-		_url = url;
+		_url = Objects.toString(url, "");
 	}
 
 	@JSON
 	@Override
 	public String getLayoutUuid() {
-		if (_layoutUuid == null) {
-			return "";
-		}
-		else {
-			return _layoutUuid;
-		}
+		return _layoutUuid;
 	}
 
 	@Override
@@ -1185,7 +1146,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 			_originalLayoutUuid = _layoutUuid;
 		}
 
-		_layoutUuid = layoutUuid;
+		_layoutUuid = Objects.toString(layoutUuid, "");
 	}
 
 	public String getOriginalLayoutUuid() {

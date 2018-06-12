@@ -660,6 +660,8 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 	@Override
 	public Portlet fetchByC_P(long companyId, String portletId,
 		boolean retrieveFromCache) {
+		portletId = Objects.toString(portletId, "");
+
 		Object[] finderArgs = new Object[] { companyId, portletId };
 
 		Object result = null;
@@ -687,10 +689,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_C_P_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_C_P_PORTLETID_3);
 			}
 			else {
@@ -774,6 +773,8 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 	public int countByC_P(long companyId, String portletId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_P;
 
+		portletId = Objects.toString(portletId, "");
+
 		Object[] finderArgs = new Object[] { companyId, portletId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -787,10 +788,7 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 
 			boolean bindPortletId = false;
 
-			if (portletId == null) {
-				query.append(_FINDER_COLUMN_C_P_PORTLETID_1);
-			}
-			else if (portletId.equals("")) {
+			if (portletId.equals("")) {
 				query.append(_FINDER_COLUMN_C_P_PORTLETID_3);
 			}
 			else {
@@ -834,7 +832,6 @@ public class PortletPersistenceImpl extends BasePersistenceImpl<Portlet>
 	}
 
 	private static final String _FINDER_COLUMN_C_P_COMPANYID_2 = "portlet.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_P_PORTLETID_1 = "portlet.portletId IS NULL";
 	private static final String _FINDER_COLUMN_C_P_PORTLETID_2 = "portlet.portletId = ?";
 	private static final String _FINDER_COLUMN_C_P_PORTLETID_3 = "(portlet.portletId IS NULL OR portlet.portletId = '')";
 

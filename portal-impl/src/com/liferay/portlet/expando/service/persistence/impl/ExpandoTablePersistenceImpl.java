@@ -714,6 +714,8 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 	@Override
 	public ExpandoTable fetchByC_C_N(long companyId, long classNameId,
 		String name, boolean retrieveFromCache) {
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { companyId, classNameId, name };
 
 		Object result = null;
@@ -744,10 +746,7 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_C_C_N_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_C_C_N_NAME_3);
 			}
 			else {
@@ -835,6 +834,8 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 	public int countByC_C_N(long companyId, long classNameId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_C_N;
 
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { companyId, classNameId, name };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -850,10 +851,7 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_C_C_N_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_C_C_N_NAME_3);
 			}
 			else {
@@ -900,7 +898,6 @@ public class ExpandoTablePersistenceImpl extends BasePersistenceImpl<ExpandoTabl
 
 	private static final String _FINDER_COLUMN_C_C_N_COMPANYID_2 = "expandoTable.companyId = ? AND ";
 	private static final String _FINDER_COLUMN_C_C_N_CLASSNAMEID_2 = "expandoTable.classNameId = ? AND ";
-	private static final String _FINDER_COLUMN_C_C_N_NAME_1 = "expandoTable.name IS NULL";
 	private static final String _FINDER_COLUMN_C_C_N_NAME_2 = "expandoTable.name = ?";
 	private static final String _FINDER_COLUMN_C_C_N_NAME_3 = "(expandoTable.name IS NULL OR expandoTable.name = '')";
 

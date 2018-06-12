@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -464,12 +465,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 	@JSON
 	@Override
 	public String getUuid() {
-		if (_uuid == null) {
-			return "";
-		}
-		else {
-			return _uuid;
-		}
+		return _uuid;
 	}
 
 	@Override
@@ -478,7 +474,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 			_originalUuid = _uuid;
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -572,17 +568,12 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 	@JSON
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -615,17 +606,12 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 	@JSON
 	@Override
 	public String getVersionUserName() {
-		if (_versionUserName == null) {
-			return "";
-		}
-		else {
-			return _versionUserName;
-		}
+		return _versionUserName;
 	}
 
 	@Override
 	public void setVersionUserName(String versionUserName) {
-		_versionUserName = versionUserName;
+		_versionUserName = Objects.toString(versionUserName, "");
 	}
 
 	@JSON
@@ -736,12 +722,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 	@JSON
 	@Override
 	public String getTemplateKey() {
-		if (_templateKey == null) {
-			return "";
-		}
-		else {
-			return _templateKey;
-		}
+		return _templateKey;
 	}
 
 	@Override
@@ -752,7 +733,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 			_originalTemplateKey = _templateKey;
 		}
 
-		_templateKey = templateKey;
+		_templateKey = Objects.toString(templateKey, "");
 	}
 
 	public String getOriginalTemplateKey() {
@@ -762,28 +743,18 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 	@JSON
 	@Override
 	public String getVersion() {
-		if (_version == null) {
-			return "";
-		}
-		else {
-			return _version;
-		}
+		return _version;
 	}
 
 	@Override
 	public void setVersion(String version) {
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	@JSON
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
@@ -831,7 +802,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -877,12 +848,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 	@JSON
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
@@ -930,7 +896,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -980,12 +946,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 	@JSON
 	@Override
 	public String getType() {
-		if (_type == null) {
-			return "";
-		}
-		else {
-			return _type;
-		}
+		return _type;
 	}
 
 	@Override
@@ -996,7 +957,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 			_originalType = _type;
 		}
 
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	public String getOriginalType() {
@@ -1006,12 +967,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 	@JSON
 	@Override
 	public String getMode() {
-		if (_mode == null) {
-			return "";
-		}
-		else {
-			return _mode;
-		}
+		return _mode;
 	}
 
 	@Override
@@ -1022,7 +978,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 			_originalMode = _mode;
 		}
 
-		_mode = mode;
+		_mode = Objects.toString(mode, "");
 	}
 
 	public String getOriginalMode() {
@@ -1032,12 +988,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 	@JSON
 	@Override
 	public String getLanguage() {
-		if (_language == null) {
-			return "";
-		}
-		else {
-			return _language;
-		}
+		return _language;
 	}
 
 	@Override
@@ -1048,7 +999,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 			_originalLanguage = _language;
 		}
 
-		_language = language;
+		_language = Objects.toString(language, "");
 	}
 
 	public String getOriginalLanguage() {
@@ -1058,17 +1009,12 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 	@JSON
 	@Override
 	public String getScript() {
-		if (_script == null) {
-			return "";
-		}
-		else {
-			return _script;
-		}
+		return _script;
 	}
 
 	@Override
 	public void setScript(String script) {
-		_script = script;
+		_script = Objects.toString(script, "");
 	}
 
 	@JSON
@@ -1131,17 +1077,12 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 	@JSON
 	@Override
 	public String getSmallImageURL() {
-		if (_smallImageURL == null) {
-			return "";
-		}
-		else {
-			return _smallImageURL;
-		}
+		return _smallImageURL;
 	}
 
 	@Override
 	public void setSmallImageURL(String smallImageURL) {
-		_smallImageURL = smallImageURL;
+		_smallImageURL = Objects.toString(smallImageURL, "");
 	}
 
 	@JSON

@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoNotification service. Represents a row in the &quot;KaleoNotification&quot; database table, with each column mapped to a property of this class.
@@ -368,17 +369,12 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public String getUserName() {
-		if (_userName == null) {
-			return "";
-		}
-		else {
-			return _userName;
-		}
+		return _userName;
 	}
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -409,12 +405,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public String getKaleoClassName() {
-		if (_kaleoClassName == null) {
-			return "";
-		}
-		else {
-			return _kaleoClassName;
-		}
+		return _kaleoClassName;
 	}
 
 	@Override
@@ -425,7 +416,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 			_originalKaleoClassName = _kaleoClassName;
 		}
 
-		_kaleoClassName = kaleoClassName;
+		_kaleoClassName = Objects.toString(kaleoClassName, "");
 	}
 
 	public String getOriginalKaleoClassName() {
@@ -478,57 +469,37 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public String getKaleoNodeName() {
-		if (_kaleoNodeName == null) {
-			return "";
-		}
-		else {
-			return _kaleoNodeName;
-		}
+		return _kaleoNodeName;
 	}
 
 	@Override
 	public void setKaleoNodeName(String kaleoNodeName) {
-		_kaleoNodeName = kaleoNodeName;
+		_kaleoNodeName = Objects.toString(kaleoNodeName, "");
 	}
 
 	@Override
 	public String getName() {
-		if (_name == null) {
-			return "";
-		}
-		else {
-			return _name;
-		}
+		return _name;
 	}
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
 	public String getDescription() {
-		if (_description == null) {
-			return "";
-		}
-		else {
-			return _description;
-		}
+		return _description;
 	}
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
 	public String getExecutionType() {
-		if (_executionType == null) {
-			return "";
-		}
-		else {
-			return _executionType;
-		}
+		return _executionType;
 	}
 
 	@Override
@@ -539,7 +510,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 			_originalExecutionType = _executionType;
 		}
 
-		_executionType = executionType;
+		_executionType = Objects.toString(executionType, "");
 	}
 
 	public String getOriginalExecutionType() {
@@ -548,47 +519,32 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public String getTemplate() {
-		if (_template == null) {
-			return "";
-		}
-		else {
-			return _template;
-		}
+		return _template;
 	}
 
 	@Override
 	public void setTemplate(String template) {
-		_template = template;
+		_template = Objects.toString(template, "");
 	}
 
 	@Override
 	public String getTemplateLanguage() {
-		if (_templateLanguage == null) {
-			return "";
-		}
-		else {
-			return _templateLanguage;
-		}
+		return _templateLanguage;
 	}
 
 	@Override
 	public void setTemplateLanguage(String templateLanguage) {
-		_templateLanguage = templateLanguage;
+		_templateLanguage = Objects.toString(templateLanguage, "");
 	}
 
 	@Override
 	public String getNotificationTypes() {
-		if (_notificationTypes == null) {
-			return "";
-		}
-		else {
-			return _notificationTypes;
-		}
+		return _notificationTypes;
 	}
 
 	@Override
 	public void setNotificationTypes(String notificationTypes) {
-		_notificationTypes = notificationTypes;
+		_notificationTypes = Objects.toString(notificationTypes, "");
 	}
 
 	public long getColumnBitmask() {
