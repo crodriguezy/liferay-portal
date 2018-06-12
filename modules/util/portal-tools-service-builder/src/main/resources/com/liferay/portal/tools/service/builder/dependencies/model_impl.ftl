@@ -92,6 +92,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Function;
@@ -733,11 +734,19 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 			<#if stringUtil.equals(entityColumn.name, "uuid")>
 				<#if entityColumn.isFinderPath()>
 					if (_originalUuid == null) {
-						_originalUuid = _uuid;
+						<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+							_originalUuid = Objects.toString(uuid, "");
+						<#else>
+							_originalUuid = _uuid;
+						</#if>
 					}
 				</#if>
 
-				_uuid = uuid;
+				<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+					_uuid = Objects.toString(uuid, "");
+				<#else>
+					_uuid = uuid;
+				</#if>
 			<#else>
 				<#if entity.hasEntityColumn("createDate", "Date") && entity.hasEntityColumn("modifiedDate", "Date") && stringUtil.equals(entityColumn.name, "modifiedDate")>
 					_setModifiedDate = true;
@@ -770,6 +779,8 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 					else {
 						_${entityColumn.name}BlobModel.set${entityColumn.methodName}Blob(${entityColumn.name});
 					}
+				<#elseif stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+					_${entityColumn.name} = Objects.toString(${entityColumn.name}, "");
 				<#else>
 					_${entityColumn.name} = ${entityColumn.name};
 				</#if>
@@ -1622,7 +1633,11 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		<#if stringUtil.equals(entityColumn.type, "Blob") && entityColumn.lazy>
 			private ${entity.name}${entityColumn.methodName}BlobModel _${entityColumn.name}BlobModel;
 		<#else>
-			private ${entityColumn.genericizedType} _${entityColumn.name};
+			<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+				private ${entityColumn.genericizedType} _${entityColumn.name} = "";
+			<#else>
+				private ${entityColumn.genericizedType} _${entityColumn.name};
+			</#if>
 
 			<#if entityColumn.localized>
 				private String _${entityColumn.name}CurrentLanguageId;
