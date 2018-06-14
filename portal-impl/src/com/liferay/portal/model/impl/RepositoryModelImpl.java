@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Repository service. Represents a row in the &quot;Repository&quot; database table, with each column mapped to a property of this class.
@@ -374,10 +375,10 @@ public class RepositoryModelImpl extends BaseModelImpl<Repository>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -481,7 +482,7 @@ public class RepositoryModelImpl extends BaseModelImpl<Repository>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -562,7 +563,7 @@ public class RepositoryModelImpl extends BaseModelImpl<Repository>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -582,7 +583,7 @@ public class RepositoryModelImpl extends BaseModelImpl<Repository>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
@@ -604,7 +605,7 @@ public class RepositoryModelImpl extends BaseModelImpl<Repository>
 			_originalPortletId = _portletId;
 		}
 
-		_portletId = portletId;
+		_portletId = Objects.toString(portletId, "");
 	}
 
 	public String getOriginalPortletId() {
@@ -624,7 +625,7 @@ public class RepositoryModelImpl extends BaseModelImpl<Repository>
 
 	@Override
 	public void setTypeSettings(String typeSettings) {
-		_typeSettings = typeSettings;
+		_typeSettings = Objects.toString(typeSettings, "");
 	}
 
 	@JSON
@@ -1003,7 +1004,7 @@ public class RepositoryModelImpl extends BaseModelImpl<Repository>
 			Repository.class, ModelWrapper.class
 		};
 	private long _mvccVersion;
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _repositoryId;
 	private long _groupId;
@@ -1013,17 +1014,17 @@ public class RepositoryModelImpl extends BaseModelImpl<Repository>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _classNameId;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
-	private String _description;
-	private String _portletId;
+	private String _description = "";
+	private String _portletId = "";
 	private String _originalPortletId;
-	private String _typeSettings;
+	private String _typeSettings = "";
 	private long _dlFolderId;
 	private Date _lastPublishDate;
 	private long _columnBitmask;

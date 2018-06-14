@@ -53,6 +53,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the DLFolder service. Represents a row in the &quot;DLFolder&quot; database table, with each column mapped to a property of this class.
@@ -456,10 +457,10 @@ public class DLFolderModelImpl extends BaseModelImpl<DLFolder>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -575,7 +576,7 @@ public class DLFolderModelImpl extends BaseModelImpl<DLFolder>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -700,7 +701,7 @@ public class DLFolderModelImpl extends BaseModelImpl<DLFolder>
 			_originalTreePath = _treePath;
 		}
 
-		_treePath = treePath;
+		_treePath = Objects.toString(treePath, "");
 	}
 
 	public String getOriginalTreePath() {
@@ -726,7 +727,7 @@ public class DLFolderModelImpl extends BaseModelImpl<DLFolder>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -746,7 +747,7 @@ public class DLFolderModelImpl extends BaseModelImpl<DLFolder>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
@@ -885,7 +886,7 @@ public class DLFolderModelImpl extends BaseModelImpl<DLFolder>
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON
@@ -1601,7 +1602,7 @@ public class DLFolderModelImpl extends BaseModelImpl<DLFolder>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			DLFolder.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _folderId;
 	private long _originalFolderId;
@@ -1613,7 +1614,7 @@ public class DLFolderModelImpl extends BaseModelImpl<DLFolder>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1626,11 +1627,11 @@ public class DLFolderModelImpl extends BaseModelImpl<DLFolder>
 	private long _parentFolderId;
 	private long _originalParentFolderId;
 	private boolean _setOriginalParentFolderId;
-	private String _treePath;
+	private String _treePath = "";
 	private String _originalTreePath;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
-	private String _description;
+	private String _description = "";
 	private Date _lastPostDate;
 	private long _defaultFileEntryTypeId;
 	private boolean _hidden;
@@ -1642,7 +1643,7 @@ public class DLFolderModelImpl extends BaseModelImpl<DLFolder>
 	private int _originalStatus;
 	private boolean _setOriginalStatus;
 	private long _statusByUserId;
-	private String _statusByUserName;
+	private String _statusByUserName = "";
 	private Date _statusDate;
 	private long _columnBitmask;
 	private DLFolder _escapedModel;

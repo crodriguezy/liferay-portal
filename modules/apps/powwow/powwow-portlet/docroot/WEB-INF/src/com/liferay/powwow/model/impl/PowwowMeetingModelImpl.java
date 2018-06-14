@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the PowwowMeeting service. Represents a row in the &quot;PowwowMeeting&quot; database table, with each column mapped to a property of this class.
@@ -434,7 +435,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -503,7 +504,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
@@ -519,7 +520,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
@@ -535,7 +536,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 
 	@Override
 	public void setProviderType(String providerType) {
-		_providerType = providerType;
+		_providerType = Objects.toString(providerType, "");
 	}
 
 	@JSON
@@ -551,7 +552,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 
 	@Override
 	public void setProviderTypeMetadata(String providerTypeMetadata) {
-		_providerTypeMetadata = providerTypeMetadata;
+		_providerTypeMetadata = Objects.toString(providerTypeMetadata, "");
 	}
 
 	@JSON
@@ -567,7 +568,7 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 
 	@Override
 	public void setLanguageId(String languageId) {
-		_languageId = languageId;
+		_languageId = Objects.toString(languageId, "");
 	}
 
 	@JSON
@@ -947,18 +948,18 @@ public class PowwowMeetingModelImpl extends BaseModelImpl<PowwowMeeting>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _powwowServerId;
 	private long _originalPowwowServerId;
 	private boolean _setOriginalPowwowServerId;
-	private String _name;
-	private String _description;
-	private String _providerType;
-	private String _providerTypeMetadata;
-	private String _languageId;
+	private String _name = "";
+	private String _description = "";
+	private String _providerType = "";
+	private String _providerTypeMetadata = "";
+	private String _languageId = "";
 	private long _calendarBookingId;
 	private int _status;
 	private int _originalStatus;

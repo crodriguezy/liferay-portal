@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoTimerInstanceToken service. Represents a row in the &quot;KaleoTimerInstanceToken&quot; database table, with each column mapped to a property of this class.
@@ -396,7 +397,7 @@ public class KaleoTimerInstanceTokenModelImpl extends BaseModelImpl<KaleoTimerIn
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -437,7 +438,7 @@ public class KaleoTimerInstanceTokenModelImpl extends BaseModelImpl<KaleoTimerIn
 
 	@Override
 	public void setKaleoClassName(String kaleoClassName) {
-		_kaleoClassName = kaleoClassName;
+		_kaleoClassName = Objects.toString(kaleoClassName, "");
 	}
 
 	@Override
@@ -548,7 +549,7 @@ public class KaleoTimerInstanceTokenModelImpl extends BaseModelImpl<KaleoTimerIn
 
 	@Override
 	public void setKaleoTimerName(String kaleoTimerName) {
-		_kaleoTimerName = kaleoTimerName;
+		_kaleoTimerName = Objects.toString(kaleoTimerName, "");
 	}
 
 	@Override
@@ -653,7 +654,7 @@ public class KaleoTimerInstanceTokenModelImpl extends BaseModelImpl<KaleoTimerIn
 
 	@Override
 	public void setWorkflowContext(String workflowContext) {
-		_workflowContext = workflowContext;
+		_workflowContext = Objects.toString(workflowContext, "");
 	}
 
 	public long getColumnBitmask() {
@@ -1044,11 +1045,11 @@ public class KaleoTimerInstanceTokenModelImpl extends BaseModelImpl<KaleoTimerIn
 	private long _groupId;
 	private long _companyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _kaleoClassName;
+	private String _kaleoClassName = "";
 	private long _kaleoClassPK;
 	private long _kaleoDefinitionVersionId;
 	private long _kaleoInstanceId;
@@ -1061,7 +1062,7 @@ public class KaleoTimerInstanceTokenModelImpl extends BaseModelImpl<KaleoTimerIn
 	private long _kaleoTimerId;
 	private long _originalKaleoTimerId;
 	private boolean _setOriginalKaleoTimerId;
-	private String _kaleoTimerName;
+	private String _kaleoTimerName = "";
 	private boolean _blocking;
 	private boolean _originalBlocking;
 	private boolean _setOriginalBlocking;
@@ -1070,7 +1071,7 @@ public class KaleoTimerInstanceTokenModelImpl extends BaseModelImpl<KaleoTimerIn
 	private boolean _originalCompleted;
 	private boolean _setOriginalCompleted;
 	private Date _completionDate;
-	private String _workflowContext;
+	private String _workflowContext = "";
 	private long _columnBitmask;
 	private KaleoTimerInstanceToken _escapedModel;
 }

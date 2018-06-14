@@ -43,6 +43,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the RepositoryEntry service. Represents a row in the &quot;RepositoryEntry&quot; database table, with each column mapped to a property of this class.
@@ -286,10 +287,10 @@ public class RepositoryEntryModelImpl extends BaseModelImpl<RepositoryEntry>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -388,7 +389,7 @@ public class RepositoryEntryModelImpl extends BaseModelImpl<RepositoryEntry>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -457,7 +458,7 @@ public class RepositoryEntryModelImpl extends BaseModelImpl<RepositoryEntry>
 			_originalMappedId = _mappedId;
 		}
 
-		_mappedId = mappedId;
+		_mappedId = Objects.toString(mappedId, "");
 	}
 
 	public String getOriginalMappedId() {
@@ -800,7 +801,7 @@ public class RepositoryEntryModelImpl extends BaseModelImpl<RepositoryEntry>
 			RepositoryEntry.class, ModelWrapper.class
 		};
 	private long _mvccVersion;
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _repositoryEntryId;
 	private long _groupId;
@@ -810,14 +811,14 @@ public class RepositoryEntryModelImpl extends BaseModelImpl<RepositoryEntry>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _repositoryId;
 	private long _originalRepositoryId;
 	private boolean _setOriginalRepositoryId;
-	private String _mappedId;
+	private String _mappedId = "";
 	private String _originalMappedId;
 	private boolean _manualCheckInRequired;
 	private Date _lastPublishDate;

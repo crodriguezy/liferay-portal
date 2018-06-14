@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoTaskFormInstance service. Represents a row in the &quot;KaleoTaskFormInstance&quot; database table, with each column mapped to a property of this class.
@@ -382,7 +383,7 @@ public class KaleoTaskFormInstanceModelImpl extends BaseModelImpl<KaleoTaskFormI
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -533,7 +534,7 @@ public class KaleoTaskFormInstanceModelImpl extends BaseModelImpl<KaleoTaskFormI
 
 	@Override
 	public void setFormValues(String formValues) {
-		_formValues = formValues;
+		_formValues = Objects.toString(formValues, "");
 	}
 
 	@Override
@@ -568,7 +569,7 @@ public class KaleoTaskFormInstanceModelImpl extends BaseModelImpl<KaleoTaskFormI
 
 	@Override
 	public void setFormValueEntryUuid(String formValueEntryUuid) {
-		_formValueEntryUuid = formValueEntryUuid;
+		_formValueEntryUuid = Objects.toString(formValueEntryUuid, "");
 	}
 
 	@Override
@@ -583,7 +584,7 @@ public class KaleoTaskFormInstanceModelImpl extends BaseModelImpl<KaleoTaskFormI
 
 	@Override
 	public void setMetadata(String metadata) {
-		_metadata = metadata;
+		_metadata = Objects.toString(metadata, "");
 	}
 
 	public long getColumnBitmask() {
@@ -946,7 +947,7 @@ public class KaleoTaskFormInstanceModelImpl extends BaseModelImpl<KaleoTaskFormI
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -965,11 +966,11 @@ public class KaleoTaskFormInstanceModelImpl extends BaseModelImpl<KaleoTaskFormI
 	private long _kaleoTaskFormId;
 	private long _originalKaleoTaskFormId;
 	private boolean _setOriginalKaleoTaskFormId;
-	private String _formValues;
+	private String _formValues = "";
 	private long _formValueEntryGroupId;
 	private long _formValueEntryId;
-	private String _formValueEntryUuid;
-	private String _metadata;
+	private String _formValueEntryUuid = "";
+	private String _metadata = "";
 	private long _columnBitmask;
 	private KaleoTaskFormInstance _escapedModel;
 }

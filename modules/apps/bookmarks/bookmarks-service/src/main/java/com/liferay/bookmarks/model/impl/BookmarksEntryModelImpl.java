@@ -53,6 +53,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the BookmarksEntry service. Represents a row in the &quot;BookmarksEntry&quot; database table, with each column mapped to a property of this class.
@@ -409,10 +410,10 @@ public class BookmarksEntryModelImpl extends BaseModelImpl<BookmarksEntry>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -528,7 +529,7 @@ public class BookmarksEntryModelImpl extends BaseModelImpl<BookmarksEntry>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -595,7 +596,7 @@ public class BookmarksEntryModelImpl extends BaseModelImpl<BookmarksEntry>
 
 	@Override
 	public void setTreePath(String treePath) {
-		_treePath = treePath;
+		_treePath = Objects.toString(treePath, "");
 	}
 
 	@JSON
@@ -613,7 +614,7 @@ public class BookmarksEntryModelImpl extends BaseModelImpl<BookmarksEntry>
 	public void setName(String name) {
 		_columnBitmask = -1L;
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
@@ -629,7 +630,7 @@ public class BookmarksEntryModelImpl extends BaseModelImpl<BookmarksEntry>
 
 	@Override
 	public void setUrl(String url) {
-		_url = url;
+		_url = Objects.toString(url, "");
 	}
 
 	@JSON
@@ -645,7 +646,7 @@ public class BookmarksEntryModelImpl extends BaseModelImpl<BookmarksEntry>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
@@ -744,7 +745,7 @@ public class BookmarksEntryModelImpl extends BaseModelImpl<BookmarksEntry>
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON
@@ -1391,7 +1392,7 @@ public class BookmarksEntryModelImpl extends BaseModelImpl<BookmarksEntry>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			BookmarksEntry.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _entryId;
 	private long _groupId;
@@ -1403,17 +1404,17 @@ public class BookmarksEntryModelImpl extends BaseModelImpl<BookmarksEntry>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _folderId;
 	private long _originalFolderId;
 	private boolean _setOriginalFolderId;
-	private String _treePath;
-	private String _name;
-	private String _url;
-	private String _description;
+	private String _treePath = "";
+	private String _name = "";
+	private String _url = "";
+	private String _description = "";
 	private int _visits;
 	private int _priority;
 	private Date _lastPublishDate;
@@ -1421,7 +1422,7 @@ public class BookmarksEntryModelImpl extends BaseModelImpl<BookmarksEntry>
 	private int _originalStatus;
 	private boolean _setOriginalStatus;
 	private long _statusByUserId;
-	private String _statusByUserName;
+	private String _statusByUserName = "";
 	private Date _statusDate;
 	private long _columnBitmask;
 	private BookmarksEntry _escapedModel;

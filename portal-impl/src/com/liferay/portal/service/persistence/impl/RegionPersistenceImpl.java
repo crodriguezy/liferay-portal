@@ -1158,6 +1158,8 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 	@Override
 	public Region fetchByC_R(long countryId, String regionCode,
 		boolean retrieveFromCache) {
+		regionCode = Objects.toString(regionCode, "");
+
 		Object[] finderArgs = new Object[] { countryId, regionCode };
 
 		Object result = null;
@@ -1185,10 +1187,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 
 			boolean bindRegionCode = false;
 
-			if (regionCode == null) {
-				query.append(_FINDER_COLUMN_C_R_REGIONCODE_1);
-			}
-			else if (regionCode.equals("")) {
+			if (regionCode.equals("")) {
 				query.append(_FINDER_COLUMN_C_R_REGIONCODE_3);
 			}
 			else {
@@ -1272,6 +1271,8 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 	public int countByC_R(long countryId, String regionCode) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_R;
 
+		regionCode = Objects.toString(regionCode, "");
+
 		Object[] finderArgs = new Object[] { countryId, regionCode };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1285,10 +1286,7 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 
 			boolean bindRegionCode = false;
 
-			if (regionCode == null) {
-				query.append(_FINDER_COLUMN_C_R_REGIONCODE_1);
-			}
-			else if (regionCode.equals("")) {
+			if (regionCode.equals("")) {
 				query.append(_FINDER_COLUMN_C_R_REGIONCODE_3);
 			}
 			else {
@@ -1332,7 +1330,6 @@ public class RegionPersistenceImpl extends BasePersistenceImpl<Region>
 	}
 
 	private static final String _FINDER_COLUMN_C_R_COUNTRYID_2 = "region.countryId = ? AND ";
-	private static final String _FINDER_COLUMN_C_R_REGIONCODE_1 = "region.regionCode IS NULL";
 	private static final String _FINDER_COLUMN_C_R_REGIONCODE_2 = "region.regionCode = ?";
 	private static final String _FINDER_COLUMN_C_R_REGIONCODE_3 = "(region.regionCode IS NULL OR region.regionCode = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_A = new FinderPath(RegionModelImpl.ENTITY_CACHE_ENABLED,

@@ -40,6 +40,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Attachment service. Represents a row in the &quot;Mail_Attachment&quot; database table, with each column mapped to a property of this class.
@@ -319,7 +320,7 @@ public class AttachmentModelImpl extends BaseModelImpl<Attachment>
 
 	@Override
 	public void setContentPath(String contentPath) {
-		_contentPath = contentPath;
+		_contentPath = Objects.toString(contentPath, "");
 	}
 
 	@Override
@@ -334,7 +335,7 @@ public class AttachmentModelImpl extends BaseModelImpl<Attachment>
 
 	@Override
 	public void setFileName(String fileName) {
-		_fileName = fileName;
+		_fileName = Objects.toString(fileName, "");
 	}
 
 	@Override
@@ -582,8 +583,8 @@ public class AttachmentModelImpl extends BaseModelImpl<Attachment>
 	private long _messageId;
 	private long _originalMessageId;
 	private boolean _setOriginalMessageId;
-	private String _contentPath;
-	private String _fileName;
+	private String _contentPath = "";
+	private String _fileName = "";
 	private long _size;
 	private long _columnBitmask;
 	private Attachment _escapedModel;

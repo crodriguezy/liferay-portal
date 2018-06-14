@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoTimer service. Represents a row in the &quot;KaleoTimer&quot; database table, with each column mapped to a property of this class.
@@ -364,7 +365,7 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -411,7 +412,7 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 			_originalKaleoClassName = _kaleoClassName;
 		}
 
-		_kaleoClassName = kaleoClassName;
+		_kaleoClassName = Objects.toString(kaleoClassName, "");
 	}
 
 	public String getOriginalKaleoClassName() {
@@ -462,7 +463,7 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -504,7 +505,7 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -529,7 +530,7 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public void setScale(String scale) {
-		_scale = scale;
+		_scale = Objects.toString(scale, "");
 	}
 
 	@Override
@@ -554,7 +555,7 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 
 	@Override
 	public void setRecurrenceScale(String recurrenceScale) {
-		_recurrenceScale = recurrenceScale;
+		_recurrenceScale = Objects.toString(recurrenceScale, "");
 	}
 
 	public long getColumnBitmask() {
@@ -912,25 +913,25 @@ public class KaleoTimerModelImpl extends BaseModelImpl<KaleoTimer>
 	private long _groupId;
 	private long _companyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _kaleoClassName;
+	private String _kaleoClassName = "";
 	private String _originalKaleoClassName;
 	private long _kaleoClassPK;
 	private long _originalKaleoClassPK;
 	private boolean _setOriginalKaleoClassPK;
 	private long _kaleoDefinitionVersionId;
-	private String _name;
+	private String _name = "";
 	private boolean _blocking;
 	private boolean _originalBlocking;
 	private boolean _setOriginalBlocking;
-	private String _description;
+	private String _description = "";
 	private double _duration;
-	private String _scale;
+	private String _scale = "";
 	private double _recurrenceDuration;
-	private String _recurrenceScale;
+	private String _recurrenceScale = "";
 	private long _columnBitmask;
 	private KaleoTimer _escapedModel;
 }

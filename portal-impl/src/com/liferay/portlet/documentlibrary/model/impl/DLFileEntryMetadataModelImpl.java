@@ -37,6 +37,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the DLFileEntryMetadata service. Represents a row in the &quot;DLFileEntryMetadata&quot; database table, with each column mapped to a property of this class.
@@ -215,10 +216,10 @@ public class DLFileEntryMetadataModelImpl extends BaseModelImpl<DLFileEntryMetad
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -551,7 +552,7 @@ public class DLFileEntryMetadataModelImpl extends BaseModelImpl<DLFileEntryMetad
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			DLFileEntryMetadata.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _fileEntryMetadataId;
 	private long _companyId;

@@ -43,6 +43,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SystemEvent service. Represents a row in the &quot;SystemEvent&quot; database table, with each column mapped to a property of this class.
@@ -370,7 +371,7 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -461,7 +462,7 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 
 	@Override
 	public void setClassUuid(String classUuid) {
-		_classUuid = classUuid;
+		_classUuid = Objects.toString(classUuid, "");
 	}
 
 	@Override
@@ -540,7 +541,7 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 
 	@Override
 	public void setExtraData(String extraData) {
-		_extraData = extraData;
+		_extraData = Objects.toString(extraData, "");
 	}
 
 	public long getColumnBitmask() {
@@ -860,7 +861,7 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 	private boolean _setOriginalGroupId;
 	private long _companyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private long _classNameId;
 	private long _originalClassNameId;
@@ -868,7 +869,7 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 	private long _classPK;
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
-	private String _classUuid;
+	private String _classUuid = "";
 	private long _referrerClassNameId;
 	private long _parentSystemEventId;
 	private long _systemEventSetKey;
@@ -877,7 +878,7 @@ public class SystemEventModelImpl extends BaseModelImpl<SystemEvent>
 	private int _type;
 	private int _originalType;
 	private boolean _setOriginalType;
-	private String _extraData;
+	private String _extraData = "";
 	private long _columnBitmask;
 	private SystemEvent _escapedModel;
 }

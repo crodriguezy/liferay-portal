@@ -33,6 +33,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Counter service. Represents a row in the &quot;Counter&quot; database table, with each column mapped to a property of this class.
@@ -157,7 +158,7 @@ public class CounterModelImpl extends BaseModelImpl<Counter>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -296,7 +297,7 @@ public class CounterModelImpl extends BaseModelImpl<Counter>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			Counter.class, ModelWrapper.class
 		};
-	private String _name;
+	private String _name = "";
 	private long _currentId;
 	private Counter _escapedModel;
 }

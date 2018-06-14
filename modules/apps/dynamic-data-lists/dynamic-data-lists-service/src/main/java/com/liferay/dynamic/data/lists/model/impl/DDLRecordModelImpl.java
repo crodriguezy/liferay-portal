@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the DDLRecord service. Represents a row in the &quot;DDLRecord&quot; database table, with each column mapped to a property of this class.
@@ -364,10 +365,10 @@ public class DDLRecordModelImpl extends BaseModelImpl<DDLRecord>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -483,7 +484,7 @@ public class DDLRecordModelImpl extends BaseModelImpl<DDLRecord>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -526,7 +527,7 @@ public class DDLRecordModelImpl extends BaseModelImpl<DDLRecord>
 
 	@Override
 	public void setVersionUserName(String versionUserName) {
-		_versionUserName = versionUserName;
+		_versionUserName = Objects.toString(versionUserName, "");
 	}
 
 	@JSON
@@ -610,7 +611,7 @@ public class DDLRecordModelImpl extends BaseModelImpl<DDLRecord>
 			_originalRecordSetVersion = _recordSetVersion;
 		}
 
-		_recordSetVersion = recordSetVersion;
+		_recordSetVersion = Objects.toString(recordSetVersion, "");
 	}
 
 	public String getOriginalRecordSetVersion() {
@@ -630,7 +631,7 @@ public class DDLRecordModelImpl extends BaseModelImpl<DDLRecord>
 
 	@Override
 	public void setVersion(String version) {
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	@JSON
@@ -1008,7 +1009,7 @@ public class DDLRecordModelImpl extends BaseModelImpl<DDLRecord>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			DDLRecord.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _recordId;
 	private long _groupId;
@@ -1020,9 +1021,9 @@ public class DDLRecordModelImpl extends BaseModelImpl<DDLRecord>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private long _versionUserId;
-	private String _versionUserName;
+	private String _versionUserName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1030,9 +1031,9 @@ public class DDLRecordModelImpl extends BaseModelImpl<DDLRecord>
 	private long _recordSetId;
 	private long _originalRecordSetId;
 	private boolean _setOriginalRecordSetId;
-	private String _recordSetVersion;
+	private String _recordSetVersion = "";
 	private String _originalRecordSetVersion;
-	private String _version;
+	private String _version = "";
 	private int _displayIndex;
 	private Date _lastPublishDate;
 	private long _columnBitmask;

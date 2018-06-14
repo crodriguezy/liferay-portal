@@ -47,6 +47,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Organization service. Represents a row in the &quot;Organization_&quot; database table, with each column mapped to a property of this class.
@@ -423,10 +424,10 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -452,7 +453,7 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 			_originalExternalReferenceCode = _externalReferenceCode;
 		}
 
-		_externalReferenceCode = externalReferenceCode;
+		_externalReferenceCode = Objects.toString(externalReferenceCode, "");
 	}
 
 	public String getOriginalExternalReferenceCode() {
@@ -545,7 +546,7 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -618,7 +619,7 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 			_originalTreePath = _treePath;
 		}
 
-		_treePath = treePath;
+		_treePath = Objects.toString(treePath, "");
 	}
 
 	public String getOriginalTreePath() {
@@ -644,7 +645,7 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -664,7 +665,7 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 
 	@Override
 	public void setType(String type) {
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	@JSON
@@ -730,7 +731,7 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 
 	@Override
 	public void setComments(String comments) {
-		_comments = comments;
+		_comments = Objects.toString(comments, "");
 	}
 
 	@JSON
@@ -1129,9 +1130,9 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 			Organization.class, ModelWrapper.class
 		};
 	private long _mvccVersion;
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
-	private String _externalReferenceCode;
+	private String _externalReferenceCode = "";
 	private String _originalExternalReferenceCode;
 	private long _organizationId;
 	private long _originalOrganizationId;
@@ -1140,23 +1141,23 @@ public class OrganizationModelImpl extends BaseModelImpl<Organization>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _parentOrganizationId;
 	private long _originalParentOrganizationId;
 	private boolean _setOriginalParentOrganizationId;
-	private String _treePath;
+	private String _treePath = "";
 	private String _originalTreePath;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
-	private String _type;
+	private String _type = "";
 	private boolean _recursable;
 	private long _regionId;
 	private long _countryId;
 	private long _statusId;
-	private String _comments;
+	private String _comments = "";
 	private long _logoId;
 	private long _columnBitmask;
 	private Organization _escapedModel;

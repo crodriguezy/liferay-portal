@@ -669,6 +669,8 @@ public class LVEntryLocalizationPersistenceImpl extends BasePersistenceImpl<LVEn
 	@Override
 	public LVEntryLocalization fetchByLvEntryId_LanguageId(long lvEntryId,
 		String languageId, boolean retrieveFromCache) {
+		languageId = Objects.toString(languageId, "");
+
 		Object[] finderArgs = new Object[] { lvEntryId, languageId };
 
 		Object result = null;
@@ -697,10 +699,7 @@ public class LVEntryLocalizationPersistenceImpl extends BasePersistenceImpl<LVEn
 
 			boolean bindLanguageId = false;
 
-			if (languageId == null) {
-				query.append(_FINDER_COLUMN_LVENTRYID_LANGUAGEID_LANGUAGEID_1);
-			}
-			else if (languageId.equals("")) {
+			if (languageId.equals("")) {
 				query.append(_FINDER_COLUMN_LVENTRYID_LANGUAGEID_LANGUAGEID_3);
 			}
 			else {
@@ -786,6 +785,8 @@ public class LVEntryLocalizationPersistenceImpl extends BasePersistenceImpl<LVEn
 	public int countByLvEntryId_LanguageId(long lvEntryId, String languageId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_LVENTRYID_LANGUAGEID;
 
+		languageId = Objects.toString(languageId, "");
+
 		Object[] finderArgs = new Object[] { lvEntryId, languageId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -799,10 +800,7 @@ public class LVEntryLocalizationPersistenceImpl extends BasePersistenceImpl<LVEn
 
 			boolean bindLanguageId = false;
 
-			if (languageId == null) {
-				query.append(_FINDER_COLUMN_LVENTRYID_LANGUAGEID_LANGUAGEID_1);
-			}
-			else if (languageId.equals("")) {
+			if (languageId.equals("")) {
 				query.append(_FINDER_COLUMN_LVENTRYID_LANGUAGEID_LANGUAGEID_3);
 			}
 			else {
@@ -846,8 +844,6 @@ public class LVEntryLocalizationPersistenceImpl extends BasePersistenceImpl<LVEn
 	}
 
 	private static final String _FINDER_COLUMN_LVENTRYID_LANGUAGEID_LVENTRYID_2 = "lvEntryLocalization.lvEntryId = ? AND ";
-	private static final String _FINDER_COLUMN_LVENTRYID_LANGUAGEID_LANGUAGEID_1 =
-		"lvEntryLocalization.languageId IS NULL";
 	private static final String _FINDER_COLUMN_LVENTRYID_LANGUAGEID_LANGUAGEID_2 =
 		"lvEntryLocalization.languageId = ?";
 	private static final String _FINDER_COLUMN_LVENTRYID_LANGUAGEID_LANGUAGEID_3 =

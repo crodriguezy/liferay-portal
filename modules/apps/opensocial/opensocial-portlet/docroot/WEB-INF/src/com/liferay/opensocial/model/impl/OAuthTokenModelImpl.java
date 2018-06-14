@@ -41,6 +41,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the OAuthToken service. Represents a row in the &quot;OpenSocial_OAuthToken&quot; database table, with each column mapped to a property of this class.
@@ -339,7 +340,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -386,7 +387,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 			_originalGadgetKey = _gadgetKey;
 		}
 
-		_gadgetKey = gadgetKey;
+		_gadgetKey = Objects.toString(gadgetKey, "");
 	}
 
 	public String getOriginalGadgetKey() {
@@ -411,7 +412,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 			_originalServiceName = _serviceName;
 		}
 
-		_serviceName = serviceName;
+		_serviceName = Objects.toString(serviceName, "");
 	}
 
 	public String getOriginalServiceName() {
@@ -452,7 +453,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public void setAccessToken(String accessToken) {
-		_accessToken = accessToken;
+		_accessToken = Objects.toString(accessToken, "");
 	}
 
 	@Override
@@ -473,7 +474,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 			_originalTokenName = _tokenName;
 		}
 
-		_tokenName = tokenName;
+		_tokenName = Objects.toString(tokenName, "");
 	}
 
 	public String getOriginalTokenName() {
@@ -492,7 +493,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public void setTokenSecret(String tokenSecret) {
-		_tokenSecret = tokenSecret;
+		_tokenSecret = Objects.toString(tokenSecret, "");
 	}
 
 	@Override
@@ -507,7 +508,7 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 
 	@Override
 	public void setSessionHandle(String sessionHandle) {
-		_sessionHandle = sessionHandle;
+		_sessionHandle = Objects.toString(sessionHandle, "");
 	}
 
 	@Override
@@ -853,22 +854,22 @@ public class OAuthTokenModelImpl extends BaseModelImpl<OAuthToken>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _gadgetKey;
+	private String _gadgetKey = "";
 	private String _originalGadgetKey;
-	private String _serviceName;
+	private String _serviceName = "";
 	private String _originalServiceName;
 	private long _moduleId;
 	private long _originalModuleId;
 	private boolean _setOriginalModuleId;
-	private String _accessToken;
-	private String _tokenName;
+	private String _accessToken = "";
+	private String _tokenName = "";
 	private String _originalTokenName;
-	private String _tokenSecret;
-	private String _sessionHandle;
+	private String _tokenSecret = "";
+	private String _sessionHandle = "";
 	private long _expiration;
 	private long _columnBitmask;
 	private OAuthToken _escapedModel;

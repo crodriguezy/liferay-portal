@@ -186,6 +186,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -229,10 +231,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -443,6 +442,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 	protected FragmentEntry getByUuid_PrevAndNext(Session session,
 		FragmentEntry fragmentEntry, String uuid,
 		OrderByComparator<FragmentEntry> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -458,10 +459,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_UUID_3);
 		}
 		else {
@@ -583,6 +581,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -594,10 +594,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -638,7 +635,6 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "fragmentEntry.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "fragmentEntry.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(fragmentEntry.uuid IS NULL OR fragmentEntry.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(FragmentEntryModelImpl.ENTITY_CACHE_ENABLED,
@@ -711,6 +707,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 	@Override
 	public FragmentEntry fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, groupId };
 
 		Object result = null;
@@ -736,10 +734,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
 			}
 			else {
@@ -825,6 +820,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -836,10 +833,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
 			}
 			else {
@@ -884,7 +878,6 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "fragmentEntry.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "fragmentEntry.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(fragmentEntry.uuid IS NULL OR fragmentEntry.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "fragmentEntry.groupId = ?";
@@ -987,6 +980,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -1035,10 +1030,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1268,6 +1260,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 	protected FragmentEntry getByUuid_C_PrevAndNext(Session session,
 		FragmentEntry fragmentEntry, String uuid, long companyId,
 		OrderByComparator<FragmentEntry> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1283,10 +1277,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 		}
 		else {
@@ -1414,6 +1405,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1425,10 +1418,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1473,7 +1463,6 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "fragmentEntry.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "fragmentEntry.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(fragmentEntry.uuid IS NULL OR fragmentEntry.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "fragmentEntry.companyId = ?";
@@ -3129,6 +3118,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 	@Override
 	public FragmentEntry fetchByG_FEK(long groupId, String fragmentEntryKey,
 		boolean retrieveFromCache) {
+		fragmentEntryKey = Objects.toString(fragmentEntryKey, "");
+
 		Object[] finderArgs = new Object[] { groupId, fragmentEntryKey };
 
 		Object result = null;
@@ -3157,10 +3148,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 
 			boolean bindFragmentEntryKey = false;
 
-			if (fragmentEntryKey == null) {
-				query.append(_FINDER_COLUMN_G_FEK_FRAGMENTENTRYKEY_1);
-			}
-			else if (fragmentEntryKey.equals("")) {
+			if (fragmentEntryKey.equals("")) {
 				query.append(_FINDER_COLUMN_G_FEK_FRAGMENTENTRYKEY_3);
 			}
 			else {
@@ -3244,6 +3232,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 	public int countByG_FEK(long groupId, String fragmentEntryKey) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_FEK;
 
+		fragmentEntryKey = Objects.toString(fragmentEntryKey, "");
+
 		Object[] finderArgs = new Object[] { groupId, fragmentEntryKey };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -3257,10 +3247,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 
 			boolean bindFragmentEntryKey = false;
 
-			if (fragmentEntryKey == null) {
-				query.append(_FINDER_COLUMN_G_FEK_FRAGMENTENTRYKEY_1);
-			}
-			else if (fragmentEntryKey.equals("")) {
+			if (fragmentEntryKey.equals("")) {
 				query.append(_FINDER_COLUMN_G_FEK_FRAGMENTENTRYKEY_3);
 			}
 			else {
@@ -3304,7 +3291,6 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 	}
 
 	private static final String _FINDER_COLUMN_G_FEK_GROUPID_2 = "fragmentEntry.groupId = ? AND ";
-	private static final String _FINDER_COLUMN_G_FEK_FRAGMENTENTRYKEY_1 = "fragmentEntry.fragmentEntryKey IS NULL";
 	private static final String _FINDER_COLUMN_G_FEK_FRAGMENTENTRYKEY_2 = "fragmentEntry.fragmentEntryKey = ?";
 	private static final String _FINDER_COLUMN_G_FEK_FRAGMENTENTRYKEY_3 = "(fragmentEntry.fragmentEntryKey IS NULL OR fragmentEntry.fragmentEntryKey = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_FCI_LIKEN =
@@ -3412,6 +3398,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		name = Objects.toString(name, "");
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_FCI_LIKEN;
 		finderArgs = new Object[] {
 				groupId, fragmentCollectionId, name,
@@ -3459,10 +3447,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_FCI_LIKEN_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_FCI_LIKEN_NAME_3);
 			}
 			else {
@@ -3709,6 +3694,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 		FragmentEntry fragmentEntry, long groupId, long fragmentCollectionId,
 		String name, OrderByComparator<FragmentEntry> orderByComparator,
 		boolean previous) {
+		name = Objects.toString(name, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -3728,10 +3715,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_G_FCI_LIKEN_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_G_FCI_LIKEN_NAME_3);
 		}
 		else {
@@ -3864,6 +3848,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 		String name) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_FCI_LIKEN;
 
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { groupId, fragmentCollectionId, name };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -3879,10 +3865,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_FCI_LIKEN_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_FCI_LIKEN_NAME_3);
 			}
 			else {
@@ -3930,7 +3913,6 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 	private static final String _FINDER_COLUMN_G_FCI_LIKEN_GROUPID_2 = "fragmentEntry.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_FCI_LIKEN_FRAGMENTCOLLECTIONID_2 =
 		"fragmentEntry.fragmentCollectionId = ? AND ";
-	private static final String _FINDER_COLUMN_G_FCI_LIKEN_NAME_1 = "fragmentEntry.name IS NULL";
 	private static final String _FINDER_COLUMN_G_FCI_LIKEN_NAME_2 = "lower(fragmentEntry.name) LIKE ?";
 	private static final String _FINDER_COLUMN_G_FCI_LIKEN_NAME_3 = "(fragmentEntry.name IS NULL OR fragmentEntry.name LIKE '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_FCI_S = new FinderPath(FragmentEntryModelImpl.ENTITY_CACHE_ENABLED,
@@ -4641,6 +4623,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		name = Objects.toString(name, "");
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_FCI_LIKEN_S;
 		finderArgs = new Object[] {
 				groupId, fragmentCollectionId, name, status,
@@ -4689,10 +4673,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_FCI_LIKEN_S_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_FCI_LIKEN_S_NAME_3);
 			}
 			else {
@@ -4958,6 +4939,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 		FragmentEntry fragmentEntry, long groupId, long fragmentCollectionId,
 		String name, int status,
 		OrderByComparator<FragmentEntry> orderByComparator, boolean previous) {
+		name = Objects.toString(name, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -4977,10 +4960,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_G_FCI_LIKEN_S_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_G_FCI_LIKEN_S_NAME_3);
 		}
 		else {
@@ -5119,6 +5099,8 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 		String name, int status) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_FCI_LIKEN_S;
 
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] {
 				groupId, fragmentCollectionId, name, status
 			};
@@ -5136,10 +5118,7 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_FCI_LIKEN_S_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_FCI_LIKEN_S_NAME_3);
 			}
 			else {
@@ -5191,7 +5170,6 @@ public class FragmentEntryPersistenceImpl extends BasePersistenceImpl<FragmentEn
 	private static final String _FINDER_COLUMN_G_FCI_LIKEN_S_GROUPID_2 = "fragmentEntry.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_FCI_LIKEN_S_FRAGMENTCOLLECTIONID_2 =
 		"fragmentEntry.fragmentCollectionId = ? AND ";
-	private static final String _FINDER_COLUMN_G_FCI_LIKEN_S_NAME_1 = "fragmentEntry.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_FCI_LIKEN_S_NAME_2 = "lower(fragmentEntry.name) LIKE ? AND ";
 	private static final String _FINDER_COLUMN_G_FCI_LIKEN_S_NAME_3 = "(fragmentEntry.name IS NULL OR fragmentEntry.name LIKE '') AND ";
 	private static final String _FINDER_COLUMN_G_FCI_LIKEN_S_STATUS_2 = "fragmentEntry.status = ?";

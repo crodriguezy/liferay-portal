@@ -39,6 +39,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SocialActivityCounter service. Represents a row in the &quot;SocialActivityCounter&quot; database table, with each column mapped to a property of this class.
@@ -384,7 +385,7 @@ public class SocialActivityCounterModelImpl extends BaseModelImpl<SocialActivity
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -792,7 +793,7 @@ public class SocialActivityCounterModelImpl extends BaseModelImpl<SocialActivity
 	private long _classPK;
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
 	private int _ownerType;
 	private int _originalOwnerType;

@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SocialActivity service. Represents a row in the &quot;SocialActivity&quot; database table, with each column mapped to a property of this class.
@@ -620,7 +621,7 @@ public class SocialActivityModelImpl extends BaseModelImpl<SocialActivity>
 
 	@Override
 	public void setExtraData(String extraData) {
-		_extraData = extraData;
+		_extraData = Objects.toString(extraData, "");
 	}
 
 	@JSON
@@ -1002,7 +1003,7 @@ public class SocialActivityModelImpl extends BaseModelImpl<SocialActivity>
 	private int _type;
 	private int _originalType;
 	private boolean _setOriginalType;
-	private String _extraData;
+	private String _extraData = "";
 	private long _receiverUserId;
 	private long _originalReceiverUserId;
 	private boolean _setOriginalReceiverUserId;

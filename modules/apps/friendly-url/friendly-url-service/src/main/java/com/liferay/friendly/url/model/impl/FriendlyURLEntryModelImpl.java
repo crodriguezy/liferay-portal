@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -332,10 +333,10 @@ public class FriendlyURLEntryModelImpl extends BaseModelImpl<FriendlyURLEntry>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -354,7 +355,7 @@ public class FriendlyURLEntryModelImpl extends BaseModelImpl<FriendlyURLEntry>
 
 	@Override
 	public void setDefaultLanguageId(String defaultLanguageId) {
-		_defaultLanguageId = defaultLanguageId;
+		_defaultLanguageId = Objects.toString(defaultLanguageId, "");
 	}
 
 	@Override
@@ -774,9 +775,9 @@ public class FriendlyURLEntryModelImpl extends BaseModelImpl<FriendlyURLEntry>
 			FriendlyURLEntry.class, ModelWrapper.class
 		};
 	private long _mvccVersion;
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
-	private String _defaultLanguageId;
+	private String _defaultLanguageId = "";
 	private long _friendlyURLEntryId;
 	private long _groupId;
 	private long _originalGroupId;

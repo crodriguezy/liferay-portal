@@ -193,6 +193,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -236,10 +238,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -450,6 +449,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	protected AssetTag getByUuid_PrevAndNext(Session session,
 		AssetTag assetTag, String uuid,
 		OrderByComparator<AssetTag> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -465,10 +466,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_UUID_3);
 		}
 		else {
@@ -590,6 +588,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -601,10 +601,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -645,7 +642,6 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "assetTag.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "assetTag.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(assetTag.uuid IS NULL OR assetTag.uuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_UUID_G = new FinderPath(AssetTagModelImpl.ENTITY_CACHE_ENABLED,
@@ -718,6 +714,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	@Override
 	public AssetTag fetchByUUID_G(String uuid, long groupId,
 		boolean retrieveFromCache) {
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, groupId };
 
 		Object result = null;
@@ -743,10 +741,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
 			}
 			else {
@@ -832,6 +827,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	public int countByUUID_G(String uuid, long groupId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_G;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, groupId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -843,10 +840,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_G_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_G_UUID_3);
 			}
 			else {
@@ -891,7 +885,6 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_G_UUID_1 = "assetTag.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_2 = "assetTag.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_G_UUID_3 = "(assetTag.uuid IS NULL OR assetTag.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "assetTag.groupId = ?";
@@ -992,6 +985,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -1040,10 +1035,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1272,6 +1264,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	protected AssetTag getByUuid_C_PrevAndNext(Session session,
 		AssetTag assetTag, String uuid, long companyId,
 		OrderByComparator<AssetTag> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1287,10 +1281,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 		}
 		else {
@@ -1418,6 +1409,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1429,10 +1422,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1477,7 +1467,6 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "assetTag.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "assetTag.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(assetTag.uuid IS NULL OR assetTag.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "assetTag.companyId = ?";
@@ -2888,6 +2877,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		name = Objects.toString(name, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -2931,10 +2922,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_NAME_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_NAME_NAME_3);
 			}
 			else {
@@ -3145,6 +3133,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	protected AssetTag getByName_PrevAndNext(Session session,
 		AssetTag assetTag, String name,
 		OrderByComparator<AssetTag> orderByComparator, boolean previous) {
+		name = Objects.toString(name, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -3160,10 +3150,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_NAME_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_NAME_NAME_3);
 		}
 		else {
@@ -3336,7 +3323,9 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		else if (names.length > 1) {
 			names = ArrayUtil.distinct(names, NULL_SAFE_STRING_COMPARATOR);
 
-			Arrays.sort(names, NULL_SAFE_STRING_COMPARATOR);
+			ArrayUtil.apply(names, StringUtil.NULL_TO_EMPTY);
+
+			Arrays.sort(names);
 		}
 
 		if (names.length == 1) {
@@ -3387,10 +3376,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 				for (int i = 0; i < names.length; i++) {
 					String name = names[i];
 
-					if (name == null) {
-						query.append(_FINDER_COLUMN_NAME_NAME_1);
-					}
-					else if (name.equals("")) {
+					if (name.equals("")) {
 						query.append(_FINDER_COLUMN_NAME_NAME_3);
 					}
 					else {
@@ -3489,6 +3475,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	public int countByName(String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_NAME;
 
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { name };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -3500,10 +3488,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_NAME_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_NAME_NAME_3);
 			}
 			else {
@@ -3558,7 +3543,9 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		else if (names.length > 1) {
 			names = ArrayUtil.distinct(names, NULL_SAFE_STRING_COMPARATOR);
 
-			Arrays.sort(names, NULL_SAFE_STRING_COMPARATOR);
+			ArrayUtil.apply(names, StringUtil.NULL_TO_EMPTY);
+
+			Arrays.sort(names);
 		}
 
 		Object[] finderArgs = new Object[] { StringUtil.merge(names) };
@@ -3577,10 +3564,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 				for (int i = 0; i < names.length; i++) {
 					String name = names[i];
 
-					if (name == null) {
-						query.append(_FINDER_COLUMN_NAME_NAME_1);
-					}
-					else if (name.equals("")) {
+					if (name.equals("")) {
 						query.append(_FINDER_COLUMN_NAME_NAME_3);
 					}
 					else {
@@ -3634,7 +3618,6 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_NAME_NAME_1 = "assetTag.name IS NULL";
 	private static final String _FINDER_COLUMN_NAME_NAME_2 = "assetTag.name = ?";
 	private static final String _FINDER_COLUMN_NAME_NAME_3 = "(assetTag.name IS NULL OR assetTag.name = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_G_N = new FinderPath(AssetTagModelImpl.ENTITY_CACHE_ENABLED,
@@ -3707,6 +3690,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	@Override
 	public AssetTag fetchByG_N(long groupId, String name,
 		boolean retrieveFromCache) {
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { groupId, name };
 
 		Object result = null;
@@ -3734,10 +3719,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_N_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_NAME_3);
 			}
 			else {
@@ -3821,6 +3803,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	public int countByG_N(long groupId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N;
 
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { groupId, name };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -3834,10 +3818,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_N_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_NAME_3);
 			}
 			else {
@@ -3881,7 +3862,6 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	}
 
 	private static final String _FINDER_COLUMN_G_N_GROUPID_2 = "assetTag.groupId = ? AND ";
-	private static final String _FINDER_COLUMN_G_N_NAME_1 = "assetTag.name IS NULL";
 	private static final String _FINDER_COLUMN_G_N_NAME_2 = "assetTag.name = ?";
 	private static final String _FINDER_COLUMN_G_N_NAME_3 = "(assetTag.name IS NULL OR assetTag.name = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_LIKEN = new FinderPath(AssetTagModelImpl.ENTITY_CACHE_ENABLED,
@@ -3973,6 +3953,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		name = Objects.toString(name, "");
+
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_LIKEN;
 		finderArgs = new Object[] { groupId, name, start, end, orderByComparator };
 
@@ -4012,10 +3994,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_LIKEN_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_LIKEN_NAME_3);
 			}
 			else {
@@ -4241,6 +4220,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	protected AssetTag getByG_LikeN_PrevAndNext(Session session,
 		AssetTag assetTag, long groupId, String name,
 		OrderByComparator<AssetTag> orderByComparator, boolean previous) {
+		name = Objects.toString(name, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -4258,10 +4239,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_G_LIKEN_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_G_LIKEN_NAME_3);
 		}
 		else {
@@ -4411,6 +4389,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	@Override
 	public List<AssetTag> filterFindByG_LikeN(long groupId, String name,
 		int start, int end, OrderByComparator<AssetTag> orderByComparator) {
+		name = Objects.toString(name, "");
+
 		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
 			return findByG_LikeN(groupId, name, start, end, orderByComparator);
 		}
@@ -4436,10 +4416,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_G_LIKEN_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_G_LIKEN_NAME_3);
 		}
 		else {
@@ -4556,6 +4533,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	protected AssetTag filterGetByG_LikeN_PrevAndNext(Session session,
 		AssetTag assetTag, long groupId, String name,
 		OrderByComparator<AssetTag> orderByComparator, boolean previous) {
+		name = Objects.toString(name, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -4578,10 +4557,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_G_LIKEN_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_G_LIKEN_NAME_3);
 		}
 		else {
@@ -4774,6 +4750,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 			Arrays.sort(groupIds);
 		}
 
+		name = Objects.toString(name, "");
+
 		StringBundler query = new StringBundler();
 
 		if (getDB().isSupportsInlineDistinct()) {
@@ -4799,10 +4777,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_G_LIKEN_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_G_LIKEN_NAME_3);
 		}
 		else {
@@ -4955,6 +4930,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 			Arrays.sort(groupIds);
 		}
 
+		name = Objects.toString(name, "");
+
 		if (groupIds.length == 1) {
 			return findByG_LikeN(groupIds[0], name, start, end,
 				orderByComparator);
@@ -5016,10 +4993,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_LIKEN_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_LIKEN_NAME_3);
 			}
 			else {
@@ -5112,6 +5086,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	public int countByG_LikeN(long groupId, String name) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_LIKEN;
 
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { groupId, name };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -5125,10 +5101,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_LIKEN_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_LIKEN_NAME_3);
 			}
 			else {
@@ -5189,6 +5162,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 			Arrays.sort(groupIds);
 		}
 
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { StringUtil.merge(groupIds), name };
 
 		Long count = (Long)finderCache.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_LIKEN,
@@ -5215,10 +5190,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_LIKEN_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_LIKEN_NAME_3);
 			}
 			else {
@@ -5273,6 +5245,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	 */
 	@Override
 	public int filterCountByG_LikeN(long groupId, String name) {
+		name = Objects.toString(name, "");
+
 		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
 			return countByG_LikeN(groupId, name);
 		}
@@ -5285,10 +5259,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_G_LIKEN_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_G_LIKEN_NAME_3);
 		}
 		else {
@@ -5353,6 +5324,8 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 			Arrays.sort(groupIds);
 		}
 
+		name = Objects.toString(name, "");
+
 		StringBundler query = new StringBundler();
 
 		query.append(_FILTER_SQL_COUNT_ASSETTAG_WHERE);
@@ -5373,10 +5346,7 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_G_LIKEN_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_G_LIKEN_NAME_3);
 		}
 		else {
@@ -5422,7 +5392,6 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 
 	private static final String _FINDER_COLUMN_G_LIKEN_GROUPID_2 = "assetTag.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_LIKEN_GROUPID_7 = "assetTag.groupId IN (";
-	private static final String _FINDER_COLUMN_G_LIKEN_NAME_1 = "assetTag.name IS NULL";
 	private static final String _FINDER_COLUMN_G_LIKEN_NAME_2 = "assetTag.name LIKE ?";
 	private static final String _FINDER_COLUMN_G_LIKEN_NAME_3 = "(assetTag.name IS NULL OR assetTag.name LIKE '')";
 

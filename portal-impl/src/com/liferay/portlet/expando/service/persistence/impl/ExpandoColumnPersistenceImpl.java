@@ -1076,7 +1076,9 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 		else if (names.length > 1) {
 			names = ArrayUtil.distinct(names, NULL_SAFE_STRING_COMPARATOR);
 
-			Arrays.sort(names, NULL_SAFE_STRING_COMPARATOR);
+			ArrayUtil.apply(names, StringUtil.NULL_TO_EMPTY);
+
+			Arrays.sort(names);
 		}
 
 		if (names.length == 1) {
@@ -1141,10 +1143,7 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 				for (int i = 0; i < names.length; i++) {
 					String name = names[i];
 
-					if (name == null) {
-						query.append(_FINDER_COLUMN_T_N_NAME_1);
-					}
-					else if (name.equals("")) {
+					if (name.equals("")) {
 						query.append(_FINDER_COLUMN_T_N_NAME_3);
 					}
 					else {
@@ -1281,6 +1280,8 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 	@Override
 	public ExpandoColumn fetchByT_N(long tableId, String name,
 		boolean retrieveFromCache) {
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { tableId, name };
 
 		Object result = null;
@@ -1308,10 +1309,7 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_T_N_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_T_N_NAME_3);
 			}
 			else {
@@ -1395,6 +1393,8 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 	public int countByT_N(long tableId, String name) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_T_N;
 
+		name = Objects.toString(name, "");
+
 		Object[] finderArgs = new Object[] { tableId, name };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1408,10 +1408,7 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_T_N_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_T_N_NAME_3);
 			}
 			else {
@@ -1469,7 +1466,9 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 		else if (names.length > 1) {
 			names = ArrayUtil.distinct(names, NULL_SAFE_STRING_COMPARATOR);
 
-			Arrays.sort(names, NULL_SAFE_STRING_COMPARATOR);
+			ArrayUtil.apply(names, StringUtil.NULL_TO_EMPTY);
+
+			Arrays.sort(names);
 		}
 
 		Object[] finderArgs = new Object[] { tableId, StringUtil.merge(names) };
@@ -1490,10 +1489,7 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 				for (int i = 0; i < names.length; i++) {
 					String name = names[i];
 
-					if (name == null) {
-						query.append(_FINDER_COLUMN_T_N_NAME_1);
-					}
-					else if (name.equals("")) {
+					if (name.equals("")) {
 						query.append(_FINDER_COLUMN_T_N_NAME_3);
 					}
 					else {
@@ -1558,6 +1554,8 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 	 */
 	@Override
 	public int filterCountByT_N(long tableId, String name) {
+		name = Objects.toString(name, "");
+
 		if (!InlineSQLHelperUtil.isEnabled()) {
 			return countByT_N(tableId, name);
 		}
@@ -1570,10 +1568,7 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_T_N_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_T_N_NAME_3);
 		}
 		else {
@@ -1635,7 +1630,9 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 		else if (names.length > 1) {
 			names = ArrayUtil.distinct(names, NULL_SAFE_STRING_COMPARATOR);
 
-			Arrays.sort(names, NULL_SAFE_STRING_COMPARATOR);
+			ArrayUtil.apply(names, StringUtil.NULL_TO_EMPTY);
+
+			Arrays.sort(names);
 		}
 
 		StringBundler query = new StringBundler();
@@ -1650,10 +1647,7 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 			for (int i = 0; i < names.length; i++) {
 				String name = names[i];
 
-				if (name == null) {
-					query.append(_FINDER_COLUMN_T_N_NAME_1);
-				}
-				else if (name.equals("")) {
+				if (name.equals("")) {
 					query.append(_FINDER_COLUMN_T_N_NAME_3);
 				}
 				else {
@@ -1708,7 +1702,6 @@ public class ExpandoColumnPersistenceImpl extends BasePersistenceImpl<ExpandoCol
 	}
 
 	private static final String _FINDER_COLUMN_T_N_TABLEID_2 = "expandoColumn.tableId = ? AND ";
-	private static final String _FINDER_COLUMN_T_N_NAME_1 = "expandoColumn.name IS NULL";
 	private static final String _FINDER_COLUMN_T_N_NAME_2 = "expandoColumn.name = ?";
 	private static final String _FINDER_COLUMN_T_N_NAME_3 = "(expandoColumn.name IS NULL OR expandoColumn.name = '')";
 

@@ -53,6 +53,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the MBCategory service. Represents a row in the &quot;MBCategory&quot; database table, with each column mapped to a property of this class.
@@ -409,10 +410,10 @@ public class MBCategoryModelImpl extends BaseModelImpl<MBCategory>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -528,7 +529,7 @@ public class MBCategoryModelImpl extends BaseModelImpl<MBCategory>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -597,7 +598,7 @@ public class MBCategoryModelImpl extends BaseModelImpl<MBCategory>
 	public void setName(String name) {
 		_columnBitmask = -1L;
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
@@ -613,7 +614,7 @@ public class MBCategoryModelImpl extends BaseModelImpl<MBCategory>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
@@ -629,7 +630,7 @@ public class MBCategoryModelImpl extends BaseModelImpl<MBCategory>
 
 	@Override
 	public void setDisplayStyle(String displayStyle) {
-		_displayStyle = displayStyle;
+		_displayStyle = Objects.toString(displayStyle, "");
 	}
 
 	@JSON
@@ -739,7 +740,7 @@ public class MBCategoryModelImpl extends BaseModelImpl<MBCategory>
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON
@@ -1412,7 +1413,7 @@ public class MBCategoryModelImpl extends BaseModelImpl<MBCategory>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			MBCategory.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _categoryId;
 	private long _originalCategoryId;
@@ -1424,16 +1425,16 @@ public class MBCategoryModelImpl extends BaseModelImpl<MBCategory>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _parentCategoryId;
 	private long _originalParentCategoryId;
 	private boolean _setOriginalParentCategoryId;
-	private String _name;
-	private String _description;
-	private String _displayStyle;
+	private String _name = "";
+	private String _description = "";
+	private String _displayStyle = "";
 	private int _threadCount;
 	private int _messageCount;
 	private Date _lastPostDate;
@@ -1442,7 +1443,7 @@ public class MBCategoryModelImpl extends BaseModelImpl<MBCategory>
 	private int _originalStatus;
 	private boolean _setOriginalStatus;
 	private long _statusByUserId;
-	private String _statusByUserName;
+	private String _statusByUserName = "";
 	private Date _statusDate;
 	private long _columnBitmask;
 	private MBCategory _escapedModel;

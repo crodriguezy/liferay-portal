@@ -37,6 +37,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the OAuth2ScopeGrant service. Represents a row in the &quot;OAuth2ScopeGrant&quot; database table, with each column mapped to a property of this class.
@@ -279,7 +280,7 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 			_originalApplicationName = _applicationName;
 		}
 
-		_applicationName = applicationName;
+		_applicationName = Objects.toString(applicationName, "");
 	}
 
 	public String getOriginalApplicationName() {
@@ -304,7 +305,7 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 			_originalBundleSymbolicName = _bundleSymbolicName;
 		}
 
-		_bundleSymbolicName = bundleSymbolicName;
+		_bundleSymbolicName = Objects.toString(bundleSymbolicName, "");
 	}
 
 	public String getOriginalBundleSymbolicName() {
@@ -329,7 +330,7 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 			_originalScope = _scope;
 		}
 
-		_scope = scope;
+		_scope = Objects.toString(scope, "");
 	}
 
 	public String getOriginalScope() {
@@ -559,11 +560,11 @@ public class OAuth2ScopeGrantModelImpl extends BaseModelImpl<OAuth2ScopeGrant>
 	private long _oAuth2ApplicationScopeAliasesId;
 	private long _originalOAuth2ApplicationScopeAliasesId;
 	private boolean _setOriginalOAuth2ApplicationScopeAliasesId;
-	private String _applicationName;
+	private String _applicationName = "";
 	private String _originalApplicationName;
-	private String _bundleSymbolicName;
+	private String _bundleSymbolicName = "";
 	private String _originalBundleSymbolicName;
-	private String _scope;
+	private String _scope = "";
 	private String _originalScope;
 	private long _columnBitmask;
 	private OAuth2ScopeGrant _escapedModel;

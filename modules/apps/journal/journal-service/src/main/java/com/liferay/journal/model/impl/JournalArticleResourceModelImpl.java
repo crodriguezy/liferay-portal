@@ -37,6 +37,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the JournalArticleResource service. Represents a row in the &quot;JournalArticleResource&quot; database table, with each column mapped to a property of this class.
@@ -196,10 +197,10 @@ public class JournalArticleResourceModelImpl extends BaseModelImpl<JournalArticl
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -278,7 +279,7 @@ public class JournalArticleResourceModelImpl extends BaseModelImpl<JournalArticl
 			_originalArticleId = _articleId;
 		}
 
-		_articleId = articleId;
+		_articleId = Objects.toString(articleId, "");
 	}
 
 	public String getOriginalArticleId() {
@@ -484,7 +485,7 @@ public class JournalArticleResourceModelImpl extends BaseModelImpl<JournalArticl
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			JournalArticleResource.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _resourcePrimKey;
 	private long _groupId;
@@ -493,7 +494,7 @@ public class JournalArticleResourceModelImpl extends BaseModelImpl<JournalArticl
 	private long _companyId;
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
-	private String _articleId;
+	private String _articleId = "";
 	private String _originalArticleId;
 	private long _columnBitmask;
 	private JournalArticleResource _escapedModel;

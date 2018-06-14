@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the WeDeployAuthToken service. Represents a row in the &quot;WeDeployAuth_WeDeployAuthToken&quot; database table, with each column mapped to a property of this class.
@@ -279,7 +280,7 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -326,7 +327,7 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 			_originalClientId = _clientId;
 		}
 
-		_clientId = clientId;
+		_clientId = Objects.toString(clientId, "");
 	}
 
 	public String getOriginalClientId() {
@@ -351,7 +352,7 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 			_originalToken = _token;
 		}
 
-		_token = token;
+		_token = Objects.toString(token, "");
 	}
 
 	public String getOriginalToken() {
@@ -637,13 +638,13 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 	private long _weDeployAuthTokenId;
 	private long _companyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _clientId;
+	private String _clientId = "";
 	private String _originalClientId;
-	private String _token;
+	private String _token = "";
 	private String _originalToken;
 	private int _type;
 	private int _originalType;

@@ -179,6 +179,8 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -222,10 +224,7 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -431,6 +430,8 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 
 	protected Lock getByUuid_PrevAndNext(Session session, Lock lock,
 		String uuid, OrderByComparator<Lock> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -446,10 +447,7 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_UUID_3);
 		}
 		else {
@@ -571,6 +569,8 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -582,10 +582,7 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -626,7 +623,6 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "lock.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "lock.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(lock.uuid IS NULL OR lock.uuid = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(LockModelImpl.ENTITY_CACHE_ENABLED,
@@ -725,6 +721,8 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -773,10 +771,7 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1000,6 +995,8 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 	protected Lock getByUuid_C_PrevAndNext(Session session, Lock lock,
 		String uuid, long companyId, OrderByComparator<Lock> orderByComparator,
 		boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1015,10 +1012,7 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 		}
 		else {
@@ -1146,6 +1140,8 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1157,10 +1153,7 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1205,7 +1198,6 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "lock.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "lock.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(lock.uuid IS NULL OR lock.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "lock.companyId = ?";
@@ -1812,6 +1804,9 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 	@Override
 	public Lock fetchByC_K(String className, String key,
 		boolean retrieveFromCache) {
+		className = Objects.toString(className, "");
+		key = Objects.toString(key, "");
+
 		Object[] finderArgs = new Object[] { className, key };
 
 		Object result = null;
@@ -1837,10 +1832,7 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 
 			boolean bindClassName = false;
 
-			if (className == null) {
-				query.append(_FINDER_COLUMN_C_K_CLASSNAME_1);
-			}
-			else if (className.equals("")) {
+			if (className.equals("")) {
 				query.append(_FINDER_COLUMN_C_K_CLASSNAME_3);
 			}
 			else {
@@ -1851,10 +1843,7 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 
 			boolean bindKey = false;
 
-			if (key == null) {
-				query.append(_FINDER_COLUMN_C_K_KEY_1);
-			}
-			else if (key.equals("")) {
+			if (key.equals("")) {
 				query.append(_FINDER_COLUMN_C_K_KEY_3);
 			}
 			else {
@@ -1940,6 +1929,9 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 	public int countByC_K(String className, String key) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_K;
 
+		className = Objects.toString(className, "");
+		key = Objects.toString(key, "");
+
 		Object[] finderArgs = new Object[] { className, key };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1951,10 +1943,7 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 
 			boolean bindClassName = false;
 
-			if (className == null) {
-				query.append(_FINDER_COLUMN_C_K_CLASSNAME_1);
-			}
-			else if (className.equals("")) {
+			if (className.equals("")) {
 				query.append(_FINDER_COLUMN_C_K_CLASSNAME_3);
 			}
 			else {
@@ -1965,10 +1954,7 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 
 			boolean bindKey = false;
 
-			if (key == null) {
-				query.append(_FINDER_COLUMN_C_K_KEY_1);
-			}
-			else if (key.equals("")) {
+			if (key.equals("")) {
 				query.append(_FINDER_COLUMN_C_K_KEY_3);
 			}
 			else {
@@ -2013,10 +1999,8 @@ public class LockPersistenceImpl extends BasePersistenceImpl<Lock>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_C_K_CLASSNAME_1 = "lock.className IS NULL AND ";
 	private static final String _FINDER_COLUMN_C_K_CLASSNAME_2 = "lock.className = ? AND ";
 	private static final String _FINDER_COLUMN_C_K_CLASSNAME_3 = "(lock.className IS NULL OR lock.className = '') AND ";
-	private static final String _FINDER_COLUMN_C_K_KEY_1 = "lock.key IS NULL";
 	private static final String _FINDER_COLUMN_C_K_KEY_2 = "lock.key = ?";
 	private static final String _FINDER_COLUMN_C_K_KEY_3 = "(lock.key IS NULL OR lock.key = '')";
 

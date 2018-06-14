@@ -38,6 +38,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the AMImageEntry service. Represents a row in the &quot;AMImageEntry&quot; database table, with each column mapped to a property of this class.
@@ -252,10 +253,10 @@ public class AMImageEntryModelImpl extends BaseModelImpl<AMImageEntry>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -344,7 +345,7 @@ public class AMImageEntryModelImpl extends BaseModelImpl<AMImageEntry>
 			_originalConfigurationUuid = _configurationUuid;
 		}
 
-		_configurationUuid = configurationUuid;
+		_configurationUuid = Objects.toString(configurationUuid, "");
 	}
 
 	public String getOriginalConfigurationUuid() {
@@ -385,7 +386,7 @@ public class AMImageEntryModelImpl extends BaseModelImpl<AMImageEntry>
 
 	@Override
 	public void setMimeType(String mimeType) {
-		_mimeType = mimeType;
+		_mimeType = Objects.toString(mimeType, "");
 	}
 
 	@Override
@@ -688,7 +689,7 @@ public class AMImageEntryModelImpl extends BaseModelImpl<AMImageEntry>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			AMImageEntry.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _amImageEntryId;
 	private long _groupId;
@@ -698,12 +699,12 @@ public class AMImageEntryModelImpl extends BaseModelImpl<AMImageEntry>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private Date _createDate;
-	private String _configurationUuid;
+	private String _configurationUuid = "";
 	private String _originalConfigurationUuid;
 	private long _fileVersionId;
 	private long _originalFileVersionId;
 	private boolean _setOriginalFileVersionId;
-	private String _mimeType;
+	private String _mimeType = "";
 	private int _height;
 	private int _width;
 	private long _size;

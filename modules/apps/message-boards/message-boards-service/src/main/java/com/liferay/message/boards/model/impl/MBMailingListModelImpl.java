@@ -44,6 +44,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the MBMailingList service. Represents a row in the &quot;MBMailingList&quot; database table, with each column mapped to a property of this class.
@@ -393,10 +394,10 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -495,7 +496,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -558,7 +559,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public void setEmailAddress(String emailAddress) {
-		_emailAddress = emailAddress;
+		_emailAddress = Objects.toString(emailAddress, "");
 	}
 
 	@Override
@@ -573,7 +574,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public void setInProtocol(String inProtocol) {
-		_inProtocol = inProtocol;
+		_inProtocol = Objects.toString(inProtocol, "");
 	}
 
 	@Override
@@ -588,7 +589,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public void setInServerName(String inServerName) {
-		_inServerName = inServerName;
+		_inServerName = Objects.toString(inServerName, "");
 	}
 
 	@Override
@@ -628,7 +629,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public void setInUserName(String inUserName) {
-		_inUserName = inUserName;
+		_inUserName = Objects.toString(inUserName, "");
 	}
 
 	@Override
@@ -643,7 +644,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public void setInPassword(String inPassword) {
-		_inPassword = inPassword;
+		_inPassword = Objects.toString(inPassword, "");
 	}
 
 	@Override
@@ -668,7 +669,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public void setOutEmailAddress(String outEmailAddress) {
-		_outEmailAddress = outEmailAddress;
+		_outEmailAddress = Objects.toString(outEmailAddress, "");
 	}
 
 	@Override
@@ -698,7 +699,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public void setOutServerName(String outServerName) {
-		_outServerName = outServerName;
+		_outServerName = Objects.toString(outServerName, "");
 	}
 
 	@Override
@@ -738,7 +739,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public void setOutUserName(String outUserName) {
-		_outUserName = outUserName;
+		_outUserName = Objects.toString(outUserName, "");
 	}
 
 	@Override
@@ -753,7 +754,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 
 	@Override
 	public void setOutPassword(String outPassword) {
-		_outPassword = outPassword;
+		_outPassword = Objects.toString(outPassword, "");
 	}
 
 	@Override
@@ -1268,7 +1269,7 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			MBMailingList.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _mailingListId;
 	private long _groupId;
@@ -1278,28 +1279,28 @@ public class MBMailingListModelImpl extends BaseModelImpl<MBMailingList>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _categoryId;
 	private long _originalCategoryId;
 	private boolean _setOriginalCategoryId;
-	private String _emailAddress;
-	private String _inProtocol;
-	private String _inServerName;
+	private String _emailAddress = "";
+	private String _inProtocol = "";
+	private String _inServerName = "";
 	private int _inServerPort;
 	private boolean _inUseSSL;
-	private String _inUserName;
-	private String _inPassword;
+	private String _inUserName = "";
+	private String _inPassword = "";
 	private int _inReadInterval;
-	private String _outEmailAddress;
+	private String _outEmailAddress = "";
 	private boolean _outCustom;
-	private String _outServerName;
+	private String _outServerName = "";
 	private int _outServerPort;
 	private boolean _outUseSSL;
-	private String _outUserName;
-	private String _outPassword;
+	private String _outUserName = "";
+	private String _outPassword = "";
 	private boolean _allowAnonymous;
 	private boolean _active;
 	private boolean _originalActive;

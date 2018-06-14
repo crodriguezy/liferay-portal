@@ -41,6 +41,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the ChangesetCollection service. Represents a row in the &quot;ChangesetCollection&quot; database table, with each column mapped to a property of this class.
@@ -328,7 +329,7 @@ public class ChangesetCollectionModelImpl extends BaseModelImpl<ChangesetCollect
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -375,7 +376,7 @@ public class ChangesetCollectionModelImpl extends BaseModelImpl<ChangesetCollect
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -394,7 +395,7 @@ public class ChangesetCollectionModelImpl extends BaseModelImpl<ChangesetCollect
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	public long getColumnBitmask() {
@@ -666,13 +667,13 @@ public class ChangesetCollectionModelImpl extends BaseModelImpl<ChangesetCollect
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
-	private String _description;
+	private String _description = "";
 	private long _columnBitmask;
 	private ChangesetCollection _escapedModel;
 }

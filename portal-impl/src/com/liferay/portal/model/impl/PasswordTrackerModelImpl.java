@@ -41,6 +41,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the PasswordTracker service. Represents a row in the &quot;PasswordTracker&quot; database table, with each column mapped to a property of this class.
@@ -285,7 +286,7 @@ public class PasswordTrackerModelImpl extends BaseModelImpl<PasswordTracker>
 
 	@Override
 	public void setPassword(String password) {
-		_password = password;
+		_password = Objects.toString(password, "");
 	}
 
 	public long getColumnBitmask() {
@@ -513,7 +514,7 @@ public class PasswordTrackerModelImpl extends BaseModelImpl<PasswordTracker>
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
 	private Date _createDate;
-	private String _password;
+	private String _password = "";
 	private long _columnBitmask;
 	private PasswordTracker _escapedModel;
 }

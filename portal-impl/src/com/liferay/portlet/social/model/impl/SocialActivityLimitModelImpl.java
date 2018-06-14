@@ -42,6 +42,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SocialActivityLimit service. Represents a row in the &quot;SocialActivityLimit&quot; database table, with each column mapped to a property of this class.
@@ -411,7 +412,7 @@ public class SocialActivityLimitModelImpl extends BaseModelImpl<SocialActivityLi
 			_originalActivityCounterName = _activityCounterName;
 		}
 
-		_activityCounterName = activityCounterName;
+		_activityCounterName = Objects.toString(activityCounterName, "");
 	}
 
 	public String getOriginalActivityCounterName() {
@@ -430,7 +431,7 @@ public class SocialActivityLimitModelImpl extends BaseModelImpl<SocialActivityLi
 
 	@Override
 	public void setValue(String value) {
-		_value = value;
+		_value = Objects.toString(value, "");
 	}
 
 	public long getColumnBitmask() {
@@ -696,9 +697,9 @@ public class SocialActivityLimitModelImpl extends BaseModelImpl<SocialActivityLi
 	private int _activityType;
 	private int _originalActivityType;
 	private boolean _setOriginalActivityType;
-	private String _activityCounterName;
+	private String _activityCounterName = "";
 	private String _originalActivityCounterName;
-	private String _value;
+	private String _value = "";
 	private long _columnBitmask;
 	private SocialActivityLimit _escapedModel;
 }

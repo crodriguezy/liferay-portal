@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the JournalFeed service. Represents a row in the &quot;JournalFeed&quot; database table, with each column mapped to a property of this class.
@@ -433,10 +434,10 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -540,7 +541,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -590,7 +591,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 			_originalFeedId = _feedId;
 		}
 
-		_feedId = feedId;
+		_feedId = Objects.toString(feedId, "");
 	}
 
 	public String getOriginalFeedId() {
@@ -610,7 +611,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
@@ -626,7 +627,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
@@ -642,7 +643,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 
 	@Override
 	public void setDDMStructureKey(String DDMStructureKey) {
-		_DDMStructureKey = DDMStructureKey;
+		_DDMStructureKey = Objects.toString(DDMStructureKey, "");
 	}
 
 	@JSON
@@ -658,7 +659,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 
 	@Override
 	public void setDDMTemplateKey(String DDMTemplateKey) {
-		_DDMTemplateKey = DDMTemplateKey;
+		_DDMTemplateKey = Objects.toString(DDMTemplateKey, "");
 	}
 
 	@JSON
@@ -674,7 +675,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 
 	@Override
 	public void setDDMRendererTemplateKey(String DDMRendererTemplateKey) {
-		_DDMRendererTemplateKey = DDMRendererTemplateKey;
+		_DDMRendererTemplateKey = Objects.toString(DDMRendererTemplateKey, "");
 	}
 
 	@JSON
@@ -701,7 +702,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 
 	@Override
 	public void setOrderByCol(String orderByCol) {
-		_orderByCol = orderByCol;
+		_orderByCol = Objects.toString(orderByCol, "");
 	}
 
 	@JSON
@@ -717,7 +718,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 
 	@Override
 	public void setOrderByType(String orderByType) {
-		_orderByType = orderByType;
+		_orderByType = Objects.toString(orderByType, "");
 	}
 
 	@JSON
@@ -733,7 +734,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 
 	@Override
 	public void setTargetLayoutFriendlyUrl(String targetLayoutFriendlyUrl) {
-		_targetLayoutFriendlyUrl = targetLayoutFriendlyUrl;
+		_targetLayoutFriendlyUrl = Objects.toString(targetLayoutFriendlyUrl, "");
 	}
 
 	@JSON
@@ -749,7 +750,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 
 	@Override
 	public void setTargetPortletId(String targetPortletId) {
-		_targetPortletId = targetPortletId;
+		_targetPortletId = Objects.toString(targetPortletId, "");
 	}
 
 	@JSON
@@ -765,7 +766,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 
 	@Override
 	public void setContentField(String contentField) {
-		_contentField = contentField;
+		_contentField = Objects.toString(contentField, "");
 	}
 
 	@JSON
@@ -781,7 +782,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 
 	@Override
 	public void setFeedFormat(String feedFormat) {
-		_feedFormat = feedFormat;
+		_feedFormat = Objects.toString(feedFormat, "");
 	}
 
 	@JSON
@@ -1268,7 +1269,7 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			JournalFeed.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _id;
 	private long _groupId;
@@ -1278,24 +1279,24 @@ public class JournalFeedModelImpl extends BaseModelImpl<JournalFeed>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _feedId;
+	private String _feedId = "";
 	private String _originalFeedId;
-	private String _name;
-	private String _description;
-	private String _DDMStructureKey;
-	private String _DDMTemplateKey;
-	private String _DDMRendererTemplateKey;
+	private String _name = "";
+	private String _description = "";
+	private String _DDMStructureKey = "";
+	private String _DDMTemplateKey = "";
+	private String _DDMRendererTemplateKey = "";
 	private int _delta;
-	private String _orderByCol;
-	private String _orderByType;
-	private String _targetLayoutFriendlyUrl;
-	private String _targetPortletId;
-	private String _contentField;
-	private String _feedFormat;
+	private String _orderByCol = "";
+	private String _orderByType = "";
+	private String _targetLayoutFriendlyUrl = "";
+	private String _targetPortletId = "";
+	private String _contentField = "";
+	private String _feedFormat = "";
 	private double _feedVersion;
 	private Date _lastPublishDate;
 	private long _columnBitmask;

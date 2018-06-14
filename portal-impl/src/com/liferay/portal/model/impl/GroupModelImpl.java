@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -483,10 +484,10 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -697,7 +698,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 			_originalTreePath = _treePath;
 		}
 
-		_treePath = treePath;
+		_treePath = Objects.toString(treePath, "");
 	}
 
 	public String getOriginalTreePath() {
@@ -723,7 +724,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 			_originalGroupKey = _groupKey;
 		}
 
-		_groupKey = groupKey;
+		_groupKey = Objects.toString(groupKey, "");
 	}
 
 	public String getOriginalGroupKey() {
@@ -788,7 +789,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	public void setName(String name) {
 		_columnBitmask = -1L;
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -887,7 +888,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -970,7 +971,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 
 	@Override
 	public void setTypeSettings(String typeSettings) {
-		_typeSettings = typeSettings;
+		_typeSettings = Objects.toString(typeSettings, "");
 	}
 
 	@JSON
@@ -1020,7 +1021,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 			_originalFriendlyURL = _friendlyURL;
 		}
 
-		_friendlyURL = friendlyURL;
+		_friendlyURL = Objects.toString(friendlyURL, "");
 	}
 
 	public String getOriginalFriendlyURL() {
@@ -1624,7 +1625,7 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 			Group.class, ModelWrapper.class
 		};
 	private long _mvccVersion;
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _groupId;
 	private long _originalGroupId;
@@ -1645,21 +1646,21 @@ public class GroupModelImpl extends BaseModelImpl<Group> implements GroupModel {
 	private long _liveGroupId;
 	private long _originalLiveGroupId;
 	private boolean _setOriginalLiveGroupId;
-	private String _treePath;
+	private String _treePath = "";
 	private String _originalTreePath;
-	private String _groupKey;
+	private String _groupKey = "";
 	private String _originalGroupKey;
-	private String _name;
+	private String _name = "";
 	private String _nameCurrentLanguageId;
-	private String _description;
+	private String _description = "";
 	private String _descriptionCurrentLanguageId;
 	private int _type;
 	private int _originalType;
 	private boolean _setOriginalType;
-	private String _typeSettings;
+	private String _typeSettings = "";
 	private boolean _manualMembership;
 	private int _membershipRestriction;
-	private String _friendlyURL;
+	private String _friendlyURL = "";
 	private String _originalFriendlyURL;
 	private boolean _site;
 	private boolean _originalSite;

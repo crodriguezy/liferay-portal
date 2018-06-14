@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the OAuth2Authorization service. Represents a row in the &quot;OAuth2Authorization&quot; database table, with each column mapped to a property of this class.
@@ -437,7 +438,7 @@ public class OAuth2AuthorizationModelImpl extends BaseModelImpl<OAuth2Authorizat
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -495,7 +496,7 @@ public class OAuth2AuthorizationModelImpl extends BaseModelImpl<OAuth2Authorizat
 
 	@Override
 	public void setAccessTokenContent(String accessTokenContent) {
-		_accessTokenContent = accessTokenContent;
+		_accessTokenContent = Objects.toString(accessTokenContent, "");
 	}
 
 	@Override
@@ -552,7 +553,7 @@ public class OAuth2AuthorizationModelImpl extends BaseModelImpl<OAuth2Authorizat
 
 	@Override
 	public void setRemoteIPInfo(String remoteIPInfo) {
-		_remoteIPInfo = remoteIPInfo;
+		_remoteIPInfo = Objects.toString(remoteIPInfo, "");
 	}
 
 	@Override
@@ -567,7 +568,7 @@ public class OAuth2AuthorizationModelImpl extends BaseModelImpl<OAuth2Authorizat
 
 	@Override
 	public void setRefreshTokenContent(String refreshTokenContent) {
-		_refreshTokenContent = refreshTokenContent;
+		_refreshTokenContent = Objects.toString(refreshTokenContent, "");
 	}
 
 	@Override
@@ -967,20 +968,20 @@ public class OAuth2AuthorizationModelImpl extends BaseModelImpl<OAuth2Authorizat
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private long _oAuth2ApplicationId;
 	private long _originalOAuth2ApplicationId;
 	private boolean _setOriginalOAuth2ApplicationId;
 	private long _oAuth2ApplicationScopeAliasesId;
-	private String _accessTokenContent;
+	private String _accessTokenContent = "";
 	private long _accessTokenContentHash;
 	private long _originalAccessTokenContentHash;
 	private boolean _setOriginalAccessTokenContentHash;
 	private Date _accessTokenCreateDate;
 	private Date _accessTokenExpirationDate;
-	private String _remoteIPInfo;
-	private String _refreshTokenContent;
+	private String _remoteIPInfo = "";
+	private String _refreshTokenContent = "";
 	private long _refreshTokenContentHash;
 	private long _originalRefreshTokenContentHash;
 	private boolean _setOriginalRefreshTokenContentHash;

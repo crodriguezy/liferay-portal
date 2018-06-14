@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Country service. Represents a row in the &quot;Country&quot; database table, with each column mapped to a property of this class.
@@ -310,7 +311,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -336,7 +337,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 			_originalA2 = _a2;
 		}
 
-		_a2 = a2;
+		_a2 = Objects.toString(a2, "");
 	}
 
 	public String getOriginalA2() {
@@ -362,7 +363,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 			_originalA3 = _a3;
 		}
 
-		_a3 = a3;
+		_a3 = Objects.toString(a3, "");
 	}
 
 	public String getOriginalA3() {
@@ -382,7 +383,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 
 	@Override
 	public void setNumber(String number) {
-		_number = number;
+		_number = Objects.toString(number, "");
 	}
 
 	@JSON
@@ -398,7 +399,7 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 
 	@Override
 	public void setIdd(String idd) {
-		_idd = idd;
+		_idd = Objects.toString(idd, "");
 	}
 
 	@JSON
@@ -698,14 +699,14 @@ public class CountryModelImpl extends BaseModelImpl<Country>
 		};
 	private long _mvccVersion;
 	private long _countryId;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
-	private String _a2;
+	private String _a2 = "";
 	private String _originalA2;
-	private String _a3;
+	private String _a3 = "";
 	private String _originalA3;
-	private String _number;
-	private String _idd;
+	private String _number = "";
+	private String _idd = "";
 	private boolean _zipRequired;
 	private boolean _active;
 	private boolean _originalActive;

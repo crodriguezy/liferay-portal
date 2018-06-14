@@ -193,6 +193,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -236,10 +238,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -445,6 +444,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 	protected User getByUuid_PrevAndNext(Session session, User user,
 		String uuid, OrderByComparator<User> orderByComparator, boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -460,10 +461,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_UUID_3);
 		}
 		else {
@@ -585,6 +583,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	public int countByUuid(String uuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -596,10 +596,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_UUID_3);
 			}
 			else {
@@ -640,7 +637,6 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_UUID_1 = "user.uuid IS NULL";
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "user.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(user.uuid IS NULL OR user.uuid = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_UUID_C = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
@@ -739,6 +735,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		uuid = Objects.toString(uuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -787,10 +785,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1014,6 +1009,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	protected User getByUuid_C_PrevAndNext(Session session, User user,
 		String uuid, long companyId, OrderByComparator<User> orderByComparator,
 		boolean previous) {
+		uuid = Objects.toString(uuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -1029,10 +1026,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		boolean bindUuid = false;
 
-		if (uuid == null) {
-			query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-		}
-		else if (uuid.equals("")) {
+		if (uuid.equals("")) {
 			query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 		}
 		else {
@@ -1160,6 +1154,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	public int countByUuid_C(String uuid, long companyId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_UUID_C;
 
+		uuid = Objects.toString(uuid, "");
+
 		Object[] finderArgs = new Object[] { uuid, companyId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1171,10 +1167,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			boolean bindUuid = false;
 
-			if (uuid == null) {
-				query.append(_FINDER_COLUMN_UUID_C_UUID_1);
-			}
-			else if (uuid.equals("")) {
+			if (uuid.equals("")) {
 				query.append(_FINDER_COLUMN_UUID_C_UUID_3);
 			}
 			else {
@@ -1219,7 +1212,6 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_UUID_C_UUID_1 = "user.uuid IS NULL AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_2 = "user.uuid = ? AND ";
 	private static final String _FINDER_COLUMN_UUID_C_UUID_3 = "(user.uuid IS NULL OR user.uuid = '') AND ";
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 = "user.companyId = ?";
@@ -2009,6 +2001,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		emailAddress = Objects.toString(emailAddress, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -2056,10 +2050,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			boolean bindEmailAddress = false;
 
-			if (emailAddress == null) {
-				query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_1);
-			}
-			else if (emailAddress.equals("")) {
+			if (emailAddress.equals("")) {
 				query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_3);
 			}
 			else {
@@ -2269,6 +2260,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	protected User getByEmailAddress_PrevAndNext(Session session, User user,
 		String emailAddress, OrderByComparator<User> orderByComparator,
 		boolean previous) {
+		emailAddress = Objects.toString(emailAddress, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -2284,10 +2277,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 		boolean bindEmailAddress = false;
 
-		if (emailAddress == null) {
-			query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_1);
-		}
-		else if (emailAddress.equals("")) {
+		if (emailAddress.equals("")) {
 			query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_3);
 		}
 		else {
@@ -2409,6 +2399,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	public int countByEmailAddress(String emailAddress) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_EMAILADDRESS;
 
+		emailAddress = Objects.toString(emailAddress, "");
+
 		Object[] finderArgs = new Object[] { emailAddress };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -2420,10 +2412,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			boolean bindEmailAddress = false;
 
-			if (emailAddress == null) {
-				query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_1);
-			}
-			else if (emailAddress.equals("")) {
+			if (emailAddress.equals("")) {
 				query.append(_FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_3);
 			}
 			else {
@@ -2464,7 +2453,6 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_1 = "user.emailAddress IS NULL";
 	private static final String _FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_2 = "user.emailAddress = ?";
 	private static final String _FINDER_COLUMN_EMAILADDRESS_EMAILADDRESS_3 = "(user.emailAddress IS NULL OR user.emailAddress = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_PORTRAITID = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
@@ -4331,6 +4319,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@Override
 	public User fetchByC_SN(long companyId, String screenName,
 		boolean retrieveFromCache) {
+		screenName = Objects.toString(screenName, "");
+
 		Object[] finderArgs = new Object[] { companyId, screenName };
 
 		Object result = null;
@@ -4358,10 +4348,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			boolean bindScreenName = false;
 
-			if (screenName == null) {
-				query.append(_FINDER_COLUMN_C_SN_SCREENNAME_1);
-			}
-			else if (screenName.equals("")) {
+			if (screenName.equals("")) {
 				query.append(_FINDER_COLUMN_C_SN_SCREENNAME_3);
 			}
 			else {
@@ -4445,6 +4432,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	public int countByC_SN(long companyId, String screenName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_SN;
 
+		screenName = Objects.toString(screenName, "");
+
 		Object[] finderArgs = new Object[] { companyId, screenName };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -4458,10 +4447,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			boolean bindScreenName = false;
 
-			if (screenName == null) {
-				query.append(_FINDER_COLUMN_C_SN_SCREENNAME_1);
-			}
-			else if (screenName.equals("")) {
+			if (screenName.equals("")) {
 				query.append(_FINDER_COLUMN_C_SN_SCREENNAME_3);
 			}
 			else {
@@ -4505,7 +4491,6 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	}
 
 	private static final String _FINDER_COLUMN_C_SN_COMPANYID_2 = "user.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_SN_SCREENNAME_1 = "user.screenName IS NULL";
 	private static final String _FINDER_COLUMN_C_SN_SCREENNAME_2 = "user.screenName = ?";
 	private static final String _FINDER_COLUMN_C_SN_SCREENNAME_3 = "(user.screenName IS NULL OR user.screenName = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_EA = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
@@ -4578,6 +4563,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@Override
 	public User fetchByC_EA(long companyId, String emailAddress,
 		boolean retrieveFromCache) {
+		emailAddress = Objects.toString(emailAddress, "");
+
 		Object[] finderArgs = new Object[] { companyId, emailAddress };
 
 		Object result = null;
@@ -4605,10 +4592,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			boolean bindEmailAddress = false;
 
-			if (emailAddress == null) {
-				query.append(_FINDER_COLUMN_C_EA_EMAILADDRESS_1);
-			}
-			else if (emailAddress.equals("")) {
+			if (emailAddress.equals("")) {
 				query.append(_FINDER_COLUMN_C_EA_EMAILADDRESS_3);
 			}
 			else {
@@ -4692,6 +4676,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	public int countByC_EA(long companyId, String emailAddress) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_EA;
 
+		emailAddress = Objects.toString(emailAddress, "");
+
 		Object[] finderArgs = new Object[] { companyId, emailAddress };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -4705,10 +4691,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			boolean bindEmailAddress = false;
 
-			if (emailAddress == null) {
-				query.append(_FINDER_COLUMN_C_EA_EMAILADDRESS_1);
-			}
-			else if (emailAddress.equals("")) {
+			if (emailAddress.equals("")) {
 				query.append(_FINDER_COLUMN_C_EA_EMAILADDRESS_3);
 			}
 			else {
@@ -4752,7 +4735,6 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	}
 
 	private static final String _FINDER_COLUMN_C_EA_COMPANYID_2 = "user.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_EA_EMAILADDRESS_1 = "user.emailAddress IS NULL";
 	private static final String _FINDER_COLUMN_C_EA_EMAILADDRESS_2 = "user.emailAddress = ?";
 	private static final String _FINDER_COLUMN_C_EA_EMAILADDRESS_3 = "(user.emailAddress IS NULL OR user.emailAddress = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_FID = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
@@ -5053,6 +5035,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@Override
 	public User fetchByC_GUID(long companyId, String googleUserId,
 		boolean retrieveFromCache) {
+		googleUserId = Objects.toString(googleUserId, "");
+
 		Object[] finderArgs = new Object[] { companyId, googleUserId };
 
 		Object result = null;
@@ -5080,10 +5064,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			boolean bindGoogleUserId = false;
 
-			if (googleUserId == null) {
-				query.append(_FINDER_COLUMN_C_GUID_GOOGLEUSERID_1);
-			}
-			else if (googleUserId.equals("")) {
+			if (googleUserId.equals("")) {
 				query.append(_FINDER_COLUMN_C_GUID_GOOGLEUSERID_3);
 			}
 			else {
@@ -5178,6 +5159,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	public int countByC_GUID(long companyId, String googleUserId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_GUID;
 
+		googleUserId = Objects.toString(googleUserId, "");
+
 		Object[] finderArgs = new Object[] { companyId, googleUserId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -5191,10 +5174,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			boolean bindGoogleUserId = false;
 
-			if (googleUserId == null) {
-				query.append(_FINDER_COLUMN_C_GUID_GOOGLEUSERID_1);
-			}
-			else if (googleUserId.equals("")) {
+			if (googleUserId.equals("")) {
 				query.append(_FINDER_COLUMN_C_GUID_GOOGLEUSERID_3);
 			}
 			else {
@@ -5238,7 +5218,6 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	}
 
 	private static final String _FINDER_COLUMN_C_GUID_COMPANYID_2 = "user.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_GUID_GOOGLEUSERID_1 = "user.googleUserId IS NULL";
 	private static final String _FINDER_COLUMN_C_GUID_GOOGLEUSERID_2 = "user.googleUserId = ?";
 	private static final String _FINDER_COLUMN_C_GUID_GOOGLEUSERID_3 = "(user.googleUserId IS NULL OR user.googleUserId = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_O = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
@@ -5311,6 +5290,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@Override
 	public User fetchByC_O(long companyId, String openId,
 		boolean retrieveFromCache) {
+		openId = Objects.toString(openId, "");
+
 		Object[] finderArgs = new Object[] { companyId, openId };
 
 		Object result = null;
@@ -5338,10 +5319,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			boolean bindOpenId = false;
 
-			if (openId == null) {
-				query.append(_FINDER_COLUMN_C_O_OPENID_1);
-			}
-			else if (openId.equals("")) {
+			if (openId.equals("")) {
 				query.append(_FINDER_COLUMN_C_O_OPENID_3);
 			}
 			else {
@@ -5436,6 +5414,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	public int countByC_O(long companyId, String openId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_O;
 
+		openId = Objects.toString(openId, "");
+
 		Object[] finderArgs = new Object[] { companyId, openId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -5449,10 +5429,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			boolean bindOpenId = false;
 
-			if (openId == null) {
-				query.append(_FINDER_COLUMN_C_O_OPENID_1);
-			}
-			else if (openId.equals("")) {
+			if (openId.equals("")) {
 				query.append(_FINDER_COLUMN_C_O_OPENID_3);
 			}
 			else {
@@ -5496,7 +5473,6 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	}
 
 	private static final String _FINDER_COLUMN_C_O_COMPANYID_2 = "user.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_O_OPENID_1 = "user.openId IS NULL";
 	private static final String _FINDER_COLUMN_C_O_OPENID_2 = "user.openId = ?";
 	private static final String _FINDER_COLUMN_C_O_OPENID_3 = "(user.openId IS NULL OR user.openId = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_S = new FinderPath(UserModelImpl.ENTITY_CACHE_ENABLED,
@@ -7339,6 +7315,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	@Override
 	public User fetchByC_ERC(long companyId, String externalReferenceCode,
 		boolean retrieveFromCache) {
+		externalReferenceCode = Objects.toString(externalReferenceCode, "");
+
 		Object[] finderArgs = new Object[] { companyId, externalReferenceCode };
 
 		Object result = null;
@@ -7367,10 +7345,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			boolean bindExternalReferenceCode = false;
 
-			if (externalReferenceCode == null) {
-				query.append(_FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_1);
-			}
-			else if (externalReferenceCode.equals("")) {
+			if (externalReferenceCode.equals("")) {
 				query.append(_FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_3);
 			}
 			else {
@@ -7465,6 +7440,8 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	public int countByC_ERC(long companyId, String externalReferenceCode) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_ERC;
 
+		externalReferenceCode = Objects.toString(externalReferenceCode, "");
+
 		Object[] finderArgs = new Object[] { companyId, externalReferenceCode };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -7478,10 +7455,7 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 
 			boolean bindExternalReferenceCode = false;
 
-			if (externalReferenceCode == null) {
-				query.append(_FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_1);
-			}
-			else if (externalReferenceCode.equals("")) {
+			if (externalReferenceCode.equals("")) {
 				query.append(_FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_3);
 			}
 			else {
@@ -7525,7 +7499,6 @@ public class UserPersistenceImpl extends BasePersistenceImpl<User>
 	}
 
 	private static final String _FINDER_COLUMN_C_ERC_COMPANYID_2 = "user.companyId = ? AND ";
-	private static final String _FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_1 = "user.externalReferenceCode IS NULL";
 	private static final String _FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_2 = "user.externalReferenceCode = ?";
 	private static final String _FINDER_COLUMN_C_ERC_EXTERNALREFERENCECODE_3 = "(user.externalReferenceCode IS NULL OR user.externalReferenceCode = '')";
 

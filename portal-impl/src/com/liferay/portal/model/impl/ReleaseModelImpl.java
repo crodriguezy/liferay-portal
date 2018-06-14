@@ -37,6 +37,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Release service. Represents a row in the &quot;Release_&quot; database table, with each column mapped to a property of this class.
@@ -298,7 +299,7 @@ public class ReleaseModelImpl extends BaseModelImpl<Release>
 			_originalServletContextName = _servletContextName;
 		}
 
-		_servletContextName = servletContextName;
+		_servletContextName = Objects.toString(servletContextName, "");
 	}
 
 	public String getOriginalServletContextName() {
@@ -317,7 +318,7 @@ public class ReleaseModelImpl extends BaseModelImpl<Release>
 
 	@Override
 	public void setSchemaVersion(String schemaVersion) {
-		_schemaVersion = schemaVersion;
+		_schemaVersion = Objects.toString(schemaVersion, "");
 	}
 
 	@Override
@@ -377,7 +378,7 @@ public class ReleaseModelImpl extends BaseModelImpl<Release>
 
 	@Override
 	public void setTestString(String testString) {
-		_testString = testString;
+		_testString = Objects.toString(testString, "");
 	}
 
 	public long getColumnBitmask() {
@@ -657,14 +658,14 @@ public class ReleaseModelImpl extends BaseModelImpl<Release>
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _servletContextName;
+	private String _servletContextName = "";
 	private String _originalServletContextName;
-	private String _schemaVersion;
+	private String _schemaVersion = "";
 	private int _buildNumber;
 	private Date _buildDate;
 	private boolean _verified;
 	private int _state;
-	private String _testString;
+	private String _testString = "";
 	private long _columnBitmask;
 	private Release _escapedModel;
 }

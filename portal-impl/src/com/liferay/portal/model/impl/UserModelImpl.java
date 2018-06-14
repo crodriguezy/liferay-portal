@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the User service. Represents a row in the &quot;User_&quot; database table, with each column mapped to a property of this class.
@@ -701,10 +702,10 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -730,7 +731,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 			_originalExternalReferenceCode = _externalReferenceCode;
 		}
 
-		_externalReferenceCode = externalReferenceCode;
+		_externalReferenceCode = Objects.toString(externalReferenceCode, "");
 	}
 
 	public String getOriginalExternalReferenceCode() {
@@ -912,7 +913,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 
 	@Override
 	public void setPassword(String password) {
-		_password = password;
+		_password = Objects.toString(password, "");
 	}
 
 	@JSON(include = false)
@@ -971,7 +972,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 
 	@Override
 	public void setDigest(String digest) {
-		_digest = digest;
+		_digest = Objects.toString(digest, "");
 	}
 
 	@JSON
@@ -987,7 +988,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 
 	@Override
 	public void setReminderQueryQuestion(String reminderQueryQuestion) {
-		_reminderQueryQuestion = reminderQueryQuestion;
+		_reminderQueryQuestion = Objects.toString(reminderQueryQuestion, "");
 	}
 
 	@JSON
@@ -1003,7 +1004,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 
 	@Override
 	public void setReminderQueryAnswer(String reminderQueryAnswer) {
-		_reminderQueryAnswer = reminderQueryAnswer;
+		_reminderQueryAnswer = Objects.toString(reminderQueryAnswer, "");
 	}
 
 	@JSON
@@ -1036,7 +1037,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 			_originalScreenName = _screenName;
 		}
 
-		_screenName = screenName;
+		_screenName = Objects.toString(screenName, "");
 	}
 
 	public String getOriginalScreenName() {
@@ -1062,7 +1063,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 			_originalEmailAddress = _emailAddress;
 		}
 
-		_emailAddress = emailAddress;
+		_emailAddress = Objects.toString(emailAddress, "");
 	}
 
 	public String getOriginalEmailAddress() {
@@ -1111,7 +1112,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 			_originalGoogleUserId = _googleUserId;
 		}
 
-		_googleUserId = googleUserId;
+		_googleUserId = Objects.toString(googleUserId, "");
 	}
 
 	public String getOriginalGoogleUserId() {
@@ -1148,7 +1149,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 			_originalOpenId = _openId;
 		}
 
-		_openId = openId;
+		_openId = Objects.toString(openId, "");
 	}
 
 	public String getOriginalOpenId() {
@@ -1191,7 +1192,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 
 	@Override
 	public void setLanguageId(String languageId) {
-		_languageId = languageId;
+		_languageId = Objects.toString(languageId, "");
 	}
 
 	@JSON
@@ -1207,7 +1208,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 
 	@Override
 	public void setTimeZoneId(String timeZoneId) {
-		_timeZoneId = timeZoneId;
+		_timeZoneId = Objects.toString(timeZoneId, "");
 	}
 
 	@JSON
@@ -1223,7 +1224,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 
 	@Override
 	public void setGreeting(String greeting) {
-		_greeting = greeting;
+		_greeting = Objects.toString(greeting, "");
 	}
 
 	@JSON
@@ -1239,7 +1240,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 
 	@Override
 	public void setComments(String comments) {
-		_comments = comments;
+		_comments = Objects.toString(comments, "");
 	}
 
 	@JSON
@@ -1255,7 +1256,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 
 	@Override
 	public void setFirstName(String firstName) {
-		_firstName = firstName;
+		_firstName = Objects.toString(firstName, "");
 	}
 
 	@JSON
@@ -1271,7 +1272,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 
 	@Override
 	public void setMiddleName(String middleName) {
-		_middleName = middleName;
+		_middleName = Objects.toString(middleName, "");
 	}
 
 	@JSON
@@ -1287,7 +1288,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 
 	@Override
 	public void setLastName(String lastName) {
-		_lastName = lastName;
+		_lastName = Objects.toString(lastName, "");
 	}
 
 	@JSON
@@ -1303,7 +1304,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 
 	@Override
 	public void setJobTitle(String jobTitle) {
-		_jobTitle = jobTitle;
+		_jobTitle = Objects.toString(jobTitle, "");
 	}
 
 	@JSON
@@ -1330,7 +1331,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 
 	@Override
 	public void setLoginIP(String loginIP) {
-		_loginIP = loginIP;
+		_loginIP = Objects.toString(loginIP, "");
 	}
 
 	@JSON
@@ -1357,7 +1358,7 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 
 	@Override
 	public void setLastLoginIP(String lastLoginIP) {
-		_lastLoginIP = lastLoginIP;
+		_lastLoginIP = Objects.toString(lastLoginIP, "");
 	}
 
 	@JSON
@@ -2209,9 +2210,9 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 			User.class, ModelWrapper.class
 		};
 	private long _mvccVersion;
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
-	private String _externalReferenceCode;
+	private String _externalReferenceCode = "";
 	private String _originalExternalReferenceCode;
 	private long _userId;
 	private long _originalUserId;
@@ -2230,41 +2231,41 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 	private long _contactId;
 	private long _originalContactId;
 	private boolean _setOriginalContactId;
-	private String _password;
+	private String _password = "";
 	private boolean _passwordEncrypted;
 	private boolean _passwordReset;
 	private Date _passwordModifiedDate;
-	private String _digest;
-	private String _reminderQueryQuestion;
-	private String _reminderQueryAnswer;
+	private String _digest = "";
+	private String _reminderQueryQuestion = "";
+	private String _reminderQueryAnswer = "";
 	private int _graceLoginCount;
-	private String _screenName;
+	private String _screenName = "";
 	private String _originalScreenName;
-	private String _emailAddress;
+	private String _emailAddress = "";
 	private String _originalEmailAddress;
 	private long _facebookId;
 	private long _originalFacebookId;
 	private boolean _setOriginalFacebookId;
-	private String _googleUserId;
+	private String _googleUserId = "";
 	private String _originalGoogleUserId;
 	private long _ldapServerId;
-	private String _openId;
+	private String _openId = "";
 	private String _originalOpenId;
 	private long _portraitId;
 	private long _originalPortraitId;
 	private boolean _setOriginalPortraitId;
-	private String _languageId;
-	private String _timeZoneId;
-	private String _greeting;
-	private String _comments;
-	private String _firstName;
-	private String _middleName;
-	private String _lastName;
-	private String _jobTitle;
+	private String _languageId = "";
+	private String _timeZoneId = "";
+	private String _greeting = "";
+	private String _comments = "";
+	private String _firstName = "";
+	private String _middleName = "";
+	private String _lastName = "";
+	private String _jobTitle = "";
 	private Date _loginDate;
-	private String _loginIP;
+	private String _loginIP = "";
 	private Date _lastLoginDate;
-	private String _lastLoginIP;
+	private String _lastLoginIP = "";
 	private Date _lastFailedLoginDate;
 	private int _failedLoginAttempts;
 	private boolean _lockout;

@@ -50,6 +50,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the DLFileVersion service. Represents a row in the &quot;DLFileVersion&quot; database table, with each column mapped to a property of this class.
@@ -489,10 +490,10 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -596,7 +597,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -699,7 +700,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 
 	@Override
 	public void setTreePath(String treePath) {
-		_treePath = treePath;
+		_treePath = Objects.toString(treePath, "");
 	}
 
 	@JSON
@@ -715,7 +716,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 
 	@Override
 	public void setFileName(String fileName) {
-		_fileName = fileName;
+		_fileName = Objects.toString(fileName, "");
 	}
 
 	@JSON
@@ -731,7 +732,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 
 	@Override
 	public void setExtension(String extension) {
-		_extension = extension;
+		_extension = Objects.toString(extension, "");
 	}
 
 	@JSON
@@ -753,7 +754,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 			_originalMimeType = _mimeType;
 		}
 
-		_mimeType = mimeType;
+		_mimeType = Objects.toString(mimeType, "");
 	}
 
 	public String getOriginalMimeType() {
@@ -779,7 +780,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 			_originalTitle = _title;
 		}
 
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	public String getOriginalTitle() {
@@ -799,7 +800,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
@@ -815,7 +816,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 
 	@Override
 	public void setChangeLog(String changeLog) {
-		_changeLog = changeLog;
+		_changeLog = Objects.toString(changeLog, "");
 	}
 
 	@JSON
@@ -831,7 +832,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 
 	@Override
 	public void setExtraSettings(String extraSettings) {
-		_extraSettings = extraSettings;
+		_extraSettings = Objects.toString(extraSettings, "");
 	}
 
 	@JSON
@@ -864,7 +865,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 			_originalVersion = _version;
 		}
 
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	public String getOriginalVersion() {
@@ -895,7 +896,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 
 	@Override
 	public void setChecksum(String checksum) {
-		_checksum = checksum;
+		_checksum = Objects.toString(checksum, "");
 	}
 
 	@JSON
@@ -972,7 +973,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON
@@ -1607,7 +1608,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			DLFileVersion.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _fileVersionId;
 	private long _groupId;
@@ -1617,7 +1618,7 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1628,27 +1629,27 @@ public class DLFileVersionModelImpl extends BaseModelImpl<DLFileVersion>
 	private long _fileEntryId;
 	private long _originalFileEntryId;
 	private boolean _setOriginalFileEntryId;
-	private String _treePath;
-	private String _fileName;
-	private String _extension;
-	private String _mimeType;
+	private String _treePath = "";
+	private String _fileName = "";
+	private String _extension = "";
+	private String _mimeType = "";
 	private String _originalMimeType;
-	private String _title;
+	private String _title = "";
 	private String _originalTitle;
-	private String _description;
-	private String _changeLog;
-	private String _extraSettings;
+	private String _description = "";
+	private String _changeLog = "";
+	private String _extraSettings = "";
 	private long _fileEntryTypeId;
-	private String _version;
+	private String _version = "";
 	private String _originalVersion;
 	private long _size;
-	private String _checksum;
+	private String _checksum = "";
 	private Date _lastPublishDate;
 	private int _status;
 	private int _originalStatus;
 	private boolean _setOriginalStatus;
 	private long _statusByUserId;
-	private String _statusByUserName;
+	private String _statusByUserName = "";
 	private Date _statusDate;
 	private long _columnBitmask;
 	private DLFileVersion _escapedModel;

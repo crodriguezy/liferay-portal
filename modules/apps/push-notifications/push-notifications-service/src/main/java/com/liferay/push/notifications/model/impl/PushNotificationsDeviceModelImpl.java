@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the PushNotificationsDevice service. Represents a row in the &quot;PushNotificationsDevice&quot; database table, with each column mapped to a property of this class.
@@ -339,7 +340,7 @@ public class PushNotificationsDeviceModelImpl extends BaseModelImpl<PushNotifica
 			_originalPlatform = _platform;
 		}
 
-		_platform = platform;
+		_platform = Objects.toString(platform, "");
 	}
 
 	public String getOriginalPlatform() {
@@ -365,7 +366,7 @@ public class PushNotificationsDeviceModelImpl extends BaseModelImpl<PushNotifica
 			_originalToken = _token;
 		}
 
-		_token = token;
+		_token = Objects.toString(token, "");
 	}
 
 	public String getOriginalToken() {
@@ -590,9 +591,9 @@ public class PushNotificationsDeviceModelImpl extends BaseModelImpl<PushNotifica
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
 	private Date _createDate;
-	private String _platform;
+	private String _platform = "";
 	private String _originalPlatform;
-	private String _token;
+	private String _token = "";
 	private String _originalToken;
 	private long _columnBitmask;
 	private PushNotificationsDevice _escapedModel;

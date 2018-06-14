@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the OAuth2Application service. Represents a row in the &quot;OAuth2Application&quot; database table, with each column mapped to a property of this class.
@@ -440,7 +441,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -496,7 +497,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 	@Override
 	public void setAllowedGrantTypes(String allowedGrantTypes) {
-		_allowedGrantTypes = allowedGrantTypes;
+		_allowedGrantTypes = Objects.toString(allowedGrantTypes, "");
 	}
 
 	@JSON
@@ -518,7 +519,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 			_originalClientId = _clientId;
 		}
 
-		_clientId = clientId;
+		_clientId = Objects.toString(clientId, "");
 	}
 
 	public String getOriginalClientId() {
@@ -549,7 +550,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 	@Override
 	public void setClientSecret(String clientSecret) {
-		_clientSecret = clientSecret;
+		_clientSecret = Objects.toString(clientSecret, "");
 	}
 
 	@JSON
@@ -565,7 +566,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
@@ -581,7 +582,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 	@Override
 	public void setFeatures(String features) {
-		_features = features;
+		_features = Objects.toString(features, "");
 	}
 
 	@JSON
@@ -597,7 +598,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 	@Override
 	public void setHomePageURL(String homePageURL) {
-		_homePageURL = homePageURL;
+		_homePageURL = Objects.toString(homePageURL, "");
 	}
 
 	@JSON
@@ -624,7 +625,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
@@ -640,7 +641,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 	@Override
 	public void setPrivacyPolicyURL(String privacyPolicyURL) {
-		_privacyPolicyURL = privacyPolicyURL;
+		_privacyPolicyURL = Objects.toString(privacyPolicyURL, "");
 	}
 
 	@JSON
@@ -656,7 +657,7 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 
 	@Override
 	public void setRedirectURIs(String redirectURIs) {
-		_redirectURIs = redirectURIs;
+		_redirectURIs = Objects.toString(redirectURIs, "");
 	}
 
 	public long getColumnBitmask() {
@@ -1038,23 +1039,23 @@ public class OAuth2ApplicationModelImpl extends BaseModelImpl<OAuth2Application>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _oAuth2ApplicationScopeAliasesId;
-	private String _allowedGrantTypes;
-	private String _clientId;
+	private String _allowedGrantTypes = "";
+	private String _clientId = "";
 	private String _originalClientId;
 	private int _clientProfile;
-	private String _clientSecret;
-	private String _description;
-	private String _features;
-	private String _homePageURL;
+	private String _clientSecret = "";
+	private String _description = "";
+	private String _features = "";
+	private String _homePageURL = "";
 	private long _iconFileEntryId;
-	private String _name;
-	private String _privacyPolicyURL;
-	private String _redirectURIs;
+	private String _name = "";
+	private String _privacyPolicyURL = "";
+	private String _redirectURIs = "";
 	private long _columnBitmask;
 	private OAuth2Application _escapedModel;
 }

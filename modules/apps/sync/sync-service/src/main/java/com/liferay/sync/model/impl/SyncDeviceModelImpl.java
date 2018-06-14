@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SyncDevice service. Represents a row in the &quot;SyncDevice&quot; database table, with each column mapped to a property of this class.
@@ -322,10 +323,10 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -424,7 +425,7 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 			_originalUserName = _userName;
 		}
 
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	public String getOriginalUserName() {
@@ -472,7 +473,7 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 
 	@Override
 	public void setType(String type) {
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	@JSON
@@ -510,7 +511,7 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 
 	@Override
 	public void setHostname(String hostname) {
-		_hostname = hostname;
+		_hostname = Objects.toString(hostname, "");
 	}
 
 	@JSON
@@ -820,7 +821,7 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			SyncDevice.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _syncDeviceId;
 	private long _companyId;
@@ -829,15 +830,15 @@ public class SyncDeviceModelImpl extends BaseModelImpl<SyncDevice>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private String _originalUserName;
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _type;
+	private String _type = "";
 	private long _buildNumber;
 	private int _featureSet;
-	private String _hostname;
+	private String _hostname = "";
 	private int _status;
 	private long _columnBitmask;
 	private SyncDevice _escapedModel;

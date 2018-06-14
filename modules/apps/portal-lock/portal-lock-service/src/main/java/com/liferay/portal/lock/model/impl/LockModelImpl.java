@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Lock service. Represents a row in the &quot;Lock_&quot; database table, with each column mapped to a property of this class.
@@ -272,10 +273,10 @@ public class LockModelImpl extends BaseModelImpl<Lock> implements LockModel {
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -352,7 +353,7 @@ public class LockModelImpl extends BaseModelImpl<Lock> implements LockModel {
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -383,7 +384,7 @@ public class LockModelImpl extends BaseModelImpl<Lock> implements LockModel {
 			_originalClassName = _className;
 		}
 
-		_className = className;
+		_className = Objects.toString(className, "");
 	}
 
 	public String getOriginalClassName() {
@@ -408,7 +409,7 @@ public class LockModelImpl extends BaseModelImpl<Lock> implements LockModel {
 			_originalKey = _key;
 		}
 
-		_key = key;
+		_key = Objects.toString(key, "");
 	}
 
 	public String getOriginalKey() {
@@ -427,7 +428,7 @@ public class LockModelImpl extends BaseModelImpl<Lock> implements LockModel {
 
 	@Override
 	public void setOwner(String owner) {
-		_owner = owner;
+		_owner = Objects.toString(owner, "");
 	}
 
 	@Override
@@ -760,20 +761,20 @@ public class LockModelImpl extends BaseModelImpl<Lock> implements LockModel {
 			Lock.class, ModelWrapper.class
 		};
 	private long _mvccVersion;
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _lockId;
 	private long _companyId;
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
-	private String _className;
+	private String _className = "";
 	private String _originalClassName;
-	private String _key;
+	private String _key = "";
 	private String _originalKey;
-	private String _owner;
+	private String _owner = "";
 	private boolean _inheritable;
 	private Date _expirationDate;
 	private Date _originalExpirationDate;

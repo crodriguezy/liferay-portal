@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -427,7 +428,7 @@ public class DDLRecordSetVersionModelImpl extends BaseModelImpl<DDLRecordSetVers
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -531,7 +532,7 @@ public class DDLRecordSetVersionModelImpl extends BaseModelImpl<DDLRecordSetVers
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -630,7 +631,7 @@ public class DDLRecordSetVersionModelImpl extends BaseModelImpl<DDLRecordSetVers
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -690,7 +691,7 @@ public class DDLRecordSetVersionModelImpl extends BaseModelImpl<DDLRecordSetVers
 
 	@Override
 	public void setSettings(String settings) {
-		_settings = settings;
+		_settings = Objects.toString(settings, "");
 	}
 
 	@JSON
@@ -712,7 +713,7 @@ public class DDLRecordSetVersionModelImpl extends BaseModelImpl<DDLRecordSetVers
 			_originalVersion = _version;
 		}
 
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	public String getOriginalVersion() {
@@ -782,7 +783,7 @@ public class DDLRecordSetVersionModelImpl extends BaseModelImpl<DDLRecordSetVers
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON
@@ -1296,24 +1297,24 @@ public class DDLRecordSetVersionModelImpl extends BaseModelImpl<DDLRecordSetVers
 	private long _groupId;
 	private long _companyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private long _recordSetId;
 	private long _originalRecordSetId;
 	private boolean _setOriginalRecordSetId;
 	private long _DDMStructureVersionId;
-	private String _name;
+	private String _name = "";
 	private String _nameCurrentLanguageId;
-	private String _description;
+	private String _description = "";
 	private String _descriptionCurrentLanguageId;
-	private String _settings;
-	private String _version;
+	private String _settings = "";
+	private String _version = "";
 	private String _originalVersion;
 	private int _status;
 	private int _originalStatus;
 	private boolean _setOriginalStatus;
 	private long _statusByUserId;
-	private String _statusByUserName;
+	private String _statusByUserName = "";
 	private Date _statusDate;
 	private long _columnBitmask;
 	private DDLRecordSetVersion _escapedModel;

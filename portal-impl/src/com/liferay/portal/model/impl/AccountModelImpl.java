@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Account service. Represents a row in the &quot;Account_&quot; database table, with each column mapped to a property of this class.
@@ -420,7 +421,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -475,7 +476,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
@@ -491,7 +492,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setLegalName(String legalName) {
-		_legalName = legalName;
+		_legalName = Objects.toString(legalName, "");
 	}
 
 	@JSON
@@ -507,7 +508,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setLegalId(String legalId) {
-		_legalId = legalId;
+		_legalId = Objects.toString(legalId, "");
 	}
 
 	@JSON
@@ -523,7 +524,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setLegalType(String legalType) {
-		_legalType = legalType;
+		_legalType = Objects.toString(legalType, "");
 	}
 
 	@JSON
@@ -539,7 +540,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setSicCode(String sicCode) {
-		_sicCode = sicCode;
+		_sicCode = Objects.toString(sicCode, "");
 	}
 
 	@JSON
@@ -555,7 +556,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setTickerSymbol(String tickerSymbol) {
-		_tickerSymbol = tickerSymbol;
+		_tickerSymbol = Objects.toString(tickerSymbol, "");
 	}
 
 	@JSON
@@ -571,7 +572,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setIndustry(String industry) {
-		_industry = industry;
+		_industry = Objects.toString(industry, "");
 	}
 
 	@JSON
@@ -587,7 +588,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setType(String type) {
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	@JSON
@@ -603,7 +604,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setSize(String size) {
-		_size = size;
+		_size = Objects.toString(size, "");
 	}
 
 	@Override
@@ -963,19 +964,19 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	private long _accountId;
 	private long _companyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _parentAccountId;
-	private String _name;
-	private String _legalName;
-	private String _legalId;
-	private String _legalType;
-	private String _sicCode;
-	private String _tickerSymbol;
-	private String _industry;
-	private String _type;
-	private String _size;
+	private String _name = "";
+	private String _legalName = "";
+	private String _legalId = "";
+	private String _legalType = "";
+	private String _sicCode = "";
+	private String _tickerSymbol = "";
+	private String _industry = "";
+	private String _type = "";
+	private String _size = "";
 	private Account _escapedModel;
 }

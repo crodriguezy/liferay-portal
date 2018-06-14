@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoNotification service. Represents a row in the &quot;KaleoNotification&quot; database table, with each column mapped to a property of this class.
@@ -378,7 +379,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -425,7 +426,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 			_originalKaleoClassName = _kaleoClassName;
 		}
 
-		_kaleoClassName = kaleoClassName;
+		_kaleoClassName = Objects.toString(kaleoClassName, "");
 	}
 
 	public String getOriginalKaleoClassName() {
@@ -488,7 +489,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public void setKaleoNodeName(String kaleoNodeName) {
-		_kaleoNodeName = kaleoNodeName;
+		_kaleoNodeName = Objects.toString(kaleoNodeName, "");
 	}
 
 	@Override
@@ -503,7 +504,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -518,7 +519,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -539,7 +540,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 			_originalExecutionType = _executionType;
 		}
 
-		_executionType = executionType;
+		_executionType = Objects.toString(executionType, "");
 	}
 
 	public String getOriginalExecutionType() {
@@ -558,7 +559,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public void setTemplate(String template) {
-		_template = template;
+		_template = Objects.toString(template, "");
 	}
 
 	@Override
@@ -573,7 +574,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public void setTemplateLanguage(String templateLanguage) {
-		_templateLanguage = templateLanguage;
+		_templateLanguage = Objects.toString(templateLanguage, "");
 	}
 
 	@Override
@@ -588,7 +589,7 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 
 	@Override
 	public void setNotificationTypes(String notificationTypes) {
-		_notificationTypes = notificationTypes;
+		_notificationTypes = Objects.toString(notificationTypes, "");
 	}
 
 	public long getColumnBitmask() {
@@ -972,11 +973,11 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _kaleoClassName;
+	private String _kaleoClassName = "";
 	private String _originalKaleoClassName;
 	private long _kaleoClassPK;
 	private long _originalKaleoClassPK;
@@ -984,14 +985,14 @@ public class KaleoNotificationModelImpl extends BaseModelImpl<KaleoNotification>
 	private long _kaleoDefinitionVersionId;
 	private long _originalKaleoDefinitionVersionId;
 	private boolean _setOriginalKaleoDefinitionVersionId;
-	private String _kaleoNodeName;
-	private String _name;
-	private String _description;
-	private String _executionType;
+	private String _kaleoNodeName = "";
+	private String _name = "";
+	private String _description = "";
+	private String _executionType = "";
 	private String _originalExecutionType;
-	private String _template;
-	private String _templateLanguage;
-	private String _notificationTypes;
+	private String _template = "";
+	private String _templateLanguage = "";
+	private String _notificationTypes = "";
 	private long _columnBitmask;
 	private KaleoNotification _escapedModel;
 }

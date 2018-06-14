@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the TrashEntry service. Represents a row in the &quot;TrashEntry&quot; database table, with each column mapped to a property of this class.
@@ -395,7 +396,7 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -509,7 +510,7 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 
 	@Override
 	public void setTypeSettings(String typeSettings) {
-		_typeSettings = typeSettings;
+		_typeSettings = Objects.toString(typeSettings, "");
 	}
 
 	@JSON
@@ -797,7 +798,7 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _originalCreateDate;
 	private long _classNameId;
@@ -807,7 +808,7 @@ public class TrashEntryModelImpl extends BaseModelImpl<TrashEntry>
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
 	private long _systemEventSetKey;
-	private String _typeSettings;
+	private String _typeSettings = "";
 	private int _status;
 	private long _columnBitmask;
 	private TrashEntry _escapedModel;

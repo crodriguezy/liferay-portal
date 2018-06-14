@@ -54,6 +54,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the BlogsEntry service. Represents a row in the &quot;BlogsEntry&quot; database table, with each column mapped to a property of this class.
@@ -503,10 +504,10 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -622,7 +623,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -668,7 +669,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@JSON
@@ -684,7 +685,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 
 	@Override
 	public void setSubtitle(String subtitle) {
-		_subtitle = subtitle;
+		_subtitle = Objects.toString(subtitle, "");
 	}
 
 	@JSON
@@ -706,7 +707,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 			_originalUrlTitle = _urlTitle;
 		}
 
-		_urlTitle = urlTitle;
+		_urlTitle = Objects.toString(urlTitle, "");
 	}
 
 	public String getOriginalUrlTitle() {
@@ -726,7 +727,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
@@ -742,7 +743,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 
 	@Override
 	public void setContent(String content) {
-		_content = content;
+		_content = Objects.toString(content, "");
 	}
 
 	@JSON
@@ -813,7 +814,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 
 	@Override
 	public void setTrackbacks(String trackbacks) {
-		_trackbacks = trackbacks;
+		_trackbacks = Objects.toString(trackbacks, "");
 	}
 
 	@JSON
@@ -829,7 +830,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 
 	@Override
 	public void setCoverImageCaption(String coverImageCaption) {
-		_coverImageCaption = coverImageCaption;
+		_coverImageCaption = Objects.toString(coverImageCaption, "");
 	}
 
 	@JSON
@@ -856,7 +857,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 
 	@Override
 	public void setCoverImageURL(String coverImageURL) {
-		_coverImageURL = coverImageURL;
+		_coverImageURL = Objects.toString(coverImageURL, "");
 	}
 
 	@JSON
@@ -911,7 +912,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 
 	@Override
 	public void setSmallImageURL(String smallImageURL) {
-		_smallImageURL = smallImageURL;
+		_smallImageURL = Objects.toString(smallImageURL, "");
 	}
 
 	@JSON
@@ -988,7 +989,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON
@@ -1749,7 +1750,7 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			BlogsEntry.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _entryId;
 	private long _groupId;
@@ -1761,34 +1762,34 @@ public class BlogsEntryModelImpl extends BaseModelImpl<BlogsEntry>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _title;
-	private String _subtitle;
-	private String _urlTitle;
+	private String _title = "";
+	private String _subtitle = "";
+	private String _urlTitle = "";
 	private String _originalUrlTitle;
-	private String _description;
-	private String _content;
+	private String _description = "";
+	private String _content = "";
 	private Date _displayDate;
 	private Date _originalDisplayDate;
 	private boolean _allowPingbacks;
 	private boolean _allowTrackbacks;
-	private String _trackbacks;
-	private String _coverImageCaption;
+	private String _trackbacks = "";
+	private String _coverImageCaption = "";
 	private long _coverImageFileEntryId;
-	private String _coverImageURL;
+	private String _coverImageURL = "";
 	private boolean _smallImage;
 	private long _smallImageFileEntryId;
 	private long _smallImageId;
-	private String _smallImageURL;
+	private String _smallImageURL = "";
 	private Date _lastPublishDate;
 	private int _status;
 	private int _originalStatus;
 	private boolean _setOriginalStatus;
 	private long _statusByUserId;
-	private String _statusByUserName;
+	private String _statusByUserName = "";
 	private Date _statusDate;
 	private long _columnBitmask;
 	private BlogsEntry _escapedModel;

@@ -40,6 +40,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SocialActivityAchievement service. Represents a row in the &quot;SocialActivityAchievement&quot; database table, with each column mapped to a property of this class.
@@ -313,7 +314,7 @@ public class SocialActivityAchievementModelImpl extends BaseModelImpl<SocialActi
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -569,7 +570,7 @@ public class SocialActivityAchievementModelImpl extends BaseModelImpl<SocialActi
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
 	private long _createDate;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
 	private boolean _firstInGroup;
 	private boolean _originalFirstInGroup;

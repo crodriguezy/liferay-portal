@@ -40,6 +40,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Entry service. Represents a row in the &quot;Chat_Entry&quot; database table, with each column mapped to a property of this class.
@@ -319,7 +320,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 			_originalContent = _content;
 		}
 
-		_content = content;
+		_content = Objects.toString(content, "");
 	}
 
 	public String getOriginalContent() {
@@ -558,7 +559,7 @@ public class EntryModelImpl extends BaseModelImpl<Entry> implements EntryModel {
 	private long _toUserId;
 	private long _originalToUserId;
 	private boolean _setOriginalToUserId;
-	private String _content;
+	private String _content = "";
 	private String _originalContent;
 	private int _flag;
 	private long _columnBitmask;

@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -413,10 +414,10 @@ public class DDMStructureModelImpl extends BaseModelImpl<DDMStructure>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -520,7 +521,7 @@ public class DDMStructureModelImpl extends BaseModelImpl<DDMStructure>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -563,7 +564,7 @@ public class DDMStructureModelImpl extends BaseModelImpl<DDMStructure>
 
 	@Override
 	public void setVersionUserName(String versionUserName) {
-		_versionUserName = versionUserName;
+		_versionUserName = Objects.toString(versionUserName, "");
 	}
 
 	@JSON
@@ -659,7 +660,7 @@ public class DDMStructureModelImpl extends BaseModelImpl<DDMStructure>
 			_originalStructureKey = _structureKey;
 		}
 
-		_structureKey = structureKey;
+		_structureKey = Objects.toString(structureKey, "");
 	}
 
 	public String getOriginalStructureKey() {
@@ -679,7 +680,7 @@ public class DDMStructureModelImpl extends BaseModelImpl<DDMStructure>
 
 	@Override
 	public void setVersion(String version) {
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	@JSON
@@ -744,7 +745,7 @@ public class DDMStructureModelImpl extends BaseModelImpl<DDMStructure>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -853,7 +854,7 @@ public class DDMStructureModelImpl extends BaseModelImpl<DDMStructure>
 			_originalDescription = _description;
 		}
 
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -917,7 +918,7 @@ public class DDMStructureModelImpl extends BaseModelImpl<DDMStructure>
 
 	@Override
 	public void setDefinition(String definition) {
-		_definition = definition;
+		_definition = Objects.toString(definition, "");
 	}
 
 	@JSON
@@ -933,7 +934,7 @@ public class DDMStructureModelImpl extends BaseModelImpl<DDMStructure>
 
 	@Override
 	public void setStorageType(String storageType) {
-		_storageType = storageType;
+		_storageType = Objects.toString(storageType, "");
 	}
 
 	@JSON
@@ -1480,7 +1481,7 @@ public class DDMStructureModelImpl extends BaseModelImpl<DDMStructure>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			DDMStructure.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _structureId;
 	private long _groupId;
@@ -1490,9 +1491,9 @@ public class DDMStructureModelImpl extends BaseModelImpl<DDMStructure>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private long _versionUserId;
-	private String _versionUserName;
+	private String _versionUserName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1502,17 +1503,17 @@ public class DDMStructureModelImpl extends BaseModelImpl<DDMStructure>
 	private long _classNameId;
 	private long _originalClassNameId;
 	private boolean _setOriginalClassNameId;
-	private String _structureKey;
+	private String _structureKey = "";
 	private String _originalStructureKey;
-	private String _version;
-	private String _name;
+	private String _version = "";
+	private String _name = "";
 	private String _nameCurrentLanguageId;
 	private String _originalName;
-	private String _description;
+	private String _description = "";
 	private String _descriptionCurrentLanguageId;
 	private String _originalDescription;
-	private String _definition;
-	private String _storageType;
+	private String _definition = "";
+	private String _storageType = "";
 	private int _type;
 	private Date _lastPublishDate;
 	private long _columnBitmask;

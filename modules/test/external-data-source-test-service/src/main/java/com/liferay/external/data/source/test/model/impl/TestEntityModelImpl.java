@@ -37,6 +37,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the TestEntity service. Represents a row in the &quot;TestEntity&quot; database table, with each column mapped to a property of this class.
@@ -171,7 +172,7 @@ public class TestEntityModelImpl extends BaseModelImpl<TestEntity>
 
 	@Override
 	public void setData(String data) {
-		_data = data;
+		_data = Objects.toString(data, "");
 	}
 
 	@Override
@@ -322,6 +323,6 @@ public class TestEntityModelImpl extends BaseModelImpl<TestEntity>
 			TestEntity.class, ModelWrapper.class
 		};
 	private long _id;
-	private String _data;
+	private String _data = "";
 	private TestEntity _escapedModel;
 }

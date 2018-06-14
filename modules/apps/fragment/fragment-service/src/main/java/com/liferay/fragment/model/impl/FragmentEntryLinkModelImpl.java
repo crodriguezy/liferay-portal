@@ -45,6 +45,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the FragmentEntryLink service. Represents a row in the &quot;FragmentEntryLink&quot; database table, with each column mapped to a property of this class.
@@ -343,10 +344,10 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -445,7 +446,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -582,7 +583,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public void setCss(String css) {
-		_css = css;
+		_css = Objects.toString(css, "");
 	}
 
 	@Override
@@ -597,7 +598,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public void setHtml(String html) {
-		_html = html;
+		_html = Objects.toString(html, "");
 	}
 
 	@Override
@@ -612,7 +613,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public void setJs(String js) {
-		_js = js;
+		_js = Objects.toString(js, "");
 	}
 
 	@Override
@@ -627,7 +628,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public void setEditableValues(String editableValues) {
-		_editableValues = editableValues;
+		_editableValues = Objects.toString(editableValues, "");
 	}
 
 	@Override
@@ -664,7 +665,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 
 	@Override
 	public void setNamespace(String namespace) {
-		_namespace = namespace;
+		_namespace = Objects.toString(namespace, "");
 	}
 
 	@Override
@@ -1121,7 +1122,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			FragmentEntryLink.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _fragmentEntryLinkId;
 	private long _groupId;
@@ -1131,7 +1132,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1145,13 +1146,13 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 	private long _classPK;
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
-	private String _css;
-	private String _html;
-	private String _js;
-	private String _editableValues;
+	private String _css = "";
+	private String _html = "";
+	private String _js = "";
+	private String _editableValues = "";
 	private int _position;
 	private Date _lastPropagationDate;
-	private String _namespace;
+	private String _namespace = "";
 	private Date _lastPublishDate;
 	private long _columnBitmask;
 	private FragmentEntryLink _escapedModel;

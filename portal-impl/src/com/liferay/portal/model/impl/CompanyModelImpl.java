@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Company service. Represents a row in the &quot;Company&quot; database table, with each column mapped to a property of this class.
@@ -342,7 +343,7 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 			_originalWebId = _webId;
 		}
 
-		_webId = webId;
+		_webId = Objects.toString(webId, "");
 	}
 
 	public String getOriginalWebId() {
@@ -362,7 +363,7 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 
 	@Override
 	public void setKey(String key) {
-		_key = key;
+		_key = Objects.toString(key, "");
 	}
 
 	@JSON
@@ -384,7 +385,7 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 			_originalMx = _mx;
 		}
 
-		_mx = mx;
+		_mx = Objects.toString(mx, "");
 	}
 
 	public String getOriginalMx() {
@@ -404,7 +405,7 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 
 	@Override
 	public void setHomeURL(String homeURL) {
-		_homeURL = homeURL;
+		_homeURL = Objects.toString(homeURL, "");
 	}
 
 	@JSON
@@ -789,12 +790,12 @@ public class CompanyModelImpl extends BaseModelImpl<Company>
 	private long _mvccVersion;
 	private long _companyId;
 	private long _accountId;
-	private String _webId;
+	private String _webId = "";
 	private String _originalWebId;
-	private String _key;
-	private String _mx;
+	private String _key = "";
+	private String _mx = "";
 	private String _originalMx;
-	private String _homeURL;
+	private String _homeURL = "";
 	private long _logoId;
 	private long _originalLogoId;
 	private boolean _setOriginalLogoId;

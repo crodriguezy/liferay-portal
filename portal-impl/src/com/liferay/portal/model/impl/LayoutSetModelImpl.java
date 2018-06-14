@@ -41,6 +41,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the LayoutSet service. Represents a row in the &quot;LayoutSet&quot; database table, with each column mapped to a property of this class.
@@ -483,7 +484,7 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 
 	@Override
 	public void setThemeId(String themeId) {
-		_themeId = themeId;
+		_themeId = Objects.toString(themeId, "");
 	}
 
 	@JSON
@@ -499,7 +500,7 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 
 	@Override
 	public void setColorSchemeId(String colorSchemeId) {
-		_colorSchemeId = colorSchemeId;
+		_colorSchemeId = Objects.toString(colorSchemeId, "");
 	}
 
 	@JSON
@@ -515,7 +516,7 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 
 	@Override
 	public void setCss(String css) {
-		_css = css;
+		_css = Objects.toString(css, "");
 	}
 
 	@JSON
@@ -542,7 +543,7 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 
 	@Override
 	public void setSettings(String settings) {
-		_settings = settings;
+		_settings = Objects.toString(settings, "");
 	}
 
 	@JSON
@@ -564,7 +565,7 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 			_originalLayoutSetPrototypeUuid = _layoutSetPrototypeUuid;
 		}
 
-		_layoutSetPrototypeUuid = layoutSetPrototypeUuid;
+		_layoutSetPrototypeUuid = Objects.toString(layoutSetPrototypeUuid, "");
 	}
 
 	public String getOriginalLayoutSetPrototypeUuid() {
@@ -953,12 +954,12 @@ public class LayoutSetModelImpl extends BaseModelImpl<LayoutSet>
 	private long _logoId;
 	private long _originalLogoId;
 	private boolean _setOriginalLogoId;
-	private String _themeId;
-	private String _colorSchemeId;
-	private String _css;
+	private String _themeId = "";
+	private String _colorSchemeId = "";
+	private String _css = "";
 	private int _pageCount;
-	private String _settings;
-	private String _layoutSetPrototypeUuid;
+	private String _settings = "";
+	private String _layoutSetPrototypeUuid = "";
 	private String _originalLayoutSetPrototypeUuid;
 	private boolean _layoutSetPrototypeLinkEnabled;
 	private long _columnBitmask;

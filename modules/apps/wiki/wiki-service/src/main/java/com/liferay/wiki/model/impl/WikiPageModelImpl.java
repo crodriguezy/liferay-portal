@@ -53,6 +53,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the WikiPage service. Represents a row in the &quot;WikiPage&quot; database table, with each column mapped to a property of this class.
@@ -455,10 +456,10 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -602,7 +603,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -675,7 +676,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 			_originalTitle = _title;
 		}
 
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	public String getOriginalTitle() {
@@ -735,7 +736,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 
 	@Override
 	public void setContent(String content) {
-		_content = content;
+		_content = Objects.toString(content, "");
 	}
 
 	@JSON
@@ -751,7 +752,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 
 	@Override
 	public void setSummary(String summary) {
-		_summary = summary;
+		_summary = Objects.toString(summary, "");
 	}
 
 	@JSON
@@ -773,7 +774,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 			_originalFormat = _format;
 		}
 
-		_format = format;
+		_format = Objects.toString(format, "");
 	}
 
 	public String getOriginalFormat() {
@@ -828,7 +829,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 			_originalParentTitle = _parentTitle;
 		}
 
-		_parentTitle = parentTitle;
+		_parentTitle = Objects.toString(parentTitle, "");
 	}
 
 	public String getOriginalParentTitle() {
@@ -854,7 +855,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 			_originalRedirectTitle = _redirectTitle;
 		}
 
-		_redirectTitle = redirectTitle;
+		_redirectTitle = Objects.toString(redirectTitle, "");
 	}
 
 	public String getOriginalRedirectTitle() {
@@ -935,7 +936,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON
@@ -1690,7 +1691,7 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			WikiPage.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _pageId;
 	private long _resourcePrimKey;
@@ -1705,36 +1706,36 @@ public class WikiPageModelImpl extends BaseModelImpl<WikiPage>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _nodeId;
 	private long _originalNodeId;
 	private boolean _setOriginalNodeId;
-	private String _title;
+	private String _title = "";
 	private String _originalTitle;
 	private double _version;
 	private double _originalVersion;
 	private boolean _setOriginalVersion;
 	private boolean _minorEdit;
-	private String _content;
-	private String _summary;
-	private String _format;
+	private String _content = "";
+	private String _summary = "";
+	private String _format = "";
 	private String _originalFormat;
 	private boolean _head;
 	private boolean _originalHead;
 	private boolean _setOriginalHead;
-	private String _parentTitle;
+	private String _parentTitle = "";
 	private String _originalParentTitle;
-	private String _redirectTitle;
+	private String _redirectTitle = "";
 	private String _originalRedirectTitle;
 	private Date _lastPublishDate;
 	private int _status;
 	private int _originalStatus;
 	private boolean _setOriginalStatus;
 	private long _statusByUserId;
-	private String _statusByUserName;
+	private String _statusByUserName = "";
 	private Date _statusDate;
 	private long _columnBitmask;
 	private WikiPage _escapedModel;

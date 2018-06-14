@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Contact service. Represents a row in the &quot;Contact_&quot; database table, with each column mapped to a property of this class.
@@ -563,7 +564,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -707,7 +708,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	@Override
 	public void setEmailAddress(String emailAddress) {
-		_emailAddress = emailAddress;
+		_emailAddress = Objects.toString(emailAddress, "");
 	}
 
 	@JSON
@@ -723,7 +724,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	@Override
 	public void setFirstName(String firstName) {
-		_firstName = firstName;
+		_firstName = Objects.toString(firstName, "");
 	}
 
 	@JSON
@@ -739,7 +740,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	@Override
 	public void setMiddleName(String middleName) {
-		_middleName = middleName;
+		_middleName = Objects.toString(middleName, "");
 	}
 
 	@JSON
@@ -755,7 +756,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	@Override
 	public void setLastName(String lastName) {
-		_lastName = lastName;
+		_lastName = Objects.toString(lastName, "");
 	}
 
 	@JSON
@@ -821,7 +822,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	@Override
 	public void setSmsSn(String smsSn) {
-		_smsSn = smsSn;
+		_smsSn = Objects.toString(smsSn, "");
 	}
 
 	@JSON
@@ -837,7 +838,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	@Override
 	public void setFacebookSn(String facebookSn) {
-		_facebookSn = facebookSn;
+		_facebookSn = Objects.toString(facebookSn, "");
 	}
 
 	@JSON
@@ -853,7 +854,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	@Override
 	public void setJabberSn(String jabberSn) {
-		_jabberSn = jabberSn;
+		_jabberSn = Objects.toString(jabberSn, "");
 	}
 
 	@JSON
@@ -869,7 +870,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	@Override
 	public void setSkypeSn(String skypeSn) {
-		_skypeSn = skypeSn;
+		_skypeSn = Objects.toString(skypeSn, "");
 	}
 
 	@JSON
@@ -885,7 +886,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	@Override
 	public void setTwitterSn(String twitterSn) {
-		_twitterSn = twitterSn;
+		_twitterSn = Objects.toString(twitterSn, "");
 	}
 
 	@JSON
@@ -901,7 +902,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	@Override
 	public void setEmployeeStatusId(String employeeStatusId) {
-		_employeeStatusId = employeeStatusId;
+		_employeeStatusId = Objects.toString(employeeStatusId, "");
 	}
 
 	@JSON
@@ -917,7 +918,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	@Override
 	public void setEmployeeNumber(String employeeNumber) {
-		_employeeNumber = employeeNumber;
+		_employeeNumber = Objects.toString(employeeNumber, "");
 	}
 
 	@JSON
@@ -933,7 +934,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	@Override
 	public void setJobTitle(String jobTitle) {
-		_jobTitle = jobTitle;
+		_jobTitle = Objects.toString(jobTitle, "");
 	}
 
 	@JSON
@@ -949,7 +950,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	@Override
 	public void setJobClass(String jobClass) {
-		_jobClass = jobClass;
+		_jobClass = Objects.toString(jobClass, "");
 	}
 
 	@JSON
@@ -965,7 +966,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 
 	@Override
 	public void setHoursOfOperation(String hoursOfOperation) {
-		_hoursOfOperation = hoursOfOperation;
+		_hoursOfOperation = Objects.toString(hoursOfOperation, "");
 	}
 
 	public long getColumnBitmask() {
@@ -1500,7 +1501,7 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1514,24 +1515,24 @@ public class ContactModelImpl extends BaseModelImpl<Contact>
 	private long _originalAccountId;
 	private boolean _setOriginalAccountId;
 	private long _parentContactId;
-	private String _emailAddress;
-	private String _firstName;
-	private String _middleName;
-	private String _lastName;
+	private String _emailAddress = "";
+	private String _firstName = "";
+	private String _middleName = "";
+	private String _lastName = "";
 	private long _prefixId;
 	private long _suffixId;
 	private boolean _male;
 	private Date _birthday;
-	private String _smsSn;
-	private String _facebookSn;
-	private String _jabberSn;
-	private String _skypeSn;
-	private String _twitterSn;
-	private String _employeeStatusId;
-	private String _employeeNumber;
-	private String _jobTitle;
-	private String _jobClass;
-	private String _hoursOfOperation;
+	private String _smsSn = "";
+	private String _facebookSn = "";
+	private String _jabberSn = "";
+	private String _skypeSn = "";
+	private String _twitterSn = "";
+	private String _employeeStatusId = "";
+	private String _employeeNumber = "";
+	private String _jobTitle = "";
+	private String _jobClass = "";
+	private String _hoursOfOperation = "";
 	private long _columnBitmask;
 	private Contact _escapedModel;
 }

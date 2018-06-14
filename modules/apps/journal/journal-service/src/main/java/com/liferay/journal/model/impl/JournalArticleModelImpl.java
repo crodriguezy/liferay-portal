@@ -53,6 +53,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the JournalArticle service. Represents a row in the &quot;JournalArticle&quot; database table, with each column mapped to a property of this class.
@@ -551,10 +552,10 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -698,7 +699,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -831,7 +832,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 
 	@Override
 	public void setTreePath(String treePath) {
-		_treePath = treePath;
+		_treePath = Objects.toString(treePath, "");
 	}
 
 	@JSON
@@ -853,7 +854,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 			_originalArticleId = _articleId;
 		}
 
-		_articleId = articleId;
+		_articleId = Objects.toString(articleId, "");
 	}
 
 	public String getOriginalArticleId() {
@@ -902,7 +903,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 			_originalUrlTitle = _urlTitle;
 		}
 
-		_urlTitle = urlTitle;
+		_urlTitle = Objects.toString(urlTitle, "");
 	}
 
 	public String getOriginalUrlTitle() {
@@ -922,7 +923,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 
 	@Override
 	public void setContent(String content) {
-		_content = content;
+		_content = Objects.toString(content, "");
 	}
 
 	@JSON
@@ -944,7 +945,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 			_originalDDMStructureKey = _DDMStructureKey;
 		}
 
-		_DDMStructureKey = DDMStructureKey;
+		_DDMStructureKey = Objects.toString(DDMStructureKey, "");
 	}
 
 	public String getOriginalDDMStructureKey() {
@@ -970,7 +971,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 			_originalDDMTemplateKey = _DDMTemplateKey;
 		}
 
-		_DDMTemplateKey = DDMTemplateKey;
+		_DDMTemplateKey = Objects.toString(DDMTemplateKey, "");
 	}
 
 	public String getOriginalDDMTemplateKey() {
@@ -990,7 +991,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 
 	@Override
 	public void setDefaultLanguageId(String defaultLanguageId) {
-		_defaultLanguageId = defaultLanguageId;
+		_defaultLanguageId = Objects.toString(defaultLanguageId, "");
 	}
 
 	@JSON
@@ -1012,7 +1013,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 			_originalLayoutUuid = _layoutUuid;
 		}
 
-		_layoutUuid = layoutUuid;
+		_layoutUuid = Objects.toString(layoutUuid, "");
 	}
 
 	public String getOriginalLayoutUuid() {
@@ -1154,7 +1155,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 
 	@Override
 	public void setSmallImageURL(String smallImageURL) {
-		_smallImageURL = smallImageURL;
+		_smallImageURL = Objects.toString(smallImageURL, "");
 	}
 
 	@JSON
@@ -1231,7 +1232,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON
@@ -2097,7 +2098,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			JournalArticle.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _id;
 	private long _resourcePrimKey;
@@ -2112,7 +2113,7 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -2125,21 +2126,21 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	private long _classPK;
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
-	private String _treePath;
-	private String _articleId;
+	private String _treePath = "";
+	private String _articleId = "";
 	private String _originalArticleId;
 	private double _version;
 	private double _originalVersion;
 	private boolean _setOriginalVersion;
-	private String _urlTitle;
+	private String _urlTitle = "";
 	private String _originalUrlTitle;
-	private String _content;
-	private String _DDMStructureKey;
+	private String _content = "";
+	private String _DDMStructureKey = "";
 	private String _originalDDMStructureKey;
-	private String _DDMTemplateKey;
+	private String _DDMTemplateKey = "";
 	private String _originalDDMTemplateKey;
-	private String _defaultLanguageId;
-	private String _layoutUuid;
+	private String _defaultLanguageId = "";
+	private String _layoutUuid = "";
 	private String _originalLayoutUuid;
 	private Date _displayDate;
 	private Date _originalDisplayDate;
@@ -2153,13 +2154,13 @@ public class JournalArticleModelImpl extends BaseModelImpl<JournalArticle>
 	private long _smallImageId;
 	private long _originalSmallImageId;
 	private boolean _setOriginalSmallImageId;
-	private String _smallImageURL;
+	private String _smallImageURL = "";
 	private Date _lastPublishDate;
 	private int _status;
 	private int _originalStatus;
 	private boolean _setOriginalStatus;
 	private long _statusByUserId;
-	private String _statusByUserName;
+	private String _statusByUserName = "";
 	private Date _statusDate;
 	private long _columnBitmask;
 	private JournalArticle _escapedModel;

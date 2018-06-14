@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the BackgroundTask service. Represents a row in the &quot;BackgroundTask&quot; database table, with each column mapped to a property of this class.
@@ -458,7 +459,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -510,7 +511,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -530,7 +531,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 
 	@Override
 	public void setServletContextNames(String servletContextNames) {
-		_servletContextNames = servletContextNames;
+		_servletContextNames = Objects.toString(servletContextNames, "");
 	}
 
 	@JSON
@@ -552,7 +553,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 			_originalTaskExecutorClassName = _taskExecutorClassName;
 		}
 
-		_taskExecutorClassName = taskExecutorClassName;
+		_taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
 	}
 
 	public String getOriginalTaskExecutorClassName() {
@@ -646,7 +647,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 
 	@Override
 	public void setStatusMessage(String statusMessage) {
-		_statusMessage = statusMessage;
+		_statusMessage = Objects.toString(statusMessage, "");
 	}
 
 	public long getColumnBitmask() {
@@ -1006,14 +1007,14 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
-	private String _servletContextNames;
-	private String _taskExecutorClassName;
+	private String _servletContextNames = "";
+	private String _taskExecutorClassName = "";
 	private String _originalTaskExecutorClassName;
 	private Map<String, Serializable> _taskContextMap;
 	private boolean _completed;
@@ -1023,7 +1024,7 @@ public class BackgroundTaskModelImpl extends BaseModelImpl<BackgroundTask>
 	private int _status;
 	private int _originalStatus;
 	private boolean _setOriginalStatus;
-	private String _statusMessage;
+	private String _statusMessage = "";
 	private long _columnBitmask;
 	private BackgroundTask _escapedModel;
 }

@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the DDMFormInstanceRecord service. Represents a row in the &quot;DDMFormInstanceRecord&quot; database table, with each column mapped to a property of this class.
@@ -357,10 +358,10 @@ public class DDMFormInstanceRecordModelImpl extends BaseModelImpl<DDMFormInstanc
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -476,7 +477,7 @@ public class DDMFormInstanceRecordModelImpl extends BaseModelImpl<DDMFormInstanc
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -519,7 +520,7 @@ public class DDMFormInstanceRecordModelImpl extends BaseModelImpl<DDMFormInstanc
 
 	@Override
 	public void setVersionUserName(String versionUserName) {
-		_versionUserName = versionUserName;
+		_versionUserName = Objects.toString(versionUserName, "");
 	}
 
 	@JSON
@@ -592,7 +593,7 @@ public class DDMFormInstanceRecordModelImpl extends BaseModelImpl<DDMFormInstanc
 			_originalFormInstanceVersion = _formInstanceVersion;
 		}
 
-		_formInstanceVersion = formInstanceVersion;
+		_formInstanceVersion = Objects.toString(formInstanceVersion, "");
 	}
 
 	public String getOriginalFormInstanceVersion() {
@@ -623,7 +624,7 @@ public class DDMFormInstanceRecordModelImpl extends BaseModelImpl<DDMFormInstanc
 
 	@Override
 	public void setVersion(String version) {
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	@JSON
@@ -983,7 +984,7 @@ public class DDMFormInstanceRecordModelImpl extends BaseModelImpl<DDMFormInstanc
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			DDMFormInstanceRecord.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _formInstanceRecordId;
 	private long _groupId;
@@ -995,19 +996,19 @@ public class DDMFormInstanceRecordModelImpl extends BaseModelImpl<DDMFormInstanc
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private long _versionUserId;
-	private String _versionUserName;
+	private String _versionUserName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _formInstanceId;
 	private long _originalFormInstanceId;
 	private boolean _setOriginalFormInstanceId;
-	private String _formInstanceVersion;
+	private String _formInstanceVersion = "";
 	private String _originalFormInstanceVersion;
 	private long _storageId;
-	private String _version;
+	private String _version = "";
 	private Date _lastPublishDate;
 	private long _columnBitmask;
 	private DDMFormInstanceRecord _escapedModel;

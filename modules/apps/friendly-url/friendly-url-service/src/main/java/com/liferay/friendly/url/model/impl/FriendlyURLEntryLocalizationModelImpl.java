@@ -39,6 +39,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the FriendlyURLEntryLocalization service. Represents a row in the &quot;FriendlyURLEntryLocalization&quot; database table, with each column mapped to a property of this class.
@@ -295,7 +296,7 @@ public class FriendlyURLEntryLocalizationModelImpl extends BaseModelImpl<Friendl
 			_originalLanguageId = _languageId;
 		}
 
-		_languageId = languageId;
+		_languageId = Objects.toString(languageId, "");
 	}
 
 	public String getOriginalLanguageId() {
@@ -320,7 +321,7 @@ public class FriendlyURLEntryLocalizationModelImpl extends BaseModelImpl<Friendl
 			_originalUrlTitle = _urlTitle;
 		}
 
-		_urlTitle = urlTitle;
+		_urlTitle = Objects.toString(urlTitle, "");
 	}
 
 	public String getOriginalUrlTitle() {
@@ -649,9 +650,9 @@ public class FriendlyURLEntryLocalizationModelImpl extends BaseModelImpl<Friendl
 	private long _friendlyURLEntryId;
 	private long _originalFriendlyURLEntryId;
 	private boolean _setOriginalFriendlyURLEntryId;
-	private String _languageId;
+	private String _languageId = "";
 	private String _originalLanguageId;
-	private String _urlTitle;
+	private String _urlTitle = "";
 	private String _originalUrlTitle;
 	private long _groupId;
 	private long _originalGroupId;

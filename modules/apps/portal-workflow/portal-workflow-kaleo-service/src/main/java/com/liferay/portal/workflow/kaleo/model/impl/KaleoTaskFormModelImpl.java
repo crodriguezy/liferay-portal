@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoTaskForm service. Represents a row in the &quot;KaleoTaskForm&quot; database table, with each column mapped to a property of this class.
@@ -403,7 +404,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -510,7 +511,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public void setKaleoTaskName(String kaleoTaskName) {
-		_kaleoTaskName = kaleoTaskName;
+		_kaleoTaskName = Objects.toString(kaleoTaskName, "");
 	}
 
 	@Override
@@ -525,7 +526,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -540,7 +541,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -565,7 +566,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public void setFormDefinition(String formDefinition) {
-		_formDefinition = formDefinition;
+		_formDefinition = Objects.toString(formDefinition, "");
 	}
 
 	@Override
@@ -606,7 +607,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 			_originalFormUuid = _formUuid;
 		}
 
-		_formUuid = formUuid;
+		_formUuid = Objects.toString(formUuid, "");
 	}
 
 	public String getOriginalFormUuid() {
@@ -625,7 +626,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 
 	@Override
 	public void setMetadata(String metadata) {
-		_metadata = metadata;
+		_metadata = Objects.toString(metadata, "");
 	}
 
 	@Override
@@ -1038,7 +1039,7 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1051,16 +1052,16 @@ public class KaleoTaskFormModelImpl extends BaseModelImpl<KaleoTaskForm>
 	private long _kaleoTaskId;
 	private long _originalKaleoTaskId;
 	private boolean _setOriginalKaleoTaskId;
-	private String _kaleoTaskName;
-	private String _name;
-	private String _description;
+	private String _kaleoTaskName = "";
+	private String _name = "";
+	private String _description = "";
 	private long _formCompanyId;
-	private String _formDefinition;
+	private String _formDefinition = "";
 	private long _formGroupId;
 	private long _formId;
-	private String _formUuid;
+	private String _formUuid = "";
 	private String _originalFormUuid;
-	private String _metadata;
+	private String _metadata = "";
 	private int _priority;
 	private long _columnBitmask;
 	private KaleoTaskForm _escapedModel;

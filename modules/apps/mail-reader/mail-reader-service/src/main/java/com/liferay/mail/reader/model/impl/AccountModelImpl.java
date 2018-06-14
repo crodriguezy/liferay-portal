@@ -41,6 +41,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Account service. Represents a row in the &quot;Mail_Account&quot; database table, with each column mapped to a property of this class.
@@ -443,7 +444,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -490,7 +491,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 			_originalAddress = _address;
 		}
 
-		_address = address;
+		_address = Objects.toString(address, "");
 	}
 
 	public String getOriginalAddress() {
@@ -509,7 +510,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setPersonalName(String personalName) {
-		_personalName = personalName;
+		_personalName = Objects.toString(personalName, "");
 	}
 
 	@Override
@@ -524,7 +525,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setProtocol(String protocol) {
-		_protocol = protocol;
+		_protocol = Objects.toString(protocol, "");
 	}
 
 	@Override
@@ -539,7 +540,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setIncomingHostName(String incomingHostName) {
-		_incomingHostName = incomingHostName;
+		_incomingHostName = Objects.toString(incomingHostName, "");
 	}
 
 	@Override
@@ -579,7 +580,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setOutgoingHostName(String outgoingHostName) {
-		_outgoingHostName = outgoingHostName;
+		_outgoingHostName = Objects.toString(outgoingHostName, "");
 	}
 
 	@Override
@@ -619,7 +620,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setLogin(String login) {
-		_login = login;
+		_login = Objects.toString(login, "");
 	}
 
 	@Override
@@ -634,7 +635,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setPassword(String password) {
-		_password = password;
+		_password = Objects.toString(password, "");
 	}
 
 	@Override
@@ -664,7 +665,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setSignature(String signature) {
-		_signature = signature;
+		_signature = Objects.toString(signature, "");
 	}
 
 	@Override
@@ -694,7 +695,7 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 
 	@Override
 	public void setFolderPrefix(String folderPrefix) {
-		_folderPrefix = folderPrefix;
+		_folderPrefix = Objects.toString(folderPrefix, "");
 	}
 
 	@Override
@@ -1201,26 +1202,26 @@ public class AccountModelImpl extends BaseModelImpl<Account>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _address;
+	private String _address = "";
 	private String _originalAddress;
-	private String _personalName;
-	private String _protocol;
-	private String _incomingHostName;
+	private String _personalName = "";
+	private String _protocol = "";
+	private String _incomingHostName = "";
 	private int _incomingPort;
 	private boolean _incomingSecure;
-	private String _outgoingHostName;
+	private String _outgoingHostName = "";
 	private int _outgoingPort;
 	private boolean _outgoingSecure;
-	private String _login;
-	private String _password;
+	private String _login = "";
+	private String _password = "";
 	private boolean _savePassword;
-	private String _signature;
+	private String _signature = "";
 	private boolean _useSignature;
-	private String _folderPrefix;
+	private String _folderPrefix = "";
 	private long _inboxFolderId;
 	private long _draftFolderId;
 	private long _sentFolderId;

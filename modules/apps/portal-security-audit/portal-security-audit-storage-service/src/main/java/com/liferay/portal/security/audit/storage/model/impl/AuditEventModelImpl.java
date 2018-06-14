@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the AuditEvent service. Represents a row in the &quot;Audit_AuditEvent&quot; database table, with each column mapped to a property of this class.
@@ -406,7 +407,7 @@ public class AuditEventModelImpl extends BaseModelImpl<AuditEvent>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -435,7 +436,7 @@ public class AuditEventModelImpl extends BaseModelImpl<AuditEvent>
 
 	@Override
 	public void setEventType(String eventType) {
-		_eventType = eventType;
+		_eventType = Objects.toString(eventType, "");
 	}
 
 	@JSON
@@ -451,7 +452,7 @@ public class AuditEventModelImpl extends BaseModelImpl<AuditEvent>
 
 	@Override
 	public void setClassName(String className) {
-		_className = className;
+		_className = Objects.toString(className, "");
 	}
 
 	@JSON
@@ -467,7 +468,7 @@ public class AuditEventModelImpl extends BaseModelImpl<AuditEvent>
 
 	@Override
 	public void setClassPK(String classPK) {
-		_classPK = classPK;
+		_classPK = Objects.toString(classPK, "");
 	}
 
 	@JSON
@@ -483,7 +484,7 @@ public class AuditEventModelImpl extends BaseModelImpl<AuditEvent>
 
 	@Override
 	public void setMessage(String message) {
-		_message = message;
+		_message = Objects.toString(message, "");
 	}
 
 	@JSON
@@ -499,7 +500,7 @@ public class AuditEventModelImpl extends BaseModelImpl<AuditEvent>
 
 	@Override
 	public void setClientHost(String clientHost) {
-		_clientHost = clientHost;
+		_clientHost = Objects.toString(clientHost, "");
 	}
 
 	@JSON
@@ -515,7 +516,7 @@ public class AuditEventModelImpl extends BaseModelImpl<AuditEvent>
 
 	@Override
 	public void setClientIP(String clientIP) {
-		_clientIP = clientIP;
+		_clientIP = Objects.toString(clientIP, "");
 	}
 
 	@JSON
@@ -531,7 +532,7 @@ public class AuditEventModelImpl extends BaseModelImpl<AuditEvent>
 
 	@Override
 	public void setServerName(String serverName) {
-		_serverName = serverName;
+		_serverName = Objects.toString(serverName, "");
 	}
 
 	@JSON
@@ -558,7 +559,7 @@ public class AuditEventModelImpl extends BaseModelImpl<AuditEvent>
 
 	@Override
 	public void setSessionID(String sessionID) {
-		_sessionID = sessionID;
+		_sessionID = Objects.toString(sessionID, "");
 	}
 
 	@JSON
@@ -574,7 +575,7 @@ public class AuditEventModelImpl extends BaseModelImpl<AuditEvent>
 
 	@Override
 	public void setAdditionalInfo(String additionalInfo) {
-		_additionalInfo = additionalInfo;
+		_additionalInfo = Objects.toString(additionalInfo, "");
 	}
 
 	public long getColumnBitmask() {
@@ -918,18 +919,18 @@ public class AuditEventModelImpl extends BaseModelImpl<AuditEvent>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
-	private String _eventType;
-	private String _className;
-	private String _classPK;
-	private String _message;
-	private String _clientHost;
-	private String _clientIP;
-	private String _serverName;
+	private String _eventType = "";
+	private String _className = "";
+	private String _classPK = "";
+	private String _message = "";
+	private String _clientHost = "";
+	private String _clientIP = "";
+	private String _serverName = "";
 	private int _serverPort;
-	private String _sessionID;
-	private String _additionalInfo;
+	private String _sessionID = "";
+	private String _additionalInfo = "";
 	private long _columnBitmask;
 	private AuditEvent _escapedModel;
 }

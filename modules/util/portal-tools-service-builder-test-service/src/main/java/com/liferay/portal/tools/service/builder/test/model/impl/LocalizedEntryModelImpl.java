@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -290,7 +291,7 @@ public class LocalizedEntryModelImpl extends BaseModelImpl<LocalizedEntry>
 
 	@Override
 	public void setDefaultLanguageId(String defaultLanguageId) {
-		_defaultLanguageId = defaultLanguageId;
+		_defaultLanguageId = Objects.toString(defaultLanguageId, "");
 	}
 
 	@Override
@@ -451,7 +452,7 @@ public class LocalizedEntryModelImpl extends BaseModelImpl<LocalizedEntry>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			LocalizedEntry.class, ModelWrapper.class
 		};
-	private String _defaultLanguageId;
+	private String _defaultLanguageId = "";
 	private long _localizedEntryId;
 	private LocalizedEntry _escapedModel;
 }

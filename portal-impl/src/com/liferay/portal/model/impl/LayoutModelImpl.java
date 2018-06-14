@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -531,10 +532,10 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -638,7 +639,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -800,7 +801,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -899,7 +900,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@Override
@@ -998,7 +999,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -1101,7 +1102,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 
 	@Override
 	public void setKeywords(String keywords) {
-		_keywords = keywords;
+		_keywords = Objects.toString(keywords, "");
 	}
 
 	@Override
@@ -1202,7 +1203,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 
 	@Override
 	public void setRobots(String robots) {
-		_robots = robots;
+		_robots = Objects.toString(robots, "");
 	}
 
 	@Override
@@ -1264,7 +1265,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 			_originalType = _type;
 		}
 
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	public String getOriginalType() {
@@ -1284,7 +1285,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 
 	@Override
 	public void setTypeSettings(String typeSettings) {
-		_typeSettings = typeSettings;
+		_typeSettings = Objects.toString(typeSettings, "");
 	}
 
 	@JSON
@@ -1323,7 +1324,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 			_originalFriendlyURL = _friendlyURL;
 		}
 
-		_friendlyURL = friendlyURL;
+		_friendlyURL = Objects.toString(friendlyURL, "");
 	}
 
 	public String getOriginalFriendlyURL() {
@@ -1366,7 +1367,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 
 	@Override
 	public void setThemeId(String themeId) {
-		_themeId = themeId;
+		_themeId = Objects.toString(themeId, "");
 	}
 
 	@JSON
@@ -1382,7 +1383,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 
 	@Override
 	public void setColorSchemeId(String colorSchemeId) {
-		_colorSchemeId = colorSchemeId;
+		_colorSchemeId = Objects.toString(colorSchemeId, "");
 	}
 
 	@JSON
@@ -1398,7 +1399,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 
 	@Override
 	public void setCss(String css) {
-		_css = css;
+		_css = Objects.toString(css, "");
 	}
 
 	@JSON
@@ -1443,7 +1444,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 			_originalLayoutPrototypeUuid = _layoutPrototypeUuid;
 		}
 
-		_layoutPrototypeUuid = layoutPrototypeUuid;
+		_layoutPrototypeUuid = Objects.toString(layoutPrototypeUuid, "");
 	}
 
 	public String getOriginalLayoutPrototypeUuid() {
@@ -1487,7 +1488,8 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 			_originalSourcePrototypeLayoutUuid = _sourcePrototypeLayoutUuid;
 		}
 
-		_sourcePrototypeLayoutUuid = sourcePrototypeLayoutUuid;
+		_sourcePrototypeLayoutUuid = Objects.toString(sourcePrototypeLayoutUuid,
+				"");
 	}
 
 	public String getOriginalSourcePrototypeLayoutUuid() {
@@ -2227,7 +2229,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 			Layout.class, ModelWrapper.class
 		};
 	private long _mvccVersion;
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _plid;
 	private long _groupId;
@@ -2237,7 +2239,7 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -2250,35 +2252,35 @@ public class LayoutModelImpl extends BaseModelImpl<Layout>
 	private long _parentLayoutId;
 	private long _originalParentLayoutId;
 	private boolean _setOriginalParentLayoutId;
-	private String _name;
+	private String _name = "";
 	private String _nameCurrentLanguageId;
-	private String _title;
+	private String _title = "";
 	private String _titleCurrentLanguageId;
-	private String _description;
+	private String _description = "";
 	private String _descriptionCurrentLanguageId;
-	private String _keywords;
+	private String _keywords = "";
 	private String _keywordsCurrentLanguageId;
-	private String _robots;
+	private String _robots = "";
 	private String _robotsCurrentLanguageId;
-	private String _type;
+	private String _type = "";
 	private String _originalType;
-	private String _typeSettings;
+	private String _typeSettings = "";
 	private boolean _hidden;
-	private String _friendlyURL;
+	private String _friendlyURL = "";
 	private String _originalFriendlyURL;
 	private long _iconImageId;
 	private long _originalIconImageId;
 	private boolean _setOriginalIconImageId;
-	private String _themeId;
-	private String _colorSchemeId;
-	private String _css;
+	private String _themeId = "";
+	private String _colorSchemeId = "";
+	private String _css = "";
 	private int _priority;
 	private int _originalPriority;
 	private boolean _setOriginalPriority;
-	private String _layoutPrototypeUuid;
+	private String _layoutPrototypeUuid = "";
 	private String _originalLayoutPrototypeUuid;
 	private boolean _layoutPrototypeLinkEnabled;
-	private String _sourcePrototypeLayoutUuid;
+	private String _sourcePrototypeLayoutUuid = "";
 	private String _originalSourcePrototypeLayoutUuid;
 	private Date _lastPublishDate;
 	private long _columnBitmask;

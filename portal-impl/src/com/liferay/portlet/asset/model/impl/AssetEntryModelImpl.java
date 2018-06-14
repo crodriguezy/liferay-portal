@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -588,7 +589,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -704,7 +705,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 			_originalClassUuid = _classUuid;
 		}
 
-		_classUuid = classUuid;
+		_classUuid = Objects.toString(classUuid, "");
 	}
 
 	public String getOriginalClassUuid() {
@@ -845,7 +846,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 
 	@Override
 	public void setMimeType(String mimeType) {
-		_mimeType = mimeType;
+		_mimeType = Objects.toString(mimeType, "");
 	}
 
 	@JSON
@@ -904,7 +905,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@Override
@@ -1003,7 +1004,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -1106,7 +1107,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 
 	@Override
 	public void setSummary(String summary) {
-		_summary = summary;
+		_summary = Objects.toString(summary, "");
 	}
 
 	@Override
@@ -1163,7 +1164,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 
 	@Override
 	public void setUrl(String url) {
-		_url = url;
+		_url = Objects.toString(url, "");
 	}
 
 	@JSON
@@ -1185,7 +1186,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 			_originalLayoutUuid = _layoutUuid;
 		}
 
-		_layoutUuid = layoutUuid;
+		_layoutUuid = Objects.toString(layoutUuid, "");
 	}
 
 	public String getOriginalLayoutUuid() {
@@ -1839,7 +1840,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1849,7 +1850,7 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	private long _classPK;
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
-	private String _classUuid;
+	private String _classUuid = "";
 	private String _originalClassUuid;
 	private long _classTypeId;
 	private boolean _listable;
@@ -1862,15 +1863,15 @@ public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
 	private Date _originalPublishDate;
 	private Date _expirationDate;
 	private Date _originalExpirationDate;
-	private String _mimeType;
-	private String _title;
+	private String _mimeType = "";
+	private String _title = "";
 	private String _titleCurrentLanguageId;
-	private String _description;
+	private String _description = "";
 	private String _descriptionCurrentLanguageId;
-	private String _summary;
+	private String _summary = "";
 	private String _summaryCurrentLanguageId;
-	private String _url;
-	private String _layoutUuid;
+	private String _url = "";
+	private String _layoutUuid = "";
 	private String _originalLayoutUuid;
 	private int _height;
 	private int _width;

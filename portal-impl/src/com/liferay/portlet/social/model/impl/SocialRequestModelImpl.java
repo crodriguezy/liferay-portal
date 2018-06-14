@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SocialRequest service. Represents a row in the &quot;SocialRequest&quot; database table, with each column mapped to a property of this class.
@@ -335,10 +336,10 @@ public class SocialRequestModelImpl extends BaseModelImpl<SocialRequest>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -567,7 +568,7 @@ public class SocialRequestModelImpl extends BaseModelImpl<SocialRequest>
 
 	@Override
 	public void setExtraData(String extraData) {
-		_extraData = extraData;
+		_extraData = Objects.toString(extraData, "");
 	}
 
 	@JSON
@@ -933,7 +934,7 @@ public class SocialRequestModelImpl extends BaseModelImpl<SocialRequest>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			SocialRequest.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _requestId;
 	private long _groupId;
@@ -956,7 +957,7 @@ public class SocialRequestModelImpl extends BaseModelImpl<SocialRequest>
 	private int _type;
 	private int _originalType;
 	private boolean _setOriginalType;
-	private String _extraData;
+	private String _extraData = "";
 	private long _receiverUserId;
 	private long _originalReceiverUserId;
 	private boolean _setOriginalReceiverUserId;

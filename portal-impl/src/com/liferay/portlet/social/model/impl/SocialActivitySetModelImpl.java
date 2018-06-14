@@ -42,6 +42,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SocialActivitySet service. Represents a row in the &quot;SocialActivitySet&quot; database table, with each column mapped to a property of this class.
@@ -443,7 +444,7 @@ public class SocialActivitySetModelImpl extends BaseModelImpl<SocialActivitySet>
 
 	@Override
 	public void setExtraData(String extraData) {
-		_extraData = extraData;
+		_extraData = Objects.toString(extraData, "");
 	}
 
 	@Override
@@ -738,7 +739,7 @@ public class SocialActivitySetModelImpl extends BaseModelImpl<SocialActivitySet>
 	private int _type;
 	private int _originalType;
 	private boolean _setOriginalType;
-	private String _extraData;
+	private String _extraData = "";
 	private int _activityCount;
 	private long _columnBitmask;
 	private SocialActivitySet _escapedModel;

@@ -40,6 +40,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the LVEntryLocalizationVersion service. Represents a row in the &quot;LVEntryLocalizationVersion&quot; database table, with each column mapped to a property of this class.
@@ -331,7 +332,7 @@ public class LVEntryLocalizationVersionModelImpl extends BaseModelImpl<LVEntryLo
 			_originalLanguageId = _languageId;
 		}
 
-		_languageId = languageId;
+		_languageId = Objects.toString(languageId, "");
 	}
 
 	public String getOriginalLanguageId() {
@@ -350,7 +351,7 @@ public class LVEntryLocalizationVersionModelImpl extends BaseModelImpl<LVEntryLo
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@Override
@@ -365,7 +366,7 @@ public class LVEntryLocalizationVersionModelImpl extends BaseModelImpl<LVEntryLo
 
 	@Override
 	public void setContent(String content) {
-		_content = content;
+		_content = Objects.toString(content, "");
 	}
 
 	public long getColumnBitmask() {
@@ -652,10 +653,10 @@ public class LVEntryLocalizationVersionModelImpl extends BaseModelImpl<LVEntryLo
 	private long _lvEntryId;
 	private long _originalLvEntryId;
 	private boolean _setOriginalLvEntryId;
-	private String _languageId;
+	private String _languageId = "";
 	private String _originalLanguageId;
-	private String _title;
-	private String _content;
+	private String _title = "";
+	private String _content = "";
 	private long _columnBitmask;
 	private LVEntryLocalizationVersion _escapedModel;
 }

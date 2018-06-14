@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoCondition service. Represents a row in the &quot;KaleoCondition&quot; database table, with each column mapped to a property of this class.
@@ -332,7 +333,7 @@ public class KaleoConditionModelImpl extends BaseModelImpl<KaleoCondition>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -417,7 +418,7 @@ public class KaleoConditionModelImpl extends BaseModelImpl<KaleoCondition>
 
 	@Override
 	public void setScript(String script) {
-		_script = script;
+		_script = Objects.toString(script, "");
 	}
 
 	@Override
@@ -432,7 +433,7 @@ public class KaleoConditionModelImpl extends BaseModelImpl<KaleoCondition>
 
 	@Override
 	public void setScriptLanguage(String scriptLanguage) {
-		_scriptLanguage = scriptLanguage;
+		_scriptLanguage = Objects.toString(scriptLanguage, "");
 	}
 
 	@Override
@@ -447,7 +448,7 @@ public class KaleoConditionModelImpl extends BaseModelImpl<KaleoCondition>
 
 	@Override
 	public void setScriptRequiredContexts(String scriptRequiredContexts) {
-		_scriptRequiredContexts = scriptRequiredContexts;
+		_scriptRequiredContexts = Objects.toString(scriptRequiredContexts, "");
 	}
 
 	public long getColumnBitmask() {
@@ -753,7 +754,7 @@ public class KaleoConditionModelImpl extends BaseModelImpl<KaleoCondition>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -763,9 +764,9 @@ public class KaleoConditionModelImpl extends BaseModelImpl<KaleoCondition>
 	private long _kaleoNodeId;
 	private long _originalKaleoNodeId;
 	private boolean _setOriginalKaleoNodeId;
-	private String _script;
-	private String _scriptLanguage;
-	private String _scriptRequiredContexts;
+	private String _script = "";
+	private String _scriptLanguage = "";
+	private String _scriptRequiredContexts = "";
 	private long _columnBitmask;
 	private KaleoCondition _escapedModel;
 }

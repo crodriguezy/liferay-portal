@@ -145,6 +145,8 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 	 */
 	@Override
 	public ClassName fetchByValue(String value, boolean retrieveFromCache) {
+		value = Objects.toString(value, "");
+
 		Object[] finderArgs = new Object[] { value };
 
 		Object result = null;
@@ -169,10 +171,7 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 
 			boolean bindValue = false;
 
-			if (value == null) {
-				query.append(_FINDER_COLUMN_VALUE_VALUE_1);
-			}
-			else if (value.equals("")) {
+			if (value.equals("")) {
 				query.append(_FINDER_COLUMN_VALUE_VALUE_3);
 			}
 			else {
@@ -252,6 +251,8 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 	public int countByValue(String value) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_VALUE;
 
+		value = Objects.toString(value, "");
+
 		Object[] finderArgs = new Object[] { value };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -263,10 +264,7 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 
 			boolean bindValue = false;
 
-			if (value == null) {
-				query.append(_FINDER_COLUMN_VALUE_VALUE_1);
-			}
-			else if (value.equals("")) {
+			if (value.equals("")) {
 				query.append(_FINDER_COLUMN_VALUE_VALUE_3);
 			}
 			else {
@@ -307,7 +305,6 @@ public class ClassNamePersistenceImpl extends BasePersistenceImpl<ClassName>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_VALUE_VALUE_1 = "className.value IS NULL";
 	private static final String _FINDER_COLUMN_VALUE_VALUE_2 = "className.value = ?";
 	private static final String _FINDER_COLUMN_VALUE_VALUE_3 = "(className.value IS NULL OR className.value = '')";
 

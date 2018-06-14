@@ -54,6 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -339,10 +340,10 @@ public class PollsQuestionModelImpl extends BaseModelImpl<PollsQuestion>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -446,7 +447,7 @@ public class PollsQuestionModelImpl extends BaseModelImpl<PollsQuestion>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -535,7 +536,7 @@ public class PollsQuestionModelImpl extends BaseModelImpl<PollsQuestion>
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@Override
@@ -634,7 +635,7 @@ public class PollsQuestionModelImpl extends BaseModelImpl<PollsQuestion>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -1121,7 +1122,7 @@ public class PollsQuestionModelImpl extends BaseModelImpl<PollsQuestion>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			PollsQuestion.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _questionId;
 	private long _groupId;
@@ -1131,13 +1132,13 @@ public class PollsQuestionModelImpl extends BaseModelImpl<PollsQuestion>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _title;
+	private String _title = "";
 	private String _titleCurrentLanguageId;
-	private String _description;
+	private String _description = "";
 	private String _descriptionCurrentLanguageId;
 	private Date _expirationDate;
 	private Date _lastPublishDate;

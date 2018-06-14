@@ -49,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the FragmentEntry service. Represents a row in the &quot;FragmentEntry&quot; database table, with each column mapped to a property of this class.
@@ -405,10 +406,10 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -512,7 +513,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -585,7 +586,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 			_originalFragmentEntryKey = _fragmentEntryKey;
 		}
 
-		_fragmentEntryKey = fragmentEntryKey;
+		_fragmentEntryKey = Objects.toString(fragmentEntryKey, "");
 	}
 
 	public String getOriginalFragmentEntryKey() {
@@ -611,7 +612,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -631,7 +632,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 
 	@Override
 	public void setCss(String css) {
-		_css = css;
+		_css = Objects.toString(css, "");
 	}
 
 	@JSON
@@ -647,7 +648,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 
 	@Override
 	public void setHtml(String html) {
-		_html = html;
+		_html = Objects.toString(html, "");
 	}
 
 	@JSON
@@ -663,7 +664,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 
 	@Override
 	public void setJs(String js) {
-		_js = js;
+		_js = Objects.toString(js, "");
 	}
 
 	@JSON
@@ -751,7 +752,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON
@@ -1259,7 +1260,7 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			FragmentEntry.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _fragmentEntryId;
 	private long _groupId;
@@ -1269,27 +1270,27 @@ public class FragmentEntryModelImpl extends BaseModelImpl<FragmentEntry>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _fragmentCollectionId;
 	private long _originalFragmentCollectionId;
 	private boolean _setOriginalFragmentCollectionId;
-	private String _fragmentEntryKey;
+	private String _fragmentEntryKey = "";
 	private String _originalFragmentEntryKey;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
-	private String _css;
-	private String _html;
-	private String _js;
+	private String _css = "";
+	private String _html = "";
+	private String _js = "";
 	private long _previewFileEntryId;
 	private Date _lastPublishDate;
 	private int _status;
 	private int _originalStatus;
 	private boolean _setOriginalStatus;
 	private long _statusByUserId;
-	private String _statusByUserName;
+	private String _statusByUserName = "";
 	private Date _statusDate;
 	private long _columnBitmask;
 	private FragmentEntry _escapedModel;

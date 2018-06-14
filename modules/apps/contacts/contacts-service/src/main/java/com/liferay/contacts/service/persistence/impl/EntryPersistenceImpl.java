@@ -657,6 +657,8 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 	@Override
 	public Entry fetchByU_EA(long userId, String emailAddress,
 		boolean retrieveFromCache) {
+		emailAddress = Objects.toString(emailAddress, "");
+
 		Object[] finderArgs = new Object[] { userId, emailAddress };
 
 		Object result = null;
@@ -684,10 +686,7 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 
 			boolean bindEmailAddress = false;
 
-			if (emailAddress == null) {
-				query.append(_FINDER_COLUMN_U_EA_EMAILADDRESS_1);
-			}
-			else if (emailAddress.equals("")) {
+			if (emailAddress.equals("")) {
 				query.append(_FINDER_COLUMN_U_EA_EMAILADDRESS_3);
 			}
 			else {
@@ -782,6 +781,8 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 	public int countByU_EA(long userId, String emailAddress) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_U_EA;
 
+		emailAddress = Objects.toString(emailAddress, "");
+
 		Object[] finderArgs = new Object[] { userId, emailAddress };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -795,10 +796,7 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 
 			boolean bindEmailAddress = false;
 
-			if (emailAddress == null) {
-				query.append(_FINDER_COLUMN_U_EA_EMAILADDRESS_1);
-			}
-			else if (emailAddress.equals("")) {
+			if (emailAddress.equals("")) {
 				query.append(_FINDER_COLUMN_U_EA_EMAILADDRESS_3);
 			}
 			else {
@@ -842,7 +840,6 @@ public class EntryPersistenceImpl extends BasePersistenceImpl<Entry>
 	}
 
 	private static final String _FINDER_COLUMN_U_EA_USERID_2 = "entry.userId = ? AND ";
-	private static final String _FINDER_COLUMN_U_EA_EMAILADDRESS_1 = "entry.emailAddress IS NULL";
 	private static final String _FINDER_COLUMN_U_EA_EMAILADDRESS_2 = "entry.emailAddress = ?";
 	private static final String _FINDER_COLUMN_U_EA_EMAILADDRESS_3 = "(entry.emailAddress IS NULL OR entry.emailAddress = '')";
 

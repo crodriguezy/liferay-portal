@@ -47,6 +47,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the PasswordPolicy service. Represents a row in the &quot;PasswordPolicy&quot; database table, with each column mapped to a property of this class.
@@ -563,10 +564,10 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -647,7 +648,7 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -726,7 +727,7 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -746,7 +747,7 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
@@ -907,7 +908,7 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 
 	@Override
 	public void setRegex(String regex) {
-		_regex = regex;
+		_regex = Objects.toString(regex, "");
 	}
 
 	@JSON
@@ -1576,23 +1577,23 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 			PasswordPolicy.class, ModelWrapper.class
 		};
 	private long _mvccVersion;
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _passwordPolicyId;
 	private long _companyId;
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private boolean _defaultPolicy;
 	private boolean _originalDefaultPolicy;
 	private boolean _setOriginalDefaultPolicy;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
-	private String _description;
+	private String _description = "";
 	private boolean _changeable;
 	private boolean _changeRequired;
 	private long _minAge;
@@ -1604,7 +1605,7 @@ public class PasswordPolicyModelImpl extends BaseModelImpl<PasswordPolicy>
 	private int _minNumbers;
 	private int _minSymbols;
 	private int _minUpperCase;
-	private String _regex;
+	private String _regex = "";
 	private boolean _history;
 	private int _historyCount;
 	private boolean _expireable;

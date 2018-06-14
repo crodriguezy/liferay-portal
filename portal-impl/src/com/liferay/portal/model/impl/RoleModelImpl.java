@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -388,10 +389,10 @@ public class RoleModelImpl extends BaseModelImpl<Role> implements RoleModel {
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -472,7 +473,7 @@ public class RoleModelImpl extends BaseModelImpl<Role> implements RoleModel {
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -588,7 +589,7 @@ public class RoleModelImpl extends BaseModelImpl<Role> implements RoleModel {
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -651,7 +652,7 @@ public class RoleModelImpl extends BaseModelImpl<Role> implements RoleModel {
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@Override
@@ -750,7 +751,7 @@ public class RoleModelImpl extends BaseModelImpl<Role> implements RoleModel {
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -839,7 +840,7 @@ public class RoleModelImpl extends BaseModelImpl<Role> implements RoleModel {
 			_originalSubtype = _subtype;
 		}
 
-		_subtype = subtype;
+		_subtype = Objects.toString(subtype, "");
 	}
 
 	public String getOriginalSubtype() {
@@ -1272,14 +1273,14 @@ public class RoleModelImpl extends BaseModelImpl<Role> implements RoleModel {
 			Role.class, ModelWrapper.class
 		};
 	private long _mvccVersion;
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _roleId;
 	private long _companyId;
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1289,16 +1290,16 @@ public class RoleModelImpl extends BaseModelImpl<Role> implements RoleModel {
 	private long _classPK;
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
-	private String _title;
+	private String _title = "";
 	private String _titleCurrentLanguageId;
-	private String _description;
+	private String _description = "";
 	private String _descriptionCurrentLanguageId;
 	private int _type;
 	private int _originalType;
 	private boolean _setOriginalType;
-	private String _subtype;
+	private String _subtype = "";
 	private String _originalSubtype;
 	private long _columnBitmask;
 	private Role _escapedModel;

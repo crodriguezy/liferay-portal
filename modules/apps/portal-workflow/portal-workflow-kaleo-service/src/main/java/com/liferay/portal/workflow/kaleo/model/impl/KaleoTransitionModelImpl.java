@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoTransition service. Represents a row in the &quot;KaleoTransition&quot; database table, with each column mapped to a property of this class.
@@ -371,7 +372,7 @@ public class KaleoTransitionModelImpl extends BaseModelImpl<KaleoTransition>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -462,7 +463,7 @@ public class KaleoTransitionModelImpl extends BaseModelImpl<KaleoTransition>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -481,7 +482,7 @@ public class KaleoTransitionModelImpl extends BaseModelImpl<KaleoTransition>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -506,7 +507,7 @@ public class KaleoTransitionModelImpl extends BaseModelImpl<KaleoTransition>
 
 	@Override
 	public void setSourceKaleoNodeName(String sourceKaleoNodeName) {
-		_sourceKaleoNodeName = sourceKaleoNodeName;
+		_sourceKaleoNodeName = Objects.toString(sourceKaleoNodeName, "");
 	}
 
 	@Override
@@ -531,7 +532,7 @@ public class KaleoTransitionModelImpl extends BaseModelImpl<KaleoTransition>
 
 	@Override
 	public void setTargetKaleoNodeName(String targetKaleoNodeName) {
-		_targetKaleoNodeName = targetKaleoNodeName;
+		_targetKaleoNodeName = Objects.toString(targetKaleoNodeName, "");
 	}
 
 	@Override
@@ -913,7 +914,7 @@ public class KaleoTransitionModelImpl extends BaseModelImpl<KaleoTransition>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -923,13 +924,13 @@ public class KaleoTransitionModelImpl extends BaseModelImpl<KaleoTransition>
 	private long _kaleoNodeId;
 	private long _originalKaleoNodeId;
 	private boolean _setOriginalKaleoNodeId;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
-	private String _description;
+	private String _description = "";
 	private long _sourceKaleoNodeId;
-	private String _sourceKaleoNodeName;
+	private String _sourceKaleoNodeName = "";
 	private long _targetKaleoNodeId;
-	private String _targetKaleoNodeName;
+	private String _targetKaleoNodeName = "";
 	private boolean _defaultTransition;
 	private boolean _originalDefaultTransition;
 	private boolean _setOriginalDefaultTransition;

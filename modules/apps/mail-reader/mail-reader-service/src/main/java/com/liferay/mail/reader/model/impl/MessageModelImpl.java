@@ -42,6 +42,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Message service. Represents a row in the &quot;Mail_Message&quot; database table, with each column mapped to a property of this class.
@@ -392,7 +393,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -465,7 +466,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public void setSender(String sender) {
-		_sender = sender;
+		_sender = Objects.toString(sender, "");
 	}
 
 	@Override
@@ -480,7 +481,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public void setTo(String to) {
-		_to = to;
+		_to = Objects.toString(to, "");
 	}
 
 	@Override
@@ -495,7 +496,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public void setCc(String cc) {
-		_cc = cc;
+		_cc = Objects.toString(cc, "");
 	}
 
 	@Override
@@ -510,7 +511,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public void setBcc(String bcc) {
-		_bcc = bcc;
+		_bcc = Objects.toString(bcc, "");
 	}
 
 	@Override
@@ -537,7 +538,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public void setSubject(String subject) {
-		_subject = subject;
+		_subject = Objects.toString(subject, "");
 	}
 
 	@Override
@@ -552,7 +553,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public void setPreview(String preview) {
-		_preview = preview;
+		_preview = Objects.toString(preview, "");
 	}
 
 	@Override
@@ -567,7 +568,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public void setBody(String body) {
-		_body = body;
+		_body = Objects.toString(body, "");
 	}
 
 	@Override
@@ -582,7 +583,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public void setFlags(String flags) {
-		_flags = flags;
+		_flags = Objects.toString(flags, "");
 	}
 
 	@Override
@@ -629,7 +630,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 
 	@Override
 	public void setContentType(String contentType) {
-		_contentType = contentType;
+		_contentType = Objects.toString(contentType, "");
 	}
 
 	public long getColumnBitmask() {
@@ -1040,7 +1041,7 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1048,20 +1049,20 @@ public class MessageModelImpl extends BaseModelImpl<Message>
 	private long _folderId;
 	private long _originalFolderId;
 	private boolean _setOriginalFolderId;
-	private String _sender;
-	private String _to;
-	private String _cc;
-	private String _bcc;
+	private String _sender = "";
+	private String _to = "";
+	private String _cc = "";
+	private String _bcc = "";
 	private Date _sentDate;
-	private String _subject;
-	private String _preview;
-	private String _body;
-	private String _flags;
+	private String _subject = "";
+	private String _preview = "";
+	private String _body = "";
+	private String _flags = "";
 	private long _size;
 	private long _remoteMessageId;
 	private long _originalRemoteMessageId;
 	private boolean _setOriginalRemoteMessageId;
-	private String _contentType;
+	private String _contentType = "";
 	private long _columnBitmask;
 	private Message _escapedModel;
 }

@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -369,10 +370,10 @@ public class MDRActionModelImpl extends BaseModelImpl<MDRAction>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -476,7 +477,7 @@ public class MDRActionModelImpl extends BaseModelImpl<MDRAction>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -628,7 +629,7 @@ public class MDRActionModelImpl extends BaseModelImpl<MDRAction>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -727,7 +728,7 @@ public class MDRActionModelImpl extends BaseModelImpl<MDRAction>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -787,7 +788,7 @@ public class MDRActionModelImpl extends BaseModelImpl<MDRAction>
 
 	@Override
 	public void setType(String type) {
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	@JSON
@@ -803,7 +804,7 @@ public class MDRActionModelImpl extends BaseModelImpl<MDRAction>
 
 	@Override
 	public void setTypeSettings(String typeSettings) {
-		_typeSettings = typeSettings;
+		_typeSettings = Objects.toString(typeSettings, "");
 	}
 
 	@JSON
@@ -1252,7 +1253,7 @@ public class MDRActionModelImpl extends BaseModelImpl<MDRAction>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			MDRAction.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _actionId;
 	private long _groupId;
@@ -1262,7 +1263,7 @@ public class MDRActionModelImpl extends BaseModelImpl<MDRAction>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1271,12 +1272,12 @@ public class MDRActionModelImpl extends BaseModelImpl<MDRAction>
 	private long _ruleGroupInstanceId;
 	private long _originalRuleGroupInstanceId;
 	private boolean _setOriginalRuleGroupInstanceId;
-	private String _name;
+	private String _name = "";
 	private String _nameCurrentLanguageId;
-	private String _description;
+	private String _description = "";
 	private String _descriptionCurrentLanguageId;
-	private String _type;
-	private String _typeSettings;
+	private String _type = "";
+	private String _typeSettings = "";
 	private Date _lastPublishDate;
 	private long _columnBitmask;
 	private MDRAction _escapedModel;

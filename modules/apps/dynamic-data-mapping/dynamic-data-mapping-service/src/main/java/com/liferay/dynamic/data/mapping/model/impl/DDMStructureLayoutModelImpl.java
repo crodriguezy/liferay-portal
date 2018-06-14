@@ -44,6 +44,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the DDMStructureLayout service. Represents a row in the &quot;DDMStructureLayout&quot; database table, with each column mapped to a property of this class.
@@ -248,10 +249,10 @@ public class DDMStructureLayoutModelImpl extends BaseModelImpl<DDMStructureLayou
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -350,7 +351,7 @@ public class DDMStructureLayoutModelImpl extends BaseModelImpl<DDMStructureLayou
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -413,7 +414,7 @@ public class DDMStructureLayoutModelImpl extends BaseModelImpl<DDMStructureLayou
 
 	@Override
 	public void setDefinition(String definition) {
-		_definition = definition;
+		_definition = Objects.toString(definition, "");
 	}
 
 	public com.liferay.dynamic.data.mapping.model.DDMFormLayout getDDMFormLayout() {
@@ -702,7 +703,7 @@ public class DDMStructureLayoutModelImpl extends BaseModelImpl<DDMStructureLayou
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			DDMStructureLayout.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _structureLayoutId;
 	private long _groupId;
@@ -712,14 +713,14 @@ public class DDMStructureLayoutModelImpl extends BaseModelImpl<DDMStructureLayou
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _structureVersionId;
 	private long _originalStructureVersionId;
 	private boolean _setOriginalStructureVersionId;
-	private String _definition;
+	private String _definition = "";
 	private long _columnBitmask;
 	private DDMStructureLayout _escapedModel;
 }

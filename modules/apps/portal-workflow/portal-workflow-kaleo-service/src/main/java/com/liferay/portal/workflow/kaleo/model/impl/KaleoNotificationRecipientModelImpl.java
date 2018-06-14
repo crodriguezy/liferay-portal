@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoNotificationRecipient service. Represents a row in the &quot;KaleoNotificationRecipient&quot; database table, with each column mapped to a property of this class.
@@ -383,7 +384,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -468,7 +469,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public void setRecipientClassName(String recipientClassName) {
-		_recipientClassName = recipientClassName;
+		_recipientClassName = Objects.toString(recipientClassName, "");
 	}
 
 	@Override
@@ -503,7 +504,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public void setRecipientScript(String recipientScript) {
-		_recipientScript = recipientScript;
+		_recipientScript = Objects.toString(recipientScript, "");
 	}
 
 	@Override
@@ -518,7 +519,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public void setRecipientScriptLanguage(String recipientScriptLanguage) {
-		_recipientScriptLanguage = recipientScriptLanguage;
+		_recipientScriptLanguage = Objects.toString(recipientScriptLanguage, "");
 	}
 
 	@Override
@@ -533,7 +534,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public void setRecipientScriptContexts(String recipientScriptContexts) {
-		_recipientScriptContexts = recipientScriptContexts;
+		_recipientScriptContexts = Objects.toString(recipientScriptContexts, "");
 	}
 
 	@Override
@@ -548,7 +549,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public void setAddress(String address) {
-		_address = address;
+		_address = Objects.toString(address, "");
 	}
 
 	@Override
@@ -563,7 +564,8 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 
 	@Override
 	public void setNotificationReceptionType(String notificationReceptionType) {
-		_notificationReceptionType = notificationReceptionType;
+		_notificationReceptionType = Objects.toString(notificationReceptionType,
+				"");
 	}
 
 	public long getColumnBitmask() {
@@ -936,7 +938,7 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -946,14 +948,14 @@ public class KaleoNotificationRecipientModelImpl extends BaseModelImpl<KaleoNoti
 	private long _kaleoNotificationId;
 	private long _originalKaleoNotificationId;
 	private boolean _setOriginalKaleoNotificationId;
-	private String _recipientClassName;
+	private String _recipientClassName = "";
 	private long _recipientClassPK;
 	private int _recipientRoleType;
-	private String _recipientScript;
-	private String _recipientScriptLanguage;
-	private String _recipientScriptContexts;
-	private String _address;
-	private String _notificationReceptionType;
+	private String _recipientScript = "";
+	private String _recipientScriptLanguage = "";
+	private String _recipientScriptContexts = "";
+	private String _address = "";
+	private String _notificationReceptionType = "";
 	private long _columnBitmask;
 	private KaleoNotificationRecipient _escapedModel;
 }

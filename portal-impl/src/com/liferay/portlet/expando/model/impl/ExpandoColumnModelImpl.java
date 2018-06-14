@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the ExpandoColumn service. Represents a row in the &quot;ExpandoColumn&quot; database table, with each column mapped to a property of this class.
@@ -308,7 +309,7 @@ public class ExpandoColumnModelImpl extends BaseModelImpl<ExpandoColumn>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -339,7 +340,7 @@ public class ExpandoColumnModelImpl extends BaseModelImpl<ExpandoColumn>
 
 	@Override
 	public void setDefaultData(String defaultData) {
-		_defaultData = defaultData;
+		_defaultData = Objects.toString(defaultData, "");
 	}
 
 	@JSON
@@ -355,7 +356,7 @@ public class ExpandoColumnModelImpl extends BaseModelImpl<ExpandoColumn>
 
 	@Override
 	public void setTypeSettings(String typeSettings) {
-		_typeSettings = typeSettings;
+		_typeSettings = Objects.toString(typeSettings, "");
 	}
 
 	public long getColumnBitmask() {
@@ -565,11 +566,11 @@ public class ExpandoColumnModelImpl extends BaseModelImpl<ExpandoColumn>
 	private long _tableId;
 	private long _originalTableId;
 	private boolean _setOriginalTableId;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
 	private int _type;
-	private String _defaultData;
-	private String _typeSettings;
+	private String _defaultData = "";
+	private String _typeSettings = "";
 	private long _columnBitmask;
 	private ExpandoColumn _escapedModel;
 }

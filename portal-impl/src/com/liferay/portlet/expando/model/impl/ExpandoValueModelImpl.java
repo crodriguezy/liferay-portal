@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the ExpandoValue service. Represents a row in the &quot;ExpandoValue&quot; database table, with each column mapped to a property of this class.
@@ -436,7 +437,7 @@ public class ExpandoValueModelImpl extends BaseModelImpl<ExpandoValue>
 			_originalData = _data;
 		}
 
-		_data = data;
+		_data = Objects.toString(data, "");
 	}
 
 	public String getOriginalData() {
@@ -711,7 +712,7 @@ public class ExpandoValueModelImpl extends BaseModelImpl<ExpandoValue>
 	private long _classPK;
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
-	private String _data;
+	private String _data = "";
 	private String _originalData;
 	private long _columnBitmask;
 	private ExpandoValue _escapedModel;

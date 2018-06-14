@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -380,10 +381,10 @@ public class CalendarModelImpl extends BaseModelImpl<Calendar>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -487,7 +488,7 @@ public class CalendarModelImpl extends BaseModelImpl<Calendar>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -599,7 +600,7 @@ public class CalendarModelImpl extends BaseModelImpl<Calendar>
 	public void setName(String name) {
 		_columnBitmask = -1L;
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -698,7 +699,7 @@ public class CalendarModelImpl extends BaseModelImpl<Calendar>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -758,7 +759,7 @@ public class CalendarModelImpl extends BaseModelImpl<Calendar>
 
 	@Override
 	public void setTimeZoneId(String timeZoneId) {
-		_timeZoneId = timeZoneId;
+		_timeZoneId = Objects.toString(timeZoneId, "");
 	}
 
 	@JSON
@@ -1286,7 +1287,7 @@ public class CalendarModelImpl extends BaseModelImpl<Calendar>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			Calendar.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _calendarId;
 	private long _groupId;
@@ -1296,18 +1297,18 @@ public class CalendarModelImpl extends BaseModelImpl<Calendar>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _calendarResourceId;
 	private long _originalCalendarResourceId;
 	private boolean _setOriginalCalendarResourceId;
-	private String _name;
+	private String _name = "";
 	private String _nameCurrentLanguageId;
-	private String _description;
+	private String _description = "";
 	private String _descriptionCurrentLanguageId;
-	private String _timeZoneId;
+	private String _timeZoneId = "";
 	private int _color;
 	private boolean _defaultCalendar;
 	private boolean _originalDefaultCalendar;

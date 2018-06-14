@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the DDMFormInstanceRecordVersion service. Represents a row in the &quot;DDMFormInstanceRecordVersion&quot; database table, with each column mapped to a property of this class.
@@ -428,7 +429,7 @@ public class DDMFormInstanceRecordVersionModelImpl extends BaseModelImpl<DDMForm
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -484,7 +485,7 @@ public class DDMFormInstanceRecordVersionModelImpl extends BaseModelImpl<DDMForm
 			_originalFormInstanceVersion = _formInstanceVersion;
 		}
 
-		_formInstanceVersion = formInstanceVersion;
+		_formInstanceVersion = Objects.toString(formInstanceVersion, "");
 	}
 
 	public String getOriginalFormInstanceVersion() {
@@ -533,7 +534,7 @@ public class DDMFormInstanceRecordVersionModelImpl extends BaseModelImpl<DDMForm
 			_originalVersion = _version;
 		}
 
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	public String getOriginalVersion() {
@@ -603,7 +604,7 @@ public class DDMFormInstanceRecordVersionModelImpl extends BaseModelImpl<DDMForm
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON
@@ -1042,23 +1043,23 @@ public class DDMFormInstanceRecordVersionModelImpl extends BaseModelImpl<DDMForm
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private long _formInstanceId;
 	private long _originalFormInstanceId;
 	private boolean _setOriginalFormInstanceId;
-	private String _formInstanceVersion;
+	private String _formInstanceVersion = "";
 	private String _originalFormInstanceVersion;
 	private long _formInstanceRecordId;
 	private long _originalFormInstanceRecordId;
 	private boolean _setOriginalFormInstanceRecordId;
-	private String _version;
+	private String _version = "";
 	private String _originalVersion;
 	private int _status;
 	private int _originalStatus;
 	private boolean _setOriginalStatus;
 	private long _statusByUserId;
-	private String _statusByUserName;
+	private String _statusByUserName = "";
 	private Date _statusDate;
 	private long _storageId;
 	private long _columnBitmask;

@@ -37,6 +37,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Module service. Represents a row in the &quot;Marketplace_Module&quot; database table, with each column mapped to a property of this class.
@@ -216,10 +217,10 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -298,7 +299,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 			_originalBundleSymbolicName = _bundleSymbolicName;
 		}
 
-		_bundleSymbolicName = bundleSymbolicName;
+		_bundleSymbolicName = Objects.toString(bundleSymbolicName, "");
 	}
 
 	public String getOriginalBundleSymbolicName() {
@@ -323,7 +324,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 			_originalBundleVersion = _bundleVersion;
 		}
 
-		_bundleVersion = bundleVersion;
+		_bundleVersion = Objects.toString(bundleVersion, "");
 	}
 
 	public String getOriginalBundleVersion() {
@@ -348,7 +349,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 			_originalContextName = _contextName;
 		}
 
-		_contextName = contextName;
+		_contextName = Objects.toString(contextName, "");
 	}
 
 	public String getOriginalContextName() {
@@ -588,7 +589,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			Module.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _moduleId;
 	private long _companyId;
@@ -597,11 +598,11 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 	private long _appId;
 	private long _originalAppId;
 	private boolean _setOriginalAppId;
-	private String _bundleSymbolicName;
+	private String _bundleSymbolicName = "";
 	private String _originalBundleSymbolicName;
-	private String _bundleVersion;
+	private String _bundleVersion = "";
 	private String _originalBundleVersion;
-	private String _contextName;
+	private String _contextName = "";
 	private String _originalContextName;
 	private long _columnBitmask;
 	private Module _escapedModel;

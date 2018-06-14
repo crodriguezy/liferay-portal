@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KBFolder service. Represents a row in the &quot;KBFolder&quot; database table, with each column mapped to a property of this class.
@@ -334,10 +335,10 @@ public class KBFolderModelImpl extends BaseModelImpl<KBFolder>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -441,7 +442,7 @@ public class KBFolderModelImpl extends BaseModelImpl<KBFolder>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -514,7 +515,7 @@ public class KBFolderModelImpl extends BaseModelImpl<KBFolder>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -540,7 +541,7 @@ public class KBFolderModelImpl extends BaseModelImpl<KBFolder>
 			_originalUrlTitle = _urlTitle;
 		}
 
-		_urlTitle = urlTitle;
+		_urlTitle = Objects.toString(urlTitle, "");
 	}
 
 	public String getOriginalUrlTitle() {
@@ -560,7 +561,7 @@ public class KBFolderModelImpl extends BaseModelImpl<KBFolder>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
@@ -898,7 +899,7 @@ public class KBFolderModelImpl extends BaseModelImpl<KBFolder>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			KBFolder.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _kbFolderId;
 	private long _groupId;
@@ -908,18 +909,18 @@ public class KBFolderModelImpl extends BaseModelImpl<KBFolder>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _parentKBFolderId;
 	private long _originalParentKBFolderId;
 	private boolean _setOriginalParentKBFolderId;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
-	private String _urlTitle;
+	private String _urlTitle = "";
 	private String _originalUrlTitle;
-	private String _description;
+	private String _description = "";
 	private Date _lastPublishDate;
 	private long _columnBitmask;
 	private KBFolder _escapedModel;

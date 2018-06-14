@@ -2790,6 +2790,8 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		layoutUuid = Objects.toString(layoutUuid, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -2833,10 +2835,7 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 
 			boolean bindLayoutUuid = false;
 
-			if (layoutUuid == null) {
-				query.append(_FINDER_COLUMN_LAYOUTUUID_LAYOUTUUID_1);
-			}
-			else if (layoutUuid.equals("")) {
+			if (layoutUuid.equals("")) {
 				query.append(_FINDER_COLUMN_LAYOUTUUID_LAYOUTUUID_3);
 			}
 			else {
@@ -3050,6 +3049,8 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 	protected AssetEntry getByLayoutUuid_PrevAndNext(Session session,
 		AssetEntry assetEntry, String layoutUuid,
 		OrderByComparator<AssetEntry> orderByComparator, boolean previous) {
+		layoutUuid = Objects.toString(layoutUuid, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -3065,10 +3066,7 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 
 		boolean bindLayoutUuid = false;
 
-		if (layoutUuid == null) {
-			query.append(_FINDER_COLUMN_LAYOUTUUID_LAYOUTUUID_1);
-		}
-		else if (layoutUuid.equals("")) {
+		if (layoutUuid.equals("")) {
 			query.append(_FINDER_COLUMN_LAYOUTUUID_LAYOUTUUID_3);
 		}
 		else {
@@ -3190,6 +3188,8 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 	public int countByLayoutUuid(String layoutUuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_LAYOUTUUID;
 
+		layoutUuid = Objects.toString(layoutUuid, "");
+
 		Object[] finderArgs = new Object[] { layoutUuid };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -3201,10 +3201,7 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 
 			boolean bindLayoutUuid = false;
 
-			if (layoutUuid == null) {
-				query.append(_FINDER_COLUMN_LAYOUTUUID_LAYOUTUUID_1);
-			}
-			else if (layoutUuid.equals("")) {
+			if (layoutUuid.equals("")) {
 				query.append(_FINDER_COLUMN_LAYOUTUUID_LAYOUTUUID_3);
 			}
 			else {
@@ -3245,7 +3242,6 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_LAYOUTUUID_LAYOUTUUID_1 = "assetEntry.layoutUuid IS NULL";
 	private static final String _FINDER_COLUMN_LAYOUTUUID_LAYOUTUUID_2 = "assetEntry.layoutUuid = ?";
 	private static final String _FINDER_COLUMN_LAYOUTUUID_LAYOUTUUID_3 = "(assetEntry.layoutUuid IS NULL OR assetEntry.layoutUuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_G_CU = new FinderPath(AssetEntryModelImpl.ENTITY_CACHE_ENABLED,
@@ -3318,6 +3314,8 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 	@Override
 	public AssetEntry fetchByG_CU(long groupId, String classUuid,
 		boolean retrieveFromCache) {
+		classUuid = Objects.toString(classUuid, "");
+
 		Object[] finderArgs = new Object[] { groupId, classUuid };
 
 		Object result = null;
@@ -3345,10 +3343,7 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 
 			boolean bindClassUuid = false;
 
-			if (classUuid == null) {
-				query.append(_FINDER_COLUMN_G_CU_CLASSUUID_1);
-			}
-			else if (classUuid.equals("")) {
+			if (classUuid.equals("")) {
 				query.append(_FINDER_COLUMN_G_CU_CLASSUUID_3);
 			}
 			else {
@@ -3443,6 +3438,8 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 	public int countByG_CU(long groupId, String classUuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_CU;
 
+		classUuid = Objects.toString(classUuid, "");
+
 		Object[] finderArgs = new Object[] { groupId, classUuid };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -3456,10 +3453,7 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 
 			boolean bindClassUuid = false;
 
-			if (classUuid == null) {
-				query.append(_FINDER_COLUMN_G_CU_CLASSUUID_1);
-			}
-			else if (classUuid.equals("")) {
+			if (classUuid.equals("")) {
 				query.append(_FINDER_COLUMN_G_CU_CLASSUUID_3);
 			}
 			else {
@@ -3503,7 +3497,6 @@ public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 	}
 
 	private static final String _FINDER_COLUMN_G_CU_GROUPID_2 = "assetEntry.groupId = ? AND ";
-	private static final String _FINDER_COLUMN_G_CU_CLASSUUID_1 = "assetEntry.classUuid IS NULL";
 	private static final String _FINDER_COLUMN_G_CU_CLASSUUID_2 = "assetEntry.classUuid = ?";
 	private static final String _FINDER_COLUMN_G_CU_CLASSUUID_3 = "(assetEntry.classUuid IS NULL OR assetEntry.classUuid = '')";
 	public static final FinderPath FINDER_PATH_FETCH_BY_C_C = new FinderPath(AssetEntryModelImpl.ENTITY_CACHE_ENABLED,

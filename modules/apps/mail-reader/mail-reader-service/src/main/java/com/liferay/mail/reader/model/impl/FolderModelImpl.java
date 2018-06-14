@@ -41,6 +41,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Folder service. Represents a row in the &quot;Mail_Folder&quot; database table, with each column mapped to a property of this class.
@@ -288,7 +289,7 @@ public class FolderModelImpl extends BaseModelImpl<Folder>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -357,7 +358,7 @@ public class FolderModelImpl extends BaseModelImpl<Folder>
 			_originalFullName = _fullName;
 		}
 
-		_fullName = fullName;
+		_fullName = Objects.toString(fullName, "");
 	}
 
 	public String getOriginalFullName() {
@@ -376,7 +377,7 @@ public class FolderModelImpl extends BaseModelImpl<Folder>
 
 	@Override
 	public void setDisplayName(String displayName) {
-		_displayName = displayName;
+		_displayName = Objects.toString(displayName, "");
 	}
 
 	@Override
@@ -650,16 +651,16 @@ public class FolderModelImpl extends BaseModelImpl<Folder>
 	private long _folderId;
 	private long _companyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _accountId;
 	private long _originalAccountId;
 	private boolean _setOriginalAccountId;
-	private String _fullName;
+	private String _fullName = "";
 	private String _originalFullName;
-	private String _displayName;
+	private String _displayName = "";
 	private int _remoteMessageCount;
 	private long _columnBitmask;
 	private Folder _escapedModel;

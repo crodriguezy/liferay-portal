@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Gadget service. Represents a row in the &quot;OpenSocial_Gadget&quot; database table, with each column mapped to a property of this class.
@@ -289,10 +290,10 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -376,7 +377,7 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 	public void setName(String name) {
 		_columnBitmask = -1L;
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
@@ -398,7 +399,7 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 			_originalUrl = _url;
 		}
 
-		_url = url;
+		_url = Objects.toString(url, "");
 	}
 
 	public String getOriginalUrl() {
@@ -418,7 +419,7 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 
 	@Override
 	public void setPortletCategoryNames(String portletCategoryNames) {
-		_portletCategoryNames = portletCategoryNames;
+		_portletCategoryNames = Objects.toString(portletCategoryNames, "");
 	}
 
 	@JSON
@@ -703,7 +704,7 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			Gadget.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _gadgetId;
 	private long _companyId;
@@ -712,10 +713,10 @@ public class GadgetModelImpl extends BaseModelImpl<Gadget>
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _name;
-	private String _url;
+	private String _name = "";
+	private String _url = "";
 	private String _originalUrl;
-	private String _portletCategoryNames;
+	private String _portletCategoryNames = "";
 	private Date _lastPublishDate;
 	private long _columnBitmask;
 	private Gadget _escapedModel;

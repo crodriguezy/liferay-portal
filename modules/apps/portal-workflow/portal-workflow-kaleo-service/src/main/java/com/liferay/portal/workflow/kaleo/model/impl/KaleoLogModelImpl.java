@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoLog service. Represents a row in the &quot;KaleoLog&quot; database table, with each column mapped to a property of this class.
@@ -506,7 +507,7 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -553,7 +554,7 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 			_originalKaleoClassName = _kaleoClassName;
 		}
 
-		_kaleoClassName = kaleoClassName;
+		_kaleoClassName = Objects.toString(kaleoClassName, "");
 	}
 
 	public String getOriginalKaleoClassName() {
@@ -682,7 +683,7 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public void setKaleoNodeName(String kaleoNodeName) {
-		_kaleoNodeName = kaleoNodeName;
+		_kaleoNodeName = Objects.toString(kaleoNodeName, "");
 	}
 
 	@Override
@@ -722,7 +723,7 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public void setKaleoActionName(String kaleoActionName) {
-		_kaleoActionName = kaleoActionName;
+		_kaleoActionName = Objects.toString(kaleoActionName, "");
 	}
 
 	@Override
@@ -737,7 +738,7 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public void setKaleoActionDescription(String kaleoActionDescription) {
-		_kaleoActionDescription = kaleoActionDescription;
+		_kaleoActionDescription = Objects.toString(kaleoActionDescription, "");
 	}
 
 	@Override
@@ -762,7 +763,7 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public void setPreviousKaleoNodeName(String previousKaleoNodeName) {
-		_previousKaleoNodeName = previousKaleoNodeName;
+		_previousKaleoNodeName = Objects.toString(previousKaleoNodeName, "");
 	}
 
 	@Override
@@ -777,7 +778,8 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public void setPreviousAssigneeClassName(String previousAssigneeClassName) {
-		_previousAssigneeClassName = previousAssigneeClassName;
+		_previousAssigneeClassName = Objects.toString(previousAssigneeClassName,
+				"");
 	}
 
 	@Override
@@ -802,7 +804,8 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public void setCurrentAssigneeClassName(String currentAssigneeClassName) {
-		_currentAssigneeClassName = currentAssigneeClassName;
+		_currentAssigneeClassName = Objects.toString(currentAssigneeClassName,
+				"");
 	}
 
 	@Override
@@ -833,7 +836,7 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 			_originalType = _type;
 		}
 
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	public String getOriginalType() {
@@ -852,7 +855,7 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public void setComment(String comment) {
-		_comment = comment;
+		_comment = Objects.toString(comment, "");
 	}
 
 	@Override
@@ -897,7 +900,7 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 
 	@Override
 	public void setWorkflowContext(String workflowContext) {
-		_workflowContext = workflowContext;
+		_workflowContext = Objects.toString(workflowContext, "");
 	}
 
 	public long getColumnBitmask() {
@@ -1440,11 +1443,11 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _kaleoClassName;
+	private String _kaleoClassName = "";
 	private String _originalKaleoClassName;
 	private long _kaleoClassPK;
 	private long _originalKaleoClassPK;
@@ -1461,24 +1464,24 @@ public class KaleoLogModelImpl extends BaseModelImpl<KaleoLog>
 	private long _kaleoTaskInstanceTokenId;
 	private long _originalKaleoTaskInstanceTokenId;
 	private boolean _setOriginalKaleoTaskInstanceTokenId;
-	private String _kaleoNodeName;
+	private String _kaleoNodeName = "";
 	private boolean _terminalKaleoNode;
 	private long _kaleoActionId;
-	private String _kaleoActionName;
-	private String _kaleoActionDescription;
+	private String _kaleoActionName = "";
+	private String _kaleoActionDescription = "";
 	private long _previousKaleoNodeId;
-	private String _previousKaleoNodeName;
-	private String _previousAssigneeClassName;
+	private String _previousKaleoNodeName = "";
+	private String _previousAssigneeClassName = "";
 	private long _previousAssigneeClassPK;
-	private String _currentAssigneeClassName;
+	private String _currentAssigneeClassName = "";
 	private long _currentAssigneeClassPK;
-	private String _type;
+	private String _type = "";
 	private String _originalType;
-	private String _comment;
+	private String _comment = "";
 	private Date _startDate;
 	private Date _endDate;
 	private long _duration;
-	private String _workflowContext;
+	private String _workflowContext = "";
 	private long _columnBitmask;
 	private KaleoLog _escapedModel;
 }

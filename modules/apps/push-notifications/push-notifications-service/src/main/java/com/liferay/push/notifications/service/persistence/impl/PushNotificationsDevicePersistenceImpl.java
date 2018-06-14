@@ -154,6 +154,8 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 	@Override
 	public PushNotificationsDevice fetchByToken(String token,
 		boolean retrieveFromCache) {
+		token = Objects.toString(token, "");
+
 		Object[] finderArgs = new Object[] { token };
 
 		Object result = null;
@@ -178,10 +180,7 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 
 			boolean bindToken = false;
 
-			if (token == null) {
-				query.append(_FINDER_COLUMN_TOKEN_TOKEN_1);
-			}
-			else if (token.equals("")) {
+			if (token.equals("")) {
 				query.append(_FINDER_COLUMN_TOKEN_TOKEN_3);
 			}
 			else {
@@ -261,6 +260,8 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 	public int countByToken(String token) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_TOKEN;
 
+		token = Objects.toString(token, "");
+
 		Object[] finderArgs = new Object[] { token };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -272,10 +273,7 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 
 			boolean bindToken = false;
 
-			if (token == null) {
-				query.append(_FINDER_COLUMN_TOKEN_TOKEN_1);
-			}
-			else if (token.equals("")) {
+			if (token.equals("")) {
 				query.append(_FINDER_COLUMN_TOKEN_TOKEN_3);
 			}
 			else {
@@ -316,7 +314,6 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_TOKEN_TOKEN_1 = "pushNotificationsDevice.token IS NULL";
 	private static final String _FINDER_COLUMN_TOKEN_TOKEN_2 = "pushNotificationsDevice.token = ?";
 	private static final String _FINDER_COLUMN_TOKEN_TOKEN_3 = "(pushNotificationsDevice.token IS NULL OR pushNotificationsDevice.token = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_U_P = new FinderPath(PushNotificationsDeviceModelImpl.ENTITY_CACHE_ENABLED,
@@ -422,6 +419,8 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		platform = Objects.toString(platform, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -473,10 +472,7 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 
 			boolean bindPlatform = false;
 
-			if (platform == null) {
-				query.append(_FINDER_COLUMN_U_P_PLATFORM_1);
-			}
-			else if (platform.equals("")) {
+			if (platform.equals("")) {
 				query.append(_FINDER_COLUMN_U_P_PLATFORM_3);
 			}
 			else {
@@ -709,6 +705,8 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 		String platform,
 		OrderByComparator<PushNotificationsDevice> orderByComparator,
 		boolean previous) {
+		platform = Objects.toString(platform, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -726,10 +724,7 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 
 		boolean bindPlatform = false;
 
-		if (platform == null) {
-			query.append(_FINDER_COLUMN_U_P_PLATFORM_1);
-		}
-		else if (platform.equals("")) {
+		if (platform.equals("")) {
 			query.append(_FINDER_COLUMN_U_P_PLATFORM_3);
 		}
 		else {
@@ -917,6 +912,8 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 			Arrays.sort(userIds);
 		}
 
+		platform = Objects.toString(platform, "");
+
 		if (userIds.length == 1) {
 			return findByU_P(userIds[0], platform, start, end, orderByComparator);
 		}
@@ -978,10 +975,7 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 
 			boolean bindPlatform = false;
 
-			if (platform == null) {
-				query.append(_FINDER_COLUMN_U_P_PLATFORM_1);
-			}
-			else if (platform.equals("")) {
+			if (platform.equals("")) {
 				query.append(_FINDER_COLUMN_U_P_PLATFORM_3);
 			}
 			else {
@@ -1074,6 +1068,8 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 	public int countByU_P(long userId, String platform) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_U_P;
 
+		platform = Objects.toString(platform, "");
+
 		Object[] finderArgs = new Object[] { userId, platform };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -1087,10 +1083,7 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 
 			boolean bindPlatform = false;
 
-			if (platform == null) {
-				query.append(_FINDER_COLUMN_U_P_PLATFORM_1);
-			}
-			else if (platform.equals("")) {
+			if (platform.equals("")) {
 				query.append(_FINDER_COLUMN_U_P_PLATFORM_3);
 			}
 			else {
@@ -1151,6 +1144,8 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 			Arrays.sort(userIds);
 		}
 
+		platform = Objects.toString(platform, "");
+
 		Object[] finderArgs = new Object[] { StringUtil.merge(userIds), platform };
 
 		Long count = (Long)finderCache.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_U_P,
@@ -1177,10 +1172,7 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 
 			boolean bindPlatform = false;
 
-			if (platform == null) {
-				query.append(_FINDER_COLUMN_U_P_PLATFORM_1);
-			}
-			else if (platform.equals("")) {
+			if (platform.equals("")) {
 				query.append(_FINDER_COLUMN_U_P_PLATFORM_3);
 			}
 			else {
@@ -1228,7 +1220,6 @@ public class PushNotificationsDevicePersistenceImpl extends BasePersistenceImpl<
 
 	private static final String _FINDER_COLUMN_U_P_USERID_2 = "pushNotificationsDevice.userId = ? AND ";
 	private static final String _FINDER_COLUMN_U_P_USERID_7 = "pushNotificationsDevice.userId IN (";
-	private static final String _FINDER_COLUMN_U_P_PLATFORM_1 = "pushNotificationsDevice.platform IS NULL";
 	private static final String _FINDER_COLUMN_U_P_PLATFORM_2 = "pushNotificationsDevice.platform = ?";
 	private static final String _FINDER_COLUMN_U_P_PLATFORM_3 = "(pushNotificationsDevice.platform IS NULL OR pushNotificationsDevice.platform = '')";
 

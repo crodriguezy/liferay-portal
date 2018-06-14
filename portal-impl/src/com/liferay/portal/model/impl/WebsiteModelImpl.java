@@ -49,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Website service. Represents a row in the &quot;Website&quot; database table, with each column mapped to a property of this class.
@@ -356,10 +357,10 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -452,7 +453,7 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -564,7 +565,7 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 
 	@Override
 	public void setUrl(String url) {
-		_url = url;
+		_url = Objects.toString(url, "");
 	}
 
 	@JSON
@@ -942,7 +943,7 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 			Website.class, ModelWrapper.class
 		};
 	private long _mvccVersion;
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _websiteId;
 	private long _companyId;
@@ -951,7 +952,7 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -961,7 +962,7 @@ public class WebsiteModelImpl extends BaseModelImpl<Website>
 	private long _classPK;
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
-	private String _url;
+	private String _url = "";
 	private long _typeId;
 	private boolean _primary;
 	private boolean _originalPrimary;

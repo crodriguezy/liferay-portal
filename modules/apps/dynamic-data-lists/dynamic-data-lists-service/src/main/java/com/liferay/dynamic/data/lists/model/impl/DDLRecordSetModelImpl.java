@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -399,10 +400,10 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -506,7 +507,7 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -549,7 +550,7 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 
 	@Override
 	public void setVersionUserName(String versionUserName) {
-		_versionUserName = versionUserName;
+		_versionUserName = Objects.toString(versionUserName, "");
 	}
 
 	@JSON
@@ -610,7 +611,7 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 			_originalRecordSetKey = _recordSetKey;
 		}
 
-		_recordSetKey = recordSetKey;
+		_recordSetKey = Objects.toString(recordSetKey, "");
 	}
 
 	public String getOriginalRecordSetKey() {
@@ -630,7 +631,7 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 
 	@Override
 	public void setVersion(String version) {
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	@JSON
@@ -689,7 +690,7 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -788,7 +789,7 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -870,7 +871,7 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 
 	@Override
 	public void setSettings(String settings) {
-		_settings = settings;
+		_settings = Objects.toString(settings, "");
 	}
 
 	@JSON
@@ -1368,7 +1369,7 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			DDLRecordSet.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _recordSetId;
 	private long _groupId;
@@ -1378,23 +1379,23 @@ public class DDLRecordSetModelImpl extends BaseModelImpl<DDLRecordSet>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private long _versionUserId;
-	private String _versionUserName;
+	private String _versionUserName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _DDMStructureId;
-	private String _recordSetKey;
+	private String _recordSetKey = "";
 	private String _originalRecordSetKey;
-	private String _version;
-	private String _name;
+	private String _version = "";
+	private String _name = "";
 	private String _nameCurrentLanguageId;
-	private String _description;
+	private String _description = "";
 	private String _descriptionCurrentLanguageId;
 	private int _minDisplayRows;
 	private int _scope;
-	private String _settings;
+	private String _settings = "";
 	private Date _lastPublishDate;
 	private long _columnBitmask;
 	private DDLRecordSet _escapedModel;

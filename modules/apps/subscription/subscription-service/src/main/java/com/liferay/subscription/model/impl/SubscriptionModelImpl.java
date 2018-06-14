@@ -43,6 +43,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Subscription service. Represents a row in the &quot;Subscription&quot; database table, with each column mapped to a property of this class.
@@ -358,7 +359,7 @@ public class SubscriptionModelImpl extends BaseModelImpl<Subscription>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -463,7 +464,7 @@ public class SubscriptionModelImpl extends BaseModelImpl<Subscription>
 
 	@Override
 	public void setFrequency(String frequency) {
-		_frequency = frequency;
+		_frequency = Objects.toString(frequency, "");
 	}
 
 	public long getColumnBitmask() {
@@ -754,7 +755,7 @@ public class SubscriptionModelImpl extends BaseModelImpl<Subscription>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -764,7 +765,7 @@ public class SubscriptionModelImpl extends BaseModelImpl<Subscription>
 	private long _classPK;
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
-	private String _frequency;
+	private String _frequency = "";
 	private long _columnBitmask;
 	private Subscription _escapedModel;
 }

@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the UserTracker service. Represents a row in the &quot;UserTracker&quot; database table, with each column mapped to a property of this class.
@@ -329,7 +330,7 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 			_originalSessionId = _sessionId;
 		}
 
-		_sessionId = sessionId;
+		_sessionId = Objects.toString(sessionId, "");
 	}
 
 	public String getOriginalSessionId() {
@@ -348,7 +349,7 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 
 	@Override
 	public void setRemoteAddr(String remoteAddr) {
-		_remoteAddr = remoteAddr;
+		_remoteAddr = Objects.toString(remoteAddr, "");
 	}
 
 	@Override
@@ -363,7 +364,7 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 
 	@Override
 	public void setRemoteHost(String remoteHost) {
-		_remoteHost = remoteHost;
+		_remoteHost = Objects.toString(remoteHost, "");
 	}
 
 	@Override
@@ -378,7 +379,7 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 
 	@Override
 	public void setUserAgent(String userAgent) {
-		_userAgent = userAgent;
+		_userAgent = Objects.toString(userAgent, "");
 	}
 
 	public long getColumnBitmask() {
@@ -642,11 +643,11 @@ public class UserTrackerModelImpl extends BaseModelImpl<UserTracker>
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
 	private Date _modifiedDate;
-	private String _sessionId;
+	private String _sessionId = "";
 	private String _originalSessionId;
-	private String _remoteAddr;
-	private String _remoteHost;
-	private String _userAgent;
+	private String _remoteAddr = "";
+	private String _remoteHost = "";
+	private String _userAgent = "";
 	private long _columnBitmask;
 	private UserTracker _escapedModel;
 }

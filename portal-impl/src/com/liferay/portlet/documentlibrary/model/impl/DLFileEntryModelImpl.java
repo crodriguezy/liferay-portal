@@ -53,6 +53,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the DLFileEntry service. Represents a row in the &quot;DLFileEntry&quot; database table, with each column mapped to a property of this class.
@@ -518,10 +519,10 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -637,7 +638,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -769,7 +770,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 
 	@Override
 	public void setTreePath(String treePath) {
-		_treePath = treePath;
+		_treePath = Objects.toString(treePath, "");
 	}
 
 	@JSON
@@ -791,7 +792,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -817,7 +818,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 			_originalFileName = _fileName;
 		}
 
-		_fileName = fileName;
+		_fileName = Objects.toString(fileName, "");
 	}
 
 	public String getOriginalFileName() {
@@ -837,7 +838,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 
 	@Override
 	public void setExtension(String extension) {
-		_extension = extension;
+		_extension = Objects.toString(extension, "");
 	}
 
 	@JSON
@@ -859,7 +860,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 			_originalMimeType = _mimeType;
 		}
 
-		_mimeType = mimeType;
+		_mimeType = Objects.toString(mimeType, "");
 	}
 
 	public String getOriginalMimeType() {
@@ -885,7 +886,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 			_originalTitle = _title;
 		}
 
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	public String getOriginalTitle() {
@@ -905,7 +906,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
@@ -921,7 +922,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 
 	@Override
 	public void setExtraSettings(String extraSettings) {
-		_extraSettings = extraSettings;
+		_extraSettings = Objects.toString(extraSettings, "");
 	}
 
 	@JSON
@@ -960,7 +961,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 
 	@Override
 	public void setVersion(String version) {
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	@JSON
@@ -1798,7 +1799,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			DLFileEntry.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _fileEntryId;
 	private long _groupId;
@@ -1810,7 +1811,7 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1822,22 +1823,22 @@ public class DLFileEntryModelImpl extends BaseModelImpl<DLFileEntry>
 	private long _folderId;
 	private long _originalFolderId;
 	private boolean _setOriginalFolderId;
-	private String _treePath;
-	private String _name;
+	private String _treePath = "";
+	private String _name = "";
 	private String _originalName;
-	private String _fileName;
+	private String _fileName = "";
 	private String _originalFileName;
-	private String _extension;
-	private String _mimeType;
+	private String _extension = "";
+	private String _mimeType = "";
 	private String _originalMimeType;
-	private String _title;
+	private String _title = "";
 	private String _originalTitle;
-	private String _description;
-	private String _extraSettings;
+	private String _description = "";
+	private String _extraSettings = "";
 	private long _fileEntryTypeId;
 	private long _originalFileEntryTypeId;
 	private boolean _setOriginalFileEntryTypeId;
-	private String _version;
+	private String _version = "";
 	private long _size;
 	private int _readCount;
 	private long _smallImageId;

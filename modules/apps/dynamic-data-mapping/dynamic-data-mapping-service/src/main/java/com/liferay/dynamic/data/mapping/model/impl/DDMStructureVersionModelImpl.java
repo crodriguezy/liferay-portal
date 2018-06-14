@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -446,7 +447,7 @@ public class DDMStructureVersionModelImpl extends BaseModelImpl<DDMStructureVers
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -502,7 +503,7 @@ public class DDMStructureVersionModelImpl extends BaseModelImpl<DDMStructureVers
 			_originalVersion = _version;
 		}
 
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	public String getOriginalVersion() {
@@ -576,7 +577,7 @@ public class DDMStructureVersionModelImpl extends BaseModelImpl<DDMStructureVers
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -675,7 +676,7 @@ public class DDMStructureVersionModelImpl extends BaseModelImpl<DDMStructureVers
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -735,7 +736,7 @@ public class DDMStructureVersionModelImpl extends BaseModelImpl<DDMStructureVers
 
 	@Override
 	public void setDefinition(String definition) {
-		_definition = definition;
+		_definition = Objects.toString(definition, "");
 	}
 
 	@JSON
@@ -751,7 +752,7 @@ public class DDMStructureVersionModelImpl extends BaseModelImpl<DDMStructureVers
 
 	@Override
 	public void setStorageType(String storageType) {
-		_storageType = storageType;
+		_storageType = Objects.toString(storageType, "");
 	}
 
 	@JSON
@@ -828,7 +829,7 @@ public class DDMStructureVersionModelImpl extends BaseModelImpl<DDMStructureVers
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON
@@ -1378,26 +1379,26 @@ public class DDMStructureVersionModelImpl extends BaseModelImpl<DDMStructureVers
 	private long _groupId;
 	private long _companyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private long _structureId;
 	private long _originalStructureId;
 	private boolean _setOriginalStructureId;
-	private String _version;
+	private String _version = "";
 	private String _originalVersion;
 	private long _parentStructureId;
-	private String _name;
+	private String _name = "";
 	private String _nameCurrentLanguageId;
-	private String _description;
+	private String _description = "";
 	private String _descriptionCurrentLanguageId;
-	private String _definition;
-	private String _storageType;
+	private String _definition = "";
+	private String _storageType = "";
 	private int _type;
 	private int _status;
 	private int _originalStatus;
 	private boolean _setOriginalStatus;
 	private long _statusByUserId;
-	private String _statusByUserName;
+	private String _statusByUserName = "";
 	private Date _statusDate;
 	private long _columnBitmask;
 	private DDMStructureVersion _escapedModel;

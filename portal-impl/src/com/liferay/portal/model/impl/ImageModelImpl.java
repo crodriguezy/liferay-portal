@@ -41,6 +41,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Image service. Represents a row in the &quot;Image&quot; database table, with each column mapped to a property of this class.
@@ -316,7 +317,7 @@ public class ImageModelImpl extends BaseModelImpl<Image> implements ImageModel {
 
 	@Override
 	public void setType(String type) {
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	@JSON
@@ -593,7 +594,7 @@ public class ImageModelImpl extends BaseModelImpl<Image> implements ImageModel {
 	private long _imageId;
 	private long _companyId;
 	private Date _modifiedDate;
-	private String _type;
+	private String _type = "";
 	private int _height;
 	private int _width;
 	private int _size;

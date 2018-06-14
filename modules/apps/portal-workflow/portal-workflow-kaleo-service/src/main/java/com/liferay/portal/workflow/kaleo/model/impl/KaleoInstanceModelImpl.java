@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoInstance service. Represents a row in the &quot;KaleoInstance&quot; database table, with each column mapped to a property of this class.
@@ -388,7 +389,7 @@ public class KaleoInstanceModelImpl extends BaseModelImpl<KaleoInstance>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -457,7 +458,7 @@ public class KaleoInstanceModelImpl extends BaseModelImpl<KaleoInstance>
 			_originalKaleoDefinitionName = _kaleoDefinitionName;
 		}
 
-		_kaleoDefinitionName = kaleoDefinitionName;
+		_kaleoDefinitionName = Objects.toString(kaleoDefinitionName, "");
 	}
 
 	public String getOriginalKaleoDefinitionName() {
@@ -514,7 +515,7 @@ public class KaleoInstanceModelImpl extends BaseModelImpl<KaleoInstance>
 			_originalClassName = _className;
 		}
 
-		_className = className;
+		_className = Objects.toString(className, "");
 	}
 
 	public String getOriginalClassName() {
@@ -602,7 +603,7 @@ public class KaleoInstanceModelImpl extends BaseModelImpl<KaleoInstance>
 
 	@Override
 	public void setWorkflowContext(String workflowContext) {
-		_workflowContext = workflowContext;
+		_workflowContext = Objects.toString(workflowContext, "");
 	}
 
 	public long getColumnBitmask() {
@@ -971,20 +972,20 @@ public class KaleoInstanceModelImpl extends BaseModelImpl<KaleoInstance>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _kaleoDefinitionVersionId;
 	private long _originalKaleoDefinitionVersionId;
 	private boolean _setOriginalKaleoDefinitionVersionId;
-	private String _kaleoDefinitionName;
+	private String _kaleoDefinitionName = "";
 	private String _originalKaleoDefinitionName;
 	private int _kaleoDefinitionVersion;
 	private int _originalKaleoDefinitionVersion;
 	private boolean _setOriginalKaleoDefinitionVersion;
 	private long _rootKaleoInstanceTokenId;
-	private String _className;
+	private String _className = "";
 	private String _originalClassName;
 	private long _classPK;
 	private long _originalClassPK;
@@ -994,7 +995,7 @@ public class KaleoInstanceModelImpl extends BaseModelImpl<KaleoInstance>
 	private boolean _setOriginalCompleted;
 	private Date _completionDate;
 	private Date _originalCompletionDate;
-	private String _workflowContext;
+	private String _workflowContext = "";
 	private long _columnBitmask;
 	private KaleoInstance _escapedModel;
 }

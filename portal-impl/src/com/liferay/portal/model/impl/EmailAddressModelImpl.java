@@ -49,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the EmailAddress service. Represents a row in the &quot;EmailAddress&quot; database table, with each column mapped to a property of this class.
@@ -346,10 +347,10 @@ public class EmailAddressModelImpl extends BaseModelImpl<EmailAddress>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -442,7 +443,7 @@ public class EmailAddressModelImpl extends BaseModelImpl<EmailAddress>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -554,7 +555,7 @@ public class EmailAddressModelImpl extends BaseModelImpl<EmailAddress>
 
 	@Override
 	public void setAddress(String address) {
-		_address = address;
+		_address = Objects.toString(address, "");
 	}
 
 	@JSON
@@ -905,7 +906,7 @@ public class EmailAddressModelImpl extends BaseModelImpl<EmailAddress>
 			EmailAddress.class, ModelWrapper.class
 		};
 	private long _mvccVersion;
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _emailAddressId;
 	private long _companyId;
@@ -914,7 +915,7 @@ public class EmailAddressModelImpl extends BaseModelImpl<EmailAddress>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -924,7 +925,7 @@ public class EmailAddressModelImpl extends BaseModelImpl<EmailAddress>
 	private long _classPK;
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
-	private String _address;
+	private String _address = "";
 	private long _typeId;
 	private boolean _primary;
 	private boolean _originalPrimary;

@@ -151,6 +151,8 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 	 */
 	@Override
 	public Ticket fetchByKey(String key, boolean retrieveFromCache) {
+		key = Objects.toString(key, "");
+
 		Object[] finderArgs = new Object[] { key };
 
 		Object result = null;
@@ -175,10 +177,7 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 
 			boolean bindKey = false;
 
-			if (key == null) {
-				query.append(_FINDER_COLUMN_KEY_KEY_1);
-			}
-			else if (key.equals("")) {
+			if (key.equals("")) {
 				query.append(_FINDER_COLUMN_KEY_KEY_3);
 			}
 			else {
@@ -268,6 +267,8 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 	public int countByKey(String key) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_KEY;
 
+		key = Objects.toString(key, "");
+
 		Object[] finderArgs = new Object[] { key };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -279,10 +280,7 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 
 			boolean bindKey = false;
 
-			if (key == null) {
-				query.append(_FINDER_COLUMN_KEY_KEY_1);
-			}
-			else if (key.equals("")) {
+			if (key.equals("")) {
 				query.append(_FINDER_COLUMN_KEY_KEY_3);
 			}
 			else {
@@ -323,7 +321,6 @@ public class TicketPersistenceImpl extends BasePersistenceImpl<Ticket>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_KEY_KEY_1 = "ticket.key IS NULL";
 	private static final String _FINDER_COLUMN_KEY_KEY_2 = "ticket.key = ?";
 	private static final String _FINDER_COLUMN_KEY_KEY_3 = "(ticket.key IS NULL OR ticket.key = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_C_T = new FinderPath(TicketModelImpl.ENTITY_CACHE_ENABLED,

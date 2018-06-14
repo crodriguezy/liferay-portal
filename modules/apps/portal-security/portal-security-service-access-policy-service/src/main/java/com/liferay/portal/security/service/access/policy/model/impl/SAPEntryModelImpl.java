@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -329,10 +330,10 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -413,7 +414,7 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -457,7 +458,8 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 
 	@Override
 	public void setAllowedServiceSignatures(String allowedServiceSignatures) {
-		_allowedServiceSignatures = allowedServiceSignatures;
+		_allowedServiceSignatures = Objects.toString(allowedServiceSignatures,
+				"");
 	}
 
 	@JSON
@@ -525,7 +527,7 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -588,7 +590,7 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@Override
@@ -996,25 +998,25 @@ public class SAPEntryModelImpl extends BaseModelImpl<SAPEntry>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			SAPEntry.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _sapEntryId;
 	private long _companyId;
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _allowedServiceSignatures;
+	private String _allowedServiceSignatures = "";
 	private boolean _defaultSAPEntry;
 	private boolean _originalDefaultSAPEntry;
 	private boolean _setOriginalDefaultSAPEntry;
 	private boolean _enabled;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
-	private String _title;
+	private String _title = "";
 	private String _titleCurrentLanguageId;
 	private long _columnBitmask;
 	private SAPEntry _escapedModel;

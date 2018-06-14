@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the PluginSetting service. Represents a row in the &quot;PluginSetting&quot; database table, with each column mapped to a property of this class.
@@ -313,7 +314,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 			_originalPluginId = _pluginId;
 		}
 
-		_pluginId = pluginId;
+		_pluginId = Objects.toString(pluginId, "");
 	}
 
 	public String getOriginalPluginId() {
@@ -339,7 +340,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 			_originalPluginType = _pluginType;
 		}
 
-		_pluginType = pluginType;
+		_pluginType = Objects.toString(pluginType, "");
 	}
 
 	public String getOriginalPluginType() {
@@ -359,7 +360,7 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 
 	@Override
 	public void setRoles(String roles) {
-		_roles = roles;
+		_roles = Objects.toString(roles, "");
 	}
 
 	@JSON
@@ -603,11 +604,11 @@ public class PluginSettingModelImpl extends BaseModelImpl<PluginSetting>
 	private long _companyId;
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
-	private String _pluginId;
+	private String _pluginId = "";
 	private String _originalPluginId;
-	private String _pluginType;
+	private String _pluginType = "";
 	private String _originalPluginType;
-	private String _roles;
+	private String _roles = "";
 	private boolean _active;
 	private long _columnBitmask;
 	private PluginSetting _escapedModel;

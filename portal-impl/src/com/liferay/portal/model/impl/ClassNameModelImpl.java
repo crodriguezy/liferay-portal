@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the ClassName service. Represents a row in the &quot;ClassName_&quot; database table, with each column mapped to a property of this class.
@@ -270,7 +271,7 @@ public class ClassNameModelImpl extends BaseModelImpl<ClassName>
 			_originalValue = _value;
 		}
 
-		_value = value;
+		_value = Objects.toString(value, "");
 	}
 
 	public String getOriginalValue() {
@@ -444,7 +445,7 @@ public class ClassNameModelImpl extends BaseModelImpl<ClassName>
 		};
 	private long _mvccVersion;
 	private long _classNameId;
-	private String _value;
+	private String _value = "";
 	private String _originalValue;
 	private long _columnBitmask;
 	private ClassName _escapedModel;

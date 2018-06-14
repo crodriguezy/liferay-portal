@@ -36,6 +36,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the ExpandoTable service. Represents a row in the &quot;ExpandoTable&quot; database table, with each column mapped to a property of this class.
@@ -269,7 +270,7 @@ public class ExpandoTableModelImpl extends BaseModelImpl<ExpandoTable>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -452,7 +453,7 @@ public class ExpandoTableModelImpl extends BaseModelImpl<ExpandoTable>
 	private long _classNameId;
 	private long _originalClassNameId;
 	private boolean _setOriginalClassNameId;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
 	private long _columnBitmask;
 	private ExpandoTable _escapedModel;

@@ -41,6 +41,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the PowwowServer service. Represents a row in the &quot;PowwowServer&quot; database table, with each column mapped to a property of this class.
@@ -306,7 +307,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -349,7 +350,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 	public void setName(String name) {
 		_columnBitmask = -1L;
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -370,7 +371,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 			_originalProviderType = _providerType;
 		}
 
-		_providerType = providerType;
+		_providerType = Objects.toString(providerType, "");
 	}
 
 	public String getOriginalProviderType() {
@@ -389,7 +390,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public void setUrl(String url) {
-		_url = url;
+		_url = Objects.toString(url, "");
 	}
 
 	@Override
@@ -404,7 +405,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public void setApiKey(String apiKey) {
-		_apiKey = apiKey;
+		_apiKey = Objects.toString(apiKey, "");
 	}
 
 	@Override
@@ -419,7 +420,7 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 
 	@Override
 	public void setSecret(String secret) {
-		_secret = secret;
+		_secret = Objects.toString(secret, "");
 	}
 
 	@Override
@@ -746,16 +747,16 @@ public class PowwowServerModelImpl extends BaseModelImpl<PowwowServer>
 	private long _powwowServerId;
 	private long _companyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _name;
-	private String _providerType;
+	private String _name = "";
+	private String _providerType = "";
 	private String _originalProviderType;
-	private String _url;
-	private String _apiKey;
-	private String _secret;
+	private String _url = "";
+	private String _apiKey = "";
+	private String _secret = "";
 	private boolean _active;
 	private boolean _originalActive;
 	private boolean _setOriginalActive;

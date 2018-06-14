@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the ResourceBlock service. Represents a row in the &quot;ResourceBlock&quot; database table, with each column mapped to a property of this class.
@@ -339,7 +340,7 @@ public class ResourceBlockModelImpl extends BaseModelImpl<ResourceBlock>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -365,7 +366,7 @@ public class ResourceBlockModelImpl extends BaseModelImpl<ResourceBlock>
 			_originalPermissionsHash = _permissionsHash;
 		}
 
-		_permissionsHash = permissionsHash;
+		_permissionsHash = Objects.toString(permissionsHash, "");
 	}
 
 	public String getOriginalPermissionsHash() {
@@ -608,9 +609,9 @@ public class ResourceBlockModelImpl extends BaseModelImpl<ResourceBlock>
 	private long _groupId;
 	private long _originalGroupId;
 	private boolean _setOriginalGroupId;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
-	private String _permissionsHash;
+	private String _permissionsHash = "";
 	private String _originalPermissionsHash;
 	private long _referenceCount;
 	private long _columnBitmask;

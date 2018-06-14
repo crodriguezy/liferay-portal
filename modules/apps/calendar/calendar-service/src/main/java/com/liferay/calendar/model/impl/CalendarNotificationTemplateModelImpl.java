@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the CalendarNotificationTemplate service. Represents a row in the &quot;CalendarNotificationTemplate&quot; database table, with each column mapped to a property of this class.
@@ -360,10 +361,10 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -468,7 +469,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -541,7 +542,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 			_originalNotificationType = _notificationType;
 		}
 
-		_notificationType = notificationType;
+		_notificationType = Objects.toString(notificationType, "");
 	}
 
 	public String getOriginalNotificationType() {
@@ -561,7 +562,8 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 
 	@Override
 	public void setNotificationTypeSettings(String notificationTypeSettings) {
-		_notificationTypeSettings = notificationTypeSettings;
+		_notificationTypeSettings = Objects.toString(notificationTypeSettings,
+				"");
 	}
 
 	@JSON
@@ -583,7 +585,8 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 			_originalNotificationTemplateType = _notificationTemplateType;
 		}
 
-		_notificationTemplateType = notificationTemplateType;
+		_notificationTemplateType = Objects.toString(notificationTemplateType,
+				"");
 	}
 
 	public String getOriginalNotificationTemplateType() {
@@ -603,7 +606,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 
 	@Override
 	public void setSubject(String subject) {
-		_subject = subject;
+		_subject = Objects.toString(subject, "");
 	}
 
 	@JSON
@@ -619,7 +622,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 
 	@Override
 	public void setBody(String body) {
-		_body = body;
+		_body = Objects.toString(body, "");
 	}
 
 	@JSON
@@ -992,7 +995,7 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			CalendarNotificationTemplate.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _calendarNotificationTemplateId;
 	private long _groupId;
@@ -1002,20 +1005,20 @@ public class CalendarNotificationTemplateModelImpl extends BaseModelImpl<Calenda
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _calendarId;
 	private long _originalCalendarId;
 	private boolean _setOriginalCalendarId;
-	private String _notificationType;
+	private String _notificationType = "";
 	private String _originalNotificationType;
-	private String _notificationTypeSettings;
-	private String _notificationTemplateType;
+	private String _notificationTypeSettings = "";
+	private String _notificationTemplateType = "";
 	private String _originalNotificationTemplateType;
-	private String _subject;
-	private String _body;
+	private String _subject = "";
+	private String _body = "";
 	private Date _lastPublishDate;
 	private long _columnBitmask;
 	private CalendarNotificationTemplate _escapedModel;

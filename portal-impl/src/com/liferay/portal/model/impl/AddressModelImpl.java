@@ -49,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the Address service. Represents a row in the &quot;Address&quot; database table, with each column mapped to a property of this class.
@@ -417,10 +418,10 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -513,7 +514,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -625,7 +626,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 
 	@Override
 	public void setStreet1(String street1) {
-		_street1 = street1;
+		_street1 = Objects.toString(street1, "");
 	}
 
 	@JSON
@@ -641,7 +642,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 
 	@Override
 	public void setStreet2(String street2) {
-		_street2 = street2;
+		_street2 = Objects.toString(street2, "");
 	}
 
 	@JSON
@@ -657,7 +658,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 
 	@Override
 	public void setStreet3(String street3) {
-		_street3 = street3;
+		_street3 = Objects.toString(street3, "");
 	}
 
 	@JSON
@@ -673,7 +674,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 
 	@Override
 	public void setCity(String city) {
-		_city = city;
+		_city = Objects.toString(city, "");
 	}
 
 	@JSON
@@ -689,7 +690,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 
 	@Override
 	public void setZip(String zip) {
-		_zip = zip;
+		_zip = Objects.toString(zip, "");
 	}
 
 	@JSON
@@ -1182,7 +1183,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 			Address.class, ModelWrapper.class
 		};
 	private long _mvccVersion;
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _addressId;
 	private long _companyId;
@@ -1191,7 +1192,7 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1201,11 +1202,11 @@ public class AddressModelImpl extends BaseModelImpl<Address>
 	private long _classPK;
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
-	private String _street1;
-	private String _street2;
-	private String _street3;
-	private String _city;
-	private String _zip;
+	private String _street1 = "";
+	private String _street2 = "";
+	private String _street3 = "";
+	private String _city = "";
+	private String _zip = "";
 	private long _regionId;
 	private long _countryId;
 	private long _typeId;

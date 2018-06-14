@@ -37,6 +37,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the JournalArticleLocalization service. Represents a row in the &quot;JournalArticleLocalization&quot; database table, with each column mapped to a property of this class.
@@ -245,7 +246,7 @@ public class JournalArticleLocalizationModelImpl extends BaseModelImpl<JournalAr
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@Override
@@ -260,7 +261,7 @@ public class JournalArticleLocalizationModelImpl extends BaseModelImpl<JournalAr
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -281,7 +282,7 @@ public class JournalArticleLocalizationModelImpl extends BaseModelImpl<JournalAr
 			_originalLanguageId = _languageId;
 		}
 
-		_languageId = languageId;
+		_languageId = Objects.toString(languageId, "");
 	}
 
 	public String getOriginalLanguageId() {
@@ -502,9 +503,9 @@ public class JournalArticleLocalizationModelImpl extends BaseModelImpl<JournalAr
 	private long _articlePK;
 	private long _originalArticlePK;
 	private boolean _setOriginalArticlePK;
-	private String _title;
-	private String _description;
-	private String _languageId;
+	private String _title = "";
+	private String _description = "";
+	private String _languageId = "";
 	private String _originalLanguageId;
 	private long _columnBitmask;
 	private JournalArticleLocalization _escapedModel;

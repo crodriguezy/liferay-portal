@@ -2218,6 +2218,8 @@ public class KaleoTaskFormPersistenceImpl extends BasePersistenceImpl<KaleoTaskF
 	@Override
 	public KaleoTaskForm fetchByFormUuid_KTI(long kaleoTaskId, String formUuid,
 		boolean retrieveFromCache) {
+		formUuid = Objects.toString(formUuid, "");
+
 		Object[] finderArgs = new Object[] { kaleoTaskId, formUuid };
 
 		Object result = null;
@@ -2245,10 +2247,7 @@ public class KaleoTaskFormPersistenceImpl extends BasePersistenceImpl<KaleoTaskF
 
 			boolean bindFormUuid = false;
 
-			if (formUuid == null) {
-				query.append(_FINDER_COLUMN_FORMUUID_KTI_FORMUUID_1);
-			}
-			else if (formUuid.equals("")) {
+			if (formUuid.equals("")) {
 				query.append(_FINDER_COLUMN_FORMUUID_KTI_FORMUUID_3);
 			}
 			else {
@@ -2344,6 +2343,8 @@ public class KaleoTaskFormPersistenceImpl extends BasePersistenceImpl<KaleoTaskF
 	public int countByFormUuid_KTI(long kaleoTaskId, String formUuid) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_FORMUUID_KTI;
 
+		formUuid = Objects.toString(formUuid, "");
+
 		Object[] finderArgs = new Object[] { kaleoTaskId, formUuid };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -2357,10 +2358,7 @@ public class KaleoTaskFormPersistenceImpl extends BasePersistenceImpl<KaleoTaskF
 
 			boolean bindFormUuid = false;
 
-			if (formUuid == null) {
-				query.append(_FINDER_COLUMN_FORMUUID_KTI_FORMUUID_1);
-			}
-			else if (formUuid.equals("")) {
+			if (formUuid.equals("")) {
 				query.append(_FINDER_COLUMN_FORMUUID_KTI_FORMUUID_3);
 			}
 			else {
@@ -2404,7 +2402,6 @@ public class KaleoTaskFormPersistenceImpl extends BasePersistenceImpl<KaleoTaskF
 	}
 
 	private static final String _FINDER_COLUMN_FORMUUID_KTI_KALEOTASKID_2 = "kaleoTaskForm.kaleoTaskId = ? AND ";
-	private static final String _FINDER_COLUMN_FORMUUID_KTI_FORMUUID_1 = "kaleoTaskForm.formUuid IS NULL";
 	private static final String _FINDER_COLUMN_FORMUUID_KTI_FORMUUID_2 = "kaleoTaskForm.formUuid = ?";
 	private static final String _FINDER_COLUMN_FORMUUID_KTI_FORMUUID_3 = "(kaleoTaskForm.formUuid IS NULL OR kaleoTaskForm.formUuid = '')";
 

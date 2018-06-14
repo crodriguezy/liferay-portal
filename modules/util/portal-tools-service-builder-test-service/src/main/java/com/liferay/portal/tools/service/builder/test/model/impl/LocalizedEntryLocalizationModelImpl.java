@@ -36,6 +36,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the LocalizedEntryLocalization service. Represents a row in the &quot;LocalizedEntryLocalization&quot; database table, with each column mapped to a property of this class.
@@ -252,7 +253,7 @@ public class LocalizedEntryLocalizationModelImpl extends BaseModelImpl<Localized
 			_originalLanguageId = _languageId;
 		}
 
-		_languageId = languageId;
+		_languageId = Objects.toString(languageId, "");
 	}
 
 	public String getOriginalLanguageId() {
@@ -271,7 +272,7 @@ public class LocalizedEntryLocalizationModelImpl extends BaseModelImpl<Localized
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@Override
@@ -286,7 +287,7 @@ public class LocalizedEntryLocalizationModelImpl extends BaseModelImpl<Localized
 
 	@Override
 	public void setContent(String content) {
-		_content = content;
+		_content = Objects.toString(content, "");
 	}
 
 	public long getColumnBitmask() {
@@ -504,10 +505,10 @@ public class LocalizedEntryLocalizationModelImpl extends BaseModelImpl<Localized
 	private long _localizedEntryId;
 	private long _originalLocalizedEntryId;
 	private boolean _setOriginalLocalizedEntryId;
-	private String _languageId;
+	private String _languageId = "";
 	private String _originalLanguageId;
-	private String _title;
-	private String _content;
+	private String _title = "";
+	private String _content = "";
 	private long _columnBitmask;
 	private LocalizedEntryLocalization _escapedModel;
 }

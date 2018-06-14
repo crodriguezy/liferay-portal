@@ -39,6 +39,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the WebDAVProps service. Represents a row in the &quot;WebDAVProps&quot; database table, with each column mapped to a property of this class.
@@ -342,7 +343,7 @@ public class WebDAVPropsModelImpl extends BaseModelImpl<WebDAVProps>
 
 	@Override
 	public void setProps(String props) {
-		_props = props;
+		_props = Objects.toString(props, "");
 	}
 
 	public long getColumnBitmask() {
@@ -589,7 +590,7 @@ public class WebDAVPropsModelImpl extends BaseModelImpl<WebDAVProps>
 	private long _classPK;
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
-	private String _props;
+	private String _props = "";
 	private long _columnBitmask;
 	private WebDAVProps _escapedModel;
 }

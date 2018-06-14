@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the App service. Represents a row in the &quot;Marketplace_App&quot; database table, with each column mapped to a property of this class.
@@ -341,10 +342,10 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -425,7 +426,7 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -492,7 +493,7 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@JSON
@@ -508,7 +509,7 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
@@ -530,7 +531,7 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 			_originalCategory = _category;
 		}
 
-		_category = category;
+		_category = Objects.toString(category, "");
 	}
 
 	public String getOriginalCategory() {
@@ -550,7 +551,7 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 
 	@Override
 	public void setIconURL(String iconURL) {
-		_iconURL = iconURL;
+		_iconURL = Objects.toString(iconURL, "");
 	}
 
 	@JSON
@@ -566,7 +567,7 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 
 	@Override
 	public void setVersion(String version) {
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	@JSON
@@ -918,26 +919,26 @@ public class AppModelImpl extends BaseModelImpl<App> implements AppModel {
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			App.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _appId;
 	private long _companyId;
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _remoteAppId;
 	private long _originalRemoteAppId;
 	private boolean _setOriginalRemoteAppId;
-	private String _title;
-	private String _description;
-	private String _category;
+	private String _title = "";
+	private String _description = "";
+	private String _category = "";
 	private String _originalCategory;
-	private String _iconURL;
-	private String _version;
+	private String _iconURL = "";
+	private String _version = "";
 	private boolean _required;
 	private long _columnBitmask;
 	private App _escapedModel;

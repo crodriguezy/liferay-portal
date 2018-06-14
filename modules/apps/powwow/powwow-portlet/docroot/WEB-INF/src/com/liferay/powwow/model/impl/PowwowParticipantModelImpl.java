@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the PowwowParticipant service. Represents a row in the &quot;PowwowParticipant&quot; database table, with each column mapped to a property of this class.
@@ -389,7 +390,7 @@ public class PowwowParticipantModelImpl extends BaseModelImpl<PowwowParticipant>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -456,7 +457,7 @@ public class PowwowParticipantModelImpl extends BaseModelImpl<PowwowParticipant>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
@@ -517,7 +518,7 @@ public class PowwowParticipantModelImpl extends BaseModelImpl<PowwowParticipant>
 			_originalEmailAddress = _emailAddress;
 		}
 
-		_emailAddress = emailAddress;
+		_emailAddress = Objects.toString(emailAddress, "");
 	}
 
 	public String getOriginalEmailAddress() {
@@ -857,18 +858,18 @@ public class PowwowParticipantModelImpl extends BaseModelImpl<PowwowParticipant>
 	private long _groupId;
 	private long _companyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private long _powwowMeetingId;
 	private long _originalPowwowMeetingId;
 	private boolean _setOriginalPowwowMeetingId;
-	private String _name;
+	private String _name = "";
 	private long _participantUserId;
 	private long _originalParticipantUserId;
 	private boolean _setOriginalParticipantUserId;
-	private String _emailAddress;
+	private String _emailAddress = "";
 	private String _originalEmailAddress;
 	private int _type;
 	private int _originalType;

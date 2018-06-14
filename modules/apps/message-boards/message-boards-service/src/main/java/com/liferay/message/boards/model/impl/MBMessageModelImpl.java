@@ -54,6 +54,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the MBMessage service. Represents a row in the &quot;MBMessage&quot; database table, with each column mapped to a property of this class.
@@ -476,10 +477,10 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -597,7 +598,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -789,7 +790,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 
 	@Override
 	public void setSubject(String subject) {
-		_subject = subject;
+		_subject = Objects.toString(subject, "");
 	}
 
 	@JSON
@@ -805,7 +806,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 
 	@Override
 	public void setBody(String body) {
-		_body = body;
+		_body = Objects.toString(body, "");
 	}
 
 	@JSON
@@ -821,7 +822,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 
 	@Override
 	public void setFormat(String format) {
-		_format = format;
+		_format = Objects.toString(format, "");
 	}
 
 	@JSON
@@ -972,7 +973,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON
@@ -1687,7 +1688,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			MBMessage.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _messageId;
 	private long _groupId;
@@ -1699,7 +1700,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	private long _userId;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1719,9 +1720,9 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	private long _parentMessageId;
 	private long _originalParentMessageId;
 	private boolean _setOriginalParentMessageId;
-	private String _subject;
-	private String _body;
-	private String _format;
+	private String _subject = "";
+	private String _body = "";
+	private String _format = "";
 	private boolean _anonymous;
 	private double _priority;
 	private boolean _allowPingbacks;
@@ -1733,7 +1734,7 @@ public class MBMessageModelImpl extends BaseModelImpl<MBMessage>
 	private int _originalStatus;
 	private boolean _setOriginalStatus;
 	private long _statusByUserId;
-	private String _statusByUserName;
+	private String _statusByUserName = "";
 	private Date _statusDate;
 	private long _columnBitmask;
 	private MBMessage _escapedModel;

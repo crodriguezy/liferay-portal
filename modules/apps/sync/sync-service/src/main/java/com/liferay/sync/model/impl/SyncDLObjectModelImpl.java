@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the SyncDLObject service. Represents a row in the &quot;SyncDLObject&quot; database table, with each column mapped to a property of this class.
@@ -531,7 +532,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -633,7 +634,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 			_originalTreePath = _treePath;
 		}
 
-		_treePath = treePath;
+		_treePath = Objects.toString(treePath, "");
 	}
 
 	public String getOriginalTreePath() {
@@ -653,7 +654,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
@@ -669,7 +670,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 
 	@Override
 	public void setExtension(String extension) {
-		_extension = extension;
+		_extension = Objects.toString(extension, "");
 	}
 
 	@JSON
@@ -685,7 +686,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 
 	@Override
 	public void setMimeType(String mimeType) {
-		_mimeType = mimeType;
+		_mimeType = Objects.toString(mimeType, "");
 	}
 
 	@JSON
@@ -701,7 +702,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
@@ -717,7 +718,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 
 	@Override
 	public void setChangeLog(String changeLog) {
-		_changeLog = changeLog;
+		_changeLog = Objects.toString(changeLog, "");
 	}
 
 	@JSON
@@ -733,7 +734,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 
 	@Override
 	public void setExtraSettings(String extraSettings) {
-		_extraSettings = extraSettings;
+		_extraSettings = Objects.toString(extraSettings, "");
 	}
 
 	@JSON
@@ -755,7 +756,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 			_originalVersion = _version;
 		}
 
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	public String getOriginalVersion() {
@@ -797,7 +798,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 
 	@Override
 	public void setChecksum(String checksum) {
-		_checksum = checksum;
+		_checksum = Objects.toString(checksum, "");
 	}
 
 	@JSON
@@ -819,7 +820,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 			_originalEvent = _event;
 		}
 
-		_event = event;
+		_event = Objects.toString(event, "");
 	}
 
 	public String getOriginalEvent() {
@@ -839,7 +840,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 
 	@Override
 	public void setLanTokenKey(String lanTokenKey) {
-		_lanTokenKey = lanTokenKey;
+		_lanTokenKey = Objects.toString(lanTokenKey, "");
 	}
 
 	@JSON(include = false)
@@ -904,7 +905,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 
 	@Override
 	public void setLockUserName(String lockUserName) {
-		_lockUserName = lockUserName;
+		_lockUserName = Objects.toString(lockUserName, "");
 	}
 
 	@JSON
@@ -926,7 +927,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 			_originalType = _type;
 		}
 
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	public String getOriginalType() {
@@ -969,7 +970,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 
 	@Override
 	public void setTypeUuid(String typeUuid) {
-		_typeUuid = typeUuid;
+		_typeUuid = Objects.toString(typeUuid, "");
 	}
 
 	public long getColumnBitmask() {
@@ -1505,7 +1506,7 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	private long _syncDLObjectId;
 	private long _companyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private long _createTime;
 	private long _modifiedTime;
 	private long _originalModifiedTime;
@@ -1516,32 +1517,32 @@ public class SyncDLObjectModelImpl extends BaseModelImpl<SyncDLObject>
 	private long _parentFolderId;
 	private long _originalParentFolderId;
 	private boolean _setOriginalParentFolderId;
-	private String _treePath;
+	private String _treePath = "";
 	private String _originalTreePath;
-	private String _name;
-	private String _extension;
-	private String _mimeType;
-	private String _description;
-	private String _changeLog;
-	private String _extraSettings;
-	private String _version;
+	private String _name = "";
+	private String _extension = "";
+	private String _mimeType = "";
+	private String _description = "";
+	private String _changeLog = "";
+	private String _extraSettings = "";
+	private String _version = "";
 	private String _originalVersion;
 	private long _versionId;
 	private long _size;
-	private String _checksum;
-	private String _event;
+	private String _checksum = "";
+	private String _event = "";
 	private String _originalEvent;
-	private String _lanTokenKey;
+	private String _lanTokenKey = "";
 	private Date _lastPermissionChangeDate;
 	private Date _lockExpirationDate;
 	private long _lockUserId;
-	private String _lockUserName;
-	private String _type;
+	private String _lockUserName = "";
+	private String _type = "";
 	private String _originalType;
 	private long _typePK;
 	private long _originalTypePK;
 	private boolean _setOriginalTypePK;
-	private String _typeUuid;
+	private String _typeUuid = "";
 	private long _columnBitmask;
 	private SyncDLObject _escapedModel;
 }

@@ -37,6 +37,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the WikiPageResource service. Represents a row in the &quot;WikiPageResource&quot; database table, with each column mapped to a property of this class.
@@ -206,10 +207,10 @@ public class WikiPageResourceModelImpl extends BaseModelImpl<WikiPageResource>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -310,7 +311,7 @@ public class WikiPageResourceModelImpl extends BaseModelImpl<WikiPageResource>
 			_originalTitle = _title;
 		}
 
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	public String getOriginalTitle() {
@@ -529,7 +530,7 @@ public class WikiPageResourceModelImpl extends BaseModelImpl<WikiPageResource>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			WikiPageResource.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _resourcePrimKey;
 	private long _groupId;
@@ -541,7 +542,7 @@ public class WikiPageResourceModelImpl extends BaseModelImpl<WikiPageResource>
 	private long _nodeId;
 	private long _originalNodeId;
 	private boolean _setOriginalNodeId;
-	private String _title;
+	private String _title = "";
 	private String _originalTitle;
 	private long _columnBitmask;
 	private WikiPageResource _escapedModel;

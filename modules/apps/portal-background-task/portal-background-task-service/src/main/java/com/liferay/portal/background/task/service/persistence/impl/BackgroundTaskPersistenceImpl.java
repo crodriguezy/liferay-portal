@@ -2228,6 +2228,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -2279,10 +2281,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindTaskExecutorClassName = false;
 
-			if (taskExecutorClassName == null) {
-				query.append(_FINDER_COLUMN_G_T_TASKEXECUTORCLASSNAME_1);
-			}
-			else if (taskExecutorClassName.equals("")) {
+			if (taskExecutorClassName.equals("")) {
 				query.append(_FINDER_COLUMN_G_T_TASKEXECUTORCLASSNAME_3);
 			}
 			else {
@@ -2515,6 +2514,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		BackgroundTask backgroundTask, long groupId,
 		String taskExecutorClassName,
 		OrderByComparator<BackgroundTask> orderByComparator, boolean previous) {
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -2532,10 +2533,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 		boolean bindTaskExecutorClassName = false;
 
-		if (taskExecutorClassName == null) {
-			query.append(_FINDER_COLUMN_G_T_TASKEXECUTORCLASSNAME_1);
-		}
-		else if (taskExecutorClassName.equals("")) {
+		if (taskExecutorClassName.equals("")) {
 			query.append(_FINDER_COLUMN_G_T_TASKEXECUTORCLASSNAME_3);
 		}
 		else {
@@ -2731,7 +2729,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			taskExecutorClassNames = ArrayUtil.distinct(taskExecutorClassNames,
 					NULL_SAFE_STRING_COMPARATOR);
 
-			Arrays.sort(taskExecutorClassNames, NULL_SAFE_STRING_COMPARATOR);
+			ArrayUtil.apply(taskExecutorClassNames, StringUtil.NULL_TO_EMPTY);
+
+			Arrays.sort(taskExecutorClassNames);
 		}
 
 		if ((groupIds.length == 1) && (taskExecutorClassNames.length == 1)) {
@@ -2804,10 +2804,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 				for (int i = 0; i < taskExecutorClassNames.length; i++) {
 					String taskExecutorClassName = taskExecutorClassNames[i];
 
-					if (taskExecutorClassName == null) {
-						query.append(_FINDER_COLUMN_G_T_TASKEXECUTORCLASSNAME_1);
-					}
-					else if (taskExecutorClassName.equals("")) {
+					if (taskExecutorClassName.equals("")) {
 						query.append(_FINDER_COLUMN_G_T_TASKEXECUTORCLASSNAME_3);
 					}
 					else {
@@ -2910,6 +2907,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 	public int countByG_T(long groupId, String taskExecutorClassName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_T;
 
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		Object[] finderArgs = new Object[] { groupId, taskExecutorClassName };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -2923,10 +2922,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindTaskExecutorClassName = false;
 
-			if (taskExecutorClassName == null) {
-				query.append(_FINDER_COLUMN_G_T_TASKEXECUTORCLASSNAME_1);
-			}
-			else if (taskExecutorClassName.equals("")) {
+			if (taskExecutorClassName.equals("")) {
 				query.append(_FINDER_COLUMN_G_T_TASKEXECUTORCLASSNAME_3);
 			}
 			else {
@@ -2994,7 +2990,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			taskExecutorClassNames = ArrayUtil.distinct(taskExecutorClassNames,
 					NULL_SAFE_STRING_COMPARATOR);
 
-			Arrays.sort(taskExecutorClassNames, NULL_SAFE_STRING_COMPARATOR);
+			ArrayUtil.apply(taskExecutorClassNames, StringUtil.NULL_TO_EMPTY);
+
+			Arrays.sort(taskExecutorClassNames);
 		}
 
 		Object[] finderArgs = new Object[] {
@@ -3030,10 +3028,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 				for (int i = 0; i < taskExecutorClassNames.length; i++) {
 					String taskExecutorClassName = taskExecutorClassNames[i];
 
-					if (taskExecutorClassName == null) {
-						query.append(_FINDER_COLUMN_G_T_TASKEXECUTORCLASSNAME_1);
-					}
-					else if (taskExecutorClassName.equals("")) {
+					if (taskExecutorClassName.equals("")) {
 						query.append(_FINDER_COLUMN_G_T_TASKEXECUTORCLASSNAME_3);
 					}
 					else {
@@ -3090,7 +3085,6 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 	private static final String _FINDER_COLUMN_G_T_GROUPID_2 = "backgroundTask.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_T_GROUPID_7 = "backgroundTask.groupId IN (";
-	private static final String _FINDER_COLUMN_G_T_TASKEXECUTORCLASSNAME_1 = "backgroundTask.taskExecutorClassName IS NULL";
 	private static final String _FINDER_COLUMN_G_T_TASKEXECUTORCLASSNAME_2 = "backgroundTask.taskExecutorClassName = ?";
 	private static final String _FINDER_COLUMN_G_T_TASKEXECUTORCLASSNAME_3 = "(backgroundTask.taskExecutorClassName IS NULL OR backgroundTask.taskExecutorClassName = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_S = new FinderPath(BackgroundTaskModelImpl.ENTITY_CACHE_ENABLED,
@@ -3743,6 +3737,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -3792,10 +3788,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindTaskExecutorClassName = false;
 
-			if (taskExecutorClassName == null) {
-				query.append(_FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_1);
-			}
-			else if (taskExecutorClassName.equals("")) {
+			if (taskExecutorClassName.equals("")) {
 				query.append(_FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_3);
 			}
 			else {
@@ -4026,6 +4019,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		BackgroundTask backgroundTask, String taskExecutorClassName,
 		int status, OrderByComparator<BackgroundTask> orderByComparator,
 		boolean previous) {
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -4041,10 +4036,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 		boolean bindTaskExecutorClassName = false;
 
-		if (taskExecutorClassName == null) {
-			query.append(_FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_1);
-		}
-		else if (taskExecutorClassName.equals("")) {
+		if (taskExecutorClassName.equals("")) {
 			query.append(_FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_3);
 		}
 		else {
@@ -4233,7 +4225,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			taskExecutorClassNames = ArrayUtil.distinct(taskExecutorClassNames,
 					NULL_SAFE_STRING_COMPARATOR);
 
-			Arrays.sort(taskExecutorClassNames, NULL_SAFE_STRING_COMPARATOR);
+			ArrayUtil.apply(taskExecutorClassNames, StringUtil.NULL_TO_EMPTY);
+
+			Arrays.sort(taskExecutorClassNames);
 		}
 
 		if (taskExecutorClassNames.length == 1) {
@@ -4289,10 +4283,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 				for (int i = 0; i < taskExecutorClassNames.length; i++) {
 					String taskExecutorClassName = taskExecutorClassNames[i];
 
-					if (taskExecutorClassName == null) {
-						query.append(_FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_4);
-					}
-					else if (taskExecutorClassName.equals("")) {
+					if (taskExecutorClassName.equals("")) {
 						query.append(_FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_6);
 					}
 					else {
@@ -4400,6 +4391,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 	public int countByT_S(String taskExecutorClassName, int status) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_T_S;
 
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		Object[] finderArgs = new Object[] { taskExecutorClassName, status };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -4411,10 +4404,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindTaskExecutorClassName = false;
 
-			if (taskExecutorClassName == null) {
-				query.append(_FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_1);
-			}
-			else if (taskExecutorClassName.equals("")) {
+			if (taskExecutorClassName.equals("")) {
 				query.append(_FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_3);
 			}
 			else {
@@ -4475,7 +4465,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			taskExecutorClassNames = ArrayUtil.distinct(taskExecutorClassNames,
 					NULL_SAFE_STRING_COMPARATOR);
 
-			Arrays.sort(taskExecutorClassNames, NULL_SAFE_STRING_COMPARATOR);
+			ArrayUtil.apply(taskExecutorClassNames, StringUtil.NULL_TO_EMPTY);
+
+			Arrays.sort(taskExecutorClassNames);
 		}
 
 		Object[] finderArgs = new Object[] {
@@ -4496,10 +4488,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 				for (int i = 0; i < taskExecutorClassNames.length; i++) {
 					String taskExecutorClassName = taskExecutorClassNames[i];
 
-					if (taskExecutorClassName == null) {
-						query.append(_FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_4);
-					}
-					else if (taskExecutorClassName.equals("")) {
+					if (taskExecutorClassName.equals("")) {
 						query.append(_FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_6);
 					}
 					else {
@@ -4560,11 +4549,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_1 = "backgroundTask.taskExecutorClassName IS NULL AND ";
 	private static final String _FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_2 = "backgroundTask.taskExecutorClassName = ? AND ";
 	private static final String _FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_3 = "(backgroundTask.taskExecutorClassName IS NULL OR backgroundTask.taskExecutorClassName = '') AND ";
-	private static final String _FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_4 = "(" +
-		removeConjunction(_FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_1) + ")";
 	private static final String _FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_5 = "(" +
 		removeConjunction(_FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_2) + ")";
 	private static final String _FINDER_COLUMN_T_S_TASKEXECUTORCLASSNAME_6 = "(" +
@@ -4692,6 +4678,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		name = Objects.toString(name, "");
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -4744,10 +4733,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_N_T_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_T_NAME_3);
 			}
 			else {
@@ -4758,10 +4744,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindTaskExecutorClassName = false;
 
-			if (taskExecutorClassName == null) {
-				query.append(_FINDER_COLUMN_G_N_T_TASKEXECUTORCLASSNAME_1);
-			}
-			else if (taskExecutorClassName.equals("")) {
+			if (taskExecutorClassName.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_T_TASKEXECUTORCLASSNAME_3);
 			}
 			else {
@@ -5009,6 +4992,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		BackgroundTask backgroundTask, long groupId, String name,
 		String taskExecutorClassName,
 		OrderByComparator<BackgroundTask> orderByComparator, boolean previous) {
+		name = Objects.toString(name, "");
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -5026,10 +5012,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_G_N_T_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_G_N_T_NAME_3);
 		}
 		else {
@@ -5040,10 +5023,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 		boolean bindTaskExecutorClassName = false;
 
-		if (taskExecutorClassName == null) {
-			query.append(_FINDER_COLUMN_G_N_T_TASKEXECUTORCLASSNAME_1);
-		}
-		else if (taskExecutorClassName.equals("")) {
+		if (taskExecutorClassName.equals("")) {
 			query.append(_FINDER_COLUMN_G_N_T_TASKEXECUTORCLASSNAME_3);
 		}
 		else {
@@ -5241,6 +5221,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			Arrays.sort(groupIds);
 		}
 
+		name = Objects.toString(name, "");
+
 		if (taskExecutorClassNames == null) {
 			taskExecutorClassNames = new String[0];
 		}
@@ -5248,7 +5230,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			taskExecutorClassNames = ArrayUtil.distinct(taskExecutorClassNames,
 					NULL_SAFE_STRING_COMPARATOR);
 
-			Arrays.sort(taskExecutorClassNames, NULL_SAFE_STRING_COMPARATOR);
+			ArrayUtil.apply(taskExecutorClassNames, StringUtil.NULL_TO_EMPTY);
+
+			Arrays.sort(taskExecutorClassNames);
 		}
 
 		if ((groupIds.length == 1) && (taskExecutorClassNames.length == 1)) {
@@ -5318,10 +5302,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_N_T_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_T_NAME_3);
 			}
 			else {
@@ -5336,10 +5317,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 				for (int i = 0; i < taskExecutorClassNames.length; i++) {
 					String taskExecutorClassName = taskExecutorClassNames[i];
 
-					if (taskExecutorClassName == null) {
-						query.append(_FINDER_COLUMN_G_N_T_TASKEXECUTORCLASSNAME_1);
-					}
-					else if (taskExecutorClassName.equals("")) {
+					if (taskExecutorClassName.equals("")) {
 						query.append(_FINDER_COLUMN_G_N_T_TASKEXECUTORCLASSNAME_3);
 					}
 					else {
@@ -5450,6 +5428,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		String taskExecutorClassName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N_T;
 
+		name = Objects.toString(name, "");
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		Object[] finderArgs = new Object[] { groupId, name, taskExecutorClassName };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -5463,10 +5444,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_N_T_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_T_NAME_3);
 			}
 			else {
@@ -5477,10 +5455,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindTaskExecutorClassName = false;
 
-			if (taskExecutorClassName == null) {
-				query.append(_FINDER_COLUMN_G_N_T_TASKEXECUTORCLASSNAME_1);
-			}
-			else if (taskExecutorClassName.equals("")) {
+			if (taskExecutorClassName.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_T_TASKEXECUTORCLASSNAME_3);
 			}
 			else {
@@ -5547,6 +5522,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			Arrays.sort(groupIds);
 		}
 
+		name = Objects.toString(name, "");
+
 		if (taskExecutorClassNames == null) {
 			taskExecutorClassNames = new String[0];
 		}
@@ -5554,7 +5531,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			taskExecutorClassNames = ArrayUtil.distinct(taskExecutorClassNames,
 					NULL_SAFE_STRING_COMPARATOR);
 
-			Arrays.sort(taskExecutorClassNames, NULL_SAFE_STRING_COMPARATOR);
+			ArrayUtil.apply(taskExecutorClassNames, StringUtil.NULL_TO_EMPTY);
+
+			Arrays.sort(taskExecutorClassNames);
 		}
 
 		Object[] finderArgs = new Object[] {
@@ -5586,10 +5565,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_N_T_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_T_NAME_3);
 			}
 			else {
@@ -5604,10 +5580,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 				for (int i = 0; i < taskExecutorClassNames.length; i++) {
 					String taskExecutorClassName = taskExecutorClassNames[i];
 
-					if (taskExecutorClassName == null) {
-						query.append(_FINDER_COLUMN_G_N_T_TASKEXECUTORCLASSNAME_1);
-					}
-					else if (taskExecutorClassName.equals("")) {
+					if (taskExecutorClassName.equals("")) {
 						query.append(_FINDER_COLUMN_G_N_T_TASKEXECUTORCLASSNAME_3);
 					}
 					else {
@@ -5668,10 +5641,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 	private static final String _FINDER_COLUMN_G_N_T_GROUPID_2 = "backgroundTask.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_N_T_GROUPID_7 = "backgroundTask.groupId IN (";
-	private static final String _FINDER_COLUMN_G_N_T_NAME_1 = "backgroundTask.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_N_T_NAME_2 = "backgroundTask.name = ? AND ";
 	private static final String _FINDER_COLUMN_G_N_T_NAME_3 = "(backgroundTask.name IS NULL OR backgroundTask.name = '') AND ";
-	private static final String _FINDER_COLUMN_G_N_T_TASKEXECUTORCLASSNAME_1 = "backgroundTask.taskExecutorClassName IS NULL";
 	private static final String _FINDER_COLUMN_G_N_T_TASKEXECUTORCLASSNAME_2 = "backgroundTask.taskExecutorClassName = ?";
 	private static final String _FINDER_COLUMN_G_N_T_TASKEXECUTORCLASSNAME_3 = "(backgroundTask.taskExecutorClassName IS NULL OR backgroundTask.taskExecutorClassName = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_T_C = new FinderPath(BackgroundTaskModelImpl.ENTITY_CACHE_ENABLED,
@@ -5796,6 +5767,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -5848,10 +5821,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindTaskExecutorClassName = false;
 
-			if (taskExecutorClassName == null) {
-				query.append(_FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_1);
-			}
-			else if (taskExecutorClassName.equals("")) {
+			if (taskExecutorClassName.equals("")) {
 				query.append(_FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_3);
 			}
 			else {
@@ -6099,6 +6069,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		BackgroundTask backgroundTask, long groupId,
 		String taskExecutorClassName, boolean completed,
 		OrderByComparator<BackgroundTask> orderByComparator, boolean previous) {
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -6116,10 +6088,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 		boolean bindTaskExecutorClassName = false;
 
-		if (taskExecutorClassName == null) {
-			query.append(_FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_1);
-		}
-		else if (taskExecutorClassName.equals("")) {
+		if (taskExecutorClassName.equals("")) {
 			query.append(_FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_3);
 		}
 		else {
@@ -6324,7 +6293,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			taskExecutorClassNames = ArrayUtil.distinct(taskExecutorClassNames,
 					NULL_SAFE_STRING_COMPARATOR);
 
-			Arrays.sort(taskExecutorClassNames, NULL_SAFE_STRING_COMPARATOR);
+			ArrayUtil.apply(taskExecutorClassNames, StringUtil.NULL_TO_EMPTY);
+
+			Arrays.sort(taskExecutorClassNames);
 		}
 
 		if ((groupIds.length == 1) && (taskExecutorClassNames.length == 1)) {
@@ -6398,10 +6369,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 				for (int i = 0; i < taskExecutorClassNames.length; i++) {
 					String taskExecutorClassName = taskExecutorClassNames[i];
 
-					if (taskExecutorClassName == null) {
-						query.append(_FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_4);
-					}
-					else if (taskExecutorClassName.equals("")) {
+					if (taskExecutorClassName.equals("")) {
 						query.append(_FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_6);
 					}
 					else {
@@ -6514,6 +6482,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		boolean completed) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_T_C;
 
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		Object[] finderArgs = new Object[] {
 				groupId, taskExecutorClassName, completed
 			};
@@ -6529,10 +6499,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindTaskExecutorClassName = false;
 
-			if (taskExecutorClassName == null) {
-				query.append(_FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_1);
-			}
-			else if (taskExecutorClassName.equals("")) {
+			if (taskExecutorClassName.equals("")) {
 				query.append(_FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_3);
 			}
 			else {
@@ -6606,7 +6573,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			taskExecutorClassNames = ArrayUtil.distinct(taskExecutorClassNames,
 					NULL_SAFE_STRING_COMPARATOR);
 
-			Arrays.sort(taskExecutorClassNames, NULL_SAFE_STRING_COMPARATOR);
+			ArrayUtil.apply(taskExecutorClassNames, StringUtil.NULL_TO_EMPTY);
+
+			Arrays.sort(taskExecutorClassNames);
 		}
 
 		Object[] finderArgs = new Object[] {
@@ -6642,10 +6611,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 				for (int i = 0; i < taskExecutorClassNames.length; i++) {
 					String taskExecutorClassName = taskExecutorClassNames[i];
 
-					if (taskExecutorClassName == null) {
-						query.append(_FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_4);
-					}
-					else if (taskExecutorClassName.equals("")) {
+					if (taskExecutorClassName.equals("")) {
 						query.append(_FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_6);
 					}
 					else {
@@ -6708,11 +6674,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 	private static final String _FINDER_COLUMN_G_T_C_GROUPID_2 = "backgroundTask.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_T_C_GROUPID_7 = "backgroundTask.groupId IN (";
-	private static final String _FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_1 = "backgroundTask.taskExecutorClassName IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_2 = "backgroundTask.taskExecutorClassName = ? AND ";
 	private static final String _FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_3 = "(backgroundTask.taskExecutorClassName IS NULL OR backgroundTask.taskExecutorClassName = '') AND ";
-	private static final String _FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_4 = "(" +
-		removeConjunction(_FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_1) + ")";
 	private static final String _FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_5 = "(" +
 		removeConjunction(_FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_2) + ")";
 	private static final String _FINDER_COLUMN_G_T_C_TASKEXECUTORCLASSNAME_6 = "(" +
@@ -6840,6 +6803,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -6892,10 +6857,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindTaskExecutorClassName = false;
 
-			if (taskExecutorClassName == null) {
-				query.append(_FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_1);
-			}
-			else if (taskExecutorClassName.equals("")) {
+			if (taskExecutorClassName.equals("")) {
 				query.append(_FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_3);
 			}
 			else {
@@ -7143,6 +7105,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		BackgroundTask backgroundTask, long groupId,
 		String taskExecutorClassName, int status,
 		OrderByComparator<BackgroundTask> orderByComparator, boolean previous) {
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -7160,10 +7124,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 		boolean bindTaskExecutorClassName = false;
 
-		if (taskExecutorClassName == null) {
-			query.append(_FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_1);
-		}
-		else if (taskExecutorClassName.equals("")) {
+		if (taskExecutorClassName.equals("")) {
 			query.append(_FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_3);
 		}
 		else {
@@ -7359,7 +7320,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			taskExecutorClassNames = ArrayUtil.distinct(taskExecutorClassNames,
 					NULL_SAFE_STRING_COMPARATOR);
 
-			Arrays.sort(taskExecutorClassNames, NULL_SAFE_STRING_COMPARATOR);
+			ArrayUtil.apply(taskExecutorClassNames, StringUtil.NULL_TO_EMPTY);
+
+			Arrays.sort(taskExecutorClassNames);
 		}
 
 		if (taskExecutorClassNames.length == 1) {
@@ -7418,10 +7381,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 				for (int i = 0; i < taskExecutorClassNames.length; i++) {
 					String taskExecutorClassName = taskExecutorClassNames[i];
 
-					if (taskExecutorClassName == null) {
-						query.append(_FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_4);
-					}
-					else if (taskExecutorClassName.equals("")) {
+					if (taskExecutorClassName.equals("")) {
 						query.append(_FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_6);
 					}
 					else {
@@ -7536,6 +7496,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		int status) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_T_S;
 
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		Object[] finderArgs = new Object[] {
 				groupId, taskExecutorClassName, status
 			};
@@ -7551,10 +7513,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindTaskExecutorClassName = false;
 
-			if (taskExecutorClassName == null) {
-				query.append(_FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_1);
-			}
-			else if (taskExecutorClassName.equals("")) {
+			if (taskExecutorClassName.equals("")) {
 				query.append(_FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_3);
 			}
 			else {
@@ -7619,7 +7578,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			taskExecutorClassNames = ArrayUtil.distinct(taskExecutorClassNames,
 					NULL_SAFE_STRING_COMPARATOR);
 
-			Arrays.sort(taskExecutorClassNames, NULL_SAFE_STRING_COMPARATOR);
+			ArrayUtil.apply(taskExecutorClassNames, StringUtil.NULL_TO_EMPTY);
+
+			Arrays.sort(taskExecutorClassNames);
 		}
 
 		Object[] finderArgs = new Object[] {
@@ -7642,10 +7603,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 				for (int i = 0; i < taskExecutorClassNames.length; i++) {
 					String taskExecutorClassName = taskExecutorClassNames[i];
 
-					if (taskExecutorClassName == null) {
-						query.append(_FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_4);
-					}
-					else if (taskExecutorClassName.equals("")) {
+					if (taskExecutorClassName.equals("")) {
 						query.append(_FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_6);
 					}
 					else {
@@ -7709,11 +7667,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 	}
 
 	private static final String _FINDER_COLUMN_G_T_S_GROUPID_2 = "backgroundTask.groupId = ? AND ";
-	private static final String _FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_1 = "backgroundTask.taskExecutorClassName IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_2 = "backgroundTask.taskExecutorClassName = ? AND ";
 	private static final String _FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_3 = "(backgroundTask.taskExecutorClassName IS NULL OR backgroundTask.taskExecutorClassName = '') AND ";
-	private static final String _FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_4 = "(" +
-		removeConjunction(_FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_1) + ")";
 	private static final String _FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_5 = "(" +
 		removeConjunction(_FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_2) + ")";
 	private static final String _FINDER_COLUMN_G_T_S_TASKEXECUTORCLASSNAME_6 = "(" +
@@ -7847,6 +7802,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
 
+		name = Objects.toString(name, "");
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
@@ -7902,10 +7860,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_N_T_C_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_T_C_NAME_3);
 			}
 			else {
@@ -7916,10 +7871,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindTaskExecutorClassName = false;
 
-			if (taskExecutorClassName == null) {
-				query.append(_FINDER_COLUMN_G_N_T_C_TASKEXECUTORCLASSNAME_1);
-			}
-			else if (taskExecutorClassName.equals("")) {
+			if (taskExecutorClassName.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_T_C_TASKEXECUTORCLASSNAME_3);
 			}
 			else {
@@ -8186,6 +8138,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		BackgroundTask backgroundTask, long groupId, String name,
 		String taskExecutorClassName, boolean completed,
 		OrderByComparator<BackgroundTask> orderByComparator, boolean previous) {
+		name = Objects.toString(name, "");
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -8203,10 +8158,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 		boolean bindName = false;
 
-		if (name == null) {
-			query.append(_FINDER_COLUMN_G_N_T_C_NAME_1);
-		}
-		else if (name.equals("")) {
+		if (name.equals("")) {
 			query.append(_FINDER_COLUMN_G_N_T_C_NAME_3);
 		}
 		else {
@@ -8217,10 +8169,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 		boolean bindTaskExecutorClassName = false;
 
-		if (taskExecutorClassName == null) {
-			query.append(_FINDER_COLUMN_G_N_T_C_TASKEXECUTORCLASSNAME_1);
-		}
-		else if (taskExecutorClassName.equals("")) {
+		if (taskExecutorClassName.equals("")) {
 			query.append(_FINDER_COLUMN_G_N_T_C_TASKEXECUTORCLASSNAME_3);
 		}
 		else {
@@ -8426,6 +8375,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			Arrays.sort(groupIds);
 		}
 
+		name = Objects.toString(name, "");
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		if (groupIds.length == 1) {
 			return findByG_N_T_C(groupIds[0], name, taskExecutorClassName,
 				completed, start, end, orderByComparator);
@@ -8494,10 +8446,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_N_T_C_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_T_C_NAME_3);
 			}
 			else {
@@ -8508,10 +8457,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindTaskExecutorClassName = false;
 
-			if (taskExecutorClassName == null) {
-				query.append(_FINDER_COLUMN_G_N_T_C_TASKEXECUTORCLASSNAME_1);
-			}
-			else if (taskExecutorClassName.equals("")) {
+			if (taskExecutorClassName.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_T_C_TASKEXECUTORCLASSNAME_3);
 			}
 			else {
@@ -8619,6 +8565,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 		String taskExecutorClassName, boolean completed) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_N_T_C;
 
+		name = Objects.toString(name, "");
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		Object[] finderArgs = new Object[] {
 				groupId, name, taskExecutorClassName, completed
 			};
@@ -8634,10 +8583,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_N_T_C_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_T_C_NAME_3);
 			}
 			else {
@@ -8648,10 +8594,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindTaskExecutorClassName = false;
 
-			if (taskExecutorClassName == null) {
-				query.append(_FINDER_COLUMN_G_N_T_C_TASKEXECUTORCLASSNAME_1);
-			}
-			else if (taskExecutorClassName.equals("")) {
+			if (taskExecutorClassName.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_T_C_TASKEXECUTORCLASSNAME_3);
 			}
 			else {
@@ -8723,6 +8666,9 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 			Arrays.sort(groupIds);
 		}
 
+		name = Objects.toString(name, "");
+		taskExecutorClassName = Objects.toString(taskExecutorClassName, "");
+
 		Object[] finderArgs = new Object[] {
 				StringUtil.merge(groupIds), name, taskExecutorClassName,
 				completed
@@ -8752,10 +8698,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindName = false;
 
-			if (name == null) {
-				query.append(_FINDER_COLUMN_G_N_T_C_NAME_1);
-			}
-			else if (name.equals("")) {
+			if (name.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_T_C_NAME_3);
 			}
 			else {
@@ -8766,10 +8709,7 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 			boolean bindTaskExecutorClassName = false;
 
-			if (taskExecutorClassName == null) {
-				query.append(_FINDER_COLUMN_G_N_T_C_TASKEXECUTORCLASSNAME_1);
-			}
-			else if (taskExecutorClassName.equals("")) {
+			if (taskExecutorClassName.equals("")) {
 				query.append(_FINDER_COLUMN_G_N_T_C_TASKEXECUTORCLASSNAME_3);
 			}
 			else {
@@ -8825,10 +8765,8 @@ public class BackgroundTaskPersistenceImpl extends BasePersistenceImpl<Backgroun
 
 	private static final String _FINDER_COLUMN_G_N_T_C_GROUPID_2 = "backgroundTask.groupId = ? AND ";
 	private static final String _FINDER_COLUMN_G_N_T_C_GROUPID_7 = "backgroundTask.groupId IN (";
-	private static final String _FINDER_COLUMN_G_N_T_C_NAME_1 = "backgroundTask.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_N_T_C_NAME_2 = "backgroundTask.name = ? AND ";
 	private static final String _FINDER_COLUMN_G_N_T_C_NAME_3 = "(backgroundTask.name IS NULL OR backgroundTask.name = '') AND ";
-	private static final String _FINDER_COLUMN_G_N_T_C_TASKEXECUTORCLASSNAME_1 = "backgroundTask.taskExecutorClassName IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_N_T_C_TASKEXECUTORCLASSNAME_2 = "backgroundTask.taskExecutorClassName = ? AND ";
 	private static final String _FINDER_COLUMN_G_N_T_C_TASKEXECUTORCLASSNAME_3 = "(backgroundTask.taskExecutorClassName IS NULL OR backgroundTask.taskExecutorClassName = '') AND ";
 	private static final String _FINDER_COLUMN_G_N_T_C_COMPLETED_2 = "backgroundTask.completed = ?";

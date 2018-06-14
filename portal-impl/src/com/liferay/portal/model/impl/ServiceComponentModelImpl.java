@@ -36,6 +36,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the ServiceComponent service. Represents a row in the &quot;ServiceComponent&quot; database table, with each column mapped to a property of this class.
@@ -226,7 +227,7 @@ public class ServiceComponentModelImpl extends BaseModelImpl<ServiceComponent>
 			_originalBuildNamespace = _buildNamespace;
 		}
 
-		_buildNamespace = buildNamespace;
+		_buildNamespace = Objects.toString(buildNamespace, "");
 	}
 
 	public String getOriginalBuildNamespace() {
@@ -277,7 +278,7 @@ public class ServiceComponentModelImpl extends BaseModelImpl<ServiceComponent>
 
 	@Override
 	public void setData(String data) {
-		_data = data;
+		_data = Objects.toString(data, "");
 	}
 
 	public long getColumnBitmask() {
@@ -501,13 +502,13 @@ public class ServiceComponentModelImpl extends BaseModelImpl<ServiceComponent>
 		};
 	private long _mvccVersion;
 	private long _serviceComponentId;
-	private String _buildNamespace;
+	private String _buildNamespace = "";
 	private String _originalBuildNamespace;
 	private long _buildNumber;
 	private long _originalBuildNumber;
 	private boolean _setOriginalBuildNumber;
 	private long _buildDate;
-	private String _data;
+	private String _data = "";
 	private long _columnBitmask;
 	private ServiceComponent _escapedModel;
 }

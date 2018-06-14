@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -395,10 +396,10 @@ public class AssetCategoryModelImpl extends BaseModelImpl<AssetCategory>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -424,7 +425,7 @@ public class AssetCategoryModelImpl extends BaseModelImpl<AssetCategory>
 			_originalExternalReferenceCode = _externalReferenceCode;
 		}
 
-		_externalReferenceCode = externalReferenceCode;
+		_externalReferenceCode = Objects.toString(externalReferenceCode, "");
 	}
 
 	public String getOriginalExternalReferenceCode() {
@@ -528,7 +529,7 @@ public class AssetCategoryModelImpl extends BaseModelImpl<AssetCategory>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -623,7 +624,7 @@ public class AssetCategoryModelImpl extends BaseModelImpl<AssetCategory>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -686,7 +687,7 @@ public class AssetCategoryModelImpl extends BaseModelImpl<AssetCategory>
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@Override
@@ -785,7 +786,7 @@ public class AssetCategoryModelImpl extends BaseModelImpl<AssetCategory>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -1337,9 +1338,9 @@ public class AssetCategoryModelImpl extends BaseModelImpl<AssetCategory>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			AssetCategory.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
-	private String _externalReferenceCode;
+	private String _externalReferenceCode = "";
 	private String _originalExternalReferenceCode;
 	private long _categoryId;
 	private long _groupId;
@@ -1349,7 +1350,7 @@ public class AssetCategoryModelImpl extends BaseModelImpl<AssetCategory>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1358,11 +1359,11 @@ public class AssetCategoryModelImpl extends BaseModelImpl<AssetCategory>
 	private boolean _setOriginalParentCategoryId;
 	private long _leftCategoryId;
 	private long _rightCategoryId;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
-	private String _title;
+	private String _title = "";
 	private String _titleCurrentLanguageId;
-	private String _description;
+	private String _description = "";
 	private String _descriptionCurrentLanguageId;
 	private long _vocabularyId;
 	private long _originalVocabularyId;

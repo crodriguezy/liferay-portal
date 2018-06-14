@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoTaskAssignmentInstance service. Represents a row in the &quot;KaleoTaskAssignmentInstance&quot; database table, with each column mapped to a property of this class.
@@ -396,7 +397,7 @@ public class KaleoTaskAssignmentInstanceModelImpl extends BaseModelImpl<KaleoTas
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -523,7 +524,7 @@ public class KaleoTaskAssignmentInstanceModelImpl extends BaseModelImpl<KaleoTas
 
 	@Override
 	public void setKaleoTaskName(String kaleoTaskName) {
-		_kaleoTaskName = kaleoTaskName;
+		_kaleoTaskName = Objects.toString(kaleoTaskName, "");
 	}
 
 	@Override
@@ -544,7 +545,7 @@ public class KaleoTaskAssignmentInstanceModelImpl extends BaseModelImpl<KaleoTas
 			_originalAssigneeClassName = _assigneeClassName;
 		}
 
-		_assigneeClassName = assigneeClassName;
+		_assigneeClassName = Objects.toString(assigneeClassName, "");
 	}
 
 	public String getOriginalAssigneeClassName() {
@@ -966,7 +967,7 @@ public class KaleoTaskAssignmentInstanceModelImpl extends BaseModelImpl<KaleoTas
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -981,8 +982,8 @@ public class KaleoTaskAssignmentInstanceModelImpl extends BaseModelImpl<KaleoTas
 	private long _originalKaleoTaskInstanceTokenId;
 	private boolean _setOriginalKaleoTaskInstanceTokenId;
 	private long _kaleoTaskId;
-	private String _kaleoTaskName;
-	private String _assigneeClassName;
+	private String _kaleoTaskName = "";
+	private String _assigneeClassName = "";
 	private String _originalAssigneeClassName;
 	private long _assigneeClassPK;
 	private long _originalAssigneeClassPK;

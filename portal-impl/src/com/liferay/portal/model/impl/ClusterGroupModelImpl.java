@@ -36,6 +36,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the ClusterGroup service. Represents a row in the &quot;ClusterGroup&quot; database table, with each column mapped to a property of this class.
@@ -207,7 +208,7 @@ public class ClusterGroupModelImpl extends BaseModelImpl<ClusterGroup>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -222,7 +223,7 @@ public class ClusterGroupModelImpl extends BaseModelImpl<ClusterGroup>
 
 	@Override
 	public void setClusterNodeIds(String clusterNodeIds) {
-		_clusterNodeIds = clusterNodeIds;
+		_clusterNodeIds = Objects.toString(clusterNodeIds, "");
 	}
 
 	@Override
@@ -422,8 +423,8 @@ public class ClusterGroupModelImpl extends BaseModelImpl<ClusterGroup>
 		};
 	private long _mvccVersion;
 	private long _clusterGroupId;
-	private String _name;
-	private String _clusterNodeIds;
+	private String _name = "";
+	private String _clusterNodeIds = "";
 	private boolean _wholeCluster;
 	private ClusterGroup _escapedModel;
 }

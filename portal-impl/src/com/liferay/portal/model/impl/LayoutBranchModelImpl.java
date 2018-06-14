@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the LayoutBranch service. Represents a row in the &quot;LayoutBranch&quot; database table, with each column mapped to a property of this class.
@@ -377,7 +378,7 @@ public class LayoutBranchModelImpl extends BaseModelImpl<LayoutBranch>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -445,7 +446,7 @@ public class LayoutBranchModelImpl extends BaseModelImpl<LayoutBranch>
 			_originalName = _name;
 		}
 
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	public String getOriginalName() {
@@ -465,7 +466,7 @@ public class LayoutBranchModelImpl extends BaseModelImpl<LayoutBranch>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
@@ -763,16 +764,16 @@ public class LayoutBranchModelImpl extends BaseModelImpl<LayoutBranch>
 	private long _groupId;
 	private long _companyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private long _layoutSetBranchId;
 	private long _originalLayoutSetBranchId;
 	private boolean _setOriginalLayoutSetBranchId;
 	private long _plid;
 	private long _originalPlid;
 	private boolean _setOriginalPlid;
-	private String _name;
+	private String _name = "";
 	private String _originalName;
-	private String _description;
+	private String _description = "";
 	private boolean _master;
 	private boolean _originalMaster;
 	private boolean _setOriginalMaster;

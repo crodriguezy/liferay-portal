@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -372,10 +373,10 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -479,7 +480,7 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -589,7 +590,7 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 
 	@Override
 	public void setClassUuid(String classUuid) {
-		_classUuid = classUuid;
+		_classUuid = Objects.toString(classUuid, "");
 	}
 
 	@JSON
@@ -611,7 +612,7 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 			_originalCode = _code;
 		}
 
-		_code = code;
+		_code = Objects.toString(code, "");
 	}
 
 	public String getOriginalCode() {
@@ -674,7 +675,7 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -773,7 +774,7 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -1303,7 +1304,7 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			CalendarResource.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _calendarResourceId;
 	private long _groupId;
@@ -1313,7 +1314,7 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1323,12 +1324,12 @@ public class CalendarResourceModelImpl extends BaseModelImpl<CalendarResource>
 	private long _classPK;
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
-	private String _classUuid;
-	private String _code;
+	private String _classUuid = "";
+	private String _code = "";
 	private String _originalCode;
-	private String _name;
+	private String _name = "";
 	private String _nameCurrentLanguageId;
-	private String _description;
+	private String _description = "";
 	private String _descriptionCurrentLanguageId;
 	private boolean _active;
 	private boolean _originalActive;

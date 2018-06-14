@@ -40,6 +40,7 @@ import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KaleoTaskInstanceToken service. Represents a row in the &quot;KaleoTaskInstanceToken&quot; database table, with each column mapped to a property of this class.
@@ -398,7 +399,7 @@ public class KaleoTaskInstanceTokenModelImpl extends BaseModelImpl<KaleoTaskInst
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@Override
@@ -515,7 +516,7 @@ public class KaleoTaskInstanceTokenModelImpl extends BaseModelImpl<KaleoTaskInst
 
 	@Override
 	public void setKaleoTaskName(String kaleoTaskName) {
-		_kaleoTaskName = kaleoTaskName;
+		_kaleoTaskName = Objects.toString(kaleoTaskName, "");
 	}
 
 	@Override
@@ -536,7 +537,7 @@ public class KaleoTaskInstanceTokenModelImpl extends BaseModelImpl<KaleoTaskInst
 			_originalClassName = _className;
 		}
 
-		_className = className;
+		_className = Objects.toString(className, "");
 	}
 
 	public String getOriginalClassName() {
@@ -638,7 +639,7 @@ public class KaleoTaskInstanceTokenModelImpl extends BaseModelImpl<KaleoTaskInst
 
 	@Override
 	public void setWorkflowContext(String workflowContext) {
-		_workflowContext = workflowContext;
+		_workflowContext = Objects.toString(workflowContext, "");
 	}
 
 	public long getColumnBitmask() {
@@ -1031,7 +1032,7 @@ public class KaleoTaskInstanceTokenModelImpl extends BaseModelImpl<KaleoTaskInst
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1045,8 +1046,8 @@ public class KaleoTaskInstanceTokenModelImpl extends BaseModelImpl<KaleoTaskInst
 	private long _kaleoTaskId;
 	private long _originalKaleoTaskId;
 	private boolean _setOriginalKaleoTaskId;
-	private String _kaleoTaskName;
-	private String _className;
+	private String _kaleoTaskName = "";
+	private String _className = "";
 	private String _originalClassName;
 	private long _classPK;
 	private long _originalClassPK;
@@ -1055,7 +1056,7 @@ public class KaleoTaskInstanceTokenModelImpl extends BaseModelImpl<KaleoTaskInst
 	private boolean _completed;
 	private Date _completionDate;
 	private Date _dueDate;
-	private String _workflowContext;
+	private String _workflowContext = "";
 	private long _columnBitmask;
 	private KaleoTaskInstanceToken _escapedModel;
 }

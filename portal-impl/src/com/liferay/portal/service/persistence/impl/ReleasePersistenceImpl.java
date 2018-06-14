@@ -153,6 +153,8 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 	@Override
 	public Release fetchByServletContextName(String servletContextName,
 		boolean retrieveFromCache) {
+		servletContextName = Objects.toString(servletContextName, "");
+
 		Object[] finderArgs = new Object[] { servletContextName };
 
 		Object result = null;
@@ -178,10 +180,7 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 
 			boolean bindServletContextName = false;
 
-			if (servletContextName == null) {
-				query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_1);
-			}
-			else if (servletContextName.equals("")) {
+			if (servletContextName.equals("")) {
 				query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_3);
 			}
 			else {
@@ -262,6 +261,8 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 	public int countByServletContextName(String servletContextName) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_SERVLETCONTEXTNAME;
 
+		servletContextName = Objects.toString(servletContextName, "");
+
 		Object[] finderArgs = new Object[] { servletContextName };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -273,10 +274,7 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 
 			boolean bindServletContextName = false;
 
-			if (servletContextName == null) {
-				query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_1);
-			}
-			else if (servletContextName.equals("")) {
+			if (servletContextName.equals("")) {
 				query.append(_FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_3);
 			}
 			else {
@@ -317,8 +315,6 @@ public class ReleasePersistenceImpl extends BasePersistenceImpl<Release>
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_1 =
-		"release.servletContextName IS NULL";
 	private static final String _FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_2 =
 		"lower(release.servletContextName) = ?";
 	private static final String _FINDER_COLUMN_SERVLETCONTEXTNAME_SERVLETCONTEXTNAME_3 =

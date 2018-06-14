@@ -676,6 +676,8 @@ public class DDLRecordSetVersionPersistenceImpl extends BasePersistenceImpl<DDLR
 	@Override
 	public DDLRecordSetVersion fetchByRS_V(long recordSetId, String version,
 		boolean retrieveFromCache) {
+		version = Objects.toString(version, "");
+
 		Object[] finderArgs = new Object[] { recordSetId, version };
 
 		Object result = null;
@@ -703,10 +705,7 @@ public class DDLRecordSetVersionPersistenceImpl extends BasePersistenceImpl<DDLR
 
 			boolean bindVersion = false;
 
-			if (version == null) {
-				query.append(_FINDER_COLUMN_RS_V_VERSION_1);
-			}
-			else if (version.equals("")) {
+			if (version.equals("")) {
 				query.append(_FINDER_COLUMN_RS_V_VERSION_3);
 			}
 			else {
@@ -791,6 +790,8 @@ public class DDLRecordSetVersionPersistenceImpl extends BasePersistenceImpl<DDLR
 	public int countByRS_V(long recordSetId, String version) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_RS_V;
 
+		version = Objects.toString(version, "");
+
 		Object[] finderArgs = new Object[] { recordSetId, version };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -804,10 +805,7 @@ public class DDLRecordSetVersionPersistenceImpl extends BasePersistenceImpl<DDLR
 
 			boolean bindVersion = false;
 
-			if (version == null) {
-				query.append(_FINDER_COLUMN_RS_V_VERSION_1);
-			}
-			else if (version.equals("")) {
+			if (version.equals("")) {
 				query.append(_FINDER_COLUMN_RS_V_VERSION_3);
 			}
 			else {
@@ -851,7 +849,6 @@ public class DDLRecordSetVersionPersistenceImpl extends BasePersistenceImpl<DDLR
 	}
 
 	private static final String _FINDER_COLUMN_RS_V_RECORDSETID_2 = "ddlRecordSetVersion.recordSetId = ? AND ";
-	private static final String _FINDER_COLUMN_RS_V_VERSION_1 = "ddlRecordSetVersion.version IS NULL";
 	private static final String _FINDER_COLUMN_RS_V_VERSION_2 = "ddlRecordSetVersion.version = ?";
 	private static final String _FINDER_COLUMN_RS_V_VERSION_3 = "(ddlRecordSetVersion.version IS NULL OR ddlRecordSetVersion.version = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_RS_S = new FinderPath(DDLRecordSetVersionModelImpl.ENTITY_CACHE_ENABLED,

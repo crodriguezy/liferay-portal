@@ -40,6 +40,7 @@ import java.sql.Types;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the DLContent service. Represents a row in the &quot;DLContent&quot; database table, with each column mapped to a property of this class.
@@ -294,7 +295,7 @@ public class DLContentModelImpl extends BaseModelImpl<DLContent>
 			_originalPath = _path;
 		}
 
-		_path = path;
+		_path = Objects.toString(path, "");
 	}
 
 	public String getOriginalPath() {
@@ -319,7 +320,7 @@ public class DLContentModelImpl extends BaseModelImpl<DLContent>
 			_originalVersion = _version;
 		}
 
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	public String getOriginalVersion() {
@@ -592,9 +593,9 @@ public class DLContentModelImpl extends BaseModelImpl<DLContent>
 	private long _repositoryId;
 	private long _originalRepositoryId;
 	private boolean _setOriginalRepositoryId;
-	private String _path;
+	private String _path = "";
 	private String _originalPath;
-	private String _version;
+	private String _version = "";
 	private String _originalVersion;
 	private DLContentDataBlobModel _dataBlobModel;
 	private long _size;

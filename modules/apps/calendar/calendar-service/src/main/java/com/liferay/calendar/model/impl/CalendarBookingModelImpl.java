@@ -57,6 +57,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -513,10 +514,10 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -620,7 +621,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -762,7 +763,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 			_originalVEventUid = _vEventUid;
 		}
 
-		_vEventUid = vEventUid;
+		_vEventUid = Objects.toString(vEventUid, "");
 	}
 
 	public String getOriginalVEventUid() {
@@ -827,7 +828,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	public void setTitle(String title) {
 		_columnBitmask = -1L;
 
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@Override
@@ -926,7 +927,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -986,7 +987,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 
 	@Override
 	public void setLocation(String location) {
-		_location = location;
+		_location = Objects.toString(location, "");
 	}
 
 	@JSON
@@ -1043,7 +1044,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 
 	@Override
 	public void setRecurrence(String recurrence) {
-		_recurrence = recurrence;
+		_recurrence = Objects.toString(recurrence, "");
 	}
 
 	@JSON
@@ -1070,7 +1071,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 
 	@Override
 	public void setFirstReminderType(String firstReminderType) {
-		_firstReminderType = firstReminderType;
+		_firstReminderType = Objects.toString(firstReminderType, "");
 	}
 
 	@JSON
@@ -1097,7 +1098,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 
 	@Override
 	public void setSecondReminderType(String secondReminderType) {
-		_secondReminderType = secondReminderType;
+		_secondReminderType = Objects.toString(secondReminderType, "");
 	}
 
 	@JSON
@@ -1174,7 +1175,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON
@@ -2012,7 +2013,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			CalendarBooking.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _calendarBookingId;
 	private long _groupId;
@@ -2022,7 +2023,7 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -2038,27 +2039,27 @@ public class CalendarBookingModelImpl extends BaseModelImpl<CalendarBooking>
 	private long _recurringCalendarBookingId;
 	private long _originalRecurringCalendarBookingId;
 	private boolean _setOriginalRecurringCalendarBookingId;
-	private String _vEventUid;
+	private String _vEventUid = "";
 	private String _originalVEventUid;
-	private String _title;
+	private String _title = "";
 	private String _titleCurrentLanguageId;
-	private String _description;
+	private String _description = "";
 	private String _descriptionCurrentLanguageId;
-	private String _location;
+	private String _location = "";
 	private long _startTime;
 	private long _endTime;
 	private boolean _allDay;
-	private String _recurrence;
+	private String _recurrence = "";
 	private long _firstReminder;
-	private String _firstReminderType;
+	private String _firstReminderType = "";
 	private long _secondReminder;
-	private String _secondReminderType;
+	private String _secondReminderType = "";
 	private Date _lastPublishDate;
 	private int _status;
 	private int _originalStatus;
 	private boolean _setOriginalStatus;
 	private long _statusByUserId;
-	private String _statusByUserName;
+	private String _statusByUserName = "";
 	private Date _statusDate;
 	private long _columnBitmask;
 	private CalendarBooking _escapedModel;

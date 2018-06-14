@@ -50,6 +50,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the KBArticle service. Represents a row in the &quot;KBArticle&quot; database table, with each column mapped to a property of this class.
@@ -505,10 +506,10 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -640,7 +641,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -777,7 +778,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@JSON
@@ -799,7 +800,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 			_originalUrlTitle = _urlTitle;
 		}
 
-		_urlTitle = urlTitle;
+		_urlTitle = Objects.toString(urlTitle, "");
 	}
 
 	public String getOriginalUrlTitle() {
@@ -819,7 +820,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 
 	@Override
 	public void setContent(String content) {
-		_content = content;
+		_content = Objects.toString(content, "");
 	}
 
 	@JSON
@@ -835,7 +836,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@JSON
@@ -868,7 +869,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 			_originalSections = _sections;
 		}
 
-		_sections = sections;
+		_sections = Objects.toString(sections, "");
 	}
 
 	public String getOriginalSections() {
@@ -957,7 +958,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 
 	@Override
 	public void setSourceURL(String sourceURL) {
-		_sourceURL = sourceURL;
+		_sourceURL = Objects.toString(sourceURL, "");
 	}
 
 	@JSON
@@ -1034,7 +1035,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON
@@ -1652,7 +1653,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			KBArticle.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _kbArticleId;
 	private long _resourcePrimKey;
@@ -1665,7 +1666,7 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1680,13 +1681,13 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	private int _version;
 	private int _originalVersion;
 	private boolean _setOriginalVersion;
-	private String _title;
-	private String _urlTitle;
+	private String _title = "";
+	private String _urlTitle = "";
 	private String _originalUrlTitle;
-	private String _content;
-	private String _description;
+	private String _content = "";
+	private String _description = "";
 	private double _priority;
-	private String _sections;
+	private String _sections = "";
 	private String _originalSections;
 	private int _viewCount;
 	private boolean _latest;
@@ -1695,13 +1696,13 @@ public class KBArticleModelImpl extends BaseModelImpl<KBArticle>
 	private boolean _main;
 	private boolean _originalMain;
 	private boolean _setOriginalMain;
-	private String _sourceURL;
+	private String _sourceURL = "";
 	private Date _lastPublishDate;
 	private int _status;
 	private int _originalStatus;
 	private boolean _setOriginalStatus;
 	private long _statusByUserId;
-	private String _statusByUserName;
+	private String _statusByUserName = "";
 	private Date _statusDate;
 	private long _columnBitmask;
 	private KBArticle _escapedModel;

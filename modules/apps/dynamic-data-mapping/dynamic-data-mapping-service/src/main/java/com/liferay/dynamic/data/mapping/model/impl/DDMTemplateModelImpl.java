@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -475,10 +476,10 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -582,7 +583,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -625,7 +626,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 
 	@Override
 	public void setVersionUserName(String versionUserName) {
-		_versionUserName = versionUserName;
+		_versionUserName = Objects.toString(versionUserName, "");
 	}
 
 	@JSON
@@ -752,7 +753,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 			_originalTemplateKey = _templateKey;
 		}
 
-		_templateKey = templateKey;
+		_templateKey = Objects.toString(templateKey, "");
 	}
 
 	public String getOriginalTemplateKey() {
@@ -772,7 +773,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 
 	@Override
 	public void setVersion(String version) {
-		_version = version;
+		_version = Objects.toString(version, "");
 	}
 
 	@JSON
@@ -831,7 +832,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@Override
@@ -930,7 +931,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 
 	@Override
 	public void setDescription(String description) {
-		_description = description;
+		_description = Objects.toString(description, "");
 	}
 
 	@Override
@@ -996,7 +997,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 			_originalType = _type;
 		}
 
-		_type = type;
+		_type = Objects.toString(type, "");
 	}
 
 	public String getOriginalType() {
@@ -1022,7 +1023,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 			_originalMode = _mode;
 		}
 
-		_mode = mode;
+		_mode = Objects.toString(mode, "");
 	}
 
 	public String getOriginalMode() {
@@ -1048,7 +1049,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 			_originalLanguage = _language;
 		}
 
-		_language = language;
+		_language = Objects.toString(language, "");
 	}
 
 	public String getOriginalLanguage() {
@@ -1068,7 +1069,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 
 	@Override
 	public void setScript(String script) {
-		_script = script;
+		_script = Objects.toString(script, "");
 	}
 
 	@JSON
@@ -1141,7 +1142,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 
 	@Override
 	public void setSmallImageURL(String smallImageURL) {
-		_smallImageURL = smallImageURL;
+		_smallImageURL = Objects.toString(smallImageURL, "");
 	}
 
 	@JSON
@@ -1743,7 +1744,7 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			DDMTemplate.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _templateId;
 	private long _groupId;
@@ -1753,9 +1754,9 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private long _versionUserId;
-	private String _versionUserName;
+	private String _versionUserName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1766,26 +1767,26 @@ public class DDMTemplateModelImpl extends BaseModelImpl<DDMTemplate>
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
 	private long _resourceClassNameId;
-	private String _templateKey;
+	private String _templateKey = "";
 	private String _originalTemplateKey;
-	private String _version;
-	private String _name;
+	private String _version = "";
+	private String _name = "";
 	private String _nameCurrentLanguageId;
-	private String _description;
+	private String _description = "";
 	private String _descriptionCurrentLanguageId;
-	private String _type;
+	private String _type = "";
 	private String _originalType;
-	private String _mode;
+	private String _mode = "";
 	private String _originalMode;
-	private String _language;
+	private String _language = "";
 	private String _originalLanguage;
-	private String _script;
+	private String _script = "";
 	private boolean _cacheable;
 	private boolean _smallImage;
 	private long _smallImageId;
 	private long _originalSmallImageId;
 	private boolean _setOriginalSmallImageId;
-	private String _smallImageURL;
+	private String _smallImageURL = "";
 	private Date _lastPublishDate;
 	private long _columnBitmask;
 	private DDMTemplate _escapedModel;

@@ -164,6 +164,8 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 	@Override
 	public WeDeployAuthToken fetchByT_T(String token, int type,
 		boolean retrieveFromCache) {
+		token = Objects.toString(token, "");
+
 		Object[] finderArgs = new Object[] { token, type };
 
 		Object result = null;
@@ -189,10 +191,7 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 
 			boolean bindToken = false;
 
-			if (token == null) {
-				query.append(_FINDER_COLUMN_T_T_TOKEN_1);
-			}
-			else if (token.equals("")) {
+			if (token.equals("")) {
 				query.append(_FINDER_COLUMN_T_T_TOKEN_3);
 			}
 			else {
@@ -289,6 +288,8 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 	public int countByT_T(String token, int type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_T_T;
 
+		token = Objects.toString(token, "");
+
 		Object[] finderArgs = new Object[] { token, type };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -300,10 +301,7 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 
 			boolean bindToken = false;
 
-			if (token == null) {
-				query.append(_FINDER_COLUMN_T_T_TOKEN_1);
-			}
-			else if (token.equals("")) {
+			if (token.equals("")) {
 				query.append(_FINDER_COLUMN_T_T_TOKEN_3);
 			}
 			else {
@@ -348,7 +346,6 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_T_T_TOKEN_1 = "weDeployAuthToken.token IS NULL AND ";
 	private static final String _FINDER_COLUMN_T_T_TOKEN_2 = "weDeployAuthToken.token = ? AND ";
 	private static final String _FINDER_COLUMN_T_T_TOKEN_3 = "(weDeployAuthToken.token IS NULL OR weDeployAuthToken.token = '') AND ";
 	private static final String _FINDER_COLUMN_T_T_TYPE_2 = "weDeployAuthToken.type = ?";
@@ -438,6 +435,9 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 	@Override
 	public WeDeployAuthToken fetchByCI_T_T(String clientId, String token,
 		int type, boolean retrieveFromCache) {
+		clientId = Objects.toString(clientId, "");
+		token = Objects.toString(token, "");
+
 		Object[] finderArgs = new Object[] { clientId, token, type };
 
 		Object result = null;
@@ -464,10 +464,7 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 
 			boolean bindClientId = false;
 
-			if (clientId == null) {
-				query.append(_FINDER_COLUMN_CI_T_T_CLIENTID_1);
-			}
-			else if (clientId.equals("")) {
+			if (clientId.equals("")) {
 				query.append(_FINDER_COLUMN_CI_T_T_CLIENTID_3);
 			}
 			else {
@@ -478,10 +475,7 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 
 			boolean bindToken = false;
 
-			if (token == null) {
-				query.append(_FINDER_COLUMN_CI_T_T_TOKEN_1);
-			}
-			else if (token.equals("")) {
+			if (token.equals("")) {
 				query.append(_FINDER_COLUMN_CI_T_T_TOKEN_3);
 			}
 			else {
@@ -584,6 +578,9 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 	public int countByCI_T_T(String clientId, String token, int type) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_CI_T_T;
 
+		clientId = Objects.toString(clientId, "");
+		token = Objects.toString(token, "");
+
 		Object[] finderArgs = new Object[] { clientId, token, type };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
@@ -595,10 +592,7 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 
 			boolean bindClientId = false;
 
-			if (clientId == null) {
-				query.append(_FINDER_COLUMN_CI_T_T_CLIENTID_1);
-			}
-			else if (clientId.equals("")) {
+			if (clientId.equals("")) {
 				query.append(_FINDER_COLUMN_CI_T_T_CLIENTID_3);
 			}
 			else {
@@ -609,10 +603,7 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 
 			boolean bindToken = false;
 
-			if (token == null) {
-				query.append(_FINDER_COLUMN_CI_T_T_TOKEN_1);
-			}
-			else if (token.equals("")) {
+			if (token.equals("")) {
 				query.append(_FINDER_COLUMN_CI_T_T_TOKEN_3);
 			}
 			else {
@@ -661,10 +652,8 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_CI_T_T_CLIENTID_1 = "weDeployAuthToken.clientId IS NULL AND ";
 	private static final String _FINDER_COLUMN_CI_T_T_CLIENTID_2 = "weDeployAuthToken.clientId = ? AND ";
 	private static final String _FINDER_COLUMN_CI_T_T_CLIENTID_3 = "(weDeployAuthToken.clientId IS NULL OR weDeployAuthToken.clientId = '') AND ";
-	private static final String _FINDER_COLUMN_CI_T_T_TOKEN_1 = "weDeployAuthToken.token IS NULL AND ";
 	private static final String _FINDER_COLUMN_CI_T_T_TOKEN_2 = "weDeployAuthToken.token = ? AND ";
 	private static final String _FINDER_COLUMN_CI_T_T_TOKEN_3 = "(weDeployAuthToken.token IS NULL OR weDeployAuthToken.token = '') AND ";
 	private static final String _FINDER_COLUMN_CI_T_T_TYPE_2 = "weDeployAuthToken.type = ?";

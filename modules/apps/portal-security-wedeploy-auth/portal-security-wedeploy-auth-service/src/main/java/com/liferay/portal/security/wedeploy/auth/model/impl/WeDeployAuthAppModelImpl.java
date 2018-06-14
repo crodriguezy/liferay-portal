@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the WeDeployAuthApp service. Represents a row in the &quot;WeDeployAuth_WeDeployAuthApp&quot; database table, with each column mapped to a property of this class.
@@ -346,7 +347,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -390,7 +391,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 
 	@Override
 	public void setName(String name) {
-		_name = name;
+		_name = Objects.toString(name, "");
 	}
 
 	@JSON
@@ -412,7 +413,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 			_originalRedirectURI = _redirectURI;
 		}
 
-		_redirectURI = redirectURI;
+		_redirectURI = Objects.toString(redirectURI, "");
 	}
 
 	public String getOriginalRedirectURI() {
@@ -438,7 +439,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 			_originalClientId = _clientId;
 		}
 
-		_clientId = clientId;
+		_clientId = Objects.toString(clientId, "");
 	}
 
 	public String getOriginalClientId() {
@@ -464,7 +465,7 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 			_originalClientSecret = _clientSecret;
 		}
 
-		_clientSecret = clientSecret;
+		_clientSecret = Objects.toString(clientSecret, "");
 	}
 
 	public String getOriginalClientSecret() {
@@ -747,16 +748,16 @@ public class WeDeployAuthAppModelImpl extends BaseModelImpl<WeDeployAuthApp>
 	private long _weDeployAuthAppId;
 	private long _companyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private String _name;
-	private String _redirectURI;
+	private String _name = "";
+	private String _redirectURI = "";
 	private String _originalRedirectURI;
-	private String _clientId;
+	private String _clientId = "";
 	private String _originalClientId;
-	private String _clientSecret;
+	private String _clientSecret = "";
 	private String _originalClientSecret;
 	private long _columnBitmask;
 	private WeDeployAuthApp _escapedModel;

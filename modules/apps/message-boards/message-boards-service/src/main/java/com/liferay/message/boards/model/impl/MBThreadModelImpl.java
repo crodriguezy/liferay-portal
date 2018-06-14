@@ -54,6 +54,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The base model implementation for the MBThread service. Represents a row in the &quot;MBThread&quot; database table, with each column mapped to a property of this class.
@@ -441,10 +442,10 @@ public class MBThreadModelImpl extends BaseModelImpl<MBThread>
 	@Override
 	public void setUuid(String uuid) {
 		if (_originalUuid == null) {
-			_originalUuid = _uuid;
+			_originalUuid = Objects.toString(uuid, "");
 		}
 
-		_uuid = uuid;
+		_uuid = Objects.toString(uuid, "");
 	}
 
 	public String getOriginalUuid() {
@@ -548,7 +549,7 @@ public class MBThreadModelImpl extends BaseModelImpl<MBThread>
 
 	@Override
 	public void setUserName(String userName) {
-		_userName = userName;
+		_userName = Objects.toString(userName, "");
 	}
 
 	@JSON
@@ -665,7 +666,7 @@ public class MBThreadModelImpl extends BaseModelImpl<MBThread>
 
 	@Override
 	public void setTitle(String title) {
-		_title = title;
+		_title = Objects.toString(title, "");
 	}
 
 	@JSON
@@ -852,7 +853,7 @@ public class MBThreadModelImpl extends BaseModelImpl<MBThread>
 
 	@Override
 	public void setStatusByUserName(String statusByUserName) {
-		_statusByUserName = statusByUserName;
+		_statusByUserName = Objects.toString(statusByUserName, "");
 	}
 
 	@JSON
@@ -1550,7 +1551,7 @@ public class MBThreadModelImpl extends BaseModelImpl<MBThread>
 	private static final Class<?>[] _escapedModelInterfaces = new Class[] {
 			MBThread.class, ModelWrapper.class
 		};
-	private String _uuid;
+	private String _uuid = "";
 	private String _originalUuid;
 	private long _threadId;
 	private long _groupId;
@@ -1560,7 +1561,7 @@ public class MBThreadModelImpl extends BaseModelImpl<MBThread>
 	private long _originalCompanyId;
 	private boolean _setOriginalCompanyId;
 	private long _userId;
-	private String _userName;
+	private String _userName = "";
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
@@ -1571,7 +1572,7 @@ public class MBThreadModelImpl extends BaseModelImpl<MBThread>
 	private long _originalRootMessageId;
 	private boolean _setOriginalRootMessageId;
 	private long _rootMessageUserId;
-	private String _title;
+	private String _title = "";
 	private int _messageCount;
 	private int _viewCount;
 	private long _lastPostByUserId;
@@ -1586,7 +1587,7 @@ public class MBThreadModelImpl extends BaseModelImpl<MBThread>
 	private int _originalStatus;
 	private boolean _setOriginalStatus;
 	private long _statusByUserId;
-	private String _statusByUserName;
+	private String _statusByUserName = "";
 	private Date _statusDate;
 	private long _columnBitmask;
 	private MBThread _escapedModel;
