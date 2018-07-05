@@ -1222,7 +1222,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			}
 		}
 
-		return user;
+		return userPersistence.findByPrimaryKey(userId);
 	}
 
 	@Override
