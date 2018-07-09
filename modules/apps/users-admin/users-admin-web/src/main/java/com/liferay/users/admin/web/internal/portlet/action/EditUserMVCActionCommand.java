@@ -153,11 +153,7 @@ public class EditUserMVCActionCommand extends BaseMVCActionCommand {
 			new ArrayList<Phone>(), new ArrayList<Website>(),
 			new ArrayList<AnnouncementsDelivery>(), sendEmail, serviceContext);
 
-		user.setComments(comments);
-
-		user = userLocalService.updateUser(user);
-
-		return user;
+		return userLocalService.updateComments(user.getUserId(), comments);
 	}
 
 	protected void deleteRole(ActionRequest actionRequest) throws Exception {
