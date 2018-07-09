@@ -2100,6 +2100,16 @@ public interface UserLocalService extends BaseLocalService,
 		String[] assetTagNames) throws PortalException;
 
 	/**
+	* Updates the user's comments.
+	*
+	* @param userId the primary key of the user
+	* @param comments the new comments
+	* @return the user
+	*/
+	public User updateComments(long userId, String comments)
+		throws PortalException;
+
+	/**
 	* Updates the user's creation date.
 	*
 	* @param userId the primary key of the user

@@ -2605,6 +2605,19 @@ public class UserLocalServiceUtil {
 	}
 
 	/**
+	* Updates the user's comments.
+	*
+	* @param userId the primary key of the user
+	* @param comments the new comments
+	* @return the user
+	*/
+	public static com.liferay.portal.kernel.model.User updateComments(
+		long userId, String comments)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().updateComments(userId, comments);
+	}
+
+	/**
 	* Updates the user's creation date.
 	*
 	* @param userId the primary key of the user

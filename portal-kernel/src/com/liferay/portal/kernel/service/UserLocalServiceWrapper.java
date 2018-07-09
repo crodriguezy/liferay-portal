@@ -2781,6 +2781,20 @@ public class UserLocalServiceWrapper implements UserLocalService,
 	}
 
 	/**
+	* Updates the user's comments.
+	*
+	* @param userId the primary key of the user
+	* @param comments the new comments
+	* @return the user
+	*/
+	@Override
+	public com.liferay.portal.kernel.model.User updateComments(long userId,
+		String comments)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _userLocalService.updateComments(userId, comments);
+	}
+
+	/**
 	* Updates the user's creation date.
 	*
 	* @param userId the primary key of the user
