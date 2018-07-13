@@ -19,7 +19,13 @@ import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.transaction.TransactionLifecycleManager;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+
 import org.aopalliance.intercept.MethodInvocation;
+
+import org.apache.commons.lang.reflect.ConstructorUtils;
+import org.apache.commons.lang.reflect.FieldUtils;
 
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -153,6 +159,39 @@ public class DefaultTransactionExecutor
 		}
 	}
 
+	private Object _getOneLevelWrapperUpdatedObject(Object returnValue) {
+		Class<?> clazz = returnValue.getClass();
+
+		Field[] fields = clazz.getDeclaredFields();
+
+		if (fields.length != 1) {
+			return returnValue;
+		}
+
+		Field field = fields[0];
+
+		Constructor<?> constructor =
+			ConstructorUtils.getMatchingAccessibleConstructor(
+				clazz, new Class<?>[] {field.getType()});
+
+		try {
+			if (constructor != null) {
+				Object fieldValue = FieldUtils.readDeclaredField(
+					returnValue, field.getName(), true);
+
+				Object newFieldValue = _getUpdatedReturnValue(fieldValue);
+
+				if (newFieldValue != fieldValue) {
+					return constructor.newInstance(fieldValue);
+				}
+			}
+		}
+		catch (Exception e) {
+		}
+
+		return returnValue;
+	}
+
 	private Object _getUpdatedObject(Object object) {
 		if (object instanceof BaseModel<?> && object instanceof MVCCModel) {
 			BaseModel<?> baseModel = (BaseModel<?>)object;
@@ -178,6 +217,9 @@ public class DefaultTransactionExecutor
 		if (returnValue instanceof MVCCModel) {
 			if (returnValue instanceof BaseModel<?>) {
 				returnValue = _getUpdatedObject(returnValue);
+			}
+			else {
+				returnValue = _getOneLevelWrapperUpdatedObject(returnValue);
 			}
 		}
 
