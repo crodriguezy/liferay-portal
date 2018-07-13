@@ -39,6 +39,7 @@ import com.liferay.source.formatter.util.SourceFormatterUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,6 +59,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import org.dom4j.DocumentException;
 
 /**
  * @author Hugo Huijser
@@ -171,6 +174,13 @@ public class SourceFormatter {
 				arguments, "include.subrepositories",
 				SourceFormatterArgs.INCLUDE_SUBREPOSITORIES);
 
+			List<String> recentChangesFileNames =
+				sourceFormatterArgs.getRecentChangesFileNames();
+
+			if (recentChangesFileNames != null) {
+				includeSubrepositories = true;
+			}
+
 			sourceFormatterArgs.setIncludeSubrepositories(
 				includeSubrepositories);
 
@@ -257,6 +267,7 @@ public class SourceFormatter {
 
 		_sourceProcessors.add(new BNDSourceProcessor());
 		_sourceProcessors.add(new CodeownersSourceProcessor());
+		_sourceProcessors.add(new ConfigSourceProcessor());
 		_sourceProcessors.add(new CQLSourceProcessor());
 		_sourceProcessors.add(new CSSSourceProcessor());
 		_sourceProcessors.add(new DockerfileSourceProcessor());
@@ -274,8 +285,8 @@ public class SourceFormatter {
 		_sourceProcessors.add(new SHSourceProcessor());
 		_sourceProcessors.add(new SoySourceProcessor());
 		_sourceProcessors.add(new SQLSourceProcessor());
-		_sourceProcessors.add(new TSSourceProcessor());
 		_sourceProcessors.add(new TLDSourceProcessor());
+		_sourceProcessors.add(new TSSourceProcessor());
 		_sourceProcessors.add(new XMLSourceProcessor());
 		_sourceProcessors.add(new YMLSourceProcessor());
 
@@ -440,6 +451,34 @@ public class SourceFormatter {
 		_sourceFormatterArgs.addRecentChangesFileNames(dependentFileNames);
 	}
 
+	private void _excludeWorkingDirCheckoutPrivateApps() throws IOException {
+		if (!_isPortalSource()) {
+			return;
+		}
+
+		File file = new File(_getPortalDir(), "working.dir.properties");
+
+		if (!file.exists()) {
+			return;
+		}
+
+		Properties properties = _getProperties(file);
+
+		for (Object key : properties.keySet()) {
+			String s = (String)key;
+
+			if (s.matches("working.dir.checkout.private.apps.(\\w)+.dirs")) {
+				List<String> dirs = ListUtil.fromString(
+					properties.getProperty(s), StringPool.COMMA);
+
+				for (String dir : dirs) {
+					_sourceFormatterExcludes.addDefaultExcludeSyntaxPatterns(
+						_getExcludeSyntaxPatterns("**/" + dir + "/**"));
+				}
+			}
+		}
+	}
+
 	private List<String> _getCheckNames() {
 		List<String> checkNames = new ArrayList<>();
 
@@ -485,9 +524,7 @@ public class SourceFormatter {
 		return excludeSyntaxPatterns;
 	}
 
-	private List<String> _getPluginsInsideModulesDirectoryNames()
-		throws Exception {
-
+	private List<String> _getPluginsInsideModulesDirectoryNames() {
 		List<String> pluginsInsideModulesDirectoryNames = new ArrayList<>();
 
 		List<String> pluginBuildFileNames = SourceFormatterUtil.filterFileNames(
@@ -520,7 +557,19 @@ public class SourceFormatter {
 		return pluginsInsideModulesDirectoryNames;
 	}
 
-	private String _getProjectPathPrefix() throws Exception {
+	private File _getPortalDir() {
+		File portalImplDir = SourceFormatterUtil.getFile(
+			_sourceFormatterArgs.getBaseDirName(), "portal-impl",
+			ToolsUtil.PORTAL_MAX_DIR_LEVEL);
+
+		if (portalImplDir == null) {
+			return null;
+		}
+
+		return portalImplDir.getParentFile();
+	}
+
+	private String _getProjectPathPrefix() throws IOException {
 		if (!_subrepository) {
 			return null;
 		}
@@ -547,7 +596,7 @@ public class SourceFormatter {
 		return null;
 	}
 
-	private Properties _getProperties(File file) throws Exception {
+	private Properties _getProperties(File file) throws IOException {
 		Properties properties = new Properties();
 
 		if (file.exists()) {
@@ -557,9 +606,11 @@ public class SourceFormatter {
 		return properties;
 	}
 
-	private void _init() throws Exception {
+	private void _init() throws DocumentException, IOException {
 		_sourceFormatterExcludes = new SourceFormatterExcludes(
 			SetUtil.fromArray(DEFAULT_EXCLUDE_SYNTAX_PATTERNS));
+
+		_excludeWorkingDirCheckoutPrivateApps();
 
 		// Find properties file in any parent directory
 
@@ -630,7 +681,7 @@ public class SourceFormatter {
 		return false;
 	}
 
-	private boolean _isSubrepository() throws Exception {
+	private boolean _isSubrepository() throws IOException {
 		if (_isPortalSource()) {
 			return false;
 		}
@@ -674,7 +725,7 @@ public class SourceFormatter {
 		System.out.print(message + "\r");
 	}
 
-	private void _readProperties(File propertiesFile) throws Exception {
+	private void _readProperties(File propertiesFile) throws IOException {
 		Properties properties = _getProperties(propertiesFile);
 
 		if (properties.isEmpty()) {

@@ -15,23 +15,19 @@
 package com.liferay.source.formatter.checks;
 
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.tools.ToolsUtil;
 import com.liferay.source.formatter.util.FileUtil;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Hugo Huijser
  */
 public class CopyrightCheck extends BaseFileCheck {
-
-	@Override
-	public void init() throws Exception {
-		_commercialCopyright = _getCommercialCopyright();
-		_copyright = _getCopyright();
-	}
 
 	public void setCopyrightFileName(String copyrightFileName) {
 		_copyrightFileName = copyrightFileName;
@@ -40,15 +36,24 @@ public class CopyrightCheck extends BaseFileCheck {
 	@Override
 	protected String doProcess(
 			String fileName, String absolutePath, String content)
-		throws Exception {
+		throws IOException {
 
-		String copyright = _copyright;
+		String copyright = _getCopyright();
+
+		if (Validator.isNull(copyright)) {
+			return content;
+		}
 
 		if (isModulesApp(absolutePath, true)) {
-			copyright = _commercialCopyright;
+			String commercialCopyright = _getCommercialCopyright();
 
-			if (content.contains(_copyright)) {
-				content = StringUtil.replace(content, _copyright, copyright);
+			if (Validator.isNotNull(commercialCopyright)) {
+				if (content.contains(copyright)) {
+					content = StringUtil.replace(
+						content, copyright, commercialCopyright);
+				}
+
+				copyright = commercialCopyright;
 			}
 		}
 
@@ -62,7 +67,7 @@ public class CopyrightCheck extends BaseFileCheck {
 	private String _fixCopyright(
 			String fileName, String absolutePath, String content,
 			String copyright)
-		throws Exception {
+		throws IOException {
 
 		String customCopyright = _getCustomCopyright(absolutePath);
 
@@ -95,33 +100,55 @@ public class CopyrightCheck extends BaseFileCheck {
 		return content;
 	}
 
-	private String _getCommercialCopyright() throws Exception {
-		Class<?> clazz = getClass();
-
-		ClassLoader classLoader = clazz.getClassLoader();
-
-		return StringUtil.read(
-			classLoader.getResourceAsStream(
-				"dependencies/copyright-commercial.txt"));
-	}
-
-	private String _getCopyright() throws Exception {
-		String copyright = getContent(
-			_copyrightFileName, ToolsUtil.PORTAL_MAX_DIR_LEVEL);
-
-		if (Validator.isNotNull(copyright)) {
-			return copyright;
+	private synchronized String _getCommercialCopyright() {
+		if (_commercialCopyright != null) {
+			return _commercialCopyright;
 		}
 
-		Class<?> clazz = getClass();
+		try {
+			Class<?> clazz = getClass();
 
-		ClassLoader classLoader = clazz.getClassLoader();
+			ClassLoader classLoader = clazz.getClassLoader();
 
-		return StringUtil.read(
-			classLoader.getResourceAsStream("dependencies/copyright.txt"));
+			_commercialCopyright = StringUtil.read(
+				classLoader.getResourceAsStream(
+					"dependencies/copyright-commercial.txt"));
+		}
+		catch (Exception e) {
+			_commercialCopyright = StringPool.BLANK;
+		}
+
+		return _commercialCopyright;
 	}
 
-	private String _getCustomCopyright(String absolutePath) throws Exception {
+	private synchronized String _getCopyright() throws IOException {
+		if (_copyright != null) {
+			return _copyright;
+		}
+
+		_copyright = getContent(
+			_copyrightFileName, ToolsUtil.PORTAL_MAX_DIR_LEVEL);
+
+		if (Validator.isNotNull(_copyright)) {
+			return _copyright;
+		}
+
+		try {
+			Class<?> clazz = getClass();
+
+			ClassLoader classLoader = clazz.getClassLoader();
+
+			_copyright = StringUtil.read(
+				classLoader.getResourceAsStream("dependencies/copyright.txt"));
+		}
+		catch (Exception e) {
+			_copyright = StringPool.BLANK;
+		}
+
+		return _copyright;
+	}
+
+	private String _getCustomCopyright(String absolutePath) throws IOException {
 		for (int x = absolutePath.length();;) {
 			x = absolutePath.lastIndexOf(CharPool.SLASH, x);
 

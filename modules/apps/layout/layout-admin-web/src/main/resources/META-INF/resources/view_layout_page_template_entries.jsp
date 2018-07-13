@@ -60,6 +60,13 @@ request.setAttribute(LayoutAdminWebKeys.LAYOUT_PAGE_TEMPLATE_DISPLAY_CONTEXT, la
 			String imagePreviewURL = layoutPageTemplateEntry.getImagePreviewURL(themeDisplay);
 			%>
 
+			<portlet:renderURL var="editLayoutPageTemplateURL">
+				<portlet:param name="mvcRenderCommandName" value="/layout/edit_layout_page_template_entry" />
+				<portlet:param name="redirect" value="<%= currentURL %>" />
+				<portlet:param name="layoutPageTemplateEntryId" value="<%= String.valueOf(layoutPageTemplateEntry.getLayoutPageTemplateEntryId()) %>" />
+				<portlet:param name="layoutPageTemplateCollectionId" value="<%= String.valueOf(layoutPageTemplateEntry.getLayoutPageTemplateCollectionId()) %>" />
+			</portlet:renderURL>
+
 			<liferay-ui:search-container-column-text>
 				<c:choose>
 					<c:when test="<%= Validator.isNotNull(imagePreviewURL) %>">
@@ -72,6 +79,7 @@ request.setAttribute(LayoutAdminWebKeys.LAYOUT_PAGE_TEMPLATE_DISPLAY_CONTEXT, la
 							resultRow="<%= row %>"
 							rowChecker="<%= searchContainer.getRowChecker() %>"
 							title="<%= layoutPageTemplateEntry.getName() %>"
+							url="<%= editLayoutPageTemplateURL %>"
 						>
 							<liferay-frontend:vertical-card-footer>
 								<div class="card-subtitle row">
@@ -106,6 +114,7 @@ request.setAttribute(LayoutAdminWebKeys.LAYOUT_PAGE_TEMPLATE_DISPLAY_CONTEXT, la
 							resultRow="<%= row %>"
 							rowChecker="<%= searchContainer.getRowChecker() %>"
 							title="<%= layoutPageTemplateEntry.getName() %>"
+							url="<%= editLayoutPageTemplateURL %>"
 						>
 							<liferay-frontend:vertical-card-footer>
 								<div class="card-subtitle row">
@@ -140,6 +149,15 @@ request.setAttribute(LayoutAdminWebKeys.LAYOUT_PAGE_TEMPLATE_DISPLAY_CONTEXT, la
 			markupView="lexicon"
 		/>
 	</liferay-ui:search-container>
+</aui:form>
+
+<portlet:actionURL name="/layout/update_layout_page_template_entry_preview" var="updateLayoutPageTemplateEntryPreviewURL">
+	<portlet:param name="redirect" value="<%= currentURL %>" />
+</portlet:actionURL>
+
+<aui:form action="<%= updateLayoutPageTemplateEntryPreviewURL %>" name="layoutPageTemplateEntryPreviewFm">
+	<aui:input name="layoutPageTemplateEntryId" type="hidden" />
+	<aui:input name="fileEntryId" type="hidden" />
 </aui:form>
 
 <aui:script require="metal-dom/src/all/dom as dom,frontend-js-web/liferay/modal/commands/OpenSimpleInputModal.es as modalCommands">
@@ -213,8 +231,50 @@ request.setAttribute(LayoutAdminWebKeys.LAYOUT_PAGE_TEMPLATE_DISPLAY_CONTEXT, la
 		}
 	);
 
+	var updateLayoutPageTemplateEntryPreviewMenuItemClickHandler = dom.delegate(
+		document.body,
+		'click',
+		'.update-layout-page-template-entry-preview > a',
+		function(event) {
+			var data = event.delegateTarget.dataset;
+
+			event.preventDefault();
+
+			AUI().use(
+				'liferay-item-selector-dialog',
+				function(A) {
+					var itemSelectorDialog = new A.LiferayItemSelectorDialog(
+						{
+							eventName: '<portlet:namespace />changePreview',
+							on: {
+								selectedItemChange: function(event) {
+									var selectedItem = event.newVal;
+
+									if (selectedItem) {
+										var itemValue = JSON.parse(selectedItem.value);
+
+										document.<portlet:namespace />layoutPageTemplateEntryPreviewFm.<portlet:namespace />layoutPageTemplateEntryId.value = data.layoutPageTemplateEntryId;
+										document.<portlet:namespace />layoutPageTemplateEntryPreviewFm.<portlet:namespace />fileEntryId.value = itemValue.fileEntryId;
+
+										submitForm(document.<portlet:namespace />layoutPageTemplateEntryPreviewFm);
+									}
+								}
+							},
+							'strings.add': '<liferay-ui:message key="ok" />',
+							title: '<liferay-ui:message key="page-template-thumbnail" />',
+							url: data.itemSelectorUrl
+						}
+					);
+
+					itemSelectorDialog.open();
+				}
+			);
+		}
+	);
+
 	function handleDestroyPortlet() {
 		updateLayoutPageTemplateEntryMenuItemClickHandler.removeListener();
+		updateLayoutPageTemplateEntryPreviewMenuItemClickHandler.removeListener();
 
 		Liferay.detach('destroyPortlet', handleDestroyPortlet);
 	}

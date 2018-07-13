@@ -38,6 +38,7 @@ import com.puppycrawl.tools.checkstyle.api.TokenTypes;
 import com.puppycrawl.tools.checkstyle.utils.AnnotationUtility;
 
 import java.io.File;
+import java.io.IOException;
 
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -176,13 +177,21 @@ public class DeprecatedMethodCallsCheck extends BaseCheck {
 	}
 
 	private synchronized Map<String, String> _getBundleSymbolicNamesMap()
-		throws Exception {
+		throws IOException {
 
 		if (_bundleSymbolicNamesMap != null) {
 			return _bundleSymbolicNamesMap;
 		}
 
-		File modulesDir = new File(_getRootDirName() + "/modules");
+		_bundleSymbolicNamesMap = new HashMap<>();
+
+		String rootDirName = _getRootDirName();
+
+		if (Validator.isNull(rootDirName)) {
+			return _bundleSymbolicNamesMap;
+		}
+
+		File modulesDir = new File(rootDirName + "/modules");
 
 		final List<File> files = new ArrayList<>();
 
@@ -215,8 +224,6 @@ public class DeprecatedMethodCallsCheck extends BaseCheck {
 				}
 
 			});
-
-		_bundleSymbolicNamesMap = new HashMap<>();
 
 		for (File file : files) {
 			String content = FileUtil.read(file);
@@ -283,10 +290,16 @@ public class DeprecatedMethodCallsCheck extends BaseCheck {
 	}
 
 	private File _getFile(String fullyQualifiedName, String... dirNames) {
+		String rootDirName = _getRootDirName();
+
+		if (Validator.isNull(rootDirName)) {
+			return null;
+		}
+
 		for (String dirName : dirNames) {
 			StringBundler sb = new StringBundler(5);
 
-			sb.append(_getRootDirName());
+			sb.append(rootDirName);
 			sb.append("/");
 			sb.append(dirName);
 			sb.append(StringUtil.replace(fullyQualifiedName, '.', '/'));
@@ -579,7 +592,9 @@ public class DeprecatedMethodCallsCheck extends BaseCheck {
 			int x = absolutePath.lastIndexOf("/");
 
 			if (x == -1) {
-				return null;
+				_rootDirName = StringPool.BLANK;
+
+				return _rootDirName;
 			}
 
 			absolutePath = absolutePath.substring(0, x);
@@ -587,7 +602,9 @@ public class DeprecatedMethodCallsCheck extends BaseCheck {
 			File file = new File(absolutePath + "/portal-impl");
 
 			if (file.exists()) {
-				return absolutePath;
+				_rootDirName = absolutePath;
+
+				return _rootDirName;
 			}
 		}
 	}

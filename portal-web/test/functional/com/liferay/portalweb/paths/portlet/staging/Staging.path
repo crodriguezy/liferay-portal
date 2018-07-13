@@ -10,11 +10,6 @@
 <tbody>
 <!--PROCESSES-->
 <tr>
-	<td>SCHEDULED</td>
-	<td>//ul[contains(@id,'StagingProcessesPortlet')]/li/a[contains(@title,'Scheduled')]</td>
-	<td></td>
-</tr>
-<tr>
 	<td>PROCESS_SUCCESSFUL</td>
 	<td>//h6[contains(.,'Successful')]</td>
 	<td></td>

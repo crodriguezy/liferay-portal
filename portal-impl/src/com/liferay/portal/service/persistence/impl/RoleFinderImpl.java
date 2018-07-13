@@ -656,7 +656,7 @@ public class RoleFinderImpl extends RoleFinderBaseImpl implements RoleFinder {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, with no direct replacement
+	 * @deprecated As of Judson (7.1.x), with no direct replacement
 	 */
 	@Deprecated
 	@Override
@@ -1180,7 +1180,7 @@ public class RoleFinderImpl extends RoleFinderBaseImpl implements RoleFinder {
 			String key = entry.getKey();
 			Object value = entry.getValue();
 
-			if (value != null) {
+			if (Validator.isNotNull(value)) {
 				sb.append(getJoin(key));
 			}
 		}
@@ -1235,7 +1235,7 @@ public class RoleFinderImpl extends RoleFinderBaseImpl implements RoleFinder {
 			String key = entry.getKey();
 			Object value = entry.getValue();
 
-			if (value != null) {
+			if (Validator.isNotNull(value)) {
 				sb.append(getWhere(key));
 			}
 		}

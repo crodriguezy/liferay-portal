@@ -167,7 +167,7 @@ public class UserGroupFinderImpl
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, with no direct replacement
+	 * @deprecated As of Wilberforce (7.0.x), with no direct replacement
 	 */
 	@Deprecated
 	@Override
@@ -381,7 +381,7 @@ public class UserGroupFinderImpl
 
 			Object value = entry.getValue();
 
-			if (value != null) {
+			if (Validator.isNotNull(value)) {
 				sb.append(getJoin(key));
 			}
 		}
@@ -445,7 +445,7 @@ public class UserGroupFinderImpl
 
 			Object value = entry.getValue();
 
-			if (value != null) {
+			if (Validator.isNotNull(value)) {
 				sb.append(getWhere(key, value));
 			}
 		}

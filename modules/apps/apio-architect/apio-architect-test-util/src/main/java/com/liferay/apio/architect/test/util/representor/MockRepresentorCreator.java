@@ -17,7 +17,7 @@ package com.liferay.apio.architect.test.util.representor;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
-import com.liferay.apio.architect.impl.internal.representor.RepresentorImpl;
+import com.liferay.apio.architect.impl.representor.RepresentorImpl;
 import com.liferay.apio.architect.representor.Representor;
 import com.liferay.apio.architect.test.util.identifier.FirstEmbeddedId;
 import com.liferay.apio.architect.test.util.identifier.RootModelId;
@@ -71,7 +71,20 @@ public class MockRepresentorCreator {
 		).addLinkedModel(
 			"linked", SecondEmbeddedId.class, __ -> "second"
 		).addLocalizedStringByLanguage(
-			"localizedString", (firstEmbeddedModel, language) -> "Translated"
+			"localizedString",
+			(firstEmbeddedModel, acceptLanguage) -> "Translated"
+		).addNestedList(
+			"nestedList",
+			__ -> asList((SecondEmbeddedModel)() -> "id 1", () -> "id 2"),
+			nestedListBuilder -> nestedListBuilder.types(
+				"Type 7"
+			).addNumber(
+				"number1", __ -> 2018
+			).addString(
+				"string1", SecondEmbeddedModel::getId
+			).addString(
+				"string2", __ -> "string3"
+			).build()
 		).addNumber(
 			"number", __ -> 42
 		).addNumberList(
@@ -101,6 +114,8 @@ public class MockRepresentorCreator {
 			"Type 1", "Type 2"
 		).identifier(
 			RootModel::getId
+		).addApplicationRelativeURL(
+			"applicationRelativeURL1", __ -> "/first"
 		).addBinary(
 			"binary1", __ -> null
 		).addBinary(
@@ -130,9 +145,21 @@ public class MockRepresentorCreator {
 		).addLink(
 			"link2", "community.liferay.com"
 		).addLocalizedStringByLanguage(
-			"localizedString1", (model, language) -> "Translated 1"
+			"localizedString1", (model, acceptLanguage) -> "Translated 1"
 		).addLocalizedStringByLanguage(
-			"localizedString2", (model, language) -> "Translated 2"
+			"localizedString2", (model, acceptLanguage) -> "Translated 2"
+		).addNestedList(
+			"nestedList",
+			__ -> asList((FirstEmbeddedModel)() -> "id 1", () -> "id 2"),
+			nestedListBuilder -> nestedListBuilder.types(
+				"Type 6"
+			).addNumber(
+				"number1", __ -> 2017
+			).addString(
+				"string1", FirstEmbeddedModel::getId
+			).addString(
+				"string2", __ -> "string2"
+			).build()
 		).addNumber(
 			"number1", __ -> 2017
 		).addNumber(
@@ -202,9 +229,9 @@ public class MockRepresentorCreator {
 			).addLink(
 				"link4", ""
 			).addLocalizedStringByLanguage(
-				"localizedString3", (model, language) -> null
+				"localizedString3", (model, acceptLanguage) -> null
 			).addLocalizedStringByLanguage(
-				"localizedString4", (model, language) -> ""
+				"localizedString4", (model, acceptLanguage) -> ""
 			).addNumber(
 				"number3", __ -> null
 			).addString(

@@ -37,6 +37,7 @@ import com.liferay.dynamic.data.mapping.model.DDMFormInstanceSettings;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceRecordLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceService;
+import com.liferay.dynamic.data.mapping.service.DDMFormInstanceVersionLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMStructureService;
 import com.liferay.dynamic.data.mapping.storage.StorageEngine;
@@ -103,6 +104,7 @@ public class DDMFormAdminDisplayContext {
 		DDMFormWebConfiguration formWebConfiguration,
 		DDMFormInstanceRecordLocalService formInstanceRecordLocalService,
 		DDMFormInstanceService formInstanceService,
+		DDMFormInstanceVersionLocalService formInstanceVersionLocalService,
 		DDMFormFieldTypeServicesTracker formFieldTypeServicesTracker,
 		DDMFormFieldTypesJSONSerializer formFieldTypesJSONSerializer,
 		DDMFormRenderer formRenderer, DDMFormValuesFactory formValuesFactory,
@@ -119,6 +121,7 @@ public class DDMFormAdminDisplayContext {
 		_ddmFormWebConfiguration = formWebConfiguration;
 		_ddmFormInstanceRecordLocalService = formInstanceRecordLocalService;
 		_ddmFormInstanceService = formInstanceService;
+		_ddmFormInstanceVersionLocalService = formInstanceVersionLocalService;
 		_ddmFormFieldTypeServicesTracker = formFieldTypeServicesTracker;
 		_ddmFormFieldTypesJSONSerializer = formFieldTypesJSONSerializer;
 		_ddmFormRenderer = formRenderer;
@@ -326,6 +329,22 @@ public class DDMFormAdminDisplayContext {
 		return _DISPLAY_VIEWS;
 	}
 
+	public List<NavigationItem> getElementSetBuilderNavigationItems() {
+		HttpServletRequest request = formAdminRequestHelper.getRequest();
+
+		return new NavigationItemList() {
+			{
+				add(
+					navigationItem -> {
+						navigationItem.setActive(true);
+						navigationItem.setHref(StringPool.BLANK);
+						navigationItem.setLabel(
+							LanguageUtil.get(request, "builder"));
+					});
+			}
+		};
+	}
+
 	public List<DropdownItem> getFilterItemsDropdownItems() {
 		HttpServletRequest request = formAdminRequestHelper.getRequest();
 
@@ -345,6 +364,31 @@ public class DDMFormAdminDisplayContext {
 							getOrderByDropdownItems());
 						dropdownGroupItem.setLabel(
 							LanguageUtil.get(request, "order-by"));
+					});
+			}
+		};
+	}
+
+	public List<NavigationItem> getFormBuilderNavigationItems() {
+		HttpServletRequest request = formAdminRequestHelper.getRequest();
+
+		return new NavigationItemList() {
+			{
+				add(
+					navigationItem -> {
+						navigationItem.putData("action", "showForm");
+						navigationItem.setActive(true);
+						navigationItem.setHref(StringPool.BLANK);
+						navigationItem.setLabel(
+							LanguageUtil.get(request, "builder"));
+					});
+
+				add(
+					navigationItem -> {
+						navigationItem.putData("action", "showRules");
+						navigationItem.setHref(StringPool.BLANK);
+						navigationItem.setLabel(
+							LanguageUtil.get(request, "rules"));
 					});
 			}
 		};
@@ -441,7 +485,8 @@ public class DDMFormAdminDisplayContext {
 		return new DDMFormViewFormInstanceRecordDisplayContext(
 			formAdminRequestHelper.getRequest(),
 			PortalUtil.getHttpServletResponse(_renderResponse),
-			_ddmFormInstanceRecordLocalService, _ddmFormRenderer,
+			_ddmFormInstanceRecordLocalService,
+			_ddmFormInstanceVersionLocalService, _ddmFormRenderer,
 			_ddmFormValuesFactory, _ddmFormValuesMerger);
 	}
 
@@ -1083,6 +1128,8 @@ public class DDMFormAdminDisplayContext {
 	private final DDMFormInstanceRecordLocalService
 		_ddmFormInstanceRecordLocalService;
 	private final DDMFormInstanceService _ddmFormInstanceService;
+	private final DDMFormInstanceVersionLocalService
+		_ddmFormInstanceVersionLocalService;
 	private final DDMFormRenderer _ddmFormRenderer;
 	private final DDMFormValuesFactory _ddmFormValuesFactory;
 	private final DDMFormValuesMerger _ddmFormValuesMerger;
