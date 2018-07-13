@@ -14,6 +14,9 @@
 
 package com.liferay.portal.spring.transaction;
 
+import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
+import com.liferay.portal.kernel.model.BaseModel;
+import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.transaction.TransactionLifecycleManager;
 
 import org.aopalliance.intercept.MethodInvocation;
@@ -63,7 +66,7 @@ public class DefaultTransactionExecutor
 			platformTransactionManager, transactionAttributeAdapter,
 			transactionStatusAdapter);
 
-		return returnValue;
+		return _getUpdatedReturnValue(returnValue);
 	}
 
 	@Override
@@ -148,6 +151,37 @@ public class DefaultTransactionExecutor
 					transactionAttributeAdapter, transactionStatusAdapter);
 			}
 		}
+	}
+
+	private Object _getUpdatedObject(Object object) {
+		if (object instanceof BaseModel<?> && object instanceof MVCCModel) {
+			BaseModel<?> baseModel = (BaseModel<?>)object;
+			MVCCModel mvccModel = (MVCCModel)object;
+
+			Object updatedValue = EntityCacheUtil.getResult(
+				baseModel.isEntityCacheEnabled(), object.getClass(),
+				baseModel.getPrimaryKeyObj());
+
+			if (updatedValue != null) {
+				if (mvccModel.getMvccVersion() <
+						((MVCCModel)updatedValue).getMvccVersion()) {
+
+					return updatedValue;
+				}
+			}
+		}
+
+		return object;
+	}
+
+	private Object _getUpdatedReturnValue(Object returnValue) {
+		if (returnValue instanceof MVCCModel) {
+			if (returnValue instanceof BaseModel<?>) {
+				returnValue = _getUpdatedObject(returnValue);
+			}
+		}
+
+		return returnValue;
 	}
 
 }
