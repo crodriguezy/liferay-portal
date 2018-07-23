@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.source.formatter.BNDSettings;
 
+import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +41,7 @@ public class PackageinfoBNDExportPackageCheck extends BaseFileCheck {
 	@Override
 	protected String doProcess(
 			String fileName, String absolutePath, String content)
-		throws Exception {
+		throws IOException {
 
 		if (absolutePath.contains("/src/main/resources/") &&
 			!_hasBNDExportPackage(fileName)) {
@@ -51,7 +53,7 @@ public class PackageinfoBNDExportPackageCheck extends BaseFileCheck {
 	}
 
 	private List<String> _getBNDExportPackages(String fileName)
-		throws Exception {
+		throws IOException {
 
 		BNDSettings bndSettings = getBNDSettings(fileName);
 
@@ -59,7 +61,8 @@ public class PackageinfoBNDExportPackageCheck extends BaseFileCheck {
 			return Collections.emptyList();
 		}
 
-		Matcher matcher = _exportsPattern.matcher(bndSettings.getContent());
+		Matcher matcher = _exportPackagePattern.matcher(
+			bndSettings.getContent());
 
 		if (!matcher.find()) {
 			return Collections.emptyList();
@@ -83,10 +86,32 @@ public class PackageinfoBNDExportPackageCheck extends BaseFileCheck {
 			exportPackages.add(line.replace(CharPool.PERIOD, CharPool.SLASH));
 		}
 
+		matcher = _exportContentsPattern.matcher(bndSettings.getContent());
+
+		if (!matcher.find()) {
+			return exportPackages;
+		}
+
+		for (String line : StringUtil.splitLines(matcher.group(3))) {
+			line = StringUtil.trim(line);
+
+			if (Validator.isNull(line) || line.equals("\\")) {
+				continue;
+			}
+
+			line = StringUtil.removeSubstring(line, ",\\");
+
+			if (line.indexOf(StringPool.SEMICOLON) != -1) {
+				line = line.substring(0, line.indexOf(StringPool.SEMICOLON));
+			}
+
+			exportPackages.add(line.replace(CharPool.PERIOD, CharPool.SLASH));
+		}
+
 		return exportPackages;
 	}
 
-	private boolean _hasBNDExportPackage(String fileName) throws Exception {
+	private boolean _hasBNDExportPackage(String fileName) throws IOException {
 		List<String> bndExportPackages = _getBNDExportPackages(fileName);
 
 		for (String bndExportPackage : bndExportPackages) {
@@ -101,7 +126,10 @@ public class PackageinfoBNDExportPackageCheck extends BaseFileCheck {
 		return false;
 	}
 
-	private final Pattern _exportsPattern = Pattern.compile(
+	private final Pattern _exportContentsPattern = Pattern.compile(
+		"\n-exportcontents:(\\\\\n| )((.*?)(\n[^\t]|\\Z))",
+		Pattern.DOTALL | Pattern.MULTILINE);
+	private final Pattern _exportPackagePattern = Pattern.compile(
 		"\nExport-Package:(\\\\\n| )((.*?)(\n[^\t]|\\Z))",
 		Pattern.DOTALL | Pattern.MULTILINE);
 

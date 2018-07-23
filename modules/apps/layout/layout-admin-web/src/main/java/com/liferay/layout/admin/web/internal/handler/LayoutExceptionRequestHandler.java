@@ -21,15 +21,13 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.model.ModelHintsUtil;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
+import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.util.LayoutTypeControllerTracker;
 
 import java.util.ResourceBundle;
 
@@ -37,6 +35,9 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Jürgen Kappler
@@ -108,18 +109,21 @@ public class LayoutExceptionRequestHandler {
 
 		String type = ParamUtil.getString(actionRequest, "type");
 
-		LayoutTypeController layoutTypeController =
-			LayoutTypeControllerTracker.getLayoutTypeController(type);
-
-		ResourceBundle layoutTypeResourceBundle = ResourceBundleUtil.getBundle(
-			"content.Language", themeDisplay.getLocale(),
-			layoutTypeController.getClass());
+		ResourceBundle resourceBundle =
+			_resourceBundleLoader.loadResourceBundle(themeDisplay.getLocale());
 
 		String layoutTypeName = LanguageUtil.get(
-			layoutTypeResourceBundle, "layout.types." + type);
+			resourceBundle, "layout.types." + type);
 
 		return LanguageUtil.format(
 			themeDisplay.getRequest(), errorMessage, layoutTypeName);
 	}
+
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(bundle.symbolic.name=com.liferay.layout.admin.web)"
+	)
+	private volatile ResourceBundleLoader _resourceBundleLoader;
 
 }

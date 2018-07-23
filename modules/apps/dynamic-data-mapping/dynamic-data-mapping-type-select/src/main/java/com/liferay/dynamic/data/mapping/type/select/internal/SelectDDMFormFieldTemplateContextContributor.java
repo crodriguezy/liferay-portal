@@ -27,12 +27,9 @@ import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.AggregateResourceBundle;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
-import com.liferay.portal.kernel.util.ResourceBundleLoaderUtil;
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +40,8 @@ import java.util.ResourceBundle;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Marcellus Tavares
@@ -183,19 +182,7 @@ public class SelectDDMFormFieldTemplateContextContributor
 	}
 
 	protected ResourceBundle getResourceBundle(Locale locale) {
-		Class<?> clazz = getClass();
-
-		ResourceBundleLoader portalResourceBundleLoader =
-			ResourceBundleLoaderUtil.getPortalResourceBundleLoader();
-
-		ResourceBundle portalResourceBundle =
-			portalResourceBundleLoader.loadResourceBundle(locale);
-
-		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-			"content.Language", locale, clazz.getClassLoader());
-
-		return new AggregateResourceBundle(
-			resourceBundle, portalResourceBundle);
+		return _resourceBundleLoader.loadResourceBundle(locale);
 	}
 
 	protected List<String> getValue(String valueString) {
@@ -229,5 +216,12 @@ public class SelectDDMFormFieldTemplateContextContributor
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		SelectDDMFormFieldTemplateContextContributor.class);
+
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(bundle.symbolic.name=com.liferay.dynamic.data.mapping.type.select)"
+	)
+	private volatile ResourceBundleLoader _resourceBundleLoader;
 
 }

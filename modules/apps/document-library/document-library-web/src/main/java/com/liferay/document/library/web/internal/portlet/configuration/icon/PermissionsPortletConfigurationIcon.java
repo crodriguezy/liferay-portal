@@ -25,8 +25,7 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.AggregateResourceBundle;
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
+import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.documentlibrary.constants.DLConstants;
 import com.liferay.taglib.security.PermissionsURLTag;
@@ -39,6 +38,8 @@ import javax.portlet.PortletResponse;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Adolfo Pérez
@@ -60,11 +61,7 @@ public class PermissionsPortletConfigurationIcon
 
 	@Override
 	public ResourceBundle getResourceBundle(Locale locale) {
-		ResourceBundle bundleResourceBundle = ResourceBundleUtil.getBundle(
-			"content.Language", locale, getClass());
-
-		return new AggregateResourceBundle(
-			bundleResourceBundle, super.getResourceBundle(locale));
+		return _resourceBundleLoader.loadResourceBundle(locale);
 	}
 
 	@Override
@@ -136,5 +133,12 @@ public class PermissionsPortletConfigurationIcon
 
 	@Reference(target = "(resource.name=" + DLConstants.RESOURCE_NAME + ")")
 	private PortletResourcePermission _portletResourcePermission;
+
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(bundle.symbolic.name=com.liferay.document.library.web)"
+	)
+	private volatile ResourceBundleLoader _resourceBundleLoader;
 
 }

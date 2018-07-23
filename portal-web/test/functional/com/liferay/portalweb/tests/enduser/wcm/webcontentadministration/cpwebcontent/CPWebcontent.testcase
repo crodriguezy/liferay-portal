@@ -760,7 +760,7 @@
 	</command>
 
 	<command name="AddTemplateWithStructure" priority="5">
-		<property name="portal.acceptance" value="quarantine" />
+		<property name="portal.acceptance" value="true" />
 		<property name="testray.component.names" value="Web Content Administration" />
 
 		<execute macro="Navigator#openURL" />
@@ -1592,25 +1592,6 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="WebContentNavigator#gotoViewStatus">
-			<var name="webContentStatus" value="Expired" />
-			<var name="webContentTitle" value="WC WebContent Title" />
-		</execute>
-
-		<execute macro="WebContent#viewStatus">
-			<var name="webContentContent" value="WC WebContent Content" />
-			<var name="webContentStatus" value="Expired" />
-			<var name="webContentTitle" value="WC WebContent Title" />
-		</execute>
-
-		<execute macro="Navigator#openURL" />
-
-		<execute macro="ProductMenu#gotoPortlet">
-			<var name="category" value="Content" />
-			<var name="panel" value="Site Administration" />
-			<var name="portlet" value="Web Content" />
-		</execute>
-
 		<execute macro="WebContentNavigator#gotoEditCP">
 			<var name="webContentTitle" value="WC WebContent Title" />
 		</execute>
@@ -1618,6 +1599,10 @@
 		<execute macro="Button#clickPublish" />
 
 		<execute macro="Alert#viewRequestFailedToComplete" />
+
+		<execute macro="Alert#closeMessage">
+			<var name="messageType" value="ERROR" />
+		</execute>
 
 		<execute macro="Alert#viewExpireContentFailedMessage" />
 	</command>
@@ -2048,7 +2033,7 @@
 	</command>
 
 	<command name="EditWebContentViaArticleTitle" priority="5">
-		<property name="portal.acceptance" value="quarantine" />
+		<property name="portal.acceptance" value="true" />
 		<property name="testray.component.names" value="Web Content Administration" />
 
 		<execute macro="Navigator#openURL" />
@@ -2641,7 +2626,7 @@
 		</execute>
 	</command>
 
-	<command name="ImportTrainingLAR" priority="5">
+	<command ignore="true" name="ImportTrainingLAR" priority="5">
 		<property name="testray.component.names" value="Training" />
 
 		<execute macro="ProductMenu#gotoPortlet">

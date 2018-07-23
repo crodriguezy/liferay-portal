@@ -102,6 +102,7 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
@@ -148,6 +149,8 @@ import javax.portlet.WindowStateException;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Eduardo Lundgren
@@ -238,8 +241,9 @@ public class CalendarPortlet extends MVCPortlet {
 			}
 		}
 		else {
-			ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-				"content.Language", themeDisplay.getLocale(), getClass());
+			ResourceBundle resourceBundle =
+				_resourceBundleLoader.loadResourceBundle(
+					themeDisplay.getLocale());
 
 			String message = ResourceBundleUtil.getString(
 				resourceBundle, "failed-to-import-empty-file");
@@ -680,7 +684,7 @@ public class CalendarPortlet extends MVCPortlet {
 				serveResourceCalendars(resourceRequest, resourceResponse);
 			}
 			else if (!super.callResourceMethod(
-						resourceRequest, resourceResponse)) {
+						 resourceRequest, resourceResponse)) {
 
 				serveUnknownResource(resourceRequest, resourceResponse);
 			}
@@ -856,7 +860,7 @@ public class CalendarPortlet extends MVCPortlet {
 				"please-select-at-least-one-category-for-x", vocabularyTitle);
 		}
 		else if (assetCategoryException.getType() ==
-					AssetCategoryException.TOO_MANY_CATEGORIES) {
+					 AssetCategoryException.TOO_MANY_CATEGORIES) {
 
 			errorMessage = themeDisplay.translate(
 				"you-cannot-select-more-than-one-category-for-x",
@@ -1867,6 +1871,13 @@ public class CalendarPortlet extends MVCPortlet {
 
 	@Reference
 	private Portal _portal;
+
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(bundle.symbolic.name=com.liferay.calendar.model.Calendar)"
+	)
+	private volatile ResourceBundleLoader _resourceBundleLoader;
 
 	private UserLocalService _userLocalService;
 

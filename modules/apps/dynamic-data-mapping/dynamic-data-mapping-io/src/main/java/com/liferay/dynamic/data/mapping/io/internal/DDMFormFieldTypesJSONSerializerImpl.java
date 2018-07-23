@@ -28,7 +28,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
+import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.List;
@@ -39,6 +39,8 @@ import java.util.ResourceBundle;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Bruno Basto
@@ -110,8 +112,8 @@ public class DDMFormFieldTypesJSONSerializerImpl
 		Locale locale = LocaleThreadLocal.getThemeDisplayLocale();
 
 		try {
-			ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-				"content.Language", locale, ddmFormFieldType.getClass());
+			ResourceBundle resourceBundle =
+				_resourceBundleLoader.loadResourceBundle(locale);
 
 			if (Validator.isNotNull(description)) {
 				jsonObject.put(
@@ -157,5 +159,12 @@ public class DDMFormFieldTypesJSONSerializerImpl
 
 	private DDMFormFieldTypeServicesTracker _ddmFormFieldTypeServicesTracker;
 	private JSONFactory _jsonFactory;
+
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(bundle.symbolic.name=com.liferay.dynamic.data.mapping.io)"
+	)
+	private volatile ResourceBundleLoader _resourceBundleLoader;
 
 }

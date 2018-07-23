@@ -399,7 +399,7 @@ public class BlogsEntryWrapper implements BlogsEntry, ModelWrapper<BlogsEntry> {
 	}
 
 	/**
-	* @deprecated As of 1.1.0, replaced by {@link
+	* @deprecated As of Judson (7.1.x), replaced by {@link
 	#getSmallImageURL(ThemeDisplay)}
 	*/
 	@Deprecated
@@ -489,6 +489,10 @@ public class BlogsEntryWrapper implements BlogsEntry, ModelWrapper<BlogsEntry> {
 		return _blogsEntry.getSmallImageId();
 	}
 
+	/**
+	* @deprecated As of Judson (7.1.x), with no direct replacement
+	*/
+	@Deprecated
 	@Override
 	public String getSmallImageType()
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -617,7 +621,7 @@ public class BlogsEntryWrapper implements BlogsEntry, ModelWrapper<BlogsEntry> {
 	* Returns the trash handler for this blogs entry.
 	*
 	* @return the trash handler for this blogs entry
-	* @deprecated As of 7.0.0, with no direct replacement
+	* @deprecated As of Judson (7.1.x), with no direct replacement
 	*/
 	@Deprecated
 	@Override
