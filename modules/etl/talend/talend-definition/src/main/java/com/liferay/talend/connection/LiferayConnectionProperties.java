@@ -72,7 +72,7 @@ public class LiferayConnectionProperties
 			}
 
 			repo.storeProperties(
-				this, this.name.getValue(), _repositoryLocation, null);
+				this, name.getValue(), repositoryLocation, null);
 
 			return ValidationResult.OK;
 		}
@@ -143,7 +143,7 @@ public class LiferayConnectionProperties
 	}
 
 	public LiferayConnectionProperties setRepositoryLocation(String location) {
-		_repositoryLocation = location;
+		repositoryLocation = location;
 
 		return this;
 	}
@@ -237,8 +237,8 @@ public class LiferayConnectionProperties
 		followRedirects.setValue(true);
 		forceHttps.setValue(false);
 		loginType.setValue(LoginType.Basic);
-		password.setValue("");
-		userId.setValue("");
+		password.setValue(_PASSWORD);
+		userId.setValue(_USER_ID);
 	}
 
 	public ValidationResult validateTestConnection() {
@@ -319,19 +319,29 @@ public class LiferayConnectionProperties
 			LiferayBaseComponentDefinition.RUNTIME_SOURCE_OR_SINK_CLASS_NAME);
 	}
 
+	/**
+	 * Must be named "repositoryLocation" as Talend uses a reflection to get a
+	 * field named like this.
+	 *
+	 * @see https://github.com/Talend/tdi-studio-se/blob/125a8144597e5d5faa1f7001ce345cdfd6dc1fe3/main/plugins/org.talend.repository.generic/src/main/java/org/talend/repository/generic/ui/GenericConnWizard.java#L111
+	 */
+	protected String repositoryLocation;
+
 	private static final int _CONNECT_TIMEOUT = 30;
 
-	private static final String _HOST = "\"https://apiosample.wedeploy.io\"";
+	private static final String _HOST = "\"http://localhost:8080/o/api\"";
 
 	private static final int _ITEMS_PER_PAGE = 100;
 
+	private static final String _PASSWORD = "test";
+
 	private static final int _READ_TIMEOUT = 60;
+
+	private static final String _USER_ID = "test@liferay.com";
 
 	private static final Logger _log = LoggerFactory.getLogger(
 		LiferayConnectionProperties.class);
 
 	private static final long serialVersionUID = -746398918369840241L;
-
-	private String _repositoryLocation;
 
 }

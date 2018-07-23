@@ -181,6 +181,10 @@ public class LayoutPageTemplateEntryServiceSoap {
 		}
 	}
 
+	/**
+	* @deprecated As of Judson (7.1.x), with no direct replacement
+	*/
+	@Deprecated
 	public static int getLayoutPageTemplateCollectionsCount(long groupId,
 		long layoutPageTemplateCollectionId) throws RemoteException {
 		try {
@@ -196,6 +200,10 @@ public class LayoutPageTemplateEntryServiceSoap {
 		}
 	}
 
+	/**
+	* @deprecated As of Judson (7.1.x), with no direct replacement
+	*/
+	@Deprecated
 	public static int getLayoutPageTemplateCollectionsCount(long groupId,
 		long layoutPageTemplateCollectionId, int status)
 		throws RemoteException {
@@ -212,6 +220,10 @@ public class LayoutPageTemplateEntryServiceSoap {
 		}
 	}
 
+	/**
+	* @deprecated As of Judson (7.1.x), with no direct replacement
+	*/
+	@Deprecated
 	public static int getLayoutPageTemplateCollectionsCount(long groupId,
 		long layoutPageTemplateCollectionId, String name)
 		throws RemoteException {
@@ -228,6 +240,10 @@ public class LayoutPageTemplateEntryServiceSoap {
 		}
 	}
 
+	/**
+	* @deprecated As of Judson (7.1.x), with no direct replacement
+	*/
+	@Deprecated
 	public static int getLayoutPageTemplateCollectionsCount(long groupId,
 		long layoutPageTemplateCollectionId, String name, int status)
 		throws RemoteException {
@@ -786,6 +802,23 @@ public class LayoutPageTemplateEntryServiceSoap {
 			com.liferay.layout.page.template.model.LayoutPageTemplateEntry returnValue =
 				LayoutPageTemplateEntryServiceUtil.updateLayoutPageTemplateEntry(layoutPageTemplateEntryId,
 					status);
+
+			return com.liferay.layout.page.template.model.LayoutPageTemplateEntrySoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.layout.page.template.model.LayoutPageTemplateEntrySoap updateLayoutPageTemplateEntry(
+		long layoutPageTemplateEntryId, long previewFileEntryId)
+		throws RemoteException {
+		try {
+			com.liferay.layout.page.template.model.LayoutPageTemplateEntry returnValue =
+				LayoutPageTemplateEntryServiceUtil.updateLayoutPageTemplateEntry(layoutPageTemplateEntryId,
+					previewFileEntryId);
 
 			return com.liferay.layout.page.template.model.LayoutPageTemplateEntrySoap.toSoapModel(returnValue);
 		}

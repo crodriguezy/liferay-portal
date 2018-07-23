@@ -32,10 +32,12 @@ import com.liferay.source.formatter.parser.JavaMethod;
 import com.liferay.source.formatter.parser.JavaParameter;
 import com.liferay.source.formatter.parser.JavaSignature;
 import com.liferay.source.formatter.parser.JavaTerm;
+import com.liferay.source.formatter.parser.ParseException;
 import com.liferay.source.formatter.util.FileUtil;
 import com.liferay.source.formatter.util.SourceFormatterUtil;
 
 import java.io.File;
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,11 +54,6 @@ import org.dom4j.Element;
  * @author Hugo Huijser
  */
 public class JSPTagAttributesCheck extends TagAttributesCheck {
-
-	@Override
-	public void init() throws Exception {
-		_primitiveTagAttributeDataTypes = _getPrimitiveTagAttributeDataTypes();
-	}
 
 	@Override
 	public void setAllFileNames(List<String> allFileNames) {
@@ -133,7 +130,10 @@ public class JSPTagAttributesCheck extends TagAttributesCheck {
 				continue;
 			}
 
-			if (_primitiveTagAttributeDataTypes.contains(dataType)) {
+			Set<String> primitiveTagAttributeDataType =
+				_getPrimitiveTagAttributeDataTypes();
+
+			if (primitiveTagAttributeDataType.contains(dataType)) {
 				if (!_isValidTagAttributeValue(attributeValue, dataType)) {
 					continue;
 				}
@@ -277,13 +277,17 @@ public class JSPTagAttributesCheck extends TagAttributesCheck {
 		return jspTags;
 	}
 
-	private Set<String> _getPrimitiveTagAttributeDataTypes() {
-		return SetUtil.fromArray(
-			new String[] {
-				"java.lang.Boolean", "Boolean", "boolean", "java.lang.Double",
-				"Double", "double", "java.lang.Integer", "Integer", "int",
-				"java.lang.Long", "Long", "long"
-			});
+	private synchronized Set<String> _getPrimitiveTagAttributeDataTypes() {
+		if (_primitiveTagAttributeDataTypes == null) {
+			_primitiveTagAttributeDataTypes = SetUtil.fromArray(
+				new String[] {
+					"java.lang.Boolean", "Boolean", "boolean",
+					"java.lang.Double", "Double", "double", "java.lang.Integer",
+					"Integer", "int", "java.lang.Long", "Long", "long"
+				});
+		}
+
+		return _primitiveTagAttributeDataTypes;
 	}
 
 	private synchronized Map<String, String> _getSetMethodsMap(String tagName)
@@ -385,7 +389,7 @@ public class JSPTagAttributesCheck extends TagAttributesCheck {
 
 	private Map<String, String> _getSetMethodsMap(
 			String tagFileName, String utilTaglibSrcDirName)
-		throws Exception {
+		throws IOException, ParseException {
 
 		if (_classSetMethodsMap.containsKey(tagFileName)) {
 			return _classSetMethodsMap.get(tagFileName);
@@ -462,7 +466,7 @@ public class JSPTagAttributesCheck extends TagAttributesCheck {
 		}
 	}
 
-	private List<String> _getTLDFileNames() throws Exception {
+	private List<String> _getTLDFileNames() throws IOException {
 		String[] excludes =
 			{"**/dependencies/**", "**/util-taglib/**", "**/portal-web/**"};
 

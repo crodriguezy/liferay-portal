@@ -31,25 +31,28 @@ import com.liferay.source.formatter.util.CheckType;
 import com.liferay.source.formatter.util.FileUtil;
 import com.liferay.source.formatter.util.SourceFormatterUtil;
 
+import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
 import com.puppycrawl.tools.checkstyle.api.Configuration;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import java.net.URL;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
@@ -67,10 +70,6 @@ public abstract class BaseSourceCheck implements SourceCheck {
 		}
 
 		return Collections.emptySet();
-	}
-
-	@Override
-	public void init() throws Exception {
 	}
 
 	@Override
@@ -107,6 +106,11 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	@Override
 	public void setEnabled(boolean enabled) {
 		_enabled = enabled;
+	}
+
+	@Override
+	public void setFileExtensions(List<String> fileExtensions) {
+		_fileExtensions = fileExtensions;
 	}
 
 	@Override
@@ -192,7 +196,7 @@ public abstract class BaseSourceCheck implements SourceCheck {
 		return _baseDirName;
 	}
 
-	protected BNDSettings getBNDSettings(String fileName) throws Exception {
+	protected BNDSettings getBNDSettings(String fileName) throws IOException {
 		for (Map.Entry<String, BNDSettings> entry :
 				_bndSettingsMap.entrySet()) {
 
@@ -227,7 +231,7 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	}
 
 	protected Map<String, String> getCheckstyleAttributesMap(String checkName)
-		throws Exception {
+		throws CheckstyleException {
 
 		return CheckstyleUtil.getAttributesMap(
 			checkName, _checkstyleConfiguration);
@@ -235,64 +239,13 @@ public abstract class BaseSourceCheck implements SourceCheck {
 
 	protected String getCheckstyleAttributeValue(
 			String checkName, String attributeName)
-		throws Exception {
+		throws CheckstyleException {
 
 		return CheckstyleUtil.getAttributeValue(
 			checkName, attributeName, _checkstyleConfiguration);
 	}
 
-	protected Map<String, String> getCompatClassNamesMap() throws Exception {
-		Map<String, String> compatClassNamesMap = new HashMap<>();
-
-		String[] includes =
-			{"**/portal-compat-shared/src/com/liferay/compat/**/*.java"};
-
-		String baseDirName = _baseDirName;
-
-		List<String> fileNames = new ArrayList<>();
-
-		for (int i = 0; i < ToolsUtil.PLUGINS_MAX_DIR_LEVEL; i++) {
-			File sharedDir = new File(baseDirName + "shared");
-
-			if (sharedDir.exists()) {
-				fileNames = getFileNames(baseDirName, new String[0], includes);
-
-				break;
-			}
-
-			baseDirName = baseDirName + "../";
-		}
-
-		for (String fileName : fileNames) {
-			File file = new File(fileName);
-
-			String content = FileUtil.read(file);
-
-			fileName = StringUtil.replace(
-				fileName, CharPool.BACK_SLASH, CharPool.SLASH);
-
-			fileName = StringUtil.replace(
-				fileName, CharPool.SLASH, CharPool.PERIOD);
-
-			int pos = fileName.indexOf("com.");
-
-			String compatClassName = fileName.substring(pos);
-
-			compatClassName = compatClassName.substring(
-				0, compatClassName.length() - 5);
-
-			String extendedClassName = StringUtil.replace(
-				compatClassName, "compat.", StringPool.BLANK);
-
-			if (content.contains("extends " + extendedClassName)) {
-				compatClassNamesMap.put(compatClassName, extendedClassName);
-			}
-		}
-
-		return compatClassNamesMap;
-	}
-
-	protected String getContent(String fileName, int level) throws Exception {
+	protected String getContent(String fileName, int level) throws IOException {
 		File file = getFile(fileName, level);
 
 		if (file != null) {
@@ -309,7 +262,7 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	protected Document getCustomSQLDocument(
 			String fileName, String absolutePath,
 			Document portalCustomSQLDocument)
-		throws Exception {
+		throws DocumentException {
 
 		if (isPortalSource() && !isModulesFile(absolutePath)) {
 			return portalCustomSQLDocument;
@@ -347,9 +300,13 @@ public abstract class BaseSourceCheck implements SourceCheck {
 		return SourceFormatterUtil.getFile(_baseDirName, fileName, level);
 	}
 
+	protected List<String> getFileExtensions() {
+		return _fileExtensions;
+	}
+
 	protected List<String> getFileNames(
 			String baseDirName, String[] excludes, String[] includes)
-		throws Exception {
+		throws IOException {
 
 		return SourceFormatterUtil.scanForFiles(
 			baseDirName, excludes, includes, _sourceFormatterExcludes, true);
@@ -436,11 +393,21 @@ public abstract class BaseSourceCheck implements SourceCheck {
 		return _pluginsInsideModulesDirectoryNames;
 	}
 
-	protected String getPortalContent(String fileName) throws Exception {
-		String content = getContent(fileName, ToolsUtil.PORTAL_MAX_DIR_LEVEL);
+	protected String getPortalContent(String fileName) throws IOException {
+		return getPortalContent(fileName, false);
+	}
 
-		if (Validator.isNotNull(content)) {
-			return content;
+	protected String getPortalContent(
+			String fileName, boolean forceRetrieveFromGit)
+		throws IOException {
+
+		if (!forceRetrieveFromGit) {
+			String content = getContent(
+				fileName, ToolsUtil.PORTAL_MAX_DIR_LEVEL);
+
+			if (Validator.isNotNull(content)) {
+				return content;
+			}
 		}
 
 		URL url = _getPortalGitURL(fileName);
@@ -452,21 +419,27 @@ public abstract class BaseSourceCheck implements SourceCheck {
 		return null;
 	}
 
-	protected Document getPortalCustomSQLDocument() throws Exception {
+	protected synchronized Document getPortalCustomSQLDocument()
+		throws DocumentException, IOException {
+
+		if (_portalCustomSQLDocument != null) {
+			return _portalCustomSQLDocument;
+		}
+
+		_portalCustomSQLDocument = DocumentHelper.createDocument();
+
 		if (!isPortalSource()) {
-			return null;
+			return _portalCustomSQLDocument;
 		}
 
 		String portalCustomSQLDefaultContent = getPortalContent(
 			"portal-impl/src/custom-sql/default.xml");
 
 		if (portalCustomSQLDefaultContent == null) {
-			return null;
+			return _portalCustomSQLDocument;
 		}
 
-		Document document = DocumentHelper.createDocument();
-
-		Element rootElement = document.addElement("custom-sql");
+		Element rootElement = _portalCustomSQLDocument.addElement("custom-sql");
 
 		Document customSQLDefaultDocument = SourceUtil.readXML(
 			portalCustomSQLDefaultContent);
@@ -496,7 +469,7 @@ public abstract class BaseSourceCheck implements SourceCheck {
 			}
 		}
 
-		return document;
+		return _portalCustomSQLDocument;
 	}
 
 	protected File getPortalDir() {
@@ -511,7 +484,7 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	}
 
 	protected InputStream getPortalInputStream(String fileName)
-		throws Exception {
+		throws IOException {
 
 		File file = getFile(fileName, ToolsUtil.PORTAL_MAX_DIR_LEVEL);
 
@@ -558,6 +531,31 @@ public abstract class BaseSourceCheck implements SourceCheck {
 
 	protected SourceFormatterExcludes getSourceFormatterExcludes() {
 		return _sourceFormatterExcludes;
+	}
+
+	protected String getVariableTypeName(
+		String content, String fileContent, String variableName) {
+
+		if (variableName == null) {
+			return null;
+		}
+
+		Pattern pattern = Pattern.compile(
+			"\\W(\\w+)\\s+" + variableName + "\\W");
+
+		Matcher matcher = pattern.matcher(content);
+
+		if (matcher.find()) {
+			return matcher.group(1);
+		}
+
+		matcher = pattern.matcher(fileContent);
+
+		if (matcher.find()) {
+			return matcher.group(1);
+		}
+
+		return null;
 	}
 
 	protected boolean isExcludedPath(
@@ -784,8 +782,10 @@ public abstract class BaseSourceCheck implements SourceCheck {
 		new ConcurrentHashMap<>();
 	private Configuration _checkstyleConfiguration;
 	private boolean _enabled = true;
+	private List<String> _fileExtensions;
 	private int _maxLineLength;
 	private List<String> _pluginsInsideModulesDirectoryNames;
+	private Document _portalCustomSQLDocument;
 	private boolean _portalSource;
 	private String _projectName;
 	private String _projectPathPrefix;
