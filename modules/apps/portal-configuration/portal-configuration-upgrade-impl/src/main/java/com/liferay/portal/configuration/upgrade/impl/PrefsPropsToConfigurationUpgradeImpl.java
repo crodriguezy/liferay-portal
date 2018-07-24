@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.io.IOException;
 
@@ -32,12 +33,12 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.ReadOnlyException;
 
 import org.osgi.service.cm.Configuration;
-import org.osgi.service.component.annotations.Component;
 
 /**
- * @author Drew Brokke
+ * @author     Drew Brokke
+ * @deprecated As of Judson (7.1.x), with no direct replacement
  */
-@Component(immediate = true, service = PrefsPropsToConfigurationUpgrade.class)
+@Deprecated
 public class PrefsPropsToConfigurationUpgradeImpl
 	implements PrefsPropsToConfigurationUpgrade {
 
@@ -69,7 +70,7 @@ public class PrefsPropsToConfigurationUpgradeImpl
 				Object value = PrefsPropsUtil.getString(
 					portletPreferences, prefsPropsName);
 
-				if (value == null) {
+				if (Validator.isNull(value)) {
 					continue;
 				}
 

@@ -53,7 +53,7 @@ public class BlogsEntryImpl extends BlogsEntryBaseImpl {
 	}
 
 	/**
-	 * @deprecated As of 1.1.0, replaced by {@link
+	 * @deprecated As of Judson (7.1.x), replaced by {@link
 	 *             #getSmallImageURL(ThemeDisplay)}
 	 */
 	@Deprecated
@@ -73,6 +73,10 @@ public class BlogsEntryImpl extends BlogsEntryBaseImpl {
 			WebServerServletTokenUtil.getToken(getSmallImageId()));
 	}
 
+	/**
+	 * @deprecated As of Judson (7.1.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public String getSmallImageType() throws PortalException {
 		if ((_smallImageType == null) && isSmallImage()) {
@@ -106,11 +110,11 @@ public class BlogsEntryImpl extends BlogsEntryBaseImpl {
 
 		long smallImageId = getSmallImageId();
 
-		if (smallImageId != 0) {
+		if ((smallImageId != 0) && isSmallImage()) {
 			return StringBundler.concat(
 				themeDisplay.getPathImage(), "/blogs/entry?img_id=",
-				String.valueOf(getSmallImageId()), "&t=",
-				WebServerServletTokenUtil.getToken(getSmallImageId()));
+				String.valueOf(smallImageId), "&t=",
+				WebServerServletTokenUtil.getToken(smallImageId));
 		}
 
 		return getCoverImageURL(themeDisplay);

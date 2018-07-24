@@ -114,17 +114,19 @@ public class ModuleNameUtil {
 	 * <code>
 	 * getPackageName("isarray/lib/index") returns "isarray"
 	 * </code>
-	 * </pre>
-	 * </p>
+	 * </pre></p>
 	 *
 	 * @param  moduleName the module's name
-	 * @return the package name or null if the module name is a reserved one
+	 * @return the package name or <code>null</code> if the module name is a
+	 *         reserved or local one
 	 * @review
 	 */
 	public static String getPackageName(String moduleName) {
-		if (isReservedModuleName(moduleName) ||
-			moduleName.startsWith(StringPool.PERIOD)) {
+		if (isLocalModuleName(moduleName)) {
+			return null;
+		}
 
+		if (isReservedModuleName(moduleName)) {
 			return null;
 		}
 
@@ -153,13 +155,17 @@ public class ModuleNameUtil {
 	 * <code>
 	 * getPackagePath("isarray/lib/index") returns "lib/index"
 	 * </code>
-	 * </pre>
-	 * </p>
+	 * </pre></p>
 	 *
 	 * @param  moduleName the module's name
-	 * @return the path portion of a full module name
+	 * @return the path portion of a full module name or <code>null</code> in
+	 *         any other case
 	 */
 	public static String getPackagePath(String moduleName) {
+		if (isLocalModuleName(moduleName)) {
+			return null;
+		}
+
 		int i = moduleName.indexOf(StringPool.SLASH);
 
 		if ((moduleName.charAt(0) == CharPool.AT) && (i != -1)) {
@@ -171,6 +177,14 @@ public class ModuleNameUtil {
 		}
 
 		return moduleName.substring(i + 1);
+	}
+
+	public static boolean isLocalModuleName(String moduleName) {
+		if (moduleName.startsWith("./") || moduleName.startsWith("../")) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public static boolean isReservedModuleName(String moduleName) {
@@ -194,6 +208,10 @@ public class ModuleNameUtil {
 	 * @return the module's name
 	 */
 	public static String toModuleName(String fileName) {
+		if (isLocalModuleName(fileName)) {
+			fileName = fileName.substring(2);
+		}
+
 		int i = fileName.lastIndexOf(CharPool.PERIOD);
 
 		if (i == -1) {

@@ -48,16 +48,19 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 
 	@Override
 	public void onAfterCreate(Layout layout) throws ModelListenerException {
-		if (ExportImportThreadLocal.isStagingInProcess() ||
-			ExportImportThreadLocal.isImportInProcess()) {
-
+		if (ExportImportThreadLocal.isStagingInProcess()) {
 			return;
 		}
 
-		boolean addToAutoMenus = GetterUtil.getBoolean(
-			layout.getTypeSettingsProperty("addToAutoMenus"));
+		UnicodeProperties typeSettingsProperties =
+			layout.getTypeSettingsProperties();
 
-		if (layout.isHidden() || !addToAutoMenus) {
+		boolean addToAutoMenus = GetterUtil.getBoolean(
+			typeSettingsProperties.getProperty("addToAutoMenus"));
+		boolean visible = GetterUtil.getBoolean(
+			typeSettingsProperties.getProperty("visible"), true);
+
+		if (layout.isHidden() || !addToAutoMenus || !visible) {
 			return;
 		}
 
@@ -83,6 +86,12 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 
 	private void _addSiteNavigationMenuItem(
 		SiteNavigationMenu siteNavigationMenu, Layout layout) {
+
+		if (ExportImportThreadLocal.isStagingInProcess() &&
+			_menuItemExists(siteNavigationMenu, layout)) {
+
+			return;
+		}
 
 		SiteNavigationMenuItemType siteNavigationMenuItemType =
 			_siteNavigationMenuItemTypeRegistry.getSiteNavigationMenuItemType(
@@ -163,6 +172,31 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 		}
 
 		return 0;
+	}
+
+	private boolean _menuItemExists(
+		SiteNavigationMenu siteNavigationMenu, Layout layout) {
+
+		List<SiteNavigationMenuItem> siteNavigationMenuItems =
+			_siteNavigationMenuItemLocalService.getSiteNavigationMenuItems(
+				siteNavigationMenu.getSiteNavigationMenuId());
+
+		for (SiteNavigationMenuItem siteNavigationMenuItem :
+				siteNavigationMenuItems) {
+
+			UnicodeProperties unicodeProperties = new UnicodeProperties();
+
+			unicodeProperties.fastLoad(
+				siteNavigationMenuItem.getTypeSettings());
+
+			String layoutUuid = unicodeProperties.getProperty("layoutUuid");
+
+			if (Objects.equals(layout.getUuid(), layoutUuid)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Reference
