@@ -1,7 +1,8 @@
 <definition component-name="portal-permissions">
 	<property name="portal.release" value="true" />
 	<property name="portal.upstream" value="true" />
-	<property name="testray.main.component.name" value="Permissions" />
+	<property name="testray.component.names" value="Roles" />
+	<property name="testray.main.component.name" value="Roles" />
 
 	<set-up>
 		<execute macro="TestCase#setUpPortalInstance" />
@@ -415,6 +416,10 @@
 			<var name="key_menuItem" value="Add Child Site" />
 		</execute>
 
+		<execute macro="LexiconEntry#gotoEntry">
+			<var name="rowEntry" value="Blank Site" />
+		</execute>
+
 		<execute macro="PortletEntry#inputName">
 			<var name="name" value="Child SiteName2" />
 		</execute>
@@ -530,7 +535,7 @@
 
 	<command name="ViewSiteManagePagesRegRole" priority="4">
 		<execute macro="TestCase#getSiteName">
-			<return from="siteName" name="siteName" />
+			<return name="siteName" />
 			<var name="siteName" value="${siteName}" />
 		</execute>
 

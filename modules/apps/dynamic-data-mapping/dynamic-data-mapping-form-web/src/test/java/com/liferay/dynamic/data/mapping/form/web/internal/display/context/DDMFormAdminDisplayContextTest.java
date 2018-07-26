@@ -25,6 +25,7 @@ import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceSettings;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceRecordLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceService;
+import com.liferay.dynamic.data.mapping.service.DDMFormInstanceVersionLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMStructureService;
 import com.liferay.dynamic.data.mapping.storage.StorageEngine;
@@ -40,7 +41,6 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
-import com.liferay.portal.kernel.util.ResourceBundleLoaderUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.registry.collections.ServiceTrackerCollections;
@@ -70,12 +70,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 /**
  * @author Adam Brandizzi
  */
-@PrepareForTest(
-	{
-		LocaleUtil.class, ResourceBundleUtil.class,
-		ResourceBundleLoaderUtil.class, ServiceTrackerCollections.class
-	}
-)
+@PrepareForTest({LocaleUtil.class, ServiceTrackerCollections.class})
 @RunWith(PowerMockRunner.class)
 public class DDMFormAdminDisplayContextTest extends PowerMockito {
 
@@ -85,8 +80,7 @@ public class DDMFormAdminDisplayContextTest extends PowerMockito {
 		setUpServiceTrackerCollections();
 
 		setUpLanguageUtil();
-		setUpResourceBundleUtil();
-		setUpResourceBundleLoaderUtil();
+		setUpResourceBundleLoader();
 
 		setUpDDMFormDisplayContext();
 	}
@@ -281,13 +275,14 @@ public class DDMFormAdminDisplayContextTest extends PowerMockito {
 			mock(DDMExporterFactory.class), mock(DDMFormWebConfiguration.class),
 			mock(DDMFormInstanceRecordLocalService.class),
 			mockDDMFormInstanceService(),
+			mock(DDMFormInstanceVersionLocalService.class),
 			mock(DDMFormFieldTypeServicesTracker.class),
 			mock(DDMFormFieldTypesJSONSerializer.class),
 			mock(DDMFormRenderer.class), mock(DDMFormValuesFactory.class),
 			mock(DDMFormValuesMerger.class),
 			mock(DDMStructureLocalService.class),
 			mock(DDMStructureService.class), mock(JSONFactory.class),
-			mock(StorageEngine.class));
+			_resourceBundleLoader, mock(StorageEngine.class));
 	}
 
 	protected void setUpLanguageUtil() {
@@ -314,27 +309,9 @@ public class DDMFormAdminDisplayContextTest extends PowerMockito {
 		portalUtil.setPortal(portal);
 	}
 
-	protected void setUpResourceBundleLoaderUtil() {
-		ResourceBundleLoader resourceBundleLoader = mock(
-			ResourceBundleLoader.class);
-
-		ResourceBundleLoaderUtil.setPortalResourceBundleLoader(
-			resourceBundleLoader);
-
+	protected void setUpResourceBundleLoader() {
 		when(
-			resourceBundleLoader.loadResourceBundle(Matchers.any(Locale.class))
-		).thenReturn(
-			ResourceBundleUtil.EMPTY_RESOURCE_BUNDLE
-		);
-	}
-
-	protected void setUpResourceBundleUtil() {
-		mockStatic(ResourceBundleUtil.class);
-
-		when(
-			ResourceBundleUtil.getBundle(
-				Matchers.anyString(), Matchers.any(Locale.class),
-				Matchers.any(ClassLoader.class))
+			_resourceBundleLoader.loadResourceBundle(Matchers.any(Locale.class))
 		).thenReturn(
 			ResourceBundleUtil.EMPTY_RESOURCE_BUNDLE
 		);
@@ -375,6 +352,9 @@ public class DDMFormAdminDisplayContextTest extends PowerMockito {
 
 	private DDMFormAdminDisplayContext _ddmFormAdminDisplayContext;
 	private RenderRequest _renderRequest;
+
+	@Mock
+	private ResourceBundleLoader _resourceBundleLoader;
 
 	@Mock
 	private ServiceTrackerMap<String, ResourceBundleLoader> _serviceTrackerMap;

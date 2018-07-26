@@ -32,7 +32,8 @@ import com.liferay.portal.kernel.service.LayoutPrototypeService;
 import com.liferay.portal.kernel.service.LayoutService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
-import com.liferay.portal.kernel.servlet.MultiSessionMessages;
+import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -43,6 +44,7 @@ import com.liferay.sites.kernel.util.SitesUtil;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -130,14 +132,16 @@ public class AddContentLayoutMVCActionCommand
 					serviceContext);
 			}
 
-			jsonObject.put(
-				"redirectURL", getContentRedirectURL(actionResponse, layout));
+			String redirectURL = getRedirectURL(
+				actionRequest, actionResponse, layout);
 
-			String portletResource = ParamUtil.getString(
-				actionRequest, "portletResource");
+			if (Objects.equals(layout.getType(), "content")) {
+				redirectURL = getContentRedirectURL(actionResponse, layout);
+			}
 
-			MultiSessionMessages.add(
-				actionRequest, portletResource + "layoutAdded", layout);
+			jsonObject.put("redirectURL", redirectURL);
+
+			SessionMessages.add(actionRequest, "layoutAdded", layout);
 
 			JSONPortletResponseUtil.writeJSON(
 				actionRequest, actionResponse, jsonObject);
@@ -146,6 +150,10 @@ public class AddContentLayoutMVCActionCommand
 			if (_log.isDebugEnabled()) {
 				_log.debug(pe, pe);
 			}
+
+			SessionErrors.add(actionRequest, "layoutNameInvalid");
+
+			hideDefaultErrorMessage(actionRequest);
 
 			_layoutExceptionRequestHandler.handlePortalException(
 				actionRequest, actionResponse, pe);

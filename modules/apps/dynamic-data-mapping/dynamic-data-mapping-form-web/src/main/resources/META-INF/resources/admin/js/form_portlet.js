@@ -13,8 +13,6 @@ AUI.add(
 
 		var STR_UNTITLED_FORM = Liferay.Language.get('untitled-form');
 
-		var TPL_BUTTON_SPINNER = '<span aria-hidden="true"><span class="icon-spinner icon-spin"></span></span>';
-
 		var FormPortlet = A.Component.create(
 			{
 				ATTRS: {
@@ -121,7 +119,6 @@ AUI.add(
 						if (instance._isFormView()) {
 							instance.get('ruleBuilder').render(instance.one('#ruleBuilder'));
 							instance.createCopyPublishFormURLPopover();
-							instance.createPublishTooltip();
 						}
 					},
 
@@ -151,6 +148,8 @@ AUI.add(
 						);
 
 						if (instance._isFormView()) {
+							instance.bindNavigationBar();
+
 							instance._eventHandlers.push(
 								instance.after('autosave', instance._afterAutosave),
 								A.one(nameEditor.element.$).on('keydown', A.bind('handleEditorTitleKeydown', instance)),
@@ -158,9 +157,7 @@ AUI.add(
 								A.one(nameEditor.element.$).on('keypress', A.bind('handleEditorTitleCopyAndPaste', instance)),
 								instance.one('#preview').on('click', A.bind('_onPreviewButtonClick', instance)),
 								instance.one('#publish').on('click', A.bind('_onPublishButtonClick', instance)),
-								instance.one('#publishIcon').on('click', A.bind('_onPublishIconClick', instance)),
-								instance.one('#showForm').on('click', A.bind('_onFormButtonClick', instance)),
-								instance.one('#showRules').on('click', A.bind('_onRulesButtonClick', instance))
+								instance.one('#publishIcon').on('click', A.bind('_onPublishIconClick', instance))
 							);
 
 							var autosaveInterval = Liferay.DDM.FormSettings.autosaveInterval;
@@ -169,6 +166,47 @@ AUI.add(
 								instance._intervalId = setInterval(A.bind('_autosave', instance, true), autosaveInterval * MINUTE);
 							}
 						}
+					},
+
+					bindNavigationBar: function() {
+						var instance = this;
+
+						var ACTIONS = {
+							'showForm': A.bind('_onFormButtonClick', instance),
+							'showRules': A.bind('_onRulesButtonClick', instance)
+						};
+
+						instance._currentTab = 'formBuilder';
+
+						Liferay.componentReady('formsNavigationBar').then(
+							function(navigationBar) {
+								navigationBar.on(
+									'itemClicked',
+									function(event) {
+										var itemData = event.data.item.data;
+
+										if (itemData && itemData.action && ACTIONS[itemData.action]) {
+											ACTIONS[itemData.action]();
+										}
+
+										var newItems = this.items;
+
+										newItems.forEach(
+											function (item) {
+												if (item.data.action === itemData.action) {
+													item.active = true;
+												}
+												else {
+													item.active = false;
+												}
+											}
+										);
+
+										this.items = newItems;
+									}
+								);
+							}
+						);
 					},
 
 					destructor: function() {
@@ -181,7 +219,6 @@ AUI.add(
 						if (instance._isFormView()) {
 							instance.get('ruleBuilder').destroy();
 							instance._copyPublishFormURLPopover.destroy();
-							instance._publishTooltip.destroy();
 						}
 
 						(new A.EventHandle(instance._eventHandlers)).detach();
@@ -232,21 +269,6 @@ AUI.add(
 								}
 							);
 						}
-					},
-
-					createPublishTooltip: function() {
-						var instance = this;
-
-						instance._publishTooltip = new A.TooltipDelegate(
-							{
-								position: 'left',
-								trigger: '.publish-icon',
-								triggerHideEvent: ['blur', 'mouseleave'],
-								triggerShowEvent: ['focus', 'mouseover'],
-								visible: false,
-								zIndex: 900
-							}
-						);
 					},
 
 					disableDescriptionEditor: function() {
@@ -452,8 +474,14 @@ AUI.add(
 
 						var ruleButton = A.one('.lfr-ddm-add-rule');
 
+						var publishButton = A.one('.publish-icon');
+
 						if (ruleButton) {
 							ruleButton.replaceClass('lfr-ddm-add-rule', 'lfr-ddm-add-field');
+						}
+
+						if (publishButton) {
+							publishButton.removeClass('hide');
 						}
 					},
 
@@ -462,8 +490,14 @@ AUI.add(
 
 						var addButton = A.one('.lfr-ddm-add-field');
 
+						var publishButton = A.one('.publish-icon');
+
 						if (addButton) {
 							addButton.replaceClass('lfr-ddm-add-field', 'lfr-ddm-add-rule');
+						}
+
+						if (publishButton) {
+							publishButton.addClass('hide');
 						}
 					},
 
@@ -472,7 +506,11 @@ AUI.add(
 
 						instance._updateAutosaveBar(event.saveAsDraft, event.modifiedDate);
 
-						A.one('.publish-icon').removeClass('hide');
+						var ruleBuilder = A.one('.lfr-ddm-add-rule');
+
+						if (!ruleBuilder) {
+							A.one('.publish-icon').removeClass('hide');
+						}
 					},
 
 					_afterEditingLocaleChange: function(event) {
@@ -727,8 +765,6 @@ AUI.add(
 						A.one('.ddm-form-builder-buttons').addClass('hide');
 
 						instance.get(STR_TRANSLATION_MANAGER).hide();
-
-						instance.one('#showForm').removeClass('active');
 					},
 
 					_hideRuleBuilder: function() {
@@ -741,8 +777,6 @@ AUI.add(
 						var ruleBuilderAncestorNode = ruleBuilderNode.ancestor();
 
 						ruleBuilderAncestorNode.addClass('hide');
-
-						instance.one('#showRules').removeClass('active');
 
 						A.one('.portlet-forms').removeClass('liferay-ddm-form-rule-builder');
 					},
@@ -805,11 +839,11 @@ AUI.add(
 					_onFormButtonClick: function() {
 						var instance = this;
 
-						var ruleTab = instance.one('#showRules');
-
-						if (ruleTab.hasClass('disabled')) {
-							ruleTab.removeClass('disabled');
+						if (instance._currentTab == 'formBuilder') {
+							return;
 						}
+
+						instance._currentTab = 'formBuilder';
 
 						instance._hideRuleBuilder();
 
@@ -922,11 +956,11 @@ AUI.add(
 					_onRulesButtonClick: function() {
 						var instance = this;
 
-						var ruleTab = instance.one('#showRules');
-
-						if (ruleTab.hasClass('disabled')) {
+						if (instance._currentTab == 'ruleBuilder') {
 							return;
 						}
+
+						instance._currentTab = 'ruleBuilder'
 
 						instance._hideFormBuilder();
 
@@ -945,8 +979,6 @@ AUI.add(
 						var saveButton = instance.one('#save');
 
 						saveButton.html(Liferay.Language.get('saving'));
-
-						saveButton.append(TPL_BUTTON_SPINNER);
 
 						instance.submitForm();
 					},
@@ -993,7 +1025,7 @@ AUI.add(
 						var alert = instance.get('alert');
 
 						if (alert) {
-							alert.destroy();
+							alert._alertsContainer._node.innerHTML = "";
 						}
 
 						var icon = 'exclamation-full';
@@ -1027,6 +1059,8 @@ AUI.add(
 					_showFormBuilder: function() {
 						var instance = this;
 
+						Liferay.fire('showFormBuilder');
+
 						instance.one('#formBuilder').show();
 
 						A.one('.ddm-form-builder-buttons').removeClass('hide');
@@ -1034,8 +1068,6 @@ AUI.add(
 						A.one('.lfr-ddm-plus-button').removeClass('hide');
 
 						instance.get(STR_TRANSLATION_MANAGER).show();
-
-						instance.one('#showForm').addClass('active');
 					},
 
 					_showRuleBuilder: function() {
@@ -1059,8 +1091,6 @@ AUI.add(
 						}
 
 						A.one('.portlet-forms').addClass('liferay-ddm-form-rule-builder');
-
-						instance.one('#showRules').addClass('active');
 					},
 
 					_syncDescription: function() {
@@ -1099,10 +1129,10 @@ AUI.add(
 						var message = '';
 
 						if (savedAsDraft) {
-							message = Liferay.Language.get('draft-saved-on-x');
+							message = Liferay.Language.get('draft-x');
 						}
 						else {
-							message = Liferay.Language.get('saved-on-x');
+							message = Liferay.Language.get('saved-x');
 						}
 
 						var autosaveMessage = A.Lang.sub(

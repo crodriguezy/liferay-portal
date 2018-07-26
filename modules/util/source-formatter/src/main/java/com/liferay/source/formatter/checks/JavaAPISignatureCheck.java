@@ -27,6 +27,7 @@ import com.liferay.source.formatter.util.FileUtil;
 import com.liferay.source.formatter.util.SourceFormatterUtil;
 
 import java.io.File;
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,11 +37,6 @@ import java.util.List;
  * @author Hugo Huijser
  */
 public class JavaAPISignatureCheck extends BaseJavaTermCheck {
-
-	@Override
-	public void init() throws Exception {
-		_apiSignatureExceptions = _getAPISignatureExceptions();
-	}
 
 	@Override
 	public boolean isPortalCheck() {
@@ -68,8 +64,9 @@ public class JavaAPISignatureCheck extends BaseJavaTermCheck {
 
 	@Override
 	protected String doProcess(
-		String fileName, String absolutePath, JavaTerm javaTerm,
-		String fileContent) {
+			String fileName, String absolutePath, JavaTerm javaTerm,
+			String fileContent)
+		throws IOException {
 
 		if (javaTerm.hasAnnotation("Override")) {
 			return javaTerm.getContent();
@@ -134,8 +131,14 @@ public class JavaAPISignatureCheck extends BaseJavaTermCheck {
 		return new String[] {JAVA_METHOD};
 	}
 
-	private String[] _getAPISignatureExceptions() throws Exception {
-		String[] apiSignatureExceptions = new String[0];
+	private synchronized String[] _getAPISignatureExceptions()
+		throws IOException {
+
+		if (_apiSignatureExceptions != null) {
+			return _apiSignatureExceptions;
+		}
+
+		_apiSignatureExceptions = new String[0];
 
 		String fileName = "source-formatter-api-signature-check-exceptions.txt";
 
@@ -149,8 +152,8 @@ public class JavaAPISignatureCheck extends BaseJavaTermCheck {
 
 			File file = new File(exceptionFileName);
 
-			apiSignatureExceptions = ArrayUtil.append(
-				apiSignatureExceptions,
+			_apiSignatureExceptions = ArrayUtil.append(
+				_apiSignatureExceptions,
 				StringUtil.splitLines(FileUtil.read(file)));
 		}
 
@@ -158,20 +161,21 @@ public class JavaAPISignatureCheck extends BaseJavaTermCheck {
 			File file = new File(getBaseDirName() + fileName);
 
 			if (file.exists()) {
-				apiSignatureExceptions = ArrayUtil.append(
-					apiSignatureExceptions,
+				_apiSignatureExceptions = ArrayUtil.append(
+					_apiSignatureExceptions,
 					StringUtil.splitLines(FileUtil.read(file)));
 			}
 
 			fileName = "../" + fileName;
 		}
 
-		return apiSignatureExceptions;
+		return _apiSignatureExceptions;
 	}
 
 	private boolean _isException(
-		String packageName, String className, String methodName,
-		JavaSignature javaSignature) {
+			String packageName, String className, String methodName,
+			JavaSignature javaSignature)
+		throws IOException {
 
 		StringBundler sb = new StringBundler(6);
 
@@ -182,7 +186,7 @@ public class JavaAPISignatureCheck extends BaseJavaTermCheck {
 		sb.append(methodName);
 		sb.append(javaSignature.toString());
 
-		if (ArrayUtil.contains(_apiSignatureExceptions, sb.toString())) {
+		if (ArrayUtil.contains(_getAPISignatureExceptions(), sb.toString())) {
 			return true;
 		}
 

@@ -153,19 +153,6 @@ public final class XMLLoggerHandler {
 		LoggerElement loggerElement = getXMLLoggerElement(stackTrace);
 
 		loggerElement.setAttribute("data-status01", status);
-
-		if (status.equals("conditional-fail") || status.equals("fail") ||
-			status.equals("pass")) {
-
-			LoggerUtil.executeJavaScript(
-				"loggerInterface.fire('line-trigger', '" +
-					loggerElement.getID() + "', false)");
-		}
-		else if (status.equals("pending")) {
-			LoggerUtil.executeJavaScript(
-				"loggerInterface.fire('line-trigger', '" +
-					loggerElement.getID() + "', true)");
-		}
 	}
 
 	private static LoggerElement _getBtnContainerLoggerElement(
@@ -275,7 +262,7 @@ public final class XMLLoggerHandler {
 							_getFunctionExecuteLoggerElement(childElement));
 					}
 					else if (childElement.attributeValue("groovy-script") !=
-								null) {
+								 null) {
 
 						loggerElement.addChildLoggerElement(
 							_getGroovyScriptLoggerElement(childElement));
@@ -286,7 +273,8 @@ public final class XMLLoggerHandler {
 								childElement, "macro"));
 					}
 					else if (Validator.isNotNull(
-								childElement.attributeValue("macro-desktop")) &&
+								 childElement.attributeValue(
+									 "macro-desktop")) &&
 							 !PropsValues.MOBILE_BROWSER) {
 
 						loggerElement.addChildLoggerElement(
@@ -294,7 +282,7 @@ public final class XMLLoggerHandler {
 								childElement, "macro-desktop"));
 					}
 					else if (Validator.isNotNull(
-								childElement.attributeValue("macro-mobile")) &&
+								 childElement.attributeValue("macro-mobile")) &&
 							 PropsValues.MOBILE_BROWSER) {
 
 						loggerElement.addChildLoggerElement(
@@ -565,8 +553,6 @@ public final class XMLLoggerHandler {
 			_getBtnContainerLoggerElement(element));
 		loggerElement.addChildLoggerElement(
 			_getLineContainerLoggerElement(element));
-
-		loggerElement.setWrittenToLogger(true);
 
 		_loggerElements.put(
 			PoshiRunnerStackTraceUtil.getSimpleStackTrace(), loggerElement);

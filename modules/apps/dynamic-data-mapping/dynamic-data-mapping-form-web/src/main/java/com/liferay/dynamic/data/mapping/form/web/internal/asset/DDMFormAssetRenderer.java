@@ -24,6 +24,7 @@ import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecord;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecordVersion;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceRecordLocalService;
+import com.liferay.dynamic.data.mapping.service.DDMFormInstanceVersionLocalService;
 import com.liferay.dynamic.data.mapping.util.DDMFormValuesMerger;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -34,6 +35,7 @@ import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
+import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Locale;
@@ -54,20 +56,24 @@ public class DDMFormAssetRenderer
 		DDMFormInstanceRecord formInstanceRecord,
 		DDMFormInstanceRecordVersion formInstanceRecordVersion,
 		DDMFormInstanceRecordLocalService ddmFormInstanceRecordLocalService,
+		DDMFormInstanceVersionLocalService formInstanceVersionLocalService,
 		DDMFormRenderer ddmFormRenderer,
 		DDMFormValuesFactory ddmFormValuesFactory,
 		DDMFormValuesMerger ddmFormValuesMerger,
 		ModelResourcePermission<DDMFormInstance>
-			ddmFormInstanceModelResourcePermission) {
+			ddmFormInstanceModelResourcePermission,
+		ResourceBundleLoader resourceBundleLoader) {
 
 		_formInstanceRecord = formInstanceRecord;
 		_formInstanceRecordVersion = formInstanceRecordVersion;
 		_ddmFormInstanceRecordLocalService = ddmFormInstanceRecordLocalService;
+		_ddmFormInstanceVersionLocalService = formInstanceVersionLocalService;
 		_ddmFormRenderer = ddmFormRenderer;
 		_ddmFormValuesFactory = ddmFormValuesFactory;
 		_ddmFormValuesMerger = ddmFormValuesMerger;
 		_ddmFormInstanceModelResourcePermission =
 			ddmFormInstanceModelResourcePermission;
+		_resourceBundleLoader = resourceBundleLoader;
 
 		DDMFormInstance formInstance = null;
 
@@ -196,8 +202,9 @@ public class DDMFormAssetRenderer
 			ddmFormViewFormInstanceRecordDisplayContext =
 				new DDMFormViewFormInstanceRecordDisplayContext(
 					request, response, _ddmFormInstanceRecordLocalService,
-					_ddmFormRenderer, _ddmFormValuesFactory,
-					_ddmFormValuesMerger);
+					_ddmFormInstanceVersionLocalService, _ddmFormRenderer,
+					_ddmFormValuesFactory, _ddmFormValuesMerger,
+					_resourceBundleLoader);
 
 		request.setAttribute(
 			WebKeys.PORTLET_DISPLAY_CONTEXT,
@@ -213,11 +220,14 @@ public class DDMFormAssetRenderer
 		_ddmFormInstanceModelResourcePermission;
 	private final DDMFormInstanceRecordLocalService
 		_ddmFormInstanceRecordLocalService;
+	private final DDMFormInstanceVersionLocalService
+		_ddmFormInstanceVersionLocalService;
 	private final DDMFormRenderer _ddmFormRenderer;
 	private final DDMFormValuesFactory _ddmFormValuesFactory;
 	private final DDMFormValuesMerger _ddmFormValuesMerger;
 	private final DDMFormInstance _formInstance;
 	private final DDMFormInstanceRecord _formInstanceRecord;
 	private final DDMFormInstanceRecordVersion _formInstanceRecordVersion;
+	private final ResourceBundleLoader _resourceBundleLoader;
 
 }

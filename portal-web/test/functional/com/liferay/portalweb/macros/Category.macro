@@ -144,9 +144,7 @@
 
 		<execute macro="Button#clickSave" />
 
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_2" value1="Please enter a valid name." />
-
-		<execute macro="Alert#viewRequestFailedToComplete" />
+		<execute macro="Alert#viewRequiredField" />
 	</command>
 
 	<command name="deleteByIconCP">
@@ -245,7 +243,7 @@
 
 		<execute macro="Alert#viewRequestFailedToComplete" />
 
-		<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_2" value1="You do not have the required permissions." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_1" value1="You do not have the required permissions." />
 	</command>
 
 	<command name="editCP">
@@ -285,10 +283,10 @@
 		<execute macro="PortletEntry#save" />
 	</command>
 
-	<command name="getAssetId" returns="assetId">
+	<command name="getAssetId">
 		<var method="selenium#getAttribute('//table[contains(@class,\'table-list\')]//tr[contains(.,\'${assetName}\')]/td[1]//input@value')" name="assetId" />
 
-		<return name="assetId" value="${assetId}" />
+		<return value="${assetId}" />
 	</command>
 
 	<command name="moveViaEditCP">
@@ -432,13 +430,15 @@
 		<execute function="Click" locator1="Categories#CATEGORY_ENTRY_LINK" />
 
 		<execute macro="SiteAdmin#viewPortletTitle">
-			<var name="portletTitle" value="${categoryName}" />
+			<var name="portletTitle" value="Categories" />
 		</execute>
 
-		<execute function="Click" locator1="Icon#BACK" />
+		<execute function="AssertClick" locator1="Breadcrumb#BREADCRUMB_ENTRY_LINK" value1="${vocabularyName}">
+			<var name="key_breadcrumbName" value="${vocabularyName}" />
+		</execute>
 
 		<execute macro="SiteAdmin#viewPortletTitle">
-			<var name="portletTitle" value="${vocabularyName}" />
+			<var name="portletTitle" value="Categories" />
 		</execute>
 	</command>
 

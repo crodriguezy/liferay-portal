@@ -29,16 +29,19 @@ import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
 import com.liferay.dynamic.data.mapping.model.DDMStructureVersion;
 import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceRecordLocalService;
+import com.liferay.dynamic.data.mapping.service.DDMFormInstanceVersionLocalService;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.util.DDMFormValuesMerger;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
+import com.liferay.portal.kernel.util.ResourceBundleLoader;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -56,14 +59,18 @@ public class DDMFormViewFormInstanceRecordDisplayContext {
 		HttpServletRequest httpServletRequest,
 		HttpServletResponse httpServletResponse,
 		DDMFormInstanceRecordLocalService formInstanceRecordLocalService,
+		DDMFormInstanceVersionLocalService formInstanceVersionLocalService,
 		DDMFormRenderer formRenderer, DDMFormValuesFactory formValuesFactory,
-		DDMFormValuesMerger formValuesMerger) {
+		DDMFormValuesMerger formValuesMerger,
+		ResourceBundleLoader resourceBundleLoader) {
 
 		_httpServletResponse = httpServletResponse;
 		_ddmFormInstanceRecordLocalService = formInstanceRecordLocalService;
+		_ddmFormInstanceVersionLocalService = formInstanceVersionLocalService;
 		_ddmFormRenderer = formRenderer;
 		_ddmFormValuesFactory = formValuesFactory;
 		_ddmFormValuesMerger = formValuesMerger;
+		_resourceBundleLoader = resourceBundleLoader;
 
 		_ddmFormAdminRequestHelper = new DDMFormAdminRequestHelper(
 			httpServletRequest);
@@ -83,19 +90,26 @@ public class DDMFormViewFormInstanceRecordDisplayContext {
 		DDMStructureVersion structureVersion =
 			formInstanceVersion.getStructureVersion();
 
-		DDMFormValues formValues = _ddmFormValuesFactory.create(
-			renderRequest, structureVersion.getDDMForm());
-
-		formValues = _ddmFormValuesMerger.merge(
-			formInstanceRecord.getDDMFormValues(), formValues);
-
 		DDMFormRenderingContext formRenderingContext =
 			createDDMFormRenderingContext(structureVersion.getDDMForm());
 
+		DDMFormValues formValues = getDDMFormValues(
+			renderRequest, formInstanceRecord, structureVersion);
+
 		formRenderingContext.setDDMFormValues(formValues);
+		formRenderingContext.setLocale(formValues.getDefaultLocale());
+
+		DDMFormInstanceVersion latestApprovedFormInstanceVersion =
+			_ddmFormInstanceVersionLocalService.getLatestFormInstanceVersion(
+				formInstance.getFormInstanceId(),
+				WorkflowConstants.STATUS_APPROVED);
+
+		DDMStructureVersion latestApprovedStructureVersion =
+			latestApprovedFormInstanceVersion.getStructureVersion();
 
 		updateDDMFormFields(
-			structureVersion.getDDMForm(), structureVersion.getDDMForm());
+			structureVersion.getDDMForm(),
+			latestApprovedStructureVersion.getDDMForm());
 
 		DDMFormLayout formLayout = structureVersion.getDDMFormLayout();
 
@@ -153,6 +167,25 @@ public class DDMFormViewFormInstanceRecordDisplayContext {
 		return formInstanceRecord;
 	}
 
+	protected DDMFormValues getDDMFormValues(
+			RenderRequest renderRequest,
+			DDMFormInstanceRecord formInstanceRecord,
+			DDMStructureVersion structureVersion)
+		throws PortalException {
+
+		DDMFormValues formValues = formInstanceRecord.getDDMFormValues();
+
+		DDMFormValues mergedFormValues = _ddmFormValuesMerger.merge(
+			formValues,
+			_ddmFormValuesFactory.create(
+				renderRequest, structureVersion.getDDMForm()));
+
+		mergedFormValues.setAvailableLocales(formValues.getAvailableLocales());
+		mergedFormValues.setDefaultLocale(formValues.getDefaultLocale());
+
+		return mergedFormValues;
+	}
+
 	protected boolean isDDMFormFieldRemoved(
 		Map<String, DDMFormField> latestFormFieldMap, String fieldName) {
 
@@ -170,8 +203,8 @@ public class DDMFormViewFormInstanceRecordDisplayContext {
 
 		String labelString = label.getString(locale);
 
-		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-			"content.Language", locale, getClass());
+		ResourceBundle resourceBundle =
+			_resourceBundleLoader.loadResourceBundle(locale);
 
 		label.addString(
 			locale,
@@ -203,6 +236,10 @@ public class DDMFormViewFormInstanceRecordDisplayContext {
 	protected void updateDDMFormFields(
 		DDMForm currentForm, DDMForm latestForm) {
 
+		if (Objects.equals(currentForm, latestForm)) {
+			return;
+		}
+
 		Map<String, DDMFormField> latestDDMFormFieldMap =
 			latestForm.getDDMFormFieldsMap(true);
 
@@ -214,9 +251,12 @@ public class DDMFormViewFormInstanceRecordDisplayContext {
 	private final DDMFormAdminRequestHelper _ddmFormAdminRequestHelper;
 	private final DDMFormInstanceRecordLocalService
 		_ddmFormInstanceRecordLocalService;
+	private final DDMFormInstanceVersionLocalService
+		_ddmFormInstanceVersionLocalService;
 	private final DDMFormRenderer _ddmFormRenderer;
 	private final DDMFormValuesFactory _ddmFormValuesFactory;
 	private final DDMFormValuesMerger _ddmFormValuesMerger;
 	private final HttpServletResponse _httpServletResponse;
+	private final ResourceBundleLoader _resourceBundleLoader;
 
 }

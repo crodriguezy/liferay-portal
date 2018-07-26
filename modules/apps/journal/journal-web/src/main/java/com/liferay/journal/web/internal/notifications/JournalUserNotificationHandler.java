@@ -35,6 +35,8 @@ import java.util.ResourceBundle;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Iván Zaera
@@ -84,39 +86,40 @@ public class JournalUserNotificationHandler
 				userFullName);
 		}
 		else if (notificationType ==
-					UserNotificationDefinition.NOTIFICATION_TYPE_UPDATE_ENTRY) {
+					 UserNotificationDefinition.
+						 NOTIFICATION_TYPE_UPDATE_ENTRY) {
 
 			title = ResourceBundleUtil.getString(
 				resourceBundle, "x-updated-a-web-content-article",
 				userFullName);
 		}
 		else if (notificationType ==
-					JournalArticleConstants.
-						NOTIFICATION_TYPE_MOVE_ENTRY_FROM_FOLDER) {
+					 JournalArticleConstants.
+						 NOTIFICATION_TYPE_MOVE_ENTRY_FROM_FOLDER) {
 
 			title = ResourceBundleUtil.getString(
 				resourceBundle, "x-moved-a-web-content-from-a-folder",
 				userFullName);
 		}
 		else if (notificationType ==
-					JournalArticleConstants.
-						NOTIFICATION_TYPE_MOVE_ENTRY_FROM_TRASH) {
+					 JournalArticleConstants.
+						 NOTIFICATION_TYPE_MOVE_ENTRY_FROM_TRASH) {
 
 			title = ResourceBundleUtil.getString(
 				resourceBundle, "x-restored-a-web-content-from-the-recycle-bin",
 				userFullName);
 		}
 		else if (notificationType ==
-					JournalArticleConstants.
-						NOTIFICATION_TYPE_MOVE_ENTRY_TO_FOLDER) {
+					 JournalArticleConstants.
+						 NOTIFICATION_TYPE_MOVE_ENTRY_TO_FOLDER) {
 
 			title = ResourceBundleUtil.getString(
 				resourceBundle, "x-moved-a-web-content-to-a-folder",
 				userFullName);
 		}
 		else if (notificationType ==
-					JournalArticleConstants.
-						NOTIFICATION_TYPE_MOVE_ENTRY_TO_TRASH) {
+					 JournalArticleConstants.
+						 NOTIFICATION_TYPE_MOVE_ENTRY_TO_TRASH) {
 
 			title = ResourceBundleUtil.getString(
 				resourceBundle, "x-moved-a-web-content-to-the-recycle-bin",
@@ -126,18 +129,14 @@ public class JournalUserNotificationHandler
 		return title;
 	}
 
-	@Reference(
-		target = "(bundle.symbolic.name=com.liferay.journal.web)", unbind = "-"
-	)
-	protected void setResourceBundleLoader(
-		ResourceBundleLoader resourceBundleLoader) {
-
-		_resourceBundleLoader = resourceBundleLoader;
-	}
-
 	@Reference
 	private Portal _portal;
 
-	private ResourceBundleLoader _resourceBundleLoader;
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(bundle.symbolic.name=com.liferay.journal.web)"
+	)
+	private volatile ResourceBundleLoader _resourceBundleLoader;
 
 }

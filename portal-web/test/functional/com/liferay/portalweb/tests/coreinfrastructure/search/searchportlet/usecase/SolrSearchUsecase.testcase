@@ -63,15 +63,19 @@
 			<var name="pageName" value="Search Page" />
 		</execute>
 
-		<for list="Type Facet,Search Results,Search Bar" param="portletName">
-			<execute macro="Navigator#gotoPage">
-				<var name="pageName" value="Search Page" />
-			</execute>
+		<execute macro="Navigator#gotoPage">
+			<var name="pageName" value="Search Page" />
+		</execute>
 
-			<execute macro="Portlet#addPG">
-				<var name="portletName" value="${portletName}" />
-			</execute>
-		</for>
+		<execute macro="SearchPortlet#addSearchPortlets">
+			<var name="searchPortletList" value="Type Facet,Search Results,Search Bar" />
+		</execute>
+
+		<execute macro="Portlet#dragAndDropPortletToColumnPG">
+			<var name="columnNumberFrom" value="1" />
+			<var name="columnNumberTo" value="2" />
+			<var name="portletName" value="Search Results" />
+		</execute>
 
 		<execute macro="SearchBarPortlet#configureParameterNames">
 			<var name="keywordsParameterName" value="keywordparameter" />
@@ -267,15 +271,23 @@
 			<var name="pageName" value="Search Page" />
 		</execute>
 
-		<for list="Search Results,Search Bar" param="portletName">
-			<execute macro="Navigator#gotoPage">
-				<var name="pageName" value="Search Page" />
-			</execute>
+		<execute macro="SearchPortlet#addSearchPortlets">
+			<var name="searchPortletList" value="Search Results,Search Bar" />
+		</execute>
 
-			<execute macro="Portlet#addPG">
-				<var name="portletName" value="${portletName}" />
-			</execute>
-		</for>
+		<execute macro="Portlet#dragAndDropPortletToColumnPG">
+			<var name="columnNumberFrom" value="1" />
+			<var name="columnNumberTo" value="2" />
+			<var name="portletName" value="Search Results" />
+		</execute>
+
+		<execute macro="SearchPortlet#configureScope">
+			<var name="searchScope" value="Let the User Choose" />
+		</execute>
+
+		<execute macro="SearchPortlet#selectScopeInput">
+			<var name="searchScope" value="Everything" />
+		</execute>
 
 		<execute macro="SearchBarPortlet#configureScope">
 			<var name="searchScope" value="Let the User Choose" />
@@ -302,6 +314,10 @@
 			<var name="searchAssetTitle" value="Potato Document" />
 			<var name="searchAssetType" value="Document" />
 			<var name="searchTerm" value="Potato" />
+		</execute>
+
+		<execute macro="SearchPortlet#selectScopeInput">
+			<var name="searchScope" value="This Site" />
 		</execute>
 
 		<execute macro="SearchBarPortlet#selectScopeInput">
@@ -382,7 +398,7 @@
 		</execute>
 
 		<execute macro="TestCase#getSiteName">
-			<return from="siteName" name="siteName" />
+			<return name="siteName" />
 			<var name="siteName" value="${siteName}" />
 		</execute>
 
@@ -788,6 +804,10 @@
 			<var name="url" value="${portalURL}/web/guest/search" />
 		</execute>
 
+		<execute macro="SearchPortlet#configureScope">
+			<var name="searchScope" value="Everything" />
+		</execute>
+
 		<execute macro="SearchBarPortlet#configureScope">
 			<var name="searchScope" value="Everything" />
 		</execute>
@@ -1107,6 +1127,7 @@
 		<property name="osgi.module.configuration.file.names" value="com.liferay.portal.search.web.internal.configuration.SearchWebConfiguration.config" />
 		<property name="osgi.module.configurations" value="classicSearchPortletInFrontPage=&quot;false&quot;" />
 		<property name="portal.acceptance" value="quarantine" />
+		<property name="portal.release" value="false" />
 
 		<var name="searchPage" value="Search Page" />
 
@@ -1126,7 +1147,7 @@
 		</execute>
 
 		<execute macro="Category#getAssetId">
-			<return from="assetId" name="organicCategoryId" />
+			<return name="organicCategoryId" />
 			<var name="assetName" value="organic" />
 		</execute>
 
@@ -1142,7 +1163,7 @@
 		</execute>
 
 		<execute macro="WebContent#getAssetId">
-			<return from="assetId" name="webContentFolderId1" />
+			<return name="webContentFolderId1" />
 			<var name="folderAsset" value="WC Folder Name 1" />
 		</execute>
 
@@ -1179,7 +1200,7 @@
 		</execute>
 
 		<execute macro="WebContent#getAssetId">
-			<return from="assetId" name="webContentFolderId2" />
+			<return name="webContentFolderId2" />
 			<var name="folderAsset" value="WC Folder Name 2" />
 		</execute>
 
@@ -1196,7 +1217,7 @@
 		</execute>
 
 		<execute macro="Site#getSiteId">
-			<return from="siteId" name="liferaySiteId" />
+			<return name="liferaySiteId" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoPortlet">
@@ -1211,7 +1232,7 @@
 		</execute>
 
 		<execute macro="Site#getSiteId">
-			<return from="siteId" name="newSiteId" />
+			<return name="newSiteId" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoPortlet">
@@ -1317,18 +1338,27 @@
 			<var name="pageName" value="${searchPage}" />
 		</execute>
 
-		<for list="Category Facet,Folder Facet,Site Facet,Tag Facet,Type Facet,User Facet,Search Results,Search Bar" param="portletName">
-			<execute macro="Navigator#gotoPage">
-				<var name="pageName" value="${searchPage}" />
-			</execute>
+		<execute macro="SearchPortlet#addSearchPortlets">
+			<var name="searchPortletList" value="Search Options,Category Facet,Folder Facet,Site Facet,Tag Facet,Type Facet,User Facet,Search Results,Search Bar" />
+		</execute>
 
-			<execute macro="Portlet#addPG">
-				<var name="portletName" value="${portletName}" />
-			</execute>
-		</for>
+		<execute macro="Portlet#dragAndDropPortletToColumnPG">
+			<var name="columnNumberFrom" value="1" />
+			<var name="columnNumberTo" value="2" />
+			<var name="portletName" value="Search Results" />
+		</execute>
+
+		<execute macro="SearchPortlet#configureScope">
+			<var name="searchScope" value="Everything" />
+		</execute>
 
 		<execute macro="SearchBarPortlet#configureScope">
 			<var name="searchScope" value="Everything" />
+		</execute>
+
+		<execute macro="SearchFacetPortlet#configureSearchOptions">
+			<var name="allowEmptySearches" value="true" />
+			<var name="basicFacetSelection" value="true" />
 		</execute>
 
 		<execute macro="SearchBarPortlet#searchPG">
@@ -1345,7 +1375,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#checkFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="type" />
 			<var name="facetValueName" value="Web Content Article" />
 			<var name="searchPage" value="${searchPage}" />
@@ -1362,7 +1392,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#checkFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="type" />
 			<var name="facetValueName" value="Blogs Entry" />
 			<var name="searchURL" value="${testSearchURL}" />
@@ -1378,7 +1408,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#uncheckFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="type" />
 			<var name="facetValueName" value="Web Content Article" />
 			<var name="searchURL" value="${testSearchURL}" />
@@ -1394,7 +1424,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#clearAllFacetsAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="searchURL" value="${testSearchURL}" />
 		</execute>
 
@@ -1403,7 +1433,7 @@
 		</execute>
 
 		<execute macro="SearchBarPortlet#getSearchTermURL">
-			<return from="searchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="searchPage" value="${searchPage}" />
 			<var name="searchTerm" value="test" />
 		</execute>
@@ -1416,7 +1446,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#checkFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="category" />
 			<var name="facetValue" value="${organicCategoryId}" />
 			<var name="facetValueName" value="organic" />
@@ -1433,7 +1463,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#checkFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="user" />
 			<var name="facetValueName" value="userfn userln" />
 			<var name="searchURL" value="${testSearchURL}" />
@@ -1449,7 +1479,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#uncheckFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="user" />
 			<var name="facetValueName" value="userfn userln" />
 			<var name="searchURL" value="${testSearchURL}" />
@@ -1465,7 +1495,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#clearAllFacetsAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="searchURL" value="${testSearchURL}" />
 		</execute>
 
@@ -1474,20 +1504,20 @@
 		</execute>
 
 		<execute macro="SearchBarPortlet#getSearchTermURL">
-			<return from="searchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="searchPage" value="${searchPage}" />
 			<var name="searchTerm" value="test" />
 		</execute>
 
 		<execute macro="SearchFacetPortlet#checkFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="tag" />
 			<var name="facetValueName" value="sweet" />
 			<var name="searchURL" value="${testSearchURL}" />
 		</execute>
 
 		<execute macro="SearchFacetPortlet#checkFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="tag" />
 			<var name="facetValueName" value="fresh" />
 			<var name="searchURL" value="${testSearchURL}" />
@@ -1503,11 +1533,11 @@
 		</execute>
 
 		<execute macro="TestCase#getSiteName">
-			<return from="siteName" name="siteName" />
+			<return name="siteName" />
 		</execute>
 
 		<execute macro="SearchFacetPortlet#checkFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="site" />
 			<var name="facetValue" value="${liferaySiteId}" />
 			<var name="facetValueName" value="${siteName}" />
@@ -1515,7 +1545,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#checkFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="site" />
 			<var name="facetValue" value="${newSiteId}" />
 			<var name="facetValueName" value="New Site" />
@@ -1532,7 +1562,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#uncheckFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="site" />
 			<var name="facetValue" value="${newSiteId}" />
 			<var name="facetValueName" value="New Site" />
@@ -1549,7 +1579,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#checkFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="folder" />
 			<var name="facetValue" value="${webContentFolderId2}" />
 			<var name="facetValueName" value="WC Folder Name 2" />
@@ -1566,7 +1596,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#checkFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="tag" />
 			<var name="facetValueName" value="ripe" />
 			<var name="searchURL" value="${testSearchURL}" />
@@ -1582,7 +1612,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#uncheckFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="folder" />
 			<var name="facetValue" value="${webContentFolderId2}" />
 			<var name="facetValueName" value="WC Folder Name 2" />
@@ -1590,7 +1620,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#uncheckFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="tag" />
 			<var name="facetValueName" value="fresh" />
 			<var name="searchURL" value="${testSearchURL}" />
@@ -1606,7 +1636,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#clearAllFacetsAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="searchURL" value="${testSearchURL}" />
 		</execute>
 
@@ -1615,13 +1645,13 @@
 		</execute>
 
 		<execute macro="SearchBarPortlet#getSearchTermURL">
-			<return from="searchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="searchPage" value="${searchPage}" />
 			<var name="searchTerm" value="organic" />
 		</execute>
 
 		<execute macro="SearchFacetPortlet#checkFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="category" />
 			<var name="facetValue" value="${organicCategoryId}" />
 			<var name="facetValueName" value="organic" />
@@ -1629,7 +1659,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#checkFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="folder" />
 			<var name="facetValue" value="${webContentFolderId1}" />
 			<var name="facetValueName" value="WC Folder Name 1" />
@@ -1637,7 +1667,7 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#checkFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="site" />
 			<var name="facetValue" value="${liferaySiteId}" />
 			<var name="facetValueName" value="${siteName}" />
@@ -1645,21 +1675,21 @@
 		</execute>
 
 		<execute macro="SearchFacetPortlet#checkFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="tag" />
 			<var name="facetValueName" value="ripe" />
 			<var name="searchURL" value="${testSearchURL}" />
 		</execute>
 
 		<execute macro="SearchFacetPortlet#checkFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="type" />
 			<var name="facetValueName" value="Web Content Article" />
 			<var name="searchURL" value="${testSearchURL}" />
 		</execute>
 
 		<execute macro="SearchFacetPortlet#checkFacetAndViewURL">
-			<return from="updatedSearchURL" name="testSearchURL" />
+			<return name="testSearchURL" />
 			<var name="facetClass" value="user" />
 			<var name="facetValueName" value="test test" />
 			<var name="searchURL" value="${testSearchURL}" />

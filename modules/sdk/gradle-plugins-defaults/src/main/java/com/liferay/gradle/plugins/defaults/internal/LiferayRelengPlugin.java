@@ -160,6 +160,7 @@ public class LiferayRelengPlugin implements Plugin<Project> {
 
 		_addTaskPrintDependentArtifact(project);
 
+		_configureLiferayRelengProperties(project);
 		_configureTaskBuildChangeLog(buildChangeLogTask, relengDir);
 		_configureTaskUploadArchives(project, recordArtifactTask);
 
@@ -619,8 +620,61 @@ public class LiferayRelengPlugin implements Plugin<Project> {
 		return writeArtifactPublishCommandsTask;
 	}
 
+	private void _configureLiferayRelengProperties(Project project) {
+		boolean privateModule = false;
+
+		String projectPath = project.getPath();
+
+		if (projectPath.startsWith(":private:")) {
+			privateModule = true;
+		}
+
+		String liferayRelengAppTitlePrefix = GradleUtil.getProperty(
+			project, _LIFERAY_RELENG_APP_TITLE_PREFIX, (String)null);
+
+		if (Validator.isNull(liferayRelengAppTitlePrefix)) {
+			if (privateModule) {
+				liferayRelengAppTitlePrefix = "Liferay";
+			}
+			else {
+				liferayRelengAppTitlePrefix = "Liferay CE";
+			}
+
+			GradleUtil.setProperty(
+				project, _LIFERAY_RELENG_APP_TITLE_PREFIX,
+				liferayRelengAppTitlePrefix);
+		}
+
+		String liferayRelengPublic = GradleUtil.getProperty(
+			project, _LIFERAY_RELENG_PUBLIC, (String)null);
+
+		if (Validator.isNull(liferayRelengPublic)) {
+			liferayRelengPublic = String.valueOf(!privateModule);
+
+			GradleUtil.setProperty(
+				project, _LIFERAY_RELENG_PUBLIC, liferayRelengPublic);
+		}
+
+		String liferayRelengSupported = GradleUtil.getProperty(
+			project, _LIFERAY_RELENG_SUPPORTED, (String)null);
+
+		if (Validator.isNull(liferayRelengSupported)) {
+			liferayRelengSupported = String.valueOf(privateModule);
+
+			GradleUtil.setProperty(
+				project, _LIFERAY_RELENG_SUPPORTED, liferayRelengSupported);
+		}
+	}
+
 	private void _configureTaskBuildChangeLog(
 		BuildChangeLogTask buildChangeLogTask, File destinationDir) {
+
+		String ticketIdPrefixes = GradleUtil.getProperty(
+			buildChangeLogTask.getProject(), "jira.project.keys", (String)null);
+
+		if (Validator.isNotNull(ticketIdPrefixes)) {
+			buildChangeLogTask.ticketIdPrefixes(ticketIdPrefixes.split(","));
+		}
 
 		buildChangeLogTask.setChangeLogFile(
 			new File(destinationDir, "liferay-releng.changelog"));
@@ -933,6 +987,15 @@ public class LiferayRelengPlugin implements Plugin<Project> {
 
 		return false;
 	}
+
+	private static final String _LIFERAY_RELENG_APP_TITLE_PREFIX =
+		"liferay.releng.app.title.prefix";
+
+	private static final String _LIFERAY_RELENG_PUBLIC =
+		"liferay.releng.public";
+
+	private static final String _LIFERAY_RELENG_SUPPORTED =
+		"liferay.releng.supported";
 
 	private static final String _RELENG_DIR_NAME = ".releng";
 

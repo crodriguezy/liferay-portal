@@ -56,7 +56,7 @@
 		</execute>
 
 		<execute macro="TestCase#getFileContent">
-			<return from="fileContent" name="htmlSnippet" />
+			<return name="htmlSnippet" />
 			<var name="fileName" value="fragment_button.html" />
 		</execute>
 
@@ -126,7 +126,7 @@
 		</execute>
 
 		<execute macro="TestCase#getFileContent">
-			<return from="fileContent" name="htmlSnippet" />
+			<return name="htmlSnippet" />
 			<var name="fileName" value="fragment_image.html" />
 		</execute>
 
@@ -136,7 +136,7 @@
 		</execute>
 
 		<execute macro="TestCase#getFileContent">
-			<return from="fileContent" name="cssSnippet" />
+			<return name="cssSnippet" />
 			<var name="fileName" value="fragment_image.css" />
 		</execute>
 
@@ -201,7 +201,7 @@
 		</execute>
 
 		<execute macro="TestCase#getFileContent">
-			<return from="fileContent" name="htmlSnippet" />
+			<return name="htmlSnippet" />
 			<var name="fileName" value="fragment_title.html" />
 		</execute>
 
@@ -245,8 +245,10 @@
 			<var name="text" value="Editing Finished" />
 		</execute>
 
-		<execute macro="LayoutPageTemplates#viewFragment">
-			<var name="fragmentName" value="Editing Finished" />
+		<execute macro="LayoutPageTemplates#viewFragmentEditableText">
+			<var name="editableText" value="Editing Finished" />
+			<var name="fragmentName" value="Fragment Name" />
+			<var name="id" value="title" />
 		</execute>
 	</command>
 
@@ -421,7 +423,7 @@
 		</execute>
 
 		<execute macro="TestCase#getFileContent">
-			<return from="fileContent" name="htmlSnippet" />
+			<return name="htmlSnippet" />
 			<var name="fileName" value="fragment_title.html" />
 		</execute>
 
@@ -431,7 +433,7 @@
 		</execute>
 
 		<execute macro="TestCase#getFileContent">
-			<return from="fileContent" name="cssSnippet" />
+			<return name="cssSnippet" />
 			<var name="fileName" value="fragment_title.css" />
 		</execute>
 
@@ -447,7 +449,7 @@
 		</execute>
 
 		<execute macro="TestCase#getFileContent">
-			<return from="fileContent" name="htmlSnippet" />
+			<return name="htmlSnippet" />
 			<var name="fileName" value="fragment_title.html" />
 		</execute>
 
@@ -457,7 +459,7 @@
 		</execute>
 
 		<execute macro="TestCase#getFileContent">
-			<return from="fileContent" name="cssSnippet" />
+			<return name="cssSnippet" />
 			<var name="fileName" value="fragment_content.css" />
 		</execute>
 

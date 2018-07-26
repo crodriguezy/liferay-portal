@@ -42,6 +42,8 @@ import javax.servlet.ServletContext;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Jorge Ferrer
@@ -156,13 +158,10 @@ public class BlogsEntryAssetRendererFactory
 			PermissionChecker permissionChecker, long classPK, String actionId)
 		throws Exception {
 
-		return _blogsEntryFolderModelResourcePermission.contains(
+		return _blogsEntryModelResourcePermission.contains(
 			permissionChecker, classPK, actionId);
 	}
 
-	@Reference(
-		target = "(bundle.symbolic.name=com.liferay.blogs.web)", unbind = "-"
-	)
 	public void setResourceBundleLoader(
 		ResourceBundleLoader resourceBundleLoader) {
 
@@ -188,11 +187,12 @@ public class BlogsEntryAssetRendererFactory
 		_blogsEntryService = blogsEntryService;
 	}
 
+	private BlogsEntryLocalService _blogsEntryLocalService;
+
 	@Reference(target = "(model.class.name=com.liferay.blogs.model.BlogsEntry)")
 	private ModelResourcePermission<BlogsEntry>
-		_blogsEntryFolderModelResourcePermission;
+		_blogsEntryModelResourcePermission;
 
-	private BlogsEntryLocalService _blogsEntryLocalService;
 	private BlogsEntryService _blogsEntryService;
 
 	@Reference
@@ -201,7 +201,13 @@ public class BlogsEntryAssetRendererFactory
 	@Reference(target = "(resource.name=" + BlogsConstants.RESOURCE_NAME + ")")
 	private PortletResourcePermission _portletResourcePermission;
 
-	private ResourceBundleLoader _resourceBundleLoader;
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(bundle.symbolic.name=com.liferay.blogs.web)"
+	)
+	private volatile ResourceBundleLoader _resourceBundleLoader;
+
 	private ServletContext _servletContext;
 
 }

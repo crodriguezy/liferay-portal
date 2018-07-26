@@ -44,6 +44,7 @@
 	{@param? _selectMappingDialogEditableId: string}
 	{@param? _selectMappingDialogEditableType: string}
 	{@param? _selectMappingDialogFragmentEntryLinkId: string}
+	{@param? _selectMappingDialogMappedFieldId: string}
 	{@param? _selectMappingDialogVisible: bool}
 	{@param? _selectMappingTypeDialogVisible: bool}
 	{@param? _translationStatus: [
@@ -53,7 +54,7 @@
 	{@param? fragmentEntryLinks: list<[
 		content: html|null,
 		editableValues: ?,
-		fragmentEntryLinkId: number,
+		fragmentEntryLinkId: string,
 		name: string
 	]>}
 	{@param? getAssetClassTypesURL: any}
@@ -109,7 +110,7 @@
 			{param selectedMappingTypes: $selectedMappingTypes /}
 			{param sidebarTabs: $sidebarTabs /}
 			{param spritemap: $spritemap /}
-			{param visible: $_contextualSidebarVisible ?: false /}
+			{param visible: $_contextualSidebarVisible ?: true /}
 		{/call}
 
 		<div class="contextual-sidebar-content">
@@ -144,8 +145,9 @@
 					'visibleChanged': $_handleSelectMappingDialogVisibleChanged
 				] /}
 				{param fragmentEntryLinkId: $_selectMappingDialogFragmentEntryLinkId /}
+				{param mappedFieldId: $_selectMappingDialogMappedFieldId /}
 				{param mappingFieldsURL: $mappingFieldsURL /}
-				{param namespace: $portletNamespace /}
+				{param portletNamespace: $portletNamespace /}
 				{param selectedMappingTypes: $selectedMappingTypes /}
 				{param spritemap: $spritemap /}
 				{param visible: $_selectMappingDialogVisible ?: false /}

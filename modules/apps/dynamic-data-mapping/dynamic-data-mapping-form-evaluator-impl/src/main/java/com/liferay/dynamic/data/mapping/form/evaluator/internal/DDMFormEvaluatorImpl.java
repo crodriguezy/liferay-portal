@@ -26,9 +26,12 @@ import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.UserGroupRoleLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.portal.kernel.util.ResourceBundleLoader;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Pablo Carvalho
@@ -46,8 +49,8 @@ public class DDMFormEvaluatorImpl implements DDMFormEvaluator {
 				new DDMFormEvaluatorHelper(
 					_ddmDataProviderInvoker, _ddmExpressionFactory,
 					ddmFormEvaluatorContext, _ddmFormFieldTypeServicesTracker,
-					_jsonFactory, _roleLocalService, _userGroupRoleLocalService,
-					_userLocalService);
+					_jsonFactory, _resourceBundleLoader, _roleLocalService,
+					_userGroupRoleLocalService, _userLocalService);
 
 			return ddmFormRuleEvaluatorHelper.evaluate();
 		}
@@ -67,6 +70,13 @@ public class DDMFormEvaluatorImpl implements DDMFormEvaluator {
 
 	@Reference
 	private JSONFactory _jsonFactory;
+
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(bundle.symbolic.name=com.liferay.dynamic.data.mapping.form.evaluator.impl)"
+	)
+	private volatile ResourceBundleLoader _resourceBundleLoader;
 
 	@Reference
 	private RoleLocalService _roleLocalService;

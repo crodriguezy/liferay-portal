@@ -43,6 +43,8 @@ import java.util.ResourceBundle;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Jorge Ferrer
@@ -144,15 +146,6 @@ public class JournalTemplateHandler extends BaseDDMTemplateHandler {
 		_journalContent = journalContent;
 	}
 
-	@Reference(
-		target = "(bundle.symbolic.name=com.liferay.journal.web)", unbind = "-"
-	)
-	protected void setResourceBundleLoader(
-		ResourceBundleLoader resourceBundleLoader) {
-
-		_resourceBundleLoader = resourceBundleLoader;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		JournalTemplateHandler.class);
 
@@ -184,11 +177,17 @@ public class JournalTemplateHandler extends BaseDDMTemplateHandler {
 	private Portal _portal;
 
 	@Reference(
-		target = "(&(release.bundle.symbolic.name=com.liferay.journal.service)(release.schema.version=1.1.3))"
+		target = "(&(release.bundle.symbolic.name=com.liferay.journal.service)(release.schema.version=1.1.4))"
 	)
 	private Release _release;
 
-	private ResourceBundleLoader _resourceBundleLoader;
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(bundle.symbolic.name=com.liferay.journal.web)"
+	)
+	private volatile ResourceBundleLoader _resourceBundleLoader;
+
 	private final TemplateVariableCodeHandler _templateVariableCodeHandler =
 		new DDMTemplateVariableCodeHandler(
 			JournalTemplateHandler.class.getClassLoader(),

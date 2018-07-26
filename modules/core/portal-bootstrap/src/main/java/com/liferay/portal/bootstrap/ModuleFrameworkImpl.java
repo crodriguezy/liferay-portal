@@ -19,7 +19,6 @@ import aQute.bnd.header.Parameters;
 import aQute.bnd.version.Version;
 
 import com.liferay.petra.reflect.ReflectionUtil;
-import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.concurrent.DefaultNoticeableFuture;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -735,7 +734,9 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 			extraProperties.getProperty(
 				Constants.FRAMEWORK_SYSTEMCAPABILITIES_EXTRA));
 
-		String provideCapability = _getAttributeValue(
+		Attributes attributes = _getExtraManifestAttributes();
+
+		String provideCapability = attributes.getValue(
 			Constants.PROVIDE_CAPABILITY);
 
 		Parameters provideCapabilityParameters = new Parameters(
@@ -749,8 +750,7 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 		}
 
 		extraProperties.setProperty(
-			Constants.FRAMEWORK_SYSTEMCAPABILITIES_EXTRA,
-			extraCapabilitiesParameters.toString());
+			Constants.FRAMEWORK_SYSTEMCAPABILITIES_EXTRA, provideCapability);
 
 		for (Map.Entry<Object, Object> entry : extraProperties.entrySet()) {
 			String key = (String)entry.getKey();
@@ -769,7 +769,8 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 			properties.put(key, value);
 		}
 
-		String systemPackagesExtra = _getSystemPackagesExtra();
+		String systemPackagesExtra = _getSystemPackagesExtra(
+			attributes.getValue(Constants.EXPORT_PACKAGE));
 
 		properties.put(
 			Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, systemPackagesExtra);
@@ -882,24 +883,18 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 		return bundles;
 	}
 
-	private String _getAttributeValue(String name) {
-		Manifest manifest = null;
+	private Attributes _getExtraManifestAttributes() {
+		try (InputStream inputStream =
+				ModuleFrameworkImpl.class.getResourceAsStream(
+					"/META-INF/system.packages.extra.mf")) {
 
-		Class<?> clazz = getClass();
+			Manifest manifest = new Manifest(inputStream);
 
-		InputStream inputStream = clazz.getResourceAsStream(
-			"/META-INF/system.packages.extra.mf");
-
-		try {
-			manifest = new Manifest(inputStream);
+			return manifest.getMainAttributes();
 		}
 		catch (IOException ioe) {
-			ReflectionUtil.throwException(ioe);
+			return ReflectionUtil.throwException(ioe);
 		}
-
-		Attributes attributes = manifest.getMainAttributes();
-
-		return attributes.getValue(name);
 	}
 
 	private String _getFelixFileInstallDir() {
@@ -996,7 +991,7 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 		}
 	}
 
-	private String _getSystemPackagesExtra() {
+	private String _getSystemPackagesExtra(String exportedPackages) {
 		String[] systemPackagesExtra =
 			PropsValues.MODULE_FRAMEWORK_SYSTEM_PACKAGES_EXTRA;
 
@@ -1006,8 +1001,6 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 			sb.append(extraPackage);
 			sb.append(StringPool.COMMA);
 		}
-
-		String exportedPackages = _getAttributeValue(Constants.EXPORT_PACKAGE);
 
 		sb.append(exportedPackages);
 
@@ -1025,7 +1018,8 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 	}
 
 	private boolean _hasLazyActivationPolicy(Bundle bundle) {
-		Dictionary<String, String> headers = bundle.getHeaders();
+		Dictionary<String, String> headers = bundle.getHeaders(
+			StringPool.BLANK);
 
 		String fragmentHost = headers.get(Constants.FRAGMENT_HOST);
 
@@ -1421,11 +1415,15 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 		frameworkStartLevel.setStartLevel(
 			PropsValues.MODULE_FRAMEWORK_BEGINNING_START_LEVEL);
 
-		for (final Bundle bundle : bundles.values()) {
-			if (_isFragmentBundle(bundle)) {
-				continue;
-			}
+		final Set<Bundle> bundlesSet = new HashSet<>();
 
+		for (Bundle bundle : bundles.values()) {
+			if (!_isFragmentBundle(bundle)) {
+				bundlesSet.add(bundle);
+			}
+		}
+
+		if (!bundlesSet.isEmpty()) {
 			final CountDownLatch countDownLatch = new CountDownLatch(1);
 
 			BundleTracker<Void> bundleTracker = new BundleTracker<Void>(
@@ -1435,10 +1433,12 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 				public Void addingBundle(
 					Bundle trackedBundle, BundleEvent bundleEvent) {
 
-					if (trackedBundle == bundle) {
-						countDownLatch.countDown();
+					if (bundlesSet.remove(trackedBundle)) {
+						if (bundlesSet.isEmpty()) {
+							countDownLatch.countDown();
 
-						close();
+							close();
+						}
 					}
 
 					return null;
@@ -1459,33 +1459,18 @@ public class ModuleFrameworkImpl implements ModuleFramework {
 
 		Bundle[] installedBundles = bundleContext.getBundles();
 
-		List<String> hostBundleSymbolicNames = new ArrayList<>();
+		Set<Bundle> fragmentBundles = new HashSet<>();
 
 		for (Bundle bundle : installedBundles) {
-			Dictionary<String, String> headers = bundle.getHeaders();
-
-			String fragmentHost = headers.get(Constants.FRAGMENT_HOST);
-
-			if (fragmentHost == null) {
-				continue;
-			}
-
-			int index = fragmentHost.indexOf(CharPool.SEMICOLON);
-
-			if (index != -1) {
-				fragmentHost = fragmentHost.substring(0, index);
-			}
-
-			hostBundleSymbolicNames.add(fragmentHost);
-		}
-
-		for (Bundle bundle : installedBundles) {
-			if (hostBundleSymbolicNames.contains(bundle.getSymbolicName())) {
-				refreshBundles.add(bundle);
+			if (_isFragmentBundle(bundle)) {
+				fragmentBundles.add(bundle);
 			}
 		}
 
-		_refreshBundles(refreshBundles);
+		FrameworkWiring frameworkWiring = _framework.adapt(
+			FrameworkWiring.class);
+
+		frameworkWiring.resolveBundles(fragmentBundles);
 
 		return new HashSet<>(Arrays.asList(initialBundles));
 	}
