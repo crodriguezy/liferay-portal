@@ -51,6 +51,7 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.IOException;
@@ -209,7 +210,7 @@ public class DDMFormAdminPortlet extends MVCPortlet {
 					_ddmFormFieldTypesJSONSerializer, _ddmFormRenderer,
 					_ddmFormValuesFactory, _ddmFormValuesMerger,
 					_ddmStructureLocalService, _ddmStructureService,
-					_jsonFactory, _storageEngine));
+					_jsonFactory, _resourceBundleLoader, _storageEngine));
 		}
 		else {
 			ThemeDisplay themeDisplay =
@@ -252,7 +253,7 @@ public class DDMFormAdminPortlet extends MVCPortlet {
 					_ddmFormFieldTypesJSONSerializer, _ddmFormRenderer,
 					_ddmFormValuesFactory, _ddmFormValuesMerger,
 					_ddmStructureLocalService, _ddmStructureService,
-					_jsonFactory, _storageEngine));
+					_jsonFactory, _resourceBundleLoader, _storageEngine));
 		}
 	}
 
@@ -321,6 +322,13 @@ public class DDMFormAdminPortlet extends MVCPortlet {
 
 	@Reference
 	private Portal _portal;
+
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(bundle.symbolic.name=com.liferay.dynamic.data.mapping.form.web)"
+	)
+	private volatile ResourceBundleLoader _resourceBundleLoader;
 
 	@Reference
 	private StorageEngine _storageEngine;

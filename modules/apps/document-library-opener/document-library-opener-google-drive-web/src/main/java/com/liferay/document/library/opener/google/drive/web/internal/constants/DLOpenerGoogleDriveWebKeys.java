@@ -12,26 +12,14 @@
  * details.
  */
 
-package com.liferay.document.library.opener.google.drive;
-
-import com.liferay.portal.kernel.exception.PortalException;
+package com.liferay.document.library.opener.google.drive.web.internal.constants;
 
 /**
  * @author Adolfo Pérez
  */
-public interface DLOpenerGoogleDriveDLHelper {
+public class DLOpenerGoogleDriveWebKeys {
 
-	public void cancelCheckOut(long fileEntryId) throws PortalException;
-
-	public void checkInFileEntry(
-			long fileEntryId, boolean majorVersion, String changeLog)
-		throws PortalException;
-
-	public DLOpenerGoogleDriveFileReference checkOutFileEntry(long fileEntryId)
-		throws PortalException;
-
-	public DLOpenerGoogleDriveFileReference editInGoogleDrive(
-			long userId, long fileEntryId)
-		throws PortalException;
+	public static final String DL_OPENER_GOOGLE_DRIVE_FILE_REFERENCE =
+		"DL_OPENER_GOOGLE_DRIVE_FILE_REFERENCE";
 
 }

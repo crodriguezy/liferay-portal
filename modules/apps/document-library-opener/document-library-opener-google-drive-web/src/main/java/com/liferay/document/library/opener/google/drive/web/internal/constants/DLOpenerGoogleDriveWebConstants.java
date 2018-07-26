@@ -12,14 +12,25 @@
  * details.
  */
 
-package com.liferay.document.library.opener.google.drive.constants;
+package com.liferay.document.library.opener.google.drive.web.internal.constants;
+
+import com.liferay.portal.kernel.util.Constants;
 
 /**
  * @author Adolfo Pérez
  */
-public class DLOpenerGoogleDriveConstants {
+public class DLOpenerGoogleDriveWebConstants {
 
-	public static final String CHECK_OUT_IN_GOOGLE_DRIVE =
-		"checkOutInGoogleDrive";
+	public static final String GOOGLE_DRIVE_CANCEL_CHECKOUT =
+		Constants.CANCEL_CHECKOUT;
+
+	public static final String GOOGLE_DRIVE_CHECKIN = Constants.CHECKIN;
+
+	public static final String GOOGLE_DRIVE_CHECKOUT = Constants.CHECKOUT;
+
+	public static final String GOOGLE_DRIVE_EDIT = Constants.EDIT;
+
+	public static final String GOOGLE_DRIVE_SERVLET_PATH =
+		"/document_library/google/oauth2";
 
 }

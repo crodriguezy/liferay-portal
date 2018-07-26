@@ -49,12 +49,9 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.UserGroupRoleLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
-import com.liferay.portal.kernel.util.AggregateResourceBundle;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
-import com.liferay.portal.kernel.util.ResourceBundleLoaderUtil;
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -81,7 +78,8 @@ public class DDMFormEvaluatorHelper {
 		DDMExpressionFactory ddmExpressionFactory,
 		DDMFormEvaluatorContext ddmFormEvaluatorContext,
 		DDMFormFieldTypeServicesTracker ddmFormFieldTypeServicesTracker,
-		JSONFactory jsonFactory, RoleLocalService roleLocalService,
+		JSONFactory jsonFactory, ResourceBundleLoader resourceBundleLoader,
+		RoleLocalService roleLocalService,
 		UserGroupRoleLocalService userGroupRoleLocalService,
 		UserLocalService userLocalService) {
 
@@ -89,6 +87,7 @@ public class DDMFormEvaluatorHelper {
 		_ddmExpressionFactory = ddmExpressionFactory;
 		_ddmFormFieldTypeServicesTracker = ddmFormFieldTypeServicesTracker;
 		_jsonFactory = jsonFactory;
+		_resourceBundleLoader = resourceBundleLoader;
 		_roleLocalService = roleLocalService;
 		_userGroupRoleLocalService = userGroupRoleLocalService;
 		_userLocalService = userLocalService;
@@ -234,17 +233,7 @@ public class DDMFormEvaluatorHelper {
 	}
 
 	protected ResourceBundle createResourceBundle() {
-		ResourceBundleLoader portalResourceBundleLoader =
-			ResourceBundleLoaderUtil.getPortalResourceBundleLoader();
-
-		ResourceBundle portalResourceBundle =
-			portalResourceBundleLoader.loadResourceBundle(_locale);
-
-		ResourceBundle portletResourceBundle = ResourceBundleUtil.getBundle(
-			"content.Language", _locale, getClass());
-
-		return new AggregateResourceBundle(
-			portletResourceBundle, portalResourceBundle);
+		return _resourceBundleLoader.loadResourceBundle(_locale);
 	}
 
 	protected void evaluateDDMFormRule(DDMFormRule ddmFormRule)
@@ -681,6 +670,7 @@ public class DDMFormEvaluatorHelper {
 	private final Map<Integer, Integer> _pageFlow = new HashMap<>();
 	private final HttpServletRequest _request;
 	private final ResourceBundle _resourceBundle;
+	private final ResourceBundleLoader _resourceBundleLoader;
 	private final RoleLocalService _roleLocalService;
 	private final UserGroupRoleLocalService _userGroupRoleLocalService;
 	private final UserLocalService _userLocalService;
