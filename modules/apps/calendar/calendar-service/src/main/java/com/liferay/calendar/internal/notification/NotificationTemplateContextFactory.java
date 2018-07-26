@@ -54,8 +54,6 @@ import javax.portlet.WindowState;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferencePolicy;
-import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Eduardo Lundgren
@@ -202,6 +200,15 @@ public class NotificationTemplateContextFactory {
 		_layoutLocalService = layoutLocalService;
 	}
 
+	@Reference(
+		target = "(bundle.symbolic.name=com.liferay.calendar.web)", unbind = "-"
+	)
+	protected void setResourceBundleLoader(
+		ResourceBundleLoader resourceBundleLoader) {
+
+		_resourceBundleLoader = resourceBundleLoader;
+	}
+
 	private static String _getCalendarBookingURL(
 			User user, long calendarBookingId)
 		throws PortalException {
@@ -269,12 +276,6 @@ public class NotificationTemplateContextFactory {
 	private static CompanyLocalService _companyLocalService;
 	private static GroupLocalService _groupLocalService;
 	private static LayoutLocalService _layoutLocalService;
-
-	@Reference(
-		policy = ReferencePolicy.DYNAMIC,
-		policyOption = ReferencePolicyOption.GREEDY,
-		target = "(bundle.symbolic.name=com.liferay.calendar.web)"
-	)
-	private static volatile ResourceBundleLoader _resourceBundleLoader;
+	private static ResourceBundleLoader _resourceBundleLoader;
 
 }
