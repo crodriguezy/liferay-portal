@@ -17,6 +17,7 @@ package com.liferay.apio.architect.impl.url;
 import static java.lang.String.join;
 
 import com.liferay.apio.architect.form.Form;
+import com.liferay.apio.architect.impl.operation.BatchCreateOperation;
 import com.liferay.apio.architect.impl.operation.CreateOperation;
 import com.liferay.apio.architect.impl.operation.DeleteOperation;
 import com.liferay.apio.architect.impl.operation.RetrieveOperation;
@@ -31,7 +32,7 @@ import java.util.Optional;
 import javax.ws.rs.core.UriBuilder;
 
 /**
- * Manages the creation of URLs, and has all their necessary information.
+ * Manages the creation of URLs and has all their necessary information.
  *
  * <p>
  * This class shouldn't be instantiated.
@@ -42,12 +43,11 @@ import javax.ws.rs.core.UriBuilder;
 public final class URLCreator {
 
 	/**
-	 * Returns the absolute version of an application relative URL
+	 * Returns the absolute version of an application's relative URL.
 	 *
 	 * @param  applicationURL the application URL
 	 * @param  relativeURL the relative URL
 	 * @return the absolute URL
-	 * @review
 	 */
 	public static String createAbsoluteURL(
 		ApplicationURL applicationURL, String relativeURL) {
@@ -56,12 +56,11 @@ public final class URLCreator {
 	}
 
 	/**
-	 * Returns the absolute version of a relative URL
+	 * Returns the absolute version of a relative URL.
 	 *
 	 * @param  serverURL the server URL
 	 * @param  relativeURL the relative URL
 	 * @return the absolute URL
-	 * @review
 	 */
 	public static String createAbsoluteURL(
 		ServerURL serverURL, String relativeURL) {
@@ -146,12 +145,11 @@ public final class URLCreator {
 	}
 
 	/**
-	 * Returns the URL for an operation
+	 * Returns an operation's URL.
 	 *
 	 * @param  applicationURL the application URL
-	 * @param  operation the operation to represent
-	 * @return the operation URL
-	 * @review
+	 * @param  operation the operation
+	 * @return the operation's URL
 	 */
 	public static Optional<String> createOperationURL(
 		ApplicationURL applicationURL, Operation operation) {
@@ -160,6 +158,10 @@ public final class URLCreator {
 
 		return optional.map(
 			uri -> {
+				if (operation instanceof BatchCreateOperation) {
+					return "batch/" + uri;
+				}
+
 				if (operation instanceof CreateOperation) {
 					return "p/" + uri;
 				}
@@ -168,11 +170,11 @@ public final class URLCreator {
 					return "p/" + uri;
 				}
 
-				if (operation instanceof UpdateOperation) {
+				if (operation instanceof RetrieveOperation) {
 					return "p/" + uri;
 				}
 
-				if (operation instanceof RetrieveOperation) {
+				if (operation instanceof UpdateOperation) {
 					return "p/" + uri;
 				}
 

@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.security.xml.SecureXMLFactoryProviderUtil;
 import com.liferay.portal.kernel.settings.LocalizedValuesMap;
 import com.liferay.portal.kernel.settings.Settings;
@@ -74,7 +73,6 @@ import org.apache.commons.collections.map.ReferenceMap;
  * @author Brian Wing Shun Chan
  * @author Connor McKay
  */
-@DoPrivileged
 public class LocalizationImpl implements Localization {
 
 	@Override
@@ -1017,7 +1015,7 @@ public class LocalizationImpl implements Localization {
 						_DEFAULT_LOCALE, defaultLanguageId);
 				}
 
-				_copyNonExempt(
+				_copyNonexempt(
 					xmlStreamReader, xmlStreamWriter, requestedLanguageId,
 					defaultLanguageId, cdata);
 
@@ -1243,7 +1241,7 @@ public class LocalizationImpl implements Localization {
 					_DEFAULT_LOCALE, defaultLanguageId);
 			}
 
-			_copyNonExempt(
+			_copyNonexempt(
 				xmlStreamReader, xmlStreamWriter, requestedLanguageId,
 				defaultLanguageId, cdata);
 
@@ -1313,7 +1311,7 @@ public class LocalizationImpl implements Localization {
 		}
 	}
 
-	private void _copyNonExempt(
+	private void _copyNonexempt(
 			XMLStreamReader xmlStreamReader, XMLStreamWriter xmlStreamWriter,
 			String exemptLanguageId, String defaultLanguageId, boolean cdata)
 		throws XMLStreamException {

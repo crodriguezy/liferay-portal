@@ -22,7 +22,6 @@ import com.liferay.apio.architect.routes.ItemRoutes;
 import com.liferay.apio.architect.routes.NestedCollectionRoutes;
 import com.liferay.content.space.apio.architect.identifier.ContentSpaceIdentifier;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
-import com.liferay.dynamic.data.mapping.model.DDMStructureModel;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -46,9 +45,9 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component
 public class ContentStructureNestedCollectionResource
-	implements
-		NestedCollectionResource<DDMStructure, Long,
-			ContentStructureIdentifier, Long, ContentSpaceIdentifier> {
+	implements NestedCollectionResource
+		<DDMStructure, Long, ContentStructureIdentifier, Long,
+			ContentSpaceIdentifier> {
 
 	@Override
 	public NestedCollectionRoutes<DDMStructure, Long, Long> collectionRoutes(
@@ -79,8 +78,8 @@ public class ContentStructureNestedCollectionResource
 
 		Representor.FirstStep<DDMStructure> bidirectionalModelStep =
 			ddmStructureFirstStep.addBidirectionalModel(
-				"interactionService", "contentStructures",
-				ContentSpaceIdentifier.class, DDMStructureModel::getGroupId);
+				"contentSpace", "contentStructures",
+				ContentSpaceIdentifier.class, DDMStructure::getGroupId);
 
 		return bidirectionalModelStep.build();
 	}

@@ -16,15 +16,20 @@ package com.liferay.media.object.apio.internal.architect.resource;
 
 import static com.liferay.portal.apio.idempotent.Idempotent.idempotent;
 
+import com.liferay.adaptive.media.image.media.query.Condition;
+import com.liferay.adaptive.media.image.media.query.MediaQuery;
+import com.liferay.adaptive.media.image.media.query.MediaQueryProvider;
+import com.liferay.adaptive.media.image.mime.type.AMImageMimeTypeProvider;
 import com.liferay.apio.architect.functional.Try;
 import com.liferay.apio.architect.pagination.PageItems;
 import com.liferay.apio.architect.pagination.Pagination;
+import com.liferay.apio.architect.representor.NestedRepresentor;
+import com.liferay.apio.architect.representor.NestedRepresentor.Builder;
 import com.liferay.apio.architect.representor.Representor;
 import com.liferay.apio.architect.resource.NestedCollectionResource;
 import com.liferay.apio.architect.routes.ItemRoutes;
 import com.liferay.apio.architect.routes.NestedCollectionRoutes;
 import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.model.AssetTagModel;
 import com.liferay.asset.kernel.service.AssetTagLocalService;
 import com.liferay.category.apio.architect.identifier.CategoryIdentifier;
 import com.liferay.document.library.kernel.model.DLFileEntry;
@@ -73,7 +78,7 @@ public class MediaObjectNestedCollectionResource
 
 	@Override
 	public String getName() {
-		return "media-object";
+		return "document";
 	}
 
 	@Override
@@ -93,34 +98,35 @@ public class MediaObjectNestedCollectionResource
 		Representor.Builder<FileEntry, Long> builder) {
 
 		return builder.types(
-			"MediaObject"
+			"Liferay:Document", "MediaObject"
 		).identifier(
 			FileEntry::getFileEntryId
 		).addBidirectionalModel(
-			"folder", "mediaObjects", FolderIdentifier.class,
+			"folder", "documents", FolderIdentifier.class,
 			FileEntry::getFolderId
 		).addRelativeURL(
-			"contentStream", this::_getFileEntryPreviewURL
+			"contentUrl", this::_getFileEntryPreviewURL
 		).addDate(
 			"dateCreated", FileEntry::getCreateDate
 		).addDate(
 			"dateModified", FileEntry::getModifiedDate
-		).addDate(
-			"datePublished", FileEntry::getLastPublishDate
 		).addLinkedModel(
 			"creator", PersonIdentifier.class, FileEntry::getUserId
+		).addNestedList(
+			"encoding", this::_getMediaQueries,
+			this::_getMediaQueryNestedRepresentor
 		).addNumber(
-			"contentSize", FileEntry::getSize
+			"sizeInBytes", FileEntry::getSize
 		).addRelatedCollection(
-			"categories", CategoryIdentifier.class
+			"category", CategoryIdentifier.class
 		).addString(
-			"fileFormat", FileEntry::getMimeType
+			"description", FileEntry::getDescription
+		).addString(
+			"encodingFormat", FileEntry::getMimeType
 		).addString(
 			"headline", FileEntry::getTitle
 		).addString(
 			"name", FileEntry::getFileName
-		).addString(
-			"text", FileEntry::getDescription
 		).addStringList(
 			"keywords", this::_getMediaObjectAssetTags
 		).build();
@@ -149,7 +155,46 @@ public class MediaObjectNestedCollectionResource
 		List<AssetTag> assetTags = _assetTagLocalService.getTags(
 			DLFileEntry.class.getName(), fileEntry.getFileEntryId());
 
-		return ListUtil.toList(assetTags, AssetTagModel::getName);
+		return ListUtil.toList(assetTags, AssetTag::getName);
+	}
+
+	private List<MediaQuery> _getMediaQueries(FileEntry fileEntry) {
+		String mimeType = fileEntry.getMimeType();
+
+		if (_amImageMimeTypeProvider.isMimeTypeSupported(mimeType)) {
+			return Try.fromFallible(
+				() -> _mediaQueryProvider.getMediaQueries(fileEntry)
+			).orElse(
+				null
+			);
+		}
+
+		return null;
+	}
+
+	private NestedRepresentor<MediaQuery> _getMediaQueryNestedRepresentor(
+		Builder<MediaQuery> builder) {
+
+		return builder.types(
+			"ImageObject", "MediaObject"
+		).addNestedList(
+			"exifData", MediaQuery::getConditions,
+			nestedBuilder -> nestedBuilder.types(
+				"ExifData", "PropertyValue"
+			).addString(
+				"name", Condition::getAttribute
+			).addString(
+				"value", Condition::getValue
+			).build()
+		).addRelativeURL(
+			"url", this::_getMediaQuerySrc
+		).build();
+	}
+
+	private String _getMediaQuerySrc(MediaQuery mediaQuery) {
+		String src = mediaQuery.getSrc();
+
+		return src.split(", ")[0];
 	}
 
 	private PageItems<FileEntry> _getPageItems(
@@ -165,6 +210,9 @@ public class MediaObjectNestedCollectionResource
 	}
 
 	@Reference
+	private AMImageMimeTypeProvider _amImageMimeTypeProvider;
+
+	@Reference
 	private AssetTagLocalService _assetTagLocalService;
 
 	@Reference
@@ -177,5 +225,8 @@ public class MediaObjectNestedCollectionResource
 
 	@Reference
 	private MediaObjectHelper _mediaObjectHelper;
+
+	@Reference
+	private MediaQueryProvider _mediaQueryProvider;
 
 }

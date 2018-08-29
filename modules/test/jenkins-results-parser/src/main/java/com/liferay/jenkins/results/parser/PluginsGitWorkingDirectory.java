@@ -22,7 +22,7 @@ import java.io.IOException;
  */
 public class PluginsGitWorkingDirectory extends GitWorkingDirectory {
 
-	public PluginsGitWorkingDirectory(
+	protected PluginsGitWorkingDirectory(
 			String portalUpstreamBranchName, String workingDirectoryPath)
 		throws IOException {
 
@@ -31,40 +31,40 @@ public class PluginsGitWorkingDirectory extends GitWorkingDirectory {
 			workingDirectoryPath);
 	}
 
-	public PluginsGitWorkingDirectory(
+	protected PluginsGitWorkingDirectory(
 			String portalUpstreamBranchName, String workingDirectoryPath,
-			String repositoryName)
+			String gitRepositoryName)
 		throws IOException {
 
 		super(
 			_getPluginsUpstreamBranchName(portalUpstreamBranchName),
-			workingDirectoryPath, repositoryName);
+			workingDirectoryPath, gitRepositoryName);
 	}
 
 	@Override
-	protected void setUpstreamRemoteToPrivateRepository() {
-		Remote upstreamRemote = getUpstreamRemote();
+	protected void setUpstreamGitRemoteToPrivateGitRepository() {
+		GitRemote upstreamGitRemote = getUpstreamGitRemote();
 
-		String remoteURL = upstreamRemote.getRemoteURL();
+		String remoteURL = upstreamGitRemote.getRemoteURL();
 
 		if (!remoteURL.contains("-ee")) {
 			remoteURL = remoteURL.replace(".git", "-ee.git");
 		}
 
-		addRemote(true, "upstream-temp", remoteURL);
+		addGitRemote(true, "upstream-temp", remoteURL);
 	}
 
 	@Override
-	protected void setUpstreamRemoteToPublicRepository() {
-		Remote upstreamRemote = getUpstreamRemote();
+	protected void setUpstreamGitRemoteToPublicGitRepository() {
+		GitRemote upstreamGitRemote = getUpstreamGitRemote();
 
-		String remoteURL = upstreamRemote.getRemoteURL();
+		String remoteURL = upstreamGitRemote.getRemoteURL();
 
 		if (remoteURL.contains("-ee")) {
 			remoteURL = remoteURL.replace("-ee", "");
 		}
 
-		addRemote(true, "upstream-temp", remoteURL);
+		addGitRemote(true, "upstream-temp", remoteURL);
 	}
 
 	private static String _getPluginsUpstreamBranchName(

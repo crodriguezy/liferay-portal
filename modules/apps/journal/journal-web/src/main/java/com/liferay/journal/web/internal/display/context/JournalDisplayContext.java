@@ -56,6 +56,7 @@ import com.liferay.journal.web.internal.security.permission.resource.JournalFold
 import com.liferay.journal.web.util.JournalPortletUtil;
 import com.liferay.message.boards.model.MBMessage;
 import com.liferay.message.boards.service.MBMessageLocalServiceUtil;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
@@ -101,7 +102,6 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PrefsParamUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -807,7 +807,11 @@ public class JournalDisplayContext {
 				if (!group.isLayout()) {
 					add(
 						navigationItem -> {
-							navigationItem.setHref(_getStructuresURL());
+							navigationItem.setActive(
+								currentItem.equals("structures"));
+							navigationItem.setHref(
+								_liferayPortletResponse.createRenderURL(),
+								"mvcPath", "/view_ddm_structures.jsp");
 							navigationItem.setLabel(
 								LanguageUtil.get(_request, "structures"));
 						});
@@ -1034,8 +1038,7 @@ public class JournalDisplayContext {
 			entriesChecker.setRememberCheckBoxStateURLRegex(
 				StringBundler.concat(
 					"^(?!.*", _liferayPortletResponse.getNamespace(),
-					"redirect).*(folderId=", String.valueOf(getFolderId()),
-					")"));
+					"redirect).*(folderId=", getFolderId(), ")"));
 
 			articleSearchContainer.setRowChecker(entriesChecker);
 
@@ -1355,7 +1358,6 @@ public class JournalDisplayContext {
 					addTableViewTypeItem();
 				}
 			}
-
 		};
 	}
 
@@ -1690,7 +1692,7 @@ public class JournalDisplayContext {
 					dropdownItem -> {
 						dropdownItem.setActive(isNavigationStructure());
 						dropdownItem.putData(
-							"action", "openStructuresSelector");
+							"action", "openDDMStructuresSelector");
 						dropdownItem.setLabel(sb.toString());
 					});
 			}
@@ -1796,41 +1798,6 @@ public class JournalDisplayContext {
 		statuses.add(WorkflowConstants.STATUS_EXPIRED);
 
 		return statuses;
-	}
-
-	private String _getStructuresURL() {
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
-		Portlet portlet = PortletLocalServiceUtil.getPortletById(
-			portletDisplay.getId());
-
-		PortletURL portletURL = PortletURLFactoryUtil.create(
-			_liferayPortletRequest,
-			PortletProviderUtil.getPortletId(
-				DDMStructure.class.getName(), PortletProvider.Action.VIEW),
-			PortletRequest.RENDER_PHASE);
-
-		portletURL.setParameter("mvcPath", "/view.jsp");
-		portletURL.setParameter("backURL", themeDisplay.getURLCurrent());
-		portletURL.setParameter(
-			"groupId", String.valueOf(themeDisplay.getScopeGroupId()));
-		portletURL.setParameter(
-			"refererPortletName", JournalPortletKeys.JOURNAL);
-		portletURL.setParameter(
-			"refererWebDAVToken", WebDAVUtil.getStorageToken(portlet));
-		portletURL.setParameter(
-			"scopeTitle", LanguageUtil.get(_request, "structures"));
-		portletURL.setParameter(
-			"showAncestorScopes",
-			String.valueOf(
-				_journalWebConfiguration.showAncestorScopesByDefault()));
-		portletURL.setParameter("showCacheableInput", Boolean.TRUE.toString());
-		portletURL.setParameter("showManageTemplates", Boolean.TRUE.toString());
-
-		return portletURL.toString();
 	}
 
 	private String _getTemplatesURL() {
