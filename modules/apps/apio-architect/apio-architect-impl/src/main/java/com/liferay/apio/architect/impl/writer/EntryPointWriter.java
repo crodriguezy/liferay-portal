@@ -23,19 +23,21 @@ import com.liferay.apio.architect.impl.request.RequestInfo;
 import com.liferay.apio.architect.impl.url.ApplicationURL;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Writes the API entrypoint.
  *
  * @author Alejandro Hernández
- * @review
+ * @author Zoltán Takács
  */
 public class EntryPointWriter {
 
 	/**
 	 * Writes the handled {@link EntryPoint} to a string.
 	 *
-	 * @return the representation of the {@code EntryPoint}
+	 * @return the entry point's representation
 	 */
 	public String write() {
 		ApplicationURL applicationURL = _requestInfo.getApplicationURL();
@@ -52,6 +54,8 @@ public class EntryPointWriter {
 
 			_entryPointMessageMapper.mapItemSelfURL(
 				_jsonObjectBuilder, itemJsonObjectBuilder, resourceName, url);
+
+			_getCollectionItemType(resourceName, itemJsonObjectBuilder);
 
 			_entryPointMessageMapper.onFinishItem(
 				_jsonObjectBuilder, itemJsonObjectBuilder);
@@ -76,9 +80,10 @@ public class EntryPointWriter {
 		public static EntryPointMessageMapperStep entryPoint(
 			EntryPoint entryPoint) {
 
-			return entryPointMessageMapper -> requestInfo ->
-				() -> new EntryPointWriter(
-					entryPoint, entryPointMessageMapper, requestInfo);
+			return entryPointMessageMapper -> requestInfo -> typeFunction -> ()
+				-> new EntryPointWriter(
+					entryPoint, entryPointMessageMapper, requestInfo,
+					typeFunction);
 		}
 
 		public interface BuildStep {
@@ -118,7 +123,20 @@ public class EntryPointWriter {
 			 *         RequestInfo.Builder}
 			 * @return the updated builder
 			 */
-			public BuildStep requestInfo(RequestInfo requestInfo);
+			public TypeFunctionStep requestInfo(RequestInfo requestInfo);
+
+		}
+
+		public interface TypeFunctionStep {
+
+			/**
+			 * Adds information to the builder about the type of the Collection
+			 *
+			 * @param  typeFunction
+			 * @return the updated builder
+			 */
+			public BuildStep typeFunction(
+				Function<String, Optional<String>> typeFunction);
 
 		}
 
@@ -126,18 +144,32 @@ public class EntryPointWriter {
 
 	private EntryPointWriter(
 		EntryPoint entryPoint, EntryPointMessageMapper entryPointMessageMapper,
-		RequestInfo requestInfo) {
+		RequestInfo requestInfo,
+		Function<String, Optional<String>> typeFunction) {
 
 		_entryPoint = entryPoint;
 		_entryPointMessageMapper = entryPointMessageMapper;
 		_requestInfo = requestInfo;
+		_typeFunction = typeFunction;
 
 		_jsonObjectBuilder = new JSONObjectBuilder();
+	}
+
+	private void _getCollectionItemType(
+		String resourceName, JSONObjectBuilder itemJsonObjectBuilder) {
+
+		_typeFunction.apply(
+			resourceName
+		).ifPresent(
+			type -> _entryPointMessageMapper.mapSemantics(
+				itemJsonObjectBuilder, type)
+		);
 	}
 
 	private final EntryPoint _entryPoint;
 	private final EntryPointMessageMapper _entryPointMessageMapper;
 	private final JSONObjectBuilder _jsonObjectBuilder;
 	private final RequestInfo _requestInfo;
+	private final Function<String, Optional<String>> _typeFunction;
 
 }

@@ -54,8 +54,8 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(immediate = true)
 public class CategoryNestedCollectionResource
-	implements NestedCollectionResource<AssetCategory, Long, CategoryIdentifier,
-		Long, VocabularyIdentifier> {
+	implements NestedCollectionResource
+		<AssetCategory, Long, CategoryIdentifier, Long, VocabularyIdentifier> {
 
 	@Override
 	public NestedCollectionRoutes<AssetCategory, Long, Long> collectionRoutes(
@@ -108,8 +108,6 @@ public class CategoryNestedCollectionResource
 			"dateCreated", AssetCategory::getCreateDate
 		).addDate(
 			"dateModified", AssetCategory::getModifiedDate
-		).addDate(
-			"datePublished", AssetCategory::getLastPublishDate
 		).addLinkedModel(
 			"creator", PersonIdentifier.class, AssetCategory::getUserId
 		).addLocalizedStringByLocale(

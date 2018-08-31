@@ -48,8 +48,9 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(immediate = true)
 public class FormInstanceNestedCollectionResource
-	implements NestedCollectionResource<DDMFormInstance, Long,
-		FormInstanceIdentifier, Long, ContentSpaceIdentifier> {
+	implements NestedCollectionResource
+		<DDMFormInstance, Long, FormInstanceIdentifier, Long,
+			ContentSpaceIdentifier> {
 
 	@Override
 	public NestedCollectionRoutes<DDMFormInstance, Long, Long> collectionRoutes(
@@ -83,7 +84,7 @@ public class FormInstanceNestedCollectionResource
 		).identifier(
 			DDMFormInstance::getFormInstanceId
 		).addBidirectionalModel(
-			"interactionService", "formInstances", ContentSpaceIdentifier.class,
+			"contentSpace", "formInstances", ContentSpaceIdentifier.class,
 			DDMFormInstance::getGroupId
 		).addDate(
 			"dateCreated", DDMFormInstance::getCreateDate

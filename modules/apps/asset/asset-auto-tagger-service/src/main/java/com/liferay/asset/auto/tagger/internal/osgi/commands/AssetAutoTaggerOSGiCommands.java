@@ -16,7 +16,8 @@ package com.liferay.asset.auto.tagger.internal.osgi.commands;
 
 import com.liferay.asset.auto.tagger.AssetAutoTagProvider;
 import com.liferay.asset.auto.tagger.AssetAutoTagger;
-import com.liferay.asset.auto.tagger.internal.configuration.AssetAutoTaggerConfiguration;
+import com.liferay.asset.auto.tagger.configuration.AssetAutoTaggerConfiguration;
+import com.liferay.asset.auto.tagger.configuration.AssetAutoTaggerConfigurationFactory;
 import com.liferay.asset.auto.tagger.service.AssetAutoTaggerEntryLocalService;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
@@ -24,7 +25,6 @@ import com.liferay.asset.kernel.service.AssetTagLocalService;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.petra.function.UnsafeConsumer;
-import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.Property;
@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.HashSet;
 import java.util.List;
@@ -45,14 +46,12 @@ import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Alejandro Tardín
  */
 @Component(
-	configurationPid = "com.liferay.asset.auto.tagger.internal.configuration.AssetAutoTaggerConfiguration",
 	immediate = true,
 	property = {
 		"osgi.command.function=tagAllUntagged",
@@ -62,8 +61,12 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class AssetAutoTaggerOSGiCommands {
 
-	public void tagAllUntagged(String... classNames) {
-		if (!_assetAutoTaggerConfiguration.enabled()) {
+	public void tagAllUntagged(String companyId, String... classNames) {
+		AssetAutoTaggerConfiguration assetAutoTaggerConfiguration =
+			_assetAutoTaggerConfigurationFactory.
+				getAssetAutoTaggerConfiguration();
+
+		if (!assetAutoTaggerConfiguration.isEnabled()) {
 			System.out.println("Asset auto tagger is disabled");
 
 			return;
@@ -80,7 +83,7 @@ public class AssetAutoTaggerOSGiCommands {
 		}
 
 		_forEachAssetEntry(
-			classNames,
+			companyId, classNames,
 			assetEntry -> {
 				String[] oldAssetTagNames = assetEntry.getTagNames();
 
@@ -99,13 +102,12 @@ public class AssetAutoTaggerOSGiCommands {
 							newAssetTagNames.length - oldAssetTagNames.length,
 							assetEntry.getTitle()));
 				}
-
 			});
 	}
 
-	public void untagAll(String... classNames) {
+	public void untagAll(String companyId, String... classNames) {
 		_forEachAssetEntry(
-			classNames,
+			companyId, classNames,
 			assetEntry -> {
 				String[] oldAssetTagNames = assetEntry.getTagNames();
 
@@ -127,8 +129,6 @@ public class AssetAutoTaggerOSGiCommands {
 	protected void activate(
 		BundleContext bundleContext, Map<String, Object> properties) {
 
-		modified(properties);
-
 		_serviceTrackerMap = ServiceTrackerMapFactory.openMultiValueMap(
 			bundleContext, AssetAutoTagProvider.class, "model.class.name");
 	}
@@ -138,14 +138,8 @@ public class AssetAutoTaggerOSGiCommands {
 		_serviceTrackerMap.close();
 	}
 
-	@Modified
-	protected void modified(Map<String, Object> properties) {
-		_assetAutoTaggerConfiguration = ConfigurableUtil.createConfigurable(
-			AssetAutoTaggerConfiguration.class, properties);
-	}
-
 	private void _forEachAssetEntry(
-		String[] classNames,
+		String companyId, String[] classNames,
 		UnsafeConsumer<AssetEntry, PortalException> consumer) {
 
 		try {
@@ -154,9 +148,12 @@ public class AssetAutoTaggerOSGiCommands {
 
 			if (!ArrayUtil.isEmpty(classNames)) {
 				actionableDynamicQuery.setAddCriteriaMethod(
-					dynamicQuery -> {
-						dynamicQuery.add(_getClassNameIdCriterion(classNames));
-					});
+					dynamicQuery -> dynamicQuery.add(
+						_getClassNameIdCriterion(classNames)));
+			}
+
+			if (Validator.isNotNull(companyId)) {
+				actionableDynamicQuery.setCompanyId(Long.valueOf(companyId));
 			}
 
 			actionableDynamicQuery.setPerformActionMethod(
@@ -192,7 +189,9 @@ public class AssetAutoTaggerOSGiCommands {
 	@Reference
 	private AssetAutoTagger _assetAutoTagger;
 
-	private volatile AssetAutoTaggerConfiguration _assetAutoTaggerConfiguration;
+	@Reference
+	private AssetAutoTaggerConfigurationFactory
+		_assetAutoTaggerConfigurationFactory;
 
 	@Reference
 	private AssetAutoTaggerEntryLocalService _assetAutoTaggerEntryLocalService;

@@ -15,17 +15,13 @@
 package com.liferay.structure.apio.internal.util;
 
 import com.liferay.apio.architect.functional.Try;
-import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMFormFieldOptions;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayoutColumn;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayoutPage;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayoutRow;
-import com.liferay.dynamic.data.mapping.model.DDMFormRule;
-import com.liferay.dynamic.data.mapping.model.DDMFormSuccessPageSettings;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
-import com.liferay.dynamic.data.mapping.model.DDMStructureVersion;
 import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.structure.apio.internal.model.FormLayoutPage;
 
@@ -45,8 +41,8 @@ import java.util.stream.Stream;
  */
 public final class StructureRepresentorUtil {
 
-	public static Function<DDMFormField,
-		List<Map.Entry<String, LocalizedValue>>> getFieldOptions(
+	public static Function
+		<DDMFormField, List<Map.Entry<String, LocalizedValue>>> getFieldOptions(
 			Function<DDMFormField, DDMFormFieldOptions> function) {
 
 		return ddmFormField -> Try.fromFallible(
@@ -62,8 +58,9 @@ public final class StructureRepresentorUtil {
 		);
 	}
 
-	public static Function<DDMFormField,
-		List<Map.Entry<String, LocalizedValue>>> getFieldOptions(String key) {
+	public static Function
+		<DDMFormField, List<Map.Entry<String, LocalizedValue>>> getFieldOptions(
+			String key) {
 
 		return getFieldOptions(
 			ddmFormField -> (DDMFormFieldOptions)ddmFormField.getProperty(key));
@@ -101,38 +98,6 @@ public final class StructureRepresentorUtil {
 			_getFormLayoutPage(ddmStructure)
 		).collect(
 			Collectors.toList()
-		);
-	}
-
-	public static DDMFormSuccessPageSettings getSuccessPage(
-		DDMStructure ddmStructure) {
-
-		DDMForm ddmForm = ddmStructure.getDDMForm();
-
-		return ddmForm.getDDMFormSuccessPageSettings();
-	}
-
-	public static DDMStructureVersion getVersion(DDMStructure ddmStructure) {
-		return Try.fromFallible(
-			ddmStructure::getStructureVersion
-		).orElse(
-			null
-		);
-	}
-
-	public static Function<DDMFormField, Boolean> hasFormRules() {
-		return ddmFormField -> Try.fromFallible(
-			ddmFormField::getDDMForm
-		).map(
-			DDMForm::getDDMFormRules
-		).map(
-			List::stream
-		).orElseGet(
-			Stream::empty
-		).map(
-			DDMFormRule::getCondition
-		).anyMatch(
-			ruleCondition -> ruleCondition.contains(ddmFormField.getName())
 		);
 	}
 

@@ -27,7 +27,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.LayoutTemplate;
 import com.liferay.portal.kernel.model.LayoutTemplateConstants;
 import com.liferay.portal.kernel.model.Portlet;
-import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.service.LayoutTemplateLocalServiceUtil;
 import com.liferay.portal.kernel.servlet.PluginContextListener;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
@@ -89,7 +88,6 @@ import org.apache.commons.lang.time.StopWatch;
  * @author Raymond Augé
  * @author Shuyang Zhou
  */
-@DoPrivileged
 public class RuntimePageImpl implements RuntimePage {
 
 	public static ThreadPoolHandler getThreadPoolHandler() {
@@ -120,9 +118,18 @@ public class RuntimePageImpl implements RuntimePage {
 			TemplateResource templateResource)
 		throws Exception {
 
-		doDispatch(
-			request, response, null, templateResource,
-			TemplateConstants.LANG_TYPE_VM, false);
+		processCustomizationSettings(
+			request, response, templateResource,
+			TemplateConstants.LANG_TYPE_VM);
+	}
+
+	@Override
+	public void processCustomizationSettings(
+			HttpServletRequest request, HttpServletResponse response,
+			TemplateResource templateResource, String langType)
+		throws Exception {
+
+		doDispatch(request, response, null, templateResource, langType, false);
 	}
 
 	@Override

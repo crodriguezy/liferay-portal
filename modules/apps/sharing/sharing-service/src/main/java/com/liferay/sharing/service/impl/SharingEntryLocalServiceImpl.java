@@ -38,7 +38,7 @@ public class SharingEntryLocalServiceImpl
 	@Override
 	public SharingEntry addSharingEntry(
 			long fromUserId, long toUserId, long classNameId, long classPK,
-			long groupId,
+			long groupId, boolean shareable,
 			Collection<SharingEntryActionKey> sharingEntryActionKeys,
 			ServiceContext serviceContext)
 		throws PortalException {
@@ -63,6 +63,7 @@ public class SharingEntryLocalServiceImpl
 		sharingEntry.setToUserId(toUserId);
 		sharingEntry.setClassNameId(classNameId);
 		sharingEntry.setClassPK(classPK);
+		sharingEntry.setShareable(shareable);
 
 		Stream<SharingEntryActionKey> sharingEntryActionKeyStream =
 			sharingEntryActionKeys.stream();
@@ -81,6 +82,14 @@ public class SharingEntryLocalServiceImpl
 	@Override
 	public int countFromUserSharingEntries(long fromUserId) {
 		return sharingEntryPersistence.countByFromUserId(fromUserId);
+	}
+
+	@Override
+	public int countFromUserSharingEntries(
+		long fromUserId, long classNameId, long classPK) {
+
+		return sharingEntryPersistence.countByFU_C_C(
+			fromUserId, classNameId, classPK);
 	}
 
 	@Override
@@ -110,11 +119,11 @@ public class SharingEntryLocalServiceImpl
 
 	@Override
 	public SharingEntry deleteSharingEntry(
-			long toUserId, long classNameId, long classPK)
+			long fromUserId, long toUserId, long classNameId, long classPK)
 		throws PortalException {
 
-		SharingEntry sharingEntry = sharingEntryPersistence.findByTU_C_C(
-			toUserId, classNameId, classPK);
+		SharingEntry sharingEntry = sharingEntryPersistence.findByFU_TU_C_C(
+			fromUserId, toUserId, classNameId, classPK);
 
 		return sharingEntryPersistence.remove(sharingEntry);
 	}
@@ -135,6 +144,22 @@ public class SharingEntryLocalServiceImpl
 	}
 
 	@Override
+	public List<SharingEntry> getFromUserSharingEntries(
+		long fromUserId, long classNameId, long classPK) {
+
+		return sharingEntryPersistence.findByFU_C_C(
+			fromUserId, classNameId, classPK);
+	}
+
+	@Override
+	public List<SharingEntry> getFromUserSharingEntries(
+		long fromUserId, long classNameId, long classPK, int start, int end) {
+
+		return sharingEntryPersistence.findByFU_C_C(
+			fromUserId, classNameId, classPK, start, end);
+	}
+
+	@Override
 	public List<SharingEntry> getGroupSharingEntries(long groupId) {
 		return sharingEntryPersistence.findByGroupId(groupId);
 	}
@@ -147,7 +172,7 @@ public class SharingEntryLocalServiceImpl
 	}
 
 	@Override
-	public SharingEntry getSharingEntry(
+	public List<SharingEntry> getSharingEntries(
 			long toUserId, long classNameId, long classPK)
 		throws PortalException {
 
@@ -168,24 +193,72 @@ public class SharingEntryLocalServiceImpl
 	}
 
 	@Override
+	public boolean hasShareableSharingPermission(
+		long toUserId, long classNameId, long classPK,
+		SharingEntryActionKey sharingEntryActionKey) {
+
+		List<SharingEntry> sharingEntries =
+			sharingEntryPersistence.findByTU_C_C(
+				toUserId, classNameId, classPK);
+
+		for (SharingEntry sharingEntry : sharingEntries) {
+			if (!sharingEntry.isShareable()) {
+				continue;
+			}
+
+			long actionIds = sharingEntry.getActionIds();
+
+			if ((actionIds & sharingEntryActionKey.getBitwiseVaue()) != 0) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Override
 	public boolean hasSharingPermission(
 		long toUserId, long classNameId, long classPK,
 		SharingEntryActionKey sharingEntryActionKey) {
 
-		SharingEntry sharingEntry = sharingEntryPersistence.fetchByTU_C_C(
-			toUserId, classNameId, classPK);
+		List<SharingEntry> sharingEntries =
+			sharingEntryPersistence.findByTU_C_C(
+				toUserId, classNameId, classPK);
 
-		if (sharingEntry == null) {
-			return false;
-		}
+		for (SharingEntry sharingEntry : sharingEntries) {
+			long actionIds = sharingEntry.getActionIds();
 
-		long actionIds = sharingEntry.getActionIds();
-
-		if ((actionIds & sharingEntryActionKey.getBitwiseVaue()) != 0) {
-			return true;
+			if ((actionIds & sharingEntryActionKey.getBitwiseVaue()) != 0) {
+				return true;
+			}
 		}
 
 		return false;
+	}
+
+	@Override
+	public SharingEntry updateSharingEntry(
+			long sharingEntryId,
+			Collection<SharingEntryActionKey> sharingEntryActionKeys)
+		throws PortalException {
+
+		SharingEntry sharingEntry = sharingEntryPersistence.findByPrimaryKey(
+			sharingEntryId);
+
+		_validateSharingEntryActionKeys(sharingEntryActionKeys);
+
+		Stream<SharingEntryActionKey> sharingEntryActionKeyStream =
+			sharingEntryActionKeys.stream();
+
+		sharingEntryActionKeyStream.map(
+			SharingEntryActionKey::getBitwiseVaue
+		).reduce(
+			(bitwiseValue1, bitwiseValue2) -> bitwiseValue1 | bitwiseValue2
+		).ifPresent(
+			actionIds -> sharingEntry.setActionIds(actionIds)
+		);
+
+		return sharingEntryPersistence.update(sharingEntry);
 	}
 
 	private void _validateSharingEntryActionKeys(

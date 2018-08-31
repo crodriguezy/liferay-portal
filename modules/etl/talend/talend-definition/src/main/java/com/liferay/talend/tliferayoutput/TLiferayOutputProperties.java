@@ -68,14 +68,12 @@ import org.talend.daikon.sandbox.SandboxedInstance;
 public class TLiferayOutputProperties
 	extends LiferayConnectionResourceBaseProperties {
 
+	public static final String ADD_QUOTES = "ADD_QUOTES";
+
 	public static final String FIELD_ERROR_MESSAGE = "_errorMessage";
 
-	public static final List<String> rejectSchemaFieldNames;
-
-	static {
-		rejectSchemaFieldNames = new ArrayList<>(
-			Arrays.asList(FIELD_ERROR_MESSAGE));
-	}
+	public static final List<String> rejectSchemaFieldNames = Arrays.asList(
+		FIELD_ERROR_MESSAGE);
 
 	public static Schema createRejectSchema(Schema inputSchema) {
 		final List<Schema.Field> rejectFields = new ArrayList<>();
@@ -195,6 +193,8 @@ public class TLiferayOutputProperties
 
 		Form mainForm = getForm(Form.MAIN);
 
+		operations.setRequired();
+
 		Widget operationsWidget = Widget.widget(operations);
 
 		operationsWidget.setLongRunning(true);
@@ -219,7 +219,10 @@ public class TLiferayOutputProperties
 		super.setupProperties();
 
 		dieOnError.setValue(true);
-		operations.setValue(Action.Upsert);
+		operations.setValue(null);
+
+		operations.setPossibleValues((List<?>)null);
+		operations.setTaggedValue(ADD_QUOTES, true);
 
 		resource = new ResourcePropertiesHelper("resource");
 
@@ -315,7 +318,7 @@ public class TLiferayOutputProperties
 	}
 
 	public transient PresentationItem calculateSchema = new PresentationItem(
-		"calculateSchema", "Calculate Schema");
+		"calculateSchema");
 	public Property<Boolean> dieOnError = PropertyFactory.newBoolean(
 		"dieOnError");
 	public Property<Action> operations = PropertyFactory.newEnum(
@@ -339,6 +342,8 @@ public class TLiferayOutputProperties
 			if (_log.isDebugEnabled()) {
 				_log.debug("Resource URL: " + resourceURL.getValue());
 			}
+
+			List<Operation> supportedOperations = new ArrayList<>();
 
 			ValidationResultMutable validationResultMutable =
 				new ValidationResultMutable();
@@ -375,7 +380,12 @@ public class TLiferayOutputProperties
 								getResourceCollectionType(
 									resourceURI.toString());
 
-						resource.setValue(resourceCollectionType);
+						resourceName.setValue(resourceCollectionType);
+
+						supportedOperations.addAll(
+							liferaySourceOrSinkRuntime.
+								getResourceSupportedOperations(
+									resourceURI.toString()));
 					}
 					catch (IOException ioe) {
 						validationResult =
@@ -398,14 +408,49 @@ public class TLiferayOutputProperties
 			if (validationResultMutable.getStatus() ==
 					ValidationResult.Result.ERROR) {
 
-				resource.setValue("");
+				resourceName.setValue("");
 				resourceURL.setValue("");
+				operations.setValue(null);
+
+				operations.setPossibleValues((List<?>)null);
 			}
+
+			Stream<Operation> operationStream = supportedOperations.stream();
+
+			List<Action> actions = operationStream.map(
+				Operation::getMethod
+			).map(
+				this::_toAction
+			).distinct(
+			).collect(
+				Collectors.toList()
+			);
+
+			if (!actions.isEmpty()) {
+				operations.setPossibleValues(actions);
+			}
+			else {
+				operations.setPossibleValues(Action.Unavailable);
+			}
+
+			operations.setValue(null);
 
 			refreshLayout(getForm(Form.MAIN));
 			refreshLayout(getForm(Form.REFERENCE));
 
 			return validationResultMutable;
+		}
+
+		private Action _toAction(String method) {
+			Stream<Action> actionsStream = Action.getActionsStream();
+
+			return actionsStream.filter(
+				action -> method.equals(action.getMethodName())
+			).findFirst(
+			).orElseThrow(
+				() -> new UnsupportedOperationException(
+					String.format("Unsupported operation: %s.", method))
+			);
 		}
 
 	}

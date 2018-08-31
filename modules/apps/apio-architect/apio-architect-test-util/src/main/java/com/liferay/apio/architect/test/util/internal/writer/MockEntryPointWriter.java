@@ -21,6 +21,8 @@ import com.liferay.apio.architect.impl.writer.EntryPointWriter;
 import com.liferay.apio.architect.impl.writer.EntryPointWriter.Builder;
 
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Provides methods that test {@code EntryPointMessageMapper} objects.
@@ -30,16 +32,16 @@ import java.util.Arrays;
  * </p>
  *
  * @author Alejandro Hernández
+ * @author Zoltán Takács
  */
 public class MockEntryPointWriter {
 
 	/**
-	 * Writes an {@link EntryPoint}.
+	 * Writes an {@code com.liferay.apio.architect.impl.entrypoint.EntryPoint}.
 	 *
-	 * @param  entryPointMessageMapper the {@link EntryPointMessageMapper} to
+	 * @param  entryPointMessageMapper the {@code EntryPointMessageMapper} to
 	 *         use for writing the JSON object
-	 * @return the {@code String} containing the JSON Object.
-	 * @review
+	 * @return the string containing the JSON object
 	 */
 	public static String write(
 		EntryPointMessageMapper entryPointMessageMapper) {
@@ -50,9 +52,19 @@ public class MockEntryPointWriter {
 			entryPointMessageMapper
 		).requestInfo(
 			getRequestInfo()
+		).typeFunction(
+			MockEntryPointWriter::_capitalize
 		).build();
 
 		return entryPointWriter.write();
+	}
+
+	private static Optional<String> _capitalize(String resourceName) {
+		String firstLetter = resourceName.substring(0, 1);
+
+		return Optional.of(
+			firstLetter.toUpperCase(Locale.getDefault()) +
+				resourceName.substring(1));
 	}
 
 	private MockEntryPointWriter() {

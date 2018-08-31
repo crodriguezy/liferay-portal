@@ -612,6 +612,8 @@ public class ServiceBuilder {
 					"Unable to parse DTD version for " + inputFileName);
 			}
 
+			_compatProperties = _getCompatProperties(matcher.group(1));
+
 			Element rootElement = document.getRootElement();
 
 			String packagePath = rootElement.attributeValue("package-path");
@@ -983,6 +985,10 @@ public class ServiceBuilder {
 		}
 
 		return sb.toString();
+	}
+
+	public String getCompatProperty(String key) {
+		return _compatProperties.getProperty(key);
 	}
 
 	public String getCreateMappingTableSQL(EntityMapping entityMapping)
@@ -4428,6 +4434,18 @@ public class ServiceBuilder {
 			content, StringPool.RETURN_NEW_LINE, StringPool.NEW_LINE);
 	}
 
+	private Properties _getCompatProperties(String version) throws IOException {
+		Properties properties = new Properties();
+
+		try (InputStream is = ServiceBuilder.class.getResourceAsStream(
+				"dependencies/" + version + "/compatibility.properties")) {
+
+			properties.load(is);
+		}
+
+		return properties;
+	}
+
 	private Map<String, Object> _getContext() throws TemplateModelException {
 		BeansWrapper beansWrapper = BeansWrapper.getDefaultInstance();
 
@@ -6510,20 +6528,22 @@ public class ServiceBuilder {
 		// Copied columns
 
 		for (Element columnElement : columnElements) {
-			String dbName = columnElement.attributeValue("db-name");
 			String name = columnElement.attributeValue("name");
-			String type = columnElement.attributeValue("type");
 
 			if (!name.equals("mvccVersion") && !name.equals("headId")) {
 				versionEntityColumnElement = versionEntityElement.addElement(
 					"column");
 
-				if (Validator.isNotNull(dbName)) {
-					versionEntityColumnElement.addAttribute("db-name", dbName);
-				}
+				List<Attribute> columnAttributes = columnElement.attributes();
 
-				versionEntityColumnElement.addAttribute("name", name);
-				versionEntityColumnElement.addAttribute("type", type);
+				for (Attribute attribute : columnAttributes) {
+					String attributeName = attribute.getName();
+
+					if (!Objects.equals(attributeName, "primary")) {
+						versionEntityColumnElement.addAttribute(
+							attributeName, attribute.getValue());
+					}
+				}
 			}
 		}
 
@@ -7103,6 +7123,7 @@ public class ServiceBuilder {
 	private long _buildNumber;
 	private boolean _buildNumberIncrement;
 	private boolean _commercialPlugin;
+	private Properties _compatProperties;
 	private String _currentTplName;
 	private int _databaseNameMaxLength = 30;
 	private Version _dtdVersion;

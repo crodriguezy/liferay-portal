@@ -31,7 +31,6 @@ import com.liferay.apio.architect.impl.entrypoint.EntryPoint;
  * </p>
  *
  * @author Alejandro Hernández
- * @review
  */
 public interface EntryPointMessageMapper extends MessageMapper<EntryPoint> {
 
@@ -57,6 +56,16 @@ public interface EntryPointMessageMapper extends MessageMapper<EntryPoint> {
 	 */
 	public default void mapSelfURL(
 		JSONObjectBuilder jsonObjectBuilder, String url) {
+	}
+
+	/**
+	 * Maps the semantics to its JSON object representation.
+	 *
+	 * @param jsonObjectBuilder the JSON object builder for the page
+	 * @param semantics Semantics of each member provided by the collection
+	 */
+	public default void mapSemantics(
+		JSONObjectBuilder jsonObjectBuilder, String semantics) {
 	}
 
 	/**
