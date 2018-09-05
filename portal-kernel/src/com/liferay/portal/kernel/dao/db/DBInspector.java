@@ -47,7 +47,21 @@ public class DBInspector {
 
 	public String getSchema() {
 		try {
-			return _connection.getSchema();
+			DatabaseMetaData metadata = _connection.getMetaData();
+
+			DB db = DBManagerUtil.getDB();
+			DBType dbType = db.getDBType();
+
+			String catalog = _connection.getCatalog();
+			String schema = null;
+
+			if ((catalog == null) && (dbType.equals(DBType.ORACLE))) {
+				schema = metadata.getUserName();
+			} else {
+				schema = _connection.getSchema();
+			}
+
+			return schema;
 		}
 		catch (Throwable t) {
 			if (_log.isDebugEnabled()) {
