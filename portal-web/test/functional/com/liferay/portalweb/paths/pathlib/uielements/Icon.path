@@ -89,13 +89,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>COG</td>
+	<td>COG_PAGE</td>
 	<td>//li/div[contains(.,'${key_pageName}')]/..//a[*[name()='svg'][contains(@class,'icon-cog')]]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>COG_PAGES</td>
-	<td>//a[*[name()='svg'][contains(@class,'icon-cog')]]</td>
 	<td></td>
 </tr>
 <tr>
@@ -110,7 +105,7 @@
 </tr>
 <tr>
 	<td>DELETE</td>
-	<td>//*[*[name()='svg'][contains(@class,'icon-trash')]]</td>
+	<td>//*[*[name()='svg'][contains(@class,'icon-trash')]] | //button[@data-title='Delete' or @title='Delete']</td>
 	<td></td>
 </tr>
 <tr>

@@ -15,7 +15,6 @@
 package com.liferay.keyword.apio.internal.architect.form;
 
 import com.liferay.apio.architect.form.Form;
-import com.liferay.apio.architect.form.Form.Builder;
 
 /**
  * Instances of this class represent the values extracted from a keyword form.
@@ -24,7 +23,9 @@ import com.liferay.apio.architect.form.Form.Builder;
  */
 public class KeywordForm {
 
-	public static Form<KeywordForm> buildForm(Builder<KeywordForm> builder) {
+	public static Form<KeywordForm> buildForm(
+		Form.Builder<KeywordForm> builder) {
+
 		return builder.title(
 			__ -> "The keyword form"
 		).description(
@@ -32,7 +33,7 @@ public class KeywordForm {
 		).constructor(
 			KeywordForm::new
 		).addRequiredString(
-			"name", KeywordForm::_setName
+			"name", KeywordForm::setName
 		).build();
 	}
 
@@ -40,7 +41,7 @@ public class KeywordForm {
 		return _name;
 	}
 
-	private void _setName(String name) {
+	public void setName(String name) {
 		_name = name;
 	}
 

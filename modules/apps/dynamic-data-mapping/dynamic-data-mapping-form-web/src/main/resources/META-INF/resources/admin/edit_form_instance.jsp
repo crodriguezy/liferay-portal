@@ -38,7 +38,7 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 <div class="loading-animation" id="<portlet:namespace />loader"></div>
 
 <portlet:actionURL name="saveFormInstance" var="saveFormInstanceURL">
-	<portlet:param name="mvcPath" value="/admin/edit_form_instance.jsp" />
+	<portlet:param name="mvcRenderCommandName" value="/admin/edit_form_instance" />
 </portlet:actionURL>
 
 <div class="hide portlet-forms" id="<portlet:namespace />formContainer">
@@ -140,10 +140,10 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 		<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="saveFormInstance" var="autoSaveFormInstanceURL" />
 
 		<liferay-form:ddm-form-builder
-			ddmStructureId="<%= ddmFormAdminDisplayContext.getDDMStructureId() %>"
+			ddmStructureVersionId="<%= ddmFormAdminDisplayContext.getLatestDDMStructureVersionId() %>"
 			defaultLanguageId="<%= ddmFormAdminDisplayContext.getDefaultLanguageId() %>"
 			editingLanguageId="<%= ddmFormAdminDisplayContext.getDefaultLanguageId() %>"
-			fieldSetsClassNameId="<%= PortalUtil.getClassNameId(DDMFormInstance.class) %>"
+			fieldSetClassNameId="<%= PortalUtil.getClassNameId(DDMFormInstance.class) %>"
 			refererPortletNamespace="<%= liferayPortletResponse.getNamespace() %>"
 		/>
 

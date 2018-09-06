@@ -33,13 +33,11 @@ import com.liferay.taglib.util.ParamAndPropertyAncestorTagImpl;
 import com.liferay.taglib.util.TypedParamAccessorTag;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.MimeResponse;
-import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
@@ -172,7 +170,7 @@ public class ActionURLTag
 		}
 
 		if (parameterMap != null) {
-			for (Entry<String, String[]> entry : parameterMap.entrySet()) {
+			for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
 				liferayPortletURL.setParameter(
 					entry.getKey(), entry.getValue(), false);
 			}
@@ -339,17 +337,9 @@ public class ActionURLTag
 		LiferayPortletResponse liferayPortletResponse =
 			PortalUtil.getLiferayPortletResponse(portletResponse);
 
-		LiferayPortletConfig liferayPortletConfig =
-			(LiferayPortletConfig)request.getAttribute(
-				JavaConstants.JAVAX_PORTLET_CONFIG);
-
-		PortletContext portletContext =
-			liferayPortletConfig.getPortletContext();
-
-		if ((portletContext.getEffectiveMajorVersion() == 3) &&
-			(((copyCurrentRenderParameters != null) &&
-			  copyCurrentRenderParameters) ||
-			 lifecycle.equals(PortletRequest.RESOURCE_PHASE))) {
+		if (((copyCurrentRenderParameters != null) &&
+			 copyCurrentRenderParameters) ||
+			lifecycle.equals(PortletRequest.RESOURCE_PHASE)) {
 
 			return liferayPortletResponse.createLiferayPortletURL(
 				plid, portletName, lifecycle, MimeResponse.Copy.ALL);

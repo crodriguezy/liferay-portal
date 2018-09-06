@@ -16,15 +16,22 @@ package com.liferay.media.object.apio.internal.architect.resource;
 
 import static com.liferay.portal.apio.idempotent.Idempotent.idempotent;
 
+import com.liferay.adaptive.media.AMAttribute;
+import com.liferay.adaptive.media.AdaptiveMedia;
+import com.liferay.adaptive.media.image.finder.AMImageFinder;
+import com.liferay.adaptive.media.image.finder.AMImageQueryBuilder;
+import com.liferay.adaptive.media.image.mime.type.AMImageMimeTypeProvider;
+import com.liferay.adaptive.media.image.processor.AMImageAttribute;
+import com.liferay.adaptive.media.image.processor.AMImageProcessor;
 import com.liferay.apio.architect.functional.Try;
 import com.liferay.apio.architect.pagination.PageItems;
 import com.liferay.apio.architect.pagination.Pagination;
+import com.liferay.apio.architect.representor.NestedRepresentor;
 import com.liferay.apio.architect.representor.Representor;
 import com.liferay.apio.architect.resource.NestedCollectionResource;
 import com.liferay.apio.architect.routes.ItemRoutes;
 import com.liferay.apio.architect.routes.NestedCollectionRoutes;
 import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.model.AssetTagModel;
 import com.liferay.asset.kernel.service.AssetTagLocalService;
 import com.liferay.category.apio.architect.identifier.CategoryIdentifier;
 import com.liferay.document.library.kernel.model.DLFileEntry;
@@ -42,6 +49,8 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.util.ListUtil;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -73,7 +82,7 @@ public class MediaObjectNestedCollectionResource
 
 	@Override
 	public String getName() {
-		return "media-object";
+		return "document";
 	}
 
 	@Override
@@ -93,37 +102,98 @@ public class MediaObjectNestedCollectionResource
 		Representor.Builder<FileEntry, Long> builder) {
 
 		return builder.types(
-			"MediaObject"
+			"Liferay:Document", "MediaObject"
 		).identifier(
 			FileEntry::getFileEntryId
 		).addBidirectionalModel(
-			"folder", "mediaObjects", FolderIdentifier.class,
+			"folder", "documents", FolderIdentifier.class,
 			FileEntry::getFolderId
 		).addRelativeURL(
-			"contentStream", this::_getFileEntryPreviewURL
+			"contentUrl", this::_getFileEntryPreviewURL
 		).addDate(
 			"dateCreated", FileEntry::getCreateDate
 		).addDate(
 			"dateModified", FileEntry::getModifiedDate
-		).addDate(
-			"datePublished", FileEntry::getLastPublishDate
 		).addLinkedModel(
 			"creator", PersonIdentifier.class, FileEntry::getUserId
+		).addNestedList(
+			"adaptedMedia", this::_getAdaptiveMedias,
+			this::_getAdaptiveMediaNestedRepresentor
 		).addNumber(
-			"contentSize", FileEntry::getSize
+			"sizeInBytes", FileEntry::getSize
 		).addRelatedCollection(
-			"categories", CategoryIdentifier.class
+			"category", CategoryIdentifier.class
 		).addString(
-			"fileFormat", FileEntry::getMimeType
+			"description", FileEntry::getDescription
+		).addString(
+			"encodingFormat", FileEntry::getMimeType
 		).addString(
 			"headline", FileEntry::getTitle
 		).addString(
 			"name", FileEntry::getFileName
-		).addString(
-			"text", FileEntry::getDescription
 		).addStringList(
 			"keywords", this::_getMediaObjectAssetTags
 		).build();
+	}
+
+	private NestedRepresentor<AdaptiveMedia<AMImageProcessor>>
+		_getAdaptiveMediaNestedRepresentor(
+			NestedRepresentor.Builder<AdaptiveMedia<AMImageProcessor>>
+				builder) {
+
+		return builder.types(
+			"ImageObject", "MediaObject"
+		).addNumber(
+			"height",
+			adaptiveMedia -> _getAdaptiveMediaValue(
+				adaptiveMedia, AMImageAttribute.AM_IMAGE_ATTRIBUTE_HEIGHT)
+		).addNumber(
+			"sizeInBytes",
+			adaptiveMedia -> _getAdaptiveMediaValue(
+				adaptiveMedia, AMAttribute.getContentLengthAMAttribute())
+		).addNumber(
+			"width",
+			adaptiveMedia -> _getAdaptiveMediaValue(
+				adaptiveMedia, AMImageAttribute.AM_IMAGE_ATTRIBUTE_WIDTH)
+		).addRelativeURL(
+			"contentUrl",
+			adaptiveMedia -> String.valueOf(adaptiveMedia.getURI())
+		).addString(
+			"resolutionName",
+			adaptiveMedia -> _getAdaptiveMediaValue(
+				adaptiveMedia, AMAttribute.getConfigurationUuidAMAttribute())
+		).build();
+	}
+
+	private List<AdaptiveMedia<AMImageProcessor>> _getAdaptiveMedias(
+		FileEntry fileEntry) {
+
+		return Try.fromFallible(
+			fileEntry::getMimeType
+		).filter(
+			_amImageMimeTypeProvider::isMimeTypeSupported
+		).map(
+			mimeType -> _amImageFinder.getAdaptiveMediaStream(
+				amImageQueryBuilder -> amImageQueryBuilder.forFileEntry(
+					fileEntry
+				).withConfigurationStatus(
+					AMImageQueryBuilder.ConfigurationStatus.ANY
+				).done()
+			).collect(
+				Collectors.toList()
+			)
+		).orElse(
+			null
+		);
+	}
+
+	private <V> V _getAdaptiveMediaValue(
+		AdaptiveMedia<AMImageProcessor> adaptiveMedia,
+		AMAttribute<AMImageProcessor, V> amAttribute) {
+
+		Optional<V> valueOptional = adaptiveMedia.getValueOptional(amAttribute);
+
+		return valueOptional.orElse(null);
 	}
 
 	private FileEntry _getFileEntry(
@@ -149,7 +219,7 @@ public class MediaObjectNestedCollectionResource
 		List<AssetTag> assetTags = _assetTagLocalService.getTags(
 			DLFileEntry.class.getName(), fileEntry.getFileEntryId());
 
-		return ListUtil.toList(assetTags, AssetTagModel::getName);
+		return ListUtil.toList(assetTags, AssetTag::getName);
 	}
 
 	private PageItems<FileEntry> _getPageItems(
@@ -163,6 +233,12 @@ public class MediaObjectNestedCollectionResource
 
 		return new PageItems<>(fileEntries, count);
 	}
+
+	@Reference
+	private AMImageFinder _amImageFinder;
+
+	@Reference
+	private AMImageMimeTypeProvider _amImageMimeTypeProvider;
 
 	@Reference
 	private AssetTagLocalService _assetTagLocalService;

@@ -601,7 +601,7 @@ public class JenkinsResultsParserUtil {
 		return "";
 	}
 
-	public static File getBaseRepositoryDir() {
+	public static File getBaseGitRepositoryDir() {
 		Properties buildProperties = null;
 
 		try {
@@ -665,11 +665,11 @@ public class JenkinsResultsParserUtil {
 	}
 
 	public static String getGitHubApiUrl(
-		String repositoryName, String username, String path) {
+		String gitRepositoryName, String username, String path) {
 
 		return combine(
-			"https://api.github.com/repos/", username, "/", repositoryName, "/",
-			path.replaceFirst("^/*", ""));
+			"https://api.github.com/repos/", username, "/", gitRepositoryName,
+			"/", path.replaceFirst("^/*", ""));
 	}
 
 	public static String getHostName(String defaultHostName) {
@@ -752,15 +752,12 @@ public class JenkinsResultsParserUtil {
 		return Float.parseFloat(matcher.group(1));
 	}
 
-	public static GitWorkingDirectory getJenkinsGitWorkingDirectory()
-		throws IOException {
+	public static GitWorkingDirectory getJenkinsGitWorkingDirectory() {
+		LocalGitRepository localGitRepository =
+			GitRepositoryFactory.getLocalGitRepository(
+				"liferay-jenkins-ee", "master");
 
-		Properties buildProperties = getBuildProperties();
-
-		String workingDirectoryPath = buildProperties.getProperty(
-			"base.repository.dir") + "/liferay-jenkins-ee";
-
-		return new GitWorkingDirectory("master", workingDirectoryPath);
+		return localGitRepository.getGitWorkingDirectory();
 	}
 
 	public static List<JenkinsMaster> getJenkinsMasters(
@@ -972,22 +969,22 @@ public class JenkinsResultsParserUtil {
 	}
 
 	public static PortalGitWorkingDirectory getPortalGitWorkingDirectory(
-			String portalBranchName)
-		throws IOException {
+		String portalBranchName) {
 
-		Properties buildProperties = getBuildProperties();
-
-		String workingDirectoryPath =
-			buildProperties.getProperty("base.repository.dir") +
-				"/liferay-portal";
+		String portalGitRepositoryName = "liferay-portal";
 
 		if (!portalBranchName.equals("master")) {
-			workingDirectoryPath = combine(
-				workingDirectoryPath, "-", portalBranchName);
+			portalGitRepositoryName += "-ee";
 		}
 
-		return new PortalGitWorkingDirectory(
-			portalBranchName, workingDirectoryPath);
+		LocalGitRepository localGitRepository =
+			GitRepositoryFactory.getLocalGitRepository(
+				portalGitRepositoryName, portalBranchName);
+
+		GitWorkingDirectory gitWorkingDirectory =
+			localGitRepository.getGitWorkingDirectory();
+
+		return (PortalGitWorkingDirectory)gitWorkingDirectory;
 	}
 
 	public static Properties getProperties(File... propertiesFiles) {

@@ -142,6 +142,8 @@ public class SharingEntryPersistenceTest {
 
 		newSharingEntry.setClassPK(RandomTestUtil.nextLong());
 
+		newSharingEntry.setShareable(RandomTestUtil.randomBoolean());
+
 		newSharingEntry.setActionIds(RandomTestUtil.nextLong());
 
 		_sharingEntries.add(_persistence.update(newSharingEntry));
@@ -170,6 +172,8 @@ public class SharingEntryPersistenceTest {
 			newSharingEntry.getClassNameId());
 		Assert.assertEquals(existingSharingEntry.getClassPK(),
 			newSharingEntry.getClassPK());
+		Assert.assertEquals(existingSharingEntry.isShareable(),
+			newSharingEntry.isShareable());
 		Assert.assertEquals(existingSharingEntry.getActionIds(),
 			newSharingEntry.getActionIds());
 	}
@@ -239,11 +243,28 @@ public class SharingEntryPersistenceTest {
 	}
 
 	@Test
+	public void testCountByFU_C_C() throws Exception {
+		_persistence.countByFU_C_C(RandomTestUtil.nextLong(),
+			RandomTestUtil.nextLong(), RandomTestUtil.nextLong());
+
+		_persistence.countByFU_C_C(0L, 0L, 0L);
+	}
+
+	@Test
 	public void testCountByTU_C_C() throws Exception {
 		_persistence.countByTU_C_C(RandomTestUtil.nextLong(),
 			RandomTestUtil.nextLong(), RandomTestUtil.nextLong());
 
 		_persistence.countByTU_C_C(0L, 0L, 0L);
+	}
+
+	@Test
+	public void testCountByFU_TU_C_C() throws Exception {
+		_persistence.countByFU_TU_C_C(RandomTestUtil.nextLong(),
+			RandomTestUtil.nextLong(), RandomTestUtil.nextLong(),
+			RandomTestUtil.nextLong());
+
+		_persistence.countByFU_TU_C_C(0L, 0L, 0L, 0L);
 	}
 
 	@Test
@@ -273,7 +294,7 @@ public class SharingEntryPersistenceTest {
 			true, "sharingEntryId", true, "groupId", true, "companyId", true,
 			"createDate", true, "modifiedDate", true, "fromUserId", true,
 			"toUserId", true, "classNameId", true, "classPK", true,
-			"actionIds", true);
+			"shareable", true, "actionIds", true);
 	}
 
 	@Test
@@ -485,6 +506,9 @@ public class SharingEntryPersistenceTest {
 			ReflectionTestUtil.<Long>invoke(existingSharingEntry,
 				"getOriginalGroupId", new Class<?>[0]));
 
+		Assert.assertEquals(Long.valueOf(existingSharingEntry.getFromUserId()),
+			ReflectionTestUtil.<Long>invoke(existingSharingEntry,
+				"getOriginalFromUserId", new Class<?>[0]));
 		Assert.assertEquals(Long.valueOf(existingSharingEntry.getToUserId()),
 			ReflectionTestUtil.<Long>invoke(existingSharingEntry,
 				"getOriginalToUserId", new Class<?>[0]));
@@ -518,6 +542,8 @@ public class SharingEntryPersistenceTest {
 		sharingEntry.setClassNameId(RandomTestUtil.nextLong());
 
 		sharingEntry.setClassPK(RandomTestUtil.nextLong());
+
+		sharingEntry.setShareable(RandomTestUtil.randomBoolean());
 
 		sharingEntry.setActionIds(RandomTestUtil.nextLong());
 

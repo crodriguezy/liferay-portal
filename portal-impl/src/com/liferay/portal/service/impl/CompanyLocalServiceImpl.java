@@ -427,7 +427,7 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 
 			// Default admin
 
-			if (userPersistence.countByCompanyId(companyId) == 1) {
+			if (userPersistence.countByCompanyId(companyId) == 0) {
 				String emailAddress =
 					PropsValues.DEFAULT_ADMIN_EMAIL_ADDRESS_PREFIX + "@" + mx;
 
@@ -1529,12 +1529,7 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 	}
 
 	protected void preregisterCompany(long companyId) {
-		PortalInstanceLifecycleManager portalInstanceLifecycleManager =
-			_serviceTracker.getService();
-
-		if (portalInstanceLifecycleManager != null) {
-			portalInstanceLifecycleManager.preregisterCompany(companyId);
-		}
+		SearchEngineHelperUtil.initialize(companyId);
 	}
 
 	protected void registerCompany(Company company) {

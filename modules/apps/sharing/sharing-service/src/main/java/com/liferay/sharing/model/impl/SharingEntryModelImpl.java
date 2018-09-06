@@ -21,8 +21,11 @@ import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 
 import com.liferay.exportimport.kernel.lar.StagedModelType;
 
+import com.liferay.petra.string.StringBundler;
+
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.model.ModelWrapper;
 import com.liferay.portal.kernel.model.User;
@@ -32,18 +35,20 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
 
 import com.liferay.sharing.model.SharingEntry;
 import com.liferay.sharing.model.SharingEntryModel;
+import com.liferay.sharing.model.SharingEntrySoap;
 
 import java.io.Serializable;
 
 import java.sql.Types;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,6 +64,7 @@ import java.util.Map;
  * @see SharingEntryModel
  * @generated
  */
+@JSON(strict = true)
 @ProviderType
 public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 	implements SharingEntryModel {
@@ -79,6 +85,7 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 			{ "toUserId", Types.BIGINT },
 			{ "classNameId", Types.BIGINT },
 			{ "classPK", Types.BIGINT },
+			{ "shareable", Types.BOOLEAN },
 			{ "actionIds", Types.BIGINT }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
@@ -94,10 +101,11 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 		TABLE_COLUMNS_MAP.put("toUserId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("classNameId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("classPK", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("shareable", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("actionIds", Types.BIGINT);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table SharingEntry (uuid_ VARCHAR(75) null,sharingEntryId LONG not null primary key,groupId LONG,companyId LONG,createDate DATE null,modifiedDate DATE null,fromUserId LONG,toUserId LONG,classNameId LONG,classPK LONG,actionIds LONG)";
+	public static final String TABLE_SQL_CREATE = "create table SharingEntry (uuid_ VARCHAR(75) null,sharingEntryId LONG not null primary key,groupId LONG,companyId LONG,createDate DATE null,modifiedDate DATE null,fromUserId LONG,toUserId LONG,classNameId LONG,classPK LONG,shareable BOOLEAN,actionIds LONG)";
 	public static final String TABLE_SQL_DROP = "drop table SharingEntry";
 	public static final String ORDER_BY_JPQL = " ORDER BY sharingEntry.sharingEntryId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY SharingEntry.sharingEntryId ASC";
@@ -121,6 +129,56 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 	public static final long TOUSERID_COLUMN_BITMASK = 32L;
 	public static final long UUID_COLUMN_BITMASK = 64L;
 	public static final long SHARINGENTRYID_COLUMN_BITMASK = 128L;
+
+	/**
+	 * Converts the soap model instance into a normal model instance.
+	 *
+	 * @param soapModel the soap model instance to convert
+	 * @return the normal model instance
+	 */
+	public static SharingEntry toModel(SharingEntrySoap soapModel) {
+		if (soapModel == null) {
+			return null;
+		}
+
+		SharingEntry model = new SharingEntryImpl();
+
+		model.setUuid(soapModel.getUuid());
+		model.setSharingEntryId(soapModel.getSharingEntryId());
+		model.setGroupId(soapModel.getGroupId());
+		model.setCompanyId(soapModel.getCompanyId());
+		model.setCreateDate(soapModel.getCreateDate());
+		model.setModifiedDate(soapModel.getModifiedDate());
+		model.setFromUserId(soapModel.getFromUserId());
+		model.setToUserId(soapModel.getToUserId());
+		model.setClassNameId(soapModel.getClassNameId());
+		model.setClassPK(soapModel.getClassPK());
+		model.setShareable(soapModel.isShareable());
+		model.setActionIds(soapModel.getActionIds());
+
+		return model;
+	}
+
+	/**
+	 * Converts the soap model instances into normal model instances.
+	 *
+	 * @param soapModels the soap model instances to convert
+	 * @return the normal model instances
+	 */
+	public static List<SharingEntry> toModels(SharingEntrySoap[] soapModels) {
+		if (soapModels == null) {
+			return null;
+		}
+
+		List<SharingEntry> models = new ArrayList<SharingEntry>(soapModels.length);
+
+		for (SharingEntrySoap soapModel : soapModels) {
+			models.add(toModel(soapModel));
+		}
+
+		return models;
+	}
+
 	public static final long LOCK_EXPIRATION_TIME = GetterUtil.getLong(com.liferay.sharing.service.util.ServiceProps.get(
 				"lock.expiration.time.com.liferay.sharing.model.SharingEntry"));
 
@@ -171,6 +229,7 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 		attributes.put("toUserId", getToUserId());
 		attributes.put("classNameId", getClassNameId());
 		attributes.put("classPK", getClassPK());
+		attributes.put("shareable", isShareable());
 		attributes.put("actionIds", getActionIds());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
@@ -241,6 +300,12 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 			setClassPK(classPK);
 		}
 
+		Boolean shareable = (Boolean)attributes.get("shareable");
+
+		if (shareable != null) {
+			setShareable(shareable);
+		}
+
 		Long actionIds = (Long)attributes.get("actionIds");
 
 		if (actionIds != null) {
@@ -248,6 +313,7 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 		}
 	}
 
+	@JSON
 	@Override
 	public String getUuid() {
 		if (_uuid == null) {
@@ -271,6 +337,7 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 		return GetterUtil.getString(_originalUuid);
 	}
 
+	@JSON
 	@Override
 	public long getSharingEntryId() {
 		return _sharingEntryId;
@@ -281,6 +348,7 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 		_sharingEntryId = sharingEntryId;
 	}
 
+	@JSON
 	@Override
 	public long getGroupId() {
 		return _groupId;
@@ -303,6 +371,7 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 		return _originalGroupId;
 	}
 
+	@JSON
 	@Override
 	public long getCompanyId() {
 		return _companyId;
@@ -325,6 +394,7 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 		return _originalCompanyId;
 	}
 
+	@JSON
 	@Override
 	public Date getCreateDate() {
 		return _createDate;
@@ -335,6 +405,7 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 		_createDate = createDate;
 	}
 
+	@JSON
 	@Override
 	public Date getModifiedDate() {
 		return _modifiedDate;
@@ -351,6 +422,7 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 		_modifiedDate = modifiedDate;
 	}
 
+	@JSON
 	@Override
 	public long getFromUserId() {
 		return _fromUserId;
@@ -389,6 +461,7 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 		return _originalFromUserId;
 	}
 
+	@JSON
 	@Override
 	public long getToUserId() {
 		return _toUserId;
@@ -447,6 +520,7 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 		setClassNameId(classNameId);
 	}
 
+	@JSON
 	@Override
 	public long getClassNameId() {
 		return _classNameId;
@@ -469,6 +543,7 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 		return _originalClassNameId;
 	}
 
+	@JSON
 	@Override
 	public long getClassPK() {
 		return _classPK;
@@ -491,6 +566,24 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 		return _originalClassPK;
 	}
 
+	@JSON
+	@Override
+	public boolean getShareable() {
+		return _shareable;
+	}
+
+	@JSON
+	@Override
+	public boolean isShareable() {
+		return _shareable;
+	}
+
+	@Override
+	public void setShareable(boolean shareable) {
+		_shareable = shareable;
+	}
+
+	@JSON
 	@Override
 	public long getActionIds() {
 		return _actionIds;
@@ -548,6 +641,7 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 		sharingEntryImpl.setToUserId(getToUserId());
 		sharingEntryImpl.setClassNameId(getClassNameId());
 		sharingEntryImpl.setClassPK(getClassPK());
+		sharingEntryImpl.setShareable(isShareable());
 		sharingEntryImpl.setActionIds(getActionIds());
 
 		sharingEntryImpl.resetOriginalValues();
@@ -686,6 +780,8 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 
 		sharingEntryCacheModel.classPK = getClassPK();
 
+		sharingEntryCacheModel.shareable = isShareable();
+
 		sharingEntryCacheModel.actionIds = getActionIds();
 
 		return sharingEntryCacheModel;
@@ -693,7 +789,7 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(23);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -715,6 +811,8 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 		sb.append(getClassNameId());
 		sb.append(", classPK=");
 		sb.append(getClassPK());
+		sb.append(", shareable=");
+		sb.append(isShareable());
 		sb.append(", actionIds=");
 		sb.append(getActionIds());
 		sb.append("}");
@@ -724,7 +822,7 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(37);
+		StringBundler sb = new StringBundler(40);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.sharing.model.SharingEntry");
@@ -771,6 +869,10 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 		sb.append(getClassPK());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>shareable</column-name><column-value><![CDATA[");
+		sb.append(isShareable());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>actionIds</column-name><column-value><![CDATA[");
 		sb.append(getActionIds());
 		sb.append("]]></column-value></column>");
@@ -808,6 +910,7 @@ public class SharingEntryModelImpl extends BaseModelImpl<SharingEntry>
 	private long _classPK;
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
+	private boolean _shareable;
 	private long _actionIds;
 	private long _columnBitmask;
 	private SharingEntry _escapedModel;

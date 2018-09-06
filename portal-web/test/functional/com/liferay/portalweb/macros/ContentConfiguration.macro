@@ -3,14 +3,12 @@
 		<for list="${checkContentNameList}" param="contentName">
 			<var name="key_contentName" value="${contentName}" />
 
-			<execute function="Click" locator1="PagesConfiguration#CONTENT_CHOOSE_CONTENT_CHECKBOX_LABEL" />
+			<execute function="Check#checkToggleSwitch" locator1="PagesConfiguration#CONTENT_CHOOSE_CONTENT_CHECKBOX_LABEL" />
 		</for>
 	</command>
 
 	<command name="checkPageName">
-		<execute function="Click" locator1="PagesConfiguration#PAGES_ALL_PUBLIC_PAGES_CHECKBOX" />
-
-		<execute function="Click" locator1="PagesConfiguration#PAGES_ALL_PUBLIC_PAGES_CHECKBOX" />
+		<execute macro="ContentConfiguration#uncheckPages" />
 
 		<for list="${checkPageName}" param="pageName">
 			<var name="key_pageName" value="${pageName}" />
@@ -124,9 +122,13 @@
 		<execute function="Click" locator1="Checkbox#PERMISSIONS" />
 	</command>
 
+	<command name="setTitle">
+		<execute function="Type" locator1="StagingPublishToLive#PUBLICATION_TITLE" value1="${publicationTitle}" />
+	</command>
+
 	<command name="uncheckContentNameList">
 		<for list="${uncheckContentNameList}" param="contentName">
-			<execute function="Click" locator1="PagesConfiguration#CONTENT_CHOOSE_CONTENT_CHECKBOX_LABEL">
+			<execute function="Uncheck#uncheckToggleSwitch" locator1="PagesConfiguration#CONTENT_CHOOSE_CONTENT_CHECKBOX_LABEL">
 				<var name="key_contentName" value="${contentName}" />
 			</execute>
 		</for>
@@ -134,6 +136,12 @@
 
 	<command name="uncheckLogo">
 		<execute function="Click" locator1="PagesConfiguration#PAGES_LOGO_CHECKBOX" />
+	</command>
+
+	<command name="uncheckPages">
+		<execute function="Click" locator1="PagesConfiguration#PAGES_ALL_PUBLIC_PAGES_CHECKBOX" />
+
+		<execute function="Click" locator1="PagesConfiguration#PAGES_ALL_PUBLIC_PAGES_CHECKBOX" />
 	</command>
 
 	<command name="uncheckSitePagesSettings">
@@ -145,11 +153,9 @@
 	</command>
 
 	<command name="uncheckSubContent">
-		<execute function="SelectFrame" value1="relative=top" />
-
 		<var name="key_contentName" value="${mainContent}" />
 
-		<execute function="AssertClick" locator1="ExportImport#CONTENT_CHOOSE_CONTENT_CONTENT_CHANGE_LINK" value1="Change" />
+		<execute function="Click" locator1="ExportImport#CONTENT_CHOOSE_CONTENT_CONTENT_CHANGE_LINK" />
 
 		<var name="key_subContent" value="${uncheckSubContent}" />
 

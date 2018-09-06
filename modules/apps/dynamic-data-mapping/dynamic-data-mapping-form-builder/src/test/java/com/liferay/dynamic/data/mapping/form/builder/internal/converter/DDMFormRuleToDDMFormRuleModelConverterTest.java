@@ -20,6 +20,7 @@ import com.liferay.dynamic.data.mapping.form.builder.internal.converter.serializ
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.storage.FieldConstants;
+import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.json.JSONFactoryImpl;
@@ -28,7 +29,6 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.lang.reflect.Field;
@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -306,7 +305,7 @@ public class DDMFormRuleToDDMFormRuleModelConverterTest
 			expectedParametersExpressionMap.size(),
 			actualParametersExpressionMap.size());
 
-		for (Entry<String, String> expectedParameterExpression :
+		for (Map.Entry<String, String> expectedParameterExpression :
 				expectedParametersExpressionMap.entrySet()) {
 
 			String expectedParameterName = expectedParameterExpression.getKey();

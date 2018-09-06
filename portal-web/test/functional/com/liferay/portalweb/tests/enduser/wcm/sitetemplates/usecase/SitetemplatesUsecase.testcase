@@ -13,7 +13,7 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		<var method="PropsUtil#get('test.portal.instance')" name="testPortalInstance" />
 
 		<if>
 			<equals arg1="${testPortalInstance}" arg2="true" />
@@ -87,6 +87,11 @@
 		<execute macro="Site#addSiteTemplateCP">
 			<var name="siteName" value="Site Name" />
 			<var name="siteTemplateName" value="Site Template Name" />
+		</execute>
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Home" />
+			<var name="siteName" value="Site Name" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoPortlet">
@@ -172,7 +177,7 @@
 		<description message="This is a use case for LPS-81629" />
 
 		<execute macro="TestCase#getSiteName">
-			<return from="siteName" name="siteName" />
+			<return name="siteName" />
 			<var name="siteName" value="${siteName}" />
 		</execute>
 
@@ -325,7 +330,7 @@
 
 	<command name="SitesDynamicTemplateInheritance" priority="4">
 		<execute macro="TestCase#getSiteName">
-			<return from="siteName" name="siteName" />
+			<return name="siteName" />
 			<var name="siteName" value="${siteName}" />
 		</execute>
 
@@ -440,7 +445,7 @@
 
 	<command name="SitesTemplateResourceInheritance" priority="3">
 		<execute macro="TestCase#getSiteName">
-			<return from="siteName" name="siteName" />
+			<return name="siteName" />
 			<var name="siteName" value="${siteName}" />
 		</execute>
 
@@ -563,7 +568,7 @@
 
 	<command name="ViewInlineGuestPermissionsInSiteTemplatesViaWCD" priority="3">
 		<execute macro="TestCase#getSiteName">
-			<return from="siteName" name="siteName" />
+			<return name="siteName" />
 			<var name="siteName" value="${siteName}" />
 		</execute>
 

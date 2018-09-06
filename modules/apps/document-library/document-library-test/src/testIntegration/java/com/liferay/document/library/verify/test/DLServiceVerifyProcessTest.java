@@ -29,8 +29,9 @@ import com.liferay.document.library.kernel.service.DLFileEntryMetadataLocalServi
 import com.liferay.document.library.kernel.service.DLFileEntryTypeLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.document.library.kernel.service.DLTrashServiceUtil;
-import com.liferay.document.library.kernel.util.DLValidator;
-import com.liferay.dynamic.data.mapping.io.DDMFormXSDDeserializer;
+import com.liferay.dynamic.data.mapping.io.DDMFormDeserializer;
+import com.liferay.dynamic.data.mapping.io.DDMFormDeserializerDeserializeRequest;
+import com.liferay.dynamic.data.mapping.io.DDMFormDeserializerDeserializeResponse;
 import com.liferay.dynamic.data.mapping.kernel.DDMForm;
 import com.liferay.dynamic.data.mapping.kernel.DDMFormField;
 import com.liferay.dynamic.data.mapping.kernel.DDMFormFieldValue;
@@ -403,8 +404,16 @@ public class DLServiceVerifyProcessTest extends BaseVerifyProcessTestCase {
 			"/com/liferay/document/library/service/test/dependencies" +
 				"/ddmstructure.xml");
 
+		DDMFormDeserializerDeserializeRequest.Builder builder =
+			DDMFormDeserializerDeserializeRequest.Builder.newBuilder(
+				new String(bytes));
+
+		DDMFormDeserializerDeserializeResponse
+			ddmFormDeserializerDeserializeResponse =
+				_ddmFormDeserializer.deserialize(builder.build());
+
 		com.liferay.dynamic.data.mapping.model.DDMForm ddmForm =
-			_ddmFormXSDDeserializer.deserialize(new String(bytes));
+			ddmFormDeserializerDeserializeResponse.getDDMForm();
 
 		serviceContext.setAttribute(
 			"ddmForm", DDMBeanTranslatorUtil.translate(ddmForm));
@@ -501,19 +510,18 @@ public class DLServiceVerifyProcessTest extends BaseVerifyProcessTestCase {
 		dictionary.put(key, value);
 
 		return new ConfigurationTemporarySwapper(
-			DLValidator.class,
 			"com.liferay.document.library.configuration.DLConfiguration",
 			dictionary);
 	}
-
-	@Inject
-	private static DDMFormXSDDeserializer _ddmFormXSDDeserializer;
 
 	@Inject(
 		filter = "verify.process.name=com.liferay.document.library.service",
 		type = VerifyProcess.class
 	)
 	private static VerifyProcess _verifyProcess;
+
+	@Inject(filter = "ddm.form.deserializer.type=xsd")
+	private DDMFormDeserializer _ddmFormDeserializer;
 
 	@DeleteAfterTestRun
 	private Group _group;

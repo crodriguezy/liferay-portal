@@ -19,19 +19,16 @@ package com.liferay.jenkins.results.parser;
  */
 public class BuildRunnerFactory {
 
-	public static BatchBuildRunner newBatchBuildRunner(
-		Job job, String batchName) {
-
-		if (batchName.contains("functional")) {
-			return new FunctionalPortalBatchBuildRunner(job, batchName);
+	public static BuildRunner newBuildRunner(BuildData buildData) {
+		if (buildData instanceof PortalBatchBuildData) {
+			return new PortalBatchBuildRunner((PortalBatchBuildData)buildData);
 		}
-		else if (batchName.contains("integration") ||
-				 batchName.contains("unit")) {
-
-			return new JunitPortalBatchBuildRunner(job, batchName);
+		else if (buildData instanceof PortalTopLevelBuildData) {
+			return new PortalTopLevelBuildRunner(
+				(PortalTopLevelBuildData)buildData);
 		}
 
-		return new PortalBatchBuildRunner(job, batchName);
+		throw new RuntimeException("Invalid build data " + buildData);
 	}
 
 }

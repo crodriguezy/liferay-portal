@@ -39,21 +39,6 @@ import org.json.JSONObject;
  */
 public class PortalGitWorkingDirectory extends GitWorkingDirectory {
 
-	public PortalGitWorkingDirectory(
-			String upstreamBranchName, String workingDirectoryPath)
-		throws IOException {
-
-		super(upstreamBranchName, workingDirectoryPath);
-	}
-
-	public PortalGitWorkingDirectory(
-			String upstreamBranchName, String workingDirectoryPath,
-			String repositoryName)
-		throws IOException {
-
-		super(upstreamBranchName, workingDirectoryPath, repositoryName);
-	}
-
 	public List<File> getModifiedModuleDirsList() throws IOException {
 		return getModifiedModuleDirsList(null, null);
 	}
@@ -242,30 +227,45 @@ public class PortalGitWorkingDirectory extends GitWorkingDirectory {
 		return npmModuleDirsList;
 	}
 
-	@Override
-	protected void setUpstreamRemoteToPrivateRepository() {
-		Remote upstreamRemote = getUpstreamRemote();
+	protected PortalGitWorkingDirectory(
+			String upstreamBranchName, String workingDirectoryPath)
+		throws IOException {
 
-		String remoteURL = upstreamRemote.getRemoteURL();
+		super(upstreamBranchName, workingDirectoryPath);
+	}
+
+	protected PortalGitWorkingDirectory(
+			String upstreamBranchName, String workingDirectoryPath,
+			String gitRepositoryName)
+		throws IOException {
+
+		super(upstreamBranchName, workingDirectoryPath, gitRepositoryName);
+	}
+
+	@Override
+	protected void setUpstreamGitRemoteToPrivateGitRepository() {
+		GitRemote upstreamGitRemote = getUpstreamGitRemote();
+
+		String remoteURL = upstreamGitRemote.getRemoteURL();
 
 		if (!remoteURL.contains("-ee")) {
 			remoteURL = remoteURL.replace(".git", "-ee.git");
 		}
 
-		addRemote(true, "upstream-temp", remoteURL);
+		addGitRemote(true, "upstream-temp", remoteURL);
 	}
 
 	@Override
-	protected void setUpstreamRemoteToPublicRepository() {
-		Remote upstreamRemote = getUpstreamRemote();
+	protected void setUpstreamGitRemoteToPublicGitRepository() {
+		GitRemote upstreamGitRemote = getUpstreamGitRemote();
 
-		String remoteURL = upstreamRemote.getRemoteURL();
+		String remoteURL = upstreamGitRemote.getRemoteURL();
 
 		if (remoteURL.contains("-ee")) {
 			remoteURL = remoteURL.replace("-ee", "");
 		}
 
-		addRemote(true, "upstream-temp", remoteURL);
+		addGitRemote(true, "upstream-temp", remoteURL);
 	}
 
 	private boolean _isNPMTestModuleDir(File moduleDir) {

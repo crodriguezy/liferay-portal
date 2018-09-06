@@ -25,12 +25,11 @@ import com.liferay.apio.architect.representor.Representor;
 import com.liferay.apio.architect.resource.NestedCollectionResource;
 import com.liferay.apio.architect.routes.ItemRoutes;
 import com.liferay.apio.architect.routes.NestedCollectionRoutes;
+import com.liferay.document.library.kernel.service.DLAppService;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
-import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecord;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecordVersion;
-import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecordVersionModel;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceRecordService;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceService;
@@ -43,11 +42,14 @@ import com.liferay.forms.apio.internal.architect.locale.AcceptLocale;
 import com.liferay.forms.apio.internal.helper.UploadFileHelper;
 import com.liferay.forms.apio.internal.model.ServiceContextWrapper;
 import com.liferay.forms.apio.internal.util.FormInstanceRecordResourceUtil;
+import com.liferay.media.object.apio.architect.identifier.MediaObjectIdentifier;
 import com.liferay.person.apio.architect.identifier.PersonIdentifier;
 import com.liferay.portal.apio.permission.HasPermission;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.structured.content.apio.architect.util.StructuredContentUtil;
 
 import java.util.List;
 
@@ -63,8 +65,9 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(immediate = true)
 public class FormInstanceRecordNestedCollectionResource
-	implements NestedCollectionResource<DDMFormInstanceRecord, Long,
-		FormInstanceRecordIdentifier, Long, FormInstanceIdentifier> {
+	implements NestedCollectionResource
+		<DDMFormInstanceRecord, Long, FormInstanceRecordIdentifier, Long,
+			FormInstanceIdentifier> {
 
 	@Override
 	public NestedCollectionRoutes<DDMFormInstanceRecord, Long, Long>
@@ -77,7 +80,7 @@ public class FormInstanceRecordNestedCollectionResource
 		).addCreator(
 			this::_addFormInstanceRecord, AcceptLocale.class,
 			ServiceContextWrapper.class,
-			_hasPermission.forAddingIn(FormInstanceIdentifier.class),
+			_hasPermission.forAddingIn(FormInstanceRecordIdentifier.class),
 			FormInstanceRecordForm::buildForm
 		).build();
 	}
@@ -127,12 +130,24 @@ public class FormInstanceRecordNestedCollectionResource
 				"creator", PersonIdentifier.class,
 				DDMFormInstanceRecordVersion::getUserId
 			).addString(
-				"name", DDMFormInstanceRecordVersionModel::getVersion
+				"name", DDMFormInstanceRecordVersion::getVersion
 			).build()
 		).addNestedList(
 			"fieldValues", this::_getFieldValues,
 			fieldValuesBuilder -> fieldValuesBuilder.types(
 				"FormFieldValue"
+			).addLinkedModel(
+				"mediaObject", MediaObjectIdentifier.class,
+				ddmFormFieldValue -> Try.fromFallible(
+					ddmFormFieldValue::getValue
+				).map(
+					value -> value.getString(LocaleUtil.getDefault())
+				).map(
+					string -> StructuredContentUtil.getFileEntryId(
+						string, _dlAppService)
+				).orElse(
+					null
+				)
 			).addLocalizedStringByLocale(
 				"value", getLocalizedString(DDMFormFieldValue::getValue)
 			).addString(
@@ -155,14 +170,12 @@ public class FormInstanceRecordNestedCollectionResource
 
 		DDMForm ddmForm = ddmStructure.getDDMForm();
 
-		List<DDMFormField> ddmFormFields = ddmForm.getDDMFormFields();
-
 		DDMFormValues ddmFormValues = getDDMFormValues(
-			formInstanceRecordForm.getFieldValues(), ddmStructure.getDDMForm(),
+			formInstanceRecordForm.getFieldValues(), ddmForm,
 			acceptLocale.get());
 
 		_uploadFileHelper.linkFiles(
-			ddmFormFields, ddmFormValues.getDDMFormFieldValues());
+			ddmForm.getDDMFormFields(), ddmFormValues.getDDMFormFieldValues());
 
 		ServiceContext serviceContext = calculateServiceContextAttributes(
 			serviceContextWrapper, formInstanceRecordForm.isDraft());
@@ -215,9 +228,14 @@ public class FormInstanceRecordNestedCollectionResource
 
 		DDMStructure ddmStructure = ddmFormInstance.getStructure();
 
+		DDMForm ddmForm = ddmStructure.getDDMForm();
+
 		DDMFormValues ddmFormValues = getDDMFormValues(
-			formInstanceRecordForm.getFieldValues(), ddmStructure.getDDMForm(),
+			formInstanceRecordForm.getFieldValues(), ddmForm,
 			acceptLocale.get());
+
+		_uploadFileHelper.linkFiles(
+			ddmForm.getDDMFormFields(), ddmFormValues.getDDMFormFieldValues());
 
 		ServiceContext serviceContext = calculateServiceContextAttributes(
 			serviceContextWrapper, formInstanceRecordForm.isDraft());
@@ -231,6 +249,9 @@ public class FormInstanceRecordNestedCollectionResource
 
 	@Reference
 	private DDMFormInstanceService _ddmFormInstanceService;
+
+	@Reference
+	private DLAppService _dlAppService;
 
 	@Reference(
 		target = "(model.class.name=com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecord)"

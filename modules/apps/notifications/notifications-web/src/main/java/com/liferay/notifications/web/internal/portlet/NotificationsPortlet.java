@@ -55,7 +55,7 @@ import org.osgi.service.component.annotations.Reference;
 		"javax.portlet.display-name=Notifications",
 		"javax.portlet.expiration-cache=0",
 		"javax.portlet.init-param.add-process-action-success-action=false",
-		"javax.portlet.init-param.template-path=/",
+		"javax.portlet.init-param.template-path=/META-INF/resources/",
 		"javax.portlet.init-param.view-template=/notifications/view.jsp",
 		"javax.portlet.name=" + NotificationsPortletKeys.NOTIFICATIONS,
 		"javax.portlet.resource-bundle=content.Language",
@@ -75,8 +75,14 @@ public class NotificationsPortlet extends MVCPortlet {
 
 		for (long userNotificationEventId : userNotificationEventIds) {
 			try {
-				_userNotificationEventLocalService.deleteUserNotificationEvent(
-					userNotificationEventId);
+				UserNotificationEvent userNotificationEvent =
+					_userNotificationEventLocalService.
+						fetchUserNotificationEvent(userNotificationEventId);
+
+				if (userNotificationEvent != null) {
+					_userNotificationEventLocalService.
+						deleteUserNotificationEvent(userNotificationEvent);
+				}
 			}
 			catch (Exception e) {
 				throw new PortletException(e);

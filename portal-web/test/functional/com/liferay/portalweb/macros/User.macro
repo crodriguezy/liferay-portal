@@ -2,6 +2,15 @@
 	<var name="password" value="test" />
 	<var name="userEmailAddress" value="test@liferay.com" />
 
+	<command name="_login">
+		<execute function="AssertClick" locator1="UserBar#USER_SIGN_IN" value1="Sign In" />
+
+		<execute function="Type" locator1="TextInput#EMAIL_ADDRESS" value1="${userEmailAddress}" />
+		<execute function="Type" locator1="TextInput#PASSWORD" value1="${password}" />
+
+		<execute function="Click" locator1="Button#SIGN_IN" />
+	</command>
+
 	<command name="acceptEndUserLicenseAgreement">
 		<if>
 			<condition function="IsElementPresent" locator1="Button#I_AGREE" value1="I Agree" />
@@ -16,8 +25,8 @@
 	<command name="activateCP">
 		<execute function="Click" locator1="Dropdown#FILTER_AND_ORDER" />
 
-		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Inactive">
-			<var name="key_menuItem" value="Inactive" />
+		<execute macro="MenuItem#click">
+			<var name="menuItem" value="Inactive" />
 		</execute>
 
 		<execute macro="LexiconEntry#gotoEntryMenuItem">
@@ -166,7 +175,7 @@
 			<elseif>
 				<equals arg1="${userScreenNameVariation}" arg2="Invalid" />
 				<then>
-					<execute function="AssertTextEquals" locator1="Message#ERROR_1" value1="The screen name cannot be an email address or a reserved word, such as postfix. It must contain only alphanumeric or the following special characters: -._." />
+					<execute function="AssertTextEquals" locator1="Message#ERROR_FORM_VALIDATION" value1="The screen name cannot be an email address or a reserved word, such as postfix. It must contain only alphanumeric or the following special characters: -._." />
 				</then>
 			</elseif>
 			<else>
@@ -782,8 +791,8 @@
 			<else>
 				<execute function="Click" locator1="ContentRow#ENTRY_CONTENT_ENTRY_ELLIPSIS" />
 
-				<execute function="AssertElementNotPresent" locator1="MenuItem#ANY_MENU_ITEM">
-					<var name="key_menuItem" value="Impersonate User" />
+				<execute macro="MenuItem#viewNotPresent">
+					<var name="menuItem" value="Impersonate User" />
 				</execute>
 			</else>
 		</if>
@@ -958,8 +967,8 @@
 	<command name="deleteCP">
 		<execute function="Click" locator1="Dropdown#FILTER_AND_ORDER" />
 
-		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Inactive">
-			<var name="key_menuItem" value="Inactive" />
+		<execute macro="MenuItem#click">
+			<var name="menuItem" value="Inactive" />
 		</execute>
 
 		<if>
@@ -1070,8 +1079,8 @@
 
 		<execute function="Click" locator1="ContentRow#ENTRY_CONTENT_ENTRY_ELLIPSIS" />
 
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Edit">
-			<var name="key_menuItem" value="Edit" />
+		<execute macro="MenuItem#click">
+			<var name="menuItem" value="Edit" />
 		</execute>
 
 		<execute function="Select" locator1="PortalSettingsDisplaySettings#DEFAULT_LANGUAGE_SELECT" value1="${languageName}" />
@@ -1430,8 +1439,8 @@
 
 		<execute function="Click" locator1="ContentRow#ENTRY_CONTENT_ENTRY_ELLIPSIS" />
 
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Impersonate User">
-			<var name="key_menuItem" value="Impersonate User" />
+		<execute macro="MenuItem#click">
+			<var name="menuItem" value="Impersonate User" />
 		</execute>
 
 		<execute function="SelectWindow" locator1="title=Welcome - ${siteName}" />
@@ -1561,22 +1570,49 @@
 	<command name="loginUserInvalidPG">
 		<execute macro="Navigator#openURL" />
 
-		<execute function="AssertClick" locator1="UserBar#USER_SIGN_IN" value1="Sign In" />
-
-		<execute function="Type" locator1="TextInput#EMAIL_ADDRESS" value1="${userEmailAddress}" />
-		<execute function="Type" locator1="TextInput#PASSWORD" value1="${password}" />
-
-		<execute function="Click" locator1="Button#SIGN_IN" />
+		<var name="count" value="0" />
 
 		<if>
-			<equals arg1="${loginAttempts}" arg2="${maximumFailure}" />
+			<not>
+				<isset var="loginAttempts" />
+			</not>
 			<then>
-				<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_1" value1="This account is locked. Please contact an administrator to have this account unlocked." />
+				<var name="loginAttempts" value="1" />
 			</then>
-			<else>
-				<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_1" value1="Authentication failed. Please try again." />
-			</else>
 		</if>
+
+		<if>
+			<not>
+				<isset var="maxLoginAttempts" />
+			</not>
+			<then>
+				<var name="maxLoginAttempts" value="0" />
+			</then>
+		</if>
+
+		<while>
+			<not>
+				<equals arg1="${count}" arg2="${loginAttempts}" />
+			</not>
+			<then>
+				<var method="MathUtil#sum('${count}', '1')" name="count" />
+
+				<execute macro="User#_login">
+					<var name="password" value="${password}" />
+					<var name="userEmailAddress" value="${userEmailAddress}" />
+				</execute>
+
+				<if>
+					<equals arg1="${count}" arg2="${maximumFailure}" />
+					<then>
+						<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_1" value1="This account is locked. Please contact an administrator to have this account unlocked." />
+					</then>
+					<else>
+						<execute function="AssertTextEquals#assertPartialText" locator1="Message#ERROR_1" value1="Authentication failed. Please try again." />
+					</else>
+				</if>
+			</then>
+		</while>
 	</command>
 
 	<command name="loginUserPG">
@@ -1584,12 +1620,10 @@
 
 		<execute macro="Navigator#openURL" />
 
-		<execute function="AssertClick" locator1="UserBar#USER_SIGN_IN" value1="Sign In" />
-
-		<execute function="Type" locator1="TextInput#EMAIL_ADDRESS" value1="${userEmailAddress}" />
-		<execute function="Type" locator1="TextInput#PASSWORD" value1="${password}" />
-
-		<execute function="Click" locator1="Button#SIGN_IN" />
+		<execute macro="User#_login">
+			<var name="emailAddress" value="${emailAddress}" />
+			<var name="password" value="${password}" />
+		</execute>
 
 		<execute function="AssertElementPresent" locator1="UserBar#USER_AVATAR_IMAGE" />
 	</command>
@@ -2003,8 +2037,8 @@
 
 		<execute function="Click" locator1="Dropdown#FILTER_AND_ORDER" />
 
-		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Active">
-			<var name="key_menuItem" value="Active" />
+		<execute macro="MenuItem#click">
+			<var name="menuItem" value="Active" />
 		</execute>
 
 		<if>
@@ -2022,8 +2056,8 @@
 
 		<execute function="Click" locator1="Dropdown#FILTER_AND_ORDER" />
 
-		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Inactive">
-			<var name="key_menuItem" value="Inactive" />
+		<execute macro="MenuItem#click">
+			<var name="menuItem" value="Inactive" />
 		</execute>
 
 		<if>
@@ -2049,8 +2083,8 @@
 
 		<execute function="Click" locator1="Dropdown#FILTER_AND_ORDER" />
 
-		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Active">
-			<var name="key_menuItem" value="Active" />
+		<execute macro="MenuItem#click">
+			<var name="menuItem" value="Active" />
 		</execute>
 
 		<execute macro="User#searchCP">
@@ -2072,8 +2106,8 @@
 
 		<execute function="Click" locator1="Dropdown#FILTER_AND_ORDER" />
 
-		<execute function="Click" locator1="MenuItem#ANY_MENU_ITEM" value1="Inactive">
-			<var name="key_menuItem" value="Inactive" />
+		<execute macro="MenuItem#click">
+			<var name="menuItem" value="Inactive" />
 		</execute>
 
 		<if>

@@ -273,6 +273,8 @@ public class SourceFormatter {
 		_sourceProcessors.add(new CQLSourceProcessor());
 		_sourceProcessors.add(new CSSSourceProcessor());
 		_sourceProcessors.add(new DockerfileSourceProcessor());
+		_sourceProcessors.add(new DTDSourceProcessor());
+		_sourceProcessors.add(new LFRBuildSourceProcessor());
 		_sourceProcessors.add(new FTLSourceProcessor());
 		_sourceProcessors.add(new GradleSourceProcessor());
 		_sourceProcessors.add(new GroovySourceProcessor());
@@ -694,7 +696,7 @@ public class SourceFormatter {
 		File baseDir = new File(baseDirAbsolutePath);
 
 		for (int i = 0; i < _SUBREPOSITORY_MAX_DIR_LEVEL; i++) {
-			if (!baseDir.exists()) {
+			if ((baseDir == null) || !baseDir.exists()) {
 				return false;
 			}
 

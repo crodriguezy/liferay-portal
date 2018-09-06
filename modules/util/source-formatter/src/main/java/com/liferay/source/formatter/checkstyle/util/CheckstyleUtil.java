@@ -131,7 +131,8 @@ public class CheckstyleUtil {
 		Configuration configuration = ConfigurationLoader.loadConfiguration(
 			new InputSource(
 				classLoader.getResourceAsStream(configurationFileName)),
-			new PropertiesExpander(System.getProperties()), false);
+			new PropertiesExpander(System.getProperties()),
+			ConfigurationLoader.IgnoredModulesOptions.EXECUTE);
 
 		String checkName = sourceFormatterArgs.getCheckName();
 
