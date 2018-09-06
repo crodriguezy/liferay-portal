@@ -14,6 +14,7 @@
 
 package com.liferay.journal.web.asset;
 
+import com.liferay.asset.display.page.constants.AssetDisplayPageConstants;
 import com.liferay.asset.display.page.model.AssetDisplayPageEntry;
 import com.liferay.asset.display.page.service.AssetDisplayPageEntryLocalServiceUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
@@ -93,15 +94,12 @@ public class JournalArticleAssetRenderer
 
 			return article.getPrimaryKey();
 		}
-		else {
-			return article.getResourcePrimKey();
-		}
+
+		return article.getResourcePrimKey();
 	}
 
 	public JournalArticleAssetRenderer(JournalArticle article) {
 		_article = article;
-
-		setJournalServiceConfiguration();
 	}
 
 	public JournalArticle getArticle() {
@@ -160,9 +158,8 @@ public class JournalArticleAssetRenderer
 		if (_journalServiceConfiguration.articleCommentsEnabled()) {
 			return "edit_article_discussion";
 		}
-		else {
-			return null;
-		}
+
+		return null;
 	}
 
 	/**
@@ -273,8 +270,18 @@ public class JournalArticleAssetRenderer
 			LiferayPortletResponse liferayPortletResponse)
 		throws Exception {
 
+		Group group = GroupLocalServiceUtil.fetchGroup(_article.getGroupId());
+
+		if (group.isCompany()) {
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)liferayPortletRequest.getAttribute(
+					WebKeys.THEME_DISPLAY);
+
+			group = themeDisplay.getScopeGroup();
+		}
+
 		PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
-			liferayPortletRequest, JournalPortletKeys.JOURNAL,
+			liferayPortletRequest, group, JournalPortletKeys.JOURNAL, 0, 0,
 			PortletRequest.RENDER_PHASE);
 
 		portletURL.setParameter("mvcPath", "/edit_article.jsp");
@@ -385,19 +392,15 @@ public class JournalArticleAssetRenderer
 
 		Group group = themeDisplay.getScopeGroup();
 
-		LayoutPageTemplateEntry defaultLayoutPageTemplateEntry = null;
+		LayoutPageTemplateEntry defaultLayoutPageTemplateEntry =
+			LayoutPageTemplateEntryServiceUtil.
+				fetchDefaultLayoutPageTemplateEntry(
+					group.getGroupId(), assetEntry.getClassNameId(),
+					assetEntry.getClassTypeId());
 
-		if (assetDisplayPageEntry == null) {
-			defaultLayoutPageTemplateEntry =
-				LayoutPageTemplateEntryServiceUtil.
-					fetchDefaultLayoutPageTemplateEntry(
-						group.getGroupId(), assetEntry.getClassNameId(),
-						assetEntry.getClassTypeId());
-		}
-
-		if ((Validator.isNotNull(_article.getLayoutUuid()) ||
-			 (assetDisplayPageEntry != null) ||
-			 (defaultLayoutPageTemplateEntry != null)) &&
+		if (_isShowDisplayPage(
+				_article, assetDisplayPageEntry,
+				defaultLayoutPageTemplateEntry) &&
 			Validator.isNull(linkToLayoutUuid)) {
 
 			if (group.getGroupId() != _article.getGroupId()) {
@@ -550,11 +553,10 @@ public class JournalArticleAssetRenderer
 				_article.getVersion(), ddmTemplateKey, viewMode, languageId,
 				articlePage, portletRequestModel, themeDisplay);
 		}
-		else {
-			return JournalArticleLocalServiceUtil.getArticleDisplay(
-				_article, ddmTemplateKey, viewMode, languageId, articlePage,
-				portletRequestModel, themeDisplay);
-		}
+
+		return JournalArticleLocalServiceUtil.getArticleDisplay(
+			_article, ddmTemplateKey, viewMode, languageId, articlePage,
+			portletRequestModel, themeDisplay);
 	}
 
 	protected String getHitLayoutURL(
@@ -601,6 +603,28 @@ public class JournalArticleAssetRenderer
 	 */
 	@Deprecated
 	protected void setJournalServiceConfiguration() {
+	}
+
+	private boolean _isShowDisplayPage(
+		JournalArticle article, AssetDisplayPageEntry assetDisplayPageEntry,
+		LayoutPageTemplateEntry defaultAssetDisplayPageEntry) {
+
+		if (Validator.isNull(article.getLayoutUuid()) &&
+			(assetDisplayPageEntry == null)) {
+
+			return false;
+		}
+
+		if ((assetDisplayPageEntry != null) &&
+			(Objects.equals(
+				assetDisplayPageEntry.getType(),
+				AssetDisplayPageConstants.TYPE_SPECIFIC) ||
+			 (defaultAssetDisplayPageEntry != null))) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

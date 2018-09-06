@@ -16,8 +16,7 @@ package com.liferay.talend.runtime.apio.jsonld;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import com.liferay.talend.runtime.apio.constants.HydraConstants.FieldNames;
-import com.liferay.talend.runtime.apio.constants.HydraConstants.FieldTypes;
+import com.liferay.talend.runtime.apio.constants.HydraConstants;
 import com.liferay.talend.runtime.apio.constants.JSONLDConstants;
 import com.liferay.talend.runtime.apio.form.Property;
 
@@ -25,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +42,35 @@ public class ApioUtils {
 	 */
 	public static JsonNode getContextJsonNode(JsonNode jsonNode) {
 		return _findJsonNode(jsonNode, JSONLDConstants.CONTEXT);
+	}
+
+	/**
+	 * Determines the type of the given <code>collection</code> JsonNode
+	 *
+	 * @param  collectionJsonNode
+	 * @return String the managed type of the collection, empty string otherwise
+	 */
+	public static String getManagedType(JsonNode collectionJsonNode) {
+		JsonNode typeJsonNode = collectionJsonNode.path(JSONLDConstants.TYPE);
+
+		if (!hasValueOf(HydraConstants.FieldTypes.COLLECTION, typeJsonNode)) {
+			_log.error(
+				"Unexpected type for the collection: \"{}\"",
+				typeJsonNode.toString());
+
+			throw new NoSuchElementException(
+				"Unable to determine the managed type of the collection");
+		}
+
+		JsonNode managesJsonNode = collectionJsonNode.path(
+			HydraConstants.FieldNames.MANAGES);
+
+		JsonNode typeObjectJsonNode = managesJsonNode.path(
+			HydraConstants.FieldNames.OBJECT);
+
+		String managedType = typeObjectJsonNode.asText();
+
+		return managedType.replaceFirst("schema:", "");
 	}
 
 	/**
@@ -71,7 +100,7 @@ public class ApioUtils {
 
 			String type = typeJsonNode.asText();
 
-			if (!type.equals(FieldTypes.SUPPORTED_PROPERTY)) {
+			if (!type.equals(HydraConstants.FieldTypes.SUPPORTED_PROPERTY)) {
 				if (_log.isDebugEnabled()) {
 					_log.debug(
 						String.format("Skipping unexpected field: %s", type),
@@ -81,10 +110,14 @@ public class ApioUtils {
 				continue;
 			}
 
-			JsonNode propertyNameJsonNode = jsonNode.path(FieldNames.PROPERTY);
-			JsonNode readableJsonNode = jsonNode.path(FieldNames.READABLE);
-			JsonNode requiredJsonNode = jsonNode.path(FieldNames.REQUIRED);
-			JsonNode writableJsonNode = jsonNode.path(FieldNames.WRITEABLE);
+			JsonNode propertyNameJsonNode = jsonNode.path(
+				HydraConstants.FieldNames.PROPERTY);
+			JsonNode readableJsonNode = jsonNode.path(
+				HydraConstants.FieldNames.READABLE);
+			JsonNode requiredJsonNode = jsonNode.path(
+				HydraConstants.FieldNames.REQUIRED);
+			JsonNode writableJsonNode = jsonNode.path(
+				HydraConstants.FieldNames.WRITEABLE);
 
 			try {
 				Property property = new Property(
@@ -154,6 +187,31 @@ public class ApioUtils {
 		JsonNode jsonNode = contextJsonNode.path(JSONLDConstants.VOCAB);
 
 		return jsonNode.asText();
+	}
+
+	public static boolean hasValueOf(String value, JsonNode jsonNode) {
+		if (jsonNode.isArray()) {
+			Iterator<JsonNode> iterator = jsonNode.elements();
+
+			while (iterator.hasNext()) {
+				JsonNode entryJsonNode = iterator.next();
+
+				String entry = entryJsonNode.asText();
+
+				if (entry.equals(value)) {
+					return true;
+				}
+			}
+		}
+		else if (jsonNode.isValueNode()) {
+			String entry = jsonNode.asText();
+
+			if (entry.equals(value)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private static JsonNode _findJsonNode(JsonNode resource, String nodeName) {

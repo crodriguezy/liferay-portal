@@ -279,17 +279,6 @@ public class MainServlet extends ActionServlet {
 		}
 
 		if (_log.isDebugEnabled()) {
-			_log.debug("Initialize server detector");
-		}
-
-		try {
-			initServerDetector();
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-		}
-
-		if (_log.isDebugEnabled()) {
 			_log.debug("Initialize plugin package");
 		}
 
@@ -795,18 +784,16 @@ public class MainServlet extends ActionServlet {
 
 			return false;
 		}
-		else {
-			return true;
-		}
+
+		return true;
 	}
 
 	protected boolean hasThemeDisplay(HttpServletRequest request) {
 		if (request.getAttribute(WebKeys.THEME_DISPLAY) == null) {
 			return false;
 		}
-		else {
-			return true;
-		}
+
+		return true;
 	}
 
 	protected void initCompanies() throws Exception {

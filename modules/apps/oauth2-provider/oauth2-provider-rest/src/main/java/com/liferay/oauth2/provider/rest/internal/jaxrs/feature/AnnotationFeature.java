@@ -20,8 +20,8 @@ import com.liferay.oauth2.provider.scope.RequiresScope;
 import com.liferay.oauth2.provider.scope.ScopeChecker;
 import com.liferay.oauth2.provider.scope.spi.scope.finder.ScopeFinder;
 import com.liferay.petra.reflect.AnnotationLocator;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.util.StringBundler;
 
 import java.lang.reflect.Method;
 
@@ -202,9 +202,8 @@ public class AnnotationFeature implements Feature {
 				if (requiresScope.allNeeded()) {
 					return _scopeChecker.checkAllScopes(requiresScope.value());
 				}
-				else {
-					return _scopeChecker.checkAnyScope(requiresScope.value());
-				}
+
+				return _scopeChecker.checkAnyScope(requiresScope.value());
 			}
 
 			return false;

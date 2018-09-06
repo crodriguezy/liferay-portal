@@ -107,7 +107,6 @@ import com.liferay.portal.kernel.scheduler.SchedulerEngineHelperUtil;
 import com.liferay.portal.kernel.security.auth.HttpPrincipal;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.auth.RemoteAuthException;
-import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
@@ -194,7 +193,6 @@ import org.osgi.service.component.annotations.Reference;
  * @author Zsolt Balogh
  */
 @Component(immediate = true)
-@DoPrivileged
 @ProviderType
 public class StagingImpl implements Staging {
 
@@ -1571,6 +1569,13 @@ public class StagingImpl implements Staging {
 						"during-the-process",
 					new String[] {modelResource, referrerDisplayName}, false);
 			}
+			else if (pde.getType() == PortletDataException.MISSING_REFERENCE) {
+				errorMessage = LanguageUtil.format(
+					locale,
+					"the-x-x-missing-reference-could-not-be-found-during-the-" +
+						"process",
+					new String[] {modelResource, referrerDisplayName}, false);
+			}
 			else if (pde.getType() ==
 						 PortletDataException.PREPARE_MANIFEST_SUMMARY) {
 
@@ -1851,7 +1856,8 @@ public class StagingImpl implements Staging {
 		User user = _userLocalService.fetchUser(userId);
 
 		HttpPrincipal httpPrincipal = new HttpPrincipal(
-			buildRemoteURL(stagingGroup.getTypeSettingsProperties()),
+			_stagingURLHelper.buildRemoteURL(
+				stagingGroup.getTypeSettingsProperties()),
 			user.getLogin(), user.getPassword(), user.isPasswordEncrypted());
 
 		Layout layout = _layoutLocalService.fetchLayout(plid);
@@ -2155,7 +2161,8 @@ public class StagingImpl implements Staging {
 
 		try {
 			HttpPrincipal httpPrincipal = new HttpPrincipal(
-				buildRemoteURL(stagingGroup.getTypeSettingsProperties()),
+				_stagingURLHelper.buildRemoteURL(
+					stagingGroup.getTypeSettingsProperties()),
 				user.getLogin(), user.getPassword(),
 				user.isPasswordEncrypted());
 
@@ -3496,7 +3503,7 @@ public class StagingImpl implements Staging {
 
 		User user = permissionChecker.getUser();
 
-		String remoteURL = buildRemoteURL(
+		String remoteURL = _stagingURLHelper.buildRemoteURL(
 			remoteAddress, remotePort, remotePathContext, secureConnection);
 
 		HttpPrincipal httpPrincipal = new HttpPrincipal(
@@ -3690,9 +3697,8 @@ public class StagingImpl implements Staging {
 			if (tabs1.equals("public-pages")) {
 				return false;
 			}
-			else {
-				return true;
-			}
+
+			return true;
 		}
 
 		return ParamUtil.getBoolean(portletRequest, "privateLayout", true);
@@ -3743,9 +3749,8 @@ public class StagingImpl implements Staging {
 
 				return layoutRevision.getLayoutRevisionId();
 			}
-			else {
-				return 0;
-			}
+
+			return 0;
 		}
 
 		RecentLayoutRevision recentLayoutRevision =
@@ -3943,7 +3948,8 @@ public class StagingImpl implements Staging {
 				targetGroupId = stagingGroup.getRemoteLiveGroupId();
 
 				HttpPrincipal httpPrincipal = new HttpPrincipal(
-					buildRemoteURL(stagingGroup.getTypeSettingsProperties()),
+					_stagingURLHelper.buildRemoteURL(
+						stagingGroup.getTypeSettingsProperties()),
 					user.getLogin(), user.getPassword(),
 					user.isPasswordEncrypted());
 

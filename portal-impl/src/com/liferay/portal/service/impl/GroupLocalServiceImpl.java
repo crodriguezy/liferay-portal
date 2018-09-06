@@ -946,6 +946,9 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			portletPreferencesLocalService.deletePortletPreferences(
 				group.getGroupId(), PortletKeys.PREFS_OWNER_TYPE_GROUP,
 				PortletKeys.PREFS_PLID_SHARED);
+			portletPreferencesLocalService.deletePortletPreferences(
+				group.getGroupId(), PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
+				PortletKeys.PREFS_PLID_SHARED);
 
 			// Repositories
 
@@ -2152,9 +2155,8 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			return search(
 				user.getCompanyId(), null, null, groupParams, start, end);
 		}
-		else {
-			return userPersistence.getGroups(userId, start, end);
-		}
+
+		return userPersistence.getGroups(userId, start, end);
 	}
 
 	/**
@@ -2344,9 +2346,8 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		if (groupPersistence.fetchByLiveGroupId(liveGroupId) != null) {
 			return true;
 		}
-		else {
-			return false;
-		}
+
+		return false;
 	}
 
 	/**
@@ -2381,9 +2382,8 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		if (groupFinder.countByG_U(groupId, userId, inherit) > 0) {
 			return true;
 		}
-		else {
-			return false;
-		}
+
+		return false;
 	}
 
 	@Override
@@ -4598,9 +4598,8 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 			return true;
 		}
-		else {
-			return false;
-		}
+
+		return false;
 	}
 
 	protected boolean isStaging(ServiceContext serviceContext) {

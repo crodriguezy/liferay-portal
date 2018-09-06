@@ -21,6 +21,7 @@ import com.liferay.poshi.runner.logger.XMLLoggerHandler;
 import com.liferay.poshi.runner.selenium.LiferaySeleniumHelper;
 import com.liferay.poshi.runner.selenium.SeleniumUtil;
 import com.liferay.poshi.runner.util.PropsValues;
+import com.liferay.poshi.runner.util.Validator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,6 +73,11 @@ public class PoshiRunner {
 			poshiTestFileIncludes,
 			PoshiRunnerGetterUtil.getCanonicalPath(
 				PropsValues.TEST_BASE_DIR_NAME));
+
+		if (Validator.isNotNull(PropsValues.TEST_SUBREPO_DIRS)) {
+			PoshiRunnerContext.readFiles(
+				poshiTestFileIncludes, PropsValues.TEST_SUBREPO_DIRS);
+		}
 
 		for (String testName : testNames) {
 			PoshiRunnerValidation.validate(testName);
@@ -232,21 +238,9 @@ public class PoshiRunner {
 			String namespacedClassCommandName)
 		throws Exception {
 
-		String className =
-			PoshiRunnerGetterUtil.getClassNameFromNamespacedClassCommandName(
-				namespacedClassCommandName);
 		String namespace =
 			PoshiRunnerGetterUtil.getNamespaceFromNamespacedClassCommandName(
 				namespacedClassCommandName);
-
-		List<Element> varElements = PoshiRunnerContext.getRootVarElements(
-			"test-case", className, namespace);
-
-		for (Element varElement : varElements) {
-			PoshiRunnerExecutor.runRootVarElement(varElement, false);
-		}
-
-		PoshiRunnerVariablesUtil.pushCommandMap();
 
 		String classCommandName =
 			PoshiRunnerGetterUtil.
@@ -262,7 +256,8 @@ public class PoshiRunner {
 
 			XMLLoggerHandler.updateStatus(commandElement, "pending");
 
-			PoshiRunnerExecutor.parseElement(commandElement);
+			PoshiRunnerExecutor.runTestCaseCommandElement(
+				commandElement, namespacedClassCommandName);
 
 			XMLLoggerHandler.updateStatus(commandElement, "pass");
 

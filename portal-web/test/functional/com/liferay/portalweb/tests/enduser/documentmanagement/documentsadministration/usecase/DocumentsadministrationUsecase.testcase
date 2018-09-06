@@ -11,7 +11,7 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		<var method="PropsUtil#get('test.portal.instance')" name="testPortalInstance" />
 
 		<if>
 			<equals arg1="${testPortalInstance}" arg2="true" />
@@ -325,13 +325,7 @@
 	<command name="CannotViewFolderAsSiteMember" priority="5">
 		<property name="testray.component.names" value="Training" />
 
-		<execute macro="ProductMenu#gotoPortlet">
-			<var name="category" value="Users" />
-			<var name="panel" value="Control Panel" />
-			<var name="portlet" value="Users and Organizations" />
-		</execute>
-
-		<execute macro="User#addCP">
+		<execute macro="JSONUser#addUser">
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
@@ -490,13 +484,7 @@
 	<command name="CannotViewMultipleDocumentsAsSiteMember" priority="5">
 		<property name="testray.component.names" value="Training" />
 
-		<execute macro="ProductMenu#gotoPortlet">
-			<var name="category" value="Users" />
-			<var name="panel" value="Control Panel" />
-			<var name="portlet" value="Users and Organizations" />
-		</execute>
-
-		<execute macro="User#addCP">
+		<execute macro="JSONUser#addUser">
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
@@ -576,13 +564,7 @@
 	</command>
 
 	<command name="CheckoutAndCheckin" priority="5">
-		<execute macro="ProductMenu#gotoPortlet">
-			<var name="category" value="Users" />
-			<var name="panel" value="Control Panel" />
-			<var name="portlet" value="Users and Organizations" />
-		</execute>
-
-		<execute macro="User#addCP">
+		<execute macro="JSONUser#addUser">
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
@@ -828,7 +810,7 @@
 		</execute>
 
 		<execute macro="DMDocument#viewDocumentVersionNumberCmdPG">
-			<var name="dmDocumentVersionNumber" value="1.1" />
+			<var name="dmDocumentVersionNumber" value="1.2" />
 		</execute>
 
 		<execute function="AssertTextEquals" locator1="DocumentsAndMediaDocument#DOCUMENT_INFO_WORKFLOW_STATUS" value1="APPROVED" />
@@ -1161,13 +1143,7 @@
 			<var name="roleTitle" value="Regular Role Name" />
 		</execute>
 
-		<execute macro="ProductMenu#gotoPortlet">
-			<var name="category" value="Users" />
-			<var name="panel" value="Control Panel" />
-			<var name="portlet" value="Users and Organizations" />
-		</execute>
-
-		<execute macro="User#addCP">
+		<execute macro="JSONUser#addUser">
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
@@ -1489,7 +1465,7 @@
 		<property name="testray.component.names" value="Training" />
 
 		<execute macro="TestCase#getSiteName">
-			<return from="siteName" name="siteName" />
+			<return name="siteName" />
 			<var name="siteName" value="${siteName}" />
 		</execute>
 
@@ -1581,13 +1557,7 @@
 			</execute>
 		</for>
 
-		<execute macro="ProductMenu#gotoPortlet">
-			<var name="category" value="Users" />
-			<var name="panel" value="Control Panel" />
-			<var name="portlet" value="Users and Organizations" />
-		</execute>
-
-		<execute macro="User#addCP">
+		<execute macro="JSONUser#addUser">
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
@@ -1628,15 +1598,7 @@
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
-		<execute macro="ProductMenu#gotoPortlet">
-			<var name="category" value="Users" />
-			<var name="panel" value="Control Panel" />
-			<var name="portlet" value="Users and Organizations" />
-		</execute>
-
-		<execute function="Pause" locator1="3000" />
-
-		<execute macro="User#addCP">
+		<execute macro="JSONUser#addUser">
 			<var name="userEmailAddress" value="userea2@liferay.com" />
 			<var name="userFirstName" value="userfn2" />
 			<var name="userLastName" value="userln2" />
@@ -2109,8 +2071,8 @@
 			<var name="key_dmDocumentTitle" value="Document Title" />
 		</execute>
 
-		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Edit">
-			<var name="key_menuItem" value="Edit" />
+		<execute macro="MenuItem#click">
+			<var name="menuItem" value="Edit" />
 		</execute>
 
 		<execute macro="Panel#expandPanel">
@@ -2142,13 +2104,7 @@
 	<command name="ViewFolderAsOrganizationUser" priority="5">
 		<property name="testray.component.names" value="Training" />
 
-		<execute macro="ProductMenu#gotoPortlet">
-			<var name="category" value="Users" />
-			<var name="panel" value="Control Panel" />
-			<var name="portlet" value="Users and Organizations" />
-		</execute>
-
-		<execute macro="User#addCP">
+		<execute macro="JSONUser#addUser">
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />

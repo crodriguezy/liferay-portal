@@ -22,7 +22,6 @@ import com.liferay.apio.architect.routes.ItemRoutes;
 import com.liferay.apio.architect.routes.NestedCollectionRoutes;
 import com.liferay.content.space.apio.architect.identifier.ContentSpaceIdentifier;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
-import com.liferay.dynamic.data.mapping.model.DDMStructureModel;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -46,15 +45,17 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component
 public class ContentStructureNestedCollectionResource
-	implements
-		NestedCollectionResource<DDMStructure, Long,
-			ContentStructureIdentifier, Long, ContentSpaceIdentifier> {
+	implements NestedCollectionResource
+		<DDMStructure, Long, ContentStructureIdentifier, Long,
+			ContentSpaceIdentifier> {
 
 	@Override
 	public NestedCollectionRoutes<DDMStructure, Long, Long> collectionRoutes(
 		NestedCollectionRoutes.Builder<DDMStructure, Long, Long> builder) {
 
-		return builder.addGetter(this::_getPageItems).build();
+		return builder.addGetter(
+			this::_getPageItems
+		).build();
 	}
 
 	@Override
@@ -66,7 +67,9 @@ public class ContentStructureNestedCollectionResource
 	public ItemRoutes<DDMStructure, Long> itemRoutes(
 		ItemRoutes.Builder<DDMStructure, Long> builder) {
 
-		return builder.addGetter(this::_getItem).build();
+		return builder.addGetter(
+			this::_getItem
+		).build();
 	}
 
 	@Override
@@ -79,8 +82,8 @@ public class ContentStructureNestedCollectionResource
 
 		Representor.FirstStep<DDMStructure> bidirectionalModelStep =
 			ddmStructureFirstStep.addBidirectionalModel(
-				"interactionService", "contentStructures",
-				ContentSpaceIdentifier.class, DDMStructureModel::getGroupId);
+				"contentSpace", "contentStructures",
+				ContentSpaceIdentifier.class, DDMStructure::getGroupId);
 
 		return bidirectionalModelStep.build();
 	}

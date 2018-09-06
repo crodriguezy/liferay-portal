@@ -18,11 +18,13 @@ import com.liferay.portal.kernel.util.StringUtil;
 
 import com.mysql.jdbc.ResultSetMetaData;
 
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -60,6 +62,21 @@ public class DBInspectorUnitTest {
 		Mockito.verify(
 			databaseMetaData, Mockito.times(1)
 		).storesLowerCaseIdentifiers();
+	}
+
+	@Test
+	public void testClobTypeIsReturnedIfDriverSupportsClob() throws Exception {
+		_mockDriverSupportsClob();
+
+		DBInspector dbInspector = new DBInspector(_connection);
+
+		Assert.assertTrue(dbInspector.getClob(_LARGE_VALUE) instanceof Clob);
+
+		Mockito.verify(
+			_clob, Mockito.times(1)
+		).setString(
+			1, _LARGE_VALUE
+		);
 	}
 
 	@Test
@@ -104,6 +121,36 @@ public class DBInspectorUnitTest {
 		Mockito.verify(
 			_preparedStatement, Mockito.never()
 		).executeQuery();
+	}
+
+	@Test
+	public void testStringTypeIsReturnedIfDriverDoesntSupportClob()
+		throws Exception {
+
+		_mockDriverDoesntSupportClob();
+
+		DBInspector dbInspector = new DBInspector(_connection);
+
+		Assert.assertEquals(_LARGE_VALUE, dbInspector.getClob(_LARGE_VALUE));
+	}
+
+	@SuppressWarnings("unchecked")
+	private void _mockDriverDoesntSupportClob() throws SQLException {
+		Mockito.when(
+			_connection.createClob()
+		).thenThrow(
+			SQLFeatureNotSupportedException.class
+		);
+	}
+
+	private void _mockDriverSupportsClob() throws SQLException {
+		_clob = Mockito.mock(Clob.class);
+
+		Mockito.when(
+			_connection.createClob()
+		).thenReturn(
+			_clob
+		);
 	}
 
 	private void _mockTableWithColumn(String tableName, String columnName)
@@ -170,7 +217,11 @@ public class DBInspectorUnitTest {
 
 	private static final String _COLUMN_NAME = "column_name";
 
+	private static final String _LARGE_VALUE = "large_value";
+
 	private static final String _TABLE_NAME = "table_name";
+
+	private Clob _clob;
 
 	@Mock
 	private Connection _connection;

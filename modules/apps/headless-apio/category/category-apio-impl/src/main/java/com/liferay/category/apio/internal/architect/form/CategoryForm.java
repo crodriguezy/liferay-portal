@@ -15,7 +15,6 @@
 package com.liferay.category.apio.internal.architect.form;
 
 import com.liferay.apio.architect.form.Form;
-import com.liferay.apio.architect.form.Form.Builder;
 
 import java.util.Collections;
 import java.util.Locale;
@@ -38,7 +37,9 @@ public class CategoryForm {
 	 * @return a category form
 	 * @review
 	 */
-	public static Form<CategoryForm> buildForm(Builder<CategoryForm> builder) {
+	public static Form<CategoryForm> buildForm(
+		Form.Builder<CategoryForm> builder) {
+
 		return builder.title(
 			__ -> "Category form"
 		).description(
@@ -46,9 +47,9 @@ public class CategoryForm {
 		).constructor(
 			CategoryForm::new
 		).addOptionalString(
-			"description", CategoryForm::_setDescription
+			"description", CategoryForm::setDescription
 		).addRequiredString(
-			"name", CategoryForm::_setName
+			"name", CategoryForm::setName
 		).build();
 	}
 
@@ -72,11 +73,11 @@ public class CategoryForm {
 		return Collections.singletonMap(locale, _name);
 	}
 
-	private void _setDescription(String description) {
+	public void setDescription(String description) {
 		_description = description;
 	}
 
-	private void _setName(String name) {
+	public void setName(String name) {
 		_name = name;
 	}
 

@@ -74,6 +74,12 @@ public class RoutesTestUtil {
 		HAS_UPDATE_PERMISSION_FUNCTION = (credentials, aLong) -> true;
 
 	/**
+	 * An identifier function that provides identifiers for {@code String}
+	 * models
+	 */
+	public static final Function<String, Long> IDENTIFIER_FUNCTION = __ -> 42L;
+
+	/**
 	 * An identifier to {@link Path} function that returns an {@link Optional}
 	 * containing a {@code Path("name", "id")}.
 	 */
@@ -136,12 +142,11 @@ public class RoutesTestUtil {
 	}
 
 	/**
-	 * Returns the value of the field with key {@code "key"} from the {@link
-	 * Body} or fails.
+	 * Returns the value of the {@code "key"} field from the {@link Body}, or
+	 * fails.
 	 *
-	 * @param  body the body to extract the value
-	 * @return the value of the key
-	 * @review
+	 * @param  body the body from which to extract the value
+	 * @return the key's value
 	 */
 	public static String keyValueFrom(Body body) {
 		Optional<String> optional = body.getValueOptional("key");

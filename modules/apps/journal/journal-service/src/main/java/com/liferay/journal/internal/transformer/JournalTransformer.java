@@ -21,6 +21,7 @@ import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.journal.configuration.JournalServiceConfiguration;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -50,7 +51,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.PropertiesUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Attribute;
@@ -70,7 +70,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -563,7 +562,9 @@ public class JournalTransformer {
 				Map<String, LocalizedValue> options =
 					ddmFormFieldOptions.getOptions();
 
-				for (Entry<String, LocalizedValue> entry : options.entrySet()) {
+				for (Map.Entry<String, LocalizedValue> entry :
+						options.entrySet()) {
+
 					String optionValue = StringUtil.stripCDATA(entry.getKey());
 
 					LocalizedValue localizedLabel = entry.getValue();
@@ -694,7 +695,6 @@ public class JournalTransformer {
 	private static final Log _logXmlBeforeListener = LogFactoryUtil.getLog(
 		JournalTransformer.class.getName() + ".XmlBeforeListener");
 
-	private final Map<String, String> _errorTemplateIds = new HashMap<>();
 	private final boolean _restricted;
 
 }

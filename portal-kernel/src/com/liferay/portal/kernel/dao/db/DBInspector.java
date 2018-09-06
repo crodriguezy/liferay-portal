@@ -23,11 +23,13 @@ import com.liferay.portal.kernel.util.Validator;
 
 import java.lang.reflect.Field;
 
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,6 +45,19 @@ public class DBInspector {
 
 	public String getCatalog() throws SQLException {
 		return _connection.getCatalog();
+	}
+
+	public Object getClob(String value) throws SQLException {
+		try {
+			Clob clob = _connection.createClob();
+
+			clob.setString(1, value);
+
+			return clob;
+		}
+		catch (SQLFeatureNotSupportedException sqlfnse) {
+			return value;
+		}
 	}
 
 	public String getSchema() {

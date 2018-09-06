@@ -16,7 +16,9 @@ package com.liferay.apio.architect.test.util.internal.writer;
 
 import static com.liferay.apio.architect.test.util.writer.MockWriterUtil.getRequestInfo;
 
+import com.liferay.apio.architect.documentation.contributor.CustomDocumentation;
 import com.liferay.apio.architect.impl.documentation.Documentation;
+import com.liferay.apio.architect.impl.documentation.contributor.CustomDocumentationImpl;
 import com.liferay.apio.architect.impl.message.json.DocumentationMessageMapper;
 import com.liferay.apio.architect.impl.routes.CollectionRoutesImpl;
 import com.liferay.apio.architect.impl.routes.ItemRoutesImpl;
@@ -34,7 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Provides methods that test {@link DocumentationMessageMapper} objects.
+ * Provides methods that test {@code DocumentationMessageMapper} objects.
  *
  * <p>
  * This class shouldn't be instantiated.
@@ -45,12 +47,11 @@ import java.util.Optional;
 public class MockDocumentationWriter {
 
 	/**
-	 * Writes a {@link Documentation} object.
+	 * Writes a {@code Documentation} object.
 	 *
 	 * @param  documentationMessageMapper the {@code DocumentationMessageMapper}
 	 *         to use for writing the JSON object
-	 * @return the {@code String} containing the JSON Object.
-	 * @review
+	 * @return the string containing the JSON object
 	 */
 	public static String write(
 		DocumentationMessageMapper documentationMessageMapper) {
@@ -60,7 +61,15 @@ public class MockDocumentationWriter {
 				"name", null,
 				__ -> {
 				},
-				__ -> null);
+				__ -> null, __ -> null);
+
+		CustomDocumentation.Builder customDocumentationBuilder =
+			new CustomDocumentationImpl.BuilderImpl();
+
+		customDocumentationBuilder.addDescription(
+			"binary1", "binary description");
+		customDocumentationBuilder.addLocalizedDescription(
+			"root/retrieve", __ -> "retrieve description");
 
 		ItemRoutes.Builder itemBuilder = new ItemRoutesImpl.BuilderImpl<>(
 			"name", null,
@@ -73,7 +82,7 @@ public class MockDocumentationWriter {
 				"name", null, __ -> null,
 				__ -> {
 				},
-				__ -> null, __ -> Optional.empty());
+				__ -> null, __ -> Optional.empty(), __ -> null);
 
 		Representor<RootModel> rootModelRepresentor =
 			MockRepresentorCreator.createRootModelRepresentor(false);
@@ -84,16 +93,21 @@ public class MockDocumentationWriter {
 		CollectionRoutes<String, Object> collectionRoutes =
 			collectionBuilder.build();
 
+		CustomDocumentation customDocumentation =
+			customDocumentationBuilder.build();
+
 		ItemRoutes itemRoutes = itemBuilder.build();
 
 		NestedCollectionRoutes nestedCollectionRoutes = nestedBuilder.build();
 
 		Documentation documentation = new Documentation(
 			() -> Optional.of(() -> "Title"),
-			() -> Optional.of(() -> "Description"), () -> root,
+			() -> Optional.of(() -> "Description"),
+			() -> Optional.of(() -> "Entrypoint"), () -> root,
 			() -> Collections.singletonMap("root", collectionRoutes),
 			() -> Collections.singletonMap("root", itemRoutes),
-			() -> Collections.singletonMap("root", nestedCollectionRoutes));
+			() -> Collections.singletonMap("root", nestedCollectionRoutes),
+			() -> customDocumentation);
 
 		DocumentationWriter documentationWriter = DocumentationWriter.create(
 			builder -> builder.documentation(

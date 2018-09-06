@@ -16,7 +16,6 @@ package com.liferay.portal.util;
 
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.util.Html;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -46,7 +45,6 @@ import net.htmlparser.jericho.TextExtractor;
  * @author Connor McKay
  * @author Shuyang Zhou
  */
-@DoPrivileged
 public class HtmlImpl implements Html {
 
 	public static final int ESCAPE_MODE_ATTRIBUTE = 1;
@@ -849,9 +847,8 @@ public class HtmlImpl implements Html {
 
 			return !Character.isLetter(item);
 		}
-		else {
-			return false;
-		}
+
+		return false;
 	}
 
 	protected int stripTag(char[] tag, String text, int pos) {
@@ -966,25 +963,28 @@ public class HtmlImpl implements Html {
 		'<', '>', '*', '$', '"', '"', ' ', 9, 10, 13, 133, 8232
 	};
 
-	private static final Map<String, String> _unescapeMap = new HashMap<>();
+	private static final Map<String, String> _unescapeMap =
+		new HashMap<String, String>() {
+			{
+				put("#34", "\"");
+				put("#35", "#");
+				put("#37", "%");
+				put("#39", "'");
+				put("#40", "(");
+				put("#41", ")");
+				put("#43", "+");
+				put("#44", ",");
+				put("#45", "-");
+				put("#59", ";");
+				put("#61", "=");
+				put("amp", "&");
+				put("gt", ">");
+				put("lt", "<");
+				put("rsquo", "\u2019");
+			}
+		};
 
 	static {
-		_unescapeMap.put("#34", "\"");
-		_unescapeMap.put("#35", "#");
-		_unescapeMap.put("#37", "%");
-		_unescapeMap.put("#39", "'");
-		_unescapeMap.put("#40", "(");
-		_unescapeMap.put("#41", ")");
-		_unescapeMap.put("#43", "+");
-		_unescapeMap.put("#44", ",");
-		_unescapeMap.put("#45", "-");
-		_unescapeMap.put("#59", ";");
-		_unescapeMap.put("#61", "=");
-		_unescapeMap.put("amp", "&");
-		_unescapeMap.put("gt", ">");
-		_unescapeMap.put("lt", "<");
-		_unescapeMap.put("rsquo", "\u2019");
-
 		for (int i = 0; i < _VALID_CHARS.length; i++) {
 			if (Character.isLetterOrDigit(i)) {
 				_VALID_CHARS[i] = true;

@@ -15,6 +15,7 @@
 package com.liferay.portal.kernel.upgrade;
 
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.dao.db.DBInspector;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.upgrade.util.UpgradeProcessUtil;
@@ -157,8 +158,11 @@ public abstract class BaseUpgradeLocalizedColumn extends UpgradeProcess {
 			columnName, " like ? and companyId = ?");
 
 		try (PreparedStatement ps = connection.prepareStatement(sql)) {
-			ps.setString(1, localizationXML);
-			ps.setString(2, originalContent);
+			DBInspector dbInspector = new DBInspector(connection);
+
+			ps.setObject(1, dbInspector.getClob(localizationXML));
+			ps.setObject(2, dbInspector.getClob(originalContent));
+
 			ps.setLong(3, companyId);
 
 			ps.executeUpdate();

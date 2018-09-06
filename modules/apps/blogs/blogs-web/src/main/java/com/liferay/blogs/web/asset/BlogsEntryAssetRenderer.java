@@ -22,10 +22,13 @@ import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.web.internal.security.permission.resource.BlogsEntryPermission;
 import com.liferay.blogs.web.internal.util.BlogsEntryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.AggregateResourceBundleLoader;
 import com.liferay.portal.kernel.util.ClassResourceBundleLoader;
@@ -99,9 +102,8 @@ public class BlogsEntryAssetRenderer
 		if (PropsValues.BLOGS_ENTRY_COMMENTS_ENABLED) {
 			return "edit_entry_discussion";
 		}
-		else {
-			return null;
-		}
+
+		return null;
 	}
 
 	/**
@@ -125,9 +127,8 @@ public class BlogsEntryAssetRenderer
 
 			return "/blogs/asset/" + template + ".jsp";
 		}
-		else {
-			return null;
-		}
+
+		return null;
 	}
 
 	@Override
@@ -156,7 +157,7 @@ public class BlogsEntryAssetRenderer
 				AssetHelper.ASSET_ENTRY_ABSTRACT_LENGTH);
 		}
 
-		String summary = _entry.getDescription();
+		String summary = HtmlUtil.escape(_entry.getDescription());
 
 		if (Validator.isNull(summary)) {
 			summary = HtmlUtil.stripHtml(
@@ -185,8 +186,18 @@ public class BlogsEntryAssetRenderer
 			LiferayPortletResponse liferayPortletResponse)
 		throws Exception {
 
+		Group group = GroupLocalServiceUtil.fetchGroup(_entry.getGroupId());
+
+		if (group.isCompany()) {
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)liferayPortletRequest.getAttribute(
+					WebKeys.THEME_DISPLAY);
+
+			group = themeDisplay.getScopeGroup();
+		}
+
 		PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
-			liferayPortletRequest, BlogsPortletKeys.BLOGS,
+			liferayPortletRequest, group, BlogsPortletKeys.BLOGS, 0, 0,
 			PortletRequest.RENDER_PHASE);
 
 		portletURL.setParameter("mvcRenderCommandName", "/blogs/edit_entry");

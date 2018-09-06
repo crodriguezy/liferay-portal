@@ -19,13 +19,17 @@ import com.liferay.asset.kernel.model.BaseJSPAssetRenderer;
 import com.liferay.bookmarks.constants.BookmarksPortletKeys;
 import com.liferay.bookmarks.constants.BookmarksWebKeys;
 import com.liferay.bookmarks.model.BookmarksEntry;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Date;
 import java.util.Locale;
@@ -88,9 +92,8 @@ public class BookmarksEntryAssetRenderer
 		if (template.equals(TEMPLATE_FULL_CONTENT)) {
 			return "/bookmarks/asset/" + template + ".jsp";
 		}
-		else {
-			return null;
-		}
+
+		return null;
 	}
 
 	@Override
@@ -129,9 +132,19 @@ public class BookmarksEntryAssetRenderer
 			LiferayPortletResponse liferayPortletResponse)
 		throws Exception {
 
+		Group group = GroupLocalServiceUtil.fetchGroup(_entry.getGroupId());
+
+		if (group.isCompany()) {
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)liferayPortletRequest.getAttribute(
+					WebKeys.THEME_DISPLAY);
+
+			group = themeDisplay.getScopeGroup();
+		}
+
 		PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
-			liferayPortletRequest, BookmarksPortletKeys.BOOKMARKS_ADMIN,
-			PortletRequest.RENDER_PHASE);
+			liferayPortletRequest, group, BookmarksPortletKeys.BOOKMARKS_ADMIN,
+			0, 0, PortletRequest.RENDER_PHASE);
 
 		portletURL.setParameter(
 			"mvcRenderCommandName", "/bookmarks/edit_entry");

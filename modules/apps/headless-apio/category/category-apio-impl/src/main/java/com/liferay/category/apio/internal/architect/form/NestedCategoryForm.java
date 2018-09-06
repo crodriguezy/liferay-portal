@@ -15,7 +15,6 @@
 package com.liferay.category.apio.internal.architect.form;
 
 import com.liferay.apio.architect.form.Form;
-import com.liferay.apio.architect.form.Form.Builder;
 
 import java.util.Collections;
 import java.util.Locale;
@@ -40,7 +39,7 @@ public class NestedCategoryForm {
 	 * @review
 	 */
 	public static Form<NestedCategoryForm> buildForm(
-		Builder<NestedCategoryForm> builder) {
+		Form.Builder<NestedCategoryForm> builder) {
 
 		return builder.title(
 			__ -> "Category form"
@@ -49,13 +48,13 @@ public class NestedCategoryForm {
 		).constructor(
 			NestedCategoryForm::new
 		).addOptionalLong(
-			"category", NestedCategoryForm::_setParentCategoryId
+			"category", NestedCategoryForm::setParentCategoryId
 		).addOptionalString(
-			"description", NestedCategoryForm::_setDescription
+			"description", NestedCategoryForm::setDescription
 		).addRequiredLong(
-			"vocabulary", NestedCategoryForm::_setVocabularyId
+			"vocabulary", NestedCategoryForm::setVocabularyId
 		).addRequiredString(
-			"name", NestedCategoryForm::_setName
+			"name", NestedCategoryForm::setName
 		).build();
 	}
 
@@ -99,19 +98,19 @@ public class NestedCategoryForm {
 		return _vocabularyId;
 	}
 
-	private void _setDescription(String description) {
+	public void setDescription(String description) {
 		_description = description;
 	}
 
-	private void _setName(String name) {
+	public void setName(String name) {
 		_name = name;
 	}
 
-	private void _setParentCategoryId(long parentCategoryId) {
+	public void setParentCategoryId(long parentCategoryId) {
 		_parentCategoryId = parentCategoryId;
 	}
 
-	private void _setVocabularyId(long vocabularyId) {
+	public void setVocabularyId(long vocabularyId) {
 		_vocabularyId = vocabularyId;
 	}
 

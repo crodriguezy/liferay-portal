@@ -166,7 +166,8 @@ public final class XMLLoggerHandler {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(
-			_getLineNumberItemText(element.attributeValue("line-number")));
+			_getLineNumberItemText(
+				PoshiRunnerGetterUtil.getLineNumber(element)));
 
 		List<Element> childElements = element.elements();
 
@@ -315,10 +316,6 @@ public final class XMLLoggerHandler {
 				else if (childElementName.equals("return")) {
 					loggerElement.addChildLoggerElement(
 						_getReturnLoggerElement(childElement));
-				}
-				else if (childElementName.equals("toggle")) {
-					loggerElement.addChildLoggerElement(
-						_getToggleLoggerElement(childElement));
 				}
 				else if (childElementName.equals("var")) {
 					loggerElement.addChildLoggerElement(
@@ -571,18 +568,18 @@ public final class XMLLoggerHandler {
 		return loggerElement.toString();
 	}
 
-	private static LoggerElement _getLineNumberItem(String lineNumber) {
+	private static LoggerElement _getLineNumberItem(int lineNumber) {
 		LoggerElement loggerElement = new LoggerElement();
 
 		loggerElement.setClassName("line-number");
 		loggerElement.setID(null);
 		loggerElement.setName("div");
-		loggerElement.setText(lineNumber);
+		loggerElement.setText(String.valueOf(lineNumber));
 
 		return loggerElement;
 	}
 
-	private static String _getLineNumberItemText(String lineNumber) {
+	private static String _getLineNumberItemText(int lineNumber) {
 		LoggerElement loggerElement = _getLineNumberItem(lineNumber);
 
 		return loggerElement.toString();
@@ -669,7 +666,8 @@ public final class XMLLoggerHandler {
 
 		for (Element childElement : childElements) {
 			loggerElement.addChildLoggerElement(
-				_getLineNumberItem(childElement.attributeValue("line-number")));
+				_getLineNumberItem(
+					PoshiRunnerGetterUtil.getLineNumber(childElement)));
 			loggerElement.addChildLoggerElement(
 				_getLineContainerLoggerElement(childElement));
 		}
@@ -721,48 +719,6 @@ public final class XMLLoggerHandler {
 
 		loggerElement.addChildLoggerElement(
 			_getClosingLineContainerLoggerElement(executeElement));
-
-		return loggerElement;
-	}
-
-	private static LoggerElement _getToggleChildContainerLoggerElement(
-			Element element)
-		throws Exception {
-
-		LoggerElement loggerElement = _getChildContainerLoggerElement();
-
-		String toggleName = element.attributeValue("name");
-
-		if (PoshiRunnerContext.isTestToggle(toggleName)) {
-			Element onElement = element.element("on");
-
-			if (onElement != null) {
-				loggerElement.addChildLoggerElement(
-					_getLoggerElementFromElement(onElement));
-			}
-		}
-		else {
-			Element onElement = element.element("off");
-
-			if (onElement != null) {
-				loggerElement.addChildLoggerElement(
-					_getLoggerElementFromElement(onElement));
-			}
-		}
-
-		return loggerElement;
-	}
-
-	private static LoggerElement _getToggleLoggerElement(Element element)
-		throws Exception {
-
-		LoggerElement loggerElement = _getLineGroupLoggerElement(
-			"conditional", element);
-
-		loggerElement.addChildLoggerElement(
-			_getToggleChildContainerLoggerElement(element));
-		loggerElement.addChildLoggerElement(
-			_getClosingLineContainerLoggerElement(element));
 
 		return loggerElement;
 	}

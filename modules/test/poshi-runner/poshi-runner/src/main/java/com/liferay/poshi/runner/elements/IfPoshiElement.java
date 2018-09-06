@@ -47,6 +47,11 @@ public class IfPoshiElement extends PoshiElement {
 	}
 
 	@Override
+	public String getPoshiLogDescriptor() {
+		return getBlockName();
+	}
+
+	@Override
 	public void parsePoshiScript(String poshiScript) {
 		for (String poshiScriptSnippet :
 				getPoshiScriptSnippets(poshiScript, false)) {
@@ -65,7 +70,7 @@ public class IfPoshiElement extends PoshiElement {
 				continue;
 			}
 
-			add(PoshiNodeFactory.newPoshiNode(this, poshiScriptSnippet.trim()));
+			add(PoshiNodeFactory.newPoshiNode(this, poshiScriptSnippet));
 		}
 	}
 
@@ -137,7 +142,7 @@ public class IfPoshiElement extends PoshiElement {
 					conditionName);
 
 				sb.append(" (");
-				sb.append(poshiElement.toPoshiScript());
+				sb.append(poshiElement.getPoshiScript());
 				sb.append(")");
 
 				break;

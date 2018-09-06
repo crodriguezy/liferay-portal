@@ -24,9 +24,14 @@ import static org.hamcrest.collection.IsMapWithSize.anEmptyMap;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
+import com.liferay.apio.architect.documentation.contributor.CustomDocumentation;
+import com.liferay.apio.architect.impl.documentation.contributor.CustomDocumentationImpl;
+
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.hamcrest.Matcher;
 
@@ -40,9 +45,9 @@ public class DocumentationTest {
 	@Test
 	public void testDocumentationWithEmptyValuesReturnEmpty() {
 		Documentation documentation = new Documentation(
-			Optional::empty, Optional::empty, Collections::emptyMap,
-			Collections::emptyMap, Collections::emptyMap,
-			Collections::emptyMap);
+			Optional::empty, Optional::empty, Optional::empty,
+			Collections::emptyMap, Collections::emptyMap, Collections::emptyMap,
+			Collections::emptyMap, null);
 
 		Optional<String> optionalTitle = documentation.getAPITitleOptional();
 
@@ -60,20 +65,35 @@ public class DocumentationTest {
 
 	@Test
 	public void testDocumentationWithNonemptyValuesReturnThem() {
+		CustomDocumentation.Builder dummyCustomDocumentationBuilder =
+			new CustomDocumentationImpl.BuilderImpl();
+
+		dummyCustomDocumentationBuilder.addDescription("key", "value");
+
 		Documentation documentation = new Documentation(
 			() -> Optional.of(() -> "A"), () -> Optional.of(() -> "B"),
+			() -> Optional.of(() -> "C"),
 			() -> Collections.singletonMap("r", null),
 			() -> Collections.singletonMap("c", null),
 			() -> Collections.singletonMap("i", null),
-			() -> Collections.singletonMap("n", null));
+			() -> Collections.singletonMap("n", null),
+			() -> dummyCustomDocumentationBuilder.build());
 
 		Optional<String> optionalTitle = documentation.getAPITitleOptional();
-
 		Optional<String> optionalDescription =
 			documentation.getAPIDescriptionOptional();
+		Optional<String> optionalApplicationURL =
+			documentation.getEntryPointOptional();
+
+		CustomDocumentation customDocumentation =
+			documentation.getCustomDocumentation();
+
+		Function<Locale, String> descriptionFunction =
+			customDocumentation.getDescriptionFunction("key");
 
 		assertThat(optionalTitle, is(optionalWithValue(equalTo("A"))));
 		assertThat(optionalDescription, is(optionalWithValue(equalTo("B"))));
+		assertThat(optionalApplicationURL, is(optionalWithValue(equalTo("C"))));
 		assertThat(documentation.getRepresentors(), _HAS_SIZE_ONE);
 		assertThat(documentation.getRepresentors(), hasKey("r"));
 		assertThat(documentation.getCollectionRoutes(), _HAS_SIZE_ONE);
@@ -82,6 +102,7 @@ public class DocumentationTest {
 		assertThat(documentation.getItemRoutes(), hasKey("i"));
 		assertThat(documentation.getNestedCollectionRoutes(), _HAS_SIZE_ONE);
 		assertThat(documentation.getNestedCollectionRoutes(), hasKey("n"));
+		assertThat(descriptionFunction.apply(null), is("value"));
 	}
 
 	private static final Matcher<Map<?, ?>> _HAS_SIZE_ONE = is(aMapWithSize(1));

@@ -17,18 +17,13 @@ package com.liferay.poshi.runner.logger;
 import com.liferay.poshi.runner.util.StringUtil;
 import com.liferay.poshi.runner.util.Validator;
 
-import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Set;
 import java.util.regex.Matcher;
 
 /**
@@ -37,21 +32,6 @@ import java.util.regex.Matcher;
 public class LoggerElement {
 
 	public LoggerElement() {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HHmmssSSS");
-
-		long time = System.currentTimeMillis();
-
-		while (true) {
-			String id = "id" + simpleDateFormat.format(new Date(time++));
-
-			if (!_usedIds.contains(id)) {
-				_usedIds.add(id);
-
-				_id = id;
-
-				break;
-			}
-		}
 	}
 
 	public LoggerElement(String id) {
@@ -267,8 +247,6 @@ public class LoggerElement {
 
 		return StringUtil.join(classNames, " ");
 	}
-
-	private static final Set<String> _usedIds = new HashSet<>();
 
 	private final Map<String, String> _attributes = new HashMap<>();
 	private final List<LoggerElement> _childLoggerElements = new ArrayList<>();

@@ -262,11 +262,27 @@ public class IndentationCheck extends BaseCheck {
 				return expectedTabCount;
 			}
 
+			if (parentAST.getType() == TokenTypes.PARAMETERS) {
+				parentAST = parentAST.getParent();
+
+				if (parentAST.getType() == TokenTypes.LAMBDA) {
+					DetailAST grandParentAST = parentAST.getParent();
+
+					if (grandParentAST.getType() == TokenTypes.LITERAL_RETURN) {
+						return expectedTabCount + 1;
+					}
+				}
+			}
+
 			if (parentAST.getType() == TokenTypes.SLIST) {
 				parentAST = parentAST.getParent();
 
 				if (parentAST.getType() == TokenTypes.LAMBDA) {
-					expectedTabCount += _getLineBreakTabs(parentAST);
+					DetailAST firstChildAST = parentAST.getFirstChild();
+
+					if (firstChildAST.getLineNo() == parentAST.getLineNo()) {
+						expectedTabCount += _getLineBreakTabs(parentAST);
+					}
 				}
 
 				continue;
@@ -361,6 +377,15 @@ public class IndentationCheck extends BaseCheck {
 			detailAST, true, TokenTypes.GENERIC_END, TokenTypes.GENERIC_START);
 
 		for (DetailAST genericAST : genericASTList) {
+			DetailAST exprAST = DetailASTUtil.getParentWithTokenType(
+				genericAST, TokenTypes.EXPR);
+
+			if ((exprAST != null) &&
+				!lineNumbers.contains(DetailASTUtil.getStartLine(exprAST))) {
+
+				continue;
+			}
+
 			int lineNo = genericAST.getLineNo();
 
 			if (lineNo < lineNumber) {
@@ -730,7 +755,10 @@ public class IndentationCheck extends BaseCheck {
 
 				DetailAST lParenAST = parentAST.getPreviousSibling();
 
-				if (lParenAST != null) {
+				if ((lParenAST != null) &&
+					(lParenAST.getType() == TokenTypes.LPAREN) &&
+					!_isAtLineStart(lParenAST)) {
+
 					int lineNo = lParenAST.getLineNo();
 
 					if (lineNo < detailAST.getLineNo()) {

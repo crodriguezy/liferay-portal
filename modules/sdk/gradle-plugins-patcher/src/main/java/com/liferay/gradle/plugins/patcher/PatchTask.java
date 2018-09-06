@@ -236,9 +236,8 @@ public class PatchTask extends DefaultTask {
 		if (!_patchFiles.isEmpty()) {
 			return project.files(_patchFiles);
 		}
-		else {
-			return project.fileTree(_patchesDir);
-		}
+
+		return project.fileTree(_patchesDir);
 	}
 
 	public boolean isCopyOriginalLibClasses() {
@@ -574,14 +573,14 @@ public class PatchTask extends DefaultTask {
 	private static final String _BASE_URL =
 		"http://repo.maven.apache.org/maven2/";
 
-	private static final Map<String, Object> _fixCrLfArgs = new HashMap<>();
-
-	static {
-		_fixCrLfArgs.put(
-			"eof", FixCrLfFilter.AddAsisRemove.newInstance("remove"));
-		_fixCrLfArgs.put("eol", FixCrLfFilter.CrLf.newInstance("lf"));
-		_fixCrLfArgs.put("fixlast", false);
-	}
+	private static final Map<String, Object> _fixCrLfArgs =
+		new HashMap<String, Object>() {
+			{
+				put("eof", FixCrLfFilter.AddAsisRemove.newInstance("remove"));
+				put("eol", FixCrLfFilter.CrLf.newInstance("lf"));
+				put("fixlast", false);
+			}
+		};
 
 	private final List<Object> _args = new ArrayList<>();
 	private boolean _copyOriginalLibClasses = true;

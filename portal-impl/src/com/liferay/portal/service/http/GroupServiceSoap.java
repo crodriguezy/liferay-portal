@@ -452,6 +452,22 @@ public class GroupServiceSoap {
 		}
 	}
 
+	public static com.liferay.portal.kernel.model.GroupSoap[] getGtGroups(
+		long gtGroupId, long companyId, long parentGroupId, boolean site,
+		int size) throws RemoteException {
+		try {
+			java.util.List<com.liferay.portal.kernel.model.Group> returnValue = GroupServiceUtil.getGtGroups(gtGroupId,
+					companyId, parentGroupId, site, size);
+
+			return com.liferay.portal.kernel.model.GroupSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	/**
 	* Returns a range of all the site groups for which the user has control
 	* panel access.

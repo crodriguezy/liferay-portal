@@ -15,6 +15,12 @@
 package com.liferay.dynamic.data.mapping.form.web.internal.display.context;
 
 import com.liferay.dynamic.data.mapping.constants.DDMPortletKeys;
+import com.liferay.dynamic.data.mapping.form.builder.context.DDMFormBuilderContextFactory;
+import com.liferay.dynamic.data.mapping.form.builder.context.DDMFormBuilderContextRequest;
+import com.liferay.dynamic.data.mapping.form.builder.context.DDMFormBuilderContextResponse;
+import com.liferay.dynamic.data.mapping.form.builder.settings.DDMFormBuilderSettingsRequest;
+import com.liferay.dynamic.data.mapping.form.builder.settings.DDMFormBuilderSettingsResponse;
+import com.liferay.dynamic.data.mapping.form.builder.settings.DDMFormBuilderSettingsRetriever;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldType;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeServicesTracker;
 import com.liferay.dynamic.data.mapping.form.renderer.DDMFormRenderer;
@@ -26,23 +32,27 @@ import com.liferay.dynamic.data.mapping.form.web.internal.display.context.util.F
 import com.liferay.dynamic.data.mapping.form.web.internal.instance.lifecycle.AddDefaultSharedFormLayoutPortalInstanceLifecycleListener;
 import com.liferay.dynamic.data.mapping.form.web.internal.search.FormInstanceRowChecker;
 import com.liferay.dynamic.data.mapping.form.web.internal.search.FormInstanceSearch;
-import com.liferay.dynamic.data.mapping.io.DDMFormFieldTypesJSONSerializer;
-import com.liferay.dynamic.data.mapping.io.exporter.DDMExporterFactory;
+import com.liferay.dynamic.data.mapping.io.DDMFormFieldTypesSerializer;
+import com.liferay.dynamic.data.mapping.io.DDMFormFieldTypesSerializerSerializeRequest;
+import com.liferay.dynamic.data.mapping.io.DDMFormFieldTypesSerializerSerializeResponse;
+import com.liferay.dynamic.data.mapping.io.DDMFormFieldTypesSerializerTracker;
+import com.liferay.dynamic.data.mapping.io.exporter.DDMFormInstanceRecordWriterTracker;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecord;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecordVersion;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceSettings;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
+import com.liferay.dynamic.data.mapping.model.DDMStructureVersion;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceRecordLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceService;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceVersionLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMStructureService;
-import com.liferay.dynamic.data.mapping.storage.StorageEngine;
 import com.liferay.dynamic.data.mapping.util.DDMFormValuesMerger;
 import com.liferay.dynamic.data.mapping.util.comparator.DDMFormInstanceModifiedDateComparator;
 import com.liferay.dynamic.data.mapping.util.comparator.DDMFormInstanceNameComparator;
+import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
@@ -50,6 +60,7 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemList;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItemList;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -57,6 +68,7 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONSerializer;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -71,13 +83,13 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -98,37 +110,42 @@ public class DDMFormAdminDisplayContext {
 		RenderRequest renderRequest, RenderResponse renderResponse,
 		AddDefaultSharedFormLayoutPortalInstanceLifecycleListener
 			addDefaultSharedFormLayoutPortalInstanceLifecycleListener,
-		DDMExporterFactory ddmExporterFactory,
+		DDMFormBuilderContextFactory ddmFormBuilderContextFactory,
+		DDMFormBuilderSettingsRetriever ddmFormBuilderSettingsRetriever,
 		DDMFormWebConfiguration formWebConfiguration,
 		DDMFormInstanceRecordLocalService formInstanceRecordLocalService,
+		DDMFormInstanceRecordWriterTracker ddmFormInstanceRecordWriterTracker,
 		DDMFormInstanceService formInstanceService,
 		DDMFormInstanceVersionLocalService formInstanceVersionLocalService,
 		DDMFormFieldTypeServicesTracker formFieldTypeServicesTracker,
-		DDMFormFieldTypesJSONSerializer formFieldTypesJSONSerializer,
+		DDMFormFieldTypesSerializerTracker formFieldTypesSerializerTracker,
 		DDMFormRenderer formRenderer, DDMFormValuesFactory formValuesFactory,
 		DDMFormValuesMerger formValuesMerger,
 		DDMStructureLocalService structureLocalService,
 		DDMStructureService structureService, JSONFactory jsonFactory,
-		StorageEngine storageEngine) {
+		NPMResolver npmResolver) {
 
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
 		_addDefaultSharedFormLayoutPortalInstanceLifecycleListener =
 			addDefaultSharedFormLayoutPortalInstanceLifecycleListener;
-		_ddmExporterFactory = ddmExporterFactory;
+		_ddmFormBuilderContextFactory = ddmFormBuilderContextFactory;
+		_ddmFormBuilderSettingsRetriever = ddmFormBuilderSettingsRetriever;
 		_ddmFormWebConfiguration = formWebConfiguration;
 		_ddmFormInstanceRecordLocalService = formInstanceRecordLocalService;
+		_ddmFormInstanceRecordWriterTracker =
+			ddmFormInstanceRecordWriterTracker;
 		_ddmFormInstanceService = formInstanceService;
 		_ddmFormInstanceVersionLocalService = formInstanceVersionLocalService;
 		_ddmFormFieldTypeServicesTracker = formFieldTypeServicesTracker;
-		_ddmFormFieldTypesJSONSerializer = formFieldTypesJSONSerializer;
+		_ddmFormFieldTypesSerializerTracker = formFieldTypesSerializerTracker;
 		_ddmFormRenderer = formRenderer;
 		_ddmFormValuesFactory = formValuesFactory;
 		_ddmFormValuesMerger = formValuesMerger;
 		_ddmStructureLocalService = structureLocalService;
 		_ddmStructureService = structureService;
 		_jsonFactory = jsonFactory;
-		_storageEngine = storageEngine;
+		_npmResolver = npmResolver;
 
 		formAdminRequestHelper = new DDMFormAdminRequestHelper(renderRequest);
 
@@ -138,7 +155,6 @@ public class DDMFormAdminDisplayContext {
 
 	public List<DropdownItem> getActionItemsDropdownItems() {
 		return new DropdownItemList() {
-
 			{
 				add(
 					dropdownItem -> {
@@ -150,7 +166,6 @@ public class DDMFormAdminDisplayContext {
 						dropdownItem.setQuickAction(true);
 					});
 			}
-
 		};
 	}
 
@@ -158,8 +173,9 @@ public class DDMFormAdminDisplayContext {
 		return _ddmFormWebConfiguration.autosaveInterval();
 	}
 
-	public Map<String, String> getAvailableExportFormats() {
-		return _ddmExporterFactory.getAvailableFormatsMap();
+	public Map<String, String> getAvailableExportExtensions() {
+		return _ddmFormInstanceRecordWriterTracker.
+			getDDMFormInstanceRecordWriterExtensions();
 	}
 
 	public Locale[] getAvailableLocales() {
@@ -207,9 +223,10 @@ public class DDMFormAdminDisplayContext {
 				addPrimaryDropdownItem(
 					dropdownItem -> {
 						dropdownItem.setHref(
-							_renderResponse.createRenderURL(), "mvcPath",
-							"/admin/edit_form_instance.jsp", "redirect",
-							PortalUtil.getCurrentURL(request), "groupId",
+							_renderResponse.createRenderURL(),
+							"mvcRenderCommandName", "/admin/edit_form_instance",
+							"redirect", PortalUtil.getCurrentURL(request),
+							"groupId",
 							String.valueOf(themeDisplay.getScopeGroupId()));
 
 						dropdownItem.setLabel(
@@ -227,8 +244,7 @@ public class DDMFormAdminDisplayContext {
 		List<DDMFormFieldType> formFieldTypes =
 			_ddmFormFieldTypeServicesTracker.getDDMFormFieldTypes();
 
-		String serializedFormFieldTypes =
-			_ddmFormFieldTypesJSONSerializer.serialize(formFieldTypes);
+		String serializedFormFieldTypes = serialize(formFieldTypes);
 
 		return _jsonFactory.createJSONArray(serializedFormFieldTypes);
 	}
@@ -498,11 +514,24 @@ public class DDMFormAdminDisplayContext {
 		return new DDMFormViewFormInstanceRecordsDisplayContext(
 			_renderRequest, _renderResponse, getDDMFormInstance(),
 			_ddmFormInstanceRecordLocalService,
-			_ddmFormFieldTypeServicesTracker, _storageEngine);
+			_ddmFormFieldTypeServicesTracker);
 	}
 
 	public JSONFactory getJSONFactory() {
 		return _jsonFactory;
+	}
+
+	public long getLatestDDMStructureVersionId() throws PortalException {
+		DDMStructure structure = getDDMStructure();
+
+		if (structure == null) {
+			return 0;
+		}
+
+		DDMStructureVersion latestDDMStructureVersion =
+			structure.getLatestStructureVersion();
+
+		return latestDDMStructureVersion.getStructureVersionId();
 	}
 
 	public String getLexiconIconsPath() {
@@ -515,6 +544,11 @@ public class DDMFormAdminDisplayContext {
 		sb.append(StringPool.POUND);
 
 		return sb.toString();
+	}
+
+	public String getMainRequire() {
+		return _npmResolver.resolveModuleName("dynamic-data-mapping-form-web") +
+			" as main";
 	}
 
 	public List<NavigationItem> getNavigationItems() {
@@ -689,6 +723,56 @@ public class DDMFormAdminDisplayContext {
 		return "formInstance";
 	}
 
+	public String getSerializedDDMFormRules() throws PortalException {
+		ThemeDisplay themeDisplay = formAdminRequestHelper.getThemeDisplay();
+
+		DDMFormBuilderSettingsRequest ddmFormBuilderSettingsRequest =
+			DDMFormBuilderSettingsRequest.with(
+				themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), 0,
+				getDDMForm(), themeDisplay.getLocale());
+
+		DDMFormBuilderSettingsResponse ddmFormBuilderSettingsResponse =
+			_ddmFormBuilderSettingsRetriever.getSettings(
+				ddmFormBuilderSettingsRequest);
+
+		return ddmFormBuilderSettingsResponse.getSerializedDDMFormRules();
+	}
+
+	public String getSerializedFormBuilderContext() throws PortalException {
+		ThemeDisplay themeDisplay = formAdminRequestHelper.getThemeDisplay();
+
+		String serializedFormBuilderContext = ParamUtil.getString(
+			_renderRequest, "serializedFormBuilderContext");
+
+		if (Validator.isNotNull(serializedFormBuilderContext)) {
+			return serializedFormBuilderContext;
+		}
+
+		JSONSerializer jsonSerializer = _jsonFactory.createJSONSerializer();
+
+		Optional<DDMStructure> ddmStructureOptional = Optional.ofNullable(
+			_ddmStructureLocalService.fetchDDMStructure(getDDMStructureId()));
+
+		Locale defaultLocale = themeDisplay.getSiteDefaultLocale();
+
+		if (ddmStructureOptional.isPresent()) {
+			DDMStructure ddmStructure = ddmStructureOptional.get();
+
+			DDMForm ddmForm = ddmStructure.getDDMForm();
+
+			defaultLocale = ddmForm.getDefaultLocale();
+		}
+
+		DDMFormBuilderContextResponse ddmFormBuilderContextResponse =
+			_ddmFormBuilderContextFactory.create(
+				DDMFormBuilderContextRequest.with(
+					ddmStructureOptional, themeDisplay.getRequest(),
+					themeDisplay.getResponse(), defaultLocale, true));
+
+		return jsonSerializer.serializeDeep(
+			ddmFormBuilderContextResponse.getContext());
+	}
+
 	public String getSharedFormURL() {
 		return _addDefaultSharedFormLayoutPortalInstanceLifecycleListener.
 			getFormLayoutURL(formAdminRequestHelper.getThemeDisplay(), false);
@@ -721,7 +805,6 @@ public class DDMFormAdminDisplayContext {
 			getPortletURL(), _renderResponse);
 
 		return new ViewTypeItemList(portletURL, getDisplayStyle()) {
-
 			{
 				String[] viewTypes = getDisplayViews();
 
@@ -734,7 +817,6 @@ public class DDMFormAdminDisplayContext {
 					}
 				}
 			}
-
 		};
 	}
 
@@ -1001,7 +1083,9 @@ public class DDMFormAdminDisplayContext {
 		return dropdownItem -> {
 			dropdownItem.setActive(orderByCol.equals(getOrderByCol()));
 			dropdownItem.setHref(getPortletURL(), "orderByCol", orderByCol);
-			dropdownItem.setLabel(orderByCol);
+			dropdownItem.setLabel(
+				LanguageUtil.get(
+					formAdminRequestHelper.getRequest(), orderByCol));
 		};
 	}
 
@@ -1036,6 +1120,22 @@ public class DDMFormAdminDisplayContext {
 		return false;
 	}
 
+	protected String serialize(List<DDMFormFieldType> ddmFormFieldTypes) {
+		DDMFormFieldTypesSerializer ddmFormFieldTypesSerializer =
+			_ddmFormFieldTypesSerializerTracker.getDDMFormFieldTypesSerializer(
+				"json");
+
+		DDMFormFieldTypesSerializerSerializeRequest.Builder builder =
+			DDMFormFieldTypesSerializerSerializeRequest.Builder.newBuilder(
+				ddmFormFieldTypes);
+
+		DDMFormFieldTypesSerializerSerializeResponse
+			ddmFormFieldTypesSerializerSerializeResponse =
+				ddmFormFieldTypesSerializer.serialize(builder.build());
+
+		return ddmFormFieldTypesSerializerSerializeResponse.getContent();
+	}
+
 	protected void setDDMFormInstanceSearchResults(
 		FormInstanceSearch ddmFormInstanceSearch) {
 
@@ -1067,14 +1167,18 @@ public class DDMFormAdminDisplayContext {
 
 	private final AddDefaultSharedFormLayoutPortalInstanceLifecycleListener
 		_addDefaultSharedFormLayoutPortalInstanceLifecycleListener;
-	private final DDMExporterFactory _ddmExporterFactory;
+	private final DDMFormBuilderContextFactory _ddmFormBuilderContextFactory;
+	private final DDMFormBuilderSettingsRetriever
+		_ddmFormBuilderSettingsRetriever;
 	private final DDMFormFieldTypeServicesTracker
 		_ddmFormFieldTypeServicesTracker;
-	private final DDMFormFieldTypesJSONSerializer
-		_ddmFormFieldTypesJSONSerializer;
+	private final DDMFormFieldTypesSerializerTracker
+		_ddmFormFieldTypesSerializerTracker;
 	private DDMFormInstance _ddmFormInstance;
 	private final DDMFormInstanceRecordLocalService
 		_ddmFormInstanceRecordLocalService;
+	private final DDMFormInstanceRecordWriterTracker
+		_ddmFormInstanceRecordWriterTracker;
 	private final DDMFormInstanceService _ddmFormInstanceService;
 	private final DDMFormInstanceVersionLocalService
 		_ddmFormInstanceVersionLocalService;
@@ -1089,8 +1193,8 @@ public class DDMFormAdminDisplayContext {
 	private final FormInstancePermissionCheckerHelper
 		_formInstancePermissionCheckerHelper;
 	private final JSONFactory _jsonFactory;
+	private final NPMResolver _npmResolver;
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
-	private final StorageEngine _storageEngine;
 
 }

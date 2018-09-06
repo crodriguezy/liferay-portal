@@ -210,6 +210,14 @@ public class DDMFormDisplayContext {
 		return ddmForm.getDDMFormSuccessPageSettings();
 	}
 
+	public String getDefaultLanguageId() throws PortalException {
+		DDMForm ddmForm = getDDMForm();
+
+		return ParamUtil.getString(
+			_renderRequest, "languageId",
+			LanguageUtil.getLanguageId(ddmForm.getDefaultLocale()));
+	}
+
 	public DDMFormInstance getFormInstance() {
 		if (_ddmFormInstance != null) {
 			return _ddmFormInstance;
@@ -582,9 +590,8 @@ public class DDMFormDisplayContext {
 		if (workflowEnabled) {
 			return LanguageUtil.get(locale, "submit-for-publication");
 		}
-		else {
-			return LanguageUtil.get(locale, "submit");
-		}
+
+		return LanguageUtil.get(locale, "submit");
 	}
 
 	protected ThemeDisplay getThemeDisplay() {

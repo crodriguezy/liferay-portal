@@ -46,21 +46,28 @@ public interface DocumentationMessageMapper
 		JSONObjectBuilder jsonObjectBuilder, String description) {
 	}
 
+	public default void mapEntryPoint(
+		JSONObjectBuilder jsonObjectBuilder, String entryPoint) {
+	}
+
 	public default void mapOperation(
 		JSONObjectBuilder jsonObjectBuilder, String resourceName, String type,
-		Operation operation) {
+		Operation operation, String description) {
 	}
 
 	public default void mapProperty(
-		JSONObjectBuilder jsonObjectBuilder, String fieldName) {
+		JSONObjectBuilder jsonObjectBuilder, String fieldName,
+		String description) {
 	}
 
 	public default void mapResource(
-		JSONObjectBuilder jsonObjectBuilder, String resourceName) {
+		JSONObjectBuilder jsonObjectBuilder, String resourceName,
+		String description) {
 	}
 
 	public default void mapResourceCollection(
-		JSONObjectBuilder jsonObjectBuilder, String resourceName) {
+		JSONObjectBuilder jsonObjectBuilder, String resourceName,
+		String description) {
 	}
 
 	/**

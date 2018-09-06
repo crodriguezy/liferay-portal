@@ -49,12 +49,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -247,20 +245,15 @@ public class DefaultLPKGDeployer implements LPKGDeployer {
 					zipFile, jarOutputStream,
 					name.substring(0, name.length() - 5));
 
-				Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
+				ZipEntry zipEntry = zipFile.getEntry(
+					"liferay-marketplace.properties");
 
-				while (zipEntries.hasMoreElements()) {
-					ZipEntry zipEntry = zipEntries.nextElement();
+				jarOutputStream.putNextEntry(zipEntry);
 
-					jarOutputStream.putNextEntry(
-						new ZipEntry(zipEntry.getName()));
+				StreamUtil.transfer(
+					zipFile.getInputStream(zipEntry), jarOutputStream, false);
 
-					StreamUtil.transfer(
-						zipFile.getInputStream(zipEntry), jarOutputStream,
-						false);
-
-					jarOutputStream.closeEntry();
-				}
+				jarOutputStream.closeEntry();
 			}
 
 			return new UnsyncByteArrayInputStream(
@@ -348,7 +341,7 @@ public class DefaultLPKGDeployer implements LPKGDeployer {
 		LPKGIndexValidatorThreadLocal.setEnabled(false);
 
 		try {
-			_instalLPKGs(bundleContext, lpkgFiles);
+			_installLPKGs(bundleContext, lpkgFiles);
 
 			_installOverrideJars(bundleContext, jarFiles);
 
@@ -378,6 +371,25 @@ public class DefaultLPKGDeployer implements LPKGDeployer {
 		Files.createDirectories(deploymentDirPath);
 
 		return deploymentDirPath;
+	}
+
+	private void _installLPKGs(
+		BundleContext bundleContext, List<File> lpkgFiles) {
+
+		for (File lpkgFile : lpkgFiles) {
+			try {
+				List<Bundle> bundles = deploy(bundleContext, lpkgFile);
+
+				if (!bundles.isEmpty()) {
+					Bundle lpkgBundle = bundles.get(0);
+
+					lpkgBundle.start();
+				}
+			}
+			catch (Exception e) {
+				_log.error("Unable to deploy LPKG file " + lpkgFile, e);
+			}
+		}
 	}
 
 	private void _installOverrideJars(
@@ -457,25 +469,6 @@ public class DefaultLPKGDeployer implements LPKGDeployer {
 
 		if (modified) {
 			_saveOverrideWarsProperties(bundleContext, properties);
-		}
-	}
-
-	private void _instalLPKGs(
-		BundleContext bundleContext, List<File> lpkgFiles) {
-
-		for (File lpkgFile : lpkgFiles) {
-			try {
-				List<Bundle> bundles = deploy(bundleContext, lpkgFile);
-
-				if (!bundles.isEmpty()) {
-					Bundle lpkgBundle = bundles.get(0);
-
-					lpkgBundle.start();
-				}
-			}
-			catch (Exception e) {
-				_log.error("Unable to deploy LPKG file " + lpkgFile, e);
-			}
 		}
 	}
 
@@ -638,14 +631,14 @@ public class DefaultLPKGDeployer implements LPKGDeployer {
 
 		Properties properties = _loadOverrideWarsProperties(bundleContext);
 
-		Set<Entry<Object, Object>> entrySet = properties.entrySet();
+		Set<Map.Entry<Object, Object>> entrySet = properties.entrySet();
 
-		Iterator<Entry<Object, Object>> iterator = entrySet.iterator();
+		Iterator<Map.Entry<Object, Object>> iterator = entrySet.iterator();
 
 		boolean modified = false;
 
 		while (iterator.hasNext()) {
-			Entry<Object, Object> entry = iterator.next();
+			Map.Entry<Object, Object> entry = iterator.next();
 
 			if (warFiles.contains(new File((String)entry.getKey()))) {
 				continue;
@@ -702,7 +695,7 @@ public class DefaultLPKGDeployer implements LPKGDeployer {
 		DefaultLPKGDeployer.class);
 
 	private static final Pattern _pattern = Pattern.compile(
-		"/?(.*?)(-\\d+\\.\\d+\\.\\d+)(\\..+)?(\\.[jw]ar)");
+		".*?(-\\d+\\.\\d+\\.\\d+)\\..+?\\.[jw]ar");
 
 	private Path _deploymentDirPath;
 	private BundleTracker<List<Bundle>> _lpkgBundleTracker;

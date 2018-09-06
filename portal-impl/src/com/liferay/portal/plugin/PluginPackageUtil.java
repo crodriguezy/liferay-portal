@@ -528,9 +528,8 @@ public class PluginPackageUtil {
 
 			return true;
 		}
-		else {
-			return false;
-		}
+
+		return false;
 	}
 
 	private boolean _isInstalled(String context) {
@@ -540,9 +539,8 @@ public class PluginPackageUtil {
 		if (pluginPackage != null) {
 			return true;
 		}
-		else {
-			return false;
-		}
+
+		return false;
 	}
 
 	private boolean _isTrusted(String repositoryURL)
@@ -554,9 +552,8 @@ public class PluginPackageUtil {
 			if (ArrayUtil.contains(trusted, repositoryURL)) {
 				return true;
 			}
-			else {
-				return false;
-			}
+
+			return false;
 		}
 		catch (Exception e) {
 			throw new PluginPackageException(
@@ -835,7 +832,7 @@ public class PluginPackageUtil {
 		if (pos == -1) {
 			pos = displayName.indexOf("-ext");
 
-			pluginType = Plugin.TYPE_EXT;
+			pluginType = _TYPE_EXT;
 		}
 
 		if (pos == -1) {
@@ -1359,6 +1356,8 @@ public class PluginPackageUtil {
 		_installedPluginPackages.registerPluginPackageInstallation(
 			pluginPackage);
 	}
+
+	private static final String _TYPE_EXT = "ext";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		PluginPackageUtil.class);

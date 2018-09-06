@@ -30,7 +30,7 @@
 	</set-up>
 
 	<tear-down>
-		<var method="TestPropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+		<var method="PropsUtil#get('test.portal.instance')" name="testPortalInstance" />
 
 		<if>
 			<equals arg1="${testPortalInstance}" arg2="true" />
@@ -679,7 +679,7 @@
 
 	<command name="StagingDemoDocumentsAndMedia" priority="5">
 		<property name="custom.properties" value="default.layout.template.id=1_column" />
-		<property name="portal.acceptance" value="false" />
+		<property name="portal.acceptance" value="true" />
 		<property name="test.name.skip.portal.instance" value="Staging#StagingDemoDocumentsAndMedia" />
 		<property name="testray.component.names" value="Training" />
 
@@ -1105,7 +1105,7 @@
 	</command>
 
 	<command name="StagingMultipleDM" priority="5">
-		<property name="portal.acceptance" value="false" />
+		<property name="portal.acceptance" value="true" />
 		<property name="testray.component.names" value="Training" />
 
 		<execute macro="Navigator#gotoSitePage">
@@ -1190,7 +1190,7 @@
 	</command>
 
 	<command name="StagingOnlyApprovedPublishToLive" priority="5">
-		<property name="portal.acceptance" value="false" />
+		<property name="portal.acceptance" value="true" />
 		<property name="testray.component.names" value="Training" />
 
 		<execute macro="ProductMenu#gotoSite">
@@ -1584,9 +1584,7 @@
 			<var name="portlet" value="Workflow" />
 		</execute>
 
-		<execute macro="Navigator#gotoNavItem">
-			<var name="navItem" value="Schemes" />
-		</execute>
+		<execute macro="NavItem#gotoSchemes" />
 
 		<execute macro="Workflow#configureWorkflow">
 			<var name="workflowDefinition" value="Single Approver" />
@@ -1786,9 +1784,7 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="Navigator#gotoNavItem">
-			<var name="navItem" value="Structures" />
-		</execute>
+		<execute macro="NavItem#gotoStructures" />
 
 		<execute macro="WebContentStructures#addCP">
 			<var name="structureDescription" value="Structure Description" />
@@ -1817,9 +1813,7 @@
 			<var name="portlet" value="Web Content" />
 		</execute>
 
-		<execute macro="Navigator#gotoNavItem">
-			<var name="navItem" value="Templates" />
-		</execute>
+		<execute macro="NavItem#gotoTemplates" />
 
 		<execute macro="WebContentTemplates#addCP">
 			<var name="templateDescription" value="Template Description" />
@@ -1910,9 +1904,7 @@
 
 		<execute function="AssertTextEquals#assertPartialText" locator1="WC#ENTRY_LIST_TITLE_ON_LIVE" value1="Web Content Title" />
 
-		<execute macro="Navigator#gotoNavItem">
-			<var name="navItem" value="Structures" />
-		</execute>
+		<execute macro="NavItem#gotoStructures" />
 
 		<execute macro="WebContentStructures#viewCP">
 			<var name="structureDescription" value="Structure Description" />

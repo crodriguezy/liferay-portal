@@ -19,12 +19,12 @@ import com.liferay.message.boards.model.MBCategory;
 import com.liferay.message.boards.model.MBMessage;
 import com.liferay.message.boards.service.MBMessageLocalService;
 import com.liferay.message.boards.social.MBActivityKeys;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.social.kernel.model.BaseSocialActivityInterpreter;
 import com.liferay.social.kernel.model.SocialActivity;
@@ -124,17 +124,15 @@ public class MBMessageActivityInterpreter
 				if (Validator.isNull(groupName)) {
 					return "activity-message-boards-message-add-message";
 				}
-				else {
-					return "activity-message-boards-message-add-message-in";
-				}
+
+				return "activity-message-boards-message-add-message-in";
 			}
 			else {
 				if (Validator.isNull(groupName)) {
 					return "activity-message-boards-message-reply-message";
 				}
-				else {
-					return "activity-message-boards-message-reply-message-in";
-				}
+
+				return "activity-message-boards-message-reply-message-in";
 			}
 		}
 		else if ((activityType == MBActivityKeys.REPLY_MESSAGE) &&
@@ -143,17 +141,15 @@ public class MBMessageActivityInterpreter
 			if (Validator.isNull(groupName)) {
 				return "activity-message-boards-message-reply-message";
 			}
-			else {
-				return "activity-message-boards-message-reply-message-in";
-			}
+
+			return "activity-message-boards-message-reply-message-in";
 		}
 		else if (activityType == MBActivityKeys.UPDATE_MESSAGE) {
 			if (Validator.isNull(groupName)) {
 				return "activity-message-boards-message-update-message";
 			}
-			else {
-				return "activity-message-boards-message-update-message-in";
-			}
+
+			return "activity-message-boards-message-update-message-in";
 		}
 
 		return null;

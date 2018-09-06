@@ -34,8 +34,6 @@ import java.util.stream.Stream;
 import javax.ws.rs.core.UriBuilder;
 
 import org.apache.avro.Schema;
-import org.apache.avro.Schema.Field;
-import org.apache.avro.Schema.Type;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
 
@@ -94,7 +92,8 @@ public class LiferayWriter
 		String resourceId = getIndexedRecordId(indexedRecord);
 
 		String resourceURL =
-			_tLiferayOutputProperties.resource.resourceURL.getValue();
+			_tLiferayOutputProperties.resource.resourceProperty.
+				getResourceURL();
 
 		UriBuilder uriBuilder = UriBuilder.fromPath(resourceURL);
 
@@ -122,7 +121,8 @@ public class LiferayWriter
 		String resourceId = getIndexedRecordId(indexedRecord);
 
 		String resourceURL =
-			_tLiferayOutputProperties.resource.resourceURL.getValue();
+			_tLiferayOutputProperties.resource.resourceProperty.
+				getResourceURL();
 
 		UriBuilder uriBuilder = UriBuilder.fromPath(resourceURL);
 
@@ -150,7 +150,8 @@ public class LiferayWriter
 		ObjectNode objectNode = _createApioExpectedForm(indexedRecord, true);
 
 		String resourceURL =
-			_tLiferayOutputProperties.resource.resourceURL.getValue();
+			_tLiferayOutputProperties.resource.resourceProperty.
+				getResourceURL();
 
 		try {
 			_liferaySink.doApioPostRequest(
@@ -183,6 +184,7 @@ public class LiferayWriter
 	@Override
 	public void open(String uId) throws IOException {
 		_result = new Result(uId);
+		_tLiferayOutputProperties.resource.setupResourceURLPrefix();
 	}
 
 	@Override
@@ -240,7 +242,7 @@ public class LiferayWriter
 
 		List<Schema.Field> indexRecordFields = indexRecordSchema.getFields();
 
-		Stream<Field> stream = indexRecordFields.stream();
+		Stream<Schema.Field> stream = indexRecordFields.stream();
 
 		Schema.Field idField = stream.filter(
 			field -> AvroConstants.ID.equals(field.name())
@@ -256,7 +258,7 @@ public class LiferayWriter
 
 		Schema unwrappedSchema = AvroUtils.unwrapIfNullable(fieldSchema);
 
-		Type fieldType = unwrappedSchema.getType();
+		Schema.Type fieldType = unwrappedSchema.getType();
 
 		if (fieldType == Schema.Type.STRING) {
 			return (String)indexedRecord.get(idField.pos());
@@ -299,7 +301,7 @@ public class LiferayWriter
 
 			Schema unwrappedSchema = AvroUtils.unwrapIfNullable(fieldSchema);
 
-			Type fieldType = unwrappedSchema.getType();
+			Schema.Type fieldType = unwrappedSchema.getType();
 
 			if (fieldType == Schema.Type.STRING) {
 				objectNode.put(
