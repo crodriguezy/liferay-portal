@@ -21,7 +21,7 @@ import com.liferay.source.formatter.checkstyle.util.DetailASTUtil;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.FullIdent;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
-import com.puppycrawl.tools.checkstyle.utils.AnnotationUtility;
+import com.puppycrawl.tools.checkstyle.utils.AnnotationUtil;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -72,9 +72,7 @@ public class ReferenceAnnotationCheck extends BaseCheck {
 
 		if (!matcher.find()) {
 			if (!_containsMethod(classDefAST, defaultUnbindMethodName)) {
-				log(
-					methodDefAST.getLineNo(),
-					_MSG_MISSING_DYNAMIC_POLICY_UNBIND);
+				log(methodDefAST, _MSG_MISSING_DYNAMIC_POLICY_UNBIND);
 			}
 
 			return;
@@ -93,7 +91,7 @@ public class ReferenceAnnotationCheck extends BaseCheck {
 				continue;
 			}
 
-			if (AnnotationUtility.containsAnnotation(
+			if (AnnotationUtil.containsAnnotation(
 					variableDefAST, "Reference")) {
 
 				return;
@@ -104,7 +102,7 @@ public class ReferenceAnnotationCheck extends BaseCheck {
 
 			if (!modifiersAST.branchContains(TokenTypes.LITERAL_STATIC)) {
 				log(
-					methodDefAST.getLineNo(), _MSG_MOVE_REFERENCE, methodName,
+					methodDefAST, _MSG_MOVE_REFERENCE, methodName,
 					variableName);
 			}
 		}
@@ -119,12 +117,12 @@ public class ReferenceAnnotationCheck extends BaseCheck {
 		if (policyOptionName.endsWith(_POLICY_OPTION_GREEDY) &&
 			policyName.endsWith(_POLICY_STATIC)) {
 
-			log(annotationAST.getLineNo(), _MSG_INCORRECT_GREEDY_POLICY_OPTION);
+			log(annotationAST, _MSG_INCORRECT_GREEDY_POLICY_OPTION);
 		}
 	}
 
 	private void _checkReferenceAnnotation(DetailAST detailAST) {
-		DetailAST annotationAST = AnnotationUtility.getAnnotation(
+		DetailAST annotationAST = AnnotationUtil.getAnnotation(
 			detailAST, "Reference");
 
 		if (annotationAST == null) {
@@ -204,9 +202,7 @@ public class ReferenceAnnotationCheck extends BaseCheck {
 			DetailAST identAST = variableDefAST.findFirstToken(
 				TokenTypes.IDENT);
 
-			log(
-				identAST.getLineNo(), _MSG_MISSING_VOLATILE,
-				identAST.getText());
+			log(identAST, _MSG_MISSING_VOLATILE, identAST.getText());
 		}
 	}
 
@@ -310,7 +306,7 @@ public class ReferenceAnnotationCheck extends BaseCheck {
 
 	private static final String _POLICY_STATIC = "STATIC";
 
-	private final Pattern _referenceMethodContentPattern = Pattern.compile(
-		"^(\\w+) =\\s+\\w+;$");
+	private static final Pattern _referenceMethodContentPattern =
+		Pattern.compile("^(\\w+) =\\s+\\w+;$");
 
 }

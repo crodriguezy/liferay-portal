@@ -29,8 +29,11 @@ import com.liferay.dynamic.data.mapping.exception.StorageFieldRequiredException;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.dynamic.data.mapping.storage.Fields;
+import com.liferay.dynamic.data.mapping.util.DDMTemplateHelper;
 import com.liferay.dynamic.data.mapping.util.DDMUtil;
+import com.liferay.exportimport.kernel.exception.ExportImportContentValidationException;
 import com.liferay.item.selector.ItemSelector;
+import com.liferay.journal.configuration.JournalFileUploadsConfiguration;
 import com.liferay.journal.constants.JournalPortletKeys;
 import com.liferay.journal.constants.JournalWebKeys;
 import com.liferay.journal.exception.ArticleContentException;
@@ -74,6 +77,7 @@ import com.liferay.journal.web.util.JournalPortletUtil;
 import com.liferay.journal.web.util.JournalUtil;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.diff.CompareVersionsException;
@@ -88,7 +92,7 @@ import com.liferay.portal.kernel.model.TrashedModel;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
-import com.liferay.portal.kernel.portlet.PortletProvider.Action;
+import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
@@ -112,7 +116,6 @@ import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -171,6 +174,7 @@ import org.osgi.service.component.annotations.Reference;
 		"com.liferay.portlet.add-default-resource=true",
 		"com.liferay.portlet.css-class-wrapper=portlet-journal",
 		"com.liferay.portlet.display-category=category.hidden",
+		"com.liferay.portlet.header-portlet-css=/css/ddm_form.css",
 		"com.liferay.portlet.header-portlet-css=/css/main.css",
 		"com.liferay.portlet.header-portlet-css=/css/tree.css",
 		"com.liferay.portlet.icon=/icons/journal.png",
@@ -186,7 +190,7 @@ import org.osgi.service.component.annotations.Reference;
 		"javax.portlet.display-name=Web Content",
 		"javax.portlet.expiration-cache=0",
 		"javax.portlet.init-param.mvc-action-command-package-prefix=com.liferay.journal.web.portlet.action",
-		"javax.portlet.init-param.template-path=/",
+		"javax.portlet.init-param.template-path=/META-INF/resources/",
 		"javax.portlet.init-param.view-template=/view.jsp",
 		"javax.portlet.name=" + JournalPortletKeys.JOURNAL,
 		"javax.portlet.resource-bundle=content.Language",
@@ -482,6 +486,15 @@ public class JournalPortlet extends MVCPortlet {
 				JournalWebKeys.ITEM_SELECTOR, _itemSelector);
 		}
 
+		if (Objects.equals(path, "/edit_ddm_template.jsp")) {
+			renderRequest.setAttribute(
+				DDMTemplateHelper.class.getName(), _ddmTemplateHelper);
+		}
+
+		renderRequest.setAttribute(
+			JournalFileUploadsConfiguration.class.getName(),
+			_journalFileUploadsConfiguration);
+
 		renderRequest.setAttribute(
 			JournalWebConfiguration.class.getName(), _journalWebConfiguration);
 
@@ -510,6 +523,9 @@ public class JournalPortlet extends MVCPortlet {
 	public void serveResource(
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
 		throws IOException, PortletException {
+
+		resourceRequest.setAttribute(
+			DDMTemplateHelper.class.getName(), _ddmTemplateHelper);
 
 		resourceRequest.setAttribute(TrashWebKeys.TRASH_HELPER, _trashHelper);
 
@@ -941,7 +957,7 @@ public class JournalPortlet extends MVCPortlet {
 
 		if (article.getClassNameId() == ddmStructureClassNameId) {
 			String ddmPortletId = PortletProviderUtil.getPortletId(
-				DDMStructure.class.getName(), Action.EDIT);
+				DDMStructure.class.getName(), PortletProvider.Action.EDIT);
 
 			MultiSessionMessages.add(
 				actionRequest, ddmPortletId + "requestProcessed");
@@ -1082,6 +1098,9 @@ public class JournalPortlet extends MVCPortlet {
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
+		_journalFileUploadsConfiguration = ConfigurableUtil.createConfigurable(
+			JournalFileUploadsConfiguration.class, properties);
+
 		_journalWebConfiguration = ConfigurableUtil.createConfigurable(
 			JournalWebConfiguration.class, properties);
 	}
@@ -1241,6 +1260,14 @@ public class JournalPortlet extends MVCPortlet {
 
 		try {
 			ActionUtil.getFolder(renderRequest);
+
+			String path = getPath(renderRequest, renderResponse);
+
+			if (Objects.equals(path, "/edit_article.jsp") ||
+				Objects.equals(path, "/view_article_history.jsp")) {
+
+				ActionUtil.getArticle(renderRequest);
+			}
 		}
 		catch (Exception e) {
 			_log.error(e.getMessage());
@@ -1320,6 +1347,7 @@ public class JournalPortlet extends MVCPortlet {
 			cause instanceof DuplicateFeedIdException ||
 			cause instanceof DuplicateFileEntryException ||
 			cause instanceof DuplicateFolderNameException ||
+			cause instanceof ExportImportContentValidationException ||
 			cause instanceof FeedContentFieldException ||
 			cause instanceof FeedIdException ||
 			cause instanceof FeedNameException ||
@@ -1535,6 +1563,9 @@ public class JournalPortlet extends MVCPortlet {
 	private DDMStructureLocalService _ddmStructureLocalService;
 
 	@Reference
+	private DDMTemplateHelper _ddmTemplateHelper;
+
+	@Reference
 	private Http _http;
 
 	@Reference
@@ -1554,6 +1585,9 @@ public class JournalPortlet extends MVCPortlet {
 
 	@Reference
 	private JournalFeedService _journalFeedService;
+
+	private volatile JournalFileUploadsConfiguration
+		_journalFileUploadsConfiguration;
 
 	@Reference
 	private JournalFolderService _journalFolderService;

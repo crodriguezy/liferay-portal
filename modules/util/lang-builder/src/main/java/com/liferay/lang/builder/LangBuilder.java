@@ -258,10 +258,6 @@ public class LangBuilder {
 		}
 	}
 
-	private static boolean _startsWithIgnoreCase(String string, String prefix) {
-		return string.regionMatches(true, 0, prefix, 0, prefix.length());
-	}
-
 	private void _addMessage(
 		Map<LangBuilderCategory, Map<String, String>> messages, String key,
 		String value, boolean useSingleCategory) {
@@ -497,6 +493,13 @@ public class LangBuilder {
 				" ", "<strong>", "</strong>", "<em>", "</em>", " URL ", "\'",
 				"\'", "\"", "\"", "reCAPTCHA", "CAPTCHA"
 			});
+		value = StringUtil.replace(
+			value.trim(),
+			new char[] {
+				'\u2018', '\u2019', '\u201a', '\u201b', '\u201c', '\u201d',
+				'\u201e', '\u201f'
+			},
+			new char[] {'\'', '\'', '\'', '\'', '\"', '\"', '\"', '\"'});
 
 		return value;
 	}

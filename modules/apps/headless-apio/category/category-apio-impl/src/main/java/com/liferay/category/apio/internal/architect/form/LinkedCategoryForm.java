@@ -15,28 +15,24 @@
 package com.liferay.category.apio.internal.architect.form;
 
 import com.liferay.apio.architect.form.Form;
-import com.liferay.apio.architect.form.Form.Builder;
 import com.liferay.category.apio.architect.identifier.CategoryIdentifier;
 
 /**
- * Instances of this class represent the values extracted from a linked category
- * form.
+ * Represents the values extracted from a linked category form.
  *
  * @author Alejandro Hernández
- * @review
  */
 public class LinkedCategoryForm {
 
 	/**
-	 * Builds a {@code Form} that generates {@code LinkedCategoryForm} depending
-	 * on the HTTP body.
+	 * Builds a {@code Form} that generates a {@code LinkedCategoryForm} that
+	 * depends on the HTTP body.
 	 *
 	 * @param  builder the {@code Form} builder
-	 * @return a nested category form
-	 * @review
+	 * @return the linked category form
 	 */
 	public static Form<LinkedCategoryForm> buildForm(
-		Builder<LinkedCategoryForm> builder) {
+		Form.Builder<LinkedCategoryForm> builder) {
 
 		return builder.title(
 			__ -> "Linked category form"
@@ -46,7 +42,7 @@ public class LinkedCategoryForm {
 			LinkedCategoryForm::new
 		).addRequiredLinkedModel(
 			"category", CategoryIdentifier.class,
-			LinkedCategoryForm::_setCategoryId
+			LinkedCategoryForm::setCategoryId
 		).build();
 	}
 
@@ -54,13 +50,12 @@ public class LinkedCategoryForm {
 	 * Returns the asset category's ID.
 	 *
 	 * @return the asset category's ID
-	 * @review
 	 */
 	public long getCategoryId() {
 		return _categoryId;
 	}
 
-	private void _setCategoryId(long categoryId) {
+	public void setCategoryId(long categoryId) {
 		_categoryId = categoryId;
 	}
 

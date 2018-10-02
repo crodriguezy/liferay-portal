@@ -17,21 +17,64 @@ package com.liferay.jenkins.results.parser;
 /**
  * @author Michael Hashimoto
  */
-public abstract class BaseBuildRunner {
+public abstract class BaseBuildRunner<T extends BuildData>
+	implements BuildRunner<T> {
 
-	public Job getJob() {
-		return job;
+	public T getBuildData() {
+		return _buildData;
 	}
 
-	public void setup() {
-		primaryLocalRepository.setup();
+	@Override
+	public void run() {
+		initWorkspace();
+
+		setUpWorkspace();
 	}
 
-	protected BaseBuildRunner(Job job) {
-		this.job = job;
+	@Override
+	public void setUp() {
 	}
 
-	protected final Job job;
-	protected LocalRepository primaryLocalRepository;
+	@Override
+	public void tearDown() {
+		initWorkspace();
+
+		tearDownWorkspace();
+	}
+
+	protected BaseBuildRunner(T buildData) {
+		_buildData = buildData;
+
+		_job = JobFactory.newJob(_buildData);
+
+		_job.readJobProperties();
+	}
+
+	protected Job getJob() {
+		return _job;
+	}
+
+	protected abstract void initWorkspace();
+
+	protected void setUpWorkspace() {
+		if (workspace == null) {
+			throw new RuntimeException("Workspace is null");
+		}
+
+		workspace.setUp(getJob());
+	}
+
+	protected void tearDownWorkspace() {
+		if (workspace == null) {
+			throw new RuntimeException("Workspace is null");
+		}
+
+		workspace.tearDown();
+	}
+
+	protected Workspace workspace;
+
+	private final T _buildData;
+	private final Job _job;
 
 }

@@ -165,6 +165,10 @@ public interface OrganizationService extends BaseService {
 	public Organization fetchOrganization(long organizationId)
 		throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Organization> getGtOrganizations(long gtOrganizationId,
+		long companyId, long parentOrganizationId, int size);
+
 	/**
 	* Returns the organization with the primary key.
 	*
@@ -225,6 +229,10 @@ public interface OrganizationService extends BaseService {
 	public List<Organization> getOrganizations(long companyId,
 		long parentOrganizationId, int start, int end);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Organization> getOrganizations(long companyId,
+		long parentOrganizationId, String name, int start, int end);
+
 	/**
 	* Returns the number of organizations belonging to the parent organization.
 	*
@@ -235,6 +243,10 @@ public interface OrganizationService extends BaseService {
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getOrganizationsCount(long companyId, long parentOrganizationId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getOrganizationsCount(long companyId, long parentOrganizationId,
+		String name) throws PortalException;
 
 	/**
 	* Returns the OSGi service identifier.

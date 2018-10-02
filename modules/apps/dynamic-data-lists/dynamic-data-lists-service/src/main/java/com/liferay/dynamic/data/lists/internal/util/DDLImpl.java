@@ -63,7 +63,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Marcellus Tavares
  * @author Eduardo Lundgren
  */
-@Component(immediate = true)
+@Component(immediate = true, service = DDL.class)
 public class DDLImpl implements DDL {
 
 	/**
@@ -166,9 +166,8 @@ public class DDLImpl implements DDL {
 
 							return String.valueOf(fieldValueDate.getTime());
 						}
-						else {
-							return String.valueOf(fieldValue);
-						}
+
+						return String.valueOf(fieldValue);
 					});
 
 				jsonObject.put(

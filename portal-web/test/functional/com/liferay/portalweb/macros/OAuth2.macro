@@ -21,21 +21,21 @@
 			<var name="rowEntry" value="${applicationName}" />
 		</execute>
 
-		<execute function="Confirm#assertPartialConfirmation" value1="Are you sure you want to delete the application?" />
+		<execute function="AssertConfirm#assertPartialConfirmation" value1="Are you sure you want to delete the application?" />
 
 		<execute function="AssertElementNotPresent" locator1="OAuth2#ADMIN_TABLE_APP_NAME">
 			<var name="key_tableName" value="${applicationName}" />
 		</execute>
 	</command>
 
-	<command name="editApplication" returns="newGeneratedClientSecret">
+	<command name="editApplication">
 		<execute macro="LexiconEntry#gotoEntryMenuItem">
 			<var name="menuItem" value="Edit" />
 			<var name="rowEntry" value="${applicationName}" />
 		</execute>
 
 		<execute macro="OAuth2#inputApplicationValues">
-			<return from="newGeneratedClientSecret" name="newGeneratedClientSecret" />
+			<return name="newGeneratedClientSecret" />
 			<var name="applicationName" value="${newApplicationName}" />
 			<var name="callbackURI" value="${callbackURI}" />
 			<var name="checkboxCheckList" value="${checkboxCheckList}" />
@@ -56,7 +56,7 @@
 			</then>
 		</if>
 
-		<return name="newGeneratedClientSecret" value="${newGeneratedClientSecret}" />
+		<return value="${newGeneratedClientSecret}" />
 	</command>
 
 	<command name="editScopes">
@@ -194,7 +194,7 @@
 		<execute function="AssertElementPresent" locator1="OAuth2#ADMIN_RESOURCE_PANEL_EXPANDED" />
 	</command>
 
-	<command name="inputApplicationValues" returns="newGeneratedClientSecret">
+	<command name="inputApplicationValues">
 		<if>
 			<isset var="clientId" />
 			<then>
@@ -229,8 +229,6 @@
 						<execute function="Click" locator1="OAuth2#ADMIN_INPUT_FORM_GENERATE_NEW_SECRET" />
 
 						<var method="selenium#getElementValue(OAuth2#ADMIN_INPUT_FORM_CLIENT_SECRET_EDIT_FIELD)" name="newGeneratedClientSecret" />
-
-						<return name="newGeneratedClientSecret" value="newGeneratedClientSecret" />
 					</then>
 					<else>
 						<execute function="Click" locator1="OAuth2#ADMIN_INPUT_FORM_CLIENT_SECRET_EDIT_FIELD" />
@@ -249,6 +247,10 @@
 				</if>
 			</then>
 		</if>
+
+		<!-- All macros that require return must have return statement that's called. -->
+
+		<return value="${newGeneratedClientSecret}" />
 
 		<if>
 			<isset var="applicationName" />
@@ -350,7 +352,7 @@
 			<var name="key_rowEntry" value="${userName}" />
 		</execute>
 
-		<execute function="Confirm#waitForConfirmation" value1="Are you sure you want to revoke the authorization?" />
+		<execute function="AssertConfirm#waitForConfirmation" value1="Are you sure you want to revoke the authorization?" />
 
 		<execute macro="Alert#viewSuccessMessage" />
 
@@ -375,7 +377,7 @@
 
 		<execute function="AssertClickNoError" locator1="OAuth2#USER_CONNECTED_APP_REMOVE_ACCESS_BUTTON" value1="Remove Access" />
 
-		<execute function="Confirm#waitForConfirmation" value1="${applicationName} will no longer have access to your account. Removed access cannot be recovered." />
+		<execute function="AssertConfirm#waitForConfirmation" value1="${applicationName} will no longer have access to your account. Removed access cannot be recovered." />
 
 		<execute macro="Alert#viewSuccessMessage" />
 	</command>

@@ -1,0 +1,111 @@
+<definition component-name="portal-wcm">
+	<property name="portal.release" value="true" />
+	<property name="portal.upstream" value="true" />
+	<property name="testray.main.component.name" value="Fragments" />
+
+	<set-up>
+		<execute macro="TestCase#setUpPortalInstance" />
+
+		<execute macro="User#firstLoginPG" />
+
+		<execute macro="JSONGroup#addGroup">
+			<var name="groupName" value="Test Site Name" />
+		</execute>
+
+		<execute macro="FragmentsAdmin#openFragmentsAdmin">
+			<var name="siteURLKey" value="test-site-name" />
+		</execute>
+	</set-up>
+
+	<tear-down>
+		<var method="PropsUtil#get('test.portal.instance')" name="testPortalInstance" />
+
+		<if>
+			<equals arg1="${testPortalInstance}" arg2="true" />
+			<then>
+				<execute macro="PortalInstances#tearDownCP" />
+			</then>
+			<else>
+				<execute macro="JSONGroup#deleteGroupByName">
+					<var name="groupName" value="Test Site Name" />
+				</execute>
+			</else>
+		</if>
+	</tear-down>
+
+	<command name="AddCollectionFragmentWithSnippets" priority="5">
+		<property name="portal.acceptance" value="true" />
+
+		<execute macro="FragmentsAdmin#addCollection">
+			<var name="collectionName" value="Collection Name" />
+		</execute>
+
+		<execute macro="Navigator#gotoNavNested">
+			<var name="navNested" value="Collection Name" />
+		</execute>
+
+		<execute macro="FragmentsAdmin#addFragment">
+			<var name="fragmentName" value="Fragment Name" />
+		</execute>
+
+		<execute macro="FragmentsAdmin#openFragmentsAdmin">
+			<var name="siteURLKey" value="test-site-name" />
+		</execute>
+
+		<execute macro="Navigator#gotoNavNested">
+			<var name="navNested" value="Collection Name" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Edit" />
+			<var name="rowEntry" value="Fragment Name" />
+		</execute>
+
+		<execute macro="TestCase#getFileContent">
+			<return name="htmlSnippet" />
+			<var name="fileName" value="fragment_button.html" />
+		</execute>
+
+		<execute function="Type#typeAceEditorNoError" locator1="Fragment#HTML_EDITOR" value1="${htmlSnippet}" />
+
+		<execute macro="TestCase#getFileContent">
+			<return name="cssSnippet" />
+			<var name="fileName" value="fragment_button.css" />
+		</execute>
+
+		<execute function="Type#typeAceEditorNoError" locator1="Fragment#CSS_EDITOR" value1="${cssSnippet}" />
+
+		<execute macro="TestCase#getFileContent">
+			<return name="javascriptSnippet" />
+			<var name="fileName" value="fragment_button.js" />
+		</execute>
+
+		<execute function="Type#typeAceEditorNoError" locator1="Fragment#JAVASCRIPT_EDITOR" value1="${javascriptSnippet}" />
+
+		<execute macro="PortletEntry#publish" />
+
+		<execute macro="FragmentsAdmin#openFragmentsAdmin">
+			<var name="siteURLKey" value="test-site-name" />
+		</execute>
+
+		<execute macro="Navigator#gotoNavNested">
+			<var name="navNested" value="Collection Name" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Edit" />
+			<var name="rowEntry" value="Fragment Name" />
+		</execute>
+
+		<execute function="SelectFrame" locator1="Fragment#PREVIEW_IFRAME" />
+
+		<execute function="AssertElementPresent" locator1="Button#SUBMIT" />
+		<execute function="AssertElementPresent" locator1="Button#CANCEL" />
+
+		<execute function="AssertClickNoError" locator1="Button#SUBMIT" value1="Submit" />
+
+		<execute function="AssertConfirm" value1="Form submitted" />
+
+		<execute function="SelectFrameTop" />
+	</command>
+</definition>

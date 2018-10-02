@@ -585,9 +585,8 @@ public class OrganizationLocalServiceImpl
 		if (organization != null) {
 			return organization.getOrganizationId();
 		}
-		else {
-			return 0;
-		}
+
+		return 0;
 	}
 
 	@Override
@@ -674,10 +673,17 @@ public class OrganizationLocalServiceImpl
 			return organizationPersistence.findByCompanyId(
 				companyId, start, end);
 		}
-		else {
-			return organizationPersistence.findByC_P(
-				companyId, parentOrganizationId, start, end);
-		}
+
+		return organizationPersistence.findByC_P(
+			companyId, parentOrganizationId, start, end);
+	}
+
+	public List<Organization> getOrganizations(
+		long companyId, long parentOrganizationId, String name, int start,
+		int end) {
+
+		return organizationPersistence.findByC_P_LikeN(
+			companyId, parentOrganizationId, name, start, end);
 	}
 
 	@Override
@@ -778,10 +784,16 @@ public class OrganizationLocalServiceImpl
 
 			return organizationPersistence.countByCompanyId(companyId);
 		}
-		else {
-			return organizationPersistence.countByC_P(
-				companyId, parentOrganizationId);
-		}
+
+		return organizationPersistence.countByC_P(
+			companyId, parentOrganizationId);
+	}
+
+	public int getOrganizationsCount(
+		long companyId, long parentOrganizationId, String name) {
+
+		return organizationPersistence.countByC_P_LikeN(
+			companyId, parentOrganizationId, name);
 	}
 
 	/**
@@ -2321,9 +2333,8 @@ public class OrganizationLocalServiceImpl
 
 			return true;
 		}
-		else {
-			return false;
-		}
+
+		return false;
 	}
 
 	protected boolean isUseCustomSQL(LinkedHashMap<String, Object> params) {
@@ -2439,7 +2450,7 @@ public class OrganizationLocalServiceImpl
 
 			if (parentOrganization == null) {
 				throw new OrganizationParentException(
-					"Organization " + parentOrganizationId + " doesn't exist");
+					"Organization " + parentOrganizationId + " does not exist");
 			}
 
 			String[] childrenTypes = getChildrenTypes(

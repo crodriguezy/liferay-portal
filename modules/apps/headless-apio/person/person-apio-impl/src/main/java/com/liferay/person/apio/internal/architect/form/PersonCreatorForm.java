@@ -14,6 +14,7 @@
 
 package com.liferay.person.apio.internal.architect.form;
 
+import com.liferay.apio.architect.file.BinaryFile;
 import com.liferay.apio.architect.form.Form;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -22,20 +23,18 @@ import java.util.Date;
 import java.util.Optional;
 
 /**
- * Instances of this class represent the values extracted from a person creator
- * form.
+ * Represents the values extracted from a person creator form.
  *
  * @author Alejandro Hernández
- * @review
  */
 public class PersonCreatorForm {
 
 	/**
-	 * Builds a {@code Form} that generates {@code PersonCreatorForm} depending
-	 * on the HTTP body.
+	 * Builds a {@code Form} that generates a {@code PersonCreatorForm} that
+	 * depends on the HTTP body.
 	 *
 	 * @param  formBuilder the {@code Form} builder
-	 * @return a person creator form
+	 * @return the person creator form
 	 */
 	public static Form<PersonCreatorForm> buildForm(
 		Form.Builder<PersonCreatorForm> formBuilder) {
@@ -47,37 +46,41 @@ public class PersonCreatorForm {
 		).constructor(
 			PersonCreatorForm::new
 		).addOptionalString(
-			"gender", PersonCreatorForm::_setGender
-		).addOptionalString(
-			"alternateName", PersonCreatorForm::_setAlternateName
+			"alternateName", PersonCreatorForm::setAlternateName
 		).addOptionalDate(
-			"birthDate", PersonCreatorForm::_setBirthDate
-		).addRequiredString(
-			"email", PersonCreatorForm::_setEmail
-		).addRequiredString(
-			"familyName", PersonCreatorForm::_setFamilyName
-		).addRequiredString(
-			"givenName", PersonCreatorForm::_setGivenName
+			"birthDate", PersonCreatorForm::setBirthDate
 		).addOptionalString(
-			"jobTitle", PersonCreatorForm::_setJobTitle
+			"gender", PersonCreatorForm::setGender
+		).addOptionalString(
+			"honorificPrefix", PersonCreatorForm::setHonorificPrefix
+		).addOptionalString(
+			"honorificSuffix", PersonCreatorForm::setHonorificSuffix
+		).addOptionalFile(
+			"image", PersonCreatorForm::setImageBinaryFile
+		).addRequiredString(
+			"email", PersonCreatorForm::setEmail
+		).addRequiredString(
+			"familyName", PersonCreatorForm::setFamilyName
+		).addRequiredString(
+			"givenName", PersonCreatorForm::setGivenName
+		).addOptionalString(
+			"jobTitle", PersonCreatorForm::setJobTitle
 		).build();
 	}
 
 	/**
-	 * Returns the person's alternate name
+	 * Returns the person's alternate name.
 	 *
 	 * @return the person's alternate name
-	 * @review
 	 */
 	public String getAlternateName() {
 		return _alternateName;
 	}
 
 	/**
-	 * Returns the person's birthday day
+	 * Returns the person's birth day.
 	 *
-	 * @return the person's birthday day
-	 * @review
+	 * @return the person's birth day
 	 */
 	public int getBirthdayDay() {
 		if (_birthdayDay != null) {
@@ -88,10 +91,9 @@ public class PersonCreatorForm {
 	}
 
 	/**
-	 * Returns the person's birthday month
+	 * Returns the person's birth month.
 	 *
-	 * @return the person's birthday month
-	 * @review
+	 * @return the person's birth month
 	 */
 	public int getBirthdayMonth() {
 		if (_birthdayMonth != null) {
@@ -102,10 +104,9 @@ public class PersonCreatorForm {
 	}
 
 	/**
-	 * Returns the person's birthday year
+	 * Returns the person's birth year.
 	 *
-	 * @return the person's birthday year
-	 * @review
+	 * @return the person's birth year
 	 */
 	public int getBirthdayYear() {
 		if (_birthdayYear != null) {
@@ -116,40 +117,48 @@ public class PersonCreatorForm {
 	}
 
 	/**
-	 * Returns the person's email
+	 * Returns the person's email address.
 	 *
-	 * @return the person's email
-	 * @review
+	 * @return the person's email address
 	 */
 	public String getEmail() {
 		return _email;
 	}
 
 	/**
-	 * Returns the person's family name
+	 * Returns the person's family name.
 	 *
 	 * @return the person's family name
-	 * @review
 	 */
 	public String getFamilyName() {
 		return _familyName;
 	}
 
 	/**
-	 * Returns the person's given name
+	 * Returns the person's given name.
 	 *
 	 * @return the person's given name
-	 * @review
 	 */
 	public String getGivenName() {
 		return _givenName;
 	}
 
+	public String getHonorificPrefix() {
+		return _honorificPrefix;
+	}
+
+	public String getHonorificSuffix() {
+		return _honorificSuffix;
+	}
+
+	public BinaryFile getImageBinaryFile() {
+		return _imageBinaryFile;
+	}
+
 	/**
-	 * Returns the person's job title
+	 * Returns the person's job title.
 	 *
 	 * @return the person's job title
-	 * @review
 	 */
 	public String getJobTitle() {
 		return Optional.ofNullable(
@@ -160,10 +169,9 @@ public class PersonCreatorForm {
 	}
 
 	/**
-	 * Checks if the person is a male
+	 * Returns {@code true} if the person is male.
 	 *
 	 * @return {@code true} if the person is a male; {@code false} otherwise
-	 * @review
 	 */
 	public boolean isMale() {
 		return Optional.ofNullable(
@@ -174,21 +182,20 @@ public class PersonCreatorForm {
 	}
 
 	/**
-	 * Checks if the person has an alternate name
+	 * Returns {@code true} if the person has an alternate name.
 	 *
 	 * @return {@code true} if the person has an alternate name; {@code false}
 	 *         otherwise
-	 * @review
 	 */
 	public boolean needsAlternateName() {
 		return Validator.isNull(_alternateName);
 	}
 
-	private void _setAlternateName(String alternateName) {
+	public void setAlternateName(String alternateName) {
 		_alternateName = alternateName;
 	}
 
-	private void _setBirthDate(Date birthDate) {
+	public void setBirthDate(Date birthDate) {
 		Calendar calendar = Calendar.getInstance();
 
 		calendar.setTime(birthDate);
@@ -198,23 +205,35 @@ public class PersonCreatorForm {
 		_birthdayYear = calendar.get(Calendar.YEAR);
 	}
 
-	private void _setEmail(String emailAddress) {
+	public void setEmail(String emailAddress) {
 		_email = emailAddress;
 	}
 
-	private void _setFamilyName(String lastName) {
+	public void setFamilyName(String lastName) {
 		_familyName = lastName;
 	}
 
-	private void _setGender(String gender) {
+	public void setGender(String gender) {
 		_male = "male".equals(gender);
 	}
 
-	private void _setGivenName(String givenName) {
+	public void setGivenName(String givenName) {
 		_givenName = givenName;
 	}
 
-	private void _setJobTitle(String jobTitle) {
+	public void setHonorificPrefix(String honorificPrefix) {
+		_honorificPrefix = honorificPrefix;
+	}
+
+	public void setHonorificSuffix(String honorificSuffix) {
+		_honorificSuffix = honorificSuffix;
+	}
+
+	public void setImageBinaryFile(BinaryFile imageBinaryFile) {
+		_imageBinaryFile = imageBinaryFile;
+	}
+
+	public void setJobTitle(String jobTitle) {
 		_jobTitle = jobTitle;
 	}
 
@@ -225,6 +244,9 @@ public class PersonCreatorForm {
 	private String _email;
 	private String _familyName;
 	private String _givenName;
+	private String _honorificPrefix;
+	private String _honorificSuffix;
+	private BinaryFile _imageBinaryFile;
 	private String _jobTitle;
 	private Boolean _male;
 

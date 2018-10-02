@@ -17,7 +17,6 @@ package com.liferay.comment.apio.internal.architect.router;
 import com.liferay.apio.architect.router.NestedCollectionRouter;
 import com.liferay.comment.apio.architect.identifier.CommentIdentifier;
 import com.liferay.comment.apio.internal.architect.router.base.BaseCommentNestedCollectionRouter;
-import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.service.JournalArticleService;
 import com.liferay.portal.kernel.comment.Comment;
 import com.liferay.portal.kernel.comment.CommentManager;
@@ -30,16 +29,15 @@ import org.osgi.service.component.annotations.Reference;
 
 /**
  * Provides the information necessary to expose the <a
- * href="http://schema.org/Comment">Comment</a> resources contained inside a
- * StructuredContent through a web API. The resources are mapped from the
- * internal model {@link Comment} and {@code JournalArticle}.
+ * href="http://schema.org/Comment">Comment</a> resources of structured content
+ * through a web API. The resources are mapped from the internal models {@code
+ * Comment} and {@code JournalArticle}.
  *
  * @author Eduardo Perez
- * @review
  */
-@Component(immediate = true)
-public class StructuredContentCommentNestedCollectionRouter extends
-	BaseCommentNestedCollectionRouter<StructuredContentIdentifier>
+@Component(immediate = true, service = NestedCollectionRouter.class)
+public class StructuredContentCommentNestedCollectionRouter
+	extends BaseCommentNestedCollectionRouter<StructuredContentIdentifier>
 	implements NestedCollectionRouter
 		<Comment, Long, CommentIdentifier, Long, StructuredContentIdentifier> {
 
@@ -52,15 +50,7 @@ public class StructuredContentCommentNestedCollectionRouter extends
 	protected GroupedModel getGroupedModel(long journalArticleId)
 		throws PortalException {
 
-		return _journalArticleService.getArticle(journalArticleId);
-	}
-
-	@Override
-	protected long getResourcePrimKey(long classPK) throws PortalException {
-		JournalArticle journalArticle = _journalArticleService.getArticle(
-			classPK);
-
-		return journalArticle.getResourcePrimKey();
+		return _journalArticleService.getLatestArticle(journalArticleId);
 	}
 
 	@Reference

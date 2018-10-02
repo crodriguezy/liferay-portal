@@ -1177,6 +1177,10 @@ public class SitesImpl implements Sites {
 				Layout layoutSetPrototypeLayout = getLayoutSetPrototypeLayout(
 					layout);
 
+				if (layoutSetPrototypeLayout == null) {
+					return true;
+				}
+
 				String layoutUpdateable =
 					layoutSetPrototypeLayout.getTypeSettingsProperty(
 						LAYOUT_UPDATEABLE);
@@ -1239,9 +1243,8 @@ public class SitesImpl implements Sites {
 
 			return true;
 		}
-		else {
-			return false;
-		}
+
+		return false;
 	}
 
 	@Override
@@ -1593,7 +1596,7 @@ public class SitesImpl implements Sites {
 				ActionKeys.UPDATE);
 		}
 		else if (!GroupPermissionUtil.contains(
-					 permissionChecker, group, ActionKeys.UPDATE) &&
+					permissionChecker, group, ActionKeys.UPDATE) &&
 				 (!group.isUser() ||
 				  (permissionChecker.getUserId() != group.getClassPK()))) {
 

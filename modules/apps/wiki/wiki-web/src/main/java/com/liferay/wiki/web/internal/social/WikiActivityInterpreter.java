@@ -14,6 +14,7 @@
 
 package com.liferay.wiki.web.internal.social;
 
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.NoSuchModelException;
 import com.liferay.portal.kernel.log.Log;
@@ -26,7 +27,6 @@ import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermi
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.URLCodec;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.social.kernel.model.BaseSocialActivityInterpreter;
@@ -168,72 +168,64 @@ public class WikiActivityInterpreter extends BaseSocialActivityInterpreter {
 			if (Validator.isNull(groupName)) {
 				return "activity-wiki-page-add-comment";
 			}
-			else {
-				return "activity-wiki-page-add-comment-in";
-			}
+
+			return "activity-wiki-page-add-comment-in";
 		}
 		else if (activityType == WikiActivityKeys.ADD_PAGE) {
 			if (Validator.isNull(groupName)) {
 				return "activity-wiki-page-add-page";
 			}
-			else {
-				return "activity-wiki-page-add-page-in";
-			}
+
+			return "activity-wiki-page-add-page-in";
 		}
 		else if (activityType == SocialActivityConstants.TYPE_ADD_ATTACHMENT) {
 			if (Validator.isNull(groupName)) {
 				return "activity-wiki-page-add-attachment";
 			}
-			else {
-				return "activity-wiki-page-add-attachment-in";
-			}
+
+			return "activity-wiki-page-add-attachment-in";
 		}
 		else if (activityType ==
-					 SocialActivityConstants.TYPE_MOVE_ATTACHMENT_TO_TRASH) {
+					SocialActivityConstants.TYPE_MOVE_ATTACHMENT_TO_TRASH) {
 
 			if (Validator.isNull(groupName)) {
 				return "activity-wiki-page-remove-attachment";
 			}
-			else {
-				return "activity-wiki-page-remove-attachment-in";
-			}
+
+			return "activity-wiki-page-remove-attachment-in";
 		}
 		else if (activityType ==
-					 SocialActivityConstants.
-						 TYPE_RESTORE_ATTACHMENT_FROM_TRASH) {
+					SocialActivityConstants.
+						TYPE_RESTORE_ATTACHMENT_FROM_TRASH) {
 
 			if (Validator.isNull(groupName)) {
 				return "activity-wiki-page-restore-attachment";
 			}
-			else {
-				return "activity-wiki-page-restore-attachment-in";
-			}
+
+			return "activity-wiki-page-restore-attachment-in";
 		}
 		else if (activityType == SocialActivityConstants.TYPE_MOVE_TO_TRASH) {
 			if (Validator.isNull(groupName)) {
 				return "activity-wiki-page-move-to-trash";
 			}
-			else {
-				return "activity-wiki-page-move-to-trash-in";
-			}
+
+			return "activity-wiki-page-move-to-trash-in";
 		}
 		else if (activityType ==
-					 SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) {
+					SocialActivityConstants.TYPE_RESTORE_FROM_TRASH) {
 
 			if (Validator.isNull(groupName)) {
 				return "activity-wiki-page-restore-from-trash";
 			}
-			else {
-				return "activity-wiki-page-restore-from-trash-in";
-			}
+
+			return "activity-wiki-page-restore-from-trash-in";
 		}
 		else if (activityType == WikiActivityKeys.UPDATE_PAGE) {
 			if (Validator.isNull(groupName)) {
 				return "activity-wiki-page-update-page";
 			}
-			else {
-				return "activity-wiki-page-update-page-in";
-			}
+
+			return "activity-wiki-page-update-page-in";
 		}
 
 		return null;

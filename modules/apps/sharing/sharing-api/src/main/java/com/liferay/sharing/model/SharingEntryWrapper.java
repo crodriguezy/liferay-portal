@@ -70,7 +70,9 @@ public class SharingEntryWrapper implements SharingEntry,
 		attributes.put("toUserId", getToUserId());
 		attributes.put("classNameId", getClassNameId());
 		attributes.put("classPK", getClassPK());
+		attributes.put("shareable", isShareable());
 		attributes.put("actionIds", getActionIds());
+		attributes.put("expirationDate", getExpirationDate());
 
 		return attributes;
 	}
@@ -137,10 +139,22 @@ public class SharingEntryWrapper implements SharingEntry,
 			setClassPK(classPK);
 		}
 
+		Boolean shareable = (Boolean)attributes.get("shareable");
+
+		if (shareable != null) {
+			setShareable(shareable);
+		}
+
 		Long actionIds = (Long)attributes.get("actionIds");
 
 		if (actionIds != null) {
 			setActionIds(actionIds);
+		}
+
+		Date expirationDate = (Date)attributes.get("expirationDate");
+
+		if (expirationDate != null) {
+			setExpirationDate(expirationDate);
 		}
 	}
 
@@ -220,6 +234,16 @@ public class SharingEntryWrapper implements SharingEntry,
 	}
 
 	/**
+	* Returns the expiration date of this sharing entry.
+	*
+	* @return the expiration date of this sharing entry
+	*/
+	@Override
+	public Date getExpirationDate() {
+		return _sharingEntry.getExpirationDate();
+	}
+
+	/**
 	* Returns the from user ID of this sharing entry.
 	*
 	* @return the from user ID of this sharing entry
@@ -272,6 +296,16 @@ public class SharingEntryWrapper implements SharingEntry,
 	@Override
 	public Serializable getPrimaryKeyObj() {
 		return _sharingEntry.getPrimaryKeyObj();
+	}
+
+	/**
+	* Returns the shareable of this sharing entry.
+	*
+	* @return the shareable of this sharing entry
+	*/
+	@Override
+	public boolean getShareable() {
+		return _sharingEntry.getShareable();
 	}
 
 	/**
@@ -332,6 +366,16 @@ public class SharingEntryWrapper implements SharingEntry,
 	@Override
 	public boolean isNew() {
 		return _sharingEntry.isNew();
+	}
+
+	/**
+	* Returns <code>true</code> if this sharing entry is shareable.
+	*
+	* @return <code>true</code> if this sharing entry is shareable; <code>false</code> otherwise
+	*/
+	@Override
+	public boolean isShareable() {
+		return _sharingEntry.isShareable();
 	}
 
 	@Override
@@ -416,6 +460,16 @@ public class SharingEntryWrapper implements SharingEntry,
 	}
 
 	/**
+	* Sets the expiration date of this sharing entry.
+	*
+	* @param expirationDate the expiration date of this sharing entry
+	*/
+	@Override
+	public void setExpirationDate(Date expirationDate) {
+		_sharingEntry.setExpirationDate(expirationDate);
+	}
+
+	/**
 	* Sets the from user ID of this sharing entry.
 	*
 	* @param fromUserId the from user ID of this sharing entry
@@ -473,6 +527,16 @@ public class SharingEntryWrapper implements SharingEntry,
 	@Override
 	public void setPrimaryKeyObj(Serializable primaryKeyObj) {
 		_sharingEntry.setPrimaryKeyObj(primaryKeyObj);
+	}
+
+	/**
+	* Sets whether this sharing entry is shareable.
+	*
+	* @param shareable the shareable of this sharing entry
+	*/
+	@Override
+	public void setShareable(boolean shareable) {
+		_sharingEntry.setShareable(shareable);
 	}
 
 	/**

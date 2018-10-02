@@ -37,8 +37,6 @@ import com.liferay.portal.kernel.resiliency.mpi.MPIHelperUtil;
 import com.liferay.portal.kernel.resiliency.spi.agent.annotation.Direction;
 import com.liferay.portal.kernel.resiliency.spi.agent.annotation.DistributedRegistry;
 import com.liferay.portal.kernel.resiliency.spi.agent.annotation.MatchType;
-import com.liferay.portal.kernel.search.IndexerRegistry;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.service.ClassNameLocalServiceUtil;
 import com.liferay.portal.kernel.service.ResourceActionLocalServiceUtil;
 import com.liferay.portal.kernel.util.BasePortalLifecycle;
@@ -47,7 +45,6 @@ import com.liferay.portal.kernel.util.PortalLifecycle;
 import com.liferay.portal.kernel.util.PortalLifecycleUtil;
 import com.liferay.portal.kernel.util.ReleaseInfo;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.plugin.PluginPackageIndexer;
 import com.liferay.portal.tools.DBUpgrader;
 import com.liferay.portal.upgrade.PortalUpgradeProcess;
 import com.liferay.portal.util.PropsValues;
@@ -67,7 +64,6 @@ import javax.portlet.MimeResponse;
 import javax.portlet.PortletRequest;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.struts.tiles.taglib.ComponentConstants;
 
 /**
  * @author Brian Wing Shun Chan
@@ -109,14 +105,17 @@ public class StartupAction extends SimpleAction {
 
 		// Portal resiliency
 
-		ServiceDependencyManager portalResiliencyServiceDependencyManager =
-			new ServiceDependencyManager();
+		if (PropsValues.PORTAL_RESILIENCY_ENABLED) {
+			ServiceDependencyManager portalResiliencyServiceDependencyManager =
+				new ServiceDependencyManager();
 
-		portalResiliencyServiceDependencyManager.addServiceDependencyListener(
-			new PortalResiliencyServiceDependencyLister());
+			portalResiliencyServiceDependencyManager.
+				addServiceDependencyListener(
+					new PortalResiliencyServiceDependencyLister());
 
-		portalResiliencyServiceDependencyManager.registerDependencies(
-			MessageBus.class, PortalExecutorManager.class);
+			portalResiliencyServiceDependencyManager.registerDependencies(
+				MessageBus.class, PortalExecutorManager.class);
+		}
 
 		// Shutdown hook
 
@@ -127,28 +126,6 @@ public class StartupAction extends SimpleAction {
 		Runtime runtime = Runtime.getRuntime();
 
 		runtime.addShutdownHook(new Thread(new ShutdownHook()));
-
-		// Indexers
-
-		ServiceDependencyManager indexerRegistryServiceDependencyManager =
-			new ServiceDependencyManager();
-
-		indexerRegistryServiceDependencyManager.addServiceDependencyListener(
-			new ServiceDependencyListener() {
-
-				@Override
-				public void dependenciesFulfilled() {
-					IndexerRegistryUtil.register(new PluginPackageIndexer());
-				}
-
-				@Override
-				public void destroy() {
-				}
-
-			});
-
-		indexerRegistryServiceDependencyManager.registerDependencies(
-			IndexerRegistry.class);
 
 		// MySQL version
 
@@ -255,9 +232,6 @@ public class StartupAction extends SimpleAction {
 		@Override
 		public void dependenciesFulfilled() {
 			try {
-				DistributedRegistry.registerDistributed(
-					ComponentConstants.COMPONENT_CONTEXT, Direction.DUPLEX,
-					MatchType.POSTFIX);
 				DistributedRegistry.registerDistributed(
 					MimeResponse.MARKUP_HEAD_ELEMENT, Direction.DUPLEX,
 					MatchType.EXACT);

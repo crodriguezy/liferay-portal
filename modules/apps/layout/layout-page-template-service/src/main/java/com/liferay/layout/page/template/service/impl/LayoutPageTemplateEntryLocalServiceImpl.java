@@ -24,9 +24,8 @@ import com.liferay.layout.page.template.exception.LayoutPageTemplateEntryNameExc
 import com.liferay.layout.page.template.exception.RequiredLayoutPageTemplateEntryException;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.base.LayoutPageTemplateEntryLocalServiceBaseImpl;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.LayoutPrototype;
 import com.liferay.portal.kernel.model.ModelHintsUtil;
@@ -563,12 +562,12 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 			layoutPageTemplateEntryPersistence.fetchByG_N(groupId, name);
 
 		if (layoutPageTemplateEntry != null) {
-			throw new DuplicateLayoutPageTemplateEntryException(name);
+			throw new DuplicateLayoutPageTemplateEntryException(
+				StringBundler.concat(
+					"Duplicate layout page template for group ", groupId,
+					" with name ", name));
 		}
 	}
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		LayoutPageTemplateEntryLocalServiceImpl.class);
 
 	@ServiceReference(type = AssetDisplayPageEntryLocalService.class)
 	private AssetDisplayPageEntryLocalService

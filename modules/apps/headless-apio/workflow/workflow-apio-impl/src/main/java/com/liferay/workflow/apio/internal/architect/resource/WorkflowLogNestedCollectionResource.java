@@ -45,11 +45,11 @@ import org.osgi.service.component.annotations.Reference;
  *
  * @author Sarai Díaz
  */
-@Component
+@Component(service = NestedCollectionResource.class)
 public class WorkflowLogNestedCollectionResource
 	implements NestedCollectionResource
 		<WorkflowLog, Long, WorkflowLogIdentifier, Long,
-			WorkflowTaskIdentifier> {
+		 WorkflowTaskIdentifier> {
 
 	@Override
 	public NestedCollectionRoutes<WorkflowLog, Long, Long> collectionRoutes(
@@ -94,13 +94,13 @@ public class WorkflowLogNestedCollectionResource
 		).addLinkedModel(
 			"task", WorkflowTaskIdentifier.class, WorkflowLog::getWorkflowTaskId
 		).addString(
-			"type", this::_getWorkflowLogType
-		).addString(
 			"commentLog", WorkflowLog::getComment
 		).addString(
 			"previousState", WorkflowLog::getPreviousState
 		).addString(
 			"state", WorkflowLog::getState
+		).addString(
+			"type", this::_getWorkflowLogType
 		).build();
 	}
 

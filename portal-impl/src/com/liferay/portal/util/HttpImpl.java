@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.portal.kernel.io.unsync.UnsyncFilterInputStream;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
@@ -112,7 +111,6 @@ import org.apache.http.util.EntityUtils;
  * @author Hugo Huijser
  * @author Shuyang Zhou
  */
-@DoPrivileged
 @ProviderType
 public class HttpImpl implements Http {
 
@@ -1310,7 +1308,7 @@ public class HttpImpl implements Http {
 			byte[] bytes = new byte[512];
 
 			for (int i = inputStream.read(bytes, 0, 512); i != -1;
-					i = inputStream.read(bytes, 0, 512)) {
+				 i = inputStream.read(bytes, 0, 512)) {
 
 				unsyncByteArrayOutputStream.write(bytes, 0, i);
 			}

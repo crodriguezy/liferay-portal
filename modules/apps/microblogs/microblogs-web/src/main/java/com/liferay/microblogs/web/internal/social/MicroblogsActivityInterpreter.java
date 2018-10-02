@@ -19,6 +19,7 @@ import com.liferay.microblogs.model.MicroblogsEntry;
 import com.liferay.microblogs.model.MicroblogsEntryConstants;
 import com.liferay.microblogs.service.MicroblogsEntryLocalService;
 import com.liferay.microblogs.web.internal.util.MicroblogsWebUtil;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
@@ -26,7 +27,6 @@ import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermi
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.social.kernel.model.BaseSocialActivityInterpreter;
 import com.liferay.social.kernel.model.SocialActivity;
 import com.liferay.social.kernel.model.SocialActivityInterpreter;
@@ -94,7 +94,7 @@ public class MicroblogsActivityInterpreter
 				sb.append(": ");
 			}
 			else if (microblogsEntry.getType() ==
-						 MicroblogsEntryConstants.TYPE_REPOST) {
+						MicroblogsEntryConstants.TYPE_REPOST) {
 
 				sb.append(serviceContext.translate("reposted-from"));
 				sb.append(" ");

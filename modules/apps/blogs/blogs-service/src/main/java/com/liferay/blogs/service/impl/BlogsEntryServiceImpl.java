@@ -19,6 +19,7 @@ import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.service.base.BlogsEntryServiceBaseImpl;
 import com.liferay.blogs.util.comparator.EntryDisplayDateComparator;
 import com.liferay.blogs.util.comparator.EntryIdComparator;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -40,7 +41,6 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -322,10 +322,9 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 				groupId, displayDate, WorkflowConstants.STATUS_IN_TRASH, start,
 				end);
 		}
-		else {
-			return blogsEntryPersistence.filterFindByG_LtD_S(
-				groupId, displayDate, status, start, end);
-		}
+
+		return blogsEntryPersistence.filterFindByG_LtD_S(
+			groupId, displayDate, status, start, end);
 	}
 
 	@Override
@@ -341,10 +340,9 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 			return blogsEntryPersistence.filterFindByG_NotS(
 				groupId, WorkflowConstants.STATUS_IN_TRASH, start, end);
 		}
-		else {
-			return blogsEntryPersistence.filterFindByG_S(
-				groupId, status, start, end);
-		}
+
+		return blogsEntryPersistence.filterFindByG_S(
+			groupId, status, start, end);
 	}
 
 	@Override
@@ -356,10 +354,9 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 			return blogsEntryPersistence.filterFindByG_NotS(
 				groupId, WorkflowConstants.STATUS_IN_TRASH, start, end, obc);
 		}
-		else {
-			return blogsEntryPersistence.filterFindByG_S(
-				groupId, status, start, end, obc);
-		}
+
+		return blogsEntryPersistence.filterFindByG_S(
+			groupId, status, start, end, obc);
 	}
 
 	@Override
@@ -370,10 +367,9 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 			return blogsEntryPersistence.filterCountByG_LtD_NotS(
 				groupId, displayDate, WorkflowConstants.STATUS_IN_TRASH);
 		}
-		else {
-			return blogsEntryPersistence.filterCountByG_LtD_S(
-				groupId, displayDate, status);
-		}
+
+		return blogsEntryPersistence.filterCountByG_LtD_S(
+			groupId, displayDate, status);
 	}
 
 	@Override
@@ -382,9 +378,8 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 			return blogsEntryPersistence.filterCountByG_NotS(
 				groupId, WorkflowConstants.STATUS_IN_TRASH);
 		}
-		else {
-			return blogsEntryPersistence.filterCountByG_S(groupId, status);
-		}
+
+		return blogsEntryPersistence.filterCountByG_S(groupId, status);
 	}
 
 	@Override
@@ -459,10 +454,9 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 				groupId, userId, WorkflowConstants.STATUS_IN_TRASH, start, end,
 				obc);
 		}
-		else {
-			return blogsEntryPersistence.filterFindByG_U_S(
-				groupId, userId, status, start, end, obc);
-		}
+
+		return blogsEntryPersistence.filterFindByG_U_S(
+			groupId, userId, status, start, end, obc);
 	}
 
 	@Override
@@ -480,10 +474,9 @@ public class BlogsEntryServiceImpl extends BlogsEntryServiceBaseImpl {
 			return blogsEntryPersistence.filterCountByG_U_NotS(
 				groupId, userId, WorkflowConstants.STATUS_IN_TRASH);
 		}
-		else {
-			return blogsEntryPersistence.filterCountByG_U_S(
-				groupId, userId, status);
-		}
+
+		return blogsEntryPersistence.filterCountByG_U_S(
+			groupId, userId, status);
 	}
 
 	@Override

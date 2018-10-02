@@ -25,7 +25,7 @@ import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.spring.aop.AnnotationChainableMethodAdvice;
 import com.liferay.portal.spring.aop.ServiceBeanAopCacheManager;
 import com.liferay.portal.spring.aop.ServiceBeanMethodInvocation;
-import com.liferay.portal.spring.transaction.AnnotationTransactionAttributeSource;
+import com.liferay.portal.spring.transaction.TransactionInterceptor;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
@@ -89,7 +89,7 @@ public class DynamicDataSourceAdviceTest {
 			_dynamicDataSourceTargetSource);
 
 		ServiceBeanAopCacheManager serviceBeanAopCacheManager =
-			new ServiceBeanAopCacheManager();
+			new ServiceBeanAopCacheManager(null);
 
 		_dynamicDataSourceAdvice.setServiceBeanAopCacheManager(
 			serviceBeanAopCacheManager);
@@ -114,8 +114,8 @@ public class DynamicDataSourceAdviceTest {
 			registeredAnnotationChainableMethodAdvices.get(
 				MasterDataSource.class));
 
-		_dynamicDataSourceAdvice.setTransactionAttributeSource(
-			new AnnotationTransactionAttributeSource());
+		_dynamicDataSourceAdvice.setTransactionInterceptor(
+			new TransactionInterceptor());
 	}
 
 	@Test
@@ -125,6 +125,11 @@ public class DynamicDataSourceAdviceTest {
 
 		Assert.assertSame(
 			MasterDataSource.class, masterDataSource.annotationType());
+	}
+
+	@Test
+	public void testDeprecatedMethods() {
+		_dynamicDataSourceAdvice.setTransactionAttributeSource(null);
 	}
 
 	@Test
@@ -166,7 +171,7 @@ public class DynamicDataSourceAdviceTest {
 			serviceBeanMethodInvocation, annotations);
 
 		serviceBeanMethodInvocation.setMethodInterceptors(
-			Arrays.<MethodInterceptor>asList(_dynamicDataSourceAdvice));
+			new MethodInterceptor[] {_dynamicDataSourceAdvice});
 
 		return serviceBeanMethodInvocation;
 	}

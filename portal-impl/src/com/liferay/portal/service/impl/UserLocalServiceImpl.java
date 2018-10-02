@@ -114,6 +114,7 @@ import com.liferay.portal.kernel.util.Digester;
 import com.liferay.portal.kernel.util.DigesterUtil;
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -1199,19 +1200,28 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			workflowUserId = defaultUser.getUserId();
 		}
 
-		ServiceContext workflowServiceContext = serviceContext;
+		ServiceContext workflowServiceContext = new ServiceContext();
 
-		if (workflowServiceContext == null) {
-			workflowServiceContext = new ServiceContext();
+		if (serviceContext != null) {
+			workflowServiceContext = (ServiceContext)serviceContext.clone();
 		}
 
 		workflowServiceContext.setAttribute("autoPassword", autoPassword);
 		workflowServiceContext.setAttribute("passwordUnencrypted", password1);
 		workflowServiceContext.setAttribute("sendEmail", sendEmail);
 
-		WorkflowHandlerRegistryUtil.startWorkflowInstance(
-			companyId, workflowUserId, User.class.getName(), userId, user,
-			workflowServiceContext);
+		Map<String, Serializable> workflowContext =
+			(Map<String, Serializable>)workflowServiceContext.removeAttribute(
+				"workflowContext");
+
+		if (workflowContext == null) {
+			workflowContext = Collections.emptyMap();
+		}
+
+		user = WorkflowHandlerRegistryUtil.startWorkflowInstance(
+			companyId, WorkflowConstants.DEFAULT_GROUP_ID, workflowUserId,
+			User.class.getName(), userId, user, workflowServiceContext,
+			workflowContext);
 
 		if (serviceContext != null) {
 			String passwordUnencrypted = (String)serviceContext.getAttribute(
@@ -1258,7 +1268,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * @see    AuthPipeline
 	 */
 	@Override
-	@Transactional(propagation = Propagation.SUPPORTS)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public int authenticateByEmailAddress(
 			long companyId, String emailAddress, String password,
 			Map<String, String[]> headerMap, Map<String, String[]> parameterMap,
@@ -1290,7 +1300,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * @see    AuthPipeline
 	 */
 	@Override
-	@Transactional(propagation = Propagation.SUPPORTS)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public int authenticateByScreenName(
 			long companyId, String screenName, String password,
 			Map<String, String[]> headerMap, Map<String, String[]> parameterMap,
@@ -1322,7 +1332,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * @see    AuthPipeline
 	 */
 	@Override
-	@Transactional(propagation = Propagation.SUPPORTS)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public int authenticateByUserId(
 			long companyId, long userId, String password,
 			Map<String, String[]> headerMap, Map<String, String[]> parameterMap,
@@ -2325,6 +2335,14 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		return userFinder.findByNoGroups();
 	}
 
+	@Override
+	public int getOrganizationsAndUserGroupsUsersCount(
+		long[] organizationIds, long[] userGroupIds) {
+
+		return userFinder.countByOrganizationsAndUserGroups(
+			organizationIds, userGroupIds);
+	}
+
 	/**
 	 * Returns the primary keys of all the users belonging to the organization.
 	 *
@@ -3058,9 +3076,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			if (elapsedTime > (passwordPolicy.getMaxAge() * 1000)) {
 				return true;
 			}
-			else {
-				return false;
-			}
+
+			return false;
 		}
 
 		return false;
@@ -3105,9 +3122,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			if (now.getTime() > timeStartWarning) {
 				return true;
 			}
-			else {
-				return false;
-			}
+
+			return false;
 		}
 
 		return false;
@@ -3565,7 +3581,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		params.put(
 			"socialRelationType",
 			new Long[][] {
-				new Long[] {userId}, ArrayUtil.toLongArray(socialRelationTypes)
+				{userId}, ArrayUtil.toLongArray(socialRelationTypes)
 			});
 		params.put("wildcardMode", WildcardMode.TRAILING);
 
@@ -3601,7 +3617,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		params.put(
 			"socialRelationType",
 			new Long[][] {
-				new Long[] {userId}, ArrayUtil.toLongArray(socialRelationTypes)
+				{userId}, ArrayUtil.toLongArray(socialRelationTypes)
 			});
 		params.put("socialRelationTypeUnionUserGroups", true);
 		params.put("usersGroups", ArrayUtil.toLongArray(groupIds));
@@ -3776,25 +3792,28 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		mailTemplateContextBuilder.put(
 			"[$COMPANY_ID$]", String.valueOf(company.getCompanyId()));
 		mailTemplateContextBuilder.put("[$COMPANY_MX$]", company.getMx());
-		mailTemplateContextBuilder.put("[$COMPANY_NAME$]", company.getName());
 		mailTemplateContextBuilder.put(
-			"[$EMAIL_VERIFICATION_CODE$]", ticket.getKey());
+			"[$COMPANY_NAME$]", HtmlUtil.escape(company.getName()));
+		mailTemplateContextBuilder.put(
+			"[$EMAIL_VERIFICATION_CODE$]", HtmlUtil.escape(ticket.getKey()));
 		mailTemplateContextBuilder.put(
 			"[$EMAIL_VERIFICATION_URL$]", verifyEmailAddressURL);
 		mailTemplateContextBuilder.put("[$FROM_ADDRESS$]", fromAddress);
-		mailTemplateContextBuilder.put("[$FROM_NAME$]", fromName);
+		mailTemplateContextBuilder.put(
+			"[$FROM_NAME$]", HtmlUtil.escape(fromName));
 		mailTemplateContextBuilder.put(
 			"[$PORTAL_URL$]", company.getPortalURL(0));
 		mailTemplateContextBuilder.put(
 			"[$REMOTE_ADDRESS$]", serviceContext.getRemoteAddr());
 		mailTemplateContextBuilder.put(
-			"[$REMOTE_HOST$]", serviceContext.getRemoteHost());
+			"[$REMOTE_HOST$]", HtmlUtil.escape(serviceContext.getRemoteHost()));
 		mailTemplateContextBuilder.put("[$TO_ADDRESS$]", emailAddress);
-		mailTemplateContextBuilder.put("[$TO_NAME$]", user.getFullName());
+		mailTemplateContextBuilder.put(
+			"[$TO_NAME$]", HtmlUtil.escape(user.getFullName()));
 		mailTemplateContextBuilder.put(
 			"[$USER_ID$]", String.valueOf(user.getUserId()));
 		mailTemplateContextBuilder.put(
-			"[$USER_SCREENNAME$]", user.getScreenName());
+			"[$USER_SCREENNAME$]", HtmlUtil.escape(user.getScreenName()));
 
 		MailTemplateContext mailTemplateContext =
 			mailTemplateContextBuilder.build();
@@ -5245,7 +5264,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		user.setStatus(status);
 
-		userPersistence.update(user);
+		user = userPersistence.update(user);
 
 		reindex(user);
 
@@ -5449,7 +5468,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		user.setJobTitle(jobTitle);
 		user.setExpandoBridgeAttributes(serviceContext);
 
-		userPersistence.update(user, serviceContext);
+		user = userPersistence.update(user, serviceContext);
 
 		// Contact
 
@@ -5691,7 +5710,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		user.setEmailAddressVerified(true);
 
-		userPersistence.update(user);
+		user = userPersistence.update(user);
 
 		ticketLocalService.deleteTicket(ticket);
 	}
@@ -6358,16 +6377,19 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			MailTemplateFactoryUtil.createMailTemplateContextBuilder();
 
 		mailTemplateContextBuilder.put("[$FROM_ADDRESS$]", fromAddress);
-		mailTemplateContextBuilder.put("[$FROM_NAME$]", fromName);
+		mailTemplateContextBuilder.put(
+			"[$FROM_NAME$]", HtmlUtil.escape(fromName));
 		mailTemplateContextBuilder.put("[$PORTAL_URL$]", portalURL);
 		mailTemplateContextBuilder.put(
 			"[$TO_ADDRESS$]", user.getEmailAddress());
-		mailTemplateContextBuilder.put("[$TO_NAME$]", user.getFullName());
+		mailTemplateContextBuilder.put(
+			"[$TO_NAME$]", HtmlUtil.escape(user.getFullName()));
 		mailTemplateContextBuilder.put(
 			"[$USER_ID$]", String.valueOf(user.getUserId()));
-		mailTemplateContextBuilder.put("[$USER_PASSWORD$]", password);
 		mailTemplateContextBuilder.put(
-			"[$USER_SCREENNAME$]", user.getScreenName());
+			"[$USER_PASSWORD$]", HtmlUtil.escape(password));
+		mailTemplateContextBuilder.put(
+			"[$USER_SCREENNAME$]", HtmlUtil.escape(user.getScreenName()));
 
 		MailTemplateContext mailTemplateContext =
 			mailTemplateContextBuilder.build();
@@ -6535,21 +6557,23 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			MailTemplateFactoryUtil.createMailTemplateContextBuilder();
 
 		mailTemplateContextBuilder.put("[$FROM_ADDRESS$]", fromAddress);
-		mailTemplateContextBuilder.put("[$FROM_NAME$]", fromName);
+		mailTemplateContextBuilder.put(
+			"[$FROM_NAME$]", HtmlUtil.escape(fromName));
 		mailTemplateContextBuilder.put(
 			"[$PASSWORD_RESET_URL$]", passwordResetURL);
 		mailTemplateContextBuilder.put("[$PORTAL_URL$]", portalURL);
 		mailTemplateContextBuilder.put(
 			"[$REMOTE_ADDRESS$]", serviceContext.getRemoteAddr());
 		mailTemplateContextBuilder.put(
-			"[$REMOTE_HOST$]", serviceContext.getRemoteHost());
+			"[$REMOTE_HOST$]", HtmlUtil.escape(serviceContext.getRemoteHost()));
 		mailTemplateContextBuilder.put("[$TO_ADDRESS$]", toAddress);
-		mailTemplateContextBuilder.put("[$TO_NAME$]", toName);
+		mailTemplateContextBuilder.put("[$TO_NAME$]", HtmlUtil.escape(toName));
 		mailTemplateContextBuilder.put(
 			"[$USER_ID$]", String.valueOf(user.getUserId()));
-		mailTemplateContextBuilder.put("[$USER_PASSWORD$]", newPassword);
 		mailTemplateContextBuilder.put(
-			"[$USER_SCREENNAME$]", user.getScreenName());
+			"[$USER_PASSWORD$]", HtmlUtil.escape(newPassword));
+		mailTemplateContextBuilder.put(
+			"[$USER_SCREENNAME$]", HtmlUtil.escape(user.getScreenName()));
 
 		MailTemplateContext mailTemplateContext =
 			mailTemplateContextBuilder.build();

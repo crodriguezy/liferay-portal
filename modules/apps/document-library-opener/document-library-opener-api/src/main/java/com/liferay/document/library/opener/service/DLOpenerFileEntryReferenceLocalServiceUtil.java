@@ -57,11 +57,20 @@ public class DLOpenerFileEntryReferenceLocalServiceUtil {
 
 	public static com.liferay.document.library.opener.model.DLOpenerFileEntryReference addDLOpenerFileEntryReference(
 		long userId, String referenceKey,
-		com.liferay.portal.kernel.repository.model.FileEntry fileEntry)
+		com.liferay.portal.kernel.repository.model.FileEntry fileEntry, int type)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .addDLOpenerFileEntryReference(userId, referenceKey,
-			fileEntry);
+			fileEntry, type);
+	}
+
+	public static com.liferay.document.library.opener.model.DLOpenerFileEntryReference addPlaceholderDLOpenerFileEntryReference(
+		long userId,
+		com.liferay.portal.kernel.repository.model.FileEntry fileEntry, int type)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addPlaceholderDLOpenerFileEntryReference(userId, fileEntry,
+			type);
 	}
 
 	/**
@@ -284,6 +293,13 @@ public class DLOpenerFileEntryReferenceLocalServiceUtil {
 		com.liferay.document.library.opener.model.DLOpenerFileEntryReference dlOpenerFileEntryReference) {
 		return getService()
 				   .updateDLOpenerFileEntryReference(dlOpenerFileEntryReference);
+	}
+
+	public static com.liferay.document.library.opener.model.DLOpenerFileEntryReference updateDLOpenerFileEntryReference(
+		String referenceKey,
+		com.liferay.portal.kernel.repository.model.FileEntry fileEntry) {
+		return getService()
+				   .updateDLOpenerFileEntryReference(referenceKey, fileEntry);
 	}
 
 	public static DLOpenerFileEntryReferenceLocalService getService() {

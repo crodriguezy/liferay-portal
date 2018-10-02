@@ -16,7 +16,6 @@ package com.liferay.category.apio.internal.architect.router;
 
 import com.liferay.apio.architect.router.NestedCollectionRouter;
 import com.liferay.apio.architect.routes.NestedCollectionRoutes;
-import com.liferay.apio.architect.routes.NestedCollectionRoutes.Builder;
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.blog.apio.architect.identifier.BlogPostingIdentifier;
 import com.liferay.blogs.model.BlogsEntry;
@@ -30,22 +29,21 @@ import org.osgi.service.component.annotations.Reference;
 
 /**
  * Provides the information necessary to expose the {@code Category} resources
- * contained inside a <a href="http://schema.org/BlogPosting">BlogPosting</a>
- * through a web API. The resources are mapped from the internal model {@link
- * AssetCategory} and {@code BlogsEntry}.
+ * of a <a href="http://schema.org/BlogPosting">BlogPosting</a> through a web
+ * API. The resources are mapped from the internal model {@code AssetCategory}
+ * and {@code BlogsEntry}.
  *
  * @author Eduardo Perez
- * @review
  */
-@Component(immediate = true)
-public class BlogPostingCategoryNestedCollectionRouter extends
-	BaseCategoryNestedCollectionRouter<BlogPostingIdentifier>
+@Component(immediate = true, service = NestedCollectionRouter.class)
+public class BlogPostingCategoryNestedCollectionRouter
+	extends BaseCategoryNestedCollectionRouter<BlogPostingIdentifier>
 	implements NestedCollectionRouter
 		<AssetCategory, Long, CategoryIdentifier, Long, BlogPostingIdentifier> {
 
 	@Override
 	public NestedCollectionRoutes<AssetCategory, Long, Long> collectionRoutes(
-		Builder<AssetCategory, Long, Long> builder) {
+		NestedCollectionRoutes.Builder<AssetCategory, Long, Long> builder) {
 
 		return builder.addGetter(
 			this::getPageItems

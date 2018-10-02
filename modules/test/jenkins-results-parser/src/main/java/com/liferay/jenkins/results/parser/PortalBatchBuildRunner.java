@@ -14,117 +14,29 @@
 
 package com.liferay.jenkins.results.parser;
 
-import java.io.File;
-
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * @author Michael Hashimoto
  */
-public class PortalBatchBuildRunner extends BatchBuildRunner {
+public class PortalBatchBuildRunner
+	extends BatchBuildRunner<PortalBatchBuildData> {
+
+	protected PortalBatchBuildRunner(
+		PortalBatchBuildData portalBatchBuildData) {
+
+		super(portalBatchBuildData);
+	}
 
 	@Override
-	public void setup() {
-		primaryLocalRepository.setup();
+	protected void initWorkspace() {
+		PortalBatchBuildData portalBatchBuildData = getBuildData();
 
-		JenkinsResultsParserUtil.writePropertiesFile(
-			_portalAppServerPropertiesFile, portalAppServerProperties, true);
-		JenkinsResultsParserUtil.writePropertiesFile(
-			_portalBuildPropertiesFile, portalBuildProperties, true);
-		JenkinsResultsParserUtil.writePropertiesFile(
-			_portalSQLPropertiesFile, portalSQLProperties, true);
-		JenkinsResultsParserUtil.writePropertiesFile(
-			_portalTestPropertiesFile, portalTestProperties, true);
-	}
+		workspace = WorkspaceFactory.newBatchWorkspace(
+			portalBatchBuildData.getPortalGitHubURL(),
+			portalBatchBuildData.getPortalUpstreamBranchName(), getBatchName());
 
-	protected PortalBatchBuildRunner(Job job, String batchName) {
-		super(job, batchName);
-
-		if (!(job instanceof PortalTestClassJob)) {
-			throw new RuntimeException("Invalid job type");
-		}
-
-		PortalTestClassJob portalTestClassJob = (PortalTestClassJob)job;
-
-		PortalGitWorkingDirectory portalGitWorkingDirectory =
-			portalTestClassJob.getPortalGitWorkingDirectory();
-
-		primaryLocalRepository = RepositoryFactory.getLocalRepository(
-			portalGitWorkingDirectory.getRepositoryName(),
-			portalGitWorkingDirectory.getUpstreamBranchName());
-
-		if (!(primaryLocalRepository instanceof PortalLocalRepository)) {
+		if (!(workspace instanceof BatchPortalWorkspace)) {
 			throw new RuntimeException("Invalid workspace");
 		}
-
-		String hostname = System.getenv("HOSTNAME");
-
-		_portalAppServerPropertiesFile = new File(
-			primaryLocalRepository.getDirectory(),
-			JenkinsResultsParserUtil.combine(
-				"app.server.", hostname, ".properties"));
-
-		_portalBuildPropertiesFile = new File(
-			primaryLocalRepository.getDirectory(),
-			JenkinsResultsParserUtil.combine(
-				"build.", hostname, ".properties"));
-
-		_portalSQLPropertiesFile = new File(
-			primaryLocalRepository.getDirectory(),
-			JenkinsResultsParserUtil.combine(
-				"sql/sql.", hostname, ".properties"));
-
-		_portalTestPropertiesFile = new File(
-			primaryLocalRepository.getDirectory(),
-			JenkinsResultsParserUtil.combine("test.", hostname, ".properties"));
-
-		_setPortalAppServerProperties();
-		_setPortalBuildProperties();
 	}
-
-	protected final Properties portalAppServerProperties = new Properties();
-	protected final Properties portalBuildProperties = new Properties();
-	protected final Properties portalSQLProperties = new Properties();
-	protected final Properties portalTestProperties = new Properties();
-
-	private void _setPortalAppServerProperties() {
-		portalAppServerProperties.put(
-			"app.server.parent.dir",
-			primaryLocalRepository.getDirectory() + "/bundles");
-	}
-
-	private void _setPortalBuildProperties() {
-		Properties jobProperties = job.getJobProperties();
-
-		for (String jobPropertyName : jobProperties.stringPropertyNames()) {
-			Matcher matcher = _pattern.matcher(jobPropertyName);
-
-			if (matcher.find()) {
-				String portalBuildPropertyName = matcher.group(
-					"portalBuildPropertyName");
-
-				portalBuildProperties.put(
-					portalBuildPropertyName,
-					JenkinsResultsParserUtil.getProperty(
-						jobProperties, jobPropertyName));
-			}
-		}
-
-		portalBuildProperties.put("jsp.precompile", "off");
-		portalBuildProperties.put("jsp.precompile.parallel", "off");
-
-		portalBuildProperties.put(
-			"liferay.home", primaryLocalRepository.getDirectory() + "/bundles");
-	}
-
-	private static final Pattern _pattern = Pattern.compile(
-		"portal.build.properties\\[(?<portalBuildPropertyName>[^\\]]+)\\]");
-
-	private final File _portalAppServerPropertiesFile;
-	private final File _portalBuildPropertiesFile;
-	private final File _portalSQLPropertiesFile;
-	private final File _portalTestPropertiesFile;
 
 }

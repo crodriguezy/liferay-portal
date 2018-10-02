@@ -464,8 +464,7 @@ public class LayoutPermissionImpl
 				return true;
 			}
 			else if (OrganizationPermissionUtil.contains(
-						 permissionChecker, organizationId,
-						 ActionKeys.UPDATE)) {
+						permissionChecker, organizationId, ActionKeys.UPDATE)) {
 
 				return true;
 			}
@@ -563,6 +562,10 @@ public class LayoutPermissionImpl
 		}
 		else if (!checkViewableGroup && group.isUserGroup() &&
 				 actionId.equals(ActionKeys.VIEW)) {
+
+			if (permissionChecker.isGroupAdmin(group.getGroupId())) {
+				return true;
+			}
 
 			try {
 				UserBag userBag = permissionChecker.getUserBag();

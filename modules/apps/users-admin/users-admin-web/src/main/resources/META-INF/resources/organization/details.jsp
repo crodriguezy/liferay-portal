@@ -228,14 +228,14 @@ if (parentOrganization != null) {
 		</portlet:renderURL>
 
 		<liferay-ui:search-container-column-text
-			cssClass="table-cell-content"
+			cssClass="table-cell-expand table-cell-minw-200 table-title"
 			href="<%= rowURL %>"
 			name="name"
 			property="name"
 		/>
 
 		<liferay-ui:search-container-column-text
-			cssClass="table-cell-content"
+			cssClass="table-cell-expand table-cell-minw-150"
 			href="<%= rowURL %>"
 			name="type"
 			value="<%= LanguageUtil.get(request, curOrganization.getType()) %>"
@@ -263,6 +263,10 @@ if (parentOrganization != null) {
 />
 
 <aui:script use="liferay-address,liferay-dynamic-select,liferay-search-container">
+	function <portlet:namespace />createURL(href, value, onclick) {
+		return '<a href="' + href + '"' + (onclick ? ' onclick="' + onclick + '" ' : '') + '>' + value + '</a>';
+	}
+
 	new Liferay.DynamicSelect(
 		[
 			{
@@ -277,6 +281,7 @@ if (parentOrganization != null) {
 				select: '<portlet:namespace />regionId',
 				selectData: Liferay.Address.getRegions,
 				selectDesc: 'name',
+				selectDisableOnEmpty: true,
 				selectId: 'regionId',
 				selectVal: '<%= regionId %>'
 			}

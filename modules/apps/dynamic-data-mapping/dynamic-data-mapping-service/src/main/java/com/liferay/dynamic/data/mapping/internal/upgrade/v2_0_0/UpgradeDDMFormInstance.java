@@ -17,6 +17,7 @@ package com.liferay.dynamic.data.mapping.internal.upgrade.v2_0_0;
 import com.liferay.counter.kernel.service.CounterLocalService;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceConstants;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Property;
@@ -30,7 +31,6 @@ import com.liferay.portal.kernel.service.ResourceActionLocalService;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
@@ -455,19 +455,18 @@ public class UpgradeDDMFormInstance extends UpgradeProcess {
 		"com.liferay.dynamic.data.lists.model.DDLRecordSet";
 
 	private static final Map<String, String> _resourceActionIdsMap =
-		new ConcurrentHashMap<>();
-
-	static {
-		_resourceActionIdsMap.put(
-			"ADD_DATA_PROVIDER_INSTANCE", "ADD_DATA_PROVIDER_INSTANCE");
-		_resourceActionIdsMap.put("ADD_RECORD", "ADD_FORM_INSTANCE_RECORD");
-		_resourceActionIdsMap.put("ADD_RECORD_SET", "ADD_FORM_INSTANCE");
-		_resourceActionIdsMap.put("ADD_STRUCTURE", "ADD_STRUCTURE");
-		_resourceActionIdsMap.put("DELETE", "DELETE");
-		_resourceActionIdsMap.put("PERMISSIONS", "PERMISSIONS");
-		_resourceActionIdsMap.put("UPDATE", "UPDATE");
-		_resourceActionIdsMap.put("VIEW", "VIEW");
-	}
+		new ConcurrentHashMap<String, String>() {
+			{
+				put("ADD_DATA_PROVIDER_INSTANCE", "ADD_DATA_PROVIDER_INSTANCE");
+				put("ADD_RECORD", "ADD_FORM_INSTANCE_RECORD");
+				put("ADD_RECORD_SET", "ADD_FORM_INSTANCE");
+				put("ADD_STRUCTURE", "ADD_STRUCTURE");
+				put("DELETE", "DELETE");
+				put("PERMISSIONS", "PERMISSIONS");
+				put("UPDATE", "UPDATE");
+				put("VIEW", "VIEW");
+			}
+		};
 
 	private final ClassNameLocalService _classNameLocalService;
 	private final CounterLocalService _counterLocalService;

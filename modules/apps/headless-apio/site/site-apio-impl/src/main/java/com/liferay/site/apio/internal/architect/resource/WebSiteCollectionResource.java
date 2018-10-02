@@ -27,9 +27,11 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.service.GroupService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.site.apio.architect.identifier.WebSiteIdentifier;
 import com.liferay.site.apio.internal.model.GroupWrapper;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -45,7 +47,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Victor Oliveira
  * @author Alejandro Hernández
  */
-@Component(immediate = true)
+@Component(immediate = true, service = CollectionResource.class)
 public class WebSiteCollectionResource
 	implements CollectionResource<GroupWrapper, Long, WebSiteIdentifier> {
 
@@ -81,7 +83,7 @@ public class WebSiteCollectionResource
 		).identifier(
 			Group::getGroupId
 		).addBidirectionalModel(
-			"interactionService", "webSites", WebSiteIdentifier.class,
+			"webSite", "webSites", WebSiteIdentifier.class,
 			this::_getParentGroupId
 		).addBoolean(
 			"active", Group::isActive
@@ -101,6 +103,10 @@ public class WebSiteCollectionResource
 			"privateUrl", GroupWrapper::getPrivateURL
 		).addString(
 			"publicUrl", GroupWrapper::getPublicURL
+		).addStringList(
+			"availableLanguages",
+			group -> Arrays.asList(
+				LocaleUtil.toW3cLanguageIds(group.getAvailableLanguageIds()))
 		).build();
 	}
 

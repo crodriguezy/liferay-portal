@@ -1,0 +1,18 @@
+{
+    "presets": ["env"],
+    "plugins": [
+        "transform-class-properties",
+        "transform-object-rest-spread"
+    ],
+    "env": {
+        "test": {
+            "plugins": [
+                ["module-resolver", {
+                    "alias": {
+                        "dynamic-data-mapping-form-field-type/*": "./src/main/resources/META-INF/resources"
+                    }
+                }]
+            ]
+        }
+    }
+}

@@ -23,9 +23,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This class is used by SOAP remote services.
+ * This class is used by SOAP remote services, specifically {@link com.liferay.sharing.service.http.SharingEntryServiceSoap}.
  *
  * @author Brian Wing Shun Chan
+ * @see com.liferay.sharing.service.http.SharingEntryServiceSoap
  * @generated
  */
 @ProviderType
@@ -43,7 +44,9 @@ public class SharingEntrySoap implements Serializable {
 		soapModel.setToUserId(model.getToUserId());
 		soapModel.setClassNameId(model.getClassNameId());
 		soapModel.setClassPK(model.getClassPK());
+		soapModel.setShareable(model.isShareable());
 		soapModel.setActionIds(model.getActionIds());
+		soapModel.setExpirationDate(model.getExpirationDate());
 
 		return soapModel;
 	}
@@ -176,12 +179,32 @@ public class SharingEntrySoap implements Serializable {
 		_classPK = classPK;
 	}
 
+	public boolean getShareable() {
+		return _shareable;
+	}
+
+	public boolean isShareable() {
+		return _shareable;
+	}
+
+	public void setShareable(boolean shareable) {
+		_shareable = shareable;
+	}
+
 	public long getActionIds() {
 		return _actionIds;
 	}
 
 	public void setActionIds(long actionIds) {
 		_actionIds = actionIds;
+	}
+
+	public Date getExpirationDate() {
+		return _expirationDate;
+	}
+
+	public void setExpirationDate(Date expirationDate) {
+		_expirationDate = expirationDate;
 	}
 
 	private String _uuid;
@@ -194,5 +217,7 @@ public class SharingEntrySoap implements Serializable {
 	private long _toUserId;
 	private long _classNameId;
 	private long _classPK;
+	private boolean _shareable;
 	private long _actionIds;
+	private Date _expirationDate;
 }

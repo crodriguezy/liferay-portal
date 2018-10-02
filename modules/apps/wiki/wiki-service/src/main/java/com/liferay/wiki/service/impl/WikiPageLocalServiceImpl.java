@@ -23,6 +23,7 @@ import com.liferay.expando.kernel.util.ExpandoBridgeUtil;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.cache.MultiVMPool;
 import com.liferay.portal.kernel.cache.PortalCache;
@@ -69,7 +70,6 @@ import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.SubscriptionSender;
 import com.liferay.portal.kernel.util.TempFileEntryUtil;
@@ -1009,10 +1009,9 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		if (_log.isDebugEnabled()) {
 			_log.debug(
 				StringBundler.concat(
-					"getDisplay for {", String.valueOf(nodeId), ", ", title,
-					", ", String.valueOf(viewPageURL), ", ",
-					String.valueOf(editPageURLSupplier.get()), "} takes ",
-					String.valueOf(stopWatch.getTime()), " ms"));
+					"getDisplay for {", nodeId, ", ", title, ", ", viewPageURL,
+					", ", editPageURLSupplier.get(), "} takes ",
+					stopWatch.getTime(), " ms"));
 		}
 
 		return pageDisplay;
@@ -1367,10 +1366,9 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		if (status == WorkflowConstants.STATUS_ANY) {
 			return wikiPagePersistence.findByN_H(nodeId, head, start, end, obc);
 		}
-		else {
-			return wikiPagePersistence.findByN_H_S(
-				nodeId, head, status, start, end, obc);
-		}
+
+		return wikiPagePersistence.findByN_H_S(
+			nodeId, head, status, start, end, obc);
 	}
 
 	@Override
@@ -1411,11 +1409,9 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 				userId, nodeId, status, start, end,
 				new PageCreateDateComparator(false));
 		}
-		else {
-			return wikiPagePersistence.findByN_S(
-				nodeId, status, start, end,
-				new PageCreateDateComparator(false));
-		}
+
+		return wikiPagePersistence.findByN_S(
+			nodeId, status, start, end, new PageCreateDateComparator(false));
 	}
 
 	@Override
@@ -1465,9 +1461,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			return wikiPagePersistence.countByN_H_NotS(
 				nodeId, head, WorkflowConstants.STATUS_IN_TRASH);
 		}
-		else {
-			return wikiPagePersistence.countByN_H_S(nodeId, head, status);
-		}
+
+		return wikiPagePersistence.countByN_H_S(nodeId, head, status);
 	}
 
 	@Override
@@ -1480,9 +1475,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		if (userId > 0) {
 			return wikiPagePersistence.countByU_N_S(userId, nodeId, status);
 		}
-		else {
-			return wikiPagePersistence.countByN_S(nodeId, status);
-		}
+
+		return wikiPagePersistence.countByN_S(nodeId, status);
 	}
 
 	@Override
@@ -1566,9 +1560,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		if (count > 0) {
 			return true;
 		}
-		else {
-			return false;
-		}
+
+		return false;
 	}
 
 	@Override
@@ -2472,7 +2465,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		if (Validator.isNotNull(layoutFullURL)) {
 			return StringBundler.concat(
 				layoutFullURL, Portal.FRIENDLY_URL_SEPARATOR, "wiki/",
-				String.valueOf(page.getNodeId()), StringPool.SLASH,
+				page.getNodeId(), StringPool.SLASH,
 				URLCodec.encodeURL(WikiEscapeUtil.escapeName(page.getTitle())));
 		}
 		else {
@@ -2536,18 +2529,16 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		if (link != null) {
 			return true;
 		}
-		else {
-			return false;
-		}
+
+		return false;
 	}
 
 	protected boolean isUsedTitle(long nodeId, String title) {
 		if (getPagesCount(nodeId, title) > 0) {
 			return true;
 		}
-		else {
-			return false;
-		}
+
+		return false;
 	}
 
 	protected void moveDependentChildPagesFromTrash(

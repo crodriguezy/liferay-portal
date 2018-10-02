@@ -351,20 +351,7 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	}
 
 	protected String getLine(String content, int lineNumber) {
-		int nextLineStartPos = getLineStartPos(content, lineNumber);
-
-		if (nextLineStartPos == -1) {
-			return null;
-		}
-
-		int nextLineEndPos = content.indexOf(
-			CharPool.NEW_LINE, nextLineStartPos);
-
-		if (nextLineEndPos == -1) {
-			return content.substring(nextLineStartPos);
-		}
-
-		return content.substring(nextLineStartPos, nextLineEndPos);
+		return SourceUtil.getLine(content, lineNumber);
 	}
 
 	protected int getLineNumber(String content, int pos) {
@@ -372,17 +359,7 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	}
 
 	protected int getLineStartPos(String content, int lineNumber) {
-		int x = 0;
-
-		for (int i = 1; i < lineNumber; i++) {
-			x = content.indexOf(CharPool.NEW_LINE, x + 1);
-
-			if (x == -1) {
-				return x;
-			}
-		}
-
-		return x + 1;
+		return SourceUtil.getLineStartPos(content, lineNumber);
 	}
 
 	protected int getMaxLineLength() {
@@ -393,12 +370,44 @@ public abstract class BaseSourceCheck implements SourceCheck {
 		return _pluginsInsideModulesDirectoryNames;
 	}
 
+	protected String getPortalBranchName() {
+		String value = SourceFormatterUtil.getPropertyValue(
+			SourceFormatterUtil.GIT_LIFERAY_PORTAL_BRANCH, _propertiesMap);
+
+		if (Validator.isNull(value)) {
+			return StringPool.BLANK;
+		}
+
+		if (!value.contains(StringPool.COMMA)) {
+			return value;
+		}
+
+		String[] portalBranchNames = StringUtil.split(value);
+
+		return portalBranchNames[0];
+	}
+
 	protected String getPortalContent(String fileName) throws IOException {
 		return getPortalContent(fileName, false);
 	}
 
 	protected String getPortalContent(
 			String fileName, boolean forceRetrieveFromGit)
+		throws IOException {
+
+		return getPortalContent(
+			fileName, getPortalBranchName(), forceRetrieveFromGit);
+	}
+
+	protected String getPortalContent(String fileName, String portalBranchName)
+		throws IOException {
+
+		return getPortalContent(fileName, portalBranchName, false);
+	}
+
+	protected String getPortalContent(
+			String fileName, String portalBranchName,
+			boolean forceRetrieveFromGit)
 		throws IOException {
 
 		if (!forceRetrieveFromGit) {
@@ -410,7 +419,7 @@ public abstract class BaseSourceCheck implements SourceCheck {
 			}
 		}
 
-		URL url = _getPortalGitURL(fileName);
+		URL url = _getPortalGitURL(fileName, portalBranchName);
 
 		if (url != null) {
 			return StringUtil.read(url.openStream());
@@ -486,13 +495,20 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	protected InputStream getPortalInputStream(String fileName)
 		throws IOException {
 
+		return getPortalInputStream(fileName, getPortalBranchName());
+	}
+
+	protected InputStream getPortalInputStream(
+			String fileName, String portalBranchName)
+		throws IOException {
+
 		File file = getFile(fileName, ToolsUtil.PORTAL_MAX_DIR_LEVEL);
 
 		if (file != null) {
 			return new FileInputStream(file);
 		}
 
-		URL url = _getPortalGitURL(fileName);
+		URL url = _getPortalGitURL(fileName, portalBranchName);
 
 		if (url != null) {
 			return url.openStream();
@@ -755,10 +771,7 @@ public abstract class BaseSourceCheck implements SourceCheck {
 	protected static final String RUN_OUTSIDE_PORTAL_EXCLUDES =
 		"run.outside.portal.excludes";
 
-	private URL _getPortalGitURL(String fileName) {
-		String portalBranchName = SourceFormatterUtil.getPropertyValue(
-			SourceFormatterUtil.GIT_LIFERAY_PORTAL_BRANCH, _propertiesMap);
-
+	private URL _getPortalGitURL(String fileName, String portalBranchName) {
 		if (Validator.isNull(portalBranchName)) {
 			return null;
 		}

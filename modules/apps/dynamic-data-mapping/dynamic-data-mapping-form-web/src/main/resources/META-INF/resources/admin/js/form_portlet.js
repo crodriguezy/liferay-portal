@@ -221,6 +221,8 @@ AUI.add(
 							instance._copyPublishFormURLPopover.destroy();
 						}
 
+						instance.savedState = null;
+
 						(new A.EventHandle(instance._eventHandlers)).detach();
 					},
 
@@ -356,7 +358,7 @@ AUI.add(
 
 						var count = 0;
 
-						formBuilder.eachFields(
+						formBuilder.eachFormBuilderField(
 							function(field) {
 								count++;
 							}
@@ -389,7 +391,7 @@ AUI.add(
 										footer: [
 											{
 												cssClass: 'btn-secondary',
-												label: Liferay.Language.get('leave'),
+												label: Liferay.Language.get('leave-page'),
 												on: {
 													click: function() {
 														confirm.call(instance, dialog);

@@ -25,8 +25,11 @@ import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.RoleConstants;
 import com.liferay.portal.kernel.service.RoleService;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.role.apio.identifier.RoleIdentifier;
+import com.liferay.workflow.apio.architect.identifier.WorkflowTaskIdentifier;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
@@ -34,13 +37,12 @@ import org.osgi.service.component.annotations.Reference;
 
 /**
  * Provides the information necessary to expose <a
- * href="http://schema.org/Role">Role </a> resources through a web API. The
+ * href="http://schema.org/Role">Role</a> resources through a web API. The
  * resources are mapped from the internal model {@code Role}.
  *
  * @author Javier
- * @review
  */
-@Component(immediate = true)
+@Component(immediate = true, service = CollectionResource.class)
 public class RoleCollectionResource
 	implements CollectionResource<Role, Long, RoleIdentifier> {
 
@@ -83,17 +85,26 @@ public class RoleCollectionResource
 			"creator", PersonIdentifier.class, Role::getUserId
 		).addLocalizedStringByLocale(
 			"description", Role::getDescription
+		).addRelatedCollection(
+			"tasks", WorkflowTaskIdentifier.class
 		).addString(
 			"name", Role::getName
 		).addString(
 			"roleType", Role::getTypeLabel
+		).addStringList(
+			"availableLanguages",
+			role -> Arrays.asList(
+				LocaleUtil.toW3cLanguageIds(role.getAvailableLanguageIds()))
 		).build();
 	}
 
 	private PageItems<Role> _getPageItems(
 		Pagination pagination, Company company) {
 
-		Integer[] roleTypes = {RoleConstants.TYPE_REGULAR};
+		Integer[] roleTypes = {
+			RoleConstants.TYPE_ORGANIZATION, RoleConstants.TYPE_REGULAR,
+			RoleConstants.TYPE_SITE
+		};
 
 		List<Role> roles = _roleService.search(
 			company.getCompanyId(), null, roleTypes, null,

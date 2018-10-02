@@ -45,6 +45,10 @@ body .ddm-user-view-content {
 			margin-left: 16px;
 		}
 	}
+
+	.multi-step-icon {
+		cursor: default;
+	}
 }
 
 .portlet-forms .ddm-form-basic-info .ddm-form-name {
@@ -69,6 +73,7 @@ body .ddm-user-view-content {
 
 	.required-warning {
 		margin-bottom: 25px;
+		padding-left: 32px;
 
 		.icon-asterisk {
 			margin-left: 4px;
@@ -411,6 +416,7 @@ body .ddm-user-view-content {
 
 .lfr-ddm-form-paginated .pagination {
 	justify-content: center;
+	padding-bottom: 30px;
 }
 
 .liferay-ddm-form-field-fieldset {

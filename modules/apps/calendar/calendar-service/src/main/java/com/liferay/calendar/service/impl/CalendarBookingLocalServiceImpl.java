@@ -1828,7 +1828,7 @@ public class CalendarBookingLocalServiceImpl
 				notificationTemplateType = NotificationTemplateType.DECLINE;
 			}
 			else if (childCalendarBookingMap.containsKey(
-						 childCalendarBooking.getCalendarId())) {
+						childCalendarBooking.getCalendarId())) {
 
 				notificationTemplateType = NotificationTemplateType.UPDATE;
 			}
@@ -1848,9 +1848,8 @@ public class CalendarBookingLocalServiceImpl
 		else if (isCustomCalendarResource(calendarResource)) {
 			return groupLocalService.getGroup(calendarResource.getGroupId());
 		}
-		else {
-			return null;
-		}
+
+		return null;
 	}
 
 	protected String getExtraDataJSON(CalendarBooking calendarBooking) {
@@ -2559,7 +2558,7 @@ public class CalendarBookingLocalServiceImpl
 					calendarBooking.getFirstReminderNotificationType();
 			}
 			else if (_isInCheckInterval(
-						 deltaTime, calendarBooking.getSecondReminder())) {
+						deltaTime, calendarBooking.getSecondReminder())) {
 
 				notificationType =
 					calendarBooking.getSecondReminderNotificationType();

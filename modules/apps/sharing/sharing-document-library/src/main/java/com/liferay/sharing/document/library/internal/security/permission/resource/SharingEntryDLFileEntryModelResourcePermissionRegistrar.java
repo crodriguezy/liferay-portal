@@ -25,7 +25,7 @@ import com.liferay.portal.kernel.security.permission.resource.PortletResourcePer
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portlet.documentlibrary.constants.DLConstants;
-import com.liferay.sharing.constants.SharingEntryActionKey;
+import com.liferay.sharing.security.permission.SharingEntryAction;
 import com.liferay.sharing.service.SharingEntryLocalService;
 
 import java.util.Dictionary;
@@ -40,14 +40,18 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Sergio González
  */
-@Component(immediate = true)
+@Component(immediate = true, service = {})
 public class SharingEntryDLFileEntryModelResourcePermissionRegistrar {
+
+	public static final String COMPONENT_NAME =
+		"com.liferay.sharing.document.library.internal.security.permission." +
+			"resource.SharingEntryDLFileEntryModelResourcePermission";
 
 	@Activate
 	public void activate(BundleContext bundleContext) {
 		Dictionary<String, Object> properties = new HashMapDictionary<>();
 
-		properties.put("component.name", _COMPONENT_NAME);
+		properties.put("component.name", COMPONENT_NAME);
 		properties.put("model.class.name", DLFileEntry.class.getName());
 		properties.put("service.ranking", 100);
 
@@ -70,10 +74,6 @@ public class SharingEntryDLFileEntryModelResourcePermissionRegistrar {
 		_serviceRegistration.unregister();
 	}
 
-	private static final String _COMPONENT_NAME =
-		"com.liferay.sharing.document.library.internal.security.permission." +
-			"resource.SharingEntryDLFileEntryModelResourcePermission";
-
 	@Reference
 	private ClassNameLocalService _classNameLocalService;
 
@@ -81,7 +81,7 @@ public class SharingEntryDLFileEntryModelResourcePermissionRegistrar {
 	private DLFileEntryLocalService _dlFileEntryLocalService;
 
 	@Reference(
-		target = "(&(model.class.name=com.liferay.document.library.kernel.model.DLFileEntry)(!(component.name=" + _COMPONENT_NAME + ")))"
+		target = "(&(model.class.name=com.liferay.document.library.kernel.model.DLFileEntry)(!(component.name=" + COMPONENT_NAME + ")))"
 	)
 	private ModelResourcePermission<DLFileEntry>
 		_dlFileEntryModelResourcePermission;
@@ -103,22 +103,27 @@ public class SharingEntryDLFileEntryModelResourcePermissionRegistrar {
 				DLFileEntry dlFileEntry, String actionId)
 			throws PortalException {
 
-			if (SharingEntryActionKey.isSupportedActionId(actionId)) {
-				SharingEntryActionKey sharingEntryActionKey =
-					SharingEntryActionKey.parseFromActionId(actionId);
+			if (_dlFileEntryModelResourcePermission.contains(
+					permissionChecker, dlFileEntry, actionId)) {
+
+				return true;
+			}
+
+			if (SharingEntryAction.isSupportedActionId(actionId)) {
+				SharingEntryAction sharingEntryAction =
+					SharingEntryAction.parseFromActionId(actionId);
 
 				long classNameId = _classNameLocalService.getClassNameId(name);
 
 				if (_sharingEntryLocalService.hasSharingPermission(
 						permissionChecker.getUserId(), classNameId,
-						dlFileEntry.getFileEntryId(), sharingEntryActionKey)) {
+						dlFileEntry.getFileEntryId(), sharingEntryAction)) {
 
 					return true;
 				}
 			}
 
-			return _dlFileEntryModelResourcePermission.contains(
-				permissionChecker, dlFileEntry, actionId);
+			return false;
 		}
 
 		private SharingDLFileEntryModelPermissionLogic(

@@ -52,6 +52,11 @@ public class ForPoshiElement extends PoshiElement {
 	}
 
 	@Override
+	public String getPoshiLogDescriptor() {
+		return getBlockName(getPoshiScript());
+	}
+
+	@Override
 	public void parsePoshiScript(String poshiScript) {
 		String blockName = getBlockName(poshiScript);
 
@@ -72,7 +77,7 @@ public class ForPoshiElement extends PoshiElement {
 		String blockContent = getBlockContent(poshiScript);
 
 		for (String poshiScriptSnippet : getPoshiScriptSnippets(blockContent)) {
-			add(PoshiNodeFactory.newPoshiNode(this, poshiScriptSnippet.trim()));
+			add(PoshiNodeFactory.newPoshiNode(this, poshiScriptSnippet));
 		}
 	}
 

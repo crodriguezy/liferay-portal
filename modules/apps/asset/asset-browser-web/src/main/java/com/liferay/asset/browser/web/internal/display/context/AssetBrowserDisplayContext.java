@@ -16,6 +16,7 @@ package com.liferay.asset.browser.web.internal.display.context;
 
 import com.liferay.asset.browser.web.internal.configuration.AssetBrowserWebConfigurationValues;
 import com.liferay.asset.browser.web.internal.constants.AssetBrowserPortletKeys;
+import com.liferay.asset.browser.web.internal.search.AddAssetEntryChecker;
 import com.liferay.asset.browser.web.internal.search.AssetBrowserSearch;
 import com.liferay.asset.constants.AssetWebKeys;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
@@ -137,6 +138,12 @@ public class AssetBrowserDisplayContext {
 
 		AssetBrowserSearch assetBrowserSearch = new AssetBrowserSearch(
 			_renderRequest, getPortletURL());
+
+		if (isMultipleSelection()) {
+			assetBrowserSearch.setRowChecker(
+				new AddAssetEntryChecker(
+					_renderResponse, getRefererAssetEntryId()));
+		}
 
 		AssetRendererFactory assetRendererFactory = getAssetRendererFactory();
 
@@ -377,6 +384,17 @@ public class AssetBrowserDisplayContext {
 		}
 
 		return true;
+	}
+
+	public boolean isMultipleSelection() {
+		if (_multipleSelection != null) {
+			return _multipleSelection;
+		}
+
+		_multipleSelection = ParamUtil.getBoolean(
+			_request, "multipleSelection");
+
+		return _multipleSelection;
 	}
 
 	private String _getAddButtonLabel() {
@@ -646,6 +664,7 @@ public class AssetBrowserDisplayContext {
 	private String _eventName;
 	private Long _groupId;
 	private String _keywords;
+	private Boolean _multipleSelection;
 	private String _orderByCol;
 	private String _orderByType;
 	private Long _refererAssetEntryId;

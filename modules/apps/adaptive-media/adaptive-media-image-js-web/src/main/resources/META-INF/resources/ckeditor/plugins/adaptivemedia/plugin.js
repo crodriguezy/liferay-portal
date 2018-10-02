@@ -29,11 +29,7 @@
 
 							event.cancel();
 
-							var onSelectedImageChangeFn = AUI._.bind(
-								instance._onSelectedImageChange,
-								instance,
-								editor
-							);
+							var onSelectedImageChangeFn = instance._onSelectedImageChange.bind(instance, editor);
 
 							editor.execCommand('imageselector', onSelectedImageChangeFn);
 
@@ -121,7 +117,7 @@
 					el = instance._getImgElement(imageSrc, selectedItem, fileEntryAttributeName);
 				}
 
-				editor.insertElement(el);
+				editor.insertHtml(el.getOuterHtml());
 
 				if (isSelectionEmpty) {
 					editor.execCommand('enter');

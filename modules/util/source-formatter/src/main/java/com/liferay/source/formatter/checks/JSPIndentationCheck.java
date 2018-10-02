@@ -522,9 +522,9 @@ public class JSPIndentationCheck extends BaseFileCheck {
 		}
 	}
 
-	private final Pattern _javaSourcePattern1 = Pattern.compile(
+	private static final Pattern _javaSourcePattern1 = Pattern.compile(
 		"\n(\t*)(<%\n(\t*[^\t%].*?))\n\t*%>\n", Pattern.DOTALL);
-	private final Pattern _javaSourcePattern2 = Pattern.compile(
+	private static final Pattern _javaSourcePattern2 = Pattern.compile(
 		"\n(\t*)([^\t\n]+[\"']<%=\n(\t*[^\t%].*?))\n\t*%>[\"']\n",
 		Pattern.DOTALL);
 
@@ -598,12 +598,10 @@ public class JSPIndentationCheck extends BaseFileCheck {
 		}
 
 		public boolean isOpenTag() {
-			if (!_javaSource && (_lineTabLevel == 1)) {
-				Matcher matcher = _openTagNamePattern.matcher(_line);
+			if (!_javaSource && (_lineTabLevel == 1) &&
+				_line.matches("^\\s*<.*")) {
 
-				if (matcher.find()) {
-					return true;
-				}
+				return true;
 			}
 
 			return false;

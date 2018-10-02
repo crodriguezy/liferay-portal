@@ -39,7 +39,7 @@ FormInstancePermissionCheckerHelper formInstancePermissionCheckerHelper = ddmFor
 				modelVar="formInstance"
 			>
 				<portlet:renderURL var="rowURL">
-					<portlet:param name="mvcPath" value="/admin/edit_form_instance.jsp" />
+					<portlet:param name="mvcRenderCommandName" value="/admin/edit_form_instance" />
 					<portlet:param name="redirect" value="<%= currentURL %>" />
 					<portlet:param name="formInstanceId" value="<%= String.valueOf(formInstance.getFormInstanceId()) %>" />
 					<portlet:param name="displayStyle" value="<%= displayStyle %>" />
@@ -70,19 +70,20 @@ FormInstancePermissionCheckerHelper formInstancePermissionCheckerHelper = ddmFor
 					</c:when>
 					<c:otherwise>
 						<liferay-ui:search-container-column-text
-							cssClass="table-cell-content"
+							cssClass="table-cell-expand table-title"
 							href="<%= rowURL %>"
 							name="name"
 							value="<%= HtmlUtil.escape(formInstance.getName(locale)) %>"
 						/>
 
 						<liferay-ui:search-container-column-text
-							cssClass="table-cell-content"
+							cssClass="table-cell-expand"
 							name="description"
 							value="<%= HtmlUtil.escape(formInstance.getDescription(locale)) %>"
 						/>
 
 						<liferay-ui:search-container-column-date
+							cssClass="table-cell-expand-smaller"
 							name="modified-date"
 							value="<%= formInstance.getModifiedDate() %>"
 						/>
@@ -120,7 +121,6 @@ FormInstancePermissionCheckerHelper formInstancePermissionCheckerHelper = ddmFor
 	Liferay.on(
 		'<portlet:namespace />copyFormURL',
 		function(event) {
-
 			if (copyPublishFormURLPopover.isVisible()) {
 				copyPublishFormURLPopover.hide();
 			}

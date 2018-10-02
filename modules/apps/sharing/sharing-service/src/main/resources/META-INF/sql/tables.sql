@@ -9,5 +9,7 @@ create table SharingEntry (
 	toUserId LONG,
 	classNameId LONG,
 	classPK LONG,
-	actionIds LONG
+	shareable BOOLEAN,
+	actionIds LONG,
+	expirationDate DATE null
 );

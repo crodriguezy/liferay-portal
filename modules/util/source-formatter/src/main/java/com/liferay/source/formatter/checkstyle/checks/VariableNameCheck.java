@@ -82,7 +82,7 @@ public class VariableNameCheck extends BaseCheck {
 				String newName =
 					name.substring(0, x) + array[0] + name.substring(y);
 
-				log(detailAST.getLineNo(), _MSG_RENAME_VARIABLE, name, newName);
+				log(detailAST, _MSG_RENAME_VARIABLE, name, newName);
 			}
 		}
 	}
@@ -117,7 +117,7 @@ public class VariableNameCheck extends BaseCheck {
 		}
 
 		if (!_classHasVariableWithName(detailAST, newName)) {
-			log(detailAST.getLineNo(), _MSG_RENAME_VARIABLE, name, newName);
+			log(detailAST, _MSG_RENAME_VARIABLE, name, newName);
 		}
 	}
 
@@ -186,7 +186,7 @@ public class VariableNameCheck extends BaseCheck {
 			}
 
 			log(
-				detailAST.getLineNo(), _MSG_TYPO_VARIABLE, name,
+				detailAST, _MSG_TYPO_VARIABLE, name,
 				StringBundler.concat(
 					leadingUnderline, expectedName, nameTrailingDigits));
 
@@ -237,7 +237,7 @@ public class VariableNameCheck extends BaseCheck {
 		}
 
 		log(
-			detailAST.getLineNo(), _MSG_TYPO_VARIABLE, name,
+			detailAST, _MSG_TYPO_VARIABLE, name,
 			_getExpectedVariableName(
 				typeName, leadingUnderline, nameTrailingDigits));
 	}
@@ -377,8 +377,7 @@ public class VariableNameCheck extends BaseCheck {
 	}
 
 	private static final String[][] _ALL_CAPS_STRINGS = {
-		new String[] {"DDL", "Ddl"}, new String[] {"DDM", "Ddm"},
-		new String[] {"DL", "Dl"}, new String[] {"PK", "Pk"}
+		{"DDL", "Ddl"}, {"DDM", "Ddm"}, {"DL", "Dl"}, {"PK", "Pk"}
 	};
 
 	private static final String _MSG_RENAME_VARIABLE = "variable.rename";

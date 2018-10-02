@@ -36,6 +36,7 @@ import com.liferay.exportimport.test.util.TestUserIdStrategy;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.test.util.JournalTestUtil;
 import com.liferay.petra.string.CharPool;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.NoSuchLayoutException;
 import com.liferay.portal.kernel.model.Company;
@@ -67,7 +68,6 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.xml.Document;
@@ -144,7 +144,7 @@ public class DefaultExportImportContentProcessorTest {
 	@Before
 	public void setUp() throws Exception {
 		_defaultLocale = LocaleUtil.getDefault();
-		_nonDefaultLocale = getNonDefaultLocale();
+		_nondefaultLocale = getNondefaultLocale();
 
 		_externalGroup = GroupTestUtil.addGroup();
 		_liveGroup = GroupTestUtil.addGroup();
@@ -785,7 +785,7 @@ public class DefaultExportImportContentProcessorTest {
 		Map<Locale, String> nameMap = new HashMap<>();
 		Map<Locale, String> firendlyURLMap = new HashMap<>();
 
-		for (Locale locale : new Locale[] {_defaultLocale, _nonDefaultLocale}) {
+		for (Locale locale : new Locale[] {_defaultLocale, _nondefaultLocale}) {
 			String name = RandomTestUtil.randomString(
 				FriendlyURLRandomizerBumper.INSTANCE,
 				NumericStringRandomizerBumper.INSTANCE,
@@ -966,7 +966,7 @@ public class DefaultExportImportContentProcessorTest {
 		return scanner.next();
 	}
 
-	protected Locale getNonDefaultLocale() throws Exception {
+	protected Locale getNondefaultLocale() throws Exception {
 		for (Locale locale : _locales) {
 			if (!locale.equals(_defaultLocale)) {
 				return locale;
@@ -1071,9 +1071,9 @@ public class DefaultExportImportContentProcessorTest {
 				_liveGroup.getFriendlyURL(),
 				String.valueOf(_liveGroup.getGroupId()),
 				_livePublicLayout.getFriendlyURL(),
-				livePublicLayoutFriendlyURLMap.get(_nonDefaultLocale),
-				stagingPrivateLayoutFriendlyURLMap.get(_nonDefaultLocale),
-				stagingPublicLayoutFriendlyURLMap.get(_nonDefaultLocale),
+				livePublicLayoutFriendlyURLMap.get(_nondefaultLocale),
+				stagingPrivateLayoutFriendlyURLMap.get(_nondefaultLocale),
+				stagingPublicLayoutFriendlyURLMap.get(_nondefaultLocale),
 				PortalUtil.getPathContext(),
 				PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING,
 				PropsValues.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING,
@@ -1197,9 +1197,10 @@ public class DefaultExportImportContentProcessorTest {
 	private static final Locale[] _locales =
 		{LocaleUtil.US, LocaleUtil.GERMANY, LocaleUtil.SPAIN};
 	private static String _oldLayoutFriendlyURLPrivateUserServletMapping;
+	private static final Pattern _pattern = Pattern.compile("href=|\\{|\\[");
 	private static ServiceTracker
-		<ExportImportContentProcessor,
-			ExportImportContentProcessor> _serviceTracker;
+		<ExportImportContentProcessor, ExportImportContentProcessor>
+			_serviceTracker;
 
 	private Locale _defaultLocale;
 	private ExportImportContentProcessor<String> _exportImportContentProcessor;
@@ -1218,8 +1219,7 @@ public class DefaultExportImportContentProcessorTest {
 
 	private Layout _livePrivateLayout;
 	private Layout _livePublicLayout;
-	private Locale _nonDefaultLocale;
-	private final Pattern _pattern = Pattern.compile("href=|\\{|\\[");
+	private Locale _nondefaultLocale;
 	private PortletDataContext _portletDataContextExport;
 	private PortletDataContext _portletDataContextImport;
 	private StagedModel _referrerStagedModel;

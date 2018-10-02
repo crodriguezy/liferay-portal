@@ -1864,6 +1864,11 @@ public class DLFileEntryLocalServiceImpl
 
 		String extension = DLAppUtil.getExtension(title, sourceFileName);
 
+		if ((file == null) && (is == null)) {
+			extension = dlFileEntry.getExtension();
+			mimeType = dlFileEntry.getMimeType();
+		}
+
 		String extraSettings = StringPool.BLANK;
 
 		if (fileEntryTypeId == -1) {
@@ -2479,14 +2484,8 @@ public class DLFileEntryLocalServiceImpl
 
 		// Folder
 
-		if (newFolderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-			DLFolder dlFolder = dlFolderPersistence.findByPrimaryKey(
-				newFolderId);
-
-			dlFolder.setModifiedDate(serviceContext.getModifiedDate(null));
-
-			dlFolderPersistence.update(dlFolder);
-		}
+		dlFolderLocalService.updateLastPostDate(
+			newFolderId, serviceContext.getModifiedDate(null));
 
 		// File
 

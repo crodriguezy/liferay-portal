@@ -46,11 +46,29 @@ public class ThenPoshiElement extends PoshiElement {
 	}
 
 	@Override
+	public int getPoshiScriptLineNumber() {
+		Class<?> thenPoshiElementClass = ThenPoshiElement.class;
+		Class<?> thisClass = getClass();
+
+		if (thenPoshiElementClass != thisClass) {
+			return super.getPoshiScriptLineNumber();
+		}
+
+		PoshiElement parentPoshiElement = (PoshiElement)getParent();
+
+		if (parentPoshiElement == null) {
+			return 1;
+		}
+
+		return parentPoshiElement.getPoshiScriptLineNumber();
+	}
+
+	@Override
 	public void parsePoshiScript(String poshiScript) {
 		String blockContent = getBlockContent(poshiScript);
 
 		for (String poshiScriptSnippet : getPoshiScriptSnippets(blockContent)) {
-			add(PoshiNodeFactory.newPoshiNode(this, poshiScriptSnippet.trim()));
+			add(PoshiNodeFactory.newPoshiNode(this, poshiScriptSnippet));
 		}
 	}
 
@@ -90,6 +108,10 @@ public class ThenPoshiElement extends PoshiElement {
 	@Override
 	protected String getBlockName() {
 		return "then";
+	}
+
+	protected int getDefaultPoshiScriptLineNumber() {
+		return super.getPoshiScriptLineNumber();
 	}
 
 	private boolean _isElementType(

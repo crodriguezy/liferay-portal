@@ -19,11 +19,11 @@ import static com.liferay.apio.architect.test.util.writer.MockWriterUtil.getRequ
 
 import static java.util.Arrays.asList;
 
-import com.liferay.apio.architect.impl.message.json.SingleModelMessageMapper;
-import com.liferay.apio.architect.impl.operation.DeleteOperation;
-import com.liferay.apio.architect.impl.operation.UpdateOperation;
-import com.liferay.apio.architect.impl.single.model.SingleModelImpl;
-import com.liferay.apio.architect.impl.writer.SingleModelWriter;
+import com.liferay.apio.architect.internal.message.json.SingleModelMessageMapper;
+import com.liferay.apio.architect.internal.operation.DeleteOperation;
+import com.liferay.apio.architect.internal.operation.UpdateOperation;
+import com.liferay.apio.architect.internal.single.model.SingleModelImpl;
+import com.liferay.apio.architect.internal.writer.SingleModelWriter;
 import com.liferay.apio.architect.single.model.SingleModel;
 import com.liferay.apio.architect.test.util.model.RootModel;
 import com.liferay.apio.architect.test.util.writer.MockWriterUtil;
@@ -42,13 +42,12 @@ import java.util.Optional;
 public class MockSingleModelWriter {
 
 	/**
-	 * Writes a {@link RootModel}, with the hierarchy of embedded models and
+	 * Writes a {@link RootModel} with the hierarchy of embedded models and
 	 * multiple fields.
 	 *
-	 * @param  singleModelMessageMapper the {@link SingleModelMessageMapper} to
+	 * @param  singleModelMessageMapper the {@code SingleModelMessageMapper} to
 	 *         use for writing the JSON object
-	 * @return the {@code String} containing the JSON Object.
-	 * @review
+	 * @return the string containing the JSON object
 	 */
 	public static String write(
 		SingleModelMessageMapper<RootModel> singleModelMessageMapper) {
@@ -81,7 +80,7 @@ public class MockSingleModelWriter {
 		Optional<String> optional = singleModelWriter.write();
 
 		return optional.orElseThrow(
-			() -> new AssertionError("Writer failed to write"));
+			() -> new AssertionError("Unable to write"));
 	}
 
 	private MockSingleModelWriter() {

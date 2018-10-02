@@ -14,6 +14,7 @@
 
 package com.liferay.portal.security.ldap.internal.exportimport;
 
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Contact;
@@ -22,7 +23,6 @@ import com.liferay.portal.kernel.model.UserGroup;
 import com.liferay.portal.kernel.security.ldap.LDAPSettings;
 import com.liferay.portal.kernel.service.UserGroupLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.exportimport.UserExporter;
@@ -152,8 +152,8 @@ public class LDAPUserExporterImpl implements UserExporter {
 			if (_log.isDebugEnabled()) {
 				_log.debug(
 					StringBundler.concat(
-						"Finished exporting contact ", String.valueOf(contact),
-						" in ", String.valueOf(stopWatch.getTime()), "ms"));
+						"Finished exporting contact ", contact, " in ",
+						stopWatch.getTime(), "ms"));
 			}
 		}
 	}
@@ -174,8 +174,7 @@ public class LDAPUserExporterImpl implements UserExporter {
 
 			_log.debug(
 				StringBundler.concat(
-					"Exporting user ", String.valueOf(user), " in user group ",
-					String.valueOf(userGroupId)));
+					"Exporting user ", user, " in user group ", userGroupId));
 		}
 
 		if (!_ldapSettings.isExportEnabled(companyId) ||
@@ -221,11 +220,11 @@ public class LDAPUserExporterImpl implements UserExporter {
 			return;
 		}
 
+		Name name = new CompositeName();
+
+		name.add(binding.getNameInNamespace());
+
 		try {
-			Name name = new CompositeName();
-
-			name.add(binding.getNameInNamespace());
-
 			Modifications modifications =
 				_portalToLDAPConverter.getLDAPGroupModifications(
 					ldapServerId, userGroup, user, groupMappings, userMappings,
@@ -252,7 +251,7 @@ public class LDAPUserExporterImpl implements UserExporter {
 				groupMappings.getProperty(GroupConverterKeys.USER));
 
 			if ((groupMembers != null) && (groupMembers.size() == 1)) {
-				ldapContext.unbind(fullGroupDN);
+				ldapContext.unbind(name);
 			}
 		}
 		finally {
@@ -263,9 +262,8 @@ public class LDAPUserExporterImpl implements UserExporter {
 			if (_log.isDebugEnabled()) {
 				_log.debug(
 					StringBundler.concat(
-						"Finished exporting user ", String.valueOf(user),
-						" in user group ", String.valueOf(userGroupId), " in ",
-						String.valueOf(stopWatch.getTime()), "ms"));
+						"Finished exporting user ", user, " in user group ",
+						userGroupId, " in ", stopWatch.getTime(), "ms"));
 			}
 		}
 	}

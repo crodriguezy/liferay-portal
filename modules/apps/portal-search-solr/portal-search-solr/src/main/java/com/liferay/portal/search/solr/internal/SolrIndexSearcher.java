@@ -76,7 +76,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -85,9 +85,7 @@ import java.util.stream.Stream;
 import org.apache.commons.lang.time.StopWatch;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrQuery.ORDER;
-import org.apache.solr.client.solrj.SolrQuery.SortClause;
-import org.apache.solr.client.solrj.SolrRequest.METHOD;
+import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.response.FieldStatsInfo;
 import org.apache.solr.client.solrj.response.Group;
 import org.apache.solr.client.solrj.response.GroupCommand;
@@ -446,13 +444,13 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 
 			sortFieldNames.add(sortFieldName);
 
-			ORDER order = ORDER.asc;
+			SolrQuery.ORDER order = SolrQuery.ORDER.asc;
 
 			if (sort.isReverse() || sortFieldName.equals("score")) {
-				order = ORDER.desc;
+				order = SolrQuery.ORDER.desc;
 			}
 
-			solrQuery.addSort(new SortClause(sortFieldName, order));
+			solrQuery.addSort(new SolrQuery.SortClause(sortFieldName, order));
 		}
 	}
 
@@ -495,18 +493,11 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 
 		List<String> filterQueries = new ArrayList<>();
 
-		if (query.getPreBooleanFilter() != null) {
-			String filterQuery = _filterTranslator.translate(
-				query.getPreBooleanFilter(), searchContext);
+		_add(filterQueries, query.getPreBooleanFilter(), searchContext);
 
-			filterQueries.add(filterQuery);
-		}
+		_add(filterQueries, query.getPostFilter(), searchContext);
 
-		String[] postFilterQueries = solrQuery.getFilterQueries();
-
-		if (!ArrayUtil.isEmpty(postFilterQueries)) {
-			Collections.addAll(filterQueries, postFilterQueries);
-		}
+		_addAll(filterQueries, solrQuery.getFilterQueries());
 
 		if (!filterQueries.isEmpty()) {
 			solrQuery.setFilterQueries(
@@ -574,7 +565,7 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 
 		SolrClient solrClient = _solrClientManager.getSolrClient();
 
-		return solrClient.query(solrQuery, METHOD.POST);
+		return solrClient.query(solrQuery, SolrRequest.METHOD.POST);
 	}
 
 	protected String getExcludeTagsString(
@@ -612,9 +603,9 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 	}
 
 	protected String getFacetString(Map<String, JSONObject> jsonObjects) {
-		Set<Entry<String, JSONObject>> entrySet = jsonObjects.entrySet();
+		Set<Map.Entry<String, JSONObject>> entrySet = jsonObjects.entrySet();
 
-		Stream<Entry<String, JSONObject>> stream = entrySet.stream();
+		Stream<Map.Entry<String, JSONObject>> stream = entrySet.stream();
 
 		String jsonString = stream.map(
 			entry -> StringBundler.concat(
@@ -630,6 +621,12 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 	}
 
 	protected String getSortFieldName(Sort sort, String scoreFieldName) {
+		String sortFieldName = sort.getFieldName();
+
+		if (Objects.equals(sortFieldName, Field.PRIORITY)) {
+			return sortFieldName;
+		}
+
 		return Field.getSortFieldName(sort, scoreFieldName);
 	}
 
@@ -699,6 +696,8 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 		Query query, Hits hits, List<Document> documents, List<Float> scores) {
 
 		if (solrDocumentList == null) {
+			Collections.addAll(documents, hits.getDocs());
+
 			return;
 		}
 
@@ -811,6 +810,11 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 					queryResponse, group.getResult(), query, groupedHits);
 
 				hits.addGroupedHits(group.getGroupValue(), groupedHits);
+
+				Document[] docs = groupedHits.getDocs();
+
+				hits.setDocs(docs);
+				hits.setLength(docs.length);
 			}
 		}
 	}
@@ -848,6 +852,24 @@ public class SolrIndexSearcher extends BaseIndexSearcher {
 
 	@Reference
 	protected Props props;
+
+	private void _add(
+		Collection<String> filterQueries, Filter filter,
+		SearchContext searchContext) {
+
+		if (filter != null) {
+			filterQueries.add(
+				_filterTranslator.translate(filter, searchContext));
+		}
+	}
+
+	private void _addAll(
+		List<String> filterQueries, String[] facetPostFilterQueries) {
+
+		if (!ArrayUtil.isEmpty(facetPostFilterQueries)) {
+			Collections.addAll(filterQueries, facetPostFilterQueries);
+		}
+	}
 
 	private static final String _VERSION_FIELD = "_version_";
 

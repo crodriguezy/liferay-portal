@@ -21,6 +21,7 @@ import com.liferay.apio.architect.form.Form;
  * record form.
  *
  * @author Paulo Cruz
+ * @review
  */
 public class FormInstanceRecordForm {
 
@@ -30,6 +31,7 @@ public class FormInstanceRecordForm {
 	 *
 	 * @param  formBuilder the {@code Form} builder
 	 * @return a form instance record form
+	 * @review
 	 */
 	public static Form<FormInstanceRecordForm> buildForm(
 		Form.Builder<FormInstanceRecordForm> formBuilder) {
@@ -42,10 +44,10 @@ public class FormInstanceRecordForm {
 					"record"
 		).constructor(
 			FormInstanceRecordForm::new
-		).addRequiredString(
-			"fieldValues", FormInstanceRecordForm::_setFieldValues
 		).addRequiredBoolean(
-			"isDraft", FormInstanceRecordForm::_setDraft
+			"isDraft", FormInstanceRecordForm::setDraft
+		).addRequiredString(
+			"fieldValues", FormInstanceRecordForm::setFieldValues
 		).build();
 	}
 
@@ -57,11 +59,11 @@ public class FormInstanceRecordForm {
 		return _draft;
 	}
 
-	private void _setDraft(boolean draft) {
+	public void setDraft(boolean draft) {
 		_draft = draft;
 	}
 
-	private void _setFieldValues(String formValues) {
+	public void setFieldValues(String formValues) {
 		_fieldValues = formValues;
 	}
 

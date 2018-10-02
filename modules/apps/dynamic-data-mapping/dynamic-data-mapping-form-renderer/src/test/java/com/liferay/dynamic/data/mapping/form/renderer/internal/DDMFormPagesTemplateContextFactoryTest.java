@@ -32,6 +32,7 @@ import com.liferay.dynamic.data.mapping.model.UnlocalizedValue;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.test.util.DDMFormTestUtil;
 import com.liferay.dynamic.data.mapping.test.util.DDMFormValuesTestUtil;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -41,10 +42,12 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.ResourceBundleLoaderUtil;
-import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.HtmlImpl;
+import com.liferay.registry.BasicRegistryImpl;
+import com.liferay.registry.RegistryUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,7 +75,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 /**
  * @author Marcellus Tavares
  */
-@PrepareForTest(ResourceBundleLoaderUtil.class)
+@PrepareForTest({ResourceBundleLoaderUtil.class, ResourceBundleUtil.class})
 @RunWith(PowerMockRunner.class)
 @SuppressStaticInitializationFor(
 	"com.liferay.portal.kernel.util.ResourceBundleLoaderUtil"
@@ -81,9 +84,12 @@ public class DDMFormPagesTemplateContextFactoryTest extends PowerMockito {
 
 	@Before
 	public void setUp() {
+		RegistryUtil.setRegistry(new BasicRegistryImpl());
+
 		setUpHtmlUtil();
 		setUpLanguageUtil();
 		setUpResourceBundleLoaderUtil();
+		setUpResourceBundleUtil();
 		setUpDDMFormTemplateContextFactoryUtil();
 	}
 
@@ -980,6 +986,18 @@ public class DDMFormPagesTemplateContextFactoryTest extends PowerMockito {
 			ResourceBundleLoaderUtil.getPortalResourceBundleLoader()
 		).thenReturn(
 			portalResourceBundleLoader
+		);
+	}
+
+	protected void setUpResourceBundleUtil() {
+		PowerMockito.mockStatic(ResourceBundleUtil.class);
+
+		PowerMockito.when(
+			ResourceBundleUtil.getBundle(
+				Matchers.anyString(), Matchers.any(Locale.class),
+				Matchers.any(ClassLoader.class))
+		).thenReturn(
+			ResourceBundleUtil.EMPTY_RESOURCE_BUNDLE
 		);
 	}
 

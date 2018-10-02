@@ -279,10 +279,9 @@ public class AssetPublisherWebUtil {
 		if (Validator.isNotNull(emailAssetEntryAddedEnabled)) {
 			return GetterUtil.getBoolean(emailAssetEntryAddedEnabled);
 		}
-		else {
-			return _assetPublisherPortletInstanceConfiguration.
-				emailAssetEntryAddedEnabled();
-		}
+
+		return _assetPublisherPortletInstanceConfiguration.
+			emailAssetEntryAddedEnabled();
 	}
 
 	public Map<Locale, String> getEmailAssetEntryAddedSubjectMap(
@@ -454,7 +453,7 @@ public class AssetPublisherWebUtil {
 			}
 		}
 		else if (scopeId.startsWith(
-					 AssetPublisherUtil.SCOPE_ID_PARENT_GROUP_PREFIX)) {
+					AssetPublisherUtil.SCOPE_ID_PARENT_GROUP_PREFIX)) {
 
 			Group siteGroup = layout.getGroup();
 
@@ -630,9 +629,8 @@ public class AssetPublisherWebUtil {
 		if (classTypeIds != null) {
 			return classTypeIds;
 		}
-		else {
-			return availableClassTypeIds;
-		}
+
+		return availableClassTypeIds;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

@@ -23,7 +23,6 @@ import com.liferay.oauth2.provider.model.OAuth2Authorization;
 import com.liferay.oauth2.provider.rest.internal.endpoint.authorize.configuration.OAuth2AuthorizationFlowConfiguration;
 import com.liferay.oauth2.provider.rest.internal.endpoint.constants.OAuth2ProviderRestEndpointConstants;
 import com.liferay.oauth2.provider.rest.spi.bearer.token.provider.BearerTokenProvider;
-import com.liferay.oauth2.provider.rest.spi.bearer.token.provider.BearerTokenProvider.AccessToken;
 import com.liferay.oauth2.provider.rest.spi.bearer.token.provider.BearerTokenProviderAccessor;
 import com.liferay.oauth2.provider.scope.liferay.LiferayOAuth2Scope;
 import com.liferay.oauth2.provider.scope.liferay.ScopeLocator;
@@ -213,7 +212,7 @@ public class LiferayOAuthDataProvider
 			serverAccessToken.getClient());
 		UserSubject userSubject = serverAccessToken.getSubject();
 
-		return new AccessToken(
+		return new BearerTokenProvider.AccessToken(
 			oAuth2Application, serverAccessToken.getAudiences(),
 			serverAccessToken.getClientCodeVerifier(),
 			serverAccessToken.getExpiresIn(),
@@ -862,7 +861,7 @@ public class LiferayOAuthDataProvider
 				clientGrantTypes.add(OAuthConstants.AUTHORIZATION_CODE_GRANT);
 			}
 			else if (_oAuth2ProviderConfiguration.
-						 allowAuthorizationCodePKCEGrant() &&
+						allowAuthorizationCodePKCEGrant() &&
 					 (allowedGrantType == GrantType.AUTHORIZATION_CODE_PKCE)) {
 
 				clientGrantTypes.add(OAuthConstants.AUTHORIZATION_CODE_GRANT);
@@ -871,13 +870,13 @@ public class LiferayOAuthDataProvider
 						AUTHORIZATION_CODE_PKCE_GRANT);
 			}
 			else if (_oAuth2ProviderConfiguration.
-						 allowClientCredentialsGrant() &&
+						allowClientCredentialsGrant() &&
 					 (allowedGrantType == GrantType.CLIENT_CREDENTIALS)) {
 
 				clientGrantTypes.add(OAuthConstants.CLIENT_CREDENTIALS_GRANT);
 			}
 			else if (_oAuth2ProviderConfiguration.
-						 allowResourceOwnerPasswordCredentialsGrant() &&
+						allowResourceOwnerPasswordCredentialsGrant() &&
 					 (allowedGrantType == GrantType.RESOURCE_OWNER_PASSWORD)) {
 
 				clientGrantTypes.add(OAuthConstants.RESOURCE_OWNER_GRANT);

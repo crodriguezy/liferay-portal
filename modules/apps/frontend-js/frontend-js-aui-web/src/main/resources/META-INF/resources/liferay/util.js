@@ -382,7 +382,7 @@
 
 				result = {};
 
-				var getterFn = _.isFunction(attributeGetter);
+				var getterFn = this.isFunction(attributeGetter);
 				var getterString = _.isString(attributeGetter);
 
 				var attrs = el.attributes;
@@ -640,6 +640,10 @@
 			return viewable;
 		},
 
+		isFunction: function(val) {
+			return typeof val === 'function';
+		},
+
 		isPhone: function() {
 			var instance = this;
 
@@ -661,8 +665,7 @@
 				selector += '[name=' + name + ']';
 			}
 
-			return _.reduce(
-				$(form).find(selector),
+			return $(form).find(selector).toArray().reduce(
 				function(prev, item, index) {
 					item = $(item);
 
@@ -685,8 +688,7 @@
 		listSelect: function(select, delimeter) {
 			select = Util.getDOM(select);
 
-			return _.reduce(
-				$(select).find('option'),
+			return $(select).find('option').toArray().reduce(
 				function(prev, item, index) {
 					var val = $(item).val();
 
@@ -922,7 +924,7 @@
 		selectFolder: function(folderData, namespace) {
 			$('#' + namespace + folderData.idString).val(folderData.idValue);
 
-			var name = _.unescape(folderData.nameValue);
+			var name = Liferay.Util.unescape(folderData.nameValue);
 
 			$('#' + namespace + folderData.nameString).val(name);
 
@@ -1093,7 +1095,7 @@
 			var selectBox = $('#' + selectBoxId);
 			var toggleBox = $('#' + toggleBoxId);
 
-			var dynamicValue = _.isFunction(value);
+			var dynamicValue = this.isFunction(value);
 
 			var toggle = function() {
 				var currentValue = selectBox.val();

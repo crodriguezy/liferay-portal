@@ -199,8 +199,19 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		String friendlyURL = friendlyURLMap.get(LocaleUtil.getSiteDefault());
 
-		int priority = layoutLocalServiceHelper.getNextPriority(
-			groupId, privateLayout, parentLayoutId, null, -1);
+		UnicodeProperties typeSettingsProperties = new UnicodeProperties();
+
+		typeSettingsProperties.fastLoad(typeSettings);
+
+		int priority = Integer.MAX_VALUE;
+
+		boolean visible = GetterUtil.getBoolean(
+			typeSettingsProperties.getProperty("visible"), true);
+
+		if (visible) {
+			priority = layoutLocalServiceHelper.getNextPriority(
+				groupId, privateLayout, parentLayoutId, null, -1);
+		}
 
 		layoutLocalServiceHelper.validate(
 			groupId, privateLayout, layoutId, parentLayoutId, name, type,
@@ -234,10 +245,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		boolean layoutUpdateable = ParamUtil.getBoolean(
 			serviceContext, Sites.LAYOUT_UPDATEABLE, true);
-
-		UnicodeProperties typeSettingsProperties = new UnicodeProperties();
-
-		typeSettingsProperties.fastLoad(typeSettings);
 
 		if (!layoutUpdateable) {
 			typeSettingsProperties.put(
@@ -3324,6 +3331,20 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			catch (NumberFormatException nfe) {
 				throw new SitemapPagePriorityException(nfe);
 			}
+		}
+
+		boolean enableJavaScript =
+			PropsValues.
+				FIELD_ENABLE_COM_LIFERAY_PORTAL_KERNEL_MODEL_LAYOUT_JAVASCRIPT;
+
+		if (!enableJavaScript) {
+			UnicodeProperties layoutTypeSettingsProperties =
+				layout.getTypeSettingsProperties();
+
+			String javaScript = layoutTypeSettingsProperties.getProperty(
+				"javascript");
+
+			typeSettingsProperties.setProperty("javascript", javaScript);
 		}
 	}
 

@@ -25,8 +25,8 @@ import com.liferay.portal.deploy.hot.CustomJspBagRegistryUtil;
 import com.liferay.portal.deploy.hot.ServiceWrapperRegistry;
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
-import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
-import com.liferay.portal.kernel.cache.SingleVMPoolUtil;
+import com.liferay.portal.kernel.cache.PortalCacheHelperUtil;
+import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCacheManager;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.deploy.DeployManagerUtil;
@@ -49,7 +49,7 @@ import com.liferay.portal.kernel.util.ClearThreadLocalUtil;
 import com.liferay.portal.kernel.util.ClearTimerThreadUtil;
 import com.liferay.portal.kernel.util.InstancePool;
 import com.liferay.portal.kernel.util.JavaConstants;
-import com.liferay.portal.kernel.util.MethodCache;
+import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.PortalLifecycleUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.ReferenceRegistry;
@@ -58,10 +58,8 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.module.framework.ModuleFrameworkUtilAdapter;
-import com.liferay.portal.security.lang.SecurityManagerUtil;
 import com.liferay.portal.servlet.PortalSessionListener;
 import com.liferay.portal.spring.aop.DynamicProxyCreator;
-import com.liferay.portal.spring.bean.BeanReferenceRefreshUtil;
 import com.liferay.portal.util.InitUtil;
 import com.liferay.portal.util.PortalClassPathUtil;
 import com.liferay.portal.util.PropsValues;
@@ -155,44 +153,41 @@ public class PortalContextLoaderListener extends ContextLoaderListener {
 
 		closeDataSource("liferayDataSourceImpl");
 
+		super.contextDestroyed(servletContextEvent);
+
 		try {
-			super.contextDestroyed(servletContextEvent);
-
-			try {
-				ModuleFrameworkUtilAdapter.stopRuntime();
-			}
-			catch (Exception e) {
-				_log.error(e, e);
-			}
-
-			try {
-				ModuleFrameworkUtilAdapter.stopFramework(
-					PropsValues.MODULE_FRAMEWORK_STOP_WAIT_TIMEOUT);
-			}
-			catch (Exception e) {
-				_log.error(e, e);
-			}
-
-			ModuleFrameworkUtilAdapter.unregisterContext(
-				_arrayApplicationContext);
-
-			_arrayApplicationContext.close();
+			ModuleFrameworkUtilAdapter.stopRuntime();
 		}
-		finally {
-			SecurityManagerUtil.destroy();
+		catch (Exception e) {
+			_log.error(e, e);
 		}
+
+		try {
+			ModuleFrameworkUtilAdapter.stopFramework(
+				PropsValues.MODULE_FRAMEWORK_STOP_WAIT_TIMEOUT);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+		}
+
+		ModuleFrameworkUtilAdapter.unregisterContext(_arrayApplicationContext);
+
+		_arrayApplicationContext.close();
 	}
 
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
-		Thread currentThread = Thread.currentThread();
-
-		SystemProperties.load(currentThread.getContextClassLoader());
+		try {
+			Class.forName(SystemProperties.class.getName());
+		}
+		catch (ClassNotFoundException cnfe) {
+			throw new RuntimeException(cnfe);
+		}
 
 		DBManagerUtil.reset();
 		DeployManagerUtil.reset();
 		InstancePool.reset();
-		MethodCache.reset();
+		MethodKey.resetCache();
 		PortalBeanLocatorUtil.reset();
 		PortletBagPool.reset();
 
@@ -282,17 +277,6 @@ public class PortalContextLoaderListener extends ContextLoaderListener {
 			() -> {
 				super.contextInitialized(servletContextEvent);
 
-				ApplicationContext applicationContext =
-					ContextLoader.getCurrentWebApplicationContext();
-
-				try {
-					BeanReferenceRefreshUtil.refresh(
-						applicationContext.getAutowireCapableBeanFactory());
-				}
-				catch (Exception e) {
-					_log.error(e, e);
-				}
-
 				return null;
 			});
 
@@ -333,8 +317,10 @@ public class PortalContextLoaderListener extends ContextLoaderListener {
 
 			ServletContextPool.clear();
 
-			MultiVMPoolUtil.clear();
-			SingleVMPoolUtil.clear();
+			PortalCacheHelperUtil.clearPortalCaches(
+				PortalCacheManagerNames.MULTI_VM);
+			PortalCacheHelperUtil.clearPortalCaches(
+				PortalCacheManagerNames.SINGLE_VM);
 		}
 
 		ServletContextPool.put(_portalServletContextName, servletContext);

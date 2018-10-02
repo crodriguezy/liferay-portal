@@ -304,7 +304,7 @@ public class BaselinePlugin implements Plugin<Project> {
 			}
 
 			for (int majorVersion = lowestMajorVersion + 1;
-					majorVersion <= maxMajorVersion; majorVersion++) {
+				 majorVersion <= maxMajorVersion; majorVersion++) {
 
 				BaselineTask majorVersionBaselineTask = _addTaskBaseline(
 					newJarTask, majorVersion);
@@ -320,7 +320,7 @@ public class BaselinePlugin implements Plugin<Project> {
 			}
 		}
 		else if (baselineConfigurationExtension.
-					 isLowestMajorVersionRequired()) {
+					isLowestMajorVersionRequired()) {
 
 			throw new GradleException(
 				"Please configure a lowest major version for " +

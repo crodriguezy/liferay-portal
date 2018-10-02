@@ -50,7 +50,7 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 /**
  * @author Carlos Sierra Andrés
  */
-@Component(immediate = true)
+@Component(immediate = true, service = {})
 public class UpgradeStepRegistratorTracker {
 
 	@Activate
@@ -91,7 +91,7 @@ public class UpgradeStepRegistratorTracker {
 	private class UpgradeStepRegistratorServiceTrackerCustomizer
 		implements ServiceTrackerCustomizer
 			<UpgradeStepRegistrator,
-				Collection<ServiceRegistration<UpgradeStep>>> {
+			 Collection<ServiceRegistration<UpgradeStep>>> {
 
 		@Override
 		public Collection<ServiceRegistration<UpgradeStep>> addingService(

@@ -15,37 +15,129 @@
 package com.liferay.sharing.service.impl;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistry;
+import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.DateUtil;
+import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.spring.extender.service.ServiceReference;
-import com.liferay.sharing.constants.SharingEntryActionKey;
-import com.liferay.sharing.exception.InvalidSharingEntryActionKeyException;
+import com.liferay.sharing.exception.InvalidSharingEntryActionException;
+import com.liferay.sharing.exception.InvalidSharingEntryExpirationDateException;
 import com.liferay.sharing.exception.InvalidSharingEntryUserException;
 import com.liferay.sharing.model.SharingEntry;
+import com.liferay.sharing.security.permission.SharingEntryAction;
 import com.liferay.sharing.service.base.SharingEntryLocalServiceBaseImpl;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
 /**
+ * Provides the local service for accessing, adding, checking, deleting and
+ * updating sharing entries.
+ *
+ * <p>
+ * This service does not perform any kind of permission checking and assumes
+ * that the user has permission to share the resource with another user with
+ * any sharing entry action. Permission checks are done in
+ * {@link SharingEntryServiceImpl}.
+ * </p>
+ *
+ * <p>
+ * However, this service performs some validations and integrity checks that
+ * ensure that the sharing entries are valid and consistent.
+ * </p>
+ *
  * @author Sergio González
+ * @review
  */
 public class SharingEntryLocalServiceImpl
 	extends SharingEntryLocalServiceBaseImpl {
 
+	/**
+	 * Adds a sharing entry in the database if it does not exist or it updates
+	 * it if it exists.
+	 *
+	 * @param  fromUserId the user id sharing the resource
+	 * @param  toUserId the user id whose resource was shared
+	 * @param  classNameId the class name ID of the resource being shared
+	 * @param  classPK the primary key of the resource being shared
+	 * @param  groupId the primary key of the group containing the resource
+	 *         being shared
+	 * @param  shareable whether the to user id can share the resource as well
+	 * @param  sharingEntryActions the sharing entry actions
+	 * @param  expirationDate the date when the sharing entry expires
+	 * @return the sharing entry
+	 * @param  serviceContext the service context to be applied
+	 * @throws PortalException if sharing entry actions are invalid (it is
+	 *         empty, it doesn't contain {@link SharingEntryAction#VIEW,} or
+	 *         it contains a <code>null</code> value) or from user id and to
+	 *         user id are the same or the expiration date is a value in the
+	 *         past.
+	 */
+	@Override
+	public SharingEntry addOrUpdateSharingEntry(
+			long fromUserId, long toUserId, long classNameId, long classPK,
+			long groupId, boolean shareable,
+			Collection<SharingEntryAction> sharingEntryActions,
+			Date expirationDate, ServiceContext serviceContext)
+		throws PortalException {
+
+		SharingEntry sharingEntry = sharingEntryPersistence.fetchByFU_TU_C_C(
+			fromUserId, toUserId, classNameId, classPK);
+
+		if (sharingEntry == null) {
+			return sharingEntryLocalService.addSharingEntry(
+				fromUserId, toUserId, classNameId, classPK, groupId, shareable,
+				sharingEntryActions, expirationDate, serviceContext);
+		}
+
+		return sharingEntryLocalService.updateSharingEntry(
+			sharingEntry.getSharingEntryId(), sharingEntryActions, shareable,
+			expirationDate, serviceContext);
+	}
+
+	/**
+	 * Adds a sharing entry in the database.
+	 *
+	 * @param  fromUserId the user id sharing the resource
+	 * @param  toUserId the user id whose resource was shared
+	 * @param  classNameId the class name ID of the resource being shared
+	 * @param  classPK the primary key of the resource being shared
+	 * @param  groupId the primary key of the group containing the resource
+	 *         being shared
+	 * @param  shareable whether the to user id can share the resource as well
+	 * @param  sharingEntryActions the sharing entry actions
+	 * @param  expirationDate the date when the sharing entry expires
+	 * @return the sharing entry
+	 * @param  serviceContext the service context to be applied
+	 * @throws PortalException if there is already a sharing entry for the same
+	 *         from user id, to user id and resource or the sharing entry
+	 *         actions are invalid (it is empty, it doesn't contain
+	 *         {@link SharingEntryAction#VIEW,} or it contains a
+	 *         <code>null</code> value) or from user id and to user id are the
+	 *         same or the expiration date is a value in the past.
+	 */
 	@Override
 	public SharingEntry addSharingEntry(
 			long fromUserId, long toUserId, long classNameId, long classPK,
-			long groupId,
-			Collection<SharingEntryActionKey> sharingEntryActionKeys,
-			ServiceContext serviceContext)
+			long groupId, boolean shareable,
+			Collection<SharingEntryAction> sharingEntryActions,
+			Date expirationDate, ServiceContext serviceContext)
 		throws PortalException {
 
-		_validateSharingEntryActionKeys(sharingEntryActionKeys);
+		_validateSharingEntryActions(sharingEntryActions);
 
 		_validateUsers(fromUserId, toUserId);
+
+		_validateExpirationDate(expirationDate);
 
 		long sharingEntryId = counterLocalService.increment();
 
@@ -63,12 +155,447 @@ public class SharingEntryLocalServiceImpl
 		sharingEntry.setToUserId(toUserId);
 		sharingEntry.setClassNameId(classNameId);
 		sharingEntry.setClassPK(classPK);
+		sharingEntry.setShareable(shareable);
+		sharingEntry.setExpirationDate(expirationDate);
 
-		Stream<SharingEntryActionKey> sharingEntryActionKeyStream =
-			sharingEntryActionKeys.stream();
+		Stream<SharingEntryAction> sharingEntryActionStream =
+			sharingEntryActions.stream();
 
-		sharingEntryActionKeyStream.map(
-			SharingEntryActionKey::getBitwiseVaue
+		sharingEntryActionStream.map(
+			SharingEntryAction::getBitwiseValue
+		).reduce(
+			(bitwiseValue1, bitwiseValue2) -> bitwiseValue1 | bitwiseValue2
+		).ifPresent(
+			actionIds -> sharingEntry.setActionIds(actionIds)
+		);
+
+		SharingEntry newSharingEntry = sharingEntryPersistence.update(
+			sharingEntry);
+
+		String className = _portal.getClassName(classNameId);
+
+		Indexer<Object> indexer = _indexerRegistry.getIndexer(className);
+
+		if (indexer != null) {
+			indexer.reindex(className, classPK);
+		}
+
+		return newSharingEntry;
+	}
+
+	/**
+	 * Returns the number of sharing entries that have been shared by a user.
+	 *
+	 * @param  fromUserId the user id sharing the resource
+	 * @return the number of sharing entries
+	 */
+	@Override
+	public int countFromUserSharingEntries(long fromUserId) {
+		return sharingEntryPersistence.countByFromUserId(fromUserId);
+	}
+
+	/**
+	 * Returns the number of sharing entries of a resource that have been shared
+	 * by a user.
+	 *
+	 * @param  fromUserId the user id sharing the resource
+	 * @param  classNameId the class name ID of the resource
+	 * @param  classPK the primary key of the resource
+	 * @return the number of sharing entries
+	 */
+	@Override
+	public int countFromUserSharingEntries(
+		long fromUserId, long classNameId, long classPK) {
+
+		return sharingEntryPersistence.countByFU_C_C(
+			fromUserId, classNameId, classPK);
+	}
+
+	/**
+	 * Returns the number of sharing entries that have been shared to a user.
+	 *
+	 * @param  toUserId the user id who was shared the resource
+	 * @return the number of sharing entries
+	 */
+	@Override
+	public int countToUserSharingEntries(long toUserId) {
+		return sharingEntryPersistence.countByToUserId(toUserId);
+	}
+
+	/**
+	 * Deletes all sharing entries whose expiration date is before the current
+	 * date.
+	 */
+	@Override
+	public void deleteExpiredEntries() {
+		sharingEntryPersistence.removeByExpirationDate(DateUtil.newDate());
+	}
+
+	/**
+	 * Deletes all sharing entries that belong to a group.
+	 */
+	@Override
+	public void deleteGroupSharingEntries(long groupId) {
+		List<SharingEntry> sharingEntries =
+			sharingEntryPersistence.findByGroupId(groupId);
+
+		for (SharingEntry sharingEntry : sharingEntries) {
+			deleteSharingEntry(sharingEntry);
+		}
+	}
+
+	/**
+	 * Deletes all sharing entries of a resource.
+	 *
+	 * @param  classNameId the class name ID of the resource
+	 * @param  classPK the primary key of the resource
+	 */
+	@Override
+	public void deleteSharingEntries(long classNameId, long classPK) {
+		List<SharingEntry> sharingEntries = sharingEntryPersistence.findByC_C(
+			classNameId, classPK);
+
+		for (SharingEntry sharingEntry : sharingEntries) {
+			deleteSharingEntry(sharingEntry);
+		}
+	}
+
+	/**
+	 * Deletes the sharing entry.
+	 *
+	 * @param  sharingEntryId the sharing entry id
+	 * @return the deleted sharing entry
+	 */
+	@Override
+	public SharingEntry deleteSharingEntry(long sharingEntryId)
+		throws PortalException {
+
+		SharingEntry sharingEntry = getSharingEntry(sharingEntryId);
+
+		return deleteSharingEntry(sharingEntry);
+	}
+
+	/**
+	 * Deletes the sharing entry of a user to another user for a resource.
+	 *
+	 * @param  classNameId the class name ID of the resource
+	 * @param  classPK the primary key of the resource
+	 * @return the deleted sharing entry
+	 */
+	@Override
+	public SharingEntry deleteSharingEntry(
+			long fromUserId, long toUserId, long classNameId, long classPK)
+		throws PortalException {
+
+		SharingEntry sharingEntry = sharingEntryPersistence.findByFU_TU_C_C(
+			fromUserId, toUserId, classNameId, classPK);
+
+		return deleteSharingEntry(sharingEntry);
+	}
+
+	/**
+	 * Deletes the sharing entry.
+	 *
+	 * @param  sharingEntry the sharing entry to delete
+	 * @return the deleted sharing entry
+	 */
+	@Override
+	public SharingEntry deleteSharingEntry(SharingEntry sharingEntry) {
+		String className = sharingEntry.getClassName();
+		long classPK = sharingEntry.getClassPK();
+
+		SharingEntry deletedSharingEntry = sharingEntryPersistence.remove(
+			sharingEntry);
+
+		Indexer<Object> indexer = _indexerRegistry.getIndexer(className);
+
+		if (indexer != null) {
+			try {
+				indexer.reindex(className, classPK);
+			}
+			catch (SearchException se) {
+				if (_log.isWarnEnabled()) {
+					_log.warn(
+						StringBundler.concat(
+							"Unable to index sharing entry for class name ",
+							className, " and primary key ",
+							String.valueOf(classPK)),
+						se);
+				}
+			}
+		}
+
+		return deletedSharingEntry;
+	}
+
+	/**
+	 * Deletes all sharing entries shared to a user.
+	 *
+	 * @param  toUserId the user id who was shared the resource
+	 */
+	@Override
+	public void deleteToUserSharingEntries(long toUserId) {
+		List<SharingEntry> sharingEntries =
+			sharingEntryPersistence.findByToUserId(toUserId);
+
+		for (SharingEntry sharingEntry : sharingEntries) {
+			deleteSharingEntry(sharingEntry);
+		}
+	}
+
+	/**
+	 * Returns a list of all the sharing entries that has been shared by a user.
+	 *
+	 * @param  fromUserId the user id sharing the resource
+	 * @return the list of sharing entries
+	 */
+	@Override
+	public List<SharingEntry> getFromUserSharingEntries(long fromUserId) {
+		return sharingEntryPersistence.findByFromUserId(fromUserId);
+	}
+
+	/**
+	 * Returns a list of all the sharing entries of a resource that has been
+	 * shared by a user
+	 *
+	 * @param  fromUserId the user id sharing the resource
+	 * @param  classNameId the class name ID of the resource
+	 * @param  classPK the primary key of the resource
+	 * @return the list of sharing entries
+	 */
+	@Override
+	public List<SharingEntry> getFromUserSharingEntries(
+		long fromUserId, long classNameId, long classPK) {
+
+		return sharingEntryPersistence.findByFU_C_C(
+			fromUserId, classNameId, classPK);
+	}
+
+	/**
+	 * Returns a range of all the sharing entries of a resource that has been
+	 * shared by a user
+	 *
+	 * @param  fromUserId the user id sharing the resource
+	 * @param  classNameId the class name ID of the resource
+	 * @param  classPK the primary key of the resource
+	 * @param  start the lower bound of the range of results
+	 * @param  end the upper bound of the range of results (not inclusive)
+	 * @return the range of sharing entries
+	 */
+	@Override
+	public List<SharingEntry> getFromUserSharingEntries(
+		long fromUserId, long classNameId, long classPK, int start, int end) {
+
+		return sharingEntryPersistence.findByFU_C_C(
+			fromUserId, classNameId, classPK, start, end);
+	}
+
+	/**
+	 * Returns a list of all the sharing entries of a group.
+	 *
+	 * @param  groupId the primary key of the group
+	 * @return the list of sharing entries
+	 */
+	@Override
+	public List<SharingEntry> getGroupSharingEntries(long groupId) {
+		return sharingEntryPersistence.findByGroupId(groupId);
+	}
+
+	/**
+	 * Returns a list of all the sharing entries of a resource.
+	 *
+	 * @param  classNameId the class name ID of the resource
+	 * @param  classPK the primary key of the resource
+	 * @return the list of sharing entries
+	 */
+	@Override
+	public List<SharingEntry> getSharingEntries(
+		long classNameId, long classPK) {
+
+		return sharingEntryPersistence.findByC_C(classNameId, classPK);
+	}
+
+	/**
+	 * Returns a list of all the sharing entries of a resource that has been
+	 * shared to a user.
+	 *
+	 * @param  toUserId the user id that has been shared the resource
+	 * @param  classNameId the class name ID of the resource
+	 * @param  classPK the primary key of the resource
+	 * @return the list of sharing entries
+	 */
+	@Override
+	public List<SharingEntry> getSharingEntries(
+		long toUserId, long classNameId, long classPK) {
+
+		return sharingEntryPersistence.findByTU_C_C(
+			toUserId, classNameId, classPK);
+	}
+
+	/**
+	 * Returns a list of all the sharing entries that has been shared to a user.
+	 *
+	 * @param  toUserId the user id that has been shared the resource
+	 * @return the range of sharing entries
+	 */
+	@Override
+	public List<SharingEntry> getToUserSharingEntries(long toUserId) {
+		return sharingEntryPersistence.findByToUserId(toUserId);
+	}
+
+	/**
+	 * Returns a range of all the sharing entries that has been shared to a
+	 * user.
+	 *
+	 * @param  toUserId the user id that has been shared the resource
+	 * @return the range of sharing entries
+	 */
+	@Override
+	public List<SharingEntry> getToUserSharingEntries(
+		long toUserId, int start, int end) {
+
+		return sharingEntryPersistence.findByToUserId(toUserId, start, end);
+	}
+
+	/**
+	 * Returns a list of sharing entries of a specific class name id that has
+	 * been shared to a user.
+	 *
+	 * @param  toUserId the user id that has been shared the resource
+	 * @param  classNameId the class name ID of the shared resource
+	 * @return the list of sharing entries
+	 */
+	@Override
+	public List<SharingEntry> getToUserSharingEntries(
+		long toUserId, long classNameId) {
+
+		return sharingEntryPersistence.findByTU_C(toUserId, classNameId);
+	}
+
+	/**
+	 * Returns <code>true</code> if the to user id has been shared a resource
+	 * with a sharing entry action and, in addition, he can share the resource
+	 * as well.
+	 *
+	 * @param  toUserId the user id that has been shared the resource
+	 * @param  classNameId the class name ID of the shared resource
+	 * @param  classPK the primary key of the shared resource
+	 * @param  sharingEntryAction the sharing entry action
+	 * @return <code>true</code> if the user has been shared a resource with a
+	 *         sharing entry action and he can, in additino, share the resource
+	 *         as well; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean hasShareableSharingPermission(
+		long toUserId, long classNameId, long classPK,
+		SharingEntryAction sharingEntryAction) {
+
+		List<SharingEntry> sharingEntries =
+			sharingEntryPersistence.findByTU_C_C(
+				toUserId, classNameId, classPK);
+
+		for (SharingEntry sharingEntry : sharingEntries) {
+			if (!sharingEntry.isShareable()) {
+				continue;
+			}
+
+			if (hasSharingPermission(sharingEntry, sharingEntryAction)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns <code>true</code> if the to user id has been shared a resource
+	 * with a sharing entry action
+	 *
+	 * @param  toUserId the user id that has been shared the resource
+	 * @param  classNameId the class name ID of the shared resource
+	 * @param  classPK the primary key of the shared resource
+	 * @param  sharingEntryAction the sharing entry action
+	 * @return <code>true</code> if the user has been shared a resource with a
+	 *         sharing entry action; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean hasSharingPermission(
+		long toUserId, long classNameId, long classPK,
+		SharingEntryAction sharingEntryAction) {
+
+		List<SharingEntry> sharingEntries =
+			sharingEntryPersistence.findByTU_C_C(
+				toUserId, classNameId, classPK);
+
+		for (SharingEntry sharingEntry : sharingEntries) {
+			if (hasSharingPermission(sharingEntry, sharingEntryAction)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns <code>true</code> if the sharing entry has certain sharing entry
+	 * action
+	 *
+	 * @param  sharingEntry the sharing entry
+	 * @param  sharingEntryAction the sharing entry action
+	 * @return <code>true</code> if the sharing entry has the sharing entry
+	 *         action; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean hasSharingPermission(
+		SharingEntry sharingEntry, SharingEntryAction sharingEntryAction) {
+
+		long actionIds = sharingEntry.getActionIds();
+
+		if ((actionIds & sharingEntryAction.getBitwiseValue()) != 0) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Updates a sharing entry in the database.
+	 *
+	 * @param  sharingEntryId the primary key of the sharing entry
+	 * @param  sharingEntryActions the sharing entry actions
+	 * @param  shareable whether the to user id can share the resource as well
+	 * @param  expirationDate the date when the sharing entry expires
+	 * @return the sharing entry
+	 * @param  serviceContext the service context to be applied
+	 * @throws PortalException if the sharing entry does not exist or sharing
+	 *         entry actions are invalid (it is empty, it doesn't contain
+	 *         {@link SharingEntryAction#VIEW,} or it contains a
+	 *         <code>null</code> value) or the expiration date is a value in the
+	 *         past.
+	 */
+	@Override
+	public SharingEntry updateSharingEntry(
+			long sharingEntryId,
+			Collection<SharingEntryAction> sharingEntryActions,
+			boolean shareable, Date expirationDate,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		SharingEntry sharingEntry = sharingEntryPersistence.findByPrimaryKey(
+			sharingEntryId);
+
+		_validateSharingEntryActions(sharingEntryActions);
+
+		_validateExpirationDate(expirationDate);
+
+		sharingEntry.setShareable(shareable);
+		sharingEntry.setExpirationDate(expirationDate);
+
+		Stream<SharingEntryAction> sharingEntryActionStream =
+			sharingEntryActions.stream();
+
+		sharingEntryActionStream.map(
+			SharingEntryAction::getBitwiseValue
 		).reduce(
 			(bitwiseValue1, bitwiseValue2) -> bitwiseValue1 | bitwiseValue2
 		).ifPresent(
@@ -78,138 +605,36 @@ public class SharingEntryLocalServiceImpl
 		return sharingEntryPersistence.update(sharingEntry);
 	}
 
-	@Override
-	public int countFromUserSharingEntries(long fromUserId) {
-		return sharingEntryPersistence.countByFromUserId(fromUserId);
-	}
+	private void _validateExpirationDate(Date expirationDate)
+		throws InvalidSharingEntryExpirationDateException {
 
-	@Override
-	public int countToUserSharingEntries(long toUserId) {
-		return sharingEntryPersistence.countByToUserId(toUserId);
-	}
+		if ((expirationDate != null) &&
+			expirationDate.before(DateUtil.newDate())) {
 
-	@Override
-	public void deleteGroupSharingEntries(long groupId) {
-		List<SharingEntry> sharingEntries =
-			sharingEntryPersistence.findByGroupId(groupId);
-
-		for (SharingEntry sharingEntry : sharingEntries) {
-			sharingEntryPersistence.remove(sharingEntry);
+			throw new InvalidSharingEntryExpirationDateException(
+				"Expiration date is in the past");
 		}
 	}
 
-	@Override
-	public void deleteSharingEntries(long classNameId, long classPK) {
-		List<SharingEntry> sharingEntries = sharingEntryPersistence.findByC_C(
-			classNameId, classPK);
+	private void _validateSharingEntryActions(
+			Collection<SharingEntryAction> sharedEntryActions)
+		throws InvalidSharingEntryActionException {
 
-		for (SharingEntry sharingEntry : sharingEntries) {
-			sharingEntryPersistence.remove(sharingEntry);
-		}
-	}
-
-	@Override
-	public SharingEntry deleteSharingEntry(
-			long toUserId, long classNameId, long classPK)
-		throws PortalException {
-
-		SharingEntry sharingEntry = sharingEntryPersistence.findByTU_C_C(
-			toUserId, classNameId, classPK);
-
-		return sharingEntryPersistence.remove(sharingEntry);
-	}
-
-	@Override
-	public void deleteToUserSharingEntries(long toUserId) {
-		List<SharingEntry> sharingEntries =
-			sharingEntryPersistence.findByToUserId(toUserId);
-
-		for (SharingEntry sharingEntry : sharingEntries) {
-			sharingEntryPersistence.remove(sharingEntry);
-		}
-	}
-
-	@Override
-	public List<SharingEntry> getFromUserSharingEntries(long fromUserId) {
-		return sharingEntryPersistence.findByFromUserId(fromUserId);
-	}
-
-	@Override
-	public List<SharingEntry> getGroupSharingEntries(long groupId) {
-		return sharingEntryPersistence.findByGroupId(groupId);
-	}
-
-	@Override
-	public List<SharingEntry> getSharingEntries(
-		long classNameId, long classPK) {
-
-		return sharingEntryPersistence.findByC_C(classNameId, classPK);
-	}
-
-	@Override
-	public SharingEntry getSharingEntry(
-			long toUserId, long classNameId, long classPK)
-		throws PortalException {
-
-		return sharingEntryPersistence.findByTU_C_C(
-			toUserId, classNameId, classPK);
-	}
-
-	@Override
-	public List<SharingEntry> getToUserSharingEntries(long toUserId) {
-		return sharingEntryPersistence.findByToUserId(toUserId);
-	}
-
-	@Override
-	public List<SharingEntry> getToUserSharingEntries(
-		long toUserId, long classNameId) {
-
-		return sharingEntryPersistence.findByTU_C(toUserId, classNameId);
-	}
-
-	@Override
-	public boolean hasSharingPermission(
-		long toUserId, long classNameId, long classPK,
-		SharingEntryActionKey sharingEntryActionKey) {
-
-		SharingEntry sharingEntry = sharingEntryPersistence.fetchByTU_C_C(
-			toUserId, classNameId, classPK);
-
-		if (sharingEntry == null) {
-			return false;
+		if (sharedEntryActions.isEmpty()) {
+			throw new InvalidSharingEntryActionException(
+				"Shared entry actions is empty");
 		}
 
-		long actionIds = sharingEntry.getActionIds();
-
-		if ((actionIds & sharingEntryActionKey.getBitwiseVaue()) != 0) {
-			return true;
-		}
-
-		return false;
-	}
-
-	private void _validateSharingEntryActionKeys(
-			Collection<SharingEntryActionKey> sharedEntryActionKeys)
-		throws InvalidSharingEntryActionKeyException {
-
-		if (sharedEntryActionKeys.isEmpty()) {
-			throw new InvalidSharingEntryActionKeyException(
-				"Shared entry action keys is empty");
-		}
-
-		for (SharingEntryActionKey curSharingEntryActionKey :
-				sharedEntryActionKeys) {
-
-			if (curSharingEntryActionKey == null) {
-				throw new InvalidSharingEntryActionKeyException(
-					"Shared entry action keys contains a null value");
+		for (SharingEntryAction curSharingEntryAction : sharedEntryActions) {
+			if (curSharingEntryAction == null) {
+				throw new InvalidSharingEntryActionException(
+					"Shared entry actions contains a null value");
 			}
 		}
 
-		if (!sharedEntryActionKeys.contains(SharingEntryActionKey.VIEW)) {
-			throw new InvalidSharingEntryActionKeyException(
-				"Shared entry action keys must contain VIEW shared entry " +
-					"action key");
+		if (!sharedEntryActions.contains(SharingEntryAction.VIEW)) {
+			throw new InvalidSharingEntryActionException(
+				"Shared entry actions must contain VIEW shared entry action");
 		}
 	}
 
@@ -222,7 +647,16 @@ public class SharingEntryLocalServiceImpl
 		}
 	}
 
+	private static final Log _log = LogFactoryUtil.getLog(
+		SharingEntryLocalServiceImpl.class);
+
 	@ServiceReference(type = GroupLocalService.class)
 	private GroupLocalService _groupLocalService;
+
+	@ServiceReference(type = IndexerRegistry.class)
+	private IndexerRegistry _indexerRegistry;
+
+	@ServiceReference(type = Portal.class)
+	private Portal _portal;
 
 }

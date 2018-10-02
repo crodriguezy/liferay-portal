@@ -157,14 +157,13 @@ public class DDMDisplayContext {
 				add(
 					dropdownItem -> {
 						dropdownItem.putData("action", action);
-						dropdownItem.setIcon("times");
+						dropdownItem.setIcon("times-circle");
 						dropdownItem.setLabel(
 							LanguageUtil.get(
 								_ddmWebRequestHelper.getRequest(), "delete"));
 						dropdownItem.setQuickAction(true);
 					});
 			}
-
 		};
 	}
 
@@ -989,7 +988,7 @@ public class DDMDisplayContext {
 			templateTypeValue = DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY;
 		}
 		else if (scopeTemplateType.equals(
-					 DDMTemplateConstants.TEMPLATE_TYPE_FORM)) {
+					DDMTemplateConstants.TEMPLATE_TYPE_FORM)) {
 
 			templateTypeValue = DDMTemplateConstants.TEMPLATE_TYPE_FORM;
 		}

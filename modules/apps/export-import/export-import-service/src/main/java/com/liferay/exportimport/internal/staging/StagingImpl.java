@@ -107,7 +107,6 @@ import com.liferay.portal.kernel.scheduler.SchedulerEngineHelperUtil;
 import com.liferay.portal.kernel.security.auth.HttpPrincipal;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.auth.RemoteAuthException;
-import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
@@ -193,8 +192,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Wesley Gong
  * @author Zsolt Balogh
  */
-@Component(immediate = true)
-@DoPrivileged
+@Component(immediate = true, service = Staging.class)
 @ProviderType
 public class StagingImpl implements Staging {
 
@@ -806,8 +804,8 @@ public class StagingImpl implements Staging {
 				}
 			}
 			else if (eicve.getType() ==
-						 ExportImportContentValidationException.
-							 FILE_ENTRY_NOT_FOUND) {
+						ExportImportContentValidationException.
+							FILE_ENTRY_NOT_FOUND) {
 
 				if (Validator.isNotNull(eicve.getStagedModelClassName())) {
 					errorMessage = LanguageUtil.format(
@@ -830,8 +828,8 @@ public class StagingImpl implements Staging {
 				}
 			}
 			else if (eicve.getType() ==
-						 ExportImportContentValidationException.
-							 LAYOUT_GROUP_NOT_FOUND) {
+						ExportImportContentValidationException.
+							LAYOUT_GROUP_NOT_FOUND) {
 
 				if (Validator.isNotNull(eicve.getStagedModelClassName())) {
 					errorMessage = LanguageUtil.format(
@@ -857,8 +855,8 @@ public class StagingImpl implements Staging {
 				}
 			}
 			else if (eicve.getType() ==
-						 ExportImportContentValidationException.
-							 LAYOUT_NOT_FOUND) {
+						ExportImportContentValidationException.
+							LAYOUT_NOT_FOUND) {
 
 				if (Validator.isNotNull(eicve.getStagedModelClassName())) {
 					errorMessage = LanguageUtil.format(
@@ -882,8 +880,8 @@ public class StagingImpl implements Staging {
 				}
 			}
 			else if (eicve.getType() ==
-						 ExportImportContentValidationException.
-							 LAYOUT_WITH_URL_NOT_FOUND) {
+						ExportImportContentValidationException.
+							LAYOUT_WITH_URL_NOT_FOUND) {
 
 				if (Validator.isNotNull(eicve.getStagedModelClassName())) {
 					errorMessage = LanguageUtil.format(
@@ -939,8 +937,8 @@ public class StagingImpl implements Staging {
 					eide.getPortletId());
 			}
 			else if (eide.getType() ==
-						 ExportImportDocumentException.
-							 PORTLET_PREFERENCES_IMPORT) {
+						ExportImportDocumentException.
+							PORTLET_PREFERENCES_IMPORT) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -977,7 +975,7 @@ public class StagingImpl implements Staging {
 					eiioe.getFileName());
 			}
 			else if (eiioe.getType() ==
-						 ExportImportIOException.ADD_ZIP_ENTRY_STREAM) {
+						ExportImportIOException.ADD_ZIP_ENTRY_STREAM) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -985,7 +983,7 @@ public class StagingImpl implements Staging {
 					eiioe.getFileName());
 			}
 			else if (eiioe.getType() ==
-						 ExportImportIOException.ADD_ZIP_ENTRY_STRING) {
+						ExportImportIOException.ADD_ZIP_ENTRY_STRING) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1000,7 +998,7 @@ public class StagingImpl implements Staging {
 					eiioe.getClassName());
 			}
 			else if (eiioe.getType() ==
-						 ExportImportIOException.LAYOUT_IMPORT_FILE) {
+						ExportImportIOException.LAYOUT_IMPORT_FILE) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1009,7 +1007,7 @@ public class StagingImpl implements Staging {
 					new String[] {eiioe.getFileName(), eiioe.getClassName()});
 			}
 			else if (eiioe.getType() ==
-						 ExportImportIOException.LAYOUT_VALIDATE) {
+						ExportImportIOException.LAYOUT_VALIDATE) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1018,7 +1016,7 @@ public class StagingImpl implements Staging {
 					eiioe.getClassName());
 			}
 			else if (eiioe.getType() ==
-						 ExportImportIOException.LAYOUT_VALIDATE_FILE) {
+						ExportImportIOException.LAYOUT_VALIDATE_FILE) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1028,7 +1026,7 @@ public class StagingImpl implements Staging {
 					new String[] {eiioe.getFileName(), eiioe.getClassName()});
 			}
 			else if (eiioe.getType() ==
-						 ExportImportIOException.PORTLET_EXPORT) {
+						ExportImportIOException.PORTLET_EXPORT) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1037,7 +1035,7 @@ public class StagingImpl implements Staging {
 					eiioe.getPortletId());
 			}
 			else if (eiioe.getType() ==
-						 ExportImportIOException.PORTLET_IMPORT) {
+						ExportImportIOException.PORTLET_IMPORT) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1046,7 +1044,7 @@ public class StagingImpl implements Staging {
 					eiioe.getClassName());
 			}
 			else if (eiioe.getType() ==
-						 ExportImportIOException.PORTLET_IMPORT_FILE) {
+						ExportImportIOException.PORTLET_IMPORT_FILE) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1055,7 +1053,7 @@ public class StagingImpl implements Staging {
 					new String[] {eiioe.getFileName(), eiioe.getClassName()});
 			}
 			else if (eiioe.getType() ==
-						 ExportImportIOException.PORTLET_VALIDATE) {
+						ExportImportIOException.PORTLET_VALIDATE) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1065,7 +1063,7 @@ public class StagingImpl implements Staging {
 					eiioe.getClassName());
 			}
 			else if (eiioe.getType() ==
-						 ExportImportIOException.PORTLET_VALIDATE_FILE) {
+						ExportImportIOException.PORTLET_VALIDATE_FILE) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1075,7 +1073,7 @@ public class StagingImpl implements Staging {
 					new String[] {eiioe.getFileName(), eiioe.getClassName()});
 			}
 			else if (eiioe.getType() ==
-						 ExportImportIOException.PUBLISH_STAGING_REQUEST) {
+						ExportImportIOException.PUBLISH_STAGING_REQUEST) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1084,7 +1082,7 @@ public class StagingImpl implements Staging {
 					eiioe.getStagingRequestId());
 			}
 			else if (eiioe.getType() ==
-						 ExportImportIOException.STAGING_REQUEST_CHECKSUM) {
+						ExportImportIOException.STAGING_REQUEST_CHECKSUM) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1093,8 +1091,8 @@ public class StagingImpl implements Staging {
 					eiioe.getChecksum());
 			}
 			else if (eiioe.getType() ==
-						 ExportImportIOException.
-							 STAGING_REQUEST_REASSEMBLE_FILE) {
+						ExportImportIOException.
+							STAGING_REQUEST_REASSEMBLE_FILE) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1191,7 +1189,7 @@ public class StagingImpl implements Staging {
 					resourceBundle, "a-x-can-only-be-imported-to-a-x", "site");
 			}
 			else if (lte.getType() ==
-						 LARTypeException.TYPE_LAYOUT_SET_PROTOTYPE) {
+						LARTypeException.TYPE_LAYOUT_SET_PROTOTYPE) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle, "a-x-can-only-be-imported-to-a-x",
@@ -1249,7 +1247,7 @@ public class StagingImpl implements Staging {
 					lie.getArguments());
 			}
 			else if (lie.getType() ==
-						 LayoutImportException.TYPE_WRONG_LAR_SCHEMA_VERSION) {
+						LayoutImportException.TYPE_WRONG_LAR_SCHEMA_VERSION) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1258,8 +1256,8 @@ public class StagingImpl implements Staging {
 					lie.getArguments());
 			}
 			else if (lie.getType() ==
-						 LayoutImportException.
-							 TYPE_WRONG_PORTLET_SCHEMA_VERSION) {
+						LayoutImportException.
+							TYPE_WRONG_PORTLET_SCHEMA_VERSION) {
 
 				Object[] arguments = lie.getArguments();
 
@@ -1399,7 +1397,7 @@ public class StagingImpl implements Staging {
 					String.valueOf(pde.getCompanyId()));
 			}
 			else if (pde.getType() ==
-						 PortletDataException.DELETE_PORTLET_DATA) {
+						PortletDataException.DELETE_PORTLET_DATA) {
 
 				if (Validator.isNotNull(pde.getLocalizedMessage())) {
 					errorMessage = LanguageUtil.format(
@@ -1424,7 +1422,7 @@ public class StagingImpl implements Staging {
 				}
 			}
 			else if (pde.getType() ==
-						 PortletDataException.EXPORT_DATA_GROUP_ELEMENT) {
+						PortletDataException.EXPORT_DATA_GROUP_ELEMENT) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1434,7 +1432,7 @@ public class StagingImpl implements Staging {
 					pde.getStagedModelClassName());
 			}
 			else if (pde.getType() ==
-						 PortletDataException.EXPORT_PORTLET_DATA) {
+						PortletDataException.EXPORT_PORTLET_DATA) {
 
 				if (Validator.isNotNull(pde.getLocalizedMessage())) {
 					errorMessage = LanguageUtil.format(
@@ -1459,7 +1457,7 @@ public class StagingImpl implements Staging {
 				}
 			}
 			else if (pde.getType() ==
-						 PortletDataException.EXPORT_PORTLET_PERMISSIONS) {
+						PortletDataException.EXPORT_PORTLET_PERMISSIONS) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1468,7 +1466,7 @@ public class StagingImpl implements Staging {
 					pde.getPortletId());
 			}
 			else if (pde.getType() ==
-						 PortletDataException.EXPORT_REFERENCED_TEMPLATE) {
+						PortletDataException.EXPORT_REFERENCED_TEMPLATE) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1477,7 +1475,7 @@ public class StagingImpl implements Staging {
 					pde.getPortletId());
 			}
 			else if (pde.getType() ==
-						 PortletDataException.EXPORT_STAGED_MODEL) {
+						PortletDataException.EXPORT_STAGED_MODEL) {
 
 				String localizedMessage = pde.getLocalizedMessage();
 
@@ -1501,7 +1499,7 @@ public class StagingImpl implements Staging {
 					false);
 			}
 			else if (pde.getType() ==
-						 PortletDataException.IMPORT_DATA_GROUP_ELEMENT) {
+						PortletDataException.IMPORT_DATA_GROUP_ELEMENT) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1511,7 +1509,7 @@ public class StagingImpl implements Staging {
 					pde.getStagedModelClassName());
 			}
 			else if (pde.getType() ==
-						 PortletDataException.IMPORT_PORTLET_DATA) {
+						PortletDataException.IMPORT_PORTLET_DATA) {
 
 				if (Validator.isNotNull(pde.getLocalizedMessage())) {
 					errorMessage = LanguageUtil.format(
@@ -1536,7 +1534,7 @@ public class StagingImpl implements Staging {
 				}
 			}
 			else if (pde.getType() ==
-						 PortletDataException.IMPORT_PORTLET_PERMISSIONS) {
+						PortletDataException.IMPORT_PORTLET_PERMISSIONS) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1545,7 +1543,7 @@ public class StagingImpl implements Staging {
 					pde.getPortletId());
 			}
 			else if (pde.getType() ==
-						 PortletDataException.IMPORT_STAGED_MODEL) {
+						PortletDataException.IMPORT_STAGED_MODEL) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1571,8 +1569,15 @@ public class StagingImpl implements Staging {
 						"during-the-process",
 					new String[] {modelResource, referrerDisplayName}, false);
 			}
+			else if (pde.getType() == PortletDataException.MISSING_REFERENCE) {
+				errorMessage = LanguageUtil.format(
+					locale,
+					"the-x-x-missing-reference-could-not-be-found-during-the-" +
+						"process",
+					new String[] {modelResource, referrerDisplayName}, false);
+			}
 			else if (pde.getType() ==
-						 PortletDataException.PREPARE_MANIFEST_SUMMARY) {
+						PortletDataException.PREPARE_MANIFEST_SUMMARY) {
 
 				if (Validator.isNotNull(pde.getLocalizedMessage())) {
 					errorMessage = LanguageUtil.format(
@@ -1611,8 +1616,8 @@ public class StagingImpl implements Staging {
 					new String[] {modelResource, referrerDisplayName}, false);
 			}
 			else if (pde.getType() ==
-						 PortletDataException.
-							 UPDATE_JOURNAL_CONTENT_SEARCH_DATA) {
+						PortletDataException.
+							UPDATE_JOURNAL_CONTENT_SEARCH_DATA) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1621,7 +1626,7 @@ public class StagingImpl implements Staging {
 					pde.getPortletId());
 			}
 			else if (pde.getType() ==
-						 PortletDataException.UPDATE_PORTLET_PREFERENCES) {
+						PortletDataException.UPDATE_PORTLET_PREFERENCES) {
 
 				errorMessage = LanguageUtil.format(
 					resourceBundle,
@@ -1851,7 +1856,8 @@ public class StagingImpl implements Staging {
 		User user = _userLocalService.fetchUser(userId);
 
 		HttpPrincipal httpPrincipal = new HttpPrincipal(
-			buildRemoteURL(stagingGroup.getTypeSettingsProperties()),
+			_stagingURLHelper.buildRemoteURL(
+				stagingGroup.getTypeSettingsProperties()),
 			user.getLogin(), user.getPassword(), user.isPasswordEncrypted());
 
 		Layout layout = _layoutLocalService.fetchLayout(plid);
@@ -2155,7 +2161,8 @@ public class StagingImpl implements Staging {
 
 		try {
 			HttpPrincipal httpPrincipal = new HttpPrincipal(
-				buildRemoteURL(stagingGroup.getTypeSettingsProperties()),
+				_stagingURLHelper.buildRemoteURL(
+					stagingGroup.getTypeSettingsProperties()),
 				user.getLogin(), user.getPassword(),
 				user.isPasswordEncrypted());
 
@@ -3496,7 +3503,7 @@ public class StagingImpl implements Staging {
 
 		User user = permissionChecker.getUser();
 
-		String remoteURL = buildRemoteURL(
+		String remoteURL = _stagingURLHelper.buildRemoteURL(
 			remoteAddress, remotePort, remotePathContext, secureConnection);
 
 		HttpPrincipal httpPrincipal = new HttpPrincipal(
@@ -3690,9 +3697,8 @@ public class StagingImpl implements Staging {
 			if (tabs1.equals("public-pages")) {
 				return false;
 			}
-			else {
-				return true;
-			}
+
+			return true;
 		}
 
 		return ParamUtil.getBoolean(portletRequest, "privateLayout", true);
@@ -3743,9 +3749,8 @@ public class StagingImpl implements Staging {
 
 				return layoutRevision.getLayoutRevisionId();
 			}
-			else {
-				return 0;
-			}
+
+			return 0;
 		}
 
 		RecentLayoutRevision recentLayoutRevision =
@@ -3943,7 +3948,8 @@ public class StagingImpl implements Staging {
 				targetGroupId = stagingGroup.getRemoteLiveGroupId();
 
 				HttpPrincipal httpPrincipal = new HttpPrincipal(
-					buildRemoteURL(stagingGroup.getTypeSettingsProperties()),
+					_stagingURLHelper.buildRemoteURL(
+						stagingGroup.getTypeSettingsProperties()),
 					user.getLogin(), user.getPassword(),
 					user.isPasswordEncrypted());
 

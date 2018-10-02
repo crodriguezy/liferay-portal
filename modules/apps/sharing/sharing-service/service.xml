@@ -3,7 +3,7 @@
 
 <service-builder auto-import-default-references="false" auto-namespace-tables="false" package-path="com.liferay.sharing">
 	<namespace>Sharing</namespace>
-	<entity local-service="true" name="SharingEntry" remote-service="false" uuid="true">
+	<entity local-service="true" name="SharingEntry" remote-service="true" uuid="true">
 
 		<!-- PK fields -->
 
@@ -25,7 +25,9 @@
 		<column name="toUserId" type="long" />
 		<column name="classNameId" type="long" />
 		<column name="classPK" type="long" />
+		<column name="shareable" type="boolean" />
 		<column name="actionIds" type="long" />
+		<column name="expirationDate" type="Date" />
 
 		<!-- Finder methods -->
 
@@ -38,6 +40,9 @@
 		<finder name="ToUserId" return-type="Collection">
 			<finder-column name="toUserId" />
 		</finder>
+		<finder name="ExpirationDate" return-type="Collection">
+			<finder-column comparator="&lt;" name="expirationDate" />
+		</finder>
 		<finder name="TU_C" return-type="Collection">
 			<finder-column name="toUserId" />
 			<finder-column name="classNameId" />
@@ -46,14 +51,26 @@
 			<finder-column name="classNameId" />
 			<finder-column name="classPK" />
 		</finder>
-		<finder name="TU_C_C" return-type="SharingEntry" unique="true">
+		<finder name="FU_C_C" return-type="Collection">
+			<finder-column name="fromUserId" />
+			<finder-column name="classNameId" />
+			<finder-column name="classPK" />
+		</finder>
+		<finder name="TU_C_C" return-type="Collection">
+			<finder-column name="toUserId" />
+			<finder-column name="classNameId" />
+			<finder-column name="classPK" />
+		</finder>
+		<finder name="FU_TU_C_C" return-type="SharingEntry" unique="true">
+			<finder-column name="fromUserId" />
 			<finder-column name="toUserId" />
 			<finder-column name="classNameId" />
 			<finder-column name="classPK" />
 		</finder>
 	</entity>
 	<exceptions>
-		<exception>InvalidSharingEntryActionKey</exception>
+		<exception>InvalidSharingEntryAction</exception>
+		<exception>InvalidSharingEntryExpirationDate</exception>
 		<exception>InvalidSharingEntryUser</exception>
 	</exceptions>
 </service-builder>

@@ -601,7 +601,7 @@ public class JenkinsResultsParserUtil {
 		return "";
 	}
 
-	public static File getBaseRepositoryDir() {
+	public static File getBaseGitRepositoryDir() {
 		Properties buildProperties = null;
 
 		try {
@@ -664,12 +664,26 @@ public class JenkinsResultsParserUtil {
 		}
 	}
 
+	public static String getDistinctTimeStamp() {
+		while (true) {
+			String timeStamp = String.valueOf(System.currentTimeMillis());
+
+			if (_timeStamps.contains(timeStamp)) {
+				continue;
+			}
+
+			_timeStamps.add(timeStamp);
+
+			return timeStamp;
+		}
+	}
+
 	public static String getGitHubApiUrl(
-		String repositoryName, String username, String path) {
+		String gitRepositoryName, String username, String path) {
 
 		return combine(
-			"https://api.github.com/repos/", username, "/", repositoryName, "/",
-			path.replaceFirst("^/*", ""));
+			"https://api.github.com/repos/", username, "/", gitRepositoryName,
+			"/", path.replaceFirst("^/*", ""));
 	}
 
 	public static String getHostName(String defaultHostName) {
@@ -752,15 +766,14 @@ public class JenkinsResultsParserUtil {
 		return Float.parseFloat(matcher.group(1));
 	}
 
-	public static GitWorkingDirectory getJenkinsGitWorkingDirectory()
-		throws IOException {
+	public static GitWorkingDirectory getJenkinsGitWorkingDirectory() {
+		String gitRepositoryName = "liferay-jenkins-ee";
 
-		Properties buildProperties = getBuildProperties();
+		File gitRepositoryDir = new File(
+			getBaseGitRepositoryDir(), gitRepositoryName);
 
-		String workingDirectoryPath = buildProperties.getProperty(
-			"base.repository.dir") + "/liferay-jenkins-ee";
-
-		return new GitWorkingDirectory("master", workingDirectoryPath);
+		return GitWorkingDirectoryFactory.newGitWorkingDirectory(
+			"master", gitRepositoryDir, gitRepositoryName);
 	}
 
 	public static List<JenkinsMaster> getJenkinsMasters(
@@ -769,9 +782,9 @@ public class JenkinsResultsParserUtil {
 		List<JenkinsMaster> jenkinsMasters = new ArrayList<>();
 
 		for (int i = 1;
-				buildProperties.containsKey(
-					"master.slaves(" + prefix + "-" + i + ")");
-				i++) {
+			 buildProperties.containsKey(
+				 "master.slaves(" + prefix + "-" + i + ")");
+			 i++) {
 
 			jenkinsMasters.add(new JenkinsMaster(prefix + "-" + i));
 		}
@@ -972,22 +985,28 @@ public class JenkinsResultsParserUtil {
 	}
 
 	public static PortalGitWorkingDirectory getPortalGitWorkingDirectory(
-			String portalBranchName)
-		throws IOException {
+		String upstreamBranchName) {
 
-		Properties buildProperties = getBuildProperties();
+		String gitRepositoryDirName = "liferay-portal";
+		String gitRepositoryName = "liferay-portal";
 
-		String workingDirectoryPath =
-			buildProperties.getProperty("base.repository.dir") +
-				"/liferay-portal";
-
-		if (!portalBranchName.equals("master")) {
-			workingDirectoryPath = combine(
-				workingDirectoryPath, "-", portalBranchName);
+		if (!upstreamBranchName.equals("master")) {
+			gitRepositoryDirName += "-" + upstreamBranchName;
+			gitRepositoryName += "-ee";
 		}
 
-		return new PortalGitWorkingDirectory(
-			portalBranchName, workingDirectoryPath);
+		File gitRepositoryDir = new File(
+			getBaseGitRepositoryDir(), gitRepositoryDirName);
+
+		GitWorkingDirectory gitWorkingDirectory =
+			GitWorkingDirectoryFactory.newGitWorkingDirectory(
+				upstreamBranchName, gitRepositoryDir, gitRepositoryName);
+
+		if (!(gitWorkingDirectory instanceof PortalGitWorkingDirectory)) {
+			throw new RuntimeException("Invalid Git working directory");
+		}
+
+		return (PortalGitWorkingDirectory)gitWorkingDirectory;
 	}
 
 	public static Properties getProperties(File... propertiesFiles) {
@@ -1014,11 +1033,41 @@ public class JenkinsResultsParserUtil {
 		String newValue = value;
 
 		while (matcher.find()) {
-			newValue = newValue.replace(
-				matcher.group(0), getProperty(properties, matcher.group(1)));
+			if (properties.containsKey(matcher.group(1))) {
+				newValue = newValue.replace(
+					matcher.group(0),
+					getProperty(properties, matcher.group(1)));
+			}
 		}
 
 		return newValue;
+	}
+
+	public static String getProperty(
+		Properties properties, String name, String... opts) {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(name);
+
+		if (opts != null) {
+			for (String opt : opts) {
+				sb.append("[");
+				sb.append(opt);
+				sb.append("]");
+			}
+		}
+
+		if (properties.containsKey(sb.toString())) {
+			return getProperty(properties, sb.toString());
+		}
+
+		if ((opts != null) && (opts.length > 0)) {
+			return getProperty(
+				properties, name, Arrays.copyOf(opts, opts.length - 1));
+		}
+
+		return null;
 	}
 
 	public static List<String> getRandomList(List<String> list, int size) {
@@ -1037,7 +1086,7 @@ public class JenkinsResultsParserUtil {
 			String item = null;
 
 			while (true) {
-				item = list.get(getRandomValue(0, list.size() - 1));
+				item = getRandomString(list);
 
 				if (randomList.contains(item)) {
 					continue;
@@ -1050,6 +1099,10 @@ public class JenkinsResultsParserUtil {
 		}
 
 		return randomList;
+	}
+
+	public static String getRandomString(List<String> list) {
+		return list.get(getRandomValue(0, list.size() - 1));
 	}
 
 	public static int getRandomValue(int start, int end) {
@@ -1233,7 +1286,7 @@ public class JenkinsResultsParserUtil {
 			}
 
 			for (int i = 1; properties.containsKey(_getRedactTokenKey(i));
-					i++) {
+				 i++) {
 
 				String key = properties.getProperty(_getRedactTokenKey(i));
 
@@ -2000,6 +2053,11 @@ public class JenkinsResultsParserUtil {
 				ioe);
 		}
 
+		for (String propertyName : properties.stringPropertyNames()) {
+			properties.setProperty(
+				propertyName, getProperty(properties, propertyName));
+		}
+
 		return properties;
 	}
 
@@ -2041,6 +2099,7 @@ public class JenkinsResultsParserUtil {
 		"https://test.liferay.com/([0-9]+)/");
 	private static final Pattern _remoteURLAuthorityPattern2 = Pattern.compile(
 		"https://(test-[0-9]+-[0-9]+).liferay.com/");
+	private static final Set<String> _timeStamps = new HashSet<>();
 
 	static {
 		System.out.println("Securing standard error and out");

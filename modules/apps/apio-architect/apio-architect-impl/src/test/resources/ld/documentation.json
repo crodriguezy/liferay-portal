@@ -20,6 +20,7 @@
 	"@id": "/doc",
 	"@type": "ApiDocumentation",
 	"description": "Description",
+	"entrypoint": "Entrypoint",
 	"supportedClass": [
 		{
 			"@id": "Type 1",
@@ -27,19 +28,28 @@
 			"supportedOperation": [
 				{
 					"@id": "_:root/retrieve",
-					"@type": ["Operation"],
+					"@type": [
+						"Operation"
+					],
+					"comment": "retrieve description",
 					"method": "GET",
 					"returns": "Type 1"
 				},
 				{
 					"@id": "_:root/update",
-					"@type": ["ReplaceAction", "Operation"],
+					"@type": [
+						"ReplaceAction",
+						"Operation"
+					],
 					"method": "PUT",
 					"returns": "Type 1"
 				},
 				{
 					"@id": "_:root/delete",
-					"@type": ["DeleteAction", "Operation"],
+					"@type": [
+						"DeleteAction",
+						"Operation"
+					],
 					"method": "DELETE",
 					"returns": "http://www.w3.org/2002/07/owl#Nothing"
 				}
@@ -51,6 +61,7 @@
 				},
 				{
 					"@type": "SupportedProperty",
+					"comment": "binary description",
 					"property": "binary1"
 				},
 				{
@@ -190,19 +201,28 @@
 			"supportedOperation": [
 				{
 					"@id": "_:root/retrieve",
-					"@type": ["Operation"],
+					"@type": [
+						"Operation"
+					],
+					"comment": "retrieve description",
 					"method": "GET",
 					"returns": "Type 2"
 				},
 				{
 					"@id": "_:root/update",
-					"@type": ["ReplaceAction", "Operation"],
+					"@type": [
+						"ReplaceAction",
+						"Operation"
+					],
 					"method": "PUT",
 					"returns": "Type 2"
 				},
 				{
 					"@id": "_:root/delete",
-					"@type": ["DeleteAction", "Operation"],
+					"@type": [
+						"DeleteAction",
+						"Operation"
+					],
 					"method": "DELETE",
 					"returns": "http://www.w3.org/2002/07/owl#Nothing"
 				}
@@ -214,6 +234,7 @@
 				},
 				{
 					"@type": "SupportedProperty",
+					"comment": "binary description",
 					"property": "binary1"
 				},
 				{
@@ -355,13 +376,19 @@
 			"supportedOperation": [
 				{
 					"@id": "_:root/retrieve",
-					"@type": ["Operation"],
+					"@type": [
+						"Operation"
+					],
+					"comment": "retrieve description",
 					"method": "GET",
 					"returns": "Collection"
 				},
 				{
 					"@id": "_:root/create",
-					"@type": ["CreateAction", "Operation"],
+					"@type": [
+						"CreateAction",
+						"Operation"
+					],
 					"method": "POST",
 					"returns": "Type 1"
 				}
@@ -390,13 +417,19 @@
 			"supportedOperation": [
 				{
 					"@id": "_:root/retrieve",
-					"@type": ["Operation"],
+					"@type": [
+						"Operation"
+					],
+					"comment": "retrieve description",
 					"method": "GET",
 					"returns": "Collection"
 				},
 				{
 					"@id": "_:root/create",
-					"@type": ["CreateAction", "Operation"],
+					"@type": [
+						"CreateAction",
+						"Operation"
+					],
 					"method": "POST",
 					"returns": "Type 2"
 				}

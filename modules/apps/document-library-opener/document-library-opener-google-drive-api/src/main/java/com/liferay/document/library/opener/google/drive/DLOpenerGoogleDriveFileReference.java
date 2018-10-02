@@ -14,7 +14,9 @@
 
 package com.liferay.document.library.opener.google.drive;
 
-import com.liferay.portal.kernel.util.StringBundler;
+import java.io.File;
+
+import java.util.function.Supplier;
 
 /**
  * @author Adolfo Pérez
@@ -22,27 +24,34 @@ import com.liferay.portal.kernel.util.StringBundler;
 public class DLOpenerGoogleDriveFileReference {
 
 	public DLOpenerGoogleDriveFileReference(
-		String googleDriveFileId, long fileEntryId) {
+		long fileEntryId, Supplier<String> titleSupplier,
+		Supplier<File> fileSupplier, long backgroundTaskId) {
 
-		_googleDriveFileId = googleDriveFileId;
 		_fileEntryId = fileEntryId;
+		_titleSupplier = titleSupplier;
+		_fileSupplier = fileSupplier;
+		_backgroundTaskId = backgroundTaskId;
+	}
+
+	public long getBackgroundTaskId() {
+		return _backgroundTaskId;
+	}
+
+	public File getContentFile() {
+		return _fileSupplier.get();
 	}
 
 	public long getFileEntryId() {
 		return _fileEntryId;
 	}
 
-	public String getGoogleDocsEditURL() {
-		return StringBundler.concat(
-			"https://docs.google.com/document/d/", getGoogleDriveFileId(),
-			"/edit");
+	public String getTitle() {
+		return _titleSupplier.get();
 	}
 
-	public String getGoogleDriveFileId() {
-		return _googleDriveFileId;
-	}
-
+	private final long _backgroundTaskId;
 	private final long _fileEntryId;
-	private final String _googleDriveFileId;
+	private final Supplier<File> _fileSupplier;
+	private final Supplier<String> _titleSupplier;
 
 }

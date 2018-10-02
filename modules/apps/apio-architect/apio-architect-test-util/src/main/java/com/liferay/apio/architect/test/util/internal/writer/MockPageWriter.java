@@ -17,11 +17,11 @@ package com.liferay.apio.architect.test.util.internal.writer;
 import static com.liferay.apio.architect.test.util.form.MockFormCreator.createForm;
 import static com.liferay.apio.architect.test.util.writer.MockWriterUtil.getRequestInfo;
 
-import com.liferay.apio.architect.impl.message.json.PageMessageMapper;
-import com.liferay.apio.architect.impl.operation.CreateOperation;
-import com.liferay.apio.architect.impl.pagination.PageImpl;
-import com.liferay.apio.architect.impl.pagination.PaginationImpl;
-import com.liferay.apio.architect.impl.writer.PageWriter;
+import com.liferay.apio.architect.internal.message.json.PageMessageMapper;
+import com.liferay.apio.architect.internal.operation.CreateOperation;
+import com.liferay.apio.architect.internal.pagination.PageImpl;
+import com.liferay.apio.architect.internal.pagination.PaginationImpl;
+import com.liferay.apio.architect.internal.writer.PageWriter;
 import com.liferay.apio.architect.operation.Operation;
 import com.liferay.apio.architect.pagination.Page;
 import com.liferay.apio.architect.pagination.PageItems;
@@ -48,13 +48,12 @@ import java.util.Optional;
 public class MockPageWriter {
 
 	/**
-	 * Writes a Collection of {@link RootModel}, with the hierarchy of embedded
+	 * Writes a {@link RootModel} collection with the hierarchy of embedded
 	 * models and multiple fields.
 	 *
-	 * @param  pageMessageMapper the {@link PageMessageMapper} to use for
+	 * @param  pageMessageMapper the {@code PageMessageMapper} to use for
 	 *         writing the JSON object
-	 * @return the {@code String} containing the JSON Object.
-	 * @review
+	 * @return the string containing the JSON object
 	 */
 	public static String write(PageMessageMapper<RootModel> pageMessageMapper) {
 		Collection<RootModel> items = Arrays.asList(

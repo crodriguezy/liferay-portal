@@ -132,11 +132,12 @@ public class DDLDisplayContext {
 					dropdownItem -> {
 						dropdownItem.putData("action", "deleteRecordSets");
 						dropdownItem.setIcon("trash");
-						dropdownItem.setLabel("delete");
+						dropdownItem.setLabel(
+							LanguageUtil.get(
+								_ddlRequestHelper.getRequest(), "delete"));
 						dropdownItem.setQuickAction(true);
 					});
 			}
-
 		};
 	}
 
@@ -192,7 +193,6 @@ public class DDLDisplayContext {
 								_ddlRequestHelper.getRequest(), "add"));
 					});
 			}
-
 		};
 	}
 
@@ -251,7 +251,7 @@ public class DDLDisplayContext {
 					_ddlWebConfiguration.defaultDisplayView());
 			}
 			else if (ArrayUtil.contains(
-						 getDisplayViews(), _ddlRecordDisplayStyle)) {
+						getDisplayViews(), _ddlRecordDisplayStyle)) {
 
 				portalPreferences.setValue(
 					DDLPortletKeys.DYNAMIC_DATA_LISTS, "display-style",
@@ -500,7 +500,6 @@ public class DDLDisplayContext {
 			getPortletURL(), _renderResponse);
 
 		return new ViewTypeItemList(portletURL, getDisplayStyle()) {
-
 			{
 				if (ArrayUtil.contains(getDisplayViews(), "descriptive")) {
 					addListViewTypeItem();
@@ -510,7 +509,6 @@ public class DDLDisplayContext {
 					addTableViewTypeItem();
 				}
 			}
-
 		};
 	}
 
