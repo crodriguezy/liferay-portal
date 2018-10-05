@@ -20,6 +20,7 @@ import com.liferay.portal.service.base.AccountLocalServiceBaseImpl;
 
 /**
  * @author Brian Wing Shun Chan
+ * @author CR7
  */
 public class AccountLocalServiceImpl extends AccountLocalServiceBaseImpl {
 
