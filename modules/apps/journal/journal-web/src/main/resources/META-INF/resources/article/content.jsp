@@ -139,6 +139,7 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 			checkRequired="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>"
 			classNameId="<%= PortalUtil.getClassNameId(DDMStructure.class) %>"
 			classPK="<%= ddmStructure.getStructureId() %>"
+			cris7="<%=LocaleUtil.fromLanguageId(defaultLanguageId) %>"
 			ddmFormValues="<%= journalDisplayContext.getDDMFormValues(ddmStructure) %>"
 			documentLibrarySelectorURL="<%= String.valueOf(journalItemSelectorHelper.getDocumentLibrarySelectorURL()) %>"
 			ignoreRequestValue="<%= changeStructure %>"
