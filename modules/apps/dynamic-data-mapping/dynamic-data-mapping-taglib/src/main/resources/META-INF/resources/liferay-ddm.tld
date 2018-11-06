@@ -78,6 +78,12 @@
 			<type>java.util.Locale</type>
 		</attribute>
 		<attribute>
+			<name>cris7</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Locale</type>
+		</attribute>
+		<attribute>
 			<name>showEmptyFieldLabel</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>

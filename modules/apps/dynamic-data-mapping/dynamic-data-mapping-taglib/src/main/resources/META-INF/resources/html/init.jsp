@@ -34,6 +34,7 @@ java.util.Locale requestedLocale = (java.util.Locale)request.getAttribute("lifer
 boolean showEmptyFieldLabel = GetterUtil.getBoolean(String.valueOf(request.getAttribute("liferay-ddm:html:showEmptyFieldLabel")), true);
 boolean synchronousFormSubmission = GetterUtil.getBoolean(String.valueOf(request.getAttribute("liferay-ddm:html:synchronousFormSubmission")), true);
 Map<String, Object> dynamicAttributes = (Map<String, Object>)request.getAttribute("liferay-ddm:html:dynamicAttributes");
+java.util.Locale cris7 = (java.util.Locale)request.getAttribute("liferay-ddm:html:cris7");
 %>
 
 <%@ include file="/html/init-ext.jspf" %>

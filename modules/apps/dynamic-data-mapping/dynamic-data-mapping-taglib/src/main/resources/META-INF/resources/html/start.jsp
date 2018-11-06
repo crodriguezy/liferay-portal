@@ -139,7 +139,9 @@
 						portletNamespace: '<portlet:namespace />',
 						repeatable: <%= repeatable %>,
 						requestedLocale: '<%= (requestedLocale == null) ? StringPool.BLANK : HtmlUtil.escapeJS(requestedLocale.toString()) %>',
-						synchronousFormSubmission: <%= synchronousFormSubmission %>
+						synchronousFormSubmission: <%= synchronousFormSubmission %>,
+						cris7: '<%= (cris7 == null) ? StringPool.BLANK : HtmlUtil.escapeJS(cris7.toString()) %>'
+						
 
 						<c:if test="<%= ddmFormValues != null %>">
 							, values: <%= DDMUtil.getDDMFormValuesJSONString(ddmFormValues) %>
