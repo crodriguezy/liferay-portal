@@ -276,6 +276,12 @@ AUI.add(
 				if (!displayLocale) {
 					displayLocale = instance.getDefaultLocale();
 				}
+				
+//				var cris7 = instance.get('cris7');
+//				
+//				if (cris7) {
+//					displayLocale = cris7;
+//				}
 
 				return displayLocale;
 			},
@@ -2965,6 +2971,9 @@ AUI.add(
 				ATTRS: {
 					availableLanguageIds: {
 						value: []
+					},
+					
+					cris7 :{
 					},
 
 					ddmFormValuesInput: {
