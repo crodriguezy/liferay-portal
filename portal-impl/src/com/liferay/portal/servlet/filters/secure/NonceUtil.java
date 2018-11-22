@@ -54,7 +54,7 @@ public class NonceUtil {
 		String nonce = DigesterUtil.digestHex(
 			Digester.MD5, remoteAddress, String.valueOf(timestamp), companyKey);
 
-		_nonceDelayQueue.put(new NonceDelayed(nonce));
+		_offer(nonce);
 
 		return nonce;
 	}
@@ -67,6 +67,13 @@ public class NonceUtil {
 
 	private static void _cleanUp() {
 		while (_nonceDelayQueue.poll() != null);
+	}
+
+	private static void _offer(String nonce) {
+		NonceDelayed nonceDelayed = new NonceDelayed(nonce);
+
+		_nonceDelayQueue.put(nonceDelayed);
+		_noncePortalCache.put(nonce, nonceDelayed);
 	}
 
 	private static final long _NONCE_EXPIRATION =
