@@ -14,6 +14,11 @@
 
 package com.liferay.portal.servlet.filters.secure;
 
+import com.liferay.portal.kernel.cache.PortalCache;
+import com.liferay.portal.kernel.cache.PortalCacheHelperUtil;
+import com.liferay.portal.kernel.cache.PortalCacheListener;
+import com.liferay.portal.kernel.cache.PortalCacheListenerScope;
+import com.liferay.portal.kernel.cache.PortalCacheManagerNames;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.util.Digester;
@@ -69,6 +74,9 @@ public class NonceUtil {
 
 	private static final DelayQueue<NonceDelayed> _nonceDelayQueue =
 		new DelayQueue<>();
+	private static final PortalCache<String, NonceDelayed> _noncePortalCache =
+		PortalCacheHelperUtil.getPortalCache(
+			PortalCacheManagerNames.MULTI_VM, NonceUtil.class.getName());
 
 	private static class NonceDelayed implements Delayed, Serializable {
 
@@ -124,6 +132,62 @@ public class NonceUtil {
 		private final long _createTime;
 		private final String _nonce;
 
+	}
+
+	private static class NonceDelayedPortalCacheListener
+		implements PortalCacheListener<String, NonceDelayed> {
+
+		@Override
+		public void dispose() {
+		}
+
+		@Override
+		public void notifyEntryEvicted(
+			PortalCache<String, NonceDelayed> portalCache, String key,
+			NonceDelayed nonceDelayed, int timeToLive) {
+		}
+
+		@Override
+		public void notifyEntryExpired(
+			PortalCache<String, NonceDelayed> portalCache, String key,
+			NonceDelayed nonceDelayed, int timeToLive) {
+		}
+
+		@Override
+		public void notifyEntryPut(
+			PortalCache<String, NonceDelayed> portalCache, String key,
+			NonceDelayed nonceDelayed, int timeToLive) {
+
+			_cleanUp();
+
+			if (!_nonceDelayQueue.contains(nonceDelayed)) {
+				_nonceDelayQueue.put(nonceDelayed);
+			}
+		}
+
+		@Override
+		public void notifyEntryRemoved(
+			PortalCache<String, NonceDelayed> portalCache, String key,
+			NonceDelayed nonceDelayed, int timeToLive) {
+		}
+
+		@Override
+		public void notifyEntryUpdated(
+			PortalCache<String, NonceDelayed> portalCache, String key,
+			NonceDelayed nonceDelayed, int timeToLive) {
+		}
+
+		@Override
+		public void notifyRemoveAll(
+			PortalCache<String, NonceDelayed> portalCache) {
+		}
+
+	}
+
+	static {
+		_noncePortalCache.registerPortalCacheListener(
+			new NonceDelayedPortalCacheListener(),
+			PortalCacheListenerScope.ALL);
 	}
 
 }
