@@ -16,7 +16,10 @@ package com.liferay.portal.servlet.filters.secure;
 
 import com.liferay.portal.kernel.cluster.ClusterExecutorUtil;
 import com.liferay.portal.kernel.cluster.ClusterInvokeThreadLocal;
+import com.liferay.portal.kernel.cluster.ClusterMasterExecutorUtil;
 import com.liferay.portal.kernel.cluster.ClusterRequest;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.util.Digester;
@@ -28,8 +31,11 @@ import com.liferay.portal.util.PropsValues;
 
 import java.io.Serializable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -59,6 +65,12 @@ public class NonceUtil {
 		return nonce;
 	}
 
+	public static List<NonceDelayed> getNonces() {
+		_cleanUp();
+
+		return new ArrayList<>(_nonceDelayQueue);
+	}
+
 	public static boolean verify(String nonce) {
 		_cleanUp();
 
@@ -82,6 +94,29 @@ public class NonceUtil {
 		while (_nonceDelayQueue.poll() != null);
 	}
 
+	private static void _initializeQueue() {
+		if (!ClusterMasterExecutorUtil.isEnabled() ||
+			ClusterMasterExecutorUtil.isMaster()) {
+
+			return;
+		}
+
+		MethodHandler methodHandler = new MethodHandler(_getNoncesMethodKey);
+
+		Future<List<NonceDelayed>> future =
+			ClusterMasterExecutorUtil.executeOnMaster(methodHandler);
+
+		try {
+			List<NonceDelayed> noncesDelayed = future.get(
+				_TIMEOUT, TimeUnit.SECONDS);
+
+			_nonceDelayQueue.addAll(noncesDelayed);
+		}
+		catch (Exception exception) {
+			_log.error("Unable to retrieve nonces from master", exception);
+		}
+	}
+
 	private static void _saveNonce(NonceDelayed nonceDelayed) {
 		_nonceDelayQueue.put(nonceDelayed);
 
@@ -103,10 +138,20 @@ public class NonceUtil {
 	private static final long _NONCE_EXPIRATION =
 		PropsValues.WEBDAV_NONCE_EXPIRATION * Time.MINUTE;
 
+	private static final long _TIMEOUT = 10L;
+
+	private static final Log _log = LogFactoryUtil.getLog(NonceUtil.class);
+
 	private static final MethodKey _addNonceMethodKey = new MethodKey(
 		NonceUtil.class, "_addNonce", NonceDelayed.class);
+	private static final MethodKey _getNoncesMethodKey = new MethodKey(
+		NonceUtil.class, "getNonces");
 	private static final DelayQueue<NonceDelayed> _nonceDelayQueue =
 		new DelayQueue<>();
+
+	static {
+		_initializeQueue();
+	}
 
 	private static class NonceDelayed implements Delayed, Serializable {
 
