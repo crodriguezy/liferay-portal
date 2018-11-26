@@ -14,10 +14,15 @@
 
 package com.liferay.portal.servlet.filters.secure;
 
+import com.liferay.portal.kernel.cluster.ClusterExecutorUtil;
+import com.liferay.portal.kernel.cluster.ClusterInvokeThreadLocal;
+import com.liferay.portal.kernel.cluster.ClusterRequest;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.util.Digester;
 import com.liferay.portal.kernel.util.DigesterUtil;
+import com.liferay.portal.kernel.util.MethodHandler;
+import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.util.PropsValues;
 
@@ -49,7 +54,7 @@ public class NonceUtil {
 		String nonce = DigesterUtil.digestHex(
 			Digester.MD5, remoteAddress, String.valueOf(timestamp), companyKey);
 
-		_nonceDelayQueue.put(new NonceDelayed(nonce));
+		_saveNonce(new NonceDelayed(nonce));
 
 		return nonce;
 	}
@@ -60,13 +65,46 @@ public class NonceUtil {
 		return _nonceDelayQueue.contains(new NonceDelayed(nonce));
 	}
 
+	private static void _addNonce(NonceDelayed nonceDelayed) {
+		boolean enabled = ClusterInvokeThreadLocal.isEnabled();
+
+		ClusterInvokeThreadLocal.setEnabled(true);
+
+		try {
+			_nonceDelayQueue.put(nonceDelayed);
+		}
+		finally {
+			ClusterInvokeThreadLocal.setEnabled(enabled);
+		}
+	}
+
 	private static void _cleanUp() {
 		while (_nonceDelayQueue.poll() != null);
+	}
+
+	private static void _saveNonce(NonceDelayed nonceDelayed) {
+		_nonceDelayQueue.put(nonceDelayed);
+
+		if (!ClusterExecutorUtil.isEnabled()) {
+			return;
+		}
+
+		MethodHandler methodHandler = new MethodHandler(
+			_addNonceMethodKey, nonceDelayed);
+
+		ClusterRequest clusterRequest = ClusterRequest.createMulticastRequest(
+			methodHandler, true);
+
+		clusterRequest.setFireAndForget(true);
+
+		ClusterExecutorUtil.execute(clusterRequest);
 	}
 
 	private static final long _NONCE_EXPIRATION =
 		PropsValues.WEBDAV_NONCE_EXPIRATION * Time.MINUTE;
 
+	private static final MethodKey _addNonceMethodKey = new MethodKey(
+		NonceUtil.class, "_addNonce", NonceDelayed.class);
 	private static final DelayQueue<NonceDelayed> _nonceDelayQueue =
 		new DelayQueue<>();
 
