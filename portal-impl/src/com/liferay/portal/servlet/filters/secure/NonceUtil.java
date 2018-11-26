@@ -71,6 +71,7 @@ public class NonceUtil {
 		return _nonceDelayQueue.contains(new NonceDelayed(nonce));
 	}
 
+	@SuppressWarnings("unused")
 	private static void _addNonce(NonceDelayed nonceDelayed) {
 		boolean enabled = ClusterInvokeThreadLocal.isEnabled();
 
@@ -88,6 +89,7 @@ public class NonceUtil {
 		while (_nonceDelayQueue.poll() != null);
 	}
 
+	@SuppressWarnings("unused")
 	private static List<NonceDelayed> _getNonces() {
 		_cleanUp();
 
