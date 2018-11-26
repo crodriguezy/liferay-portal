@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.util.DigesterUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.util.PropsValues;
 
+import java.io.Serializable;
+
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
@@ -68,7 +70,7 @@ public class NonceUtil {
 	private static final DelayQueue<NonceDelayed> _nonceDelayQueue =
 		new DelayQueue<>();
 
-	private static class NonceDelayed implements Delayed {
+	private static class NonceDelayed implements Delayed, Serializable {
 
 		public NonceDelayed(String nonce) {
 			if (nonce == null) {
