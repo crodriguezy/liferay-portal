@@ -346,6 +346,9 @@ public interface WebKeys {
 
 	public static final String NETVIBES = "NETVIBES";
 
+	@Distributed(direction = Direction.REQUEST)
+	public static final String NONCE = "NONCE";
+
 	public static final String NOTES_LIST = "NOTES_LIST";
 
 	public static final String OPEN_ID_LOGIN = "OPEN_ID_LOGIN";
