@@ -232,7 +232,8 @@ public class HttpAuthManagerImpl implements HttpAuthManager {
 
 		String remoteAddress = httpServletRequest.getRemoteAddr();
 
-		String nonce = NonceUtil.generate(companyId, remoteAddress);
+		String nonce = NonceUtil.generate(
+			httpServletRequest, companyId, remoteAddress);
 
 		httpAuthorizationHeader.setAuthParameter(
 			HttpAuthorizationHeader.AUTH_PARAMETER_NAME_NONCE, nonce);
@@ -321,7 +322,7 @@ public class HttpAuthManagerImpl implements HttpAuthManager {
 			return userId;
 		}
 
-		if (!NonceUtil.verify(nonce)) {
+		if (!NonceUtil.verify(httpServletRequest, nonce)) {
 			return userId;
 		}
 
