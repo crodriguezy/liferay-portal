@@ -24,10 +24,6 @@ import com.liferay.portal.util.PropsValues;
 
 import java.io.Serializable;
 
-import java.util.concurrent.DelayQueue;
-import java.util.concurrent.Delayed;
-import java.util.concurrent.TimeUnit;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -62,28 +58,6 @@ public class NonceUtil {
 		return nonce;
 	}
 
-	public static String generate(long companyId, String remoteAddress) {
-		String companyKey = null;
-
-		try {
-			Company company = CompanyLocalServiceUtil.getCompanyById(companyId);
-
-			companyKey = company.getKey();
-		}
-		catch (Exception e) {
-			throw new RuntimeException("Invalid companyId " + companyId, e);
-		}
-
-		long timestamp = System.currentTimeMillis();
-
-		String nonce = DigesterUtil.digestHex(
-			Digester.MD5, remoteAddress, String.valueOf(timestamp), companyKey);
-
-		_nonceDelayQueue.put(new NonceDelayed(nonce));
-
-		return nonce;
-	}
-
 	public static boolean verify(HttpServletRequest request, String nonce) {
 		HttpSession session = request.getSession();
 
@@ -102,21 +76,8 @@ public class NonceUtil {
 		return originalNonce._nonce.equals(nonce);
 	}
 
-	public static boolean verify(String nonce) {
-		_cleanUp();
-
-		return _nonceDelayQueue.contains(new NonceDelayed(nonce));
-	}
-
-	private static void _cleanUp() {
-		while (_nonceDelayQueue.poll() != null);
-	}
-
 	private static final long _NONCE_EXPIRATION =
 		PropsValues.WEBDAV_NONCE_EXPIRATION * Time.MINUTE;
-
-	private static final DelayQueue<NonceDelayed> _nonceDelayQueue =
-		new DelayQueue<>();
 
 	private static class Nonce implements Serializable {
 
@@ -158,62 +119,6 @@ public class NonceUtil {
 
 		private final long _createTime;
 		private final long _expirationTime;
-		private final String _nonce;
-
-	}
-
-	private static class NonceDelayed implements Delayed {
-
-		public NonceDelayed(String nonce) {
-			if (nonce == null) {
-				throw new NullPointerException("Nonce is null");
-			}
-
-			_nonce = nonce;
-			_createTime = System.currentTimeMillis();
-		}
-
-		@Override
-		public int compareTo(Delayed delayed) {
-			NonceDelayed nonceDelayed = (NonceDelayed)delayed;
-
-			long result = _createTime - nonceDelayed._createTime;
-
-			if (result == 0) {
-				return 0;
-			}
-			else if (result > 0) {
-				return 1;
-			}
-
-			return -1;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			NonceDelayed nonceDelayed = (NonceDelayed)obj;
-
-			if (_nonce.equals(nonceDelayed._nonce)) {
-				return true;
-			}
-
-			return false;
-		}
-
-		@Override
-		public long getDelay(TimeUnit timeUnit) {
-			long leftDelayTime =
-				_NONCE_EXPIRATION + _createTime - System.currentTimeMillis();
-
-			return timeUnit.convert(leftDelayTime, TimeUnit.MILLISECONDS);
-		}
-
-		@Override
-		public int hashCode() {
-			return _nonce.hashCode();
-		}
-
-		private final long _createTime;
 		private final String _nonce;
 
 	}
