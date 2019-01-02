@@ -42,7 +42,19 @@ public class DBInspector {
 	}
 
 	public String getCatalog() throws SQLException {
-		return _connection.getCatalog();
+		DatabaseMetaData metadata = _connection.getMetaData();
+
+		String catalog = _connection.getCatalog();
+
+		DB db = DBManagerUtil.getDB();
+
+		DBType dbType = db.getDBType();
+
+		if ((catalog == null) && dbType.equals(DBType.ORACLE)) {
+			catalog = metadata.getUserName();
+		}
+
+		return catalog;
 	}
 
 	public String getSchema() {
