@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.dao.jdbc.ParamSetter;
 import com.liferay.portal.kernel.dao.jdbc.RowMapper;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
-import com.liferay.portal.kernel.exception.NoSuchModelException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.ModelListener;
@@ -442,14 +441,23 @@ public class TableMapperImpl<L extends BaseModel<L>, R extends BaseModel<R>>
 
 		List<T> slaveBaseModels = new ArrayList<>(slavePrimaryKeys.length);
 
-		try {
-			for (long slavePrimaryKey : slavePrimaryKeys) {
-				slaveBaseModels.add(
-					slaveBasePersistence.findByPrimaryKey(slavePrimaryKey));
+		boolean outOfDate = false;
+
+		for (long slavePrimaryKey : slavePrimaryKeys) {
+			T primaryKey = slaveBasePersistence.fetchByPrimaryKey(
+				slavePrimaryKey);
+
+			if (primaryKey != null) {
+				slaveBaseModels.add(primaryKey);
+			}
+			else {
+				outOfDate = true;
 			}
 		}
-		catch (NoSuchModelException nsme) {
-			throw new SystemException(nsme);
+
+		if (outOfDate) {
+			PortalCacheHelperUtil.removeWithoutReplicator(
+				portalCache, masterPrimaryKey);
 		}
 
 		if (obc != null) {

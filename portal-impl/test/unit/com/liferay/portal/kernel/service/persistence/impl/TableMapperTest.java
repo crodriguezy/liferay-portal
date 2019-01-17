@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactory;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
-import com.liferay.portal.kernel.exception.NoSuchModelException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.BaseModelListener;
@@ -1100,22 +1099,20 @@ public class TableMapperTest {
 
 		// No such model exception
 
-		_leftBasePersistence.setNoSuchModelException(true);
+		_leftBasePersistence.setNoSuchPrimaryKey(left.getPrimaryKeyObj());
 
 		try {
-			_tableMapperImpl.getLeftBaseModels(
+			lefts = _tableMapperImpl.getLeftBaseModels(
 				rightPrimaryKey, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-		}
-		catch (SystemException se) {
-			Throwable cause = se.getCause();
 
-			Assert.assertSame(NoSuchModelException.class, cause.getClass());
+			Assert.assertEquals(lefts.toString(), 2, lefts.size());
 
-			Assert.assertEquals(
-				String.valueOf(leftPrimaryKey1), cause.getMessage());
+			List<Long> cachedKeys = rightToLeftPortalCache.getKeys();
+
+			Assert.assertTrue(cachedKeys.isEmpty());
 		}
 		finally {
-			_leftBasePersistence.setNoSuchModelException(false);
+			_leftBasePersistence.setNoSuchPrimaryKey(null);
 		}
 	}
 
@@ -1286,24 +1283,20 @@ public class TableMapperTest {
 
 		leftToRightPortalCache.remove(leftPrimaryKey);
 
-		// No such model exception
-
-		_rightBasePersistence.setNoSuchModelException(true);
+		_rightBasePersistence.setNoSuchPrimaryKey(right.getPrimaryKeyObj());
 
 		try {
-			_tableMapperImpl.getRightBaseModels(
+			rights = _tableMapperImpl.getRightBaseModels(
 				leftPrimaryKey, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-		}
-		catch (SystemException se) {
-			Throwable cause = se.getCause();
 
-			Assert.assertSame(NoSuchModelException.class, cause.getClass());
+			Assert.assertEquals(rights.toString(), 2, rights.size());
 
-			Assert.assertEquals(
-				String.valueOf(rightPrimaryKey1), cause.getMessage());
+			List<Long> cachedKeys = leftToRightPortalCache.getKeys();
+
+			Assert.assertTrue(cachedKeys.isEmpty());
 		}
 		finally {
-			_rightBasePersistence.setNoSuchModelException(false);
+			_rightBasePersistence.setNoSuchPrimaryKey(null);
 		}
 	}
 
@@ -1864,11 +1857,9 @@ public class TableMapperTest {
 		}
 
 		@Override
-		public T findByPrimaryKey(Serializable primaryKey)
-			throws NoSuchModelException {
-
-			if (_noSuchModelException) {
-				throw new NoSuchModelException(primaryKey.toString());
+		public T fetchByPrimaryKey(Serializable primaryKey) {
+			if (primaryKey == _noSuchPrimaryKey) {
+				return null;
 			}
 
 			Class<T> modelClass = getModelClass();
@@ -1890,8 +1881,8 @@ public class TableMapperTest {
 			_listeners.add(listener);
 		}
 
-		public void setNoSuchModelException(boolean noSuchModelException) {
-			_noSuchModelException = noSuchModelException;
+		public void setNoSuchPrimaryKey(Serializable noSuchPrimaryKey) {
+			_noSuchPrimaryKey = noSuchPrimaryKey;
 		}
 
 		@Override
@@ -1900,7 +1891,7 @@ public class TableMapperTest {
 		}
 
 		private final List<ModelListener<T>> _listeners = new ArrayList<>();
-		private boolean _noSuchModelException;
+		private Serializable _noSuchPrimaryKey;
 
 	}
 
