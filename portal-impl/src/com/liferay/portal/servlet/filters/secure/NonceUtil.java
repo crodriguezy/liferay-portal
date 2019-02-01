@@ -55,7 +55,7 @@ public class NonceUtil {
 	public static boolean verify(String nonce) {
 		_cleanUp();
 
-		return _nonceDelayQueue.contains(new NonceDelayed(nonce));
+		return _nonceDelayQueue.remove(new NonceDelayed(nonce));
 	}
 
 	private static void _cleanUp() {
