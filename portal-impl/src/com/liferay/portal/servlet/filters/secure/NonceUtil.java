@@ -62,7 +62,7 @@ public class NonceUtil {
 	public static boolean verify(String nonce) {
 		_cleanUp();
 
-		return _nonceDelayQueue.remove(new NonceDelayed(nonce));
+		return _removeNonceAndNotify(new NonceDelayed(nonce));
 	}
 
 	private static void _addNonce(NonceDelayed nonceDelayed) {
@@ -103,6 +103,29 @@ public class NonceUtil {
 		ClusterExecutorUtil.execute(clusterRequest);
 	}
 
+	private static boolean _removeNonce(NonceDelayed nonceDelayed) {
+		_cleanUp();
+
+		boolean enabled = ClusterInvokeThreadLocal.isEnabled();
+
+		ClusterInvokeThreadLocal.setEnabled(true);
+
+		try {
+			return _nonceDelayQueue.remove(nonceDelayed);
+		}
+		finally {
+			ClusterInvokeThreadLocal.setEnabled(enabled);
+		}
+	}
+
+	private static boolean _removeNonceAndNotify(NonceDelayed nonceDelayed) {
+		boolean removed = _nonceDelayQueue.remove(nonceDelayed);
+
+		_notifyNodes(_removeNonceMethodKey, nonceDelayed);
+
+		return removed;
+	}
+
 	private static final long _NONCE_EXPIRATION =
 		PropsValues.WEBDAV_NONCE_EXPIRATION * Time.MINUTE;
 
@@ -110,6 +133,8 @@ public class NonceUtil {
 		NonceUtil.class, "_addNonce", NonceDelayed.class);
 	private static final DelayQueue<NonceDelayed> _nonceDelayQueue =
 		new DelayQueue<>();
+	private static final MethodKey _removeNonceMethodKey = new MethodKey(
+		NonceUtil.class, "_removeNonce", NonceDelayed.class);
 
 	private static class NonceDelayed implements Delayed, Serializable {
 
