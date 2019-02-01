@@ -34,6 +34,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author Alexander Chow
+ * @author Cristina Rodríguez
+ * @author Mariano Álvaro Sáiz
  */
 public class NonceUtil {
 
