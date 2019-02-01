@@ -65,6 +65,7 @@ public class NonceUtil {
 		return _removeNonceAndNotify(new NonceDelayed(nonce));
 	}
 
+	@SuppressWarnings("unused")
 	private static void _addNonce(NonceDelayed nonceDelayed) {
 		boolean enabled = ClusterInvokeThreadLocal.isEnabled();
 
@@ -103,6 +104,7 @@ public class NonceUtil {
 		ClusterExecutorUtil.execute(clusterRequest);
 	}
 
+	@SuppressWarnings("unused")
 	private static boolean _removeNonce(NonceDelayed nonceDelayed) {
 		_cleanUp();
 
