@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.cluster.ClusterNodeResponse;
 import com.liferay.portal.kernel.cluster.ClusterNodeResponses;
 import com.liferay.portal.kernel.cluster.ClusterRequest;
 import com.liferay.portal.kernel.cluster.FutureClusterResponses;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.util.Digester;
@@ -95,6 +97,8 @@ public class NonceUtil {
 				10, TimeUnit.SECONDS);
 		}
 		catch (Exception e) {
+			_log.error("Error trying to verify nonce accross the cluster", e);
+
 			return false;
 		}
 
@@ -124,6 +128,8 @@ public class NonceUtil {
 
 	private static final long _NONCE_EXPIRATION =
 		PropsValues.WEBDAV_NONCE_EXPIRATION * Time.MINUTE;
+
+	private static final Log _log = LogFactoryUtil.getLog(NonceUtil.class);
 
 	private static final MethodKey _checkInLocalNode = new MethodKey(
 		NonceUtil.class, "checkInLocalNode", String.class);
