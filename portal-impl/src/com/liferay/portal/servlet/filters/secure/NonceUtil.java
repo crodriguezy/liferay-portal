@@ -14,13 +14,21 @@
 
 package com.liferay.portal.servlet.filters.secure;
 
+import com.liferay.portal.kernel.cluster.ClusterExecutorUtil;
+import com.liferay.portal.kernel.cluster.ClusterNodeResponse;
+import com.liferay.portal.kernel.cluster.ClusterNodeResponses;
+import com.liferay.portal.kernel.cluster.ClusterRequest;
+import com.liferay.portal.kernel.cluster.FutureClusterResponses;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.util.Digester;
 import com.liferay.portal.kernel.util.DigesterUtil;
+import com.liferay.portal.kernel.util.MethodHandler;
+import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.util.PropsValues;
 
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
@@ -57,6 +65,56 @@ public class NonceUtil {
 	public static boolean verify(String nonce) {
 		_cleanUp();
 
+		boolean verify = false;
+
+		if (_checkInLocalNode(nonce) || _checkInCluster(nonce)) {
+			verify = true;
+		}
+
+		return verify;
+	}
+
+	private static boolean _checkInCluster(String nonce) {
+		if (!ClusterExecutorUtil.isEnabled()) {
+			return false;
+		}
+
+		MethodHandler methodHandler = new MethodHandler(
+			_checkInLocalNode, nonce);
+
+		ClusterRequest clusterRequest = ClusterRequest.createMulticastRequest(
+			methodHandler, true);
+
+		FutureClusterResponses futureClusterResponses =
+			ClusterExecutorUtil.execute(clusterRequest);
+
+		ClusterNodeResponses clusterNodeResponses;
+
+		try {
+			clusterNodeResponses = futureClusterResponses.get(
+				10, TimeUnit.SECONDS);
+		}
+		catch (Exception e) {
+			return false;
+		}
+
+		BlockingQueue<ClusterNodeResponse> clusterResponses =
+			clusterNodeResponses.getClusterResponses();
+
+		while (!clusterResponses.isEmpty()) {
+			ClusterNodeResponse clusterNodeResponse = clusterResponses.poll();
+
+			if ((boolean)clusterNodeResponse.getResult()) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private static boolean _checkInLocalNode(String nonce) {
+		_cleanUp();
+
 		return _nonceDelayQueue.remove(new NonceDelayed(nonce));
 	}
 
@@ -67,6 +125,8 @@ public class NonceUtil {
 	private static final long _NONCE_EXPIRATION =
 		PropsValues.WEBDAV_NONCE_EXPIRATION * Time.MINUTE;
 
+	private static final MethodKey _checkInLocalNode = new MethodKey(
+		NonceUtil.class, "checkInLocalNode", String.class);
 	private static final DelayQueue<NonceDelayed> _nonceDelayQueue =
 		new DelayQueue<>();
 
