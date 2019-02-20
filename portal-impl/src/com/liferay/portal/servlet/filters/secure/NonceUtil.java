@@ -65,8 +65,6 @@ public class NonceUtil {
 	}
 
 	public static boolean verify(String nonce) {
-		_cleanUp();
-
 		boolean verify = false;
 
 		if (_checkInLocalNode(nonce) || _checkInCluster(nonce)) {
