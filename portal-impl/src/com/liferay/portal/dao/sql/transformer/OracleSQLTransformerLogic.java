@@ -34,8 +34,9 @@ public class OracleSQLTransformerLogic extends BaseSQLTransformerLogic {
 		Function[] functions = {
 			getBooleanFunction(), getCastClobTextFunction(),
 			getCastLongFunction(), getCastTextFunction(), getConcatFunction(),
-			getIntegerDivisionFunction(), getNullDateFunction(),
-			_getEscapeFunction(), _getNotEqualsBlankStringFunction()
+			getDropTableIfExistsTextFunction(), getIntegerDivisionFunction(),
+			getNullDateFunction(), _getEscapeFunction(),
+			_getNotEqualsBlankStringFunction()
 		};
 
 		if (!db.isSupportsStringCaseSensitiveQuery()) {
@@ -62,6 +63,14 @@ public class OracleSQLTransformerLogic extends BaseSQLTransformerLogic {
 	@Override
 	protected String replaceCastText(Matcher matcher) {
 		return matcher.replaceAll("CAST($1 AS VARCHAR(4000))");
+	}
+
+	protected String replaceDropTableIfExistsText(Matcher matcher) {
+		String dropTableIfExists =
+			"BEGIN EXECUTE IMMEDIATE 'DROP TABLE $1'; EXCEPTION WHEN OTHERS " +
+				"THEN IF SQLCODE != -942 THEN RAISE; END IF; END;";
+
+		return matcher.replaceAll(dropTableIfExists);
 	}
 
 	@Override
