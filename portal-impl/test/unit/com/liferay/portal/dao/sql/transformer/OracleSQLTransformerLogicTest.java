@@ -31,6 +31,12 @@ public class OracleSQLTransformerLogicTest
 	}
 
 	@Override
+	public String getDropTableIfExistsTextTransformedSQL() {
+		return "BEGIN EXECUTE IMMEDIATE 'DROP TABLE Foo'; EXCEPTION WHEN " +
+			"OTHERS THEN IF SQLCODE != -942 THEN RAISE; END IF; END;;";
+	}
+
+	@Override
 	@Test
 	public void testReplaceBitwiseCheckWithExtraWhitespace() {
 		Assert.assertEquals(
