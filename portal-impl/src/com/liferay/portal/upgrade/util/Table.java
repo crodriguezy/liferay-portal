@@ -41,8 +41,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Reader;
 
-import java.math.BigDecimal;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -325,8 +323,10 @@ public class Table {
 	public String getSelectSQL() throws Exception {
 		if (_selectSQL == null) {
 			/*String sql = "select ";
+
 			for (int i = 0; i < _columns.length; i++) {
 				sql += _columns[i][0];
+
 				if ((i + 1) < _columns.length) {
 					sql += ", ";
 				}
@@ -334,6 +334,7 @@ public class Table {
 					sql += " from " + _tableName;
 				}
 			}
+
 			return sql;*/
 
 			return "select * from " + _tableName;
@@ -433,10 +434,10 @@ public class Table {
 		}
 		else if (t == Types.DECIMAL) {
 			try {
-				value = GetterUtil.getNumber(rs.getBigDecimal(name));
+				value = GetterUtil.getBigDecimal(rs.getBigDecimal(name));
 			}
 			catch (SQLException sqle) {
-				value = GetterUtil.getNumber(rs.getString(name));
+				value = GetterUtil.getBigDecimal(rs.getString(name));
 			}
 		}
 		else if (t == Types.DOUBLE) {
@@ -585,9 +586,7 @@ public class Table {
 			ps.setString(paramIndex, value);
 		}
 		else if (t == Types.DECIMAL) {
-			ps.setBigDecimal(
-				paramIndex,
-				(BigDecimal)GetterUtil.getNumber(value, BigDecimal.ZERO));
+			ps.setBigDecimal(paramIndex, GetterUtil.getBigDecimal(value));
 		}
 		else if (t == Types.DOUBLE) {
 			ps.setDouble(paramIndex, GetterUtil.getDouble(value));
