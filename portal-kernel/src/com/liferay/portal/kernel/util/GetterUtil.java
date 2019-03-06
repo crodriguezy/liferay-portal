@@ -41,6 +41,11 @@ public class GetterUtil {
 	public static final String[] BOOLEANS = {"true", "t", "y", "on", "1"};
 
 	/**
+	 * The default BigDecimal value is {@value #DEFAULT_BIGDECIMAL}.
+	 */
+	public static final BigDecimal DEFAULT_BIGDECIMAL = BigDecimal.ZERO;
+
+	/**
 	 * The default boolean value is {@value #DEFAULT_BOOLEAN}.
 	 */
 	public static final boolean DEFAULT_BOOLEAN = false;
@@ -139,6 +144,32 @@ public class GetterUtil {
 	 * The default String array value is an empty String array.
 	 */
 	public static final String[] DEFAULT_STRING_VALUES = new String[0];
+
+	/**
+	 * Returns the Object value as a BigDecimal. If the value is <code>null</code>
+	 * or not convertible to a BigDecimal, the defaultValue is returned.
+	 *
+	 * @param  value the value to convert
+	 * @return the value as a BigDecimal
+	 */
+	public static BigDecimal get(Object value, BigDecimal defaultValue) {
+		if (value instanceof String) {
+			String valueString = (String)value;
+
+			if (Validator.isNull(valueString)) {
+				return defaultValue;
+			}
+
+			try {
+				return new BigDecimal(valueString.trim());
+			}
+			catch (NumberFormatException nfe) {
+				return defaultValue;
+			}
+		}
+
+		return defaultValue;
+	}
 
 	/**
 	 * Returns the Object value as a boolean. If the value is <code>null</code>,
@@ -636,6 +667,32 @@ public class GetterUtil {
 		}
 
 		return value;
+	}
+
+	/**
+	 * Returns the Object value as a BigDecimal. If the value is <code>null</code>
+	 * or not convertible to a BigDecimal, the {@link #DEFAULT_BIGDECIMAL} is
+	 * returned.
+	 *
+	 * @param  value the value to convert
+	 * @return the value as a BigDecimal
+	 */
+	public static BigDecimal getBigDecimal(Object value) {
+		return getBigDecimal(value, DEFAULT_BIGDECIMAL);
+	}
+
+	/**
+	 * Returns the Object value as a BigDecimal. If the value is <code>null</code>
+	 * or not convertible to a BigDecimal, the defaultValue is
+	 * returned.
+	 *
+	 * @param  value the value to convert
+	 * @return the value as a BigDecimal
+	 */
+	public static BigDecimal getBigDecimal(
+		Object value, BigDecimal defaultValue) {
+
+		return get(value, defaultValue);
 	}
 
 	/**
