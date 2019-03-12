@@ -1115,18 +1115,6 @@ public interface PropsKeys {
 	@Deprecated
 	public static final String DL_FILE_MAX_SIZE = "dl.file.max.size";
 
-	/**
-	 * @deprecated As of Judson (7.1.x), with no direct replacement
-	 */
-	@Deprecated
-	public static final String DL_FILE_RANK_ENABLED = "dl.file.rank.enabled";
-
-	/**
-	 * @deprecated As of Judson (7.1.x), with no direct replacement
-	 */
-	@Deprecated
-	public static final String DL_FILE_RANK_MAX_SIZE = "dl.file.rank.max.size";
-
 	public static final String DL_FOLDER_COLUMNS = "dl.folder.columns";
 
 	public static final String DL_FOLDER_ICON_CHECK_COUNT =
