@@ -14,8 +14,8 @@
 
 package com.liferay.portal.template.freemarker.internal;
 
+import com.liferay.osgi.util.BundleUtil;
 import com.liferay.petra.concurrent.ConcurrentReferenceKeyHashMap;
-import com.liferay.petra.lang.ClassLoaderPool;
 import com.liferay.petra.memory.FinalizeManager;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringBundler;
@@ -332,6 +332,8 @@ public class FreeMarkerManager extends BaseSingleTemplateManager {
 
 		_bundle = bundleContext.getBundle();
 
+		_bundleContextName = BundleUtil.toClassLoaderName(_bundle);
+
 		int stateMask = Bundle.ACTIVE | Bundle.RESOLVED;
 
 		_bundleTracker = new BundleTracker<>(
@@ -434,12 +436,7 @@ public class FreeMarkerManager extends BaseSingleTemplateManager {
 	}
 
 	private String _getMacroLibrary() {
-		Class<?> clazz = getClass();
-
-		String contextName = ClassLoaderPool.getContextName(
-			clazz.getClassLoader());
-
-		contextName = contextName.concat(
+		String contextName = _bundleContextName.concat(
 			TemplateConstants.CLASS_LOADER_SEPARATOR);
 
 		String[] macroLibrary = _freeMarkerEngineConfiguration.macroLibrary();
@@ -469,6 +466,7 @@ public class FreeMarkerManager extends BaseSingleTemplateManager {
 			FinalizeManager.WEAK_REFERENCE_FACTORY);
 
 	private Bundle _bundle;
+	private String _bundleContextName;
 	private BundleTracker<Set<String>> _bundleTracker;
 
 	// Set initial to -2 because -1 has significance to bundle trackers
