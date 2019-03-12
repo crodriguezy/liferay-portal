@@ -14,8 +14,8 @@
 
 package com.liferay.portal.classloader.tracker.internal;
 
+import com.liferay.osgi.util.BundleUtil;
 import com.liferay.petra.lang.ClassLoaderPool;
-import com.liferay.petra.string.StringPool;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
@@ -43,7 +43,7 @@ public class ClassLoaderTrackerBundleActivator implements BundleActivator {
 				ClassLoader classLoader = bundleWiring.getClassLoader();
 
 				ClassLoaderPool.register(
-					_toClassLoaderName(bundle), classLoader);
+					BundleUtil.toClassLoaderName(bundle), classLoader);
 
 				return classLoader;
 			}
@@ -64,14 +64,6 @@ public class ClassLoaderTrackerBundleActivator implements BundleActivator {
 	@Override
 	public void stop(BundleContext context) {
 		_bundleTracker.close();
-	}
-
-	private String _toClassLoaderName(Bundle bundle) {
-		String classLoaderName = bundle.getSymbolicName();
-
-		classLoaderName = classLoaderName.concat(StringPool.UNDERLINE);
-
-		return classLoaderName.concat(String.valueOf(bundle.getVersion()));
 	}
 
 	private BundleTracker<ClassLoader> _bundleTracker;

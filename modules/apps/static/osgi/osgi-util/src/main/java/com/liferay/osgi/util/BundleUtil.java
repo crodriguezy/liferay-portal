@@ -14,6 +14,8 @@
 
 package com.liferay.osgi.util;
 
+import com.liferay.petra.string.StringPool;
+
 import java.net.URL;
 
 import java.util.Collections;
@@ -61,6 +63,14 @@ public class BundleUtil {
 		List<URL> list = Collections.list(enumeration);
 
 		return list.get(list.size() - 1);
+	}
+
+	public static String toClassLoaderName(Bundle bundle) {
+		String classLoaderName = bundle.getSymbolicName();
+
+		classLoaderName = classLoaderName.concat(StringPool.UNDERLINE);
+
+		return classLoaderName.concat(String.valueOf(bundle.getVersion()));
 	}
 
 }
