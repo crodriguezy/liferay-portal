@@ -23,6 +23,13 @@ PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("mvcRenderCommandName", "exportImport");
 portletURL.setParameter("portletResource", portletResource);
+
+if (layout instanceof VirtualLayout && layout.isTypeControlPanel()) {
+	VirtualLayout virtualLayout = (VirtualLayout)layout;
+
+	long targetGroupId = virtualLayout.getVirtualGroupId();
+	plid = _layoutLocalService.getDefaultPlid(targetGroupId);
+}
 %>
 
 <clay:navigation-bar
