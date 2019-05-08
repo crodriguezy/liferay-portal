@@ -18,6 +18,12 @@
 
 <%
 String redirect = ParamUtil.getString(request, "redirect");
+
+if (layout instanceof VirtualLayout && layout.isTypeControlPanel()) {
+	VirtualLayout virtualLayout = (VirtualLayout)layout;
+	long targetGroupId = virtualLayout.getVirtualGroupId();
+	plid = _layoutLocalService.getDefaultPlid(targetGroupId);
+}
 %>
 
 <liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="exportImport" var="importPortletURL">

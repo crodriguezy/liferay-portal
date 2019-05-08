@@ -21,6 +21,12 @@ String redirect = ParamUtil.getString(request, "redirect");
 
 long groupId = ParamUtil.getLong(request, "groupId", scopeGroupId);
 
+if (layout instanceof VirtualLayout && layout.isTypeControlPanel()) {
+	VirtualLayout virtualLayout = (VirtualLayout)layout;
+	long targetGroupId = virtualLayout.getVirtualGroupId();
+	plid = _layoutLocalService.getDefaultPlid(targetGroupId);
+}
+
 Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 
 FileEntry fileEntry = ExportImportHelperUtil.getTempFileEntry(groupId, themeDisplay.getUserId(), ExportImportHelper.TEMP_FOLDER_NAME + selPortlet.getPortletId());
