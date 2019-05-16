@@ -28,7 +28,15 @@ if (layout instanceof VirtualLayout && layout.isTypeControlPanel()) {
 	VirtualLayout virtualLayout = (VirtualLayout)layout;
 
 	long targetGroupId = virtualLayout.getVirtualGroupId();
-	plid = LayoutLocalServiceUtil.getDefaultPlid(targetGroupId);
+	long defaultPlid = LayoutLocalServiceUtil.getDefaultPlid(targetGroupId);
+
+	if (defaultPlid == 0) {
+		Group userGroup = GroupLocalServiceUtil.getGroup(user.getCompanyId(), String.valueOf(user.getUserId()));
+
+		plid = LayoutLocalServiceUtil.getDefaultPlid(userGroup.getGroupId());
+	} else {
+		plid = defaultPlid;
+	}
 }
 %>
 
