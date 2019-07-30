@@ -43,13 +43,24 @@
 			required=required
 			type="text"
 			value=(fileEntryTitle?has_content)?string(fileEntryTitle, '')
-		/>
+		>
+			<#if required>
+				<@liferay_aui.validator
+					errorMessage=" "
+					name="required"
+				/>
+			</#if>
+		</@>
 
 		<@liferay_aui.input
 			name=namespacedFieldName
 			type="hidden"
 			value=fieldRawValue
-		/>
+		>
+			<#if required>
+				<@liferay_aui.validator name="required" />
+			</#if>
+		</@>
 
 		<div class="button-holder">
 			<@liferay_aui.button
