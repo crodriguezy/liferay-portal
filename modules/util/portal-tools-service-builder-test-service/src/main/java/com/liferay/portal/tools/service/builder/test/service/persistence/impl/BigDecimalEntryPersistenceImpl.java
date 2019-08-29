@@ -317,7 +317,7 @@ public class BigDecimalEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("bigDecimalValue=");
+		msg.append("bigDecimalValue = ");
 		msg.append(bigDecimalValue);
 
 		msg.append("}");
@@ -372,7 +372,7 @@ public class BigDecimalEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("bigDecimalValue=");
+		msg.append("bigDecimalValue = ");
 		msg.append(bigDecimalValue);
 
 		msg.append("}");
@@ -874,7 +874,7 @@ public class BigDecimalEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("bigDecimalValue=");
+		msg.append("bigDecimalValue > ");
 		msg.append(bigDecimalValue);
 
 		msg.append("}");
@@ -929,7 +929,7 @@ public class BigDecimalEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("bigDecimalValue=");
+		msg.append("bigDecimalValue > ");
 		msg.append(bigDecimalValue);
 
 		msg.append("}");
@@ -1434,7 +1434,7 @@ public class BigDecimalEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("bigDecimalValue=");
+		msg.append("bigDecimalValue < ");
 		msg.append(bigDecimalValue);
 
 		msg.append("}");
@@ -1489,7 +1489,7 @@ public class BigDecimalEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("bigDecimalValue=");
+		msg.append("bigDecimalValue < ");
 		msg.append(bigDecimalValue);
 
 		msg.append("}");

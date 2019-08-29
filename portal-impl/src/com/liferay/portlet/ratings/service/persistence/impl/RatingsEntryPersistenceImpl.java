@@ -304,7 +304,7 @@ public class RatingsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -355,7 +355,7 @@ public class RatingsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -872,10 +872,10 @@ public class RatingsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -932,10 +932,10 @@ public class RatingsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1459,10 +1459,10 @@ public class RatingsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("classNameId=");
+		msg.append("classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", classPK=");
+		msg.append(", classPK = ");
 		msg.append(classPK);
 
 		msg.append("}");
@@ -1519,10 +1519,10 @@ public class RatingsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("classNameId=");
+		msg.append("classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", classPK=");
+		msg.append(", classPK = ");
 		msg.append(classPK);
 
 		msg.append("}");
@@ -2060,13 +2060,13 @@ public class RatingsEntryPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("userId=");
+			msg.append("userId = ");
 			msg.append(userId);
 
-			msg.append(", classNameId=");
+			msg.append(", classNameId = ");
 			msg.append(classNameId);
 
-			msg.append(", classPK=");
+			msg.append(", classPK = ");
 			msg.append(classPK);
 
 			msg.append("}");
@@ -2607,13 +2607,13 @@ public class RatingsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("classNameId=");
+		msg.append("classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", classPK=");
+		msg.append(", classPK = ");
 		msg.append(classPK);
 
-		msg.append(", score=");
+		msg.append(", score = ");
 		msg.append(score);
 
 		msg.append("}");
@@ -2672,13 +2672,13 @@ public class RatingsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("classNameId=");
+		msg.append("classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", classPK=");
+		msg.append(", classPK = ");
 		msg.append(classPK);
 
-		msg.append(", score=");
+		msg.append(", score = ");
 		msg.append(score);
 
 		msg.append("}");

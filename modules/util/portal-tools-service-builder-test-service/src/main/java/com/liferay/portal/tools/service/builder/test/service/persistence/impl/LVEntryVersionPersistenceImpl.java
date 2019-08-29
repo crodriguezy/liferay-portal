@@ -298,7 +298,7 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("lvEntryId=");
+		msg.append("lvEntryId = ");
 		msg.append(lvEntryId);
 
 		msg.append("}");
@@ -351,7 +351,7 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("lvEntryId=");
+		msg.append("lvEntryId = ");
 		msg.append(lvEntryId);
 
 		msg.append("}");
@@ -629,10 +629,10 @@ public class LVEntryVersionPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("lvEntryId=");
+			msg.append("lvEntryId = ");
 			msg.append(lvEntryId);
 
-			msg.append(", version=");
+			msg.append(", version = ");
 			msg.append(version);
 
 			msg.append("}");
@@ -1053,7 +1053,7 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -1105,7 +1105,7 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -1622,10 +1622,10 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", version=");
+		msg.append(", version = ");
 		msg.append(version);
 
 		msg.append("}");
@@ -1682,10 +1682,10 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", version=");
+		msg.append(", version = ");
 		msg.append(version);
 
 		msg.append("}");
@@ -2222,10 +2222,10 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", groupId=");
+		msg.append(", groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -2282,10 +2282,10 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", groupId=");
+		msg.append(", groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -2614,13 +2614,13 @@ public class LVEntryVersionPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("uuid=");
+			msg.append("uuid = ");
 			msg.append(uuid);
 
-			msg.append(", groupId=");
+			msg.append(", groupId = ");
 			msg.append(groupId);
 
-			msg.append(", version=");
+			msg.append(", version = ");
 			msg.append(version);
 
 			msg.append("}");
@@ -3104,10 +3104,10 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -3164,10 +3164,10 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -3718,13 +3718,13 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
-		msg.append(", version=");
+		msg.append(", version = ");
 		msg.append(version);
 
 		msg.append("}");
@@ -3783,13 +3783,13 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
-		msg.append(", version=");
+		msg.append(", version = ");
 		msg.append(version);
 
 		msg.append("}");
@@ -4316,7 +4316,7 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -4369,7 +4369,7 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -4847,10 +4847,10 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", version=");
+		msg.append(", version = ");
 		msg.append(version);
 
 		msg.append("}");
@@ -4907,10 +4907,10 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", version=");
+		msg.append(", version = ");
 		msg.append(version);
 
 		msg.append("}");
@@ -5423,10 +5423,10 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", uniqueGroupKey=");
+		msg.append(", uniqueGroupKey = ");
 		msg.append(uniqueGroupKey);
 
 		msg.append("}");
@@ -5483,10 +5483,10 @@ public class LVEntryVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", uniqueGroupKey=");
+		msg.append(", uniqueGroupKey = ");
 		msg.append(uniqueGroupKey);
 
 		msg.append("}");
@@ -5815,13 +5815,13 @@ public class LVEntryVersionPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("groupId=");
+			msg.append("groupId = ");
 			msg.append(groupId);
 
-			msg.append(", uniqueGroupKey=");
+			msg.append(", uniqueGroupKey = ");
 			msg.append(uniqueGroupKey);
 
-			msg.append(", version=");
+			msg.append(", version = ");
 			msg.append(version);
 
 			msg.append("}");

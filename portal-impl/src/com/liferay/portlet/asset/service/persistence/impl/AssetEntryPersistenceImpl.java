@@ -297,7 +297,7 @@ public class AssetEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -348,7 +348,7 @@ public class AssetEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -811,7 +811,7 @@ public class AssetEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -864,7 +864,7 @@ public class AssetEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1323,7 +1323,7 @@ public class AssetEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("visible=");
+		msg.append("visible = ");
 		msg.append(visible);
 
 		msg.append("}");
@@ -1374,7 +1374,7 @@ public class AssetEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("visible=");
+		msg.append("visible = ");
 		msg.append(visible);
 
 		msg.append("}");
@@ -1851,7 +1851,7 @@ public class AssetEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("publishDate=");
+		msg.append("publishDate = ");
 		msg.append(publishDate);
 
 		msg.append("}");
@@ -1904,7 +1904,7 @@ public class AssetEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("publishDate=");
+		msg.append("publishDate = ");
 		msg.append(publishDate);
 
 		msg.append("}");
@@ -2407,7 +2407,7 @@ public class AssetEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("expirationDate=");
+		msg.append("expirationDate = ");
 		msg.append(expirationDate);
 
 		msg.append("}");
@@ -2461,7 +2461,7 @@ public class AssetEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("expirationDate=");
+		msg.append("expirationDate = ");
 		msg.append(expirationDate);
 
 		msg.append("}");
@@ -2964,7 +2964,7 @@ public class AssetEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("layoutUuid=");
+		msg.append("layoutUuid = ");
 		msg.append(layoutUuid);
 
 		msg.append("}");
@@ -3017,7 +3017,7 @@ public class AssetEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("layoutUuid=");
+		msg.append("layoutUuid = ");
 		msg.append(layoutUuid);
 
 		msg.append("}");
@@ -3323,10 +3323,10 @@ public class AssetEntryPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("groupId=");
+			msg.append("groupId = ");
 			msg.append(groupId);
 
-			msg.append(", classUuid=");
+			msg.append(", classUuid = ");
 			msg.append(classUuid);
 
 			msg.append("}");
@@ -3594,10 +3594,10 @@ public class AssetEntryPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("classNameId=");
+			msg.append("classNameId = ");
 			msg.append(classNameId);
 
-			msg.append(", classPK=");
+			msg.append(", classPK = ");
 			msg.append(classPK);
 
 			msg.append("}");
@@ -4033,13 +4033,13 @@ public class AssetEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", visible=");
+		msg.append(", visible = ");
 		msg.append(visible);
 
 		msg.append("}");
@@ -4098,13 +4098,13 @@ public class AssetEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", visible=");
+		msg.append(", visible = ");
 		msg.append(visible);
 
 		msg.append("}");
@@ -4672,16 +4672,16 @@ public class AssetEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", publishDate=");
+		msg.append(", publishDate = ");
 		msg.append(publishDate);
 
-		msg.append(", expirationDate=");
+		msg.append(", expirationDate = ");
 		msg.append(expirationDate);
 
 		msg.append("}");
@@ -4745,16 +4745,16 @@ public class AssetEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", publishDate=");
+		msg.append(", publishDate = ");
 		msg.append(publishDate);
 
-		msg.append(", expirationDate=");
+		msg.append(", expirationDate = ");
 		msg.append(expirationDate);
 
 		msg.append("}");

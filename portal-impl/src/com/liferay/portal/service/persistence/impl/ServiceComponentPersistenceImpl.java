@@ -305,7 +305,7 @@ public class ServiceComponentPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("buildNamespace=");
+		msg.append("buildNamespace = ");
 		msg.append(buildNamespace);
 
 		msg.append("}");
@@ -360,7 +360,7 @@ public class ServiceComponentPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("buildNamespace=");
+		msg.append("buildNamespace = ");
 		msg.append(buildNamespace);
 
 		msg.append("}");
@@ -676,10 +676,10 @@ public class ServiceComponentPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("buildNamespace=");
+			msg.append("buildNamespace = ");
 			msg.append(buildNamespace);
 
-			msg.append(", buildNumber=");
+			msg.append(", buildNumber = ");
 			msg.append(buildNumber);
 
 			msg.append("}");

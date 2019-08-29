@@ -116,7 +116,7 @@ public class MemberRequestPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("key=");
+			msg.append("key = ");
 			msg.append(key);
 
 			msg.append("}");
@@ -551,7 +551,7 @@ public class MemberRequestPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("receiverUserId=");
+		msg.append("receiverUserId = ");
 		msg.append(receiverUserId);
 
 		msg.append("}");
@@ -606,7 +606,7 @@ public class MemberRequestPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("receiverUserId=");
+		msg.append("receiverUserId = ");
 		msg.append(receiverUserId);
 
 		msg.append("}");
@@ -1086,10 +1086,10 @@ public class MemberRequestPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("receiverUserId=");
+		msg.append("receiverUserId = ");
 		msg.append(receiverUserId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -1146,10 +1146,10 @@ public class MemberRequestPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("receiverUserId=");
+		msg.append("receiverUserId = ");
 		msg.append(receiverUserId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -1449,13 +1449,13 @@ public class MemberRequestPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("groupId=");
+			msg.append("groupId = ");
 			msg.append(groupId);
 
-			msg.append(", receiverUserId=");
+			msg.append(", receiverUserId = ");
 			msg.append(receiverUserId);
 
-			msg.append(", status=");
+			msg.append(", status = ");
 			msg.append(status);
 
 			msg.append("}");

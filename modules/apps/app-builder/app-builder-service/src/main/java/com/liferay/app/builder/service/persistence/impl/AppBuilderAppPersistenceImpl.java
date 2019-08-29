@@ -312,7 +312,7 @@ public class AppBuilderAppPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -363,7 +363,7 @@ public class AppBuilderAppPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -668,10 +668,10 @@ public class AppBuilderAppPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("uuid=");
+			msg.append("uuid = ");
 			msg.append(uuid);
 
-			msg.append(", groupId=");
+			msg.append(", groupId = ");
 			msg.append(groupId);
 
 			msg.append("}");
@@ -1135,10 +1135,10 @@ public class AppBuilderAppPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1195,10 +1195,10 @@ public class AppBuilderAppPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1706,7 +1706,7 @@ public class AppBuilderAppPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -1759,7 +1759,7 @@ public class AppBuilderAppPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -2235,10 +2235,10 @@ public class AppBuilderAppPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -2295,10 +2295,10 @@ public class AppBuilderAppPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -2810,13 +2810,13 @@ public class AppBuilderAppPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
-		msg.append(", ddmStructureId=");
+		msg.append(", ddmStructureId = ");
 		msg.append(ddmStructureId);
 
 		msg.append("}");
@@ -2875,13 +2875,13 @@ public class AppBuilderAppPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
-		msg.append(", ddmStructureId=");
+		msg.append(", ddmStructureId = ");
 		msg.append(ddmStructureId);
 
 		msg.append("}");

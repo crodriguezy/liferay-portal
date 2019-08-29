@@ -291,7 +291,7 @@ public class TrashVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("entryId=");
+		msg.append("entryId = ");
 		msg.append(entryId);
 
 		msg.append("}");
@@ -344,7 +344,7 @@ public class TrashVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("entryId=");
+		msg.append("entryId = ");
 		msg.append(entryId);
 
 		msg.append("}");
@@ -819,10 +819,10 @@ public class TrashVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("entryId=");
+		msg.append("entryId = ");
 		msg.append(entryId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
 		msg.append("}");
@@ -879,10 +879,10 @@ public class TrashVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("entryId=");
+		msg.append("entryId = ");
 		msg.append(entryId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
 		msg.append("}");
@@ -1178,10 +1178,10 @@ public class TrashVersionPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("classNameId=");
+			msg.append("classNameId = ");
 			msg.append(classNameId);
 
-			msg.append(", classPK=");
+			msg.append(", classPK = ");
 			msg.append(classPK);
 
 			msg.append("}");

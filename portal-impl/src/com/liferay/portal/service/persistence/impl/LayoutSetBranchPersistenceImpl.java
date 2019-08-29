@@ -292,7 +292,7 @@ public class LayoutSetBranchPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -345,7 +345,7 @@ public class LayoutSetBranchPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -1203,10 +1203,10 @@ public class LayoutSetBranchPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", privateLayout=");
+		msg.append(", privateLayout = ");
 		msg.append(privateLayout);
 
 		msg.append("}");
@@ -1263,10 +1263,10 @@ public class LayoutSetBranchPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", privateLayout=");
+		msg.append(", privateLayout = ");
 		msg.append(privateLayout);
 
 		msg.append("}");
@@ -1969,13 +1969,13 @@ public class LayoutSetBranchPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("groupId=");
+			msg.append("groupId = ");
 			msg.append(groupId);
 
-			msg.append(", privateLayout=");
+			msg.append(", privateLayout = ");
 			msg.append(privateLayout);
 
-			msg.append(", name=");
+			msg.append(", name = ");
 			msg.append(name);
 
 			msg.append("}");
@@ -2463,13 +2463,13 @@ public class LayoutSetBranchPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", privateLayout=");
+		msg.append(", privateLayout = ");
 		msg.append(privateLayout);
 
-		msg.append(", master=");
+		msg.append(", master = ");
 		msg.append(master);
 
 		msg.append("}");
@@ -2528,13 +2528,13 @@ public class LayoutSetBranchPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", privateLayout=");
+		msg.append(", privateLayout = ");
 		msg.append(privateLayout);
 
-		msg.append(", master=");
+		msg.append(", master = ");
 		msg.append(master);
 
 		msg.append("}");

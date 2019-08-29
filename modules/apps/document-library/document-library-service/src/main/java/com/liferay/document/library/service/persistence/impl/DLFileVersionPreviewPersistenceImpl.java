@@ -298,7 +298,7 @@ public class DLFileVersionPreviewPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("fileEntryId=");
+		msg.append("fileEntryId = ");
 		msg.append(fileEntryId);
 
 		msg.append("}");
@@ -353,7 +353,7 @@ public class DLFileVersionPreviewPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("fileEntryId=");
+		msg.append("fileEntryId = ");
 		msg.append(fileEntryId);
 
 		msg.append("}");
@@ -826,7 +826,7 @@ public class DLFileVersionPreviewPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("fileVersionId=");
+		msg.append("fileVersionId = ");
 		msg.append(fileVersionId);
 
 		msg.append("}");
@@ -881,7 +881,7 @@ public class DLFileVersionPreviewPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("fileVersionId=");
+		msg.append("fileVersionId = ");
 		msg.append(fileVersionId);
 
 		msg.append("}");
@@ -1166,10 +1166,10 @@ public class DLFileVersionPreviewPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("fileEntryId=");
+			msg.append("fileEntryId = ");
 			msg.append(fileEntryId);
 
-			msg.append(", fileVersionId=");
+			msg.append(", fileVersionId = ");
 			msg.append(fileVersionId);
 
 			msg.append("}");
@@ -1399,13 +1399,13 @@ public class DLFileVersionPreviewPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("fileEntryId=");
+			msg.append("fileEntryId = ");
 			msg.append(fileEntryId);
 
-			msg.append(", fileVersionId=");
+			msg.append(", fileVersionId = ");
 			msg.append(fileVersionId);
 
-			msg.append(", previewStatus=");
+			msg.append(", previewStatus = ");
 			msg.append(previewStatus);
 
 			msg.append("}");

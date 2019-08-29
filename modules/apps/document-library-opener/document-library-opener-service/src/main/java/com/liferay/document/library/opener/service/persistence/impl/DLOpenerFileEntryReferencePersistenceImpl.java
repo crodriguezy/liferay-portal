@@ -116,7 +116,7 @@ public class DLOpenerFileEntryReferencePersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("fileEntryId=");
+			msg.append("fileEntryId = ");
 			msg.append(fileEntryId);
 
 			msg.append("}");
@@ -327,10 +327,10 @@ public class DLOpenerFileEntryReferencePersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("referenceType=");
+			msg.append("referenceType = ");
 			msg.append(referenceType);
 
-			msg.append(", fileEntryId=");
+			msg.append(", fileEntryId = ");
 			msg.append(fileEntryId);
 
 			msg.append("}");

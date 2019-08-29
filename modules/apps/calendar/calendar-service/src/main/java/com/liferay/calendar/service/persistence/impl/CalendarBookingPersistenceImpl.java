@@ -314,7 +314,7 @@ public class CalendarBookingPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -366,7 +366,7 @@ public class CalendarBookingPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -672,10 +672,10 @@ public class CalendarBookingPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("uuid=");
+			msg.append("uuid = ");
 			msg.append(uuid);
 
-			msg.append(", groupId=");
+			msg.append(", groupId = ");
 			msg.append(groupId);
 
 			msg.append("}");
@@ -1139,10 +1139,10 @@ public class CalendarBookingPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1199,10 +1199,10 @@ public class CalendarBookingPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1716,7 +1716,7 @@ public class CalendarBookingPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("calendarId=");
+		msg.append("calendarId = ");
 		msg.append(calendarId);
 
 		msg.append("}");
@@ -1770,7 +1770,7 @@ public class CalendarBookingPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("calendarId=");
+		msg.append("calendarId = ");
 		msg.append(calendarId);
 
 		msg.append("}");
@@ -2242,7 +2242,7 @@ public class CalendarBookingPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("calendarResourceId=");
+		msg.append("calendarResourceId = ");
 		msg.append(calendarResourceId);
 
 		msg.append("}");
@@ -2297,7 +2297,7 @@ public class CalendarBookingPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("calendarResourceId=");
+		msg.append("calendarResourceId = ");
 		msg.append(calendarResourceId);
 
 		msg.append("}");
@@ -2779,7 +2779,7 @@ public class CalendarBookingPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("parentCalendarBookingId=");
+		msg.append("parentCalendarBookingId = ");
 		msg.append(parentCalendarBookingId);
 
 		msg.append("}");
@@ -2834,7 +2834,7 @@ public class CalendarBookingPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("parentCalendarBookingId=");
+		msg.append("parentCalendarBookingId = ");
 		msg.append(parentCalendarBookingId);
 
 		msg.append("}");
@@ -3320,7 +3320,7 @@ public class CalendarBookingPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("recurringCalendarBookingId=");
+		msg.append("recurringCalendarBookingId = ");
 		msg.append(recurringCalendarBookingId);
 
 		msg.append("}");
@@ -3376,7 +3376,7 @@ public class CalendarBookingPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("recurringCalendarBookingId=");
+		msg.append("recurringCalendarBookingId = ");
 		msg.append(recurringCalendarBookingId);
 
 		msg.append("}");
@@ -3669,10 +3669,10 @@ public class CalendarBookingPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("calendarId=");
+			msg.append("calendarId = ");
 			msg.append(calendarId);
 
-			msg.append(", parentCalendarBookingId=");
+			msg.append(", parentCalendarBookingId = ");
 			msg.append(parentCalendarBookingId);
 
 			msg.append("}");
@@ -3901,10 +3901,10 @@ public class CalendarBookingPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("calendarId=");
+			msg.append("calendarId = ");
 			msg.append(calendarId);
 
-			msg.append(", vEventUid=");
+			msg.append(", vEventUid = ");
 			msg.append(vEventUid);
 
 			msg.append("}");
@@ -4355,10 +4355,10 @@ public class CalendarBookingPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("calendarId=");
+		msg.append("calendarId = ");
 		msg.append(calendarId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -4415,10 +4415,10 @@ public class CalendarBookingPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("calendarId=");
+		msg.append("calendarId = ");
 		msg.append(calendarId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -5214,10 +5214,10 @@ public class CalendarBookingPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("parentCalendarBookingId=");
+		msg.append("parentCalendarBookingId = ");
 		msg.append(parentCalendarBookingId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -5274,10 +5274,10 @@ public class CalendarBookingPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("parentCalendarBookingId=");
+		msg.append("parentCalendarBookingId = ");
 		msg.append(parentCalendarBookingId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");

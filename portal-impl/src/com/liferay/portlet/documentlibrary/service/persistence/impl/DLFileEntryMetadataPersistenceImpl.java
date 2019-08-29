@@ -302,7 +302,7 @@ public class DLFileEntryMetadataPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -356,7 +356,7 @@ public class DLFileEntryMetadataPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -876,10 +876,10 @@ public class DLFileEntryMetadataPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -936,10 +936,10 @@ public class DLFileEntryMetadataPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1456,7 +1456,7 @@ public class DLFileEntryMetadataPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("fileEntryId=");
+		msg.append("fileEntryId = ");
 		msg.append(fileEntryId);
 
 		msg.append("}");
@@ -1511,7 +1511,7 @@ public class DLFileEntryMetadataPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("fileEntryId=");
+		msg.append("fileEntryId = ");
 		msg.append(fileEntryId);
 
 		msg.append("}");
@@ -1985,7 +1985,7 @@ public class DLFileEntryMetadataPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("fileVersionId=");
+		msg.append("fileVersionId = ");
 		msg.append(fileVersionId);
 
 		msg.append("}");
@@ -2040,7 +2040,7 @@ public class DLFileEntryMetadataPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("fileVersionId=");
+		msg.append("fileVersionId = ");
 		msg.append(fileVersionId);
 
 		msg.append("}");
@@ -2327,10 +2327,10 @@ public class DLFileEntryMetadataPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("DDMStructureId=");
+			msg.append("DDMStructureId = ");
 			msg.append(DDMStructureId);
 
-			msg.append(", fileVersionId=");
+			msg.append(", fileVersionId = ");
 			msg.append(fileVersionId);
 
 			msg.append("}");

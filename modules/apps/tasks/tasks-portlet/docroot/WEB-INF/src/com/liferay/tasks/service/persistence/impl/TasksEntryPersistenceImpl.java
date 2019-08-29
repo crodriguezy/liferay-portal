@@ -287,7 +287,7 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -338,7 +338,7 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -1171,7 +1171,7 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -1222,7 +1222,7 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -1687,7 +1687,7 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("assigneeUserId=");
+		msg.append("assigneeUserId = ");
 		msg.append(assigneeUserId);
 
 		msg.append("}");
@@ -1741,7 +1741,7 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("assigneeUserId=");
+		msg.append("assigneeUserId = ");
 		msg.append(assigneeUserId);
 
 		msg.append("}");
@@ -2207,7 +2207,7 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resolverUserId=");
+		msg.append("resolverUserId = ");
 		msg.append(resolverUserId);
 
 		msg.append("}");
@@ -2261,7 +2261,7 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resolverUserId=");
+		msg.append("resolverUserId = ");
 		msg.append(resolverUserId);
 
 		msg.append("}");
@@ -2737,10 +2737,10 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", userId=");
+		msg.append(", userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -2797,10 +2797,10 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", userId=");
+		msg.append(", userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -3687,10 +3687,10 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", assigneeUserId=");
+		msg.append(", assigneeUserId = ");
 		msg.append(assigneeUserId);
 
 		msg.append("}");
@@ -3747,10 +3747,10 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", assigneeUserId=");
+		msg.append(", assigneeUserId = ");
 		msg.append(assigneeUserId);
 
 		msg.append("}");
@@ -4645,10 +4645,10 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", resolverUserId=");
+		msg.append(", resolverUserId = ");
 		msg.append(resolverUserId);
 
 		msg.append("}");
@@ -4705,10 +4705,10 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", resolverUserId=");
+		msg.append(", resolverUserId = ");
 		msg.append(resolverUserId);
 
 		msg.append("}");
@@ -5602,10 +5602,10 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -5662,10 +5662,10 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -6448,10 +6448,10 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("assigneeUserId=");
+		msg.append("assigneeUserId = ");
 		msg.append(assigneeUserId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -6508,10 +6508,10 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("assigneeUserId=");
+		msg.append("assigneeUserId = ");
 		msg.append(assigneeUserId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -7313,13 +7313,13 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", userId=");
+		msg.append(", userId = ");
 		msg.append(userId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -7378,13 +7378,13 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", userId=");
+		msg.append(", userId = ");
 		msg.append(userId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -8874,13 +8874,13 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", assigneeUserId=");
+		msg.append(", assigneeUserId = ");
 		msg.append(assigneeUserId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -8939,13 +8939,13 @@ public class TasksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", assigneeUserId=");
+		msg.append(", assigneeUserId = ");
 		msg.append(assigneeUserId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");

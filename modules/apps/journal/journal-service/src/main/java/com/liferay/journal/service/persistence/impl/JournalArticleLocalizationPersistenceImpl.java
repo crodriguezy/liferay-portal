@@ -301,7 +301,7 @@ public class JournalArticleLocalizationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("articlePK=");
+		msg.append("articlePK = ");
 		msg.append(articlePK);
 
 		msg.append("}");
@@ -356,7 +356,7 @@ public class JournalArticleLocalizationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("articlePK=");
+		msg.append("articlePK = ");
 		msg.append(articlePK);
 
 		msg.append("}");
@@ -642,10 +642,10 @@ public class JournalArticleLocalizationPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("articlePK=");
+			msg.append("articlePK = ");
 			msg.append(articlePK);
 
-			msg.append(", languageId=");
+			msg.append(", languageId = ");
 			msg.append(languageId);
 
 			msg.append("}");

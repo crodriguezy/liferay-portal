@@ -288,7 +288,7 @@ public class DDMTemplateVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("templateId=");
+		msg.append("templateId = ");
 		msg.append(templateId);
 
 		msg.append("}");
@@ -343,7 +343,7 @@ public class DDMTemplateVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("templateId=");
+		msg.append("templateId = ");
 		msg.append(templateId);
 
 		msg.append("}");
@@ -625,10 +625,10 @@ public class DDMTemplateVersionPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("templateId=");
+			msg.append("templateId = ");
 			msg.append(templateId);
 
-			msg.append(", version=");
+			msg.append(", version = ");
 			msg.append(version);
 
 			msg.append("}");
@@ -1078,10 +1078,10 @@ public class DDMTemplateVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("templateId=");
+		msg.append("templateId = ");
 		msg.append(templateId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -1138,10 +1138,10 @@ public class DDMTemplateVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("templateId=");
+		msg.append("templateId = ");
 		msg.append(templateId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");

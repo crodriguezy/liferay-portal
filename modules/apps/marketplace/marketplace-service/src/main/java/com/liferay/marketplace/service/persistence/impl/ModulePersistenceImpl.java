@@ -307,7 +307,7 @@ public class ModulePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -358,7 +358,7 @@ public class ModulePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -871,10 +871,10 @@ public class ModulePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -930,10 +930,10 @@ public class ModulePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1434,7 +1434,7 @@ public class ModulePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("appId=");
+		msg.append("appId = ");
 		msg.append(appId);
 
 		msg.append("}");
@@ -1485,7 +1485,7 @@ public class ModulePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("appId=");
+		msg.append("appId = ");
 		msg.append(appId);
 
 		msg.append("}");
@@ -1966,7 +1966,7 @@ public class ModulePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("bundleSymbolicName=");
+		msg.append("bundleSymbolicName = ");
 		msg.append(bundleSymbolicName);
 
 		msg.append("}");
@@ -2021,7 +2021,7 @@ public class ModulePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("bundleSymbolicName=");
+		msg.append("bundleSymbolicName = ");
 		msg.append(bundleSymbolicName);
 
 		msg.append("}");
@@ -2533,7 +2533,7 @@ public class ModulePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("contextName=");
+		msg.append("contextName = ");
 		msg.append(contextName);
 
 		msg.append("}");
@@ -2585,7 +2585,7 @@ public class ModulePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("contextName=");
+		msg.append("contextName = ");
 		msg.append(contextName);
 
 		msg.append("}");
@@ -2890,10 +2890,10 @@ public class ModulePersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("appId=");
+			msg.append("appId = ");
 			msg.append(appId);
 
-			msg.append(", contextName=");
+			msg.append(", contextName = ");
 			msg.append(contextName);
 
 			msg.append("}");
@@ -3163,13 +3163,13 @@ public class ModulePersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("appId=");
+			msg.append("appId = ");
 			msg.append(appId);
 
-			msg.append(", bundleSymbolicName=");
+			msg.append(", bundleSymbolicName = ");
 			msg.append(bundleSymbolicName);
 
-			msg.append(", bundleVersion=");
+			msg.append(", bundleVersion = ");
 			msg.append(bundleVersion);
 
 			msg.append("}");

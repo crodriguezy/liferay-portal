@@ -111,7 +111,7 @@ public class PushNotificationsDevicePersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("token=");
+			msg.append("token = ");
 			msg.append(token);
 
 			msg.append("}");
@@ -563,10 +563,10 @@ public class PushNotificationsDevicePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
-		msg.append(", platform=");
+		msg.append(", platform = ");
 		msg.append(platform);
 
 		msg.append("}");
@@ -623,10 +623,10 @@ public class PushNotificationsDevicePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
-		msg.append(", platform=");
+		msg.append(", platform = ");
 		msg.append(platform);
 
 		msg.append("}");

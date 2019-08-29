@@ -307,7 +307,7 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -361,7 +361,7 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -820,7 +820,7 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -873,7 +873,7 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -1349,10 +1349,10 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -1409,10 +1409,10 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -1916,10 +1916,10 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("creatorClassNameId=");
+		msg.append("creatorClassNameId = ");
 		msg.append(creatorClassNameId);
 
-		msg.append(", creatorClassPK=");
+		msg.append(", creatorClassPK = ");
 		msg.append(creatorClassPK);
 
 		msg.append("}");
@@ -1976,10 +1976,10 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("creatorClassNameId=");
+		msg.append("creatorClassNameId = ");
 		msg.append(creatorClassNameId);
 
-		msg.append(", creatorClassPK=");
+		msg.append(", creatorClassPK = ");
 		msg.append(creatorClassPK);
 
 		msg.append("}");
@@ -2791,10 +2791,10 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("creatorClassNameId=");
+		msg.append("creatorClassNameId = ");
 		msg.append(creatorClassNameId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -2851,10 +2851,10 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("creatorClassNameId=");
+		msg.append("creatorClassNameId = ");
 		msg.append(creatorClassNameId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -3355,10 +3355,10 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("type=");
+		msg.append("type = ");
 		msg.append(type);
 
-		msg.append(", parentMicroblogsEntryId=");
+		msg.append(", parentMicroblogsEntryId = ");
 		msg.append(parentMicroblogsEntryId);
 
 		msg.append("}");
@@ -3415,10 +3415,10 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("type=");
+		msg.append("type = ");
 		msg.append(type);
 
-		msg.append(", parentMicroblogsEntryId=");
+		msg.append(", parentMicroblogsEntryId = ");
 		msg.append(parentMicroblogsEntryId);
 
 		msg.append("}");
@@ -3937,13 +3937,13 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", creatorClassNameId=");
+		msg.append(", creatorClassNameId = ");
 		msg.append(creatorClassNameId);
 
-		msg.append(", creatorClassPK=");
+		msg.append(", creatorClassPK = ");
 		msg.append(creatorClassPK);
 
 		msg.append("}");
@@ -4003,13 +4003,13 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", creatorClassNameId=");
+		msg.append(", creatorClassNameId = ");
 		msg.append(creatorClassNameId);
 
-		msg.append(", creatorClassPK=");
+		msg.append(", creatorClassPK = ");
 		msg.append(creatorClassPK);
 
 		msg.append("}");
@@ -4873,13 +4873,13 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", creatorClassNameId=");
+		msg.append(", creatorClassNameId = ");
 		msg.append(creatorClassNameId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -4938,13 +4938,13 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", creatorClassNameId=");
+		msg.append(", creatorClassNameId = ");
 		msg.append(creatorClassNameId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -5485,13 +5485,13 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("creatorClassNameId=");
+		msg.append("creatorClassNameId = ");
 		msg.append(creatorClassNameId);
 
-		msg.append(", creatorClassPK=");
+		msg.append(", creatorClassPK = ");
 		msg.append(creatorClassPK);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -5550,13 +5550,13 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("creatorClassNameId=");
+		msg.append("creatorClassNameId = ");
 		msg.append(creatorClassNameId);
 
-		msg.append(", creatorClassPK=");
+		msg.append(", creatorClassPK = ");
 		msg.append(creatorClassPK);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -6441,16 +6441,16 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", creatorClassNameId=");
+		msg.append(", creatorClassNameId = ");
 		msg.append(creatorClassNameId);
 
-		msg.append(", creatorClassPK=");
+		msg.append(", creatorClassPK = ");
 		msg.append(creatorClassPK);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -6513,16 +6513,16 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", creatorClassNameId=");
+		msg.append(", creatorClassNameId = ");
 		msg.append(creatorClassNameId);
 
-		msg.append(", creatorClassPK=");
+		msg.append(", creatorClassPK = ");
 		msg.append(creatorClassPK);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -7454,16 +7454,16 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
-		msg.append(", createDate=");
+		msg.append(", createDate = ");
 		msg.append(createDate);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
-		msg.append(", socialRelationType=");
+		msg.append(", socialRelationType = ");
 		msg.append(socialRelationType);
 
 		msg.append("}");
@@ -7525,16 +7525,16 @@ public class MicroblogsEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
-		msg.append(", createDate=");
+		msg.append(", createDate = ");
 		msg.append(createDate);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
-		msg.append(", socialRelationType=");
+		msg.append(", socialRelationType = ");
 		msg.append(socialRelationType);
 
 		msg.append("}");

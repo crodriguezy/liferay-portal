@@ -312,7 +312,7 @@ public class SiteFriendlyURLPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -364,7 +364,7 @@ public class SiteFriendlyURLPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -670,10 +670,10 @@ public class SiteFriendlyURLPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("uuid=");
+			msg.append("uuid = ");
 			msg.append(uuid);
 
-			msg.append(", groupId=");
+			msg.append(", groupId = ");
 			msg.append(groupId);
 
 			msg.append("}");
@@ -1137,10 +1137,10 @@ public class SiteFriendlyURLPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1197,10 +1197,10 @@ public class SiteFriendlyURLPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1725,10 +1725,10 @@ public class SiteFriendlyURLPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", groupId=");
+		msg.append(", groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -1785,10 +1785,10 @@ public class SiteFriendlyURLPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", groupId=");
+		msg.append(", groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -2085,10 +2085,10 @@ public class SiteFriendlyURLPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("companyId=");
+			msg.append("companyId = ");
 			msg.append(companyId);
 
-			msg.append(", friendlyURL=");
+			msg.append(", friendlyURL = ");
 			msg.append(friendlyURL);
 
 			msg.append("}");
@@ -2343,13 +2343,13 @@ public class SiteFriendlyURLPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("companyId=");
+			msg.append("companyId = ");
 			msg.append(companyId);
 
-			msg.append(", groupId=");
+			msg.append(", groupId = ");
 			msg.append(groupId);
 
-			msg.append(", languageId=");
+			msg.append(", languageId = ");
 			msg.append(languageId);
 
 			msg.append("}");
@@ -2625,13 +2625,13 @@ public class SiteFriendlyURLPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("companyId=");
+			msg.append("companyId = ");
 			msg.append(companyId);
 
-			msg.append(", friendlyURL=");
+			msg.append(", friendlyURL = ");
 			msg.append(friendlyURL);
 
-			msg.append(", languageId=");
+			msg.append(", languageId = ");
 			msg.append(languageId);
 
 			msg.append("}");

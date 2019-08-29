@@ -297,7 +297,7 @@ public class PowwowParticipantPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("powwowMeetingId=");
+		msg.append("powwowMeetingId = ");
 		msg.append(powwowMeetingId);
 
 		msg.append("}");
@@ -352,7 +352,7 @@ public class PowwowParticipantPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("powwowMeetingId=");
+		msg.append("powwowMeetingId = ");
 		msg.append(powwowMeetingId);
 
 		msg.append("}");
@@ -640,10 +640,10 @@ public class PowwowParticipantPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("powwowMeetingId=");
+			msg.append("powwowMeetingId = ");
 			msg.append(powwowMeetingId);
 
-			msg.append(", participantUserId=");
+			msg.append(", participantUserId = ");
 			msg.append(participantUserId);
 
 			msg.append("}");
@@ -891,10 +891,10 @@ public class PowwowParticipantPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("powwowMeetingId=");
+			msg.append("powwowMeetingId = ");
 			msg.append(powwowMeetingId);
 
-			msg.append(", emailAddress=");
+			msg.append(", emailAddress = ");
 			msg.append(emailAddress);
 
 			msg.append("}");
@@ -1352,10 +1352,10 @@ public class PowwowParticipantPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("powwowMeetingId=");
+		msg.append("powwowMeetingId = ");
 		msg.append(powwowMeetingId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -1412,10 +1412,10 @@ public class PowwowParticipantPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("powwowMeetingId=");
+		msg.append("powwowMeetingId = ");
 		msg.append(powwowMeetingId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");

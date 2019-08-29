@@ -99,7 +99,7 @@ public class CompanyPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("webId=");
+			msg.append("webId = ");
 			msg.append(webId);
 
 			msg.append("}");
@@ -328,7 +328,7 @@ public class CompanyPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("mx=");
+			msg.append("mx = ");
 			msg.append(mx);
 
 			msg.append("}");
@@ -571,7 +571,7 @@ public class CompanyPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("logoId=");
+			msg.append("logoId = ");
 			msg.append(logoId);
 
 			msg.append("}");
@@ -968,7 +968,7 @@ public class CompanyPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("system=");
+		msg.append("system = ");
 		msg.append(system);
 
 		msg.append("}");
@@ -1019,7 +1019,7 @@ public class CompanyPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("system=");
+		msg.append("system = ");
 		msg.append(system);
 
 		msg.append("}");

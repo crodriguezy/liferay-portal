@@ -299,7 +299,7 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -352,7 +352,7 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -815,7 +815,7 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -868,7 +868,7 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1332,7 +1332,7 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("completed=");
+		msg.append("completed = ");
 		msg.append(completed);
 
 		msg.append("}");
@@ -1387,7 +1387,7 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("completed=");
+		msg.append("completed = ");
 		msg.append(completed);
 
 		msg.append("}");
@@ -1846,7 +1846,7 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("status=");
+		msg.append("status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -1899,7 +1899,7 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("status=");
+		msg.append("status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -2394,10 +2394,10 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", taskExecutorClassName=");
+		msg.append(", taskExecutorClassName = ");
 		msg.append(taskExecutorClassName);
 
 		msg.append("}");
@@ -2454,10 +2454,10 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", taskExecutorClassName=");
+		msg.append(", taskExecutorClassName = ");
 		msg.append(taskExecutorClassName);
 
 		msg.append("}");
@@ -3370,10 +3370,10 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -3430,10 +3430,10 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -3947,10 +3947,10 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("taskExecutorClassName=");
+		msg.append("taskExecutorClassName = ");
 		msg.append(taskExecutorClassName);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -4007,10 +4007,10 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("taskExecutorClassName=");
+		msg.append("taskExecutorClassName = ");
 		msg.append(taskExecutorClassName);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -4941,13 +4941,13 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", name=");
+		msg.append(", name = ");
 		msg.append(name);
 
-		msg.append(", taskExecutorClassName=");
+		msg.append(", taskExecutorClassName = ");
 		msg.append(taskExecutorClassName);
 
 		msg.append("}");
@@ -5006,13 +5006,13 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", name=");
+		msg.append(", name = ");
 		msg.append(name);
 
-		msg.append(", taskExecutorClassName=");
+		msg.append(", taskExecutorClassName = ");
 		msg.append(taskExecutorClassName);
 
 		msg.append("}");
@@ -6056,13 +6056,13 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", taskExecutorClassName=");
+		msg.append(", taskExecutorClassName = ");
 		msg.append(taskExecutorClassName);
 
-		msg.append(", completed=");
+		msg.append(", completed = ");
 		msg.append(completed);
 
 		msg.append("}");
@@ -6121,13 +6121,13 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", taskExecutorClassName=");
+		msg.append(", taskExecutorClassName = ");
 		msg.append(taskExecutorClassName);
 
-		msg.append(", completed=");
+		msg.append(", completed = ");
 		msg.append(completed);
 
 		msg.append("}");
@@ -7129,13 +7129,13 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", taskExecutorClassName=");
+		msg.append(", taskExecutorClassName = ");
 		msg.append(taskExecutorClassName);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -7194,13 +7194,13 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", taskExecutorClassName=");
+		msg.append(", taskExecutorClassName = ");
 		msg.append(taskExecutorClassName);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -8185,16 +8185,16 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", name=");
+		msg.append(", name = ");
 		msg.append(name);
 
-		msg.append(", taskExecutorClassName=");
+		msg.append(", taskExecutorClassName = ");
 		msg.append(taskExecutorClassName);
 
-		msg.append(", completed=");
+		msg.append(", completed = ");
 		msg.append(completed);
 
 		msg.append("}");
@@ -8258,16 +8258,16 @@ public class BackgroundTaskPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", name=");
+		msg.append(", name = ");
 		msg.append(name);
 
-		msg.append(", taskExecutorClassName=");
+		msg.append(", taskExecutorClassName = ");
 		msg.append(taskExecutorClassName);
 
-		msg.append(", completed=");
+		msg.append(", completed = ");
 		msg.append(completed);
 
 		msg.append("}");

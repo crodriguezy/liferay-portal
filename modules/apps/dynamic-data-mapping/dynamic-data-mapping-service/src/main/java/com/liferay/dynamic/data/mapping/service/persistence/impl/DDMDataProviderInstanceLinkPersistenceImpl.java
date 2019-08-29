@@ -299,7 +299,7 @@ public class DDMDataProviderInstanceLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("dataProviderInstanceId=");
+		msg.append("dataProviderInstanceId = ");
 		msg.append(dataProviderInstanceId);
 
 		msg.append("}");
@@ -355,7 +355,7 @@ public class DDMDataProviderInstanceLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("dataProviderInstanceId=");
+		msg.append("dataProviderInstanceId = ");
 		msg.append(dataProviderInstanceId);
 
 		msg.append("}");
@@ -842,7 +842,7 @@ public class DDMDataProviderInstanceLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("structureId=");
+		msg.append("structureId = ");
 		msg.append(structureId);
 
 		msg.append("}");
@@ -897,7 +897,7 @@ public class DDMDataProviderInstanceLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("structureId=");
+		msg.append("structureId = ");
 		msg.append(structureId);
 
 		msg.append("}");
@@ -1184,10 +1184,10 @@ public class DDMDataProviderInstanceLinkPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("dataProviderInstanceId=");
+			msg.append("dataProviderInstanceId = ");
 			msg.append(dataProviderInstanceId);
 
-			msg.append(", structureId=");
+			msg.append(", structureId = ");
 			msg.append(structureId);
 
 			msg.append("}");

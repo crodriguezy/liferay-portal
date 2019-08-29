@@ -299,7 +299,7 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -351,7 +351,7 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -869,10 +869,10 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -929,10 +929,10 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1445,7 +1445,7 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1498,7 +1498,7 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1960,7 +1960,7 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId1=");
+		msg.append("userId1 = ");
 		msg.append(userId1);
 
 		msg.append("}");
@@ -2013,7 +2013,7 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId1=");
+		msg.append("userId1 = ");
 		msg.append(userId1);
 
 		msg.append("}");
@@ -2475,7 +2475,7 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId2=");
+		msg.append("userId2 = ");
 		msg.append(userId2);
 
 		msg.append("}");
@@ -2528,7 +2528,7 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId2=");
+		msg.append("userId2 = ");
 		msg.append(userId2);
 
 		msg.append("}");
@@ -2987,7 +2987,7 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("type=");
+		msg.append("type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -3039,7 +3039,7 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("type=");
+		msg.append("type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -3514,10 +3514,10 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -3574,10 +3574,10 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -4074,10 +4074,10 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId1=");
+		msg.append("userId1 = ");
 		msg.append(userId1);
 
-		msg.append(", userId2=");
+		msg.append(", userId2 = ");
 		msg.append(userId2);
 
 		msg.append("}");
@@ -4134,10 +4134,10 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId1=");
+		msg.append("userId1 = ");
 		msg.append(userId1);
 
-		msg.append(", userId2=");
+		msg.append(", userId2 = ");
 		msg.append(userId2);
 
 		msg.append("}");
@@ -4633,10 +4633,10 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId1=");
+		msg.append("userId1 = ");
 		msg.append(userId1);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -4693,10 +4693,10 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId1=");
+		msg.append("userId1 = ");
 		msg.append(userId1);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -5191,10 +5191,10 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId2=");
+		msg.append("userId2 = ");
 		msg.append(userId2);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -5251,10 +5251,10 @@ public class SocialRelationPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId2=");
+		msg.append("userId2 = ");
 		msg.append(userId2);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -5552,13 +5552,13 @@ public class SocialRelationPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("userId1=");
+			msg.append("userId1 = ");
 			msg.append(userId1);
 
-			msg.append(", userId2=");
+			msg.append(", userId2 = ");
 			msg.append(userId2);
 
-			msg.append(", type=");
+			msg.append(", type = ");
 			msg.append(type);
 
 			msg.append("}");

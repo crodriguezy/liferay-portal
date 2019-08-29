@@ -284,7 +284,7 @@ public class OrgLaborPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("organizationId=");
+		msg.append("organizationId = ");
 		msg.append(organizationId);
 
 		msg.append("}");
@@ -337,7 +337,7 @@ public class OrgLaborPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("organizationId=");
+		msg.append("organizationId = ");
 		msg.append(organizationId);
 
 		msg.append("}");

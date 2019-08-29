@@ -316,7 +316,7 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -368,7 +368,7 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -673,10 +673,10 @@ public class BookmarksEntryPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("uuid=");
+			msg.append("uuid = ");
 			msg.append(uuid);
 
-			msg.append(", groupId=");
+			msg.append(", groupId = ");
 			msg.append(groupId);
 
 			msg.append("}");
@@ -1140,10 +1140,10 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1200,10 +1200,10 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1715,7 +1715,7 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1768,7 +1768,7 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -2245,10 +2245,10 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", folderId=");
+		msg.append(", folderId = ");
 		msg.append(folderId);
 
 		msg.append("}");
@@ -2305,10 +2305,10 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", folderId=");
+		msg.append(", folderId = ");
 		msg.append(folderId);
 
 		msg.append("}");
@@ -3717,10 +3717,10 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -3777,10 +3777,10 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -4660,10 +4660,10 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", status=");
+		msg.append(", status != ");
 		msg.append(status);
 
 		msg.append("}");
@@ -4720,10 +4720,10 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", status=");
+		msg.append(", status != ");
 		msg.append(status);
 
 		msg.append("}");
@@ -5603,10 +5603,10 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", status=");
+		msg.append(", status != ");
 		msg.append(status);
 
 		msg.append("}");
@@ -5663,10 +5663,10 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", status=");
+		msg.append(", status != ");
 		msg.append(status);
 
 		msg.append("}");
@@ -6175,13 +6175,13 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", userId=");
+		msg.append(", userId = ");
 		msg.append(userId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -6240,13 +6240,13 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", userId=");
+		msg.append(", userId = ");
 		msg.append(userId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -7175,13 +7175,13 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", userId=");
+		msg.append(", userId = ");
 		msg.append(userId);
 
-		msg.append(", status=");
+		msg.append(", status != ");
 		msg.append(status);
 
 		msg.append("}");
@@ -7240,13 +7240,13 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", userId=");
+		msg.append(", userId = ");
 		msg.append(userId);
 
-		msg.append(", status=");
+		msg.append(", status != ");
 		msg.append(status);
 
 		msg.append("}");
@@ -8189,13 +8189,13 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", folderId=");
+		msg.append(", folderId = ");
 		msg.append(folderId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -8254,13 +8254,13 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", folderId=");
+		msg.append(", folderId = ");
 		msg.append(folderId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -9745,13 +9745,13 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", folderId=");
+		msg.append(", folderId = ");
 		msg.append(folderId);
 
-		msg.append(", status=");
+		msg.append(", status != ");
 		msg.append(status);
 
 		msg.append("}");
@@ -9810,13 +9810,13 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", folderId=");
+		msg.append(", folderId = ");
 		msg.append(folderId);
 
-		msg.append(", status=");
+		msg.append(", status != ");
 		msg.append(status);
 
 		msg.append("}");
@@ -11334,16 +11334,16 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", userId=");
+		msg.append(", userId = ");
 		msg.append(userId);
 
-		msg.append(", folderId=");
+		msg.append(", folderId = ");
 		msg.append(folderId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -11404,16 +11404,16 @@ public class BookmarksEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", userId=");
+		msg.append(", userId = ");
 		msg.append(userId);
 
-		msg.append(", folderId=");
+		msg.append(", folderId = ");
 		msg.append(folderId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");

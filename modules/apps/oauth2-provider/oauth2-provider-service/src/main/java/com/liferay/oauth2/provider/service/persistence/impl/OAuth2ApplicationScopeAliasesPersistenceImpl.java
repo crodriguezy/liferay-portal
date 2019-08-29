@@ -303,7 +303,7 @@ public class OAuth2ApplicationScopeAliasesPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -358,7 +358,7 @@ public class OAuth2ApplicationScopeAliasesPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -842,7 +842,7 @@ public class OAuth2ApplicationScopeAliasesPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("oAuth2ApplicationId=");
+		msg.append("oAuth2ApplicationId = ");
 		msg.append(oAuth2ApplicationId);
 
 		msg.append("}");
@@ -898,7 +898,7 @@ public class OAuth2ApplicationScopeAliasesPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("oAuth2ApplicationId=");
+		msg.append("oAuth2ApplicationId = ");
 		msg.append(oAuth2ApplicationId);
 
 		msg.append("}");

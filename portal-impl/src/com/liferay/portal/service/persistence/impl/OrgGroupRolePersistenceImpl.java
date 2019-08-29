@@ -284,7 +284,7 @@ public class OrgGroupRolePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -337,7 +337,7 @@ public class OrgGroupRolePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -795,7 +795,7 @@ public class OrgGroupRolePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("roleId=");
+		msg.append("roleId = ");
 		msg.append(roleId);
 
 		msg.append("}");
@@ -847,7 +847,7 @@ public class OrgGroupRolePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("roleId=");
+		msg.append("roleId = ");
 		msg.append(roleId);
 
 		msg.append("}");

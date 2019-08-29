@@ -291,7 +291,7 @@ public class WorkflowDefinitionLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -346,7 +346,7 @@ public class WorkflowDefinitionLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -844,13 +844,13 @@ public class WorkflowDefinitionLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
 		msg.append("}");
@@ -909,13 +909,13 @@ public class WorkflowDefinitionLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
 		msg.append("}");
@@ -1473,13 +1473,13 @@ public class WorkflowDefinitionLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", workflowDefinitionName=");
+		msg.append(", workflowDefinitionName = ");
 		msg.append(workflowDefinitionName);
 
-		msg.append(", workflowDefinitionVersion=");
+		msg.append(", workflowDefinitionVersion = ");
 		msg.append(workflowDefinitionVersion);
 
 		msg.append("}");
@@ -1542,13 +1542,13 @@ public class WorkflowDefinitionLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", workflowDefinitionName=");
+		msg.append(", workflowDefinitionName = ");
 		msg.append(workflowDefinitionName);
 
-		msg.append(", workflowDefinitionVersion=");
+		msg.append(", workflowDefinitionVersion = ");
 		msg.append(workflowDefinitionVersion);
 
 		msg.append("}");
@@ -2138,16 +2138,16 @@ public class WorkflowDefinitionLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", classPK=");
+		msg.append(", classPK = ");
 		msg.append(classPK);
 
 		msg.append("}");
@@ -2208,16 +2208,16 @@ public class WorkflowDefinitionLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", classPK=");
+		msg.append(", classPK = ");
 		msg.append(classPK);
 
 		msg.append("}");
@@ -2561,19 +2561,19 @@ public class WorkflowDefinitionLinkPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("groupId=");
+			msg.append("groupId = ");
 			msg.append(groupId);
 
-			msg.append(", companyId=");
+			msg.append(", companyId = ");
 			msg.append(companyId);
 
-			msg.append(", classNameId=");
+			msg.append(", classNameId = ");
 			msg.append(classNameId);
 
-			msg.append(", classPK=");
+			msg.append(", classPK = ");
 			msg.append(classPK);
 
-			msg.append(", typePK=");
+			msg.append(", typePK = ");
 			msg.append(typePK);
 
 			msg.append("}");

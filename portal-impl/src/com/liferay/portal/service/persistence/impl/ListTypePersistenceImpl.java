@@ -294,7 +294,7 @@ public class ListTypePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("type=");
+		msg.append("type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -345,7 +345,7 @@ public class ListTypePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("type=");
+		msg.append("type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -650,10 +650,10 @@ public class ListTypePersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("name=");
+			msg.append("name = ");
 			msg.append(name);
 
-			msg.append(", type=");
+			msg.append(", type = ");
 			msg.append(type);
 
 			msg.append("}");

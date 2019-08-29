@@ -292,7 +292,7 @@ public class EntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -343,7 +343,7 @@ public class EntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -619,10 +619,10 @@ public class EntryPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("userId=");
+			msg.append("userId = ");
 			msg.append(userId);
 
-			msg.append(", emailAddress=");
+			msg.append(", emailAddress = ");
 			msg.append(emailAddress);
 
 			msg.append("}");

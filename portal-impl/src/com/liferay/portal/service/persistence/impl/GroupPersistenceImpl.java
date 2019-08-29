@@ -307,7 +307,7 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -358,7 +358,7 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -662,10 +662,10 @@ public class GroupPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("uuid=");
+			msg.append("uuid = ");
 			msg.append(uuid);
 
-			msg.append(", groupId=");
+			msg.append(", groupId = ");
 			msg.append(groupId);
 
 			msg.append("}");
@@ -1128,10 +1128,10 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1187,10 +1187,10 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1695,7 +1695,7 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1746,7 +1746,7 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -2022,7 +2022,7 @@ public class GroupPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("liveGroupId=");
+			msg.append("liveGroupId = ");
 			msg.append(liveGroupId);
 
 			msg.append("}");
@@ -2440,10 +2440,10 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
 		msg.append("}");
@@ -2500,10 +2500,10 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
 		msg.append("}");
@@ -2998,10 +2998,10 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", parentGroupId=");
+		msg.append(", parentGroupId = ");
 		msg.append(parentGroupId);
 
 		msg.append("}");
@@ -3058,10 +3058,10 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", parentGroupId=");
+		msg.append(", parentGroupId = ");
 		msg.append(parentGroupId);
 
 		msg.append("}");
@@ -3357,10 +3357,10 @@ public class GroupPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("companyId=");
+			msg.append("companyId = ");
 			msg.append(companyId);
 
-			msg.append(", groupKey=");
+			msg.append(", groupKey = ");
 			msg.append(groupKey);
 
 			msg.append("}");
@@ -3613,10 +3613,10 @@ public class GroupPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("companyId=");
+			msg.append("companyId = ");
 			msg.append(companyId);
 
-			msg.append(", friendlyURL=");
+			msg.append(", friendlyURL = ");
 			msg.append(friendlyURL);
 
 			msg.append("}");
@@ -4065,10 +4065,10 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", site=");
+		msg.append(", site = ");
 		msg.append(site);
 
 		msg.append("}");
@@ -4123,10 +4123,10 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", site=");
+		msg.append(", site = ");
 		msg.append(site);
 
 		msg.append("}");
@@ -4616,10 +4616,10 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", active=");
+		msg.append(", active = ");
 		msg.append(active);
 
 		msg.append("}");
@@ -4675,10 +4675,10 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", active=");
+		msg.append(", active = ");
 		msg.append(active);
 
 		msg.append("}");
@@ -5170,10 +5170,10 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("classNameId=");
+		msg.append("classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", classPK=");
+		msg.append(", classPK = ");
 		msg.append(classPK);
 
 		msg.append("}");
@@ -5230,10 +5230,10 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("classNameId=");
+		msg.append("classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", classPK=");
+		msg.append(", classPK = ");
 		msg.append(classPK);
 
 		msg.append("}");
@@ -5721,10 +5721,10 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("type=");
+		msg.append("type = ");
 		msg.append(type);
 
-		msg.append(", active=");
+		msg.append(", active = ");
 		msg.append(active);
 
 		msg.append("}");
@@ -5778,10 +5778,10 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("type=");
+		msg.append("type = ");
 		msg.append(type);
 
-		msg.append(", active=");
+		msg.append(", active = ");
 		msg.append(active);
 
 		msg.append("}");
@@ -6272,13 +6272,13 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId > ");
 		msg.append(groupId);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
-		msg.append(", parentGroupId=");
+		msg.append(", parentGroupId = ");
 		msg.append(parentGroupId);
 
 		msg.append("}");
@@ -6337,13 +6337,13 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId > ");
 		msg.append(groupId);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
-		msg.append(", parentGroupId=");
+		msg.append(", parentGroupId = ");
 		msg.append(parentGroupId);
 
 		msg.append("}");
@@ -6496,13 +6496,13 @@ public class GroupPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("companyId=");
+			msg.append("companyId = ");
 			msg.append(companyId);
 
-			msg.append(", classNameId=");
+			msg.append(", classNameId = ");
 			msg.append(classNameId);
 
-			msg.append(", classPK=");
+			msg.append(", classPK = ");
 			msg.append(classPK);
 
 			msg.append("}");
@@ -6961,13 +6961,13 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", parentGroupId=");
+		msg.append(", parentGroupId = ");
 		msg.append(parentGroupId);
 
 		msg.append("}");
@@ -7026,13 +7026,13 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", parentGroupId=");
+		msg.append(", parentGroupId = ");
 		msg.append(parentGroupId);
 
 		msg.append("}");
@@ -7563,13 +7563,13 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", parentGroupId=");
+		msg.append(", parentGroupId = ");
 		msg.append(parentGroupId);
 
-		msg.append(", site=");
+		msg.append(", site = ");
 		msg.append(site);
 
 		msg.append("}");
@@ -7628,13 +7628,13 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", parentGroupId=");
+		msg.append(", parentGroupId = ");
 		msg.append(parentGroupId);
 
-		msg.append(", site=");
+		msg.append(", site = ");
 		msg.append(site);
 
 		msg.append("}");
@@ -7949,13 +7949,13 @@ public class GroupPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("companyId=");
+			msg.append("companyId = ");
 			msg.append(companyId);
 
-			msg.append(", liveGroupId=");
+			msg.append(", liveGroupId = ");
 			msg.append(liveGroupId);
 
-			msg.append(", groupKey=");
+			msg.append(", groupKey = ");
 			msg.append(groupKey);
 
 			msg.append("}");
@@ -8443,13 +8443,13 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", treePath=");
+		msg.append(", treePath LIKE ");
 		msg.append(treePath);
 
-		msg.append(", site=");
+		msg.append(", site = ");
 		msg.append(site);
 
 		msg.append("}");
@@ -8508,13 +8508,13 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", treePath=");
+		msg.append(", treePath LIKE ");
 		msg.append(treePath);
 
-		msg.append(", site=");
+		msg.append(", site = ");
 		msg.append(site);
 
 		msg.append("}");
@@ -9065,13 +9065,13 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", name=");
+		msg.append(", name LIKE ");
 		msg.append(name);
 
-		msg.append(", site=");
+		msg.append(", site = ");
 		msg.append(site);
 
 		msg.append("}");
@@ -9130,13 +9130,13 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", name=");
+		msg.append(", name LIKE ");
 		msg.append(name);
 
-		msg.append(", site=");
+		msg.append(", site = ");
 		msg.append(site);
 
 		msg.append("}");
@@ -9686,13 +9686,13 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", site=");
+		msg.append(", site = ");
 		msg.append(site);
 
-		msg.append(", active=");
+		msg.append(", active = ");
 		msg.append(active);
 
 		msg.append("}");
@@ -9751,13 +9751,13 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", site=");
+		msg.append(", site = ");
 		msg.append(site);
 
-		msg.append(", active=");
+		msg.append(", active = ");
 		msg.append(active);
 
 		msg.append("}");
@@ -10282,16 +10282,16 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId > ");
 		msg.append(groupId);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", parentGroupId=");
+		msg.append(", parentGroupId = ");
 		msg.append(parentGroupId);
 
 		msg.append("}");
@@ -10353,16 +10353,16 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId > ");
 		msg.append(groupId);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", parentGroupId=");
+		msg.append(", parentGroupId = ");
 		msg.append(parentGroupId);
 
 		msg.append("}");
@@ -10742,16 +10742,16 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId > ");
 		msg.append(groupId);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
-		msg.append(", parentGroupId=");
+		msg.append(", parentGroupId = ");
 		msg.append(parentGroupId);
 
-		msg.append(", site=");
+		msg.append(", site = ");
 		msg.append(site);
 
 		msg.append("}");
@@ -10812,16 +10812,16 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId > ");
 		msg.append(groupId);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
-		msg.append(", parentGroupId=");
+		msg.append(", parentGroupId = ");
 		msg.append(parentGroupId);
 
-		msg.append(", site=");
+		msg.append(", site = ");
 		msg.append(site);
 
 		msg.append("}");
@@ -10991,16 +10991,16 @@ public class GroupPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("companyId=");
+			msg.append("companyId = ");
 			msg.append(companyId);
 
-			msg.append(", classNameId=");
+			msg.append(", classNameId = ");
 			msg.append(classNameId);
 
-			msg.append(", liveGroupId=");
+			msg.append(", liveGroupId = ");
 			msg.append(liveGroupId);
 
-			msg.append(", groupKey=");
+			msg.append(", groupKey = ");
 			msg.append(groupKey);
 
 			msg.append("}");
@@ -11523,16 +11523,16 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", parentGroupId=");
+		msg.append(", parentGroupId = ");
 		msg.append(parentGroupId);
 
-		msg.append(", name=");
+		msg.append(", name LIKE ");
 		msg.append(name);
 
-		msg.append(", site=");
+		msg.append(", site = ");
 		msg.append(site);
 
 		msg.append("}");
@@ -11593,16 +11593,16 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", parentGroupId=");
+		msg.append(", parentGroupId = ");
 		msg.append(parentGroupId);
 
-		msg.append(", name=");
+		msg.append(", name LIKE ");
 		msg.append(name);
 
-		msg.append(", site=");
+		msg.append(", site = ");
 		msg.append(site);
 
 		msg.append("}");
@@ -12195,16 +12195,16 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", parentGroupId=");
+		msg.append(", parentGroupId = ");
 		msg.append(parentGroupId);
 
-		msg.append(", site=");
+		msg.append(", site = ");
 		msg.append(site);
 
-		msg.append(", inheritContent=");
+		msg.append(", inheritContent = ");
 		msg.append(inheritContent);
 
 		msg.append("}");
@@ -12266,16 +12266,16 @@ public class GroupPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", parentGroupId=");
+		msg.append(", parentGroupId = ");
 		msg.append(parentGroupId);
 
-		msg.append(", site=");
+		msg.append(", site = ");
 		msg.append(site);
 
-		msg.append(", inheritContent=");
+		msg.append(", inheritContent = ");
 		msg.append(inheritContent);
 
 		msg.append("}");

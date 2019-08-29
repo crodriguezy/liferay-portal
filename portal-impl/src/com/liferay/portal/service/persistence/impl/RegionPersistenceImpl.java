@@ -283,7 +283,7 @@ public class RegionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("countryId=");
+		msg.append("countryId = ");
 		msg.append(countryId);
 
 		msg.append("}");
@@ -334,7 +334,7 @@ public class RegionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("countryId=");
+		msg.append("countryId = ");
 		msg.append(countryId);
 
 		msg.append("}");
@@ -790,7 +790,7 @@ public class RegionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("active=");
+		msg.append("active = ");
 		msg.append(active);
 
 		msg.append("}");
@@ -841,7 +841,7 @@ public class RegionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("active=");
+		msg.append("active = ");
 		msg.append(active);
 
 		msg.append("}");
@@ -1118,10 +1118,10 @@ public class RegionPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("countryId=");
+			msg.append("countryId = ");
 			msg.append(countryId);
 
-			msg.append(", regionCode=");
+			msg.append(", regionCode = ");
 			msg.append(regionCode);
 
 			msg.append("}");
@@ -1571,10 +1571,10 @@ public class RegionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("countryId=");
+		msg.append("countryId = ");
 		msg.append(countryId);
 
-		msg.append(", active=");
+		msg.append(", active = ");
 		msg.append(active);
 
 		msg.append("}");
@@ -1630,10 +1630,10 @@ public class RegionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("countryId=");
+		msg.append("countryId = ");
 		msg.append(countryId);
 
-		msg.append(", active=");
+		msg.append(", active = ");
 		msg.append(active);
 
 		msg.append("}");

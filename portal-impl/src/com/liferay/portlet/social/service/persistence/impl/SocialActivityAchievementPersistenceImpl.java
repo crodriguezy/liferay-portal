@@ -287,7 +287,7 @@ public class SocialActivityAchievementPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -342,7 +342,7 @@ public class SocialActivityAchievementPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -829,10 +829,10 @@ public class SocialActivityAchievementPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", userId=");
+		msg.append(", userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -889,10 +889,10 @@ public class SocialActivityAchievementPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", userId=");
+		msg.append(", userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -1408,10 +1408,10 @@ public class SocialActivityAchievementPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", name=");
+		msg.append(", name = ");
 		msg.append(name);
 
 		msg.append("}");
@@ -1468,10 +1468,10 @@ public class SocialActivityAchievementPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", name=");
+		msg.append(", name = ");
 		msg.append(name);
 
 		msg.append("}");
@@ -2005,10 +2005,10 @@ public class SocialActivityAchievementPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", firstInGroup=");
+		msg.append(", firstInGroup = ");
 		msg.append(firstInGroup);
 
 		msg.append("}");
@@ -2065,10 +2065,10 @@ public class SocialActivityAchievementPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", firstInGroup=");
+		msg.append(", firstInGroup = ");
 		msg.append(firstInGroup);
 
 		msg.append("}");
@@ -2372,13 +2372,13 @@ public class SocialActivityAchievementPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("groupId=");
+			msg.append("groupId = ");
 			msg.append(groupId);
 
-			msg.append(", userId=");
+			msg.append(", userId = ");
 			msg.append(userId);
 
-			msg.append(", name=");
+			msg.append(", name = ");
 			msg.append(name);
 
 			msg.append("}");
@@ -2869,13 +2869,13 @@ public class SocialActivityAchievementPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", userId=");
+		msg.append(", userId = ");
 		msg.append(userId);
 
-		msg.append(", firstInGroup=");
+		msg.append(", firstInGroup = ");
 		msg.append(firstInGroup);
 
 		msg.append("}");
@@ -2934,13 +2934,13 @@ public class SocialActivityAchievementPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", userId=");
+		msg.append(", userId = ");
 		msg.append(userId);
 
-		msg.append(", firstInGroup=");
+		msg.append(", firstInGroup = ");
 		msg.append(firstInGroup);
 
 		msg.append("}");

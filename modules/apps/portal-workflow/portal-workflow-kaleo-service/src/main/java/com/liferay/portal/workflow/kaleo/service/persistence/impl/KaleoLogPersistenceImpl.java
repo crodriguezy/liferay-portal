@@ -298,7 +298,7 @@ public class KaleoLogPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -350,7 +350,7 @@ public class KaleoLogPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -823,7 +823,7 @@ public class KaleoLogPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("kaleoDefinitionVersionId=");
+		msg.append("kaleoDefinitionVersionId = ");
 		msg.append(kaleoDefinitionVersionId);
 
 		msg.append("}");
@@ -878,7 +878,7 @@ public class KaleoLogPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("kaleoDefinitionVersionId=");
+		msg.append("kaleoDefinitionVersionId = ");
 		msg.append(kaleoDefinitionVersionId);
 
 		msg.append("}");
@@ -1349,7 +1349,7 @@ public class KaleoLogPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("kaleoInstanceId=");
+		msg.append("kaleoInstanceId = ");
 		msg.append(kaleoInstanceId);
 
 		msg.append("}");
@@ -1402,7 +1402,7 @@ public class KaleoLogPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("kaleoInstanceId=");
+		msg.append("kaleoInstanceId = ");
 		msg.append(kaleoInstanceId);
 
 		msg.append("}");
@@ -1877,7 +1877,7 @@ public class KaleoLogPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("kaleoTaskInstanceTokenId=");
+		msg.append("kaleoTaskInstanceTokenId = ");
 		msg.append(kaleoTaskInstanceTokenId);
 
 		msg.append("}");
@@ -1932,7 +1932,7 @@ public class KaleoLogPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("kaleoTaskInstanceTokenId=");
+		msg.append("kaleoTaskInstanceTokenId = ");
 		msg.append(kaleoTaskInstanceTokenId);
 
 		msg.append("}");
@@ -2430,10 +2430,10 @@ public class KaleoLogPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("kaleoInstanceTokenId=");
+		msg.append("kaleoInstanceTokenId = ");
 		msg.append(kaleoInstanceTokenId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -2490,10 +2490,10 @@ public class KaleoLogPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("kaleoInstanceTokenId=");
+		msg.append("kaleoInstanceTokenId = ");
 		msg.append(kaleoInstanceTokenId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -3076,16 +3076,16 @@ public class KaleoLogPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("kaleoClassName=");
+		msg.append("kaleoClassName = ");
 		msg.append(kaleoClassName);
 
-		msg.append(", kaleoClassPK=");
+		msg.append(", kaleoClassPK = ");
 		msg.append(kaleoClassPK);
 
-		msg.append(", kaleoInstanceTokenId=");
+		msg.append(", kaleoInstanceTokenId = ");
 		msg.append(kaleoInstanceTokenId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -3148,16 +3148,16 @@ public class KaleoLogPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("kaleoClassName=");
+		msg.append("kaleoClassName = ");
 		msg.append(kaleoClassName);
 
-		msg.append(", kaleoClassPK=");
+		msg.append(", kaleoClassPK = ");
 		msg.append(kaleoClassPK);
 
-		msg.append(", kaleoInstanceTokenId=");
+		msg.append(", kaleoInstanceTokenId = ");
 		msg.append(kaleoInstanceTokenId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");

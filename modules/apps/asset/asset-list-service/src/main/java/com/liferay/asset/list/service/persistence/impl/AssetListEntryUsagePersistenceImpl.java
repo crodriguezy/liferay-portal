@@ -315,7 +315,7 @@ public class AssetListEntryUsagePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -369,7 +369,7 @@ public class AssetListEntryUsagePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -676,10 +676,10 @@ public class AssetListEntryUsagePersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("uuid=");
+			msg.append("uuid = ");
 			msg.append(uuid);
 
-			msg.append(", groupId=");
+			msg.append(", groupId = ");
 			msg.append(groupId);
 
 			msg.append("}");
@@ -1144,10 +1144,10 @@ public class AssetListEntryUsagePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1204,10 +1204,10 @@ public class AssetListEntryUsagePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1727,7 +1727,7 @@ public class AssetListEntryUsagePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("assetListEntryId=");
+		msg.append("assetListEntryId = ");
 		msg.append(assetListEntryId);
 
 		msg.append("}");
@@ -1782,7 +1782,7 @@ public class AssetListEntryUsagePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("assetListEntryId=");
+		msg.append("assetListEntryId = ");
 		msg.append(assetListEntryId);
 
 		msg.append("}");
@@ -2270,10 +2270,10 @@ public class AssetListEntryUsagePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("assetListEntryId=");
+		msg.append("assetListEntryId = ");
 		msg.append(assetListEntryId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
 		msg.append("}");
@@ -2330,10 +2330,10 @@ public class AssetListEntryUsagePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("assetListEntryId=");
+		msg.append("assetListEntryId = ");
 		msg.append(assetListEntryId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
 		msg.append("}");
@@ -2635,13 +2635,13 @@ public class AssetListEntryUsagePersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("classNameId=");
+			msg.append("classNameId = ");
 			msg.append(classNameId);
 
-			msg.append(", classPK=");
+			msg.append(", classPK = ");
 			msg.append(classPK);
 
-			msg.append(", portletId=");
+			msg.append(", portletId = ");
 			msg.append(portletId);
 
 			msg.append("}");

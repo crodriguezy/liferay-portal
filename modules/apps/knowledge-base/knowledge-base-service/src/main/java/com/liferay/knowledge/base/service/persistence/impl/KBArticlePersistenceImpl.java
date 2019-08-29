@@ -315,7 +315,7 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resourcePrimKey=");
+		msg.append("resourcePrimKey = ");
 		msg.append(resourcePrimKey);
 
 		msg.append("}");
@@ -369,7 +369,7 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resourcePrimKey=");
+		msg.append("resourcePrimKey = ");
 		msg.append(resourcePrimKey);
 
 		msg.append("}");
@@ -840,7 +840,7 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -891,7 +891,7 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -1195,10 +1195,10 @@ public class KBArticlePersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("uuid=");
+			msg.append("uuid = ");
 			msg.append(uuid);
 
-			msg.append(", groupId=");
+			msg.append(", groupId = ");
 			msg.append(groupId);
 
 			msg.append("}");
@@ -1662,10 +1662,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1722,10 +1722,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -2247,10 +2247,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resourcePrimKey=");
+		msg.append("resourcePrimKey = ");
 		msg.append(resourcePrimKey);
 
-		msg.append(", groupId=");
+		msg.append(", groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -2307,10 +2307,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resourcePrimKey=");
+		msg.append("resourcePrimKey = ");
 		msg.append(resourcePrimKey);
 
-		msg.append(", groupId=");
+		msg.append(", groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -3003,10 +3003,10 @@ public class KBArticlePersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("resourcePrimKey=");
+			msg.append("resourcePrimKey = ");
 			msg.append(resourcePrimKey);
 
-			msg.append(", version=");
+			msg.append(", version = ");
 			msg.append(version);
 
 			msg.append("}");
@@ -3429,10 +3429,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resourcePrimKey=");
+		msg.append("resourcePrimKey = ");
 		msg.append(resourcePrimKey);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
 		msg.append("}");
@@ -3489,10 +3489,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resourcePrimKey=");
+		msg.append("resourcePrimKey = ");
 		msg.append(resourcePrimKey);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
 		msg.append("}");
@@ -4289,10 +4289,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resourcePrimKey=");
+		msg.append("resourcePrimKey = ");
 		msg.append(resourcePrimKey);
 
-		msg.append(", main=");
+		msg.append(", main = ");
 		msg.append(main);
 
 		msg.append("}");
@@ -4349,10 +4349,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resourcePrimKey=");
+		msg.append("resourcePrimKey = ");
 		msg.append(resourcePrimKey);
 
-		msg.append(", main=");
+		msg.append(", main = ");
 		msg.append(main);
 
 		msg.append("}");
@@ -5150,10 +5150,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resourcePrimKey=");
+		msg.append("resourcePrimKey = ");
 		msg.append(resourcePrimKey);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -5210,10 +5210,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resourcePrimKey=");
+		msg.append("resourcePrimKey = ");
 		msg.append(resourcePrimKey);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -6007,10 +6007,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
 		msg.append("}");
@@ -6067,10 +6067,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
 		msg.append("}");
@@ -6953,10 +6953,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", main=");
+		msg.append(", main = ");
 		msg.append(main);
 
 		msg.append("}");
@@ -7012,10 +7012,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", main=");
+		msg.append(", main = ");
 		msg.append(main);
 
 		msg.append("}");
@@ -7898,10 +7898,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -7958,10 +7958,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -8845,10 +8845,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
 		msg.append("}");
@@ -8905,10 +8905,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
 		msg.append("}");
@@ -9400,10 +9400,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", main=");
+		msg.append(", main = ");
 		msg.append(main);
 
 		msg.append("}");
@@ -9460,10 +9460,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", main=");
+		msg.append(", main = ");
 		msg.append(main);
 
 		msg.append("}");
@@ -9955,10 +9955,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -10015,10 +10015,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -10516,10 +10516,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("parentResourcePrimKey=");
+		msg.append("parentResourcePrimKey = ");
 		msg.append(parentResourcePrimKey);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
 		msg.append("}");
@@ -10576,10 +10576,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("parentResourcePrimKey=");
+		msg.append("parentResourcePrimKey = ");
 		msg.append(parentResourcePrimKey);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
 		msg.append("}");
@@ -11384,10 +11384,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("parentResourcePrimKey=");
+		msg.append("parentResourcePrimKey = ");
 		msg.append(parentResourcePrimKey);
 
-		msg.append(", main=");
+		msg.append(", main = ");
 		msg.append(main);
 
 		msg.append("}");
@@ -11444,10 +11444,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("parentResourcePrimKey=");
+		msg.append("parentResourcePrimKey = ");
 		msg.append(parentResourcePrimKey);
 
-		msg.append(", main=");
+		msg.append(", main = ");
 		msg.append(main);
 
 		msg.append("}");
@@ -12251,10 +12251,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("parentResourcePrimKey=");
+		msg.append("parentResourcePrimKey = ");
 		msg.append(parentResourcePrimKey);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -12311,10 +12311,10 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("parentResourcePrimKey=");
+		msg.append("parentResourcePrimKey = ");
 		msg.append(parentResourcePrimKey);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -12919,13 +12919,13 @@ public class KBArticlePersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("resourcePrimKey=");
+			msg.append("resourcePrimKey = ");
 			msg.append(resourcePrimKey);
 
-			msg.append(", groupId=");
+			msg.append(", groupId = ");
 			msg.append(groupId);
 
-			msg.append(", version=");
+			msg.append(", version = ");
 			msg.append(version);
 
 			msg.append("}");
@@ -13383,13 +13383,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resourcePrimKey=");
+		msg.append("resourcePrimKey = ");
 		msg.append(resourcePrimKey);
 
-		msg.append(", groupId=");
+		msg.append(", groupId = ");
 		msg.append(groupId);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
 		msg.append("}");
@@ -13448,13 +13448,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resourcePrimKey=");
+		msg.append("resourcePrimKey = ");
 		msg.append(resourcePrimKey);
 
-		msg.append(", groupId=");
+		msg.append(", groupId = ");
 		msg.append(groupId);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
 		msg.append("}");
@@ -14973,13 +14973,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resourcePrimKey=");
+		msg.append("resourcePrimKey = ");
 		msg.append(resourcePrimKey);
 
-		msg.append(", groupId=");
+		msg.append(", groupId = ");
 		msg.append(groupId);
 
-		msg.append(", main=");
+		msg.append(", main = ");
 		msg.append(main);
 
 		msg.append("}");
@@ -15038,13 +15038,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resourcePrimKey=");
+		msg.append("resourcePrimKey = ");
 		msg.append(resourcePrimKey);
 
-		msg.append(", groupId=");
+		msg.append(", groupId = ");
 		msg.append(groupId);
 
-		msg.append(", main=");
+		msg.append(", main = ");
 		msg.append(main);
 
 		msg.append("}");
@@ -16557,13 +16557,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resourcePrimKey=");
+		msg.append("resourcePrimKey = ");
 		msg.append(resourcePrimKey);
 
-		msg.append(", groupId=");
+		msg.append(", groupId = ");
 		msg.append(groupId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -16622,13 +16622,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("resourcePrimKey=");
+		msg.append("resourcePrimKey = ");
 		msg.append(resourcePrimKey);
 
-		msg.append(", groupId=");
+		msg.append(", groupId = ");
 		msg.append(groupId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -18148,13 +18148,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", parentResourcePrimKey=");
+		msg.append(", parentResourcePrimKey = ");
 		msg.append(parentResourcePrimKey);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
 		msg.append("}");
@@ -18213,13 +18213,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", parentResourcePrimKey=");
+		msg.append(", parentResourcePrimKey = ");
 		msg.append(parentResourcePrimKey);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
 		msg.append("}");
@@ -19750,13 +19750,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", parentResourcePrimKey=");
+		msg.append(", parentResourcePrimKey = ");
 		msg.append(parentResourcePrimKey);
 
-		msg.append(", main=");
+		msg.append(", main = ");
 		msg.append(main);
 
 		msg.append("}");
@@ -19815,13 +19815,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", parentResourcePrimKey=");
+		msg.append(", parentResourcePrimKey = ");
 		msg.append(parentResourcePrimKey);
 
-		msg.append(", main=");
+		msg.append(", main = ");
 		msg.append(main);
 
 		msg.append("}");
@@ -21352,13 +21352,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", parentResourcePrimKey=");
+		msg.append(", parentResourcePrimKey = ");
 		msg.append(parentResourcePrimKey);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -21417,13 +21417,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", parentResourcePrimKey=");
+		msg.append(", parentResourcePrimKey = ");
 		msg.append(parentResourcePrimKey);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -22959,13 +22959,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", kbFolderId=");
+		msg.append(", kbFolderId = ");
 		msg.append(kbFolderId);
 
-		msg.append(", urlTitle=");
+		msg.append(", urlTitle = ");
 		msg.append(urlTitle);
 
 		msg.append("}");
@@ -23024,13 +23024,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", kbFolderId=");
+		msg.append(", kbFolderId = ");
 		msg.append(kbFolderId);
 
-		msg.append(", urlTitle=");
+		msg.append(", urlTitle = ");
 		msg.append(urlTitle);
 
 		msg.append("}");
@@ -24044,13 +24044,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", kbFolderId=");
+		msg.append(", kbFolderId = ");
 		msg.append(kbFolderId);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
 		msg.append("}");
@@ -24109,13 +24109,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", kbFolderId=");
+		msg.append(", kbFolderId = ");
 		msg.append(kbFolderId);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
 		msg.append("}");
@@ -25059,13 +25059,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", kbFolderId=");
+		msg.append(", kbFolderId = ");
 		msg.append(kbFolderId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -25124,13 +25124,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", kbFolderId=");
+		msg.append(", kbFolderId = ");
 		msg.append(kbFolderId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -26074,13 +26074,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", sections=");
+		msg.append(", sections LIKE ");
 		msg.append(sections);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
 		msg.append("}");
@@ -26139,13 +26139,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", sections=");
+		msg.append(", sections LIKE ");
 		msg.append(sections);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
 		msg.append("}");
@@ -27792,13 +27792,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", sections=");
+		msg.append(", sections LIKE ");
 		msg.append(sections);
 
-		msg.append(", main=");
+		msg.append(", main = ");
 		msg.append(main);
 
 		msg.append("}");
@@ -27857,13 +27857,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", sections=");
+		msg.append(", sections LIKE ");
 		msg.append(sections);
 
-		msg.append(", main=");
+		msg.append(", main = ");
 		msg.append(main);
 
 		msg.append("}");
@@ -29508,13 +29508,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", sections=");
+		msg.append(", sections LIKE ");
 		msg.append(sections);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -29573,13 +29573,13 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", sections=");
+		msg.append(", sections LIKE ");
 		msg.append(sections);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -31240,16 +31240,16 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", parentResourcePrimKey=");
+		msg.append(", parentResourcePrimKey = ");
 		msg.append(parentResourcePrimKey);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -31311,16 +31311,16 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", parentResourcePrimKey=");
+		msg.append(", parentResourcePrimKey = ");
 		msg.append(parentResourcePrimKey);
 
-		msg.append(", latest=");
+		msg.append(", latest = ");
 		msg.append(latest);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -32945,16 +32945,16 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", kbFolderId=");
+		msg.append(", kbFolderId = ");
 		msg.append(kbFolderId);
 
-		msg.append(", urlTitle=");
+		msg.append(", urlTitle = ");
 		msg.append(urlTitle);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -33015,16 +33015,16 @@ public class KBArticlePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", kbFolderId=");
+		msg.append(", kbFolderId = ");
 		msg.append(kbFolderId);
 
-		msg.append(", urlTitle=");
+		msg.append(", urlTitle = ");
 		msg.append(urlTitle);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");

@@ -297,7 +297,7 @@ public class MessagePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -349,7 +349,7 @@ public class MessagePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -805,7 +805,7 @@ public class MessagePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("folderId=");
+		msg.append("folderId = ");
 		msg.append(folderId);
 
 		msg.append("}");
@@ -856,7 +856,7 @@ public class MessagePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("folderId=");
+		msg.append("folderId = ");
 		msg.append(folderId);
 
 		msg.append("}");
@@ -1132,10 +1132,10 @@ public class MessagePersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("folderId=");
+			msg.append("folderId = ");
 			msg.append(folderId);
 
-			msg.append(", remoteMessageId=");
+			msg.append(", remoteMessageId = ");
 			msg.append(remoteMessageId);
 
 			msg.append("}");

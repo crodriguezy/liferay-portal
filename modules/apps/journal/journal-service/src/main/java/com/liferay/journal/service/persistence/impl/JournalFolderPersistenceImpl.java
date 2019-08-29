@@ -315,7 +315,7 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -366,7 +366,7 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -671,10 +671,10 @@ public class JournalFolderPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("uuid=");
+			msg.append("uuid = ");
 			msg.append(uuid);
 
-			msg.append(", groupId=");
+			msg.append(", groupId = ");
 			msg.append(groupId);
 
 			msg.append("}");
@@ -1138,10 +1138,10 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1198,10 +1198,10 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1709,7 +1709,7 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -1762,7 +1762,7 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -2602,7 +2602,7 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -2655,7 +2655,7 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -3132,10 +3132,10 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", parentFolderId=");
+		msg.append(", parentFolderId = ");
 		msg.append(parentFolderId);
 
 		msg.append("}");
@@ -3192,10 +3192,10 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", parentFolderId=");
+		msg.append(", parentFolderId = ");
 		msg.append(parentFolderId);
 
 		msg.append("}");
@@ -3893,10 +3893,10 @@ public class JournalFolderPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("groupId=");
+			msg.append("groupId = ");
 			msg.append(groupId);
 
-			msg.append(", name=");
+			msg.append(", name = ");
 			msg.append(name);
 
 			msg.append("}");
@@ -4348,10 +4348,10 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", status=");
+		msg.append(", status != ");
 		msg.append(status);
 
 		msg.append("}");
@@ -4408,10 +4408,10 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", status=");
+		msg.append(", status != ");
 		msg.append(status);
 
 		msg.append("}");
@@ -4711,13 +4711,13 @@ public class JournalFolderPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("groupId=");
+			msg.append("groupId = ");
 			msg.append(groupId);
 
-			msg.append(", parentFolderId=");
+			msg.append(", parentFolderId = ");
 			msg.append(parentFolderId);
 
-			msg.append(", name=");
+			msg.append(", name = ");
 			msg.append(name);
 
 			msg.append("}");
@@ -5203,13 +5203,13 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", parentFolderId=");
+		msg.append(", parentFolderId = ");
 		msg.append(parentFolderId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -5268,13 +5268,13 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", parentFolderId=");
+		msg.append(", parentFolderId = ");
 		msg.append(parentFolderId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -6209,13 +6209,13 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", parentFolderId=");
+		msg.append(", parentFolderId = ");
 		msg.append(parentFolderId);
 
-		msg.append(", status=");
+		msg.append(", status != ");
 		msg.append(status);
 
 		msg.append("}");
@@ -6274,13 +6274,13 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", parentFolderId=");
+		msg.append(", parentFolderId = ");
 		msg.append(parentFolderId);
 
-		msg.append(", status=");
+		msg.append(", status != ");
 		msg.append(status);
 
 		msg.append("}");
@@ -7230,16 +7230,16 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("folderId=");
+		msg.append("folderId > ");
 		msg.append(folderId);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
-		msg.append(", parentFolderId=");
+		msg.append(", parentFolderId = ");
 		msg.append(parentFolderId);
 
-		msg.append(", status=");
+		msg.append(", status != ");
 		msg.append(status);
 
 		msg.append("}");
@@ -7301,16 +7301,16 @@ public class JournalFolderPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("folderId=");
+		msg.append("folderId > ");
 		msg.append(folderId);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
-		msg.append(", parentFolderId=");
+		msg.append(", parentFolderId = ");
 		msg.append(parentFolderId);
 
-		msg.append(", status=");
+		msg.append(", status != ");
 		msg.append(status);
 
 		msg.append("}");

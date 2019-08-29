@@ -305,7 +305,7 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -356,7 +356,7 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -660,10 +660,10 @@ public class DDMStructurePersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("uuid=");
+			msg.append("uuid = ");
 			msg.append(uuid);
 
-			msg.append(", groupId=");
+			msg.append(", groupId = ");
 			msg.append(groupId);
 
 			msg.append("}");
@@ -1127,10 +1127,10 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1187,10 +1187,10 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1697,7 +1697,7 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -1750,7 +1750,7 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -3068,7 +3068,7 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("parentStructureId=");
+		msg.append("parentStructureId = ");
 		msg.append(parentStructureId);
 
 		msg.append("}");
@@ -3123,7 +3123,7 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("parentStructureId=");
+		msg.append("parentStructureId = ");
 		msg.append(parentStructureId);
 
 		msg.append("}");
@@ -3591,7 +3591,7 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("classNameId=");
+		msg.append("classNameId = ");
 		msg.append(classNameId);
 
 		msg.append("}");
@@ -3644,7 +3644,7 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("classNameId=");
+		msg.append("classNameId = ");
 		msg.append(classNameId);
 
 		msg.append("}");
@@ -4121,7 +4121,7 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("structureKey=");
+		msg.append("structureKey = ");
 		msg.append(structureKey);
 
 		msg.append("}");
@@ -4176,7 +4176,7 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("structureKey=");
+		msg.append("structureKey = ");
 		msg.append(structureKey);
 
 		msg.append("}");
@@ -4683,10 +4683,10 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", parentStructureId=");
+		msg.append(", parentStructureId = ");
 		msg.append(parentStructureId);
 
 		msg.append("}");
@@ -4743,10 +4743,10 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", parentStructureId=");
+		msg.append(", parentStructureId = ");
 		msg.append(parentStructureId);
 
 		msg.append("}");
@@ -5642,10 +5642,10 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
 		msg.append("}");
@@ -5702,10 +5702,10 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
 		msg.append("}");
@@ -7123,10 +7123,10 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
 		msg.append("}");
@@ -7183,10 +7183,10 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
 		msg.append("}");
@@ -7485,13 +7485,13 @@ public class DDMStructurePersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("groupId=");
+			msg.append("groupId = ");
 			msg.append(groupId);
 
-			msg.append(", classNameId=");
+			msg.append(", classNameId = ");
 			msg.append(classNameId);
 
-			msg.append(", structureKey=");
+			msg.append(", structureKey = ");
 			msg.append(structureKey);
 
 			msg.append("}");
@@ -8003,13 +8003,13 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", name=");
+		msg.append(", name = ");
 		msg.append(name);
 
-		msg.append(", description=");
+		msg.append(", description = ");
 		msg.append(description);
 
 		msg.append("}");
@@ -8068,13 +8068,13 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", name=");
+		msg.append(", name = ");
 		msg.append(name);
 
-		msg.append(", description=");
+		msg.append(", description = ");
 		msg.append(description);
 
 		msg.append("}");
@@ -9189,16 +9189,16 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", name=");
+		msg.append(", name = ");
 		msg.append(name);
 
-		msg.append(", description=");
+		msg.append(", description = ");
 		msg.append(description);
 
 		msg.append("}");
@@ -9259,16 +9259,16 @@ public class DDMStructurePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", classNameId=");
+		msg.append(", classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", name=");
+		msg.append(", name = ");
 		msg.append(name);
 
-		msg.append(", description=");
+		msg.append(", description = ");
 		msg.append(description);
 
 		msg.append("}");

@@ -313,7 +313,7 @@ public class DEDataDefinitionFieldLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -368,7 +368,7 @@ public class DEDataDefinitionFieldLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -681,10 +681,10 @@ public class DEDataDefinitionFieldLinkPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("uuid=");
+			msg.append("uuid = ");
 			msg.append(uuid);
 
-			msg.append(", groupId=");
+			msg.append(", groupId = ");
 			msg.append(groupId);
 
 			msg.append("}");
@@ -943,16 +943,16 @@ public class DEDataDefinitionFieldLinkPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("classNameId=");
+			msg.append("classNameId = ");
 			msg.append(classNameId);
 
-			msg.append(", classPK=");
+			msg.append(", classPK = ");
 			msg.append(classPK);
 
-			msg.append(", ddmStructureId=");
+			msg.append(", ddmStructureId = ");
 			msg.append(ddmStructureId);
 
-			msg.append(", fieldName=");
+			msg.append(", fieldName = ");
 			msg.append(fieldName);
 
 			msg.append("}");

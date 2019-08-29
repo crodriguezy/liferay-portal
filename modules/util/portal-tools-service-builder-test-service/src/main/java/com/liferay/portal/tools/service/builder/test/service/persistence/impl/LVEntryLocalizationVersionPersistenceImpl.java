@@ -303,7 +303,7 @@ public class LVEntryLocalizationVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("lvEntryLocalizationId=");
+		msg.append("lvEntryLocalizationId = ");
 		msg.append(lvEntryLocalizationId);
 
 		msg.append("}");
@@ -359,7 +359,7 @@ public class LVEntryLocalizationVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("lvEntryLocalizationId=");
+		msg.append("lvEntryLocalizationId = ");
 		msg.append(lvEntryLocalizationId);
 
 		msg.append("}");
@@ -650,10 +650,10 @@ public class LVEntryLocalizationVersionPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("lvEntryLocalizationId=");
+			msg.append("lvEntryLocalizationId = ");
 			msg.append(lvEntryLocalizationId);
 
-			msg.append(", version=");
+			msg.append(", version = ");
 			msg.append(version);
 
 			msg.append("}");
@@ -1086,7 +1086,7 @@ public class LVEntryLocalizationVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("lvEntryId=");
+		msg.append("lvEntryId = ");
 		msg.append(lvEntryId);
 
 		msg.append("}");
@@ -1141,7 +1141,7 @@ public class LVEntryLocalizationVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("lvEntryId=");
+		msg.append("lvEntryId = ");
 		msg.append(lvEntryId);
 
 		msg.append("}");
@@ -1631,10 +1631,10 @@ public class LVEntryLocalizationVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("lvEntryId=");
+		msg.append("lvEntryId = ");
 		msg.append(lvEntryId);
 
-		msg.append(", version=");
+		msg.append(", version = ");
 		msg.append(version);
 
 		msg.append("}");
@@ -1692,10 +1692,10 @@ public class LVEntryLocalizationVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("lvEntryId=");
+		msg.append("lvEntryId = ");
 		msg.append(lvEntryId);
 
-		msg.append(", version=");
+		msg.append(", version = ");
 		msg.append(version);
 
 		msg.append("}");
@@ -2216,10 +2216,10 @@ public class LVEntryLocalizationVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("lvEntryId=");
+		msg.append("lvEntryId = ");
 		msg.append(lvEntryId);
 
-		msg.append(", languageId=");
+		msg.append(", languageId = ");
 		msg.append(languageId);
 
 		msg.append("}");
@@ -2277,10 +2277,10 @@ public class LVEntryLocalizationVersionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("lvEntryId=");
+		msg.append("lvEntryId = ");
 		msg.append(lvEntryId);
 
-		msg.append(", languageId=");
+		msg.append(", languageId = ");
 		msg.append(languageId);
 
 		msg.append("}");
@@ -2618,13 +2618,13 @@ public class LVEntryLocalizationVersionPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("lvEntryId=");
+			msg.append("lvEntryId = ");
 			msg.append(lvEntryId);
 
-			msg.append(", languageId=");
+			msg.append(", languageId = ");
 			msg.append(languageId);
 
-			msg.append(", version=");
+			msg.append(", version = ");
 			msg.append(version);
 
 			msg.append("}");

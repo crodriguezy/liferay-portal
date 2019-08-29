@@ -310,7 +310,7 @@ public class PollsVotePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -361,7 +361,7 @@ public class PollsVotePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -665,10 +665,10 @@ public class PollsVotePersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("uuid=");
+			msg.append("uuid = ");
 			msg.append(uuid);
 
-			msg.append(", groupId=");
+			msg.append(", groupId = ");
 			msg.append(groupId);
 
 			msg.append("}");
@@ -1132,10 +1132,10 @@ public class PollsVotePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1192,10 +1192,10 @@ public class PollsVotePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1704,7 +1704,7 @@ public class PollsVotePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("questionId=");
+		msg.append("questionId = ");
 		msg.append(questionId);
 
 		msg.append("}");
@@ -1757,7 +1757,7 @@ public class PollsVotePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("questionId=");
+		msg.append("questionId = ");
 		msg.append(questionId);
 
 		msg.append("}");
@@ -2215,7 +2215,7 @@ public class PollsVotePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("choiceId=");
+		msg.append("choiceId = ");
 		msg.append(choiceId);
 
 		msg.append("}");
@@ -2267,7 +2267,7 @@ public class PollsVotePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("choiceId=");
+		msg.append("choiceId = ");
 		msg.append(choiceId);
 
 		msg.append("}");
@@ -2742,10 +2742,10 @@ public class PollsVotePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("questionId=");
+		msg.append("questionId = ");
 		msg.append(questionId);
 
-		msg.append(", userId=");
+		msg.append(", userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -2802,10 +2802,10 @@ public class PollsVotePersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("questionId=");
+		msg.append("questionId = ");
 		msg.append(questionId);
 
-		msg.append(", userId=");
+		msg.append(", userId = ");
 		msg.append(userId);
 
 		msg.append("}");

@@ -318,10 +318,10 @@ public class PowwowServerPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("providerType=");
+		msg.append("providerType = ");
 		msg.append(providerType);
 
-		msg.append(", active=");
+		msg.append(", active = ");
 		msg.append(active);
 
 		msg.append("}");
@@ -378,10 +378,10 @@ public class PowwowServerPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("providerType=");
+		msg.append("providerType = ");
 		msg.append(providerType);
 
-		msg.append(", active=");
+		msg.append(", active = ");
 		msg.append(active);
 
 		msg.append("}");

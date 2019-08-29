@@ -98,7 +98,7 @@ public class VirtualHostPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("hostname=");
+			msg.append("hostname = ");
 			msg.append(hostname);
 
 			msg.append("}");
@@ -334,10 +334,10 @@ public class VirtualHostPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("companyId=");
+			msg.append("companyId = ");
 			msg.append(companyId);
 
-			msg.append(", layoutSetId=");
+			msg.append(", layoutSetId = ");
 			msg.append(layoutSetId);
 
 			msg.append("}");

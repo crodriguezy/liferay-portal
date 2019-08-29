@@ -301,7 +301,7 @@ public class DDMStorageLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -353,7 +353,7 @@ public class DDMStorageLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -870,10 +870,10 @@ public class DDMStorageLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -930,10 +930,10 @@ public class DDMStorageLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1258,7 +1258,7 @@ public class DDMStorageLinkPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("classPK=");
+			msg.append("classPK = ");
 			msg.append(classPK);
 
 			msg.append("}");
@@ -1650,7 +1650,7 @@ public class DDMStorageLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("structureId=");
+		msg.append("structureId = ");
 		msg.append(structureId);
 
 		msg.append("}");
@@ -1704,7 +1704,7 @@ public class DDMStorageLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("structureId=");
+		msg.append("structureId = ");
 		msg.append(structureId);
 
 		msg.append("}");
@@ -2176,7 +2176,7 @@ public class DDMStorageLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("structureVersionId=");
+		msg.append("structureVersionId = ");
 		msg.append(structureVersionId);
 
 		msg.append("}");
@@ -2231,7 +2231,7 @@ public class DDMStorageLinkPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("structureVersionId=");
+		msg.append("structureVersionId = ");
 		msg.append(structureVersionId);
 
 		msg.append("}");

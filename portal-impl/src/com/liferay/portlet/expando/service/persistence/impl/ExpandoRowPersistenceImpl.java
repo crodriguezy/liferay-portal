@@ -283,7 +283,7 @@ public class ExpandoRowPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("tableId=");
+		msg.append("tableId = ");
 		msg.append(tableId);
 
 		msg.append("}");
@@ -334,7 +334,7 @@ public class ExpandoRowPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("tableId=");
+		msg.append("tableId = ");
 		msg.append(tableId);
 
 		msg.append("}");
@@ -793,7 +793,7 @@ public class ExpandoRowPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("classPK=");
+		msg.append("classPK = ");
 		msg.append(classPK);
 
 		msg.append("}");
@@ -844,7 +844,7 @@ public class ExpandoRowPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("classPK=");
+		msg.append("classPK = ");
 		msg.append(classPK);
 
 		msg.append("}");
@@ -1121,10 +1121,10 @@ public class ExpandoRowPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("tableId=");
+			msg.append("tableId = ");
 			msg.append(tableId);
 
-			msg.append(", classPK=");
+			msg.append(", classPK = ");
 			msg.append(classPK);
 
 			msg.append("}");

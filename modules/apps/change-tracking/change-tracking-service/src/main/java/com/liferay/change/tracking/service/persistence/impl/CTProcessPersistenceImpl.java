@@ -292,7 +292,7 @@ public class CTProcessPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -345,7 +345,7 @@ public class CTProcessPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -801,7 +801,7 @@ public class CTProcessPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -852,7 +852,7 @@ public class CTProcessPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -1315,7 +1315,7 @@ public class CTProcessPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("ctCollectionId=");
+		msg.append("ctCollectionId = ");
 		msg.append(ctCollectionId);
 
 		msg.append("}");
@@ -1368,7 +1368,7 @@ public class CTProcessPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("ctCollectionId=");
+		msg.append("ctCollectionId = ");
 		msg.append(ctCollectionId);
 
 		msg.append("}");

@@ -285,7 +285,7 @@ public class SocialActivityLimitPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -340,7 +340,7 @@ public class SocialActivityLimitPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -806,7 +806,7 @@ public class SocialActivityLimitPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -860,7 +860,7 @@ public class SocialActivityLimitPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -1339,10 +1339,10 @@ public class SocialActivityLimitPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("classNameId=");
+		msg.append("classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", classPK=");
+		msg.append(", classPK = ");
 		msg.append(classPK);
 
 		msg.append("}");
@@ -1399,10 +1399,10 @@ public class SocialActivityLimitPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("classNameId=");
+		msg.append("classNameId = ");
 		msg.append(classNameId);
 
-		msg.append(", classPK=");
+		msg.append(", classPK = ");
 		msg.append(classPK);
 
 		msg.append("}");
@@ -1710,22 +1710,22 @@ public class SocialActivityLimitPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("groupId=");
+			msg.append("groupId = ");
 			msg.append(groupId);
 
-			msg.append(", userId=");
+			msg.append(", userId = ");
 			msg.append(userId);
 
-			msg.append(", classNameId=");
+			msg.append(", classNameId = ");
 			msg.append(classNameId);
 
-			msg.append(", classPK=");
+			msg.append(", classPK = ");
 			msg.append(classPK);
 
-			msg.append(", activityType=");
+			msg.append(", activityType = ");
 			msg.append(activityType);
 
-			msg.append(", activityCounterName=");
+			msg.append(", activityCounterName = ");
 			msg.append(activityCounterName);
 
 			msg.append("}");

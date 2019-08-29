@@ -295,7 +295,7 @@ public class AssetCategoryPropertyPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -350,7 +350,7 @@ public class AssetCategoryPropertyPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -822,7 +822,7 @@ public class AssetCategoryPropertyPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("categoryId=");
+		msg.append("categoryId = ");
 		msg.append(categoryId);
 
 		msg.append("}");
@@ -877,7 +877,7 @@ public class AssetCategoryPropertyPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("categoryId=");
+		msg.append("categoryId = ");
 		msg.append(categoryId);
 
 		msg.append("}");
@@ -1372,10 +1372,10 @@ public class AssetCategoryPropertyPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", key=");
+		msg.append(", key = ");
 		msg.append(key);
 
 		msg.append("}");
@@ -1432,10 +1432,10 @@ public class AssetCategoryPropertyPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("companyId=");
+		msg.append("companyId = ");
 		msg.append(companyId);
 
-		msg.append(", key=");
+		msg.append(", key = ");
 		msg.append(key);
 
 		msg.append("}");
@@ -1765,10 +1765,10 @@ public class AssetCategoryPropertyPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("categoryId=");
+			msg.append("categoryId = ");
 			msg.append(categoryId);
 
-			msg.append(", key=");
+			msg.append(", key = ");
 			msg.append(key);
 
 			msg.append("}");

@@ -284,7 +284,7 @@ public class RecentLayoutRevisionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -339,7 +339,7 @@ public class RecentLayoutRevisionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -806,7 +806,7 @@ public class RecentLayoutRevisionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -861,7 +861,7 @@ public class RecentLayoutRevisionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("userId=");
+		msg.append("userId = ");
 		msg.append(userId);
 
 		msg.append("}");
@@ -1335,7 +1335,7 @@ public class RecentLayoutRevisionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("layoutRevisionId=");
+		msg.append("layoutRevisionId = ");
 		msg.append(layoutRevisionId);
 
 		msg.append("}");
@@ -1390,7 +1390,7 @@ public class RecentLayoutRevisionPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("layoutRevisionId=");
+		msg.append("layoutRevisionId = ");
 		msg.append(layoutRevisionId);
 
 		msg.append("}");
@@ -1679,13 +1679,13 @@ public class RecentLayoutRevisionPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("userId=");
+			msg.append("userId = ");
 			msg.append(userId);
 
-			msg.append(", layoutSetBranchId=");
+			msg.append(", layoutSetBranchId = ");
 			msg.append(layoutSetBranchId);
 
-			msg.append(", plid=");
+			msg.append(", plid = ");
 			msg.append(plid);
 
 			msg.append("}");

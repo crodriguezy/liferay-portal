@@ -315,7 +315,7 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -366,7 +366,7 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
 		msg.append("}");
@@ -671,10 +671,10 @@ public class FragmentEntryPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("uuid=");
+			msg.append("uuid = ");
 			msg.append(uuid);
 
-			msg.append(", groupId=");
+			msg.append(", groupId = ");
 			msg.append(groupId);
 
 			msg.append("}");
@@ -1138,10 +1138,10 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1198,10 +1198,10 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("uuid=");
+		msg.append("uuid = ");
 		msg.append(uuid);
 
-		msg.append(", companyId=");
+		msg.append(", companyId = ");
 		msg.append(companyId);
 
 		msg.append("}");
@@ -1709,7 +1709,7 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -1762,7 +1762,7 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
 		msg.append("}");
@@ -2611,7 +2611,7 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("fragmentCollectionId=");
+		msg.append("fragmentCollectionId = ");
 		msg.append(fragmentCollectionId);
 
 		msg.append("}");
@@ -2666,7 +2666,7 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("fragmentCollectionId=");
+		msg.append("fragmentCollectionId = ");
 		msg.append(fragmentCollectionId);
 
 		msg.append("}");
@@ -3153,10 +3153,10 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", fragmentCollectionId=");
+		msg.append(", fragmentCollectionId = ");
 		msg.append(fragmentCollectionId);
 
 		msg.append("}");
@@ -3213,10 +3213,10 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", fragmentCollectionId=");
+		msg.append(", fragmentCollectionId = ");
 		msg.append(fragmentCollectionId);
 
 		msg.append("}");
@@ -3916,10 +3916,10 @@ public class FragmentEntryPersistenceImpl
 
 			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			msg.append("groupId=");
+			msg.append("groupId = ");
 			msg.append(groupId);
 
-			msg.append(", fragmentEntryKey=");
+			msg.append(", fragmentEntryKey = ");
 			msg.append(fragmentEntryKey);
 
 			msg.append("}");
@@ -4390,13 +4390,13 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", fragmentCollectionId=");
+		msg.append(", fragmentCollectionId = ");
 		msg.append(fragmentCollectionId);
 
-		msg.append(", name=");
+		msg.append(", name LIKE ");
 		msg.append(name);
 
 		msg.append("}");
@@ -4455,13 +4455,13 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", fragmentCollectionId=");
+		msg.append(", fragmentCollectionId = ");
 		msg.append(fragmentCollectionId);
 
-		msg.append(", name=");
+		msg.append(", name LIKE ");
 		msg.append(name);
 
 		msg.append("}");
@@ -5489,13 +5489,13 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", fragmentCollectionId=");
+		msg.append(", fragmentCollectionId = ");
 		msg.append(fragmentCollectionId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -5554,13 +5554,13 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", fragmentCollectionId=");
+		msg.append(", fragmentCollectionId = ");
 		msg.append(fragmentCollectionId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
 		msg.append("}");
@@ -6524,13 +6524,13 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", fragmentCollectionId=");
+		msg.append(", fragmentCollectionId = ");
 		msg.append(fragmentCollectionId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -6589,13 +6589,13 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", fragmentCollectionId=");
+		msg.append(", fragmentCollectionId = ");
 		msg.append(fragmentCollectionId);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -7568,16 +7568,16 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", fragmentCollectionId=");
+		msg.append(", fragmentCollectionId = ");
 		msg.append(fragmentCollectionId);
 
-		msg.append(", name=");
+		msg.append(", name LIKE ");
 		msg.append(name);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -7639,16 +7639,16 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", fragmentCollectionId=");
+		msg.append(", fragmentCollectionId = ");
 		msg.append(fragmentCollectionId);
 
-		msg.append(", name=");
+		msg.append(", name LIKE ");
 		msg.append(name);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -8727,16 +8727,16 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", fragmentCollectionId=");
+		msg.append(", fragmentCollectionId = ");
 		msg.append(fragmentCollectionId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
@@ -8798,16 +8798,16 @@ public class FragmentEntryPersistenceImpl
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("groupId=");
+		msg.append("groupId = ");
 		msg.append(groupId);
 
-		msg.append(", fragmentCollectionId=");
+		msg.append(", fragmentCollectionId = ");
 		msg.append(fragmentCollectionId);
 
-		msg.append(", type=");
+		msg.append(", type = ");
 		msg.append(type);
 
-		msg.append(", status=");
+		msg.append(", status = ");
 		msg.append(status);
 
 		msg.append("}");
