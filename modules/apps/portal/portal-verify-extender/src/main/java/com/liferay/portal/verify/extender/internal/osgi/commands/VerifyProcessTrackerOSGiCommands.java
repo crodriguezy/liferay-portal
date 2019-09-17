@@ -474,7 +474,9 @@ public class VerifyProcessTrackerOSGiCommands {
 			String key, VerifyProcess serviceVerifyProcess,
 			List<VerifyProcess> contentVerifyProcesses) {
 
-			_execute(verifyProcessTrackerMap, key, null, false);
+			_execute(
+				verifyProcessTrackerMap, key,
+				OutputStreamContainerFactory.DUMMY_FACTORY_NAME, false);
 		}
 
 		@Override
