@@ -19,6 +19,8 @@ package com.liferay.portal.output.stream.container;
  */
 public interface OutputStreamContainerFactory {
 
+	public static final String DUMMY_FACTORY_NAME = "Dummy";
+
 	public OutputStreamContainer create(String hint);
 
 }
