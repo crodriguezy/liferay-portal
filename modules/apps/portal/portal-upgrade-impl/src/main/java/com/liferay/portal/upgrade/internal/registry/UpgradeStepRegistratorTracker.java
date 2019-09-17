@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.upgrade.UpgradeStep;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
+import com.liferay.portal.output.stream.container.OutputStreamContainerFactory;
 import com.liferay.portal.upgrade.internal.configuration.ReleaseManagerConfiguration;
 import com.liferay.portal.upgrade.internal.release.osgi.commands.ReleaseManagerOSGiCommands;
 import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
@@ -171,7 +172,9 @@ public class UpgradeStepRegistratorTracker {
 			}
 
 			if (_releaseManagerConfiguration.autoUpgrade()) {
-				_releaseManagerOSGiCommands.execute(bundleSymbolicName);
+				_releaseManagerOSGiCommands.executeTo(
+					bundleSymbolicName,
+					OutputStreamContainerFactory.DUMMY_FACTORY_NAME);
 			}
 
 			return serviceRegistrations;
