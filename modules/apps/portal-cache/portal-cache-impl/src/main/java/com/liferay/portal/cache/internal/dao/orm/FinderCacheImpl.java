@@ -520,30 +520,4 @@ public class FinderCacheImpl
 
 	}
 
-	private static class LocalCacheValue implements Serializable {
-
-		public LocalCacheValue(long createTime, Serializable value) {
-			_createTime = createTime;
-			_value = value;
-		}
-
-		public Serializable getValue() {
-			return _value;
-		}
-
-		public boolean isDirty(Long expireTime) {
-			if ((expireTime == null) || (_createTime < expireTime)) {
-				return true;
-			}
-
-			return false;
-		}
-
-		private static final long serialVersionUID = 1L;
-
-		private final long _createTime;
-		private final Serializable _value;
-
-	}
-
 }
