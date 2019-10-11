@@ -116,27 +116,37 @@ public class FinderCacheImpl
 		}
 
 		String encodedArguments = finderPath.encodeArguments(args);
-		Map<Serializable, Serializable> localCache = null;
+		Map<Serializable, LocalCacheValue> localCache = null;
 		Serializable localCacheKey = null;
 		Serializable primaryKey = null;
+
+		PortalCache<Serializable, Serializable> portalCache = _getPortalCache(
+			finderPath.getCacheName());
 
 		if (_isLocalCacheEnabled()) {
 			localCache = _localCache.get();
 
-			localCacheKey = finderPath.encodeLocalCacheKey(encodedArguments);
+			LocalCacheValue localCacheValue = localCache.get(
+				finderPath.encodeLocalCacheKey(encodedArguments));
 
-			primaryKey = localCache.get(localCacheKey);
+			if ((localCacheValue != null) &&
+				!localCacheValue.isDirty(
+					_portalCacheModificationListener.
+						getPortalCacheLastModifiedTime(portalCache))) {
+
+				primaryKey = localCacheValue.getValue();
+			}
 		}
 
 		if (primaryKey == null) {
-			PortalCache<Serializable, Serializable> portalCache =
-				_getPortalCache(finderPath.getCacheName());
-
 			primaryKey = portalCache.get(
 				finderPath.encodeCacheKey(encodedArguments));
 
 			if ((primaryKey != null) && (localCache != null)) {
-				localCache.put(localCacheKey, primaryKey);
+				localCache.put(
+					localCacheKey,
+					new LocalCacheValue(
+						System.currentTimeMillis(), primaryKey));
 			}
 		}
 
@@ -212,20 +222,21 @@ public class FinderCacheImpl
 			}
 		}
 		else {
-			if (_isLocalCacheEnabled()) {
-				Map<Serializable, Serializable> localCache = _localCache.get();
-
-				localCache.put(
-					finderPath.encodeLocalCacheKey(encodedArguments),
-					primaryKey);
-			}
-
 			if (quiet) {
 				PortalCacheHelperUtil.putWithoutReplicator(
 					portalCache, cacheKey, primaryKey);
 			}
 			else {
 				portalCache.put(cacheKey, primaryKey);
+			}
+
+			if (_isLocalCacheEnabled()) {
+				Map<Serializable, Serializable> localCache = _localCache.get();
+
+				localCache.put(
+					finderPath.encodeLocalCacheKey(encodedArguments),
+					new LocalCacheValue(
+						System.currentTimeMillis(), primaryKey));
 			}
 		}
 	}
@@ -291,6 +302,11 @@ public class FinderCacheImpl
 			portalCacheManager = _multiVMPool.getPortalCacheManager();
 
 		portalCacheManager.registerPortalCacheManagerListener(this);
+
+		if (_localCache != null) {
+			_portalCacheModificationListener =
+				new PortalCacheModificationListener();
+		}
 	}
 
 	@Reference(unbind = "-")
@@ -329,6 +345,11 @@ public class FinderCacheImpl
 
 		if (previousPortalCache != null) {
 			return previousPortalCache;
+		}
+
+		if (_localCache != null) {
+			portalCache.registerPortalCacheListener(
+				_portalCacheModificationListener);
 		}
 
 		return portalCache;
@@ -451,6 +472,7 @@ public class FinderCacheImpl
 	private EntityCache _entityCache;
 	private ThreadLocal<LRUMap> _localCache;
 	private MultiVMPool _multiVMPool;
+	private PortalCacheModificationListener _portalCacheModificationListener;
 	private final ConcurrentMap<String, PortalCache<Serializable, Serializable>>
 		_portalCaches = new ConcurrentHashMap<>();
 	private Props _props;
@@ -495,6 +517,32 @@ public class FinderCacheImpl
 		}
 
 		private Object[] _args;
+
+	}
+
+	private static class LocalCacheValue implements Serializable {
+
+		public LocalCacheValue(long createTime, Serializable value) {
+			_createTime = createTime;
+			_value = value;
+		}
+
+		public Serializable getValue() {
+			return _value;
+		}
+
+		public boolean isDirty(Long expireTime) {
+			if ((expireTime == null) || (_createTime < expireTime)) {
+				return true;
+			}
+
+			return false;
+		}
+
+		private static final long serialVersionUID = 1L;
+
+		private final long _createTime;
+		private final Serializable _value;
 
 	}
 
