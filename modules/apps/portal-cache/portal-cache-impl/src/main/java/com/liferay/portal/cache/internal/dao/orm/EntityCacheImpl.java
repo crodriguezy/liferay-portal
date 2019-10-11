@@ -125,6 +125,11 @@ public class EntityCacheImpl
 			return previousPortalCache;
 		}
 
+		if (_localCache != null) {
+			portalCache.registerPortalCacheListener(
+				_portalCacheModificationListener);
+		}
+
 		return portalCache;
 	}
 
@@ -145,22 +150,30 @@ public class EntityCacheImpl
 
 		Serializable result = null;
 
-		Map<Serializable, Serializable> localCache = null;
+		Map<Serializable, LocalCacheValue> localCache = null;
 
 		Serializable localCacheKey = null;
+
+		PortalCache<Serializable, Serializable> portalCache = getPortalCache(
+			clazz);
 
 		if (_isLocalCacheEnabled()) {
 			localCache = _localCache.get();
 
 			localCacheKey = new LocalCacheKey(clazz.getName(), primaryKey);
 
-			result = localCache.get(localCacheKey);
+			LocalCacheValue localCacheValue = localCache.get(localCacheKey);
+
+			if ((localCacheValue != null) &&
+				!localCacheValue.isDirty(
+					_portalCacheModificationListener.
+						getPortalCacheLastModifiedTime(portalCache))) {
+
+				result = localCacheValue.getValue();
+			}
 		}
 
 		if (result == null) {
-			PortalCache<Serializable, Serializable> portalCache =
-				getPortalCache(clazz);
-
 			result = portalCache.get(primaryKey);
 
 			if (result == null) {
@@ -168,7 +181,9 @@ public class EntityCacheImpl
 			}
 
 			if (localCache != null) {
-				localCache.put(localCacheKey, result);
+				localCache.put(
+					localCacheKey,
+					new LocalCacheValue(System.currentTimeMillis(), result));
 			}
 		}
 
@@ -206,24 +221,32 @@ public class EntityCacheImpl
 
 		Serializable result = null;
 
-		Map<Serializable, Serializable> localCache = null;
+		Map<Serializable, LocalCacheValue> localCache = null;
 
 		Serializable localCacheKey = null;
+
+		PortalCache<Serializable, Serializable> portalCache = getPortalCache(
+			clazz);
 
 		if (_isLocalCacheEnabled()) {
 			localCache = _localCache.get();
 
 			localCacheKey = new LocalCacheKey(clazz.getName(), primaryKey);
 
-			result = localCache.get(localCacheKey);
+			LocalCacheValue localCacheValue = localCache.get(localCacheKey);
+
+			if ((localCacheValue != null) &&
+				!localCacheValue.isDirty(
+					_portalCacheModificationListener.
+						getPortalCacheLastModifiedTime(portalCache))) {
+
+				result = localCacheValue.getValue();
+			}
 		}
 
 		Serializable loadResult = null;
 
 		if (result == null) {
-			PortalCache<Serializable, Serializable> portalCache =
-				getPortalCache(clazz);
-
 			result = portalCache.get(primaryKey);
 
 			if (result == null) {
@@ -258,7 +281,9 @@ public class EntityCacheImpl
 			}
 
 			if (localCache != null) {
-				localCache.put(localCacheKey, result);
+				localCache.put(
+					localCacheKey,
+					new LocalCacheValue(System.currentTimeMillis(), result));
 			}
 		}
 
@@ -304,15 +329,6 @@ public class EntityCacheImpl
 
 		result = baseModel.toCacheModel();
 
-		if (_isLocalCacheEnabled()) {
-			Map<Serializable, Serializable> localCache = _localCache.get();
-
-			Serializable localCacheKey = new LocalCacheKey(
-				clazz.getName(), primaryKey);
-
-			localCache.put(localCacheKey, result);
-		}
-
 		PortalCache<Serializable, Serializable> portalCache = getPortalCache(
 			clazz);
 
@@ -322,6 +338,18 @@ public class EntityCacheImpl
 		}
 		else {
 			portalCache.put(primaryKey, result);
+		}
+
+		if (_isLocalCacheEnabled()) {
+			Map<Serializable, Serializable> localCache = _localCache.get();
+
+			Serializable localCacheKey = new LocalCacheKey(
+				clazz.getName(), primaryKey);
+
+			Serializable localCacheValue = new LocalCacheValue(
+				System.currentTimeMillis(), result);
+
+			localCache.put(localCacheKey, localCacheValue);
 		}
 	}
 
@@ -344,6 +372,11 @@ public class EntityCacheImpl
 			return;
 		}
 
+		PortalCache<Serializable, Serializable> portalCache = getPortalCache(
+			clazz);
+
+		portalCache.remove(primaryKey);
+
 		if (_isLocalCacheEnabled()) {
 			Map<Serializable, Serializable> localCache = _localCache.get();
 
@@ -352,11 +385,6 @@ public class EntityCacheImpl
 
 			localCache.remove(localCacheKey);
 		}
-
-		PortalCache<Serializable, Serializable> portalCache = getPortalCache(
-			clazz);
-
-		portalCache.remove(primaryKey);
 	}
 
 	@Activate
@@ -386,6 +414,11 @@ public class EntityCacheImpl
 			portalCacheManager = _multiVMPool.getPortalCacheManager();
 
 		portalCacheManager.registerPortalCacheManagerListener(this);
+
+		if (_localCache != null) {
+			_portalCacheModificationListener =
+				new PortalCacheModificationListener();
+		}
 	}
 
 	@Reference(unbind = "-")
@@ -428,6 +461,7 @@ public class EntityCacheImpl
 
 	private ThreadLocal<LRUMap> _localCache;
 	private MultiVMPool _multiVMPool;
+	private PortalCacheModificationListener _portalCacheModificationListener;
 	private final ConcurrentMap<String, PortalCache<Serializable, Serializable>>
 		_portalCaches = new ConcurrentHashMap<>();
 	private Props _props;
@@ -464,6 +498,32 @@ public class EntityCacheImpl
 
 		private final String _className;
 		private final Serializable _primaryKey;
+
+	}
+
+	private static class LocalCacheValue implements Serializable {
+
+		public LocalCacheValue(long createTime, Serializable value) {
+			_createTime = createTime;
+			_value = value;
+		}
+
+		public Serializable getValue() {
+			return _value;
+		}
+
+		public boolean isDirty(Long expireTime) {
+			if ((expireTime == null) || (_createTime < expireTime)) {
+				return true;
+			}
+
+			return false;
+		}
+
+		private static final long serialVersionUID = 1L;
+
+		private final long _createTime;
+		private final Serializable _value;
 
 	}
 
