@@ -65,6 +65,6 @@ public class SegmentsExperiencePortletUtil {
 	}
 
 	private static final String _SEGMENTS_EXPERIENCE_SEPARATOR =
-		"_SEGMENTS_EXPERIENCE_";
+		"-SEGMENTS-EXPERIENCE-";
 
 }
