@@ -82,6 +82,13 @@ public class LayoutPageTemplateStructureDataHandlerUtil {
 			return;
 		}
 
+		existingLayoutPageTemplateStructure.setClassNameId(classNameId);
+		existingLayoutPageTemplateStructure.setClassPK(classPK);
+
+		_layoutPageTemplateStructureLocalService.
+			updateLayoutPageTemplateStructure(
+				existingLayoutPageTemplateStructure);
+
 		List<LayoutPageTemplateStructureRel>
 			existingLayoutPageTemplateStructureRels =
 				_layoutPageTemplateStructureRelLocalService.
