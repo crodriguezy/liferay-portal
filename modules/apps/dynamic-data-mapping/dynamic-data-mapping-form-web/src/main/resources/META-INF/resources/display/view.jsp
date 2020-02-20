@@ -17,7 +17,17 @@
 <%@ include file="/display/init.jsp" %>
 
 <%
-String redirect = ParamUtil.getString(request, "redirect", currentURL);
+String redirect = ParamUtil.getString(request, "redirect");
+
+if (redirect == null) {
+	HttpServletRequest originalRequest = PortalUtil.getOriginalServletRequest(request);
+
+	redirect = originalRequest.getParameter("redirect");
+
+	if (redirect == null) {
+		redirect = currentURL;
+	}
+}
 
 long formInstanceId = ddmFormDisplayContext.getFormInstanceId();
 %>
