@@ -18,6 +18,10 @@
 
 <%
 String redirect = ParamUtil.getString(request, "redirect", currentURL);
+		 
+if (redirect == null) {
+	redirect = currentURL;
+}
 
 long formInstanceId = ddmFormDisplayContext.getFormInstanceId();
 %>
