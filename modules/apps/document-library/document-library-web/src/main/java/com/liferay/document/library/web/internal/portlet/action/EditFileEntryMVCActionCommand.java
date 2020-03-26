@@ -434,7 +434,7 @@ public class EditFileEntryMVCActionCommand extends BaseMVCActionCommand {
 				serviceContext);
 
 			_assetDisplayPageEntryFormProcessor.process(
-				FileEntry.class.getName(), fileEntry.getFileEntryId(),
+				DLFileEntry.class.getName(), fileEntry.getFileEntryId(),
 				actionRequest);
 
 			validFileNameKVPs.add(
