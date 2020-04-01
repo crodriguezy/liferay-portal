@@ -8469,7 +8469,13 @@ public class PortalImpl implements Portal {
 		sb.append(_pathContext);
 
 		if (themeDisplay.isI18n() && !canonicalURL) {
-			sb.append(themeDisplay.getI18nPath());
+			String i18nLanguageId = themeDisplay.getI18nLanguageId();
+
+			if (LanguageUtil.isAvailableLocale(
+					group.getGroupId(), i18nLanguageId)) {
+
+				sb.append(themeDisplay.getI18nPath());
+			}
 		}
 
 		if (themeDisplay.isWidget()) {
