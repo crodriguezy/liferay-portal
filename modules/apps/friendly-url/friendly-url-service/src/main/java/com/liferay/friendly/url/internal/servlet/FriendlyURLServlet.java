@@ -328,6 +328,16 @@ public class FriendlyURLServlet extends HttpServlet {
 			}
 		}
 
+		Map<String, String[]> parameterMap =
+			httpServletRequest.getParameterMap();
+
+		if (parameterMap != null) {
+			for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+				actualURL = HttpUtil.setParameter(
+					actualURL, entry.getKey(), entry.getValue()[0]);
+			}
+		}
+
 		return new Redirect(actualURL);
 	}
 
