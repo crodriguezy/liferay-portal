@@ -64,6 +64,7 @@ import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.LinkedHashMapBuilder;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.test.rule.Inject;
@@ -90,8 +91,8 @@ import org.junit.runner.RunWith;
 /**
  * @author Drew Brokke
  * @author Julio Camarero
- * @author Roberto Díaz
- * @author Sergio González
+ * @author Roberto DÃ­az
+ * @author Sergio GonzÃ¡lez
  */
 @RunWith(Arquillian.class)
 @Sync(cleanTransaction = true)
@@ -880,6 +881,35 @@ public class GroupServiceTest {
 	}
 
 	@Test
+	public void testGroupValidSiteFriendlyURLI18nPath() throws Exception {
+		_group = GroupTestUtil.addGroup();
+
+		GroupTestUtil.updateDisplaySettings(
+			_group.getGroupId(), Arrays.asList(LocaleUtil.SPAIN),
+			LocaleUtil.SPAIN);
+
+		ThemeDisplay themeDisplay = new ThemeDisplay();
+
+		String languageId = _language.getLanguageId(LocaleUtil.ENGLISH);
+
+		String i18path = StringPool.SLASH.concat(
+			LocaleUtil.toW3cLanguageId(languageId));
+
+		themeDisplay.setI18nLanguageId(languageId);
+
+		themeDisplay.setI18nPath(i18path);
+		themeDisplay.setSiteGroupId(_group.getGroupId());
+
+		String siteFriendlyURL = PortalUtil.getGroupFriendlyURL(
+			_group.getPublicLayoutSet(), themeDisplay);
+
+		boolean validSiteFriendlyURLI18nPath = !siteFriendlyURL.contains(
+			themeDisplay.getI18nPath());
+
+		Assert.assertTrue(validSiteFriendlyURLI18nPath);
+	}
+
+	@Test
 	public void testIndividualResourcePermission() throws Exception {
 		_group = GroupTestUtil.addGroup();
 
@@ -1150,7 +1180,7 @@ public class GroupServiceTest {
 	public void testUpdateFriendlyURLWithJapaneseCharacters() throws Exception {
 		_group = GroupTestUtil.addGroup();
 
-		String friendlyURL = "/平仮名片仮名漢字";
+		String friendlyURL = "/å¹³ä»®å��ç‰‡ä»®å��æ¼¢å­—";
 
 		_group = _groupService.updateFriendlyURL(
 			_group.getGroupId(), friendlyURL);
