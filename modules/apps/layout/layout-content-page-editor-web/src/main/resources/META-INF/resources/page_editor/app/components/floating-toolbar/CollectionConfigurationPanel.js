@@ -12,13 +12,15 @@
  * details.
  */
 
-import ClayForm, {ClayInput, ClaySelectWithOption} from '@clayui/form';
+import ClayForm, {
+	ClayInput,
+	ClaySelect,
+	ClaySelectWithOption,
+} from '@clayui/form';
 import React, {useEffect, useState} from 'react';
 
 import {config} from '../../../app/config/index';
 import CollectionSelector from '../../../common/components/CollectionSelector';
-import {LAYOUT_DATA_ITEM_DEFAULT_CONFIGURATIONS} from '../../config/constants/layoutDataItemDefaultConfigurations';
-import {LAYOUT_DATA_ITEM_TYPES} from '../../config/constants/layoutDataItemTypes';
 import selectSegmentsExperienceId from '../../selectors/selectSegmentsExperienceId';
 import InfoItemService from '../../services/InfoItemService';
 import {useDispatch, useSelector} from '../../store/index';
@@ -34,23 +36,20 @@ const LAYOUT_OPTIONS = [
 	{label: Liferay.Util.sub(Liferay.Language.get('x-columns'), 6), value: '6'},
 ];
 
-function collectionIsMapped(collectionConfig) {
-	return collectionConfig.collection;
-}
+const LIST_STYLE_GRID = '';
+
+const DEFAULT_LIST_STYLE = {
+	label: Liferay.Language.get('grid'),
+	value: LIST_STYLE_GRID,
+};
 
 export const CollectionConfigurationPanel = ({item}) => {
 	const collectionLayoutId = useId();
+	const collectionListItemStyleId = useId();
 	const collectionNumberOfItemsId = useId();
 	const dispatch = useDispatch();
 	const listStyleId = useId();
 	const segmentsExperienceId = useSelector(selectSegmentsExperienceId);
-
-	const collectionConfig = {
-		...LAYOUT_DATA_ITEM_DEFAULT_CONFIGURATIONS[
-			LAYOUT_DATA_ITEM_TYPES.collection
-		],
-		...item.config,
-	};
 
 	const handleConfigurationChanged = (itemConfig) => {
 		dispatch(
@@ -62,10 +61,14 @@ export const CollectionConfigurationPanel = ({item}) => {
 		);
 	};
 
-	const [availableListRenderers, setAvailableListRenderers] = useState([]);
+	const [availableListItemStyles, setAvailableListItemStyles] = useState([]);
 
-	const collectionItemType = collectionConfig.collection
-		? collectionConfig.collection.itemType
+	const [availableListStyles, setAvailableListStyles] = useState([
+		DEFAULT_LIST_STYLE,
+	]);
+
+	const collectionItemType = item.config.collection
+		? item.config.collection.itemType
 		: null;
 
 	useEffect(() => {
@@ -74,65 +77,188 @@ export const CollectionConfigurationPanel = ({item}) => {
 				className: collectionItemType,
 			})
 				.then((response) => {
-					setAvailableListRenderers(response);
+					setAvailableListStyles([
+						DEFAULT_LIST_STYLE,
+						{
+							label: Liferay.Language.get('templates'),
+							options: response,
+							type: 'group',
+						},
+					]);
 				})
 				.catch(() => {
-					setAvailableListRenderers([]);
+					setAvailableListStyles([DEFAULT_LIST_STYLE]);
 				});
 		}
 	}, [collectionItemType]);
+
+	useEffect(() => {
+		if (
+			(item.config.collection,
+			item.config.listStyle && item.config.listStyle !== LIST_STYLE_GRID)
+		) {
+			InfoItemService.getAvailableListItemRenderers({
+				itemSubtype: item.config.collection.itemSubtype,
+				itemType: item.config.collection.itemType,
+				listStyle: item.config.listStyle,
+			})
+				.then((response) => {
+					setAvailableListItemStyles(response);
+				})
+				.catch(() => {
+					setAvailableListItemStyles([]);
+				});
+		}
+	}, [item.config.collection, item.config.listStyle]);
 
 	return (
 		<>
 			<ClayForm.Group small>
 				<CollectionSelector
-					collectionTitle={collectionConfig.collection.title}
+					collectionTitle={(item.config.collection || {}).title || ''}
 					itemSelectorURL={config.collectionSelectorURL}
 					label={Liferay.Language.get('collection')}
 					onCollectionSelect={(collection) =>
 						handleConfigurationChanged({
 							collection,
+							listItemStyle: null,
+							listStyle: LIST_STYLE_GRID,
+							templateKey: null,
 						})
 					}
 				/>
 			</ClayForm.Group>
-			{collectionIsMapped(item.config) && (
+			{item.config.collection && (
 				<>
-					{availableListRenderers.length > 0 && (
+					<ClayForm.Group small>
+						<label htmlFor={listStyleId}>
+							{Liferay.Language.get('list-style')}
+						</label>
+						<ClaySelectWithOption
+							aria-label={Liferay.Language.get('list-style')}
+							id={listStyleId}
+							onChange={({target: {value}}) =>
+								handleConfigurationChanged({
+									listStyle: value,
+								})
+							}
+							options={availableListStyles}
+							value={item.config.listStyle}
+						/>
+					</ClayForm.Group>
+
+					{item.config.listStyle === LIST_STYLE_GRID && (
 						<ClayForm.Group small>
-							<label htmlFor={listStyleId}>
-								{Liferay.Language.get('list-style')}
+							<label htmlFor={collectionLayoutId}>
+								{Liferay.Language.get('layout')}
 							</label>
 							<ClaySelectWithOption
-								aria-label={Liferay.Language.get('list-style')}
-								id={listStyleId}
+								aria-label={Liferay.Language.get('layout')}
+								id={collectionLayoutId}
 								onChange={({target: {value}}) =>
 									handleConfigurationChanged({
-										listStyle: value,
+										numberOfColumns: value,
 									})
 								}
-								options={availableListRenderers}
-								value={item.config.listStyle}
+								options={LAYOUT_OPTIONS}
+								value={item.config.numberOfColumns}
 							/>
 						</ClayForm.Group>
 					)}
 
-					<ClayForm.Group small>
-						<label htmlFor={collectionLayoutId}>
-							{Liferay.Language.get('layout')}
-						</label>
-						<ClaySelectWithOption
-							aria-label={Liferay.Language.get('layout')}
-							id={collectionLayoutId}
-							onChange={({target: {value}}) =>
-								handleConfigurationChanged({
-									numberOfColumns: value,
-								})
-							}
-							options={LAYOUT_OPTIONS}
-							value={item.config.numberOfColumns}
-						/>
-					</ClayForm.Group>
+					{item.config.listStyle !== LIST_STYLE_GRID &&
+						availableListItemStyles.length > 0 && (
+							<ClayForm.Group small>
+								<label htmlFor={collectionListItemStyleId}>
+									{Liferay.Language.get('list-item-style')}
+								</label>
+								<ClaySelect
+									aria-label={Liferay.Language.get(
+										'list-item-style'
+									)}
+									id={collectionListItemStyleId}
+									onChange={({target}) =>
+										handleConfigurationChanged({
+											listItemStyle:
+												target.options[
+													target.selectedIndex
+												].dataset.key,
+											templateKey:
+												target.options[
+													target.selectedIndex
+												].dataset.templateKey,
+										})
+									}
+								>
+									{availableListItemStyles.map(
+										(listItemStyle) => {
+											if (listItemStyle.templates) {
+												return (
+													<ClaySelect.OptGroup
+														key={
+															listItemStyle.label
+														}
+														label={
+															listItemStyle.label
+														}
+													>
+														{listItemStyle.templates.map(
+															(template) => (
+																<ClaySelect.Option
+																	data-key={
+																		template.key
+																	}
+																	data-template-key={
+																		template.templateKey
+																	}
+																	key={`${template.key}_${template.templateKey}`}
+																	label={
+																		template.label
+																	}
+																	selected={
+																		item
+																			.config
+																			.listItemStyle ===
+																			template.key &&
+																		(!item
+																			.config
+																			.templateKey ||
+																			item
+																				.config
+																				.templateKey ===
+																				template.templateKey)
+																	}
+																/>
+															)
+														)}
+													</ClaySelect.OptGroup>
+												);
+											}
+											else {
+												return (
+													<ClaySelect.Option
+														data-key={
+															listItemStyle.key
+														}
+														key={
+															listItemStyle.label
+														}
+														label={
+															listItemStyle.label
+														}
+														selected={
+															item.config
+																.listItemStyle ===
+															listItemStyle.key
+														}
+													/>
+												);
+											}
+										}
+									)}
+								</ClaySelect>
+							</ClayForm.Group>
+						)}
 
 					<ClayForm.Group small>
 						<label htmlFor={collectionNumberOfItemsId}>
@@ -147,7 +273,7 @@ export const CollectionConfigurationPanel = ({item}) => {
 								})
 							}
 							type="number"
-							value={collectionConfig.numberOfItems}
+							value={item.config.numberOfItems}
 						/>
 					</ClayForm.Group>
 				</>

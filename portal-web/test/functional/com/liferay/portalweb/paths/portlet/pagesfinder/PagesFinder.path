@@ -20,7 +20,7 @@
 </tr>
 <tr>
 	<td>OUTLINE_ICON</td>
-	<td>//a[contains(.,'Find a Page')]</td>
+	<td>//button[contains(.,'Page Tree')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -31,6 +31,11 @@
 <tr>
 	<td>PAGE_NAME</td>
 	<td>//a[contains(@class,'layout-tree')][contains(.,'${pageName}')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>PAGE_SEARCH_RESULT</td>
+	<td>//a[contains(@class,'mb-2')][normalize-space(text())='${key_pageName}']</td>
 	<td></td>
 </tr>
 <tr>

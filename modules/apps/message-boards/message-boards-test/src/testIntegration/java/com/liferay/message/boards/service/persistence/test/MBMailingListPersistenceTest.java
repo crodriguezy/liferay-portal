@@ -124,6 +124,10 @@ public class MBMailingListPersistenceTest {
 
 		MBMailingList newMBMailingList = _persistence.create(pk);
 
+		newMBMailingList.setMvccVersion(RandomTestUtil.nextLong());
+
+		newMBMailingList.setCtCollectionId(RandomTestUtil.nextLong());
+
 		newMBMailingList.setUuid(RandomTestUtil.randomString());
 
 		newMBMailingList.setGroupId(RandomTestUtil.nextLong());
@@ -179,6 +183,12 @@ public class MBMailingListPersistenceTest {
 		MBMailingList existingMBMailingList = _persistence.findByPrimaryKey(
 			newMBMailingList.getPrimaryKey());
 
+		Assert.assertEquals(
+			existingMBMailingList.getMvccVersion(),
+			newMBMailingList.getMvccVersion());
+		Assert.assertEquals(
+			existingMBMailingList.getCtCollectionId(),
+			newMBMailingList.getCtCollectionId());
 		Assert.assertEquals(
 			existingMBMailingList.getUuid(), newMBMailingList.getUuid());
 		Assert.assertEquals(
@@ -321,15 +331,16 @@ public class MBMailingListPersistenceTest {
 
 	protected OrderByComparator<MBMailingList> getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create(
-			"MBMailingList", "uuid", true, "mailingListId", true, "groupId",
-			true, "companyId", true, "userId", true, "userName", true,
-			"createDate", true, "modifiedDate", true, "categoryId", true,
-			"emailAddress", true, "inProtocol", true, "inServerName", true,
-			"inServerPort", true, "inUseSSL", true, "inUserName", true,
-			"inPassword", true, "inReadInterval", true, "outEmailAddress", true,
-			"outCustom", true, "outServerName", true, "outServerPort", true,
-			"outUseSSL", true, "outUserName", true, "outPassword", true,
-			"allowAnonymous", true, "active", true);
+			"MBMailingList", "mvccVersion", true, "ctCollectionId", true,
+			"uuid", true, "mailingListId", true, "groupId", true, "companyId",
+			true, "userId", true, "userName", true, "createDate", true,
+			"modifiedDate", true, "categoryId", true, "emailAddress", true,
+			"inProtocol", true, "inServerName", true, "inServerPort", true,
+			"inUseSSL", true, "inUserName", true, "inPassword", true,
+			"inReadInterval", true, "outEmailAddress", true, "outCustom", true,
+			"outServerName", true, "outServerPort", true, "outUseSSL", true,
+			"outUserName", true, "outPassword", true, "allowAnonymous", true,
+			"active", true);
 	}
 
 	@Test
@@ -580,6 +591,10 @@ public class MBMailingListPersistenceTest {
 		long pk = RandomTestUtil.nextLong();
 
 		MBMailingList mbMailingList = _persistence.create(pk);
+
+		mbMailingList.setMvccVersion(RandomTestUtil.nextLong());
+
+		mbMailingList.setCtCollectionId(RandomTestUtil.nextLong());
 
 		mbMailingList.setUuid(RandomTestUtil.randomString());
 

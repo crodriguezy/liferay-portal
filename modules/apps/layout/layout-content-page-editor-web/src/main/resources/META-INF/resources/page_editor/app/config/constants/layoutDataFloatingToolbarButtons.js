@@ -24,19 +24,19 @@ export const LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS = {
 		type: 'panel',
 	},
 
-	containerConfiguration: {
-		icon: 'cog',
-		id: 'container_configuration',
-		panelId: 'container_configuration',
-		title: Liferay.Language.get('section-configuration'),
+	containerLink: {
+		icon: 'link',
+		id: 'container_link',
+		panelId: 'container_link',
+		title: Liferay.Language.get('link'),
 		type: 'panel',
 	},
 
-	duplicateItem: {
-		icon: 'paste',
-		id: 'duplicate_item',
-		panelId: '',
-		title: Liferay.Language.get('duplicate'),
+	containerStyles: {
+		icon: 'format',
+		id: 'container_configuration',
+		panelId: 'container_configuration',
+		title: Liferay.Language.get('container-styles'),
 		type: 'panel',
 	},
 
@@ -56,19 +56,27 @@ export const LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS = {
 		type: 'panel',
 	},
 
+	fragmentStyles: {
+		icon: 'format',
+		id: 'fragment_styles',
+		panelId: 'fragment_styles',
+		title: Liferay.Language.get('fragment-styles'),
+		type: 'panel',
+	},
+
 	rowConfiguration: {
 		icon: 'cog',
 		id: 'row_configuration',
 		panelId: 'row_configuration',
-		title: Liferay.Language.get('row-configuration'),
+		title: Liferay.Language.get('grid-configuration'),
 		type: 'panel',
 	},
 
-	saveFragmentComposition: {
-		icon: 'disk',
-		id: 'save_fragment_composition',
-		panelId: 'save_fragment_compositionn',
-		title: Liferay.Language.get('save-as-fragment'),
+	rowStyles: {
+		icon: 'format',
+		id: 'row_styles',
+		panelId: 'row_styles',
+		title: Liferay.Language.get('grid-styles'),
 		type: 'panel',
 	},
 };

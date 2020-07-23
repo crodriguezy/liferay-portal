@@ -124,7 +124,7 @@ public class DDMFormContextProviderServlet extends HttpServlet {
 						ddmFormTemplateContextProcessor.getDDMFormLayout(),
 						ddmFormRenderingContext,
 						_ddmStructureLayoutLocalService,
-						_ddmStructureLocalService);
+						_ddmStructureLocalService, _jsonFactory);
 
 			ddmFormPagesTemplateContextFactory.setDDMFormEvaluator(
 				_ddmFormEvaluator);

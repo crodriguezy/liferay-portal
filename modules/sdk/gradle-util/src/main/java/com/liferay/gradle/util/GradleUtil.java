@@ -38,6 +38,7 @@ import org.gradle.api.GradleException;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
+import org.gradle.api.UnknownTaskException;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.ConfigurationContainer;
 import org.gradle.api.artifacts.Dependency;
@@ -223,6 +224,28 @@ public class GradleUtil {
 		return taskContainer.findByName(name);
 	}
 
+	public static TaskProvider<Task> fetchTaskProvider(
+		Project project, String name) {
+
+		try {
+			return getTaskProvider(project, name);
+		}
+		catch (UnknownTaskException unknownTaskException) {
+			return null;
+		}
+	}
+
+	public static <T extends Task> TaskProvider<T> fetchTaskProvider(
+		Project project, String name, Class<T> clazz) {
+
+		try {
+			return getTaskProvider(project, name, clazz);
+		}
+		catch (UnknownTaskException unknownTaskException) {
+			return null;
+		}
+	}
+
 	public static Configuration getConfiguration(Project project, String name) {
 		ConfigurationContainer configurationContainer =
 			project.getConfigurations();
@@ -309,9 +332,8 @@ public class GradleUtil {
 	public static String getGradlePropertiesValue(
 		Project project, String key, String defaultValue) {
 
-		File rootDir = getRootDir(project, "gradle.properties");
-
-		return getGradlePropertiesValue(rootDir, key, defaultValue);
+		return getGradlePropertiesValue(
+			getRootDir(project, "gradle.properties"), key, defaultValue);
 	}
 
 	public static Project getProject(Project rootProject, File projectDir) {

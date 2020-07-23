@@ -79,22 +79,24 @@ public class MBCategoryModelImpl
 	public static final String TABLE_NAME = "MBCategory";
 
 	public static final Object[][] TABLE_COLUMNS = {
+		{"mvccVersion", Types.BIGINT}, {"ctCollectionId", Types.BIGINT},
 		{"uuid_", Types.VARCHAR}, {"categoryId", Types.BIGINT},
 		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
 		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
 		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
 		{"parentCategoryId", Types.BIGINT}, {"name", Types.VARCHAR},
 		{"description", Types.VARCHAR}, {"displayStyle", Types.VARCHAR},
-		{"threadCount", Types.INTEGER}, {"messageCount", Types.INTEGER},
-		{"lastPostDate", Types.TIMESTAMP}, {"lastPublishDate", Types.TIMESTAMP},
-		{"status", Types.INTEGER}, {"statusByUserId", Types.BIGINT},
-		{"statusByUserName", Types.VARCHAR}, {"statusDate", Types.TIMESTAMP}
+		{"lastPublishDate", Types.TIMESTAMP}, {"status", Types.INTEGER},
+		{"statusByUserId", Types.BIGINT}, {"statusByUserName", Types.VARCHAR},
+		{"statusDate", Types.TIMESTAMP}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
 		new HashMap<String, Integer>();
 
 	static {
+		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("ctCollectionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("uuid_", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("categoryId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
@@ -107,9 +109,6 @@ public class MBCategoryModelImpl
 		TABLE_COLUMNS_MAP.put("name", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("description", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("displayStyle", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("threadCount", Types.INTEGER);
-		TABLE_COLUMNS_MAP.put("messageCount", Types.INTEGER);
-		TABLE_COLUMNS_MAP.put("lastPostDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("lastPublishDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("status", Types.INTEGER);
 		TABLE_COLUMNS_MAP.put("statusByUserId", Types.BIGINT);
@@ -118,7 +117,7 @@ public class MBCategoryModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table MBCategory (uuid_ VARCHAR(75) null,categoryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,parentCategoryId LONG,name VARCHAR(75) null,description STRING null,displayStyle VARCHAR(75) null,threadCount INTEGER,messageCount INTEGER,lastPostDate DATE null,lastPublishDate DATE null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null)";
+		"create table MBCategory (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,uuid_ VARCHAR(75) null,categoryId LONG not null,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,parentCategoryId LONG,name VARCHAR(75) null,description STRING null,displayStyle VARCHAR(75) null,lastPublishDate DATE null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,primary key (categoryId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP = "drop table MBCategory";
 
@@ -148,12 +147,18 @@ public class MBCategoryModelImpl
 
 	public static final long NAME_COLUMN_BITMASK = 64L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-		_entityCacheEnabled = entityCacheEnabled;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-		_finderCacheEnabled = finderCacheEnabled;
 	}
 
 	/**
@@ -169,6 +174,8 @@ public class MBCategoryModelImpl
 
 		MBCategory model = new MBCategoryImpl();
 
+		model.setMvccVersion(soapModel.getMvccVersion());
+		model.setCtCollectionId(soapModel.getCtCollectionId());
 		model.setUuid(soapModel.getUuid());
 		model.setCategoryId(soapModel.getCategoryId());
 		model.setGroupId(soapModel.getGroupId());
@@ -181,9 +188,6 @@ public class MBCategoryModelImpl
 		model.setName(soapModel.getName());
 		model.setDescription(soapModel.getDescription());
 		model.setDisplayStyle(soapModel.getDisplayStyle());
-		model.setThreadCount(soapModel.getThreadCount());
-		model.setMessageCount(soapModel.getMessageCount());
-		model.setLastPostDate(soapModel.getLastPostDate());
 		model.setLastPublishDate(soapModel.getLastPublishDate());
 		model.setStatus(soapModel.getStatus());
 		model.setStatusByUserId(soapModel.getStatusByUserId());
@@ -264,9 +268,6 @@ public class MBCategoryModelImpl
 				attributeName, attributeGetterFunction.apply((MBCategory)this));
 		}
 
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
-
 		return attributes;
 	}
 
@@ -339,6 +340,15 @@ public class MBCategoryModelImpl
 		Map<String, BiConsumer<MBCategory, ?>> attributeSetterBiConsumers =
 			new LinkedHashMap<String, BiConsumer<MBCategory, ?>>();
 
+		attributeGetterFunctions.put("mvccVersion", MBCategory::getMvccVersion);
+		attributeSetterBiConsumers.put(
+			"mvccVersion",
+			(BiConsumer<MBCategory, Long>)MBCategory::setMvccVersion);
+		attributeGetterFunctions.put(
+			"ctCollectionId", MBCategory::getCtCollectionId);
+		attributeSetterBiConsumers.put(
+			"ctCollectionId",
+			(BiConsumer<MBCategory, Long>)MBCategory::setCtCollectionId);
 		attributeGetterFunctions.put("uuid", MBCategory::getUuid);
 		attributeSetterBiConsumers.put(
 			"uuid", (BiConsumer<MBCategory, String>)MBCategory::setUuid);
@@ -386,20 +396,6 @@ public class MBCategoryModelImpl
 		attributeSetterBiConsumers.put(
 			"displayStyle",
 			(BiConsumer<MBCategory, String>)MBCategory::setDisplayStyle);
-		attributeGetterFunctions.put("threadCount", MBCategory::getThreadCount);
-		attributeSetterBiConsumers.put(
-			"threadCount",
-			(BiConsumer<MBCategory, Integer>)MBCategory::setThreadCount);
-		attributeGetterFunctions.put(
-			"messageCount", MBCategory::getMessageCount);
-		attributeSetterBiConsumers.put(
-			"messageCount",
-			(BiConsumer<MBCategory, Integer>)MBCategory::setMessageCount);
-		attributeGetterFunctions.put(
-			"lastPostDate", MBCategory::getLastPostDate);
-		attributeSetterBiConsumers.put(
-			"lastPostDate",
-			(BiConsumer<MBCategory, Date>)MBCategory::setLastPostDate);
 		attributeGetterFunctions.put(
 			"lastPublishDate", MBCategory::getLastPublishDate);
 		attributeSetterBiConsumers.put(
@@ -427,6 +423,28 @@ public class MBCategoryModelImpl
 			attributeGetterFunctions);
 		_attributeSetterBiConsumers = Collections.unmodifiableMap(
 			(Map)attributeSetterBiConsumers);
+	}
+
+	@JSON
+	@Override
+	public long getMvccVersion() {
+		return _mvccVersion;
+	}
+
+	@Override
+	public void setMvccVersion(long mvccVersion) {
+		_mvccVersion = mvccVersion;
+	}
+
+	@JSON
+	@Override
+	public long getCtCollectionId() {
+		return _ctCollectionId;
+	}
+
+	@Override
+	public void setCtCollectionId(long ctCollectionId) {
+		_ctCollectionId = ctCollectionId;
 	}
 
 	@JSON
@@ -666,39 +684,6 @@ public class MBCategoryModelImpl
 	@Override
 	public void setDisplayStyle(String displayStyle) {
 		_displayStyle = displayStyle;
-	}
-
-	@JSON
-	@Override
-	public int getThreadCount() {
-		return _threadCount;
-	}
-
-	@Override
-	public void setThreadCount(int threadCount) {
-		_threadCount = threadCount;
-	}
-
-	@JSON
-	@Override
-	public int getMessageCount() {
-		return _messageCount;
-	}
-
-	@Override
-	public void setMessageCount(int messageCount) {
-		_messageCount = messageCount;
-	}
-
-	@JSON
-	@Override
-	public Date getLastPostDate() {
-		return _lastPostDate;
-	}
-
-	@Override
-	public void setLastPostDate(Date lastPostDate) {
-		_lastPostDate = lastPostDate;
 	}
 
 	@JSON
@@ -1081,6 +1066,8 @@ public class MBCategoryModelImpl
 	public Object clone() {
 		MBCategoryImpl mbCategoryImpl = new MBCategoryImpl();
 
+		mbCategoryImpl.setMvccVersion(getMvccVersion());
+		mbCategoryImpl.setCtCollectionId(getCtCollectionId());
 		mbCategoryImpl.setUuid(getUuid());
 		mbCategoryImpl.setCategoryId(getCategoryId());
 		mbCategoryImpl.setGroupId(getGroupId());
@@ -1093,9 +1080,6 @@ public class MBCategoryModelImpl
 		mbCategoryImpl.setName(getName());
 		mbCategoryImpl.setDescription(getDescription());
 		mbCategoryImpl.setDisplayStyle(getDisplayStyle());
-		mbCategoryImpl.setThreadCount(getThreadCount());
-		mbCategoryImpl.setMessageCount(getMessageCount());
-		mbCategoryImpl.setLastPostDate(getLastPostDate());
 		mbCategoryImpl.setLastPublishDate(getLastPublishDate());
 		mbCategoryImpl.setStatus(getStatus());
 		mbCategoryImpl.setStatusByUserId(getStatusByUserId());
@@ -1135,16 +1119,16 @@ public class MBCategoryModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof MBCategory)) {
+		if (!(object instanceof MBCategory)) {
 			return false;
 		}
 
-		MBCategory mbCategory = (MBCategory)obj;
+		MBCategory mbCategory = (MBCategory)object;
 
 		long primaryKey = mbCategory.getPrimaryKey();
 
@@ -1161,14 +1145,22 @@ public class MBCategoryModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	@Override
@@ -1207,6 +1199,10 @@ public class MBCategoryModelImpl
 	@Override
 	public CacheModel<MBCategory> toCacheModel() {
 		MBCategoryCacheModel mbCategoryCacheModel = new MBCategoryCacheModel();
+
+		mbCategoryCacheModel.mvccVersion = getMvccVersion();
+
+		mbCategoryCacheModel.ctCollectionId = getCtCollectionId();
 
 		mbCategoryCacheModel.uuid = getUuid();
 
@@ -1274,19 +1270,6 @@ public class MBCategoryModelImpl
 
 		if ((displayStyle != null) && (displayStyle.length() == 0)) {
 			mbCategoryCacheModel.displayStyle = null;
-		}
-
-		mbCategoryCacheModel.threadCount = getThreadCount();
-
-		mbCategoryCacheModel.messageCount = getMessageCount();
-
-		Date lastPostDate = getLastPostDate();
-
-		if (lastPostDate != null) {
-			mbCategoryCacheModel.lastPostDate = lastPostDate.getTime();
-		}
-		else {
-			mbCategoryCacheModel.lastPostDate = Long.MIN_VALUE;
 		}
 
 		Date lastPublishDate = getLastPublishDate();
@@ -1392,9 +1375,8 @@ public class MBCategoryModelImpl
 
 	}
 
-	private static boolean _entityCacheEnabled;
-	private static boolean _finderCacheEnabled;
-
+	private long _mvccVersion;
+	private long _ctCollectionId;
 	private String _uuid;
 	private String _originalUuid;
 	private long _categoryId;
@@ -1417,9 +1399,6 @@ public class MBCategoryModelImpl
 	private String _name;
 	private String _description;
 	private String _displayStyle;
-	private int _threadCount;
-	private int _messageCount;
-	private Date _lastPostDate;
 	private Date _lastPublishDate;
 	private int _status;
 	private int _originalStatus;

@@ -41,6 +41,10 @@ public class LayoutPageTemplateCollectionLocalServiceUtil {
 	/**
 	 * Adds the layout page template collection to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect LayoutPageTemplateCollectionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param layoutPageTemplateCollection the layout page template collection
 	 * @return the layout page template collection that was added
 	 */
@@ -94,6 +98,10 @@ public class LayoutPageTemplateCollectionLocalServiceUtil {
 	/**
 	 * Deletes the layout page template collection from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect LayoutPageTemplateCollectionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param layoutPageTemplateCollection the layout page template collection
 	 * @return the layout page template collection that was removed
 	 * @throws PortalException
@@ -112,6 +120,10 @@ public class LayoutPageTemplateCollectionLocalServiceUtil {
 
 	/**
 	 * Deletes the layout page template collection with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect LayoutPageTemplateCollectionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param layoutPageTemplateCollectionId the primary key of the layout page template collection
 	 * @return the layout page template collection that was removed
@@ -437,6 +449,10 @@ public class LayoutPageTemplateCollectionLocalServiceUtil {
 
 	/**
 	 * Updates the layout page template collection in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect LayoutPageTemplateCollectionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param layoutPageTemplateCollection the layout page template collection
 	 * @return the layout page template collection that was updated

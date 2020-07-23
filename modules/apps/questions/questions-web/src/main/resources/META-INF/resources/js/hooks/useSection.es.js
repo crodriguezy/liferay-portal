@@ -14,30 +14,13 @@
 
 import {useEffect, useState} from 'react';
 
-import {getSection} from '../utils/client.es';
+import {getSections} from '../utils/client.es';
 
 export default function useSection(sectionTitle, siteKey) {
 	const [section, setSection] = useState({});
 
 	useEffect(() => {
-		getSection(sectionTitle, siteKey)
-			.then((section) => {
-				if (section.parentMessageBoardSectionId) {
-					return Promise.all([
-						section,
-						getSection(
-							section.parentMessageBoardSectionId,
-							siteKey
-						),
-					]);
-				}
-
-				return [section, section];
-			})
-			.then(([section, parentSection]) => {
-				section.parentSection = parentSection;
-				setSection(section);
-			});
+		getSections(sectionTitle, siteKey).then(setSection);
 	}, [sectionTitle, siteKey]);
 
 	return section;

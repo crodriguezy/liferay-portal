@@ -121,6 +121,7 @@ definition {
 
 	@priority = "5"
 	test AddSiteTeamMultiple {
+		property portal.acceptance = "true";
 		property testray.component.names = "Site Administration";
 
 		JSONLayout.addPublicLayout(
@@ -165,12 +166,9 @@ definition {
 			userLastName = "userln",
 			userScreenName = "usersn");
 
-		Site.openSiteMembershipsAdmin(siteURLKey = "site-name");
-
-		Site.assignUserAsMemberCP(
-			userFirstName = "userfn",
-			userLastName = "userln",
-			userScreenName = "usersn");
+		JSONUser.addUserToSite(
+			groupName = "Site Name",
+			userEmailAddress = "userea@liferay.com");
 
 		Site.openSiteTeamsAdmin(siteURLKey = "site-name");
 
@@ -339,6 +337,7 @@ definition {
 
 	@priority = "5"
 	test DeleteSiteTeam {
+		property portal.acceptance = "true";
 		property testray.component.names = "Site Administration";
 
 		Site.openSiteTeamsAdmin(siteURLKey = "site-name");

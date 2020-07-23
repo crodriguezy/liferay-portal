@@ -104,7 +104,8 @@ public class AccountResourceImpl
 		AccountEntry accountEntry = _accountEntryLocalService.addAccountEntry(
 			contextUser.getUserId(), _getParentAccountId(account),
 			account.getName(), account.getDescription(), _getDomains(account),
-			null, _getStatus(account), null);
+			null, null, AccountConstants.ACCOUNT_ENTRY_TYPE_BUSINESS,
+			_getStatus(account), null);
 
 		_accountEntryOrganizationRelLocalService.
 			setAccountEntryOrganizationRels(
@@ -125,7 +126,7 @@ public class AccountResourceImpl
 			_accountEntryLocalService.updateAccountEntry(
 				accountId, _getParentAccountId(account), account.getName(),
 				account.getDescription(), false, _getDomains(account), null,
-				_getStatus(account), null));
+				null, _getStatus(account), null));
 	}
 
 	private String[] _getDomains(Account account) {

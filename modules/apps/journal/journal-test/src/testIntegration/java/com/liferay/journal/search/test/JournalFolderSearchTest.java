@@ -15,8 +15,8 @@
 package com.liferay.journal.search.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.journal.constants.JournalFolderConstants;
 import com.liferay.journal.model.JournalFolder;
-import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.JournalFolderLocalServiceUtil;
 import com.liferay.journal.test.util.JournalTestUtil;
 import com.liferay.portal.kernel.model.BaseModel;
@@ -55,10 +55,12 @@ public class JournalFolderSearchTest extends BaseSearchTestCase {
 	}
 
 	@Override
+	@Test
 	public void testLocalizedSearch() throws Exception {
 	}
 
 	@Override
+	@Test
 	public void testSearchAttachments() throws Exception {
 	}
 
@@ -81,42 +83,52 @@ public class JournalFolderSearchTest extends BaseSearchTestCase {
 	}
 
 	@Override
+	@Test
 	public void testSearchByDDMStructureField() throws Exception {
 	}
 
 	@Override
+	@Test
 	public void testSearchComments() throws Exception {
 	}
 
 	@Override
+	@Test
 	public void testSearchCommentsByKeywords() throws Exception {
 	}
 
 	@Override
+	@Test
 	public void testSearchExpireAllVersions() throws Exception {
 	}
 
 	@Override
+	@Test
 	public void testSearchExpireLatestVersion() throws Exception {
 	}
 
 	@Override
+	@Test
 	public void testSearchMyEntries() throws Exception {
 	}
 
 	@Override
+	@Test
 	public void testSearchRecentEntries() throws Exception {
 	}
 
 	@Override
+	@Test
 	public void testSearchStatus() throws Exception {
 	}
 
 	@Override
+	@Test
 	public void testSearchVersions() throws Exception {
 	}
 
 	@Override
+	@Test
 	public void testSearchWithinDDMStructure() throws Exception {
 	}
 

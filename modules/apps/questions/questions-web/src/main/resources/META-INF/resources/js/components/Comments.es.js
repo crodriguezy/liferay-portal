@@ -12,104 +12,105 @@
  * details.
  */
 
+import {useMutation} from '@apollo/client';
 import ClayButton from '@clayui/button';
 import ClayForm from '@clayui/form';
-import {Editor} from 'frontend-editor-ckeditor-web';
-import React, {useCallback, useContext, useState} from 'react';
+import React, {useCallback, useState} from 'react';
+import {withRouter} from 'react-router-dom';
 
-import {AppContext} from '../AppContext.es';
-import {createComment} from '../utils/client.es';
-import lang from '../utils/lang.es';
-import {getCKEditorConfig, onBeforeLoadCKEditor} from '../utils/utils.es';
+import {createCommentQuery} from '../utils/client.es';
+import {getContextLink, stripHTML} from '../utils/utils.es';
 import Comment from './Comment.es';
+import QuestionsEditor from './QuestionsEditor';
+import TextLengthValidation from './TextLengthValidation.es';
 
-export default ({
-	comments,
-	commentsChange,
-	entityId,
-	showNewComment,
-	showNewCommentChange,
-}) => {
-	const [comment, setComment] = useState('');
-
-	const context = useContext(AppContext);
-
-	const postComment = () => {
-		return createComment(comment, entityId).then((data) => {
-			setComment('');
-			showNewCommentChange(false);
-			commentsChange([...comments, data]);
-		});
-	};
-
-	const _commentChange = useCallback(
-		(comment) => {
-			if (commentsChange) {
-				return commentsChange([
-					...comments.filter((o) => o.id !== comment.id),
-				]);
-			}
-
-			return null;
+export default withRouter(
+	({
+		comments,
+		commentsChange,
+		entityId,
+		match: {
+			params: {questionId, sectionTitle},
 		},
-		[commentsChange, comments]
-	);
+		showNewComment,
+		showNewCommentChange,
+	}) => {
+		const [comment, setComment] = useState('');
 
-	return (
-		<div>
-			{comments.map((comment) => (
-				<Comment
-					comment={comment}
-					commentChange={_commentChange}
-					key={comment.id}
-				/>
-			))}
+		const [createComment] = useMutation(createCommentQuery, {
+			context: getContextLink(`${sectionTitle}/${questionId}`),
+			onCompleted(data) {
+				setComment('');
+				showNewCommentChange(false);
+				commentsChange([
+					...comments,
+					data.createMessageBoardMessageMessageBoardMessage,
+				]);
+			},
+		});
 
-			{showNewComment && (
-				<>
-					<ClayForm.Group small>
-						<Editor
-							config={getCKEditorConfig()}
-							data={comment}
-							onBeforeLoad={(editor) =>
-								onBeforeLoadCKEditor(
-									editor,
-									context.imageBrowseURL
-								)
-							}
-							onChange={(event) =>
-								setComment(event.editor.getData())
-							}
-						/>
+		const _commentChange = useCallback(
+			(comment) => {
+				if (commentsChange) {
+					return commentsChange([
+						...comments.filter((o) => o.id !== comment.id),
+					]);
+				}
 
-						{comment.length < 15 && (
-							<p className="float-right small text-secondary">
-								{lang.sub(
-									Liferay.Language.get('x-characters-left'),
-									[15 - comment.length]
-								)}
-							</p>
-						)}
+				return null;
+			},
+			[commentsChange, comments]
+		);
 
-						<ClayButton.Group className="c-mt-3" spaced>
-							<ClayButton
-								disabled={comment.length < 15}
-								displayType="primary"
-								onClick={postComment}
-							>
-								{Liferay.Language.get('reply')}
-							</ClayButton>
+		return (
+			<div>
+				{comments.map((comment) => (
+					<Comment
+						comment={comment}
+						commentChange={_commentChange}
+						key={comment.id}
+					/>
+				))}
 
-							<ClayButton
-								displayType="secondary"
-								onClick={() => showNewCommentChange(false)}
-							>
-								{Liferay.Language.get('cancel')}
-							</ClayButton>
-						</ClayButton.Group>
-					</ClayForm.Group>
-				</>
-			)}
-		</div>
-	);
-};
+				{showNewComment && (
+					<>
+						<ClayForm.Group small>
+							<QuestionsEditor
+								contents={comment}
+								onChange={(event) => {
+									setComment(event.editor.getData());
+								}}
+							/>
+
+							<TextLengthValidation text={comment} />
+
+							<ClayButton.Group className="c-mt-3" spaced>
+								<ClayButton
+									disabled={stripHTML(comment).length < 15}
+									displayType="primary"
+									onClick={() => {
+										createComment({
+											variables: {
+												articleBody: comment,
+												parentMessageBoardMessageId: entityId,
+											},
+										});
+									}}
+								>
+									{Liferay.Language.get('reply')}
+								</ClayButton>
+
+								<ClayButton
+									displayType="secondary"
+									onClick={() => showNewCommentChange(false)}
+								>
+									{Liferay.Language.get('cancel')}
+								</ClayButton>
+							</ClayButton.Group>
+						</ClayForm.Group>
+					</>
+				)}
+			</div>
+		);
+	}
+);

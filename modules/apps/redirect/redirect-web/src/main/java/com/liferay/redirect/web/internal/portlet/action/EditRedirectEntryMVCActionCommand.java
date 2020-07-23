@@ -14,6 +14,8 @@
 
 package com.liferay.redirect.web.internal.portlet.action;
 
+import com.liferay.petra.lang.SafeClosable;
+import com.liferay.portal.kernel.messaging.proxy.ProxyModeThreadLocal;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
@@ -63,7 +65,9 @@ public class EditRedirectEntryMVCActionCommand extends BaseMVCActionCommand {
 		String destinationURL = ParamUtil.getString(
 			actionRequest, "destinationURL");
 
-		if (!_http.hasProtocol(destinationURL)) {
+		if (Validator.isNotNull(destinationURL) &&
+			!_http.hasProtocol(destinationURL)) {
+
 			destinationURL =
 				_http.getProtocol(actionRequest) + "://" + destinationURL;
 		}
@@ -74,7 +78,9 @@ public class EditRedirectEntryMVCActionCommand extends BaseMVCActionCommand {
 		boolean updateChainedRedirectEntries = ParamUtil.getBoolean(
 			actionRequest, "updateChainedRedirectEntries");
 
-		try {
+		try (SafeClosable safeClosable =
+				ProxyModeThreadLocal.setWithSafeClosable(true)) {
+
 			if (redirectEntryId == 0) {
 				_redirectEntryService.addRedirectEntry(
 					themeDisplay.getScopeGroupId(), destinationURL,

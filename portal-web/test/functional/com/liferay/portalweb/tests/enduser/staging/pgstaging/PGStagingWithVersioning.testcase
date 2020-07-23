@@ -38,15 +38,20 @@ definition {
 
 	@priority = "4"
 	test AddEventRepeatDaily {
-		Staging.addEventRepeatDaily(
+		Staging.addRepeatEvent(
+			frequency = "Daily",
 			scheduleTitleName = "Event Daily Name",
 			siteName = "Site Name");
+
+		Staging.viewRepeatingEventDetails(
+			endDate = "No End Date",
+			scheduleTitleName = "Event Daily Name",
+			siteName = "site-name-staging");
 	}
 
 	@priority = "5"
 	test AddPageVariation {
 		property portal.acceptance = "true";
-		property portal.upstream = "quarantine";
 		property test.assert.warning.exceptions = "true";
 		property testray.component.names = "Training";
 

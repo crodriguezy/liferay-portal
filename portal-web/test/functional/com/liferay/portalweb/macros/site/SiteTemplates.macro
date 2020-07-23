@@ -21,7 +21,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addChildPage(
@@ -61,10 +60,9 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
-		LexiconEntry.gotoAdd();
+		LexiconEntry.gotoAddMenuItem(menuItem = "Add Site Template Page");
 
 		if (contains("${sitePageType}", "{sitePageType}")) {
 			var sitePageType = "Widget Page";
@@ -89,11 +87,6 @@ definition {
 			LexiconCard.clickCard(card = "${rowEntry}");
 		}
 
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		PortletEntry.inputName(name = "${pageName}");
@@ -105,6 +98,10 @@ definition {
 		Button.click(button = "Add");
 
 		SelectFrame.selectFrameTop();
+
+		if (isSet(inheritChanges)) {
+			Page.togglePageTemplateInheritChanges(toggleValue = "${inheritChanges}");
+		}
 
 		if ("${sitePageType}" != "Content Page") {
 			Button.click(button = "Save");
@@ -162,6 +159,10 @@ definition {
 		LexiconEntry.openEntryMenu(rowEntry = "${siteTemplateName}");
 
 		MenuItem.click(menuItem = "Manage");
+
+		ProductMenu.gotoPortlet(
+			category = "Site Builder",
+			portlet = "Pages");
 
 		SitePages.deletePage(pageName = "${pageName}");
 	}
@@ -258,6 +259,8 @@ definition {
 	}
 
 	macro resetPageChanges {
+		WaitForElementPresent(locator1 = "ControlMenu#INFO");
+
 		Click(locator1 = "ControlMenu#INFO");
 
 		AssertTextEquals.assertPartialText(
@@ -282,7 +285,7 @@ definition {
 	}
 
 	macro tearDownCP {
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Sites",
 			panel = "Control Panel",
 			portlet = "Site Templates");
@@ -359,7 +362,7 @@ definition {
 			menuItem = "Manage",
 			rowEntry = "Site Template Name");
 
-		ProductMenuHelper.expandPanel(panel = "Site Administration");
+		ProductMenuHelper.openProductMenu();
 
 		ProductMenuHelper.expandCategory(category = "Configuration");
 

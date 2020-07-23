@@ -14,6 +14,7 @@
 
 package com.liferay.portal.license.deployer.internal.installer;
 
+import com.liferay.portal.file.install.FileInstaller;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.license.util.LicenseManagerUtil;
@@ -24,15 +25,15 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 
 import java.io.File;
 
-import org.apache.felix.fileinstall.ArtifactInstaller;
+import java.net.URL;
 
 /**
  * @author Amos Fong
  */
-public class LicenseInstaller implements ArtifactInstaller {
+public class LicenseInstaller implements FileInstaller {
 
 	@Override
-	public boolean canHandle(File artifact) {
+	public boolean canTransformURL(File artifact) {
 		String extension = FileUtil.getExtension(artifact.getName());
 
 		if (!extension.equals("xml")) {
@@ -61,20 +62,18 @@ public class LicenseInstaller implements ArtifactInstaller {
 	}
 
 	@Override
-	public void install(File file) throws Exception {
+	public URL transformURL(File file) throws Exception {
 		String content = FileUtil.read(file);
 
 		JSONObject jsonObject = JSONUtil.put("licenseXML", content);
 
 		LicenseManagerUtil.registerLicense(jsonObject);
+
+		return null;
 	}
 
 	@Override
-	public void uninstall(File file) throws Exception {
-	}
-
-	@Override
-	public void update(File file) throws Exception {
+	public void uninstall(File file) {
 	}
 
 }

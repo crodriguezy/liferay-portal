@@ -393,7 +393,7 @@ public class InlineSQLHelperImpl implements InlineSQLHelper {
 			if (!isEnabled(groupId)) {
 				if (groupAdminResourcePermissionSB == null) {
 					groupAdminResourcePermissionSB = new StringBundler(
-						groupIds.length * 2 - 1);
+						(groupIds.length * 2) - 1);
 				}
 				else {
 					groupAdminResourcePermissionSB.append(", ");

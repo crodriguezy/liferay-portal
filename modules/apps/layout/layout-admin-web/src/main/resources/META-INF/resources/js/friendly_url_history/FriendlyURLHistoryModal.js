@@ -16,11 +16,25 @@ import ClayList from '@clayui/list';
 import ClayLoadingIndicator from '@clayui/loading-indicator';
 import ClayModal from '@clayui/modal';
 import {useIsMounted} from 'frontend-js-react-web';
-import {fetch, openToast} from 'frontend-js-web';
+import {fetch, objectToFormData, openToast} from 'frontend-js-web';
 import PropTypes from 'prop-types';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import LanguageSelector from './LanguageSelector';
+
+function logError(error) {
+	if (process.env.NODE_ENV === 'development' && error) {
+		console.error(error);
+	}
+}
+
+const showToastError = () => {
+	openToast({
+		message: Liferay.Language.get('an-unexpected-error-occurred'),
+		title: Liferay.Language.get('error'),
+		type: 'danger',
+	});
+};
 
 const FriendlyURLHistoryModal = ({
 	defaultLanguageId,
@@ -29,6 +43,7 @@ const FriendlyURLHistoryModal = ({
 	initialLanguageId,
 	observer,
 	portletNamespace,
+	restoreFriendlyURLEntryLocalizationURL,
 }) => {
 	const [languageId, setLanguageId] = useState();
 	const [loading, setLoading] = useState(true);
@@ -39,30 +54,51 @@ const FriendlyURLHistoryModal = ({
 	const [availableLanguages, setAvailableLanguages] = useState([]);
 	const isMounted = useIsMounted();
 
-	useEffect(() => {
+	const getFriendlyUrlLocalizations = useCallback(() => {
 		fetch(friendlyURLEntryLocalizationsURL)
 			.then((response) => response.json())
 			.then((response) => {
 				if (isMounted()) {
-					setAvailableLanguages(Object.keys(response));
+					setAvailableLanguages(
+						Object.entries(response).reduce(
+							(acc, [language, {current}]) => {
+								if (current && current.urlTitle) {
+									acc.push(language);
+								}
+
+								return acc;
+							},
+							[]
+						)
+					);
+
 					setFriendlyURLEntryLocalizations(response);
 				}
 			})
 			.catch((error) => {
-				if (process.env.NODE_ENV === 'development') {
-					console.error(error);
-				}
+				logError(error);
+				showToastError();
 			});
 	}, [friendlyURLEntryLocalizationsURL, isMounted]);
+
+	useEffect(() => {
+		getFriendlyUrlLocalizations();
+	}, [getFriendlyUrlLocalizations]);
 
 	useEffect(() => {
 		if (loading) {
 			let selectedLanguageId;
 
-			if (friendlyURLEntryLocalizations[initialLanguageId]) {
+			if (
+				friendlyURLEntryLocalizations[initialLanguageId] &&
+				availableLanguages.includes(initialLanguageId)
+			) {
 				selectedLanguageId = initialLanguageId;
 			}
-			else if (friendlyURLEntryLocalizations[defaultLanguageId]) {
+			else if (
+				friendlyURLEntryLocalizations[defaultLanguageId] &&
+				availableLanguages.includes(defaultLanguageId)
+			) {
 				selectedLanguageId = defaultLanguageId;
 			}
 			else {
@@ -90,58 +126,92 @@ const FriendlyURLHistoryModal = ({
 		}
 	}, [friendlyURLEntryLocalizations, loading, languageId]);
 
-	const handleDeleteFriendlyUrl = (deleteFriendlyURLEntryId) => {
-		const formData = new FormData();
+	const sendRequest = useCallback(
+		(url, friendlyURLEntryId) => {
+			return fetch(url, {
+				body: objectToFormData({
+					[`${portletNamespace}friendlyURLEntryId`]: friendlyURLEntryId,
+					[`${portletNamespace}languageId`]: languageId,
+				}),
+				method: 'POST',
+			})
+				.then((response) => response.json())
+				.catch((error) => {
+					logError(error);
+					showToastError();
+				});
+		},
+		[languageId, portletNamespace]
+	);
 
-		formData.append(
-			`${portletNamespace}friendlyURLEntryId`,
-			deleteFriendlyURLEntryId
-		);
-
-		formData.append(`${portletNamespace}languageId`, languageId);
-
-		fetch(deleteFriendlyURLEntryLocalizationURL, {
-			body: formData,
-			method: 'POST',
-		})
-			.then((response) => response.json())
-			.then((response) => {
-				if (response.success) {
+	const handleDeleteFriendlyUrl = useCallback(
+		(deleteFriendlyURLEntryId) => {
+			sendRequest(
+				deleteFriendlyURLEntryLocalizationURL,
+				deleteFriendlyURLEntryId
+			).then(({success} = {}) => {
+				if (success) {
 					setFriendlyURLEntryLocalizations(
-						(friendlyURLEntryLocalizations) => {
-							friendlyURLEntryLocalizations[
-								languageId
-							].history = friendlyURLEntryLocalizations[
-								languageId
-							].history.filter(
-								({friendlyURLEntryId}) =>
-									friendlyURLEntryId !=
-									deleteFriendlyURLEntryId
-							);
-
-							return {...friendlyURLEntryLocalizations};
-						}
+						(friendlyURLEntryLocalizations) => ({
+							...friendlyURLEntryLocalizations,
+							[languageId]: {
+								...friendlyURLEntryLocalizations[languageId],
+								history: friendlyURLEntryLocalizations[
+									languageId
+								].history.filter(
+									({friendlyURLEntryId}) =>
+										friendlyURLEntryId !=
+										deleteFriendlyURLEntryId
+								),
+							},
+						})
 					);
 				}
 				else {
 					showToastError();
 				}
-			})
-			.catch((error) => {
-				if (process.env.NODE_ENV === 'development') {
-					console.error(error);
-				}
-				showToastError();
 			});
-	};
+		},
+		[deleteFriendlyURLEntryLocalizationURL, languageId, sendRequest]
+	);
 
-	const showToastError = () => {
-		openToast({
-			message: Liferay.Language.get('an-unexpected-error-occurred'),
-			title: Liferay.Language.get('error'),
-			type: 'danger',
-		});
-	};
+	const handleRestoreFriendlyUrl = useCallback(
+		(restoreFriendlyUrlEntryId, urlTitle) => {
+			sendRequest(
+				restoreFriendlyURLEntryLocalizationURL,
+				restoreFriendlyUrlEntryId
+			).then(({success} = {}) => {
+				if (isMounted() && success) {
+					getFriendlyUrlLocalizations();
+
+					const inputComponent = Liferay.component(
+						`${portletNamespace}friendlyURL`
+					);
+
+					if (inputComponent.getSelectedLanguageId() === languageId) {
+						inputComponent.updateInput(urlTitle);
+					}
+					else {
+						inputComponent.updateInputLanguage(
+							urlTitle,
+							languageId
+						);
+					}
+				}
+				else {
+					showToastError();
+				}
+			});
+		},
+		[
+			getFriendlyUrlLocalizations,
+			isMounted,
+			languageId,
+			portletNamespace,
+			restoreFriendlyURLEntryLocalizationURL,
+			sendRequest,
+		]
+	);
 
 	return (
 		<ClayModal
@@ -209,7 +279,16 @@ const FriendlyURLHistoryModal = ({
 												<ClayList.ItemField>
 													<ClayList.QuickActionMenu>
 														<ClayList.QuickActionMenu.Item
-															className="d-none"
+															className="lfr-portal-tooltip"
+															data-title={Liferay.Language.get(
+																'restore-url'
+															)}
+															onClick={() => {
+																handleRestoreFriendlyUrl(
+																	friendlyURLEntryId,
+																	urlTitle
+																);
+															}}
 															symbol="reload"
 														/>
 														<ClayList.QuickActionMenu.Item
@@ -245,6 +324,7 @@ FriendlyURLHistoryModal.propTypes = {
 	friendlyURLEntryLocalizationsURL: PropTypes.string.isRequired,
 	observer: PropTypes.object.isRequired,
 	portletNamespace: PropTypes.string.isRequired,
+	restoreFriendlyURLEntryLocalizationURL: PropTypes.string.isRequired,
 };
 
 export default FriendlyURLHistoryModal;

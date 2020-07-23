@@ -14,14 +14,17 @@
 
 package com.liferay.dynamic.data.mapping.internal.model.listener;
 
+import com.liferay.dynamic.data.mapping.internal.petra.executor.DDMFormInstanceReportPortalExecutor;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceReport;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceReportLocalService;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.exception.ModelListenerException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModelListener;
 import com.liferay.portal.kernel.model.ModelListener;
+import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -38,49 +41,68 @@ public class DDMFormInstanceModelListener
 		throws ModelListenerException {
 
 		try {
-			_ddmFormInstanceReportLocalService.addFormInstanceReport(
+			ddmFormInstanceReportLocalService.addFormInstanceReport(
 				ddmFormInstance.getFormInstanceId());
 		}
 		catch (Exception exception) {
-			_log.error(
-				"Unable to update dynamic data mapping form instance report " +
-					"for dynamic data mapping form instance " +
-						ddmFormInstance.getFormInstanceId(),
-				exception);
+			if (_log.isWarnEnabled()) {
+				StringBundler sb = new StringBundler(4);
+
+				sb.append("Unable to update dynamic data mapping form ");
+				sb.append("instance report for dynamic data mapping form ");
+				sb.append("instance ");
+				sb.append(ddmFormInstance.getFormInstanceId());
+
+				_log.warn(sb.toString(), exception);
+			}
 		}
 	}
 
 	@Override
-	public void onAfterRemove(DDMFormInstance ddmFormInstance)
+	public void onBeforeRemove(DDMFormInstance ddmFormInstance)
 		throws ModelListenerException {
 
 		try {
 			DDMFormInstanceReport ddmFormInstanceReport =
-				_ddmFormInstanceReportLocalService.
+				ddmFormInstanceReportLocalService.
 					getFormInstanceReportByFormInstanceId(
 						ddmFormInstance.getFormInstanceId());
 
-			if (ddmFormInstanceReport == null) {
-				return;
-			}
+			TransactionCommitCallbackUtil.registerCallback(
+				() -> {
+					_ddmFormInstanceReportPortalExecutor.execute(
+						() ->
+							ddmFormInstanceReportLocalService.
+								deleteDDMFormInstanceReport(
+									ddmFormInstanceReport.
+										getFormInstanceReportId()));
 
-			_ddmFormInstanceReportLocalService.deleteDDMFormInstanceReport(
-				ddmFormInstanceReport.getFormInstanceReportId());
+					return null;
+				});
 		}
 		catch (Exception exception) {
-			_log.error(
-				"Unable to update dynamic data mapping form instance report " +
-					"for dynamic data mapping form instance " +
-						ddmFormInstance.getFormInstanceId(),
-				exception);
+			if (_log.isWarnEnabled()) {
+				StringBundler sb = new StringBundler(4);
+
+				sb.append("Unable to update dynamic data mapping form ");
+				sb.append("instance report for dynamic data mapping form ");
+				sb.append("instance ");
+				sb.append(ddmFormInstance.getFormInstanceId());
+
+				_log.warn(sb.toString(), exception);
+			}
 		}
 	}
+
+	@Reference
+	protected DDMFormInstanceReportLocalService
+		ddmFormInstanceReportLocalService;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		DDMFormInstanceModelListener.class);
 
 	@Reference
-	private DDMFormInstanceReportLocalService
-		_ddmFormInstanceReportLocalService;
+	private DDMFormInstanceReportPortalExecutor
+		_ddmFormInstanceReportPortalExecutor;
 
 }

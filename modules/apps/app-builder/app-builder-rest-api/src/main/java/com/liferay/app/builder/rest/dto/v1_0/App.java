@@ -226,6 +226,34 @@ public class App {
 	protected Long dataListViewId;
 
 	@Schema
+	public Long getDataRecordCollectionId() {
+		return dataRecordCollectionId;
+	}
+
+	public void setDataRecordCollectionId(Long dataRecordCollectionId) {
+		this.dataRecordCollectionId = dataRecordCollectionId;
+	}
+
+	@JsonIgnore
+	public void setDataRecordCollectionId(
+		UnsafeSupplier<Long, Exception> dataRecordCollectionIdUnsafeSupplier) {
+
+		try {
+			dataRecordCollectionId = dataRecordCollectionIdUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long dataRecordCollectionId;
+
+	@Schema
 	public Date getDateCreated() {
 		return dateCreated;
 	}
@@ -335,6 +363,34 @@ public class App {
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Map<String, Object> name;
+
+	@Schema
+	public String getScope() {
+		return scope;
+	}
+
+	public void setScope(String scope) {
+		this.scope = scope;
+	}
+
+	@JsonIgnore
+	public void setScope(
+		UnsafeSupplier<String, Exception> scopeUnsafeSupplier) {
+
+		try {
+			scope = scopeUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String scope;
 
 	@Schema
 	public Long getSiteId() {
@@ -496,6 +552,16 @@ public class App {
 			sb.append(dataListViewId);
 		}
 
+		if (dataRecordCollectionId != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"dataRecordCollectionId\": ");
+
+			sb.append(dataRecordCollectionId);
+		}
+
 		if (dateCreated != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -544,6 +610,20 @@ public class App {
 			sb.append(_toJSON(name));
 		}
 
+		if (scope != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"scope\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(scope));
+
+			sb.append("\"");
+		}
+
 		if (siteId != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -581,6 +661,16 @@ public class App {
 		return string.replaceAll("\"", "\\\\\"");
 	}
 
+	private static boolean _isArray(Object value) {
+		if (value == null) {
+			return false;
+		}
+
+		Class<?> clazz = value.getClass();
+
+		return clazz.isArray();
+	}
+
 	private static String _toJSON(Map<String, ?> map) {
 		StringBuilder sb = new StringBuilder("{");
 
@@ -599,9 +689,7 @@ public class App {
 
 			Object value = entry.getValue();
 
-			Class<?> clazz = value.getClass();
-
-			if (clazz.isArray()) {
+			if (_isArray(value)) {
 				sb.append("[");
 
 				Object[] valueArray = (Object[])value;

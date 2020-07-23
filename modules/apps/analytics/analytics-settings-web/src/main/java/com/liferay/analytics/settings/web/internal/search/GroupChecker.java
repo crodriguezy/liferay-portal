@@ -42,11 +42,12 @@ public class GroupChecker extends EmptyOnClickRowChecker {
 	}
 
 	@Override
-	public boolean isChecked(Object obj) {
-		Group group = (Group)obj;
+	public boolean isChecked(Object object) {
+		Group group = (Group)object;
 
 		if (StringUtil.equalsIgnoreCase(
-				_mvcRenderCommandName, "/analytics/edit_synced_sites")) {
+				_mvcRenderCommandName,
+				"/analytics_settings/edit_synced_sites")) {
 
 			return _ids.contains(String.valueOf(group.getGroupId()));
 		}
@@ -62,7 +63,8 @@ public class GroupChecker extends EmptyOnClickRowChecker {
 		String checkBoxAllRowIds, String checkBoxPostOnClick) {
 
 		if (StringUtil.equalsIgnoreCase(
-				_mvcRenderCommandName, "/analytics/edit_synced_sites")) {
+				_mvcRenderCommandName,
+				"/analytics_settings/edit_synced_sites")) {
 
 			return super.getRowCheckBox(
 				httpServletRequest, checked, disabled, name, value,

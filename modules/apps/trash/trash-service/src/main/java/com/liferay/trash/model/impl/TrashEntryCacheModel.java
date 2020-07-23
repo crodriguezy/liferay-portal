@@ -37,16 +37,17 @@ public class TrashEntryCacheModel
 	implements CacheModel<TrashEntry>, Externalizable, MVCCModel {
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof TrashEntryCacheModel)) {
+		if (!(object instanceof TrashEntryCacheModel)) {
 			return false;
 		}
 
-		TrashEntryCacheModel trashEntryCacheModel = (TrashEntryCacheModel)obj;
+		TrashEntryCacheModel trashEntryCacheModel =
+			(TrashEntryCacheModel)object;
 
 		if ((entryId == trashEntryCacheModel.entryId) &&
 			(mvccVersion == trashEntryCacheModel.mvccVersion)) {
@@ -76,10 +77,12 @@ public class TrashEntryCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
+		sb.append(", ctCollectionId=");
+		sb.append(ctCollectionId);
 		sb.append(", entryId=");
 		sb.append(entryId);
 		sb.append(", groupId=");
@@ -112,6 +115,7 @@ public class TrashEntryCacheModel
 		TrashEntryImpl trashEntryImpl = new TrashEntryImpl();
 
 		trashEntryImpl.setMvccVersion(mvccVersion);
+		trashEntryImpl.setCtCollectionId(ctCollectionId);
 		trashEntryImpl.setEntryId(entryId);
 		trashEntryImpl.setGroupId(groupId);
 		trashEntryImpl.setCompanyId(companyId);
@@ -155,6 +159,8 @@ public class TrashEntryCacheModel
 
 		mvccVersion = objectInput.readLong();
 
+		ctCollectionId = objectInput.readLong();
+
 		entryId = objectInput.readLong();
 
 		groupId = objectInput.readLong();
@@ -178,6 +184,8 @@ public class TrashEntryCacheModel
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
 		objectOutput.writeLong(mvccVersion);
+
+		objectOutput.writeLong(ctCollectionId);
 
 		objectOutput.writeLong(entryId);
 
@@ -213,6 +221,7 @@ public class TrashEntryCacheModel
 	}
 
 	public long mvccVersion;
+	public long ctCollectionId;
 	public long entryId;
 	public long groupId;
 	public long companyId;

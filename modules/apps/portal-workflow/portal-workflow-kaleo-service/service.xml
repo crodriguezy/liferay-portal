@@ -54,7 +54,18 @@
 			<finder-column name="kaleoClassName" />
 			<finder-column name="kaleoClassPK" />
 		</finder>
+		<finder name="C_KCN_KCPK" return-type="Collection">
+			<finder-column name="companyId" />
+			<finder-column name="kaleoClassName" />
+			<finder-column name="kaleoClassPK" />
+		</finder>
 		<finder name="KCN_KCPK_ET" return-type="Collection">
+			<finder-column name="kaleoClassName" />
+			<finder-column name="kaleoClassPK" />
+			<finder-column name="executionType" />
+		</finder>
+		<finder name="C_KCN_KCPK_ET" return-type="Collection">
+			<finder-column name="companyId" />
 			<finder-column name="kaleoClassName" />
 			<finder-column name="kaleoClassPK" />
 			<finder-column name="executionType" />
@@ -129,6 +140,7 @@
 		<column localized="true" name="title" type="String" />
 		<column name="description" type="String" />
 		<column name="content" type="String" />
+		<column name="scope" type="String" />
 		<column name="version" type="int" />
 		<column name="active" type="boolean" />
 
@@ -265,6 +277,11 @@
 		<finder name="CN_CPK" return-type="Collection">
 			<finder-column name="className" />
 			<finder-column name="classPK" />
+		</finder>
+		<finder name="KII_C_U" return-type="KaleoInstance">
+			<finder-column name="kaleoInstanceId" />
+			<finder-column name="companyId" />
+			<finder-column name="userId" />
 		</finder>
 		<finder name="C_KDN_KDV_CD" return-type="Collection">
 			<finder-column name="companyId" />

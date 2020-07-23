@@ -17,6 +17,7 @@ package com.liferay.portal.kernel.service;
 import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.petra.sql.dsl.query.DSLQuery;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
+import com.liferay.portal.kernel.change.tracking.CTAware;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
@@ -56,6 +57,7 @@ import org.osgi.annotation.versioning.ProviderType;
  * @see GroupLocalServiceUtil
  * @generated
  */
+@CTAware
 @ProviderType
 @Transactional(
 	isolation = Isolation.PORTAL,
@@ -72,6 +74,10 @@ public interface GroupLocalService
 
 	/**
 	 * Adds the group to the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect GroupLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param group the group
 	 * @return the group that was added
@@ -179,6 +185,10 @@ public interface GroupLocalService
 	/**
 	 * Deletes the group from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect GroupLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param group the group
 	 * @return the group that was removed
 	 * @throws PortalException
@@ -188,6 +198,10 @@ public interface GroupLocalService
 
 	/**
 	 * Deletes the group with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect GroupLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param groupId the primary key of the group
 	 * @return the group that was removed
@@ -414,14 +428,14 @@ public interface GroupLocalService
 	 * @param start the lower bound of the range of groups to return
 	 * @param end the upper bound of the range of groups to return (not
 	 inclusive)
-	 * @param obc the comparator to order the groups (optionally
+	 * @param orderByComparator the comparator to order the groups (optionally
 	 <code>null</code>)
 	 * @return the active or inactive groups
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Group> getActiveGroups(
 		long companyId, boolean site, boolean active, int start, int end,
-		OrderByComparator<Group> obc);
+		OrderByComparator<Group> orderByComparator);
 
 	/**
 	 * Returns the active or inactive groups associated with the company.
@@ -441,14 +455,14 @@ public interface GroupLocalService
 	 * @param start the lower bound of the range of groups to return
 	 * @param end the upper bound of the range of groups to return (not
 	 inclusive)
-	 * @param obc the comparator to order the groups (optionally
+	 * @param orderByComparator the comparator to order the groups (optionally
 	 <code>null</code>)
 	 * @return the active or inactive groups
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Group> getActiveGroups(
 		long companyId, boolean active, int start, int end,
-		OrderByComparator<Group> obc);
+		OrderByComparator<Group> orderByComparator);
 
 	/**
 	 * Returns the number of active or inactive groups associated with the
@@ -748,15 +762,15 @@ public interface GroupLocalService
 	 * @param start the lower bound of the range of groups to return
 	 * @param end the upper bound of the range of groups to return (not
 	 inclusive)
-	 * @param obc the comparator to order the groups (optionally
+	 * @param orderByComparator the comparator to order the groups (optionally
 	 <code>null</code>)
 	 * @return the range of matching groups ordered by comparator
-	 <code>obc</code>
+	 <code>orderByComparator</code>
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Group> getLayoutsGroups(
 		long companyId, long parentGroupId, boolean site, boolean active,
-		int start, int end, OrderByComparator<Group> obc);
+		int start, int end, OrderByComparator<Group> orderByComparator);
 
 	/**
 	 * Returns a range of all groups that are children of the parent group and
@@ -777,15 +791,15 @@ public interface GroupLocalService
 	 * @param start the lower bound of the range of groups to return
 	 * @param end the upper bound of the range of groups to return (not
 	 inclusive)
-	 * @param obc the comparator to order the groups (optionally
+	 * @param orderByComparator the comparator to order the groups (optionally
 	 <code>null</code>)
 	 * @return the range of matching groups ordered by comparator
-	 <code>obc</code>
+	 <code>orderByComparator</code>
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Group> getLayoutsGroups(
 		long companyId, long parentGroupId, boolean site, int start, int end,
-		OrderByComparator<Group> obc);
+		OrderByComparator<Group> orderByComparator);
 
 	/**
 	 * Returns the number of groups that are children or the parent group and
@@ -1129,6 +1143,10 @@ public interface GroupLocalService
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Group> getUserSitesGroups(long userId, int start, int end)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasOrganizationGroup(long organizationId, long groupId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -1313,15 +1331,15 @@ public interface GroupLocalService
 	 * @param start the lower bound of the range of groups to return
 	 * @param end the upper bound of the range of groups to return (not
 	 inclusive)
-	 * @param obc the comparator to order the groups (optionally
+	 * @param orderByComparator the comparator to order the groups (optionally
 	 <code>null</code>)
-	 * @return the matching groups ordered by comparator <code>obc</code>
+	 * @return the matching groups ordered by comparator <code>orderByComparator</code>
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Group> search(
 		long companyId, long parentGroupId, String keywords,
 		LinkedHashMap<String, Object> params, int start, int end,
-		OrderByComparator<Group> obc);
+		OrderByComparator<Group> orderByComparator);
 
 	/**
 	 * Returns an ordered range of all the site groups belonging to the parent
@@ -1393,15 +1411,15 @@ public interface GroupLocalService
 	 * @param start the lower bound of the range of groups to return
 	 * @param end the upper bound of the range of groups to return (not
 	 inclusive)
-	 * @param obc the comparator to order the groups (optionally
+	 * @param orderByComparator the comparator to order the groups (optionally
 	 <code>null</code>)
-	 * @return the matching groups ordered by comparator <code>obc</code>
+	 * @return the matching groups ordered by comparator <code>orderByComparator</code>
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Group> search(
 		long companyId, long parentGroupId, String name, String description,
 		LinkedHashMap<String, Object> params, boolean andOperator, int start,
-		int end, OrderByComparator<Group> obc);
+		int end, OrderByComparator<Group> orderByComparator);
 
 	/**
 	 * Returns an ordered range of all the groups belonging to the parent group
@@ -1473,15 +1491,15 @@ public interface GroupLocalService
 	 * @param start the lower bound of the range of groups to return
 	 * @param end the upper bound of the range of groups to return (not
 	 inclusive)
-	 * @param obc the comparator to order the groups (optionally
+	 * @param orderByComparator the comparator to order the groups (optionally
 	 <code>null</code>)
-	 * @return the matching groups ordered by comparator <code>obc</code>
+	 * @return the matching groups ordered by comparator <code>orderByComparator</code>
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Group> search(
 		long companyId, long[] classNameIds, long parentGroupId,
 		String keywords, LinkedHashMap<String, Object> params, int start,
-		int end, OrderByComparator<Group> obc);
+		int end, OrderByComparator<Group> orderByComparator);
 
 	/**
 	 * Returns an ordered range of all the groups belonging to the parent group
@@ -1559,15 +1577,16 @@ public interface GroupLocalService
 	 * @param start the lower bound of the range of groups to return
 	 * @param end the upper bound of the range of groups to return (not
 	 inclusive)
-	 * @param obc the comparator to order the groups (optionally
+	 * @param orderByComparator the comparator to order the groups (optionally
 	 <code>null</code>)
-	 * @return the matching groups ordered by comparator <code>obc</code>
+	 * @return the matching groups ordered by comparator <code>orderByComparator</code>
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Group> search(
 		long companyId, long[] classNameIds, long parentGroupId, String name,
 		String description, LinkedHashMap<String, Object> params,
-		boolean andOperator, int start, int end, OrderByComparator<Group> obc);
+		boolean andOperator, int start, int end,
+		OrderByComparator<Group> orderByComparator);
 
 	/**
 	 * Returns an ordered range of all the groups that match the class name IDs
@@ -1634,15 +1653,15 @@ public interface GroupLocalService
 	 * @param start the lower bound of the range of groups to return
 	 * @param end the upper bound of the range of groups to return (not
 	 inclusive)
-	 * @param obc the comparator to order the groups (optionally
+	 * @param orderByComparator the comparator to order the groups (optionally
 	 <code>null</code>)
-	 * @return the matching groups ordered by comparator <code>obc</code>
+	 * @return the matching groups ordered by comparator <code>orderByComparator</code>
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Group> search(
 		long companyId, long[] classNameIds, String keywords,
 		LinkedHashMap<String, Object> params, int start, int end,
-		OrderByComparator<Group> obc);
+		OrderByComparator<Group> orderByComparator);
 
 	/**
 	 * Returns an ordered range of all the groups that match the class name IDs,
@@ -1718,15 +1737,15 @@ public interface GroupLocalService
 	 * @param start the lower bound of the range of groups to return
 	 * @param end the upper bound of the range of groups to return (not
 	 inclusive)
-	 * @param obc the comparator to order the groups (optionally
+	 * @param orderByComparator the comparator to order the groups (optionally
 	 <code>null</code>)
-	 * @return the matching groups ordered by comparator <code>obc</code>
+	 * @return the matching groups ordered by comparator <code>orderByComparator</code>
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Group> search(
 		long companyId, long[] classNameIds, String name, String description,
 		LinkedHashMap<String, Object> params, boolean andOperator, int start,
-		int end, OrderByComparator<Group> obc);
+		int end, OrderByComparator<Group> orderByComparator);
 
 	/**
 	 * Returns an ordered range of all the groups that match the keywords,
@@ -1788,14 +1807,14 @@ public interface GroupLocalService
 	 * @param start the lower bound of the range of groups to return
 	 * @param end the upper bound of the range of groups to return (not
 	 inclusive)
-	 * @param obc the comparator to order the groups (optionally
+	 * @param orderByComparator the comparator to order the groups (optionally
 	 <code>null</code>)
-	 * @return the matching groups ordered by comparator <code>obc</code>
+	 * @return the matching groups ordered by comparator <code>orderByComparator</code>
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Group> search(
 		long companyId, String keywords, LinkedHashMap<String, Object> params,
-		int start, int end, OrderByComparator<Group> obc);
+		int start, int end, OrderByComparator<Group> orderByComparator);
 
 	/**
 	 * Returns an ordered range of all the site groups and organization groups
@@ -1865,15 +1884,15 @@ public interface GroupLocalService
 	 * @param start the lower bound of the range of groups to return
 	 * @param end the upper bound of the range of groups to return (not
 	 inclusive)
-	 * @param obc the comparator to order the groups (optionally
+	 * @param orderByComparator the comparator to order the groups (optionally
 	 <code>null</code>)
-	 * @return the matching groups ordered by comparator <code>obc</code>
+	 * @return the matching groups ordered by comparator <code>orderByComparator</code>
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Group> search(
 		long companyId, String name, String description,
 		LinkedHashMap<String, Object> params, boolean andOperator, int start,
-		int end, OrderByComparator<Group> obc);
+		int end, OrderByComparator<Group> orderByComparator);
 
 	/**
 	 * Returns the number of groups belonging to the parent group that match the
@@ -2132,6 +2151,10 @@ public interface GroupLocalService
 
 	/**
 	 * Updates the group in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect GroupLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param group the group
 	 * @return the group that was updated

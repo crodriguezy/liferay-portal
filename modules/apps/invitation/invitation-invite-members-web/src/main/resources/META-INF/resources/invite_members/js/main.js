@@ -19,8 +19,6 @@ AUI.add(
 
 		var Language = Liferay.Language;
 
-		var LString = Lang.String;
-
 		var Util = Liferay.Util;
 
 		var CSS_INVITED = 'invited';
@@ -212,7 +210,7 @@ AUI.add(
 				_onInviteMembersListResults(event) {
 					var instance = this;
 
-					var responseData = A.JSON.parse(event.data.responseText);
+					var responseData = JSON.parse(event.data.responseText);
 
 					instance._membersList.html(
 						instance._renderResults(responseData).join(STR_BLANK)
@@ -329,10 +327,10 @@ AUI.add(
 
 								return Lang.sub(TPL_USER, {
 									cssClass,
-									userEmailAddress: LString.escapeHTML(
+									userEmailAddress: Liferay.Util.escapeHTML(
 										result.userEmailAddress
 									),
-									userFullName: LString.escapeHTML(
+									userFullName: Liferay.Util.escapeHTML(
 										result.userFullName
 									),
 									userId: result.userId,

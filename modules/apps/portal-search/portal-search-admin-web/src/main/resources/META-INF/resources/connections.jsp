@@ -36,7 +36,7 @@ SearchEngineDisplayContext
 %>
 
 <clay:container-fluid
-	className="container-form-lg search-engine-page-container"
+	cssClass="container-form-lg search-engine-page-container"
 >
 	<c:choose>
 		<c:when test="<%= searchEngineDisplayContext.isMissingSearchEngine() %>">
@@ -54,7 +54,9 @@ SearchEngineDisplayContext
 					</div>
 				</c:when>
 				<c:otherwise>
-					<div class="connection-info-item connection-info-item-header sheet sheet-lg">
+					<clay:sheet
+						cssClass="connection-info-item connection-info-item-header"
+					>
 						<div class="connection-info-data-container">
 							<div class="data-item">
 								<div class="key"><liferay-ui:message key="search-engine-vendor" /></div>
@@ -66,7 +68,7 @@ SearchEngineDisplayContext
 								<div class="value"><%= searchEngineDisplayContext.getClientVersionString() %></div>
 							</div>
 						</div>
-					</div>
+					</clay:sheet>
 
 					<%
 					List<ConnectionInformation> connectionInformationList = searchEngineDisplayContext.getConnectionInformationList();
@@ -75,11 +77,10 @@ SearchEngineDisplayContext
 					<h3 class="search-engine-page-title">
 						<liferay-ui:message key="active-connections" />
 
-						<span class="badge badge-secondary">
-							<span class="badge-item badge-item-expand">
-								<%= (connectionInformationList == null) ? 0 : connectionInformationList.size() %>
-							</span>
-						</span>
+						<clay:badge
+							displayType="secondary"
+							label="<%= String.valueOf((connectionInformationList == null) ? 0 : connectionInformationList.size()) %>"
+						/>
 					</h3>
 
 					<c:choose>
@@ -89,7 +90,9 @@ SearchEngineDisplayContext
 							for (ConnectionInformation connectionInformation : connectionInformationList) {
 							%>
 
-								<div class="connection-info-item sheet sheet-lg">
+								<clay:sheet
+									cssClass="connection-info-item"
+								>
 									<div class="connection-info-item-header">
 										<div class="connection-info-item-header-block">
 											<h4 class="connection-id">
@@ -99,11 +102,9 @@ SearchEngineDisplayContext
 												for (String label : connectionInformation.getLabels()) {
 												%>
 
-													<span class="label label-secondary">
-														<span class="label-item label-item-expand">
-															<liferay-ui:message key="<%= label %>" />
-														</span>
-													</span>
+													<clay:label
+														label="<%= label %>"
+													/>
 
 												<%
 												}
@@ -126,7 +127,7 @@ SearchEngineDisplayContext
 													</div>
 
 													<div class="connection-health-indicator-text indicator-item">
-														<liferay-ui:message arguments="<%= new String[] {connectionInformation.getHealth()} %>" key="health-x" />
+														<liferay-ui:message arguments="<%= connectionInformation.getHealth() %>" key="health-x" />
 													</div>
 												</div>
 											</div>
@@ -179,12 +180,11 @@ SearchEngineDisplayContext
 
 									<c:if test="<%= Validator.isNotNull(errorMessage) %>">
 										<clay:alert
+											displayType="danger"
 											message="<%= errorMessage %>"
-											style="danger"
-											title='<%= LanguageUtil.get(request, "error") %>'
 										/>
 									</c:if>
-								</div>
+								</clay:sheet>
 
 							<%
 							}
@@ -193,9 +193,7 @@ SearchEngineDisplayContext
 						</c:when>
 						<c:otherwise>
 							<clay:alert
-								message='<%= LanguageUtil.get(request, "no-active-connections") %>'
-								style="info"
-								title='<%= LanguageUtil.get(request, "info") %>'
+								message="no-active-connections"
 							/>
 						</c:otherwise>
 					</c:choose>

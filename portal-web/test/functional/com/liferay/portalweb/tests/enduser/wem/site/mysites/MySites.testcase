@@ -160,6 +160,7 @@ definition {
 	@description = "Assert joining a restricted site requires admin approval"
 	@priority = "5"
 	test JoinSiteRestricted {
+		property portal.acceptance = "true";
 		property testray.component.names = "Site Administration,Users and Organizations";
 
 		task ("Create a restricted site") {

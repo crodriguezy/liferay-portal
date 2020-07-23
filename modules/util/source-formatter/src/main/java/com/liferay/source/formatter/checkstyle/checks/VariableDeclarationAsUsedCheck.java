@@ -23,6 +23,7 @@ import com.puppycrawl.tools.checkstyle.api.TokenTypes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Hugo Huijser
@@ -57,15 +58,7 @@ public class VariableDeclarationAsUsedCheck extends BaseCheck {
 
 		if (hasParentWithTokenType(
 				variableDefinitionDetailAST, TokenTypes.FOR_EACH_CLAUSE,
-				TokenTypes.FOR_INIT) ||
-			_containsMethodName(
-				variableDefinitionDetailAST,
-				"_?(add|channel|close|create|delete|execute|open|post|put|" +
-					"register|resolve|send|transform|unzip|update|zip)" +
-						"([A-Z].*)?",
-				"currentTimeMillis", "nextVersion", "toString") ||
-			_containsVariableType(
-				variableDefinitionDetailAST, identValues, "File")) {
+				TokenTypes.FOR_INIT)) {
 
 			return;
 		}
@@ -86,19 +79,29 @@ public class VariableDeclarationAsUsedCheck extends BaseCheck {
 			return;
 		}
 
-		int endLineNumber = getEndLineNumber(variableDefinitionDetailAST);
+		if (!_containsMethodName(
+				variableDefinitionDetailAST,
+				"_?(add|channel|close|create|delete|execute|open|post|put|" +
+					"register|resolve|send|transform|unzip|update|zip)" +
+						"([A-Z].*)?",
+				"currentTimeMillis", "nextVersion", "toString") &&
+			!_containsVariableType(
+				variableDefinitionDetailAST, identValues, "File")) {
 
-		DetailAST lastBranchingStatementDetailAST =
-			_getLastBranchingStatementDetailAST(
-				detailAST, endLineNumber,
-				_getClosestParentLineNumber(
-					firstDependentIdentDetailAST, endLineNumber));
+			int endLineNumber = getEndLineNumber(variableDefinitionDetailAST);
 
-		if (lastBranchingStatementDetailAST != null) {
-			log(
-				variableDefinitionDetailAST, _MSG_DECLARE_VARIABLE_AS_USED,
-				variableName, lastBranchingStatementDetailAST.getText(),
-				lastBranchingStatementDetailAST.getLineNo());
+			DetailAST lastBranchingStatementDetailAST =
+				_getLastBranchingStatementDetailAST(
+					detailAST, endLineNumber,
+					_getClosestParentLineNumber(
+						firstDependentIdentDetailAST, endLineNumber));
+
+			if (lastBranchingStatementDetailAST != null) {
+				log(
+					variableDefinitionDetailAST, _MSG_DECLARE_VARIABLE_AS_USED,
+					variableName, lastBranchingStatementDetailAST.getText(),
+					lastBranchingStatementDetailAST.getLineNo());
+			}
 		}
 
 		String absolutePath = getAbsolutePath();
@@ -111,54 +114,6 @@ public class VariableDeclarationAsUsedCheck extends BaseCheck {
 			variableDefinitionDetailAST);
 
 		if (assignMethodCallDetailAST == null) {
-			return;
-		}
-
-		DetailAST elistDetailAST = assignMethodCallDetailAST.findFirstToken(
-			TokenTypes.ELIST);
-
-		int parameterCount = 0;
-
-		DetailAST childDetailAST = elistDetailAST.getFirstChild();
-
-		while (true) {
-			if (childDetailAST == null) {
-				break;
-			}
-
-			if (childDetailAST.getType() == TokenTypes.COMMA) {
-				childDetailAST = childDetailAST.getNextSibling();
-
-				continue;
-			}
-
-			if (childDetailAST.getType() != TokenTypes.EXPR) {
-				return;
-			}
-
-			parameterCount++;
-
-			if (parameterCount > 1) {
-				return;
-			}
-
-			DetailAST grandChildDetailAST = childDetailAST.getFirstChild();
-
-			if (grandChildDetailAST.getType() != TokenTypes.IDENT) {
-				return;
-			}
-
-			childDetailAST = childDetailAST.getNextSibling();
-		}
-
-		DetailAST firstChildDetailAST =
-			assignMethodCallDetailAST.getFirstChild();
-
-		FullIdent fullIdent = FullIdent.createFullIdent(firstChildDetailAST);
-
-		String methodName = fullIdent.getText();
-
-		if (!methodName.matches("(?i)([\\w.]*\\.)?get" + variableName)) {
 			return;
 		}
 
@@ -191,6 +146,34 @@ public class VariableDeclarationAsUsedCheck extends BaseCheck {
 			return;
 		}
 
+		if (_isBuildMethodCall(assignMethodCallDetailAST)) {
+			if (_isInsideStatementClause(identDetailAST)) {
+				return;
+			}
+		}
+		else {
+			if ((getStartLineNumber(assignMethodCallDetailAST) !=
+					getEndLineNumber(assignMethodCallDetailAST)) ||
+				(_isInsideStatementClause(identDetailAST) &&
+				 hasParentWithTokenType(
+					 identDetailAST, RELATIONAL_OPERATOR_TOKEN_TYPES))) {
+
+				return;
+			}
+
+			DetailAST firstChildDetailAST =
+				assignMethodCallDetailAST.getFirstChild();
+
+			FullIdent fullIdent = FullIdent.createFullIdent(
+				firstChildDetailAST);
+
+			String methodName = fullIdent.getText();
+
+			if (!methodName.matches("(?i)([\\w.]*\\.)?get" + variableName)) {
+				return;
+			}
+		}
+
 		DetailAST parentDetailAST = getParentWithTokenType(
 			identDetailAST, TokenTypes.LITERAL_FOR, TokenTypes.LITERAL_WHILE,
 			TokenTypes.LITERAL_TRY, TokenTypes.LITERAL_SYNCHRONIZED,
@@ -210,15 +193,16 @@ public class VariableDeclarationAsUsedCheck extends BaseCheck {
 
 			if (Validator.isNull(getLine(i - 1))) {
 				emptyLineCount++;
+
+				if (emptyLineCount > 1) {
+					return;
+				}
 			}
 		}
 
-		if (emptyLineCount < 2) {
-			log(
-				variableDefinitionDetailAST,
-				_MSG_VARIABLE_DECLARTION_NOT_NEEDED, variableName,
-				identDetailAST.getLineNo());
-		}
+		log(
+			variableDefinitionDetailAST, _MSG_VARIABLE_DECLARTION_NOT_NEEDED,
+			variableName, identDetailAST.getLineNo());
 	}
 
 	private boolean _containsMethodName(
@@ -440,6 +424,93 @@ public class VariableDeclarationAsUsedCheck extends BaseCheck {
 		}
 
 		return lastBranchingStatementDetailAST;
+	}
+
+	private boolean _isBuildMethodCall(DetailAST methodCallDetailAST) {
+		DetailAST firstChildDetailAST = methodCallDetailAST.getFirstChild();
+
+		if (firstChildDetailAST.getType() != TokenTypes.DOT) {
+			return false;
+		}
+
+		DetailAST lastChildDetailAST = firstChildDetailAST.getLastChild();
+
+		if ((lastChildDetailAST.getType() != TokenTypes.IDENT) ||
+			!Objects.equals(lastChildDetailAST.getText(), "build")) {
+
+			return false;
+		}
+
+		while (true) {
+			firstChildDetailAST = firstChildDetailAST.getFirstChild();
+
+			if (firstChildDetailAST == null) {
+				return false;
+			}
+
+			if ((firstChildDetailAST.getType() == TokenTypes.DOT) ||
+				(firstChildDetailAST.getType() == TokenTypes.METHOD_CALL)) {
+
+				continue;
+			}
+
+			FullIdent fullIdent = FullIdent.createFullIdent(
+				firstChildDetailAST.getParent());
+
+			String methodName = fullIdent.getText();
+
+			if (methodName.matches(".*Builder\\..*")) {
+				return true;
+			}
+
+			return false;
+		}
+	}
+
+	private boolean _isInsideStatementClause(DetailAST detailAST) {
+		DetailAST parentDetailAST = detailAST.getParent();
+
+		while (true) {
+			DetailAST grandParentDetailAST = parentDetailAST.getParent();
+
+			if (grandParentDetailAST == null) {
+				return false;
+			}
+
+			if (grandParentDetailAST.getType() == TokenTypes.LITERAL_FOR) {
+				if ((parentDetailAST.getType() == TokenTypes.FOR_CONDITION) ||
+					(parentDetailAST.getType() == TokenTypes.FOR_EACH_CLAUSE) ||
+					(parentDetailAST.getType() == TokenTypes.FOR_INIT) ||
+					(parentDetailAST.getType() == TokenTypes.FOR_ITERATOR)) {
+
+					return true;
+				}
+
+				return false;
+			}
+
+			if ((grandParentDetailAST.getType() == TokenTypes.LITERAL_IF) ||
+				(grandParentDetailAST.getType() == TokenTypes.LITERAL_WHILE)) {
+
+				if (parentDetailAST.getType() == TokenTypes.EXPR) {
+					return true;
+				}
+
+				return false;
+			}
+
+			if (grandParentDetailAST.getType() == TokenTypes.LITERAL_TRY) {
+				if (parentDetailAST.getType() ==
+						TokenTypes.RESOURCE_SPECIFICATION) {
+
+					return true;
+				}
+
+				return false;
+			}
+
+			parentDetailAST = grandParentDetailAST;
+		}
 	}
 
 	private static final String _MSG_DECLARE_VARIABLE_AS_USED =

@@ -17,7 +17,6 @@ package com.liferay.app.builder.web.internal.deploy;
 import com.liferay.app.builder.constants.AppBuilderPortletKeys;
 import com.liferay.app.builder.deploy.AppDeployer;
 import com.liferay.app.builder.model.AppBuilderApp;
-import com.liferay.app.builder.service.AppBuilderAppLocalService;
 import com.liferay.app.builder.web.internal.layout.type.controller.AppPortletLayoutTypeController;
 import com.liferay.app.builder.web.internal.model.AppPortletLayoutTypeAccessPolicy;
 import com.liferay.app.builder.web.internal.portlet.AppPortlet;
@@ -27,12 +26,11 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
-import com.liferay.portal.kernel.model.LayoutTypeAccessPolicy;
-import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
@@ -43,15 +41,10 @@ import com.liferay.portal.kernel.util.Validator;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.portlet.Portlet;
 
 import javax.servlet.ServletContext;
 
-import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -62,16 +55,16 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true, property = "app.builder.deploy.type=standalone",
 	service = AppDeployer.class
 )
-public class StandaloneAppDeployer implements AppDeployer {
+public class StandaloneAppDeployer extends BaseAppDeployer {
 
 	@Override
 	public void deploy(long appId) throws Exception {
 		AppBuilderApp appBuilderApp =
-			_appBuilderAppLocalService.getAppBuilderApp(appId);
+			appBuilderAppLocalService.getAppBuilderApp(appId);
 
 		appBuilderApp.setActive(true);
 
-		_serviceRegistrationsMap.computeIfAbsent(
+		serviceRegistrationsMap.computeIfAbsent(
 			appId,
 			key -> {
 				try {
@@ -79,32 +72,33 @@ public class StandaloneAppDeployer implements AppDeployer {
 						LocaleThreadLocal.getThemeDisplayLocale());
 					String portletName = _getPortletName(appId);
 
-					return new ServiceRegistration<?>[] {
-						_deployLayoutTypeController(
-							appBuilderApp.getCompanyId(), appId, appName,
-							portletName),
+					return ArrayUtil.append(
 						_deployPortlet(appBuilderApp, appName, portletName),
-						_deployLayoutTypeAccessPolicy(portletName)
-					};
+						new ServiceRegistration<?>[] {
+							_deployLayoutTypeController(
+								appBuilderApp.getCompanyId(), appId, appName,
+								portletName),
+							_deployLayoutTypeAccessPolicy(portletName)
+						});
 				}
 				catch (PortalException portalException) {
 					throw new IllegalStateException(portalException);
 				}
 			});
 
-		_appBuilderAppLocalService.updateAppBuilderApp(appBuilderApp);
+		appBuilderAppLocalService.updateAppBuilderApp(appBuilderApp);
 	}
 
 	@Override
 	public void undeploy(long appId) throws Exception {
 		if (!undeploy(
-				_appBuilderAppLocalService, appId, _serviceRegistrationsMap)) {
+				appBuilderAppLocalService, appId, serviceRegistrationsMap)) {
 
 			return;
 		}
 
 		AppBuilderApp appBuilderApp =
-			_appBuilderAppLocalService.getAppBuilderApp(appId);
+			appBuilderAppLocalService.getAppBuilderApp(appId);
 
 		Group group = _groupLocalService.getGroup(
 			appBuilderApp.getCompanyId(), _getGroupName(appId));
@@ -113,38 +107,6 @@ public class StandaloneAppDeployer implements AppDeployer {
 
 		_groupLocalService.updateGroup(group);
 	}
-
-	@Activate
-	protected void activate(BundleContext bundleContext) {
-		_bundleContext = bundleContext;
-	}
-
-	@Reference(unbind = "-")
-	protected void setGroupLocalService(GroupLocalService groupLocalService) {
-		_groupLocalService = groupLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setLayoutLocalService(
-		LayoutLocalService layoutLocalService) {
-
-		_layoutLocalService = layoutLocalService;
-	}
-
-	@Reference(
-		target = "(osgi.web.symbolicname=com.liferay.app.builder.web)",
-		unbind = "-"
-	)
-	protected void setServletContext(ServletContext servletContext) {
-		this.servletContext = servletContext;
-	}
-
-	@Reference(unbind = "-")
-	protected void setUserLocalService(UserLocalService userLocalService) {
-		_userLocalService = userLocalService;
-	}
-
-	protected ServletContext servletContext;
 
 	private Group _addGroup(long companyId, long appId) throws PortalException {
 		Map<Locale, String> nameMap = Collections.singletonMap(
@@ -186,8 +148,7 @@ public class StandaloneAppDeployer implements AppDeployer {
 	private ServiceRegistration<?> _deployLayoutTypeAccessPolicy(
 		String portletName) {
 
-		return _bundleContext.registerService(
-			LayoutTypeAccessPolicy.class,
+		return deployLayoutTypeAccessPolicy(
 			new AppPortletLayoutTypeAccessPolicy(),
 			new HashMapDictionary<String, Object>() {
 				{
@@ -219,10 +180,9 @@ public class StandaloneAppDeployer implements AppDeployer {
 			_addPublicLayout(companyId, group.getGroupId(), portletName);
 		}
 
-		return _bundleContext.registerService(
-			LayoutTypeController.class,
+		return deployLayoutTypeController(
 			new AppPortletLayoutTypeController(
-				servletContext, appName, portletName),
+				_servletContext, appName, portletName),
 			new HashMapDictionary<String, Object>() {
 				{
 					put("layout.type", portletName);
@@ -230,19 +190,17 @@ public class StandaloneAppDeployer implements AppDeployer {
 			});
 	}
 
-	private ServiceRegistration<?> _deployPortlet(
+	private ServiceRegistration<?>[] _deployPortlet(
 		AppBuilderApp appBuilderApp, String appName, String portletName) {
 
-		AppPortlet appPortlet = new AppPortlet(
-			appBuilderApp, "standalone", appName, portletName);
-
-		return _bundleContext.registerService(
-			Portlet.class, appPortlet,
-			appPortlet.getProperties(
-				HashMapBuilder.<String, Object>put(
-					"com.liferay.portlet.application-type",
-					"full-page-application"
-				).build()));
+		return deployPortlet(
+			new AppPortlet(
+				appBuilderApp, appBuilderAppPortletTabServiceTrackerMap,
+				"standalone", appName,
+				appPortletMVCResourceCommandServiceTrackerMap, portletName),
+			HashMapBuilder.<String, Object>put(
+				"com.liferay.portlet.application-type", "full-page-application"
+			).build());
 	}
 
 	private String _getGroupFriendlyURL(long appId) {
@@ -258,13 +216,15 @@ public class StandaloneAppDeployer implements AppDeployer {
 	}
 
 	@Reference
-	private AppBuilderAppLocalService _appBuilderAppLocalService;
-
-	private BundleContext _bundleContext;
 	private GroupLocalService _groupLocalService;
+
+	@Reference
 	private LayoutLocalService _layoutLocalService;
-	private final ConcurrentHashMap<Long, ServiceRegistration<?>[]>
-		_serviceRegistrationsMap = new ConcurrentHashMap<>();
+
+	@Reference(target = "(osgi.web.symbolicname=com.liferay.app.builder.web)")
+	private ServletContext _servletContext;
+
+	@Reference
 	private UserLocalService _userLocalService;
 
 }

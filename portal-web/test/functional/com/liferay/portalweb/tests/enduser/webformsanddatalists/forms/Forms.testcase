@@ -23,10 +23,13 @@ definition {
 
 			ProductMenu.gotoPortlet(
 				category = "Content &amp; Data",
-				panel = "Site Administration",
 				portlet = "Forms");
 
 			FormsAdmin.teardownForms();
+
+			Navigator.gotoNavItem(navItem = "Element Sets");
+
+			FormsAdmin.teardownElementSets();
 
 			Page.tearDownCP();
 		}
@@ -35,12 +38,12 @@ definition {
 	@priority = "4"
 	test Add20Forms {
 		property test.name.skip.portal.instance = "Forms#Add20Forms";
+		property portal.acceptance = "true";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		for (var number : list "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20") {
@@ -66,7 +69,6 @@ definition {
 
 			ProductMenu.gotoPortlet(
 				category = "Content &amp; Data",
-				panel = "Site Administration",
 				portlet = "Forms");
 		}
 	}
@@ -74,11 +76,12 @@ definition {
 	@priority = "4"
 	test Add30Fields {
 		property test.name.skip.portal.instance = "Forms#Add30Fields";
+		property portal.acceptance = "true";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -96,22 +99,22 @@ definition {
 		Form.save();
 	}
 
+	@ignore = "true"
 	@priority = "5"
 	test AddElementSetsWithTranslation {
 		property test.name.skip.portal.instance = "Forms#AddElementSetsWithTranslation";
 		property testray.component.names = "Training";
-		property portal.upstream = "quarantine";
+		property portal.acceptance = "true";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		Navigator.gotoNavItem(navItem = "Element Sets");
 
-		FormsAdminNavigator.gotoAddForm();
+		FormsAdminNavigator.gotoAddElementSet();
 
 		Form.editName(formName = "Element Set 1");
 
@@ -119,7 +122,7 @@ definition {
 
 		Form.addTextField(fieldPositionNumber = "1");
 
-		Form.editFieldLabel(fieldValue = "Text Field Required");
+		Form.editElementSetFieldLabel(fieldValue = "Text Field Required");
 
 		FormFields.enableSwitcher(fieldName = "required");
 
@@ -129,7 +132,7 @@ definition {
 			fieldPositionNumber = "2",
 			fieldType = "Select from List");
 
-		Form.editFieldLabel(fieldValue = "Select Repeatable");
+		Form.editElementSetFieldLabel(fieldValue = "Select Repeatable");
 
 		for (var number : list "1,2,3") {
 			FormFields.editOptionsRow(
@@ -146,7 +149,13 @@ definition {
 
 		Form.saveElementSet();
 
-		FormsAdminNavigator.gotoBack();
+		Navigator.openURL();
+
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		Navigator.gotoNavItem(navItem = "Element Sets");
 
 		LexiconEntry.gotoEntryMenuItem(
 			menuItem = "Edit",
@@ -156,35 +165,38 @@ definition {
 
 		FormsAdminNavigator.gotoEditField(fieldName = "Text Field Required");
 
-		FormFields.editText(
-			fieldName = "label",
+		Form.editElementSetFieldLabel(
+			fieldName = "TextFieldRequired",
 			fieldValue = "表格文本");
 
 		Form.closeSidebar();
 
 		FormsAdminNavigator.gotoEditField(fieldName = "Select Repeatable");
 
-		FormFields.editText(
-			fieldName = "label",
+		Form.editElementSetFieldLabel(
+			fieldName = "SelectRepeatable",
 			fieldValue = "表单选择");
 
 		Form.closeSidebar();
 
 		Form.saveElementSet();
 
+		Navigator.openURL();
+
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
 
 		Form.editName();
 
-		Form.gotoAddElementSet(elementSetTitle = "Element Set 1");
+		Form.gotoAddElementSet(
+			elementSetTitle = "Element Set 1",
+			fieldPositionNumber = "1");
 
 		Form.gotoAddField(
-			fieldPositionNumber = "1",
+			fieldPositionNumber = "3",
 			fieldType = "Date");
 
 		Form.editFieldLabelMetal(fieldValue = "Date Field");
@@ -193,7 +205,7 @@ definition {
 
 		FormsAdminNavigator.gotoEditField(fieldName = "Text Field Required");
 
-		FormFields.editFieldName(fieldValue = "TextFieldRequired1");
+		FormFields.editFieldName(fieldValue = "FirstTextField");
 
 		Form.gotoAdvancedTab();
 
@@ -205,13 +217,13 @@ definition {
 
 		FormFields.viewTextLabel(
 			fieldLabel = "表格文本",
-			fieldName = "TextFieldRequired");
-
-		FormFields.viewRequiredAsterisk();
+			fieldName = "${fieldName1}");
 
 		FormFields.viewSelectLabel(
 			fieldLabel = "表单选择",
 			fieldName = "SelectRepeatable");
+
+		FormFields.viewRequiredAsterisk();
 
 		FormsAdminNavigator.gotoEditField(fieldName = "SelectRepeatable");
 
@@ -221,11 +233,11 @@ definition {
 
 		Form.closeSidebar();
 
-		AssertNotVisible(locator1 = "Form#ADD_FIELD");
-
 		Form.selectTranslation(localizedLanguage = "English (United States)");
 
-		Form.gotoAddElementSet(elementSetTitle = "Element Set 1");
+		Form.gotoAddElementSet(
+			elementSetTitle = "Element Set 1",
+			fieldPositionNumber = "4");
 
 		FormsAdminNavigator.gotoEditField(fieldName = "TextFieldRequired");
 
@@ -239,11 +251,11 @@ definition {
 
 		FormsAdminNavigator.gotoPublishedForm();
 
+		FormPortlet.waitFormRenderer(text = "Submit");
+
 		FormFields.viewTextLabel(
 			fieldLabel = "Text Field Required",
 			fieldName = "${fieldName1}");
-
-		FormFields.viewRequiredAsterisk();
 
 		FormFields.viewSelectLabel(
 			fieldLabel = "Select Repeatable",
@@ -253,13 +265,17 @@ definition {
 			fieldLabel = "Text Field Required",
 			fieldName = "${fieldName2}");
 
+		FormFields.viewSelectLabel(
+			fieldLabel = "Select Repeatable",
+			fieldName = "SelectRepeatable1");
+
+		FormFields.viewRequiredAsterisk();
+
 		FormPortlet.changeLocale(locale = "中文-中国");
 
 		FormFields.viewTextLabel(
 			fieldLabel = "表格文本",
 			fieldName = "${fieldName1}");
-
-		FormFields.viewRequiredAsterisk();
 
 		FormFields.viewSelectLabel(
 			fieldLabel = "表单选择",
@@ -268,6 +284,12 @@ definition {
 		FormFields.viewTextLabel(
 			fieldLabel = "表格文本",
 			fieldName = "${fieldName2}");
+
+		FormFields.viewSelectLabel(
+			fieldLabel = "表单选择",
+			fieldName = "SelectRepeatable1");
+
+		FormFields.viewRequiredAsterisk();
 
 		FormFields.editText(
 			fieldName = "${fieldName1}",
@@ -283,16 +305,17 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		Navigator.gotoNavItem(navItem = "Element Sets");
 
-		FormsAdminNavigator.gotoAddForm();
+		FormsAdminNavigator.gotoAddElementSet();
 
 		Form.editName(formName = "Element Set 2");
 
-		Form.gotoAddElementSet(elementSetTitle = "Element Set 1");
+		Form.gotoAddElementSet(
+			elementSetTitle = "Element Set 1",
+			fieldPositionNumber = "1");
 
 		Form.addTranslation(localizedLanguage = "Chinese (China)");
 
@@ -300,11 +323,11 @@ definition {
 			fieldLabel = "表格文本",
 			fieldName = "TextFieldRequired");
 
-		FormFields.viewRequiredAsterisk();
-
 		FormFields.viewSelectLabel(
 			fieldLabel = "表单选择",
 			fieldName = "SelectRepeatable");
+
+		FormFields.viewRequiredAsterisk();
 
 		FormsAdminNavigator.gotoEditField(fieldName = "SelectRepeatable");
 
@@ -316,9 +339,9 @@ definition {
 
 		Form.selectTranslation(localizedLanguage = "English (United States)");
 
-		Form.gotoAddField(fieldType = "Text");
+		Form.addTextField(fieldPositionNumber = "3");
 
-		Form.editFieldLabelMetal(fieldValue = "Text Field New");
+		Form.editElementSetFieldLabel(fieldValue = "Text Field New");
 
 		Form.closeSidebar();
 
@@ -337,7 +360,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -366,7 +388,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdmin.viewForm(
@@ -385,7 +406,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPrivatePage(pageName = "Private Form Page");
@@ -418,10 +438,12 @@ definition {
 	@description = "This is a use case for LPS-68377."
 	@priority = "3"
 	test AddFormToUserSiteAndViewNoDuplicates {
+		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "Forms#AddFormToUserSiteAndViewNoDuplicates";
+
 		Navigator.openURL();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -432,7 +454,7 @@ definition {
 			userLastName = "userln",
 			userScreenName = "usersn");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -441,7 +463,7 @@ definition {
 			userEmailAddress = "userea@liferay.com",
 			userScreenName = "usersn");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Sites",
 			panel = "Control Panel",
 			portlet = "Sites");
@@ -454,14 +476,12 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
 
 		ProductMenu.gotoPortlet(
 			category = "People",
-			panel = "Site Administration",
 			portlet = "Memberships");
 
 		Site.assignUserAsMemberCP(
@@ -493,7 +513,7 @@ definition {
 			roleTitle = "Forms Site Role Name",
 			roleType = "site");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -510,7 +530,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -529,7 +548,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdmin.viewForm();
@@ -541,11 +559,11 @@ definition {
 	@priority = "4"
 	test AddFormWithDuplicateTextFields {
 		property test.name.skip.portal.instance = "Forms#AddFormWithDuplicateTextFields";
+		property portal.acceptance = "true";
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -573,10 +591,12 @@ definition {
 		Form.save();
 	}
 
-	@ignore = "true"
 	@priority = "5"
 	test AddFormWithSpanishAsDefaultPortalLanguage {
 		property test.name.skip.portal.instance = "Forms#AddFormWithSpanishAsDefaultPortalLanguage";
+		property portal.acceptance = "true";
+
+		Navigator.openURL();
 
 		PortalSettings.gotoConfiguration(
 			configurationCategory = "Localization",
@@ -589,7 +609,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -608,7 +627,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -627,6 +645,8 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
+		FormPortlet.waitFormRenderer(text = "Enviar");
+
 		FormFields.viewTextLabel(
 			fieldLabel = "Text Field On Spanish Portal",
 			fieldName = "TextFieldOnSpanishPortal");
@@ -641,7 +661,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -656,17 +675,27 @@ definition {
 			fieldLabel = "Text Field On Spanish Portal",
 			fieldName = "TextFieldOnSpanishPortal",
 			fieldValue = "Text Field Value");
+
+		Navigator.openURL();
+
+		PortalSettings.gotoConfiguration(
+			configurationCategory = "Localization",
+			configurationName = "Language",
+			configurationScope = "Virtual Instance Scope");
+
+		PortalSettings.configureCurrentLanguagesCP(defaultPortalLanguage = "English (United States)");
 	}
 
 	@description = "This is a use case for LPS-75116 and LPS-79101."
 	@priority = "4"
 	test ChangeFieldType {
 		property test.name.skip.portal.instance = "Forms#ChangeFieldType";
+		property portal.acceptance = "true";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -698,9 +727,13 @@ definition {
 
 		Form.save();
 
-		FormsAdminNavigator.gotoEditField(fieldName = "Testing Title");
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
 
-		Pause(locator1 = "2000");
+		FormsAdminNavigator.gotoEditFormByName();
+
+		FormsAdminNavigator.gotoEditField(fieldName = "Testing Title");
 
 		FormFields.changeFieldType(selectOption = "Text");
 
@@ -714,6 +747,8 @@ definition {
 
 		FormFields.viewRequiredAsterisk();
 
+		FormsAdminNavigator.gotoEditField(fieldName = "Testing Title");
+
 		FormFields.changeFieldType(selectOption = "Select from List");
 
 		FormFields.viewTextLabel(
@@ -739,6 +774,8 @@ definition {
 				rowNumber = "${number}");
 		}
 
+		FormsAdminNavigator.gotoEditField(fieldName = "Testing Title");
+
 		FormFields.changeFieldType(selectOption = "Single Selection");
 
 		FormFields.viewTextLabel(
@@ -756,6 +793,8 @@ definition {
 				fieldValue = "Select ${number}",
 				rowNumber = "${number}");
 		}
+
+		FormsAdminNavigator.gotoEditField(fieldName = "Testing Title");
 
 		FormFields.changeFieldType(selectOption = "Date");
 
@@ -769,6 +808,8 @@ definition {
 
 		FormFields.viewRequiredAsterisk();
 
+		FormsAdminNavigator.gotoEditField(fieldName = "Testing Title");
+
 		FormFields.changeFieldType(selectOption = "Single Selection");
 
 		FormFields.viewTextLabel(
@@ -794,6 +835,8 @@ definition {
 				rowNumber = "${number}");
 		}
 
+		FormsAdminNavigator.gotoEditField(fieldName = "Testing Title");
+
 		FormFields.changeFieldType(selectOption = "Multiple Selection");
 
 		FormFields.viewTextLabel(
@@ -812,6 +855,8 @@ definition {
 				rowNumber = "${number}");
 		}
 
+		FormsAdminNavigator.gotoEditField(fieldName = "Testing Title");
+
 		FormFields.changeFieldType(selectOption = "Grid");
 
 		FormFields.viewTextLabel(
@@ -824,6 +869,8 @@ definition {
 
 		FormFields.viewRequiredAsterisk();
 
+		FormsAdminNavigator.gotoEditField(fieldName = "Testing Title");
+
 		FormFields.changeFieldType(selectOption = "Numeric");
 
 		FormFields.viewTextLabel(
@@ -833,6 +880,8 @@ definition {
 		FormFields.viewRadioValue(
 			fieldName = "dataType",
 			fieldValue = "Integer");
+
+		FormsAdminNavigator.gotoEditField(fieldName = "Testing Title");
 
 		FormFields.changeFieldType(selectOption = "Multiple Selection");
 
@@ -859,11 +908,19 @@ definition {
 				rowNumber = "${number}");
 		}
 
+		FormsAdminNavigator.gotoEditField(fieldName = "Testing Title");
+
 		FormFields.changeFieldType(selectOption = "Select from List");
 
 		Form.closeSidebar();
 
 		Form.save();
+
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		FormsAdminNavigator.gotoEditFormByName();
 
 		FormsAdminNavigator.gotoEditField(fieldName = "Testing Title");
 
@@ -893,9 +950,17 @@ definition {
 
 		Form.save();
 
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		FormsAdminNavigator.gotoEditFormByName();
+
 		Form.publishForm();
 
 		FormsAdminNavigator.gotoPublishedForm();
+
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.selectSelectOption(
 			fieldName = "TestingTitle",
@@ -911,7 +976,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoEditFormByName();
@@ -934,7 +998,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -955,11 +1018,12 @@ definition {
 	@description = "This is a use case for LPS-68418."
 	@priority = "3"
 	test ConfigureAutosave {
+		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "Forms#ConfigureAutosave";
 
 		Navigator.openURL();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "System Settings");
@@ -979,9 +1043,10 @@ definition {
 
 		SystemSettings.saveConfiguration();
 
+		Navigator.openURL();
+
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -1019,15 +1084,72 @@ definition {
 			rowEntry = "Created Form Name");
 	}
 
+	@description = "This is a use case for LPS-98073."
+	@ignore = "true"
+	@priority = "5"
+	test CreateReadUpdateDeleteImageField {
+		property test.name.skip.portal.instance = "Forms#SubmitFormWithRequiredImageField";
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		FormsAdminNavigator.gotoAddForm();
+
+		Refresh();
+
+		Form.editName(formName = "Form");
+
+		Form.editPageTitle(
+			formPageName = "Created Form Page Name",
+			formTitleNumber = "1");
+
+		Form.editDescription();
+
+		Form.gotoAddField(
+			fieldPositionNumber = "1",
+			fieldType = "Image");
+
+		Type.clickAtType(
+			locator1 = "FormFields#FIELD_HELPER_EDIT",
+			value1 = "help");
+
+		Form.save();
+
+		FormsAdminNavigator.gotoEditField(fieldName = "Image");
+
+		FormFields.editText(
+			fieldName = "label",
+			fieldValue = "Image Field");
+
+		Type.clickAtType(
+			locator1 = "FormFields#FIELD_HELPER_EDIT",
+			value1 = "Help Text");
+
+		Form.gotoPropertiesTab();
+
+		Type.clickAtType(
+			locator1 = "FormFields#FIELD_NAME_EDIT",
+			value1 = "Image Field Name");
+
+		Click(locator1 = "FormFields#UPLOAD_PREDEFINED_VALUE");
+
+		ItemSelector.uploadFile(
+			navTab = "Documents and Media",
+			uploadFileName = "Document_1.jpg");
+
+		Form.publishForm();
+	}
+
 	@description = "This is a use case for LPS-64379."
 	@priority = "3"
 	test CreateUntitledForm {
+		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "Forms#CreateUntitledForm";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -1042,7 +1164,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdmin.viewForm(
@@ -1053,12 +1174,13 @@ definition {
 	@description = "This is a use case for LPS-60520."
 	@priority = "4"
 	test DeleteDateFieldAndViewEntries {
+		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "Forms#DeleteDateFieldAndViewEntries";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -1085,7 +1207,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -1104,6 +1225,8 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
+		FormPortlet.waitFormRenderer(text = "Submit");
+
 		FormFields.viewTextField(
 			fieldLabel = "Text Field",
 			fieldName = "TextField");
@@ -1120,13 +1243,12 @@ definition {
 			fieldName = "DateField",
 			fieldValue = "01/01/2016");
 
-		FormPortlet.submit();
+		FormPortlet.submitSuccessfully();
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		LexiconEntry.gotoEntryMenuItem(
@@ -1145,7 +1267,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		LexiconEntry.changeDisplayStyle(displayStyle = "list");
@@ -1160,12 +1281,12 @@ definition {
 	@priority = "5"
 	test DeletePages {
 		property test.name.skip.portal.instance = "Forms#DeletePages";
+		property portal.acceptance = "true";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -1198,7 +1319,9 @@ definition {
 			successPageDescription = "Thank you for filling out the Form.",
 			successPageTitle = "Success Page Title");
 
-		Form.deleteCurrentPage(formPageNumber = "2");
+		Form.deleteCurrentPage(
+			formDropDownNumber = "1",
+			formPageNumber = "2");
 
 		Form.deleteSuccessPage(formPageNumber = "2");
 
@@ -1211,11 +1334,12 @@ definition {
 	@priority = "4"
 	test DeleteSelectFromListOptionAndViewEntries {
 		property test.name.skip.portal.instance = "Forms#DeleteSelectFromListOptionAndViewEntries";
+		property portal.acceptance = "true";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -1239,9 +1363,17 @@ definition {
 
 		Form.save();
 
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		FormsAdminNavigator.gotoEditFormByName(formName = "Delete Select Option Test");
+
 		Form.publishForm();
 
 		FormsAdminNavigator.gotoPublishedForm();
+
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.selectSelectOption(
 			fieldName = "Select",
@@ -1253,7 +1385,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -1267,7 +1398,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		LexiconEntry.gotoEntryMenuItem(
@@ -1288,7 +1418,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -1310,7 +1439,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -1365,16 +1493,16 @@ definition {
 			rowNumber = "3");
 	}
 
+	@ignore = "true"
 	@priority = "4"
 	test EditAllFormFieldNames {
 		property test.name.skip.portal.instance = "Forms#EditAllFormFieldNames";
-		property portal.upstream = "quarantine";
+		property portal.acceptance = "true";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -1479,8 +1607,6 @@ definition {
 			optionValue = "Option2Name",
 			rowNumber = "2");
 
-		Pause(locator1 = "3000");
-
 		Form.closeSidebar();
 
 		Form.gotoAddField(
@@ -1522,11 +1648,12 @@ definition {
 	@description = "This is a use case for LPS-50757."
 	@priority = "4"
 	test EditAllFormFieldsTypesUsedBySystemSettings {
+		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "Forms#EditAllFormFieldsTypesUsedBySystemSettings";
 
 		Navigator.openURL();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "System Settings");
@@ -1716,12 +1843,11 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		LexiconEntry.viewActiveDisplayStyle(displayStyle = "table");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "System Settings");
@@ -1741,14 +1867,15 @@ definition {
 
 		SystemSettings.saveConfiguration();
 
+		Navigator.openURL();
+
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		LexiconEntry.viewActiveDisplayStyle(displayStyle = "list");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "System Settings");
@@ -1760,9 +1887,10 @@ definition {
 
 		SystemSettings.resetConfiguration(configurationName = "Forms");
 
+		Navigator.openURL();
+
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		LexiconEntry.viewActiveDisplayStyle(displayStyle = "table");
@@ -1772,12 +1900,12 @@ definition {
 	@priority = "2"
 	test EditFormWithUpdatedSiteAndUserLocale {
 		property test.name.skip.portal.instance = "Forms#EditFormWithUpdatedSiteAndUserLocale";
+		property portal.acceptance = "true";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -1802,7 +1930,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Contenido",
-			panel = "Site Administration",
 			portlet = "Formularios");
 
 		FormsAdminNavigator.gotoEditFormByName();
@@ -1813,7 +1940,7 @@ definition {
 
 		Form.editDescription(formDescription = "User Locale Edit Form Description");
 
-		Form.saveLocalized(saveButton = "Guardar formulario");
+		Form.saveLocalized(saveButton = "Guardar");
 
 		Click(locator1 = "UserBar#USER_AVATAR_IMAGE");
 
@@ -1830,7 +1957,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Settings");
 
 		Site.configureCurrentLanguagesCP(
@@ -1839,7 +1965,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoEditFormByName(formName = "User Locale Edit Form Name");
@@ -1855,12 +1980,12 @@ definition {
 	@priority = "4"
 	test EditTranslatedGridField {
 		property test.name.skip.portal.instance = "Forms#EditTranslatedGridField";
+		property portal.acceptance = "true";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -1910,6 +2035,12 @@ definition {
 
 		Form.save();
 
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		FormsAdminNavigator.gotoEditFormByName();
+
 		FormsAdminNavigator.gotoEditField(fieldName = "Grid Field Translated");
 
 		FormFields.deleteGridOptionsRow(
@@ -1917,6 +2048,12 @@ definition {
 			rowNumber = "2");
 
 		Form.save();
+
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		FormsAdminNavigator.gotoEditFormByName();
 
 		FormsAdminNavigator.gotoEditField(fieldName = "Grid Field Translated");
 
@@ -1941,6 +2078,12 @@ definition {
 		Form.closeSidebar();
 
 		Form.save();
+
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		FormsAdminNavigator.gotoEditFormByName();
 
 		for (var localeMap : list "Japanese (Japan):日本語,Portuguese (Brazil):Português") {
 			var locale = StringUtil.extractFirst("${localeMap}", ":");
@@ -1978,11 +2121,12 @@ definition {
 	@priority = "5"
 	test NavigateToCorrectForm {
 		property test.name.skip.portal.instance = "Forms#NavigateToCorrectForm";
+		property portal.acceptance = "true";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -1996,6 +2140,12 @@ definition {
 		Form.closeSidebar();
 
 		Form.save();
+
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		FormsAdminNavigator.gotoEditFormByName(formName = "Text");
 
 		Form.viewFormName(formName = "Text");
 
@@ -2022,6 +2172,12 @@ definition {
 
 		Form.save();
 
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		FormsAdminNavigator.gotoEditFormByName(formName = "Checkbox");
+
 		Form.viewFormName(formName = "Checkbox");
 
 		FormsAdminNavigator.gotoBack();
@@ -2034,7 +2190,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoEditFormByName(formName = "Checkbox");
@@ -2045,7 +2200,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoEditFormByName(formName = "Text");
@@ -2056,30 +2210,21 @@ definition {
 	@description = "This is a use case for LPS-61740"
 	@priority = "5"
 	test PreviewAndPublishForm {
-		property portal.acceptance = "quarantine";
-		property portal.upstream = "quarantine";
 		property app.server.types = "jboss,tcserver,tomcat,weblogic,websphere,wildfly";
 		property database.types = "db2,hypersonic,mariadb,mysql,oracle,postgresql,sqlserver,sybase";
-		property environment.acceptance = "quarantine";
+		property portal.acceptance = "true";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
 
-		Form.editName();
+		Form.editName(formName = "Test Preview and Publish Form");
 
-		Form.editDescription();
-
-		var browserType = PropsUtil.get("browser.type");
-
-		if (("${browserType}" == "internetexplorer") && (IsElementPresent(locator1 = "Form#SIDEBAR_CLOSE"))) {
-			Click(locator1 = "Form#SIDEBAR_CLOSE");
-		}
+		Form.editDescription(formDescription = "Test Preview and Publish Form Description");
 
 		Form.addTextField(fieldPositionNumber = "1");
 
@@ -2089,12 +2234,13 @@ definition {
 
 		Form.save();
 
+		Navigator.openURL();
+
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
-		FormsAdminNavigator.gotoEditFormByName();
+		FormsAdminNavigator.gotoEditFormByName(formName = "Test Preview and Publish Form");
 
 		Form.publishForm();
 
@@ -2103,7 +2249,8 @@ definition {
 		Form.previewForm(
 			fieldLabel = "Text Field",
 			fieldName = "TextField",
-			fieldValue = "Preview Paragraph entry");
+			fieldValue = "Preview Paragraph entry",
+			formName = "Test Preview and Publish Form");
 
 		Navigator.closeWindow();
 
@@ -2111,21 +2258,28 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
-		FormsAdminNavigator.gotoEditFormByName();
+		FormsAdminNavigator.gotoEditFormByName(formName = "Test Preview and Publish Form");
 
-		Form.submitFormPublish(
+		FormsAdminNavigator.gotoPublishedForm();
+
+		FormPortlet.waitFormRenderer(text = "Submit");
+
+		FormFields.viewTextField(
 			fieldLabel = "Text Field",
+			fieldName = "TextField");
+
+		FormFields.editText(
 			fieldName = "TextField",
 			fieldValue = "Published Paragraph entry");
+
+		FormPortlet.submitSuccessfully();
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -2138,10 +2292,9 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
-		FormsAdminNavigator.gotoEditFormByName();
+		FormsAdminNavigator.gotoEditFormByName(formName = "Test Preview and Publish Form");
 
 		Form.viewFormNotPublished();
 	}
@@ -2150,12 +2303,12 @@ definition {
 	@priority = "3"
 	test ReorderFieldOptions {
 		property test.name.skip.portal.instance = "Forms#ReorderFieldOptions";
+		property portal.acceptance = "true";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -2224,16 +2377,18 @@ definition {
 	@priority = "4"
 	test SearchFormRecordMultipleEntries {
 		property test.name.skip.portal.instance = "Forms#SearchFormRecordMultipleEntries";
+		property portal.acceptance = "true";
 		var fieldValueList = "testEntry1,exampleText,sampleAnswer";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
+
+		Refresh();
 
 		Form.editName(formName = "Test Form");
 
@@ -2249,7 +2404,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -2268,6 +2422,8 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
+		FormPortlet.waitFormRenderer(text = "Submit");
+
 		for (var fieldValue : list "${fieldValueList}") {
 			FormFields.editText(
 				fieldName = "TextField",
@@ -2284,7 +2440,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdmin.viewForm(
@@ -2322,12 +2477,12 @@ definition {
 	@priority = "4"
 	test SelectAndRemoveMultipleOptionsInSelectFromListField {
 		property test.name.skip.portal.instance = "Forms#SelectAndRemoveMultipleOptionsInSelectFromListField";
+		property portal.acceptance = "true";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -2361,6 +2516,8 @@ definition {
 
 		FormsAdminNavigator.gotoPublishedForm();
 
+		FormPortlet.waitFormRenderer(text = "Submit");
+
 		FormFields.selectSelectWithMultipleOptions(
 			fieldName = "Select",
 			selectOptionsList = "Select 1,Select 2,Select 3");
@@ -2387,7 +2544,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -2400,14 +2556,13 @@ definition {
 	@priority = "5"
 	test SubmitFormAfterEditingFields {
 		property test.name.skip.portal.instance = "Forms#SubmitFormAfterEditingFields";
-		property portal.acceptance = "false";
+		property portal.acceptance = "true";
 		property testray.component.names = "Training";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -2491,7 +2646,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -2509,6 +2663,8 @@ definition {
 		PortletEntry.save();
 
 		Navigator.gotoPage(pageName = "Form Page");
+
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.viewParagraphField(
 			fieldTitle = "Paragraph",
@@ -2554,12 +2710,9 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
-		LexiconEntry.gotoEntryMenuItem(
-			menuItem = "Edit",
-			rowEntry = "Created Form Name");
+		FormsAdminNavigator.gotoEditFormByName();
 
 		FormsAdminNavigator.gotoEditField(fieldName = "Paragraph");
 
@@ -2615,6 +2768,8 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
+		FormPortlet.waitFormRenderer(text = "Submit");
+
 		FormFields.viewParagraphField(
 			fieldName = "Paragraph",
 			fieldTitle = "New Paragraph",
@@ -2654,7 +2809,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -2692,14 +2846,15 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		LAR.exportPortlet(larFileName = "FormsExport.lar");
 
 		Pause(locator1 = "5000");
 
-		ProductMenu.gotoPortlet(
+		Navigator.openURL();
+
+		ApplicationsMenu.gotoPortlet(
 			category = "Sites",
 			panel = "Control Panel",
 			portlet = "Sites");
@@ -2708,14 +2863,12 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Site Page Name");
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		LAR.importPortlet(
@@ -2726,7 +2879,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -2761,18 +2913,22 @@ definition {
 		FormsAdmin.viewCheckboxEntry(
 			fieldName = "NewCheckbox",
 			fieldValue = "Checkbox 1");
+
+		Navigator.openURL();
+
+		Site.tearDownCP();
 	}
 
 	@priority = "4"
 	test SubmitFormAndViewEmailNotification {
 		property test.name.skip.portal.instance = "Forms#SubmitFormAndViewEmailNotification";
+		property portal.acceptance = "true";
 		property test.smtp.server.enabled = "true";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -2799,7 +2955,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -2817,6 +2972,8 @@ definition {
 		PortletEntry.save();
 
 		Navigator.gotoPage(pageName = "Form Page");
+
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.viewTextLabel(
 			fieldLabel = "Text Field",
@@ -2851,14 +3008,13 @@ definition {
 	@priority = "5"
 	test SubmitFormContainingCaptchaAndViewTextFieldValue {
 		property captcha.enabled = "true";
-		property portal.acceptance = "quarantine";
+		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "Forms#SubmitFormContainingCaptchaAndViewTextFieldValue";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -2879,6 +3035,12 @@ definition {
 
 		Form.save();
 
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		FormsAdminNavigator.gotoEditFormByName();
+
 		Form.publishForm();
 
 		FormsAdminNavigator.gotoPublishCopyURLLink();
@@ -2891,7 +3053,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -2915,6 +3076,8 @@ definition {
 			else if ("${formAccessLevel}" == "public") {
 				Navigator.openSpecificURL(url = "${publishedFormPublicURL}");
 			}
+
+			FormPortlet.waitFormRenderer(text = "Submit");
 
 			FormFields.viewTextField(
 				fieldLabel = "Text Field",
@@ -2940,14 +3103,13 @@ definition {
 	@priority = "5"
 	test SubmitFormWithAllFieldTypesAndThreePages {
 		property test.name.skip.portal.instance = "Forms#SubmitFormWithAllFieldTypesAndThreePages";
-		property portal.acceptance = "false";
+		property portal.acceptance = "true";
 		property testray.component.names = "Training";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -3106,7 +3268,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -3124,6 +3285,8 @@ definition {
 		PortletEntry.save();
 
 		Navigator.gotoPage(pageName = "Form Page");
+
+		FormPortlet.waitFormRenderer(text = "Next");
 
 		FormFields.viewParagraphField(
 			fieldTitle = "Paragraph",
@@ -3167,19 +3330,26 @@ definition {
 			formPageCurrent = "Page 2",
 			formPageNext = "Page 3");
 
+		FormFields.viewUploadField(
+			fieldLabel = "Upload Field",
+			fieldName = "UploadField");
+
+		AssertNotEditable(
+			key_fieldName = "UploadField",
+			locator1 = "FormFields#UPLOAD_FIELD");
+
 		ItemSelector.gotoItemSelectorViaSelectButton();
 
 		ItemSelector.uploadFile(
 			navTab = "Documents and Media",
 			uploadFileName = "Document_1.jpg");
 
-		FormPortlet.submit();
+		FormPortlet.submitSuccessfully();
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -3248,11 +3418,12 @@ definition {
 	@priority = "5"
 	test SubmitFormWithCustomTextContainingValidation {
 		property test.name.skip.portal.instance = "Forms#SubmitFormWithCustomTextContainingValidation";
+		property portal.acceptance = "true";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -3280,7 +3451,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -3299,11 +3469,11 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
+		FormPortlet.waitFormRenderer(text = "Submit");
+
 		FormFields.viewTextLabel(
 			fieldLabel = "Text",
 			fieldName = "Text");
-
-		Pause(locator1 = "5000");
 
 		FormFields.editText(
 			fieldName = "Text",
@@ -3315,13 +3485,14 @@ definition {
 			fieldName = "Text",
 			fieldValue = "test");
 
-		FormPortlet.submit();
+		FormPortlet.waitForValidationErrorNotPresent(validationErrorMessage = "Text must contain &apos;&apos;Test&apos;&apos;");
+
+		FormPortlet.submitSuccessfully();
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdmin.viewForm();
@@ -3336,11 +3507,12 @@ definition {
 	@priority = "4"
 	test SubmitFormWithMultipleFieldsAndViewEntriesViaDescriptiveDisplay {
 		property test.name.skip.portal.instance = "Forms#SubmitFormWithMultipleFieldsAndViewEntriesViaDescriptiveDisplay";
+		property portal.acceptance = "true";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -3406,7 +3578,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -3424,6 +3595,8 @@ definition {
 		PortletEntry.save();
 
 		Navigator.gotoPage(pageName = "Form Page");
+
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.viewTextLabel(
 			fieldLabel = "Text Field",
@@ -3457,13 +3630,12 @@ definition {
 			fieldName = "SelectField",
 			selectOption = "Select 2");
 
-		FormPortlet.submit();
+		FormPortlet.submitSuccessfully();
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		LexiconEntry.changeDisplayStyle(displayStyle = "list");
@@ -3512,11 +3684,12 @@ definition {
 	@priority = "4"
 	test SubmitFormWithRequiredCheckboxField {
 		property test.name.skip.portal.instance = "Forms#SubmitFormWithRequiredCheckboxField";
+		property portal.acceptance = "true";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -3544,7 +3717,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -3563,6 +3735,8 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
+		FormPortlet.waitFormRenderer(text = "Submit");
+
 		FormFields.viewCheckboxLabel(
 			fieldLabel = "Checkbox Field",
 			fieldName = "CheckboxField");
@@ -3575,13 +3749,14 @@ definition {
 			checkboxOption = "Checkbox 1",
 			fieldName = "CheckboxField");
 
-		FormPortlet.submit();
+		FormPortlet.waitForValidationErrorNotPresent();
+
+		FormPortlet.submitSuccessfully();
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -3589,6 +3764,98 @@ definition {
 		FormsAdmin.viewFormTableEntry(
 			fieldLabel = "Checkbox Field",
 			fieldValue = "Checkbox 1");
+	}
+
+	@description = "This is a use case for LPS-98073."
+	@priority = "5"
+	test SubmitFormWithRequiredImageField {
+		property test.name.skip.portal.instance = "Forms#SubmitFormWithRequiredImageField";
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		FormsAdminNavigator.gotoAddForm();
+
+		Refresh();
+
+		Form.editName(formName = "Form");
+
+		Form.editPageTitle(
+			formPageName = "Created Form Page Name",
+			formTitleNumber = "1");
+
+		Form.editDescription();
+
+		Form.gotoAddField(
+			fieldPositionNumber = "1",
+			fieldType = "Image");
+
+		FormFields.enableSwitcher(fieldName = "Required Field");
+
+		Type.clickAtType(
+			locator1 = "FormFields#FIELD_HELPER_EDIT",
+			value1 = "help");
+
+		Form.gotoPropertiesTab();
+
+		FormFields.enableSwitcher(fieldName = "Repeatable");
+
+		Form.publishForm();
+
+		Form.assertFormWasPublished();
+		ProductMenu.gotoPortlet(
+			category = "Site Builder",
+			portlet = "Pages");
+
+		SitePages.addPublicPage(pageName = "Form Page");
+
+		Navigator.gotoPage(pageName = "Form Page");
+
+		Portlet.addPG(
+			pageName = "Form Page",
+			portletName = "Form");
+
+		FormPortletNavigator.gotoSelectForm();
+
+		FormPortletConfiguration.selectForm(formName = "Form");
+
+		PortletEntry.save();
+
+		Navigator.gotoPage(pageName = "Form Page");
+
+		FormPortlet.submitWithValidationError(validationErrorMessage = "This field is required.");
+
+		Click(locator1 = "FormFields#FIELD_ADD_DUPLICATE");
+
+		Click(locator1 = "FormFields#UPLOAD_ON_WIDGET");
+
+		ItemSelector.uploadFile(
+			navTab = "Documents and Media",
+			uploadFileName = "Document_1.jpg");
+
+		Form.editImageDescription(
+			descriptionContent = "Description 1",
+			descriptionPosition = "1");
+
+		Click(locator1 = "FormFields#UPLOAD_ON_DUPLICATE_FIELD");
+
+		ItemSelector.uploadFile(
+			navTab = "Documents and Media",
+			uploadFileName = "Document_1.jpg");
+
+		Form.editImageDescription(
+			descriptionContent = "Description 2",
+			descriptionPosition = "2");
+
+		FormPortlet.clickSubmit();
+
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		FormsAdminNavigator.gotoViewEntries(formName = "Form");
+
+		FormsAdmin.viewImageTableEntry();
 	}
 
 	@description = "This is a use case for LPS-59997."
@@ -3599,7 +3866,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -3622,7 +3888,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -3641,6 +3906,8 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
+		FormPortlet.waitFormRenderer(text = "Submit");
+
 		FormFields.viewTextLabel(
 			fieldLabel = "Text Field",
 			fieldName = "TextField");
@@ -3655,13 +3922,14 @@ definition {
 			fieldName = "TextField",
 			fieldValue = "Text Field Value");
 
-		FormPortlet.submit();
+		FormPortlet.waitForValidationErrorNotPresent();
+
+		FormPortlet.submitSuccessfully();
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -3678,7 +3946,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -3710,7 +3977,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -3729,6 +3995,8 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
+		FormPortlet.waitFormRenderer(text = "Submit");
+
 		FormFields.viewRadioLabel(
 			fieldLabel = "Radio Field",
 			fieldName = "RadioField");
@@ -3741,13 +4009,14 @@ definition {
 			fieldName = "RadioField",
 			radioOption = "Option 1");
 
-		FormPortlet.submit();
+		FormPortlet.waitForValidationErrorNotPresent();
+
+		FormPortlet.submitSuccessfully();
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -3761,11 +4030,12 @@ definition {
 	@priority = "5"
 	test SubmitFormWithRequiredRepeatingTextField {
 		property test.name.skip.portal.instance = "Forms#SubmitFormWithRequiredRepeatingTextField";
+		property portal.acceptance = "true";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -3790,7 +4060,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -3809,6 +4078,8 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
+		FormPortlet.waitFormRenderer(text = "Submit");
+
 		FormFields.addRepeatableField(
 			fieldName = "TextField",
 			repeatableFieldNumber = "1");
@@ -3824,7 +4095,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -3838,15 +4108,13 @@ definition {
 	@priority = "5"
 	test SubmitFormWithRequiredTextField {
 		property test.name.skip.portal.instance = "Forms#SubmitFormWithRequiredTextField";
-		property portal.acceptance = "quarantine";
-		property portal.upstream = "quarantine";
+		property portal.acceptance = "true";
 		property testray.component.names = "Training";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -3867,7 +4135,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -3886,6 +4153,8 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
+		FormPortlet.waitFormRenderer(text = "Submit");
+
 		FormFields.viewTextLabel(
 			fieldLabel = "Text Field",
 			fieldName = "TextField");
@@ -3898,13 +4167,14 @@ definition {
 			fieldName = "TextField",
 			fieldValue = "Text Field Value");
 
-		FormPortlet.submit();
+		FormPortlet.waitForValidationErrorNotPresent();
+
+		FormPortlet.submitSuccessfully();
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -3918,11 +4188,12 @@ definition {
 	@priority = "4"
 	test SubmitFormWithSwitcherCheckboxField {
 		property test.name.skip.portal.instance = "Forms#SubmitFormWithSwitcherCheckboxField";
+		property portal.acceptance = "true";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -3955,7 +4226,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -3974,6 +4244,8 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
+		FormPortlet.waitFormRenderer(text = "Submit");
+
 		FormFields.viewSwitcherLabel(
 			fieldLabel = "Checkbox Field",
 			fieldName = "CheckboxField");
@@ -3990,7 +4262,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -4009,11 +4280,12 @@ definition {
 	@priority = "4"
 	test SubmitFormWithUploadField {
 		property test.name.skip.portal.instance = "Forms#SubmitFormWithUploadField";
+		property portal.acceptance = "true";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -4032,9 +4304,17 @@ definition {
 
 		Form.save();
 
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		FormsAdminNavigator.gotoEditFormByName();
+
 		Form.publishForm();
 
 		FormsAdminNavigator.gotoPublishedForm();
+
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.viewUploadField(
 			fieldLabel = "Upload Field",
@@ -4050,13 +4330,12 @@ definition {
 			navTab = "Documents and Media",
 			uploadFileName = "Document_1.jpg");
 
-		FormPortlet.submit();
+		FormPortlet.submitSuccessfully();
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -4073,12 +4352,12 @@ definition {
 	@priority = "4"
 	test SubmitWithRequiredDateField {
 		property test.name.skip.portal.instance = "Forms#SubmitWithRequiredDateField";
+		property portal.acceptance = "true";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -4099,9 +4378,17 @@ definition {
 
 		Form.save();
 
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		FormsAdminNavigator.gotoEditFormByName();
+
 		Form.publishForm();
 
 		FormsAdminNavigator.gotoPublishedForm();
+
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.viewDateField(
 			fieldLabel = "Date Field",
@@ -4127,13 +4414,14 @@ definition {
 			fieldName = "DateField",
 			fieldValue = "01/01/2016");
 
-		FormPortlet.submit();
+		FormPortlet.waitForValidationErrorNotPresent();
+
+		FormPortlet.submitSuccessfully();
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -4146,88 +4434,16 @@ definition {
 			fieldValue = "01/01/2016");
 	}
 
-	@description = "This is a use case for LPS-71485 and LPS-71512."
-	@ignore = "true"
-	@priority = "2"
-	test ViewAltSuccessPagePagination {
-		property test.name.skip.portal.instance = "Forms#ViewAltSuccessPagePagination";
-
-		Navigator.openURL();
-
-		ProductMenu.gotoPortlet(
-			category = "Content &amp; Data",
-			panel = "Site Administration",
-			portlet = "Forms");
-
-		FormsAdminNavigator.gotoAddForm();
-
-		Form.editName();
-
-		Form.editDescription();
-
-		Form.editPageTitle(
-			formPageName = "Page 1",
-			formTitleNumber = "1");
-
-		Form.addTextField(fieldPositionNumber = "1");
-
-		Form.editFieldLabelMetal(fieldValue = "Text Field");
-
-		Form.closeSidebar();
-
-		Form.addPage(formAddNewPageNumber = "1");
-
-		Form.editPageTitle(
-			formPageName = "Page 2",
-			formTitleNumber = "2");
-
-		Form.addTextField(fieldPositionNumber = "3");
-
-		Form.editFieldLabelMetal(fieldValue = "Text2");
-
-		Form.closeSidebar();
-
-		Form.addSuccessPage();
-
-		Form.editSuccessPage(
-			successPageDescription = "Thank you for filling out the Form.",
-			successPageTitle = "Success Page Title");
-
-		Form.switchPaginationModeToBottom();
-
-		Form.viewAltPagePagination(page = "2");
-
-		Form.viewAltSuccessPagePagination();
-
-		Form.gotoPageAltPagination(page = "1");
-
-		FormFields.viewTextField(
-			fieldLabel = "Text Field",
-			fieldName = "TextField");
-
-		Form.save();
-
-		Form.viewAltPagePagination(page = "2");
-
-		Form.viewAltSuccessPagePagination();
-
-		Form.gotoPageAltPagination(page = "1");
-
-		FormFields.viewTextField(
-			fieldLabel = "Text Field",
-			fieldName = "TextField");
-	}
-
 	@description = "This is a use case for LPS-68182."
 	@priority = "3"
 	test ViewBlankLabelWhenAddingNewField {
 		property test.name.skip.portal.instance = "Forms#ViewBlankLabelWhenAddingNewField";
+		property portal.acceptance = "true";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -4259,12 +4475,12 @@ definition {
 	@priority = "3"
 	test ViewConfirmationWhenLeavingFormWithoutSaving {
 		property test.name.skip.portal.instance = "Forms#ViewConfirmationWhenLeavingFormWithoutSaving";
+		property portal.acceptance = "true";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -4291,14 +4507,16 @@ definition {
 	}
 
 	@description = "This is a use case for LPS-64305."
+	@ignore = "true"
 	@priority = "4"
 	test ViewDefaultFieldNamesWithPunctuationCharacters {
 		property test.name.skip.portal.instance = "Forms#ViewDefaultFieldNamesWithPunctuationCharacters";
+		property portal.acceptance = "true";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -4309,48 +4527,29 @@ definition {
 
 		Form.addTextField(fieldPositionNumber = "1");
 
-		FormFields.editText(
-			fieldName = "label",
+		Form.editFieldLabelMetal(
+			fieldName = "Text",
 			fieldValue = ",-+!@#$%^*()=.?/;:{}[]\|");
-
-		FormFields.viewFieldName(fieldName = "Text");
 
 		FormFields.editFieldName(fieldValue = "_,-+!@#$%^*()=.?/;:{}[]\|");
 
 		Form.closeSidebar();
 
-		Form.addTextField(fieldPositionNumber = "1");
+		Form.addTextField(fieldPositionNumber = "2");
 
-		FormFields.editText(
-			fieldName = "label",
+		Form.editFieldLabelMetal(
+			fieldName = "JumpSheExclaimed",
 			fieldValue = "Jump, She exclaimed!");
 
 		FormFields.editFieldName(fieldValue = "Jump, She exclaimed!");
 
 		Form.closeSidebar();
 
-		Form.save();
+		Form.publishForm();
 
-		ProductMenu.gotoPortlet(
-			category = "Site Builder",
-			panel = "Site Administration",
-			portlet = "Pages");
+		FormsAdminNavigator.gotoPublishedForm();
 
-		SitePages.addPublicPage(pageName = "Form Page");
-
-		Navigator.gotoPage(pageName = "Form Page");
-
-		Portlet.addPG(
-			pageName = "Form Page",
-			portletName = "Form");
-
-		FormPortletNavigator.gotoSelectForm();
-
-		FormPortletConfiguration.selectForm();
-
-		PortletEntry.save();
-
-		Navigator.gotoPage(pageName = "Form Page");
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.viewTextField(
 			fieldLabel = ",-+!@#$%^*()=.?/;:{}[]\|",
@@ -4375,11 +4574,12 @@ definition {
 	@priority = "4"
 	test ViewFieldValidationIsNotBypassedWhenNextButtonIsHitTwice {
 		property test.name.skip.portal.instance = "Forms#ViewFieldValidationIsNotBypassedWhenNextButtonIsHitTwice";
+		property portal.acceptance = "true";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -4426,6 +4626,8 @@ definition {
 
 		FormsAdminNavigator.gotoPublishedForm();
 
+		FormPortlet.waitFormRenderer(text = "Next");
+
 		FormFields.editText(
 			fieldName = "TextField",
 			fieldValue = "test");
@@ -4453,11 +4655,12 @@ definition {
 	@priority = "3"
 	test ViewFormWithMultipleSelectionFieldAsASwitcherAndHideLabel {
 		property test.name.skip.portal.instance = "Forms#ViewFormWithMultipleSelectionFieldAsASwitcherAndHideLabel";
+		property portal.acceptance = "true";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -4495,7 +4698,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -4514,6 +4716,8 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
+		FormPortlet.waitFormRenderer(text = "Submit");
+
 		FormFields.viewSwitcher(fieldName = "MultipleSelection");
 
 		FormFields.viewSwitcherLabelNotPresent(
@@ -4526,12 +4730,12 @@ definition {
 	@priority = "4"
 	test ViewRepeatableTextFieldLabel {
 		property test.name.skip.portal.instance = "Forms#ViewRepeatableTextFieldLabel";
+		property portal.acceptance = "true";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -4554,7 +4758,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -4573,6 +4776,8 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
+		FormPortlet.waitFormRenderer(text = "Submit");
+
 		FormFields.addRepeatableField(
 			fieldName = "TextField",
 			repeatableFieldNumber = "1");
@@ -4586,11 +4791,12 @@ definition {
 	@priority = "3"
 	test ViewSaveNotification {
 		property test.name.skip.portal.instance = "Forms#ViewSaveNotification";
+		property portal.acceptance = "true";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -4619,12 +4825,12 @@ definition {
 	test ViewSuccessPage {
 		property test.name.skip.portal.instance = "Forms#ViewSuccessPage";
 		property testray.component.names = "Training";
+		property portal.acceptance = "true";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -4647,7 +4853,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -4666,6 +4871,8 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
+		FormPortlet.waitFormRenderer(text = "Submit");
+
 		FormFields.viewTextLabel(
 			fieldLabel = "Text Field",
 			fieldName = "TextField");
@@ -4674,7 +4881,7 @@ definition {
 			fieldName = "TextField",
 			fieldValue = "Text Field Value");
 
-		FormPortlet.submit();
+		FormPortlet.submitSuccessfully();
 
 		FormPortlet.viewSuccessPage(
 			successPageDescription = "Edited: Your information was successfully received. Thank you for filling out the form.",

@@ -23,7 +23,6 @@ import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.petra.io.unsync.UnsyncStringWriter;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -42,7 +41,6 @@ import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,7 +63,8 @@ public class FreeMarkerFragmentEntryProcessor
 	public JSONObject getDefaultEditableValuesJSONObject(
 		String html, String configuration) {
 
-		return JSONFactoryUtil.createJSONObject();
+		return _fragmentEntryConfigurationParser.
+			getConfigurationDefaultValuesJSONObject(configuration);
 	}
 
 	@Override
@@ -80,7 +79,10 @@ public class FreeMarkerFragmentEntryProcessor
 					FreeMarkerFragmentEntryProcessorConfiguration.class,
 					fragmentEntryLink.getCompanyId());
 
-		if (!freeMarkerFragmentEntryProcessorConfiguration.enable()) {
+		if (!freeMarkerFragmentEntryProcessorConfiguration.enable() &&
+			Validator.isNull(fragmentEntryLink.getRendererKey()) &&
+			!fragmentEntryLink.isSystem()) {
+
 			return html;
 		}
 
@@ -117,17 +119,16 @@ public class FreeMarkerFragmentEntryProcessor
 				fragmentEntryLink.getConfiguration(),
 				fragmentEntryLink.getEditableValues());
 
-		Map<String, Object> contextObjects = HashMapBuilder.<String, Object>put(
-			"configuration", configurationValuesJSONObject
-		).put(
-			"fragmentEntryLinkNamespace", fragmentEntryLink.getNamespace()
-		).putAll(
-			_fragmentEntryConfigurationParser.getContextObjects(
-				configurationValuesJSONObject,
-				fragmentEntryLink.getConfiguration())
-		).build();
-
-		template.putAll(contextObjects);
+		template.putAll(
+			HashMapBuilder.<String, Object>put(
+				"configuration", configurationValuesJSONObject
+			).put(
+				"fragmentEntryLinkNamespace", fragmentEntryLink.getNamespace()
+			).putAll(
+				_fragmentEntryConfigurationParser.getContextObjects(
+					configurationValuesJSONObject,
+					fragmentEntryLink.getConfiguration())
+			).build());
 
 		template.prepareTaglib(
 			fragmentEntryProcessorContext.getHttpServletRequest(),
@@ -184,7 +185,7 @@ public class FreeMarkerFragmentEntryProcessor
 					_fragmentEntryConfigurationParser.
 						getConfigurationDefaultValuesJSONObject(configuration);
 
-				Map<String, Object> contextObjects =
+				template.putAll(
 					HashMapBuilder.<String, Object>put(
 						"configuration", configurationDefaultValuesJSONObject
 					).put(
@@ -192,9 +193,7 @@ public class FreeMarkerFragmentEntryProcessor
 					).putAll(
 						_fragmentEntryConfigurationParser.getContextObjects(
 							configurationDefaultValuesJSONObject, configuration)
-					).build();
-
-				template.putAll(contextObjects);
+					).build());
 
 				template.prepareTaglib(httpServletRequest, httpServletResponse);
 

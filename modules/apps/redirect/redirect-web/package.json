@@ -1,8 +1,8 @@
 {
 	"dependencies": {
-		"@clayui/form": "3.7.1",
+		"@clayui/form": "3.9.0",
 		"@clayui/icon": "3.0.5",
-		"@clayui/loading-indicator": "3.0.2",
+		"@clayui/loading-indicator": "3.1.0",
 		"frontend-js-web": "*",
 		"metal-state": "2.16.8",
 		"prop-types": "15.7.2",
@@ -15,5 +15,5 @@
 		"format": "liferay-npm-scripts fix",
 		"test": "liferay-npm-scripts test"
 	},
-	"version": "1.0.13"
+	"version": "1.0.19"
 }

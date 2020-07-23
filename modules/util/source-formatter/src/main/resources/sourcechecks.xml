@@ -93,6 +93,7 @@
 			<description name="Checks for unnesecarry including of `test-classes/integration`" />
 			<property name="checkTestIncludeResource" value="true" />
 		</check>
+		<check name="BNDLiferayEnterpriseAppCheck" />
 		<check name="BNDWebContextPathCheck">
 			<category name="Bug Prevention" />
 			<description name="Checks if the property value for `Web-ContextPath` matches the module directory" />
@@ -231,6 +232,7 @@
 		<check name="JavaConstructorSuperCallCheck" />
 		<check name="JavaDeserializationSecurityCheck" />
 		<check name="JavaDiamondOperatorCheck" />
+		<check name="JavaDuplicateVariableCheck" />
 		<check name="JavaElseStatementCheck" />
 		<check name="JavaEmptyLineAfterSuperCallCheck" />
 		<check name="JavaEmptyLinesCheck" />
@@ -378,12 +380,17 @@
 		<check name="JavaStagedModelDataHandlerCheck" />
 		<check name="JavaStringBundlerConcatCheck" />
 		<check name="JavaStringBundlerInitialCapacityCheck" />
+		<check name="JavaStringStartsWithSubstringCheck">
+			<category name="Bug Prevention" />
+			<description name="Checks for uses of `contains` followed by `substring`, which should be `startsWith` instead" />
+		</check>
 		<check name="JavaSwitchCheck" />
 		<check name="JavaSystemEventAnnotationCheck" />
 		<check name="JavaTaglibMethodCheck" />
 		<check name="JavaTestMethodAnnotationsCheck">
 			<category name="Naming Conventions" />
 			<description name="Checks if methods with test annotations follow the naming conventions" />
+			<property name="enabled" value="false" />
 		</check>
 		<check name="JavaUnsafeCastingCheck">
 			<category name="Bug Prevention" />
@@ -492,6 +499,9 @@
 		<check name="JSPLanguageUtilCheck" />
 		<check name="JSPLineBreakCheck" />
 		<check name="JSPLogFileNameCheck" />
+		<check name="JSPMethodCallsCheck">
+			<property name="enabled" value="false" />
+		</check>
 		<check name="JSPParenthesesCheck" />
 		<check name="JSPRedirectBackURLCheck" />
 		<check name="JSPSessionKeysCheck" />
@@ -611,6 +621,7 @@
 
 		<!-- Liferay Source Checks -->
 
+		<check name="PropertiesArchivedModulesCheck" />
 		<check name="PropertiesBuildIncludeDirsCheck" />
 		<check name="PropertiesLanguageKeysCheck">
 			<category name="Bug Prevention" />

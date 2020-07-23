@@ -38,6 +38,9 @@ public class DDMFormInstanceVersionTable
 	public final Column<DDMFormInstanceVersionTable, Long> mvccVersion =
 		createColumn(
 			"mvccVersion", Long.class, Types.BIGINT, Column.FLAG_NULLITY);
+	public final Column<DDMFormInstanceVersionTable, Long> ctCollectionId =
+		createColumn(
+			"ctCollectionId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
 	public final Column<DDMFormInstanceVersionTable, Long>
 		formInstanceVersionId = createColumn(
 			"formInstanceVersionId", Long.class, Types.BIGINT,
@@ -64,9 +67,9 @@ public class DDMFormInstanceVersionTable
 			Column.FLAG_DEFAULT);
 	public final Column<DDMFormInstanceVersionTable, String> name =
 		createColumn("name", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-	public final Column<DDMFormInstanceVersionTable, String> description =
+	public final Column<DDMFormInstanceVersionTable, Clob> description =
 		createColumn(
-			"description", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
+			"description", Clob.class, Types.CLOB, Column.FLAG_DEFAULT);
 	public final Column<DDMFormInstanceVersionTable, Clob> settings =
 		createColumn("settings_", Clob.class, Types.CLOB, Column.FLAG_DEFAULT);
 	public final Column<DDMFormInstanceVersionTable, String> version =

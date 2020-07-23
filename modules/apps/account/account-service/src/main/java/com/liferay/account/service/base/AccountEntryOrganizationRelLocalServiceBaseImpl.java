@@ -76,6 +76,10 @@ public abstract class AccountEntryOrganizationRelLocalServiceBaseImpl
 	/**
 	 * Adds the account entry organization rel to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AccountEntryOrganizationRelLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param accountEntryOrganizationRel the account entry organization rel
 	 * @return the account entry organization rel that was added
 	 */
@@ -108,6 +112,10 @@ public abstract class AccountEntryOrganizationRelLocalServiceBaseImpl
 	/**
 	 * Deletes the account entry organization rel with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AccountEntryOrganizationRelLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param accountEntryOrganizationRelId the primary key of the account entry organization rel
 	 * @return the account entry organization rel that was removed
 	 * @throws PortalException if a account entry organization rel with the primary key could not be found
@@ -124,6 +132,10 @@ public abstract class AccountEntryOrganizationRelLocalServiceBaseImpl
 
 	/**
 	 * Deletes the account entry organization rel from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AccountEntryOrganizationRelLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param accountEntryOrganizationRel the account entry organization rel
 	 * @return the account entry organization rel that was removed
@@ -369,6 +381,10 @@ public abstract class AccountEntryOrganizationRelLocalServiceBaseImpl
 
 	/**
 	 * Updates the account entry organization rel in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AccountEntryOrganizationRelLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param accountEntryOrganizationRel the account entry organization rel
 	 * @return the account entry organization rel that was updated

@@ -64,10 +64,11 @@ public class TrashVersionModelImpl
 	public static final String TABLE_NAME = "TrashVersion";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"mvccVersion", Types.BIGINT}, {"versionId", Types.BIGINT},
-		{"companyId", Types.BIGINT}, {"entryId", Types.BIGINT},
-		{"classNameId", Types.BIGINT}, {"classPK", Types.BIGINT},
-		{"typeSettings", Types.CLOB}, {"status", Types.INTEGER}
+		{"mvccVersion", Types.BIGINT}, {"ctCollectionId", Types.BIGINT},
+		{"versionId", Types.BIGINT}, {"companyId", Types.BIGINT},
+		{"entryId", Types.BIGINT}, {"classNameId", Types.BIGINT},
+		{"classPK", Types.BIGINT}, {"typeSettings", Types.CLOB},
+		{"status", Types.INTEGER}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -75,6 +76,7 @@ public class TrashVersionModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("ctCollectionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("versionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("entryId", Types.BIGINT);
@@ -85,7 +87,7 @@ public class TrashVersionModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table TrashVersion (mvccVersion LONG default 0 not null,versionId LONG not null primary key,companyId LONG,entryId LONG,classNameId LONG,classPK LONG,typeSettings TEXT null,status INTEGER)";
+		"create table TrashVersion (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,versionId LONG not null,companyId LONG,entryId LONG,classNameId LONG,classPK LONG,typeSettings TEXT null,status INTEGER,primary key (versionId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP = "drop table TrashVersion";
 
@@ -109,12 +111,18 @@ public class TrashVersionModelImpl
 
 	public static final long VERSIONID_COLUMN_BITMASK = 8L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-		_entityCacheEnabled = entityCacheEnabled;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-		_finderCacheEnabled = finderCacheEnabled;
 	}
 
 	public TrashVersionModelImpl() {
@@ -168,9 +176,6 @@ public class TrashVersionModelImpl
 				attributeName,
 				attributeGetterFunction.apply((TrashVersion)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -249,6 +254,11 @@ public class TrashVersionModelImpl
 		attributeSetterBiConsumers.put(
 			"mvccVersion",
 			(BiConsumer<TrashVersion, Long>)TrashVersion::setMvccVersion);
+		attributeGetterFunctions.put(
+			"ctCollectionId", TrashVersion::getCtCollectionId);
+		attributeSetterBiConsumers.put(
+			"ctCollectionId",
+			(BiConsumer<TrashVersion, Long>)TrashVersion::setCtCollectionId);
 		attributeGetterFunctions.put("versionId", TrashVersion::getVersionId);
 		attributeSetterBiConsumers.put(
 			"versionId",
@@ -294,6 +304,16 @@ public class TrashVersionModelImpl
 	@Override
 	public void setMvccVersion(long mvccVersion) {
 		_mvccVersion = mvccVersion;
+	}
+
+	@Override
+	public long getCtCollectionId() {
+		return _ctCollectionId;
+	}
+
+	@Override
+	public void setCtCollectionId(long ctCollectionId) {
+		_ctCollectionId = ctCollectionId;
 	}
 
 	@Override
@@ -464,6 +484,7 @@ public class TrashVersionModelImpl
 		TrashVersionImpl trashVersionImpl = new TrashVersionImpl();
 
 		trashVersionImpl.setMvccVersion(getMvccVersion());
+		trashVersionImpl.setCtCollectionId(getCtCollectionId());
 		trashVersionImpl.setVersionId(getVersionId());
 		trashVersionImpl.setCompanyId(getCompanyId());
 		trashVersionImpl.setEntryId(getEntryId());
@@ -493,16 +514,16 @@ public class TrashVersionModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof TrashVersion)) {
+		if (!(object instanceof TrashVersion)) {
 			return false;
 		}
 
-		TrashVersion trashVersion = (TrashVersion)obj;
+		TrashVersion trashVersion = (TrashVersion)object;
 
 		long primaryKey = trashVersion.getPrimaryKey();
 
@@ -519,14 +540,22 @@ public class TrashVersionModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	@Override
@@ -555,6 +584,8 @@ public class TrashVersionModelImpl
 			new TrashVersionCacheModel();
 
 		trashVersionCacheModel.mvccVersion = getMvccVersion();
+
+		trashVersionCacheModel.ctCollectionId = getCtCollectionId();
 
 		trashVersionCacheModel.versionId = getVersionId();
 
@@ -649,10 +680,8 @@ public class TrashVersionModelImpl
 
 	}
 
-	private static boolean _entityCacheEnabled;
-	private static boolean _finderCacheEnabled;
-
 	private long _mvccVersion;
+	private long _ctCollectionId;
 	private long _versionId;
 	private long _companyId;
 	private long _entryId;

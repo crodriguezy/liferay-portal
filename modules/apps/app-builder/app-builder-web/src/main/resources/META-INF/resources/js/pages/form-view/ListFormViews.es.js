@@ -12,12 +12,13 @@
  * details.
  */
 
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import {AppContext} from '../../AppContext.es';
 import Button from '../../components/button/Button.es';
 import ListView from '../../components/list-view/ListView.es';
-import {confirmDelete} from '../../utils/client.es';
+import {confirmDelete, getItem} from '../../utils/client.es';
+import {getLocalizedValue} from '../../utils/lang.es';
 import {fromNow} from '../../utils/time.es';
 
 export default ({
@@ -26,6 +27,7 @@ export default ({
 	},
 }) => {
 	const {basePortletURL} = useContext(AppContext);
+	const [defaultLanguageId, setDefaultLanguageId] = useState('');
 
 	const getItemURL = (item) =>
 		Liferay.Util.PortletURL.createRenderURL(basePortletURL, {
@@ -41,6 +43,11 @@ export default ({
 	};
 
 	const COLUMNS = [
+		{
+			key: 'id',
+			sortable: true,
+			value: Liferay.Language.get('id'),
+		},
 		{
 			key: 'name',
 			sortable: true,
@@ -63,6 +70,14 @@ export default ({
 		dataDefinitionId,
 		mvcRenderCommandName: '/edit_form_view',
 	});
+
+	useEffect(() => {
+		getItem(
+			`/o/data-engine/v2.0/data-definitions/${dataDefinitionId}`
+		).then(({defaultLanguageId}) => {
+			setDefaultLanguageId(defaultLanguageId);
+		});
+	}, [dataDefinitionId]);
 
 	return (
 		<ListView
@@ -101,17 +116,21 @@ export default ({
 			}}
 			endpoint={`/o/data-engine/v2.0/data-definitions/${dataDefinitionId}/data-layouts`}
 		>
-			{(item) => ({
-				dataDefinitionId,
-				dateCreated: fromNow(item.dateCreated),
-				dateModified: fromNow(item.dateModified),
-				id: item.id,
-				name: (
-					<a href={getItemURL(item)}>
-						{item.name[Liferay.ThemeDisplay.getDefaultLanguageId()]}
-					</a>
-				),
-			})}
+			{(item) => {
+				const {dateCreated, dateModified, id, name} = item;
+
+				return {
+					dataDefinitionId,
+					dateCreated: fromNow(dateCreated),
+					dateModified: fromNow(dateModified),
+					id,
+					name: (
+						<a href={getItemURL(item)}>
+							{getLocalizedValue(defaultLanguageId, name)}
+						</a>
+					),
+				};
+			}}
 		</ListView>
 	);
 };

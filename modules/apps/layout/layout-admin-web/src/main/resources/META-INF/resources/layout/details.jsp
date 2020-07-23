@@ -97,24 +97,30 @@ String friendlyURLBase = StringPool.BLANK;
 					<portlet:param name="plid" value="<%= String.valueOf(selLayout.getPlid()) %>" />
 				</portlet:actionURL>
 
-				<c:if test="<%= FFViewFriendlyURLHistoryConfigurationUtil.enabled() %>">
-					<div class="btn-url-history-wrapper">
-						<react:component
-							data='<%=
-								HashMapBuilder.<String, Object>put(
-									"defaultLanguageId",
-									LocaleUtil.toLanguageId(company.getDefaultUser().getLocale())
-								).put(
-									"deleteFriendlyURLEntryLocalizationURL",
-									deleteFriendlyURLEntryLocalizationURL
-								).put(
-									"friendlyURLEntryLocalizationsURL",
-									friendlyURLEntryLocalizationsURL
-								).build() %>'
-							module="js/friendly_url_history/FriendlyURLHistory"
-						/>
-					</div>
-				</c:if>
+				<portlet:actionURL name="/layout/restore_friendly_url_entry_localization" var="restoreFriendlyURLEntryLocalizationURL">
+					<portlet:param name="plid" value="<%= String.valueOf(selLayout.getPlid()) %>" />
+				</portlet:actionURL>
+
+				<div class="btn-url-history-wrapper">
+					<react:component
+						data='<%=
+							HashMapBuilder.<String, Object>put(
+								"defaultLanguageId",
+								LocaleUtil.toLanguageId(company.getDefaultUser().getLocale())
+							).put(
+								"deleteFriendlyURLEntryLocalizationURL",
+								deleteFriendlyURLEntryLocalizationURL
+							).put(
+								"friendlyURLEntryLocalizationsURL",
+								friendlyURLEntryLocalizationsURL
+							).put(
+								"restoreFriendlyURLEntryLocalizationURL",
+								restoreFriendlyURLEntryLocalizationURL
+							).build()
+						%>'
+						module="js/friendly_url_history/FriendlyURLHistory"
+					/>
+				</div>
 
 				<div class="form-group friendly-url">
 					<label for="<portlet:namespace />friendlyURL"><liferay-ui:message key="friendly-url" /> <liferay-ui:icon-help message='<%= LanguageUtil.format(request, "for-example-x", "<em>/news</em>", false) %>' /></label>
@@ -186,11 +192,11 @@ String friendlyURLBase = StringPool.BLANK;
 </div>
 
 <c:if test="<%= !selLayout.isTypeAssetDisplay() %>">
-	<div class="sheet-section">
+	<clay:sheet-section>
 		<h3 class="sheet-subtitle"><liferay-ui:message key="categorization" /></h3>
 
 		<liferay-util:include page="/layout/categorization.jsp" servletContext="<%= application %>" />
-	</div>
+	</clay:sheet-section>
 </c:if>
 
 <aui:script require="metal-dom/src/dom as dom">

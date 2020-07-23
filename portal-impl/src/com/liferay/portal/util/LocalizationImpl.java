@@ -40,7 +40,6 @@ import com.liferay.portal.kernel.util.Tuple;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.language.LanguageResources;
 
 import java.io.Serializable;
 
@@ -861,7 +860,7 @@ public class LocalizationImpl implements Localization {
 
 			xmlStreamWriter.writeStartElement(_ROOT);
 
-			StringBundler sb = new StringBundler(2 * map.size() - 1);
+			StringBundler sb = new StringBundler((2 * map.size()) - 1);
 
 			sb.append(defaultLanguageId);
 
@@ -1409,10 +1408,7 @@ public class LocalizationImpl implements Localization {
 			}
 		}
 
-		if (Validator.isNotNull(value)) {
-			value = LanguageResources.fixValue(value);
-		}
-		else {
+		if (Validator.isNull(value)) {
 			value = LanguageUtil.get(locale, key, defaultValue);
 		}
 

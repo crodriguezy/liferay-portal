@@ -20,10 +20,12 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.DateUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.search.document.Document;
 import com.liferay.portal.search.document.DocumentBuilder;
@@ -120,7 +122,7 @@ public class WorkflowMetricsRESTTestHelper {
 		_instanceWorkflowMetricsIndexer.addInstance(
 			_createLocalizationMap(instance.getAssetTitle()),
 			_createLocalizationMap(instance.getAssetType()), StringPool.BLANK,
-			0, companyId, null,
+			GetterUtil.getLong(instance.getClassPK()), companyId, null,
 			Optional.ofNullable(
 				instance.getDateCreated()
 			).orElseGet(
@@ -208,7 +210,7 @@ public class WorkflowMetricsRESTTestHelper {
 	public NodeMetric addNodeMetric(
 			Assignee assignee, long companyId,
 			UnsafeSupplier<Instance, Exception> instanceSuplier, long processId,
-			String status)
+			String status, User user)
 		throws Exception {
 
 		String randomString = RandomTestUtil.randomString();
@@ -230,14 +232,15 @@ public class WorkflowMetricsRESTTestHelper {
 		};
 
 		return addNodeMetric(
-			assignee, companyId, instanceSuplier, processId, status, task,
+			assignee, companyId, instanceSuplier, task, processId, status, user,
 			"1.0");
 	}
 
 	public NodeMetric addNodeMetric(
 			Assignee assignee, long companyId,
-			UnsafeSupplier<Instance, Exception> instanceSuplier, long processId,
-			String status, NodeMetric nodeMetric, String version)
+			UnsafeSupplier<Instance, Exception> instanceSuplier,
+			NodeMetric nodeMetric, long processId, String status, User user,
+			String version)
 		throws Exception {
 
 		Node node = addNode(
@@ -267,7 +270,7 @@ public class WorkflowMetricsRESTTestHelper {
 
 			addTask(
 				assignee, companyId, nodeMetric.getDurationAvg(), instance,
-				processId, node.getId(), taskId, node.getName());
+				node.getName(), node.getId(), processId, taskId, user);
 
 			if (instance.getCompleted()) {
 				completeInstance(companyId, instance);
@@ -434,26 +437,27 @@ public class WorkflowMetricsRESTTestHelper {
 			"taskId", taskId, "taskName", taskName);
 	}
 
-	public Task addTask(Assignee assignee, long companyId, Instance instance)
+	public Task addTask(
+			Assignee assignee, long companyId, Instance instance, User user)
 		throws Exception {
 
 		return addTask(
-			assignee, companyId, 0L, instance, instance.getProcessId(),
-			RandomTestUtil.randomLong(), RandomTestUtil.randomLong(),
-			RandomTestUtil.randomString());
+			assignee, companyId, 0L, instance, RandomTestUtil.randomString(),
+			RandomTestUtil.randomLong(), instance.getProcessId(),
+			RandomTestUtil.randomLong(), user);
 	}
 
 	public Task addTask(
 			Assignee assignee, long companyId, long durationAvg,
-			Instance instance, long processId, long nodeId, long taskId,
-			String name)
+			Instance instance, String name, long nodeId, long processId,
+			long taskId, User user)
 		throws Exception {
 
 		Task task = new Task();
 
 		task.setAssignee(assignee);
 		task.setClassName(StringPool.BLANK);
-		task.setClassPK(0L);
+		task.setClassPK(GetterUtil.getLong(instance.getClassPK()));
 		task.setCompleted(durationAvg > 0);
 		task.setDateCompletion((durationAvg > 0) ? new Date() : null);
 		task.setCompletionUserId((durationAvg > 0) ? assignee.getId() : null);
@@ -467,14 +471,14 @@ public class WorkflowMetricsRESTTestHelper {
 		task.setProcessId(processId);
 		task.setProcessVersion("1.0");
 
-		return addTask(companyId, instance, task);
+		return addTask(companyId, instance, task, user);
 	}
 
-	public Task addTask(long companyId, Instance instance, Task task)
+	public Task addTask(long companyId, Instance instance, Task task, User user)
 		throws Exception {
 
-		Long[] assigneeIds = null;
-		String assigneeType = null;
+		Long[] assigneeIds = ArrayUtil.toArray(user.getRoleIds());
+		String assigneeType = Role.class.getName();
 
 		Assignee assignee = task.getAssignee();
 

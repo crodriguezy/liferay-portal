@@ -230,6 +230,20 @@ public interface AppBuilderAppModel
 	public void setActive(boolean active);
 
 	/**
+	 * Returns the ddl record set ID of this app builder app.
+	 *
+	 * @return the ddl record set ID of this app builder app
+	 */
+	public long getDdlRecordSetId();
+
+	/**
+	 * Sets the ddl record set ID of this app builder app.
+	 *
+	 * @param ddlRecordSetId the ddl record set ID of this app builder app
+	 */
+	public void setDdlRecordSetId(long ddlRecordSetId);
+
+	/**
 	 * Returns the ddm structure ID of this app builder app.
 	 *
 	 * @return the ddm structure ID of this app builder app
@@ -369,6 +383,21 @@ public interface AppBuilderAppModel
 	 * @param defaultLocale the default locale
 	 */
 	public void setNameMap(Map<Locale, String> nameMap, Locale defaultLocale);
+
+	/**
+	 * Returns the scope of this app builder app.
+	 *
+	 * @return the scope of this app builder app
+	 */
+	@AutoEscape
+	public String getScope();
+
+	/**
+	 * Sets the scope of this app builder app.
+	 *
+	 * @param scope the scope of this app builder app
+	 */
+	public void setScope(String scope);
 
 	@Override
 	public String[] getAvailableLanguageIds();

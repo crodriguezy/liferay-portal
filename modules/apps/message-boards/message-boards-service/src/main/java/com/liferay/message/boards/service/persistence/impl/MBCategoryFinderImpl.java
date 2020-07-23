@@ -14,13 +14,10 @@
 
 package com.liferay.message.boards.service.persistence.impl;
 
-import com.liferay.message.boards.constants.MBCategoryConstants;
 import com.liferay.message.boards.model.MBCategory;
 import com.liferay.message.boards.model.MBMessage;
 import com.liferay.message.boards.model.impl.MBCategoryImpl;
 import com.liferay.message.boards.model.impl.MBThreadImpl;
-import com.liferay.message.boards.service.MBMessageLocalService;
-import com.liferay.message.boards.service.MBThreadLocalService;
 import com.liferay.message.boards.service.persistence.MBCategoryFinder;
 import com.liferay.message.boards.service.persistence.MBCategoryUtil;
 import com.liferay.message.boards.service.persistence.MBThreadUtil;
@@ -226,10 +223,10 @@ public class MBCategoryFinderImpl
 				}
 			}
 
-			Iterator<Long> itr = sqlQuery.iterate();
+			Iterator<Long> iterator = sqlQuery.iterate();
 
-			while (itr.hasNext()) {
-				Long count = itr.next();
+			while (iterator.hasNext()) {
+				Long count = iterator.next();
 
 				if (count != null) {
 					return count.intValue();
@@ -294,10 +291,10 @@ public class MBCategoryFinderImpl
 
 			int count = 0;
 
-			Iterator<Long> itr = sqlQuery.iterate();
+			Iterator<Long> iterator = sqlQuery.iterate();
 
-			if (itr.hasNext()) {
-				Long l = itr.next();
+			if (iterator.hasNext()) {
+				Long l = iterator.next();
 
 				if (l != null) {
 					count = l.intValue();
@@ -398,10 +395,10 @@ public class MBCategoryFinderImpl
 
 			int count = 0;
 
-			Iterator<Long> itr = sqlQuery.iterate();
+			Iterator<Long> iterator = sqlQuery.iterate();
 
-			while (itr.hasNext()) {
-				Long l = itr.next();
+			while (iterator.hasNext()) {
+				Long l = iterator.next();
 
 				if (l != null) {
 					count += l.intValue();
@@ -480,12 +477,12 @@ public class MBCategoryFinderImpl
 
 			List<MBCategory> categories = new ArrayList<>();
 
-			Iterator<Object[]> itr = (Iterator<Object[]>)QueryUtil.iterate(
+			Iterator<Object[]> iterator = (Iterator<Object[]>)QueryUtil.iterate(
 				sqlQuery, getDialect(), queryDefinition.getStart(),
 				queryDefinition.getEnd());
 
-			while (itr.hasNext()) {
-				Object[] array = itr.next();
+			while (iterator.hasNext()) {
+				Object[] array = iterator.next();
 
 				long modelId = (Long)array[0];
 
@@ -562,14 +559,6 @@ public class MBCategoryFinderImpl
 					groupId);
 
 			if (subscription != null) {
-				int threadCount = _mbThreadLocalService.getCategoryThreadsCount(
-					groupId, MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID,
-					WorkflowConstants.STATUS_APPROVED);
-				int messageCount =
-					_mbMessageLocalService.getCategoryMessagesCount(
-						groupId, MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID,
-						WorkflowConstants.STATUS_APPROVED);
-
 				MBCategory category = new MBCategoryImpl();
 
 				category.setGroupId(group.getGroupId());
@@ -577,8 +566,6 @@ public class MBCategoryFinderImpl
 				category.setName(group.getDescriptiveName());
 				category.setDescription(
 					group.getDescription(LocaleUtil.getMostRelevantLocale()));
-				category.setThreadCount(threadCount);
-				category.setMessageCount(messageCount);
 
 				list.add(category);
 			}
@@ -674,26 +661,26 @@ public class MBCategoryFinderImpl
 
 			List<Object> models = new ArrayList<>();
 
-			Iterator<Object[]> itr = (Iterator<Object[]>)QueryUtil.iterate(
+			Iterator<Object[]> iterator = (Iterator<Object[]>)QueryUtil.iterate(
 				sqlQuery, getDialect(), queryDefinition.getStart(),
 				queryDefinition.getEnd());
 
-			while (itr.hasNext()) {
-				Object[] array = itr.next();
+			while (iterator.hasNext()) {
+				Object[] array = iterator.next();
 
 				long modelId = (Long)array[0];
 				long modelCategory = (Long)array[1];
 
-				Object obj = null;
+				Object object = null;
 
 				if (modelCategory == 1) {
-					obj = MBThreadUtil.findByPrimaryKey(modelId);
+					object = MBThreadUtil.findByPrimaryKey(modelId);
 				}
 				else {
-					obj = MBCategoryUtil.findByPrimaryKey(modelId);
+					object = MBCategoryUtil.findByPrimaryKey(modelId);
 				}
 
-				models.add(obj);
+				models.add(object);
 			}
 
 			return models;
@@ -726,12 +713,6 @@ public class MBCategoryFinderImpl
 
 	@Reference
 	private GroupLocalService _groupLocalService;
-
-	@Reference
-	private MBMessageLocalService _mbMessageLocalService;
-
-	@Reference
-	private MBThreadLocalService _mbThreadLocalService;
 
 	@Reference
 	private Portal _portal;

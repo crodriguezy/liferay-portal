@@ -13,6 +13,7 @@
  */
 
 import ClayForm from '@clayui/form';
+import ClayLayout from '@clayui/layout';
 import {
 	DataDefinitionUtils,
 	DragTypes,
@@ -55,11 +56,12 @@ const FiltersSidebarHeader = () => {
 
 	return (
 		<Sidebar.Header className="d-flex table-view-filters-sidebar-header">
-			<div className="align-items-center autofit-row">
-				<div className="autofit-col">
+			<ClayLayout.ContentRow verticalAlign="center">
+				<ClayLayout.ContentCol>
 					<BtnAction className="mr-2" onClick={onClickBack} />
-				</div>
-				<div className="autofit-col-expand">
+				</ClayLayout.ContentCol>
+
+				<ClayLayout.ContentCol expand>
 					<FieldType
 						description={getFieldTypeLabel(fieldTypes, fieldType)}
 						dragAlignment="none"
@@ -71,8 +73,8 @@ const FiltersSidebarHeader = () => {
 						)}
 						name={focusedColumn}
 					/>
-				</div>
-			</div>
+				</ClayLayout.ContentCol>
+			</ClayLayout.ContentRow>
 		</Sidebar.Header>
 	);
 };
@@ -86,20 +88,37 @@ const FieldsTabContent = ({keywords, onAddFieldName}) => {
 		},
 	] = useContext(EditTableViewContext);
 
+	const fieldTypesItems = [];
+
+	const fieldTypeModel = ({fieldType, label: {en_US: label}, name}) => ({
+		description: getFieldTypeLabel(fieldTypes, fieldType),
+		disabled: fieldNames.some((fieldName) => fieldName === name),
+		icon: fieldType,
+		label,
+		name,
+	});
+
+	dataDefinitionFields.forEach(
+		({nestedDataDefinitionFields, ...dataDefinitionField}) => {
+			if (nestedDataDefinitionFields.length) {
+				fieldTypesItems.push(
+					...nestedDataDefinitionFields.map((nestedField) =>
+						fieldTypeModel(nestedField)
+					)
+				);
+			}
+			else {
+				fieldTypesItems.push(fieldTypeModel(dataDefinitionField));
+			}
+		}
+	);
+
+	fieldTypesItems.sort((a, b) => a.label.localeCompare(b.label));
+
 	return (
 		<FieldTypeList
 			dragType={DragTypes.DRAG_FIELD_TYPE}
-			fieldTypes={dataDefinitionFields.map(
-				({fieldType, label: {en_US: label}, name}) => ({
-					description: getFieldTypeLabel(fieldTypes, fieldType),
-					disabled: fieldNames.some(
-						(fieldName) => fieldName === name
-					),
-					icon: fieldType,
-					label,
-					name,
-				})
-			)}
+			fieldTypes={fieldTypesItems}
 			keywords={keywords}
 			onDoubleClick={({name}) => onAddFieldName(name, fieldNames.length)}
 		/>
@@ -133,13 +152,13 @@ export default ({className, onAddFieldName, onToggle}) => {
 										setKeywords(keywords)
 									}
 								>
-									<div className="autofit-col">
+									<ClayLayout.ContentCol>
 										<BtnAction
 											angle="right"
 											className="close-sidebar-btn ml-2"
 											onClick={onToggle}
 										/>
-									</div>
+									</ClayLayout.ContentCol>
 								</Sidebar.SearchInput>
 							</ClayForm>
 						</Sidebar.Header>

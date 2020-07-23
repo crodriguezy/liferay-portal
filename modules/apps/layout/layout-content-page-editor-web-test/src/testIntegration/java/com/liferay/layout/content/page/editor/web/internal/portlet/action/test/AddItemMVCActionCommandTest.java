@@ -22,7 +22,6 @@ import com.liferay.layout.util.structure.ContainerLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
@@ -43,7 +42,6 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -90,7 +88,6 @@ public class AddItemMVCActionCommandTest {
 			_layoutPageTemplateStructureLocalService.
 				addLayoutPageTemplateStructure(
 					TestPropsValues.getUserId(), _group.getGroupId(),
-					_portal.getClassNameId(Layout.class.getName()),
 					_layout.getPlid(), _layoutStructure.toString(),
 					ServiceContextTestUtil.getServiceContext(
 						_group, TestPropsValues.getUserId()));
@@ -149,10 +146,9 @@ public class AddItemMVCActionCommandTest {
 			_layoutStructure.getMainItemId(), 0);
 
 		_layoutPageTemplateStructureLocalService.
-			updateLayoutPageTemplateStructure(
-				_group.getGroupId(),
-				_portal.getClassNameId(Layout.class.getName()),
-				_layout.getPlid(), _layoutStructure.toString());
+			updateLayoutPageTemplateStructureData(
+				_group.getGroupId(), _layout.getPlid(),
+				_layoutStructure.toString());
 
 		mockLiferayPortletActionRequest.addParameter(
 			"itemType", LayoutDataItemTypeConstants.TYPE_CONTAINER);
@@ -193,7 +189,7 @@ public class AddItemMVCActionCommandTest {
 			layoutStructureItem instanceof ContainerLayoutStructureItem);
 	}
 
-	private Layout _addLayout() throws PortalException {
+	private Layout _addLayout() throws Exception {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
 				TestPropsValues.getGroupId(), TestPropsValues.getUserId());
@@ -208,7 +204,7 @@ public class AddItemMVCActionCommandTest {
 
 	private MockLiferayPortletActionRequest
 			_getMockLiferayPortletActionRequest()
-		throws PortalException {
+		throws Exception {
 
 		MockLiferayPortletActionRequest mockLiferayPortletActionRequest =
 			new MockLiferayPortletActionRequest();
@@ -222,7 +218,7 @@ public class AddItemMVCActionCommandTest {
 		return mockLiferayPortletActionRequest;
 	}
 
-	private ThemeDisplay _getThemeDisplay() throws PortalException {
+	private ThemeDisplay _getThemeDisplay() throws Exception {
 		ThemeDisplay themeDisplay = new ThemeDisplay();
 
 		themeDisplay.setCompany(_company);
@@ -262,8 +258,5 @@ public class AddItemMVCActionCommandTest {
 
 	@Inject(filter = "mvc.command.name=/content_layout/add_item")
 	private MVCActionCommand _mvcActionCommand;
-
-	@Inject
-	private Portal _portal;
 
 }

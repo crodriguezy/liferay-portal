@@ -6,11 +6,6 @@ definition {
 			pageTemplateName = "${pageTemplateName}",
 			sitePageType = "${sitePageType}");
 
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		SitePages._addPageToNavigationMenu(
@@ -57,7 +52,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 	}
 
@@ -167,6 +161,8 @@ definition {
 			key_pageName = "${parentPageName}",
 			locator1 = "SitePages#LIST_GROUP_ITEM_PLUS_ICON");
 
+		DropdownMenuItem.click(menuItem = "Add Page");
+
 		SitePages._addPage(
 			assertCheckboxMissing = "${assertCheckboxMissing}",
 			navigationMenus = "${navigationMenus}",
@@ -193,7 +189,7 @@ definition {
 		var key_breadcrumbName="Pages";
 
 		if ("${siteTemplate}" == "true") {
-			LexiconEntry.gotoAdd();
+			LexiconEntry.gotoAddMenuItem(menuItem = "Add Site Template Page");
 		}
 		else if (IsElementPresent(locator1 = "Message#EMPTY_INFO_TAGLIB")) {
 			SitePages.gotoAddFirstPage(pageType = "Private Page");
@@ -259,7 +255,7 @@ definition {
 	}
 
 	macro addPublicPageUnderSitePagesVariation {
-		LexiconEntry.gotoAdd();
+		LexiconEntry.gotoAddMenuItem(menuItem = "Public Page");
 
 		SitePages._selectPageType(
 			collectionName = "${collectionName}",
@@ -309,7 +305,6 @@ definition {
 	macro configurePage {
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.togglePrivacy(privacy = "${privacy}");
@@ -422,6 +417,16 @@ definition {
 		}
 
 		MenuItem.click(menuItem = "${menuItem}");
+	}
+
+	macro movePageToPageUp {
+		var key_pageName = "${pageName}";
+		var key_pageNameTo = "${pageNameTo}";
+
+		DragAndDrop.javaScriptDragAndDropToUp(
+			locator1 = "SitePages#LIST_GROUP_ITEM_DRAG_HANDLER",
+			locator2 = "SitePages#LIST_GROUP_ITEM_DROP_TARGET",
+			value1 = "");
 	}
 
 	macro openPagesAdmin {

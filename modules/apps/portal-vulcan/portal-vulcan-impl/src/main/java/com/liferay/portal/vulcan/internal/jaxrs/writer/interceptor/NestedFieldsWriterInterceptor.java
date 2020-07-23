@@ -547,7 +547,7 @@ public class NestedFieldsWriterInterceptor implements WriterInterceptor {
 
 	private Object _adaptToFieldType(Class<?> fieldType, Object value) {
 		if (value instanceof Page) {
-			Page page = (Page)value;
+			Page<?> page = (Page)value;
 
 			value = page.getItems();
 		}
@@ -596,7 +596,7 @@ public class NestedFieldsWriterInterceptor implements WriterInterceptor {
 			items.addAll((Collection)entity);
 		}
 		else if (entity instanceof Page) {
-			Page page = (Page)entity;
+			Page<?> page = (Page)entity;
 
 			items.addAll(page.getItems());
 		}
@@ -706,8 +706,8 @@ public class NestedFieldsWriterInterceptor implements WriterInterceptor {
 	private static class FactoryKey {
 
 		@Override
-		public boolean equals(Object obj) {
-			FactoryKey factoryKey = (FactoryKey)obj;
+		public boolean equals(Object object) {
+			FactoryKey factoryKey = (FactoryKey)object;
 
 			if (Objects.equals(factoryKey._nestedFieldName, _nestedFieldName) &&
 				Objects.equals(factoryKey._parentClass, _parentClass) &&

@@ -63,7 +63,8 @@ public class PageStructureContentPageEditorSidebarPanel
 
 		try {
 			if (LayoutPermissionUtil.contains(
-					permissionChecker, plid, ActionKeys.UPDATE)) {
+					permissionChecker, plid,
+					ActionKeys.UPDATE_LAYOUT_CONTENT)) {
 
 				return true;
 			}

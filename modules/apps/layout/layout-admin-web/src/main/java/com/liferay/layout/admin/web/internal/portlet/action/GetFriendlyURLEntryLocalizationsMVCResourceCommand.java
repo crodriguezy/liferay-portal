@@ -14,14 +14,12 @@
 
 package com.liferay.layout.admin.web.internal.portlet.action;
 
-import com.liferay.friendly.url.model.FriendlyURLEntry;
 import com.liferay.friendly.url.model.FriendlyURLEntryLocalization;
 import com.liferay.friendly.url.service.FriendlyURLEntryLocalService;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.admin.web.internal.util.comparator.FriendlyURLEntryLocalizationComparator;
 import com.liferay.layout.friendly.url.LayoutFriendlyURLEntryHelper;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -35,11 +33,12 @@ import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 import javax.portlet.ResourceRequest;
@@ -82,45 +81,38 @@ public class GetFriendlyURLEntryLocalizationsMVCResourceCommand
 
 	private JSONObject _getFriendlyURLEntryLocalizationsJSONObject(
 			ResourceRequest resourceRequest)
-		throws PortalException {
+		throws Exception {
 
 		Layout layout = _layoutLocalService.getLayout(
 			ParamUtil.getLong(resourceRequest, "plid"));
-
-		FriendlyURLEntry mainFriendlyURLEntry =
-			_friendlyURLEntryLocalService.getMainFriendlyURLEntry(
-				_layoutFriendlyURLEntryHelper.getClassNameId(
-					layout.isPrivateLayout()),
-				layout.getPlid());
 
 		JSONObject friendlyURLEntryLocalizationsJSONObject =
 			JSONFactoryUtil.createJSONObject();
 
 		for (String languageId : layout.getAvailableLanguageIds()) {
-			FriendlyURLEntryLocalization mainFriendlyURLEntryLocalization =
-				_friendlyURLEntryLocalService.getFriendlyURLEntryLocalization(
-					mainFriendlyURLEntry.getFriendlyURLEntryId(), languageId);
+			List<FriendlyURLEntryLocalization> friendlyURLEntryLocalizations =
+				_friendlyURLEntryLocalService.getFriendlyURLEntryLocalizations(
+					layout.getGroupId(),
+					_layoutFriendlyURLEntryHelper.getClassNameId(
+						layout.isPrivateLayout()),
+					layout.getPlid(), languageId, QueryUtil.ALL_POS,
+					QueryUtil.ALL_POS, _friendlyURLEntryLocalizationComparator);
+
+			String mainUrlTitle = layout.getFriendlyURL(
+				LocaleUtil.fromLanguageId(languageId));
 
 			friendlyURLEntryLocalizationsJSONObject.put(
 				languageId,
 				JSONUtil.put(
-					"current",
-					_serializeFriendlyURLEntryLocalization(
-						mainFriendlyURLEntryLocalization)
+					"current", JSONUtil.put("urlTitle", mainUrlTitle)
 				).put(
 					"history",
 					_getJSONJArray(
-						ListUtil.remove(
-							_friendlyURLEntryLocalService.
-								getFriendlyURLEntryLocalizations(
-									layout.getGroupId(),
-									_layoutFriendlyURLEntryHelper.
-										getClassNameId(
-											layout.isPrivateLayout()),
-									layout.getPlid(), languageId,
-									QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-									_friendlyURLEntryLocalizationComparator),
-							Arrays.asList(mainFriendlyURLEntryLocalization)),
+						ListUtil.filter(
+							friendlyURLEntryLocalizations,
+							friendlyURLEntryLocalization -> !Objects.equals(
+								friendlyURLEntryLocalization.getUrlTitle(),
+								mainUrlTitle)),
 						this::_serializeFriendlyURLEntryLocalization)
 				));
 		}
@@ -140,6 +132,10 @@ public class GetFriendlyURLEntryLocalizationsMVCResourceCommand
 
 	private JSONObject _serializeFriendlyURLEntryLocalization(
 		FriendlyURLEntryLocalization friendlyEntryLocalization) {
+
+		if (friendlyEntryLocalization == null) {
+			return null;
+		}
 
 		return JSONUtil.put(
 			"friendlyURLEntryId",

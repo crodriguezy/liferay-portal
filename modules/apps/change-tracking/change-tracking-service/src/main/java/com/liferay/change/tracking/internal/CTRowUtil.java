@@ -45,7 +45,7 @@ public class CTRowUtil {
 
 		if (_isPostgresBlobTable(tableColumnsMap)) {
 			StringBundler sb = new StringBundler(
-				3 * tableColumnsMap.size() + 4);
+				(3 * tableColumnsMap.size()) + 4);
 
 			sb.append("insert into ");
 			sb.append(ctPersistence.getTableName());
@@ -101,7 +101,7 @@ public class CTRowUtil {
 			}
 		}
 
-		StringBundler sb = new StringBundler(2 * tableColumnsMap.size() + 4);
+		StringBundler sb = new StringBundler((2 * tableColumnsMap.size()) + 4);
 
 		sb.append("insert into ");
 		sb.append(ctPersistence.getTableName());
@@ -129,7 +129,7 @@ public class CTRowUtil {
 		long targetCTCollectionId, boolean includeSourceCTPrimaryKey) {
 
 		StringBundler sb = new StringBundler(
-			4 * uniqueIndexColumnNames.length + 17);
+			(4 * uniqueIndexColumnNames.length) + 17);
 
 		sb.append("select ");
 

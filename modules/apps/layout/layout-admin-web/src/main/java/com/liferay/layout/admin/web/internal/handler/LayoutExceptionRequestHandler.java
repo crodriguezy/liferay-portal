@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.model.ModelHintsUtil;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
+import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
@@ -117,6 +118,11 @@ public class LayoutExceptionRequestHandler {
 				errorMessage = _handleLayoutTypeException(
 					actionRequest, layoutTypeException.getType());
 			}
+		}
+		else if (portalException instanceof PrincipalException) {
+			errorMessage = LanguageUtil.get(
+				themeDisplay.getRequest(),
+				"you-do-not-have-the-required-permissions");
 		}
 
 		if (Validator.isNull(errorMessage)) {

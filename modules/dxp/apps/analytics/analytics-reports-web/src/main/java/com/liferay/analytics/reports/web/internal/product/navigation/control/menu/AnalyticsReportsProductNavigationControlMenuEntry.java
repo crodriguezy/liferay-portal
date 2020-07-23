@@ -19,6 +19,9 @@ import com.liferay.analytics.reports.info.item.AnalyticsReportsInfoItemTracker;
 import com.liferay.analytics.reports.web.internal.constants.AnalyticsReportsPortletKeys;
 import com.liferay.analytics.reports.web.internal.util.AnalyticsReportsUtil;
 import com.liferay.asset.display.page.constants.AssetDisplayPageWebKeys;
+import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
+import com.liferay.asset.kernel.model.AssetRenderer;
+import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringBundler;
@@ -30,6 +33,8 @@ import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletURLFactory;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -77,7 +82,7 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"product.navigation.control.menu.category.key=" + ProductNavigationControlMenuCategoryKeys.USER,
-		"product.navigation.control.menu.entry.order:Integer=500"
+		"product.navigation.control.menu.entry.order:Integer=400"
 	},
 	service = ProductNavigationControlMenuEntry.class
 )
@@ -143,8 +148,8 @@ public class AnalyticsReportsProductNavigationControlMenuEntry
 				ReflectionUtil.throwException(windowStateException);
 			}
 
-			InfoDisplayObjectProvider infoDisplayObjectProvider =
-				(InfoDisplayObjectProvider)httpServletRequest.getAttribute(
+			InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
+				(InfoDisplayObjectProvider<?>)httpServletRequest.getAttribute(
 					AssetDisplayPageWebKeys.INFO_DISPLAY_OBJECT_PROVIDER);
 
 			portletURL.setParameter(
@@ -246,6 +251,10 @@ public class AnalyticsReportsProductNavigationControlMenuEntry
 			return false;
 		}
 
+		if (!_hasEditPermission(httpServletRequest, layout)) {
+			return false;
+		}
+
 		return super.isShow(httpServletRequest);
 	}
 
@@ -258,21 +267,62 @@ public class AnalyticsReportsProductNavigationControlMenuEntry
 	private boolean _hasAnalyticsReportsInfoItem(
 		HttpServletRequest httpServletRequest) {
 
-		InfoDisplayObjectProvider infoDisplayObjectProvider =
-			(InfoDisplayObjectProvider)httpServletRequest.getAttribute(
+		InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
+			(InfoDisplayObjectProvider<?>)httpServletRequest.getAttribute(
 				AssetDisplayPageWebKeys.INFO_DISPLAY_OBJECT_PROVIDER);
 
 		if (infoDisplayObjectProvider == null) {
 			return false;
 		}
 
-		AnalyticsReportsInfoItem analyticsReportsInfoItem =
+		AnalyticsReportsInfoItem<?> analyticsReportsInfoItem =
 			_analyticsReportsInfoItemTracker.getAnalyticsReportsInfoItem(
 				_portal.getClassName(
 					infoDisplayObjectProvider.getClassNameId()));
 
 		if ((analyticsReportsInfoItem == null) ||
 			(infoDisplayObjectProvider.getDisplayObject() == null)) {
+
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean _hasEditPermission(
+			HttpServletRequest httpServletRequest, Layout layout)
+		throws PortalException {
+
+		InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
+			(InfoDisplayObjectProvider<?>)httpServletRequest.getAttribute(
+				AssetDisplayPageWebKeys.INFO_DISPLAY_OBJECT_PROVIDER);
+
+		if (infoDisplayObjectProvider == null) {
+			return false;
+		}
+
+		AssetRendererFactory<?> assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.
+				getAssetRendererFactoryByClassNameId(
+					infoDisplayObjectProvider.getClassNameId());
+
+		AssetRenderer<?> assetRenderer = null;
+
+		if (assetRendererFactory != null) {
+			assetRenderer = assetRendererFactory.getAssetRenderer(
+				infoDisplayObjectProvider.getClassPK());
+		}
+
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		if (((assetRenderer == null) ||
+			 !assetRenderer.hasEditPermission(
+				 themeDisplay.getPermissionChecker())) &&
+			!LayoutPermissionUtil.contains(
+				themeDisplay.getPermissionChecker(), layout,
+				ActionKeys.UPDATE)) {
 
 			return false;
 		}

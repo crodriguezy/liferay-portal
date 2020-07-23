@@ -14,12 +14,30 @@
 
 package com.liferay.redirect.model.impl;
 
+import com.liferay.portal.kernel.service.ClassNameLocalServiceUtil;
+import com.liferay.portal.kernel.view.count.ViewCountManagerUtil;
+import com.liferay.redirect.model.RedirectNotFoundEntry;
+
 /**
  * @author Brian Wing Shun Chan
  */
 public class RedirectNotFoundEntryImpl extends RedirectNotFoundEntryBaseImpl {
 
 	public RedirectNotFoundEntryImpl() {
+	}
+
+	@Override
+	public long getHits() {
+		return getRequestCount();
+	}
+
+	@Override
+	public long getRequestCount() {
+		return ViewCountManagerUtil.getViewCount(
+			getCompanyId(),
+			ClassNameLocalServiceUtil.getClassNameId(
+				RedirectNotFoundEntry.class),
+			getPrimaryKey());
 	}
 
 }

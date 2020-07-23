@@ -409,7 +409,7 @@ public class JUnitBatchTestClassGroup extends BatchTestClassGroup {
 
 		_setAutoBalanceTestFiles();
 
-		_setTestClassNamesExcludesRelativeGlobs();
+		setTestClassNamesExcludesRelativeGlobs();
 		_setTestClassNamesIncludesRelativeGlobs();
 
 		setTestClasses();
@@ -611,6 +611,50 @@ public class JUnitBatchTestClassGroup extends BatchTestClassGroup {
 		Collections.sort(testClasses);
 	}
 
+	protected void setTestClassNamesExcludesRelativeGlobs() {
+		String testClassNamesExcludesPropertyValue =
+			_getTestClassNamesExcludesPropertyValue(testSuiteName, false);
+
+		List<String> testClassNamesExcludesRelativeGlobs = new ArrayList<>();
+
+		if ((testClassNamesExcludesPropertyValue != null) &&
+			!testClassNamesExcludesPropertyValue.isEmpty()) {
+
+			Collections.addAll(
+				testClassNamesExcludesRelativeGlobs,
+				JenkinsResultsParserUtil.getGlobsFromProperty(
+					testClassNamesExcludesPropertyValue));
+		}
+
+		if (testRelevantChanges) {
+			testClassNamesExcludesRelativeGlobs.addAll(
+				getRelevantTestClassNamesRelativeExcludesGlobs());
+		}
+
+		if (includeStableTestSuite && isStableTestSuiteBatch()) {
+			String stableTestClassNamesExcludesPropertyValue =
+				_getTestClassNamesExcludesPropertyValue(
+					NAME_STABLE_TEST_SUITE, false);
+
+			if ((stableTestClassNamesExcludesPropertyValue != null) &&
+				!stableTestClassNamesExcludesPropertyValue.isEmpty()) {
+
+				Collections.addAll(
+					testClassNamesExcludesRelativeGlobs,
+					JenkinsResultsParserUtil.getGlobsFromProperty(
+						stableTestClassNamesExcludesPropertyValue));
+			}
+		}
+
+		testClassNamesExcludesPathMatchers.addAll(
+			JenkinsResultsParserUtil.toPathMatchers(
+				JenkinsResultsParserUtil.combine(
+					JenkinsResultsParserUtil.getCanonicalPath(
+						_rootWorkingDirectory),
+					File.separator),
+				testClassNamesExcludesRelativeGlobs.toArray(new String[0])));
+	}
+
 	protected final List<PathMatcher> testClassNamesExcludesPathMatchers =
 		new ArrayList<>();
 	protected final List<PathMatcher> testClassNamesIncludesPathMatchers =
@@ -709,50 +753,6 @@ public class JUnitBatchTestClassGroup extends BatchTestClassGroup {
 		}
 
 		_includeAutoBalanceTests = _ENABLE_INCLUDE_AUTO_BALANCE_TESTS_DEFAULT;
-	}
-
-	private void _setTestClassNamesExcludesRelativeGlobs() {
-		String testClassNamesExcludesPropertyValue =
-			_getTestClassNamesExcludesPropertyValue(testSuiteName, false);
-
-		List<String> testClassNamesExcludesRelativeGlobs = new ArrayList<>();
-
-		if ((testClassNamesExcludesPropertyValue != null) &&
-			!testClassNamesExcludesPropertyValue.isEmpty()) {
-
-			Collections.addAll(
-				testClassNamesExcludesRelativeGlobs,
-				JenkinsResultsParserUtil.getGlobsFromProperty(
-					testClassNamesExcludesPropertyValue));
-		}
-
-		if (testRelevantChanges) {
-			testClassNamesExcludesRelativeGlobs.addAll(
-				getRelevantTestClassNamesRelativeExcludesGlobs());
-		}
-
-		if (includeStableTestSuite && isStableTestSuiteBatch()) {
-			String stableTestClassNamesExcludesPropertyValue =
-				_getTestClassNamesExcludesPropertyValue(
-					NAME_STABLE_TEST_SUITE, false);
-
-			if ((stableTestClassNamesExcludesPropertyValue != null) &&
-				!stableTestClassNamesExcludesPropertyValue.isEmpty()) {
-
-				Collections.addAll(
-					testClassNamesExcludesRelativeGlobs,
-					JenkinsResultsParserUtil.getGlobsFromProperty(
-						stableTestClassNamesExcludesPropertyValue));
-			}
-		}
-
-		testClassNamesExcludesPathMatchers.addAll(
-			JenkinsResultsParserUtil.toPathMatchers(
-				JenkinsResultsParserUtil.combine(
-					JenkinsResultsParserUtil.getCanonicalPath(
-						_rootWorkingDirectory),
-					File.separator),
-				testClassNamesExcludesRelativeGlobs.toArray(new String[0])));
 	}
 
 	private void _setTestClassNamesIncludesRelativeGlobs() {

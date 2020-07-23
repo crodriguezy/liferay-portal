@@ -57,8 +57,6 @@
 			</c:if>
 		</c:otherwise>
 	</c:choose>
-
-	Liferay.BrowserSelectors.run();
 </aui:script>
 
 <aui:script>
@@ -66,7 +64,10 @@
 		svg4everybody(
 			{
 				attributeName: 'data-href',
-				polyfill: true
+				polyfill: true,
+				validate: function (src, svg, use) {
+					return !src || !src.startsWith('#');
+				}
 			}
 		);
 	}
@@ -190,23 +191,15 @@ if (layout != null) {
 	</aui:script>
 </c:if>
 
-<aui:script use="liferay-menu,liferay-notice,liferay-poller">
+<aui:script use="liferay-menu">
 	new Liferay.Menu();
 
 	var liferayNotices = Liferay.Data.notices;
 
-	for (var i = 1; i < liferayNotices.length; i++) {
-		new Liferay.Notice(liferayNotices[i]);
+	for (var i = 0; i < liferayNotices.length; i++) {
+		Liferay.Util.openToast(liferayNotices[i]);
 	}
 
-	<c:if test="<%= themeDisplay.isSignedIn() %>">
-		Liferay.Poller.init(
-			{
-				encryptedUserId: '<%= Encryptor.encrypt(company.getKeyObj(), String.valueOf(themeDisplay.getUserId())) %>',
-				supportsComet: <%= ServerDetector.isSupportsComet() %>
-			}
-		);
-	</c:if>
 </aui:script>
 
 <script type="text/javascript">

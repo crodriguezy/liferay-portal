@@ -1,0 +1,65 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
+import {ClayButtonWithIcon} from '@clayui/button';
+import ClayDropDown from '@clayui/drop-down';
+import ClayIcon from '@clayui/icon';
+import PropTypes from 'prop-types';
+import React, {useState} from 'react';
+
+function ActiveViewSelector({activeView, setActiveView, views}) {
+	const [active, setActive] = useState(false);
+
+	return (
+		<ClayDropDown
+			active={active}
+			onActiveChange={setActive}
+			trigger={
+				<ClayButtonWithIcon
+					displayType="secondary"
+					symbol={views[activeView || 0].thumbnail}
+				/>
+			}
+		>
+			<ClayDropDown.ItemList>
+				{views.map((view, i) => (
+					<ClayDropDown.Item
+						key={i}
+						onClick={(event) => {
+							event.preventDefault();
+							setActive(false);
+							setActiveView(i);
+						}}
+					>
+						<ClayIcon className="mr-3" symbol={view.thumbnail} />
+						{view.label}
+					</ClayDropDown.Item>
+				))}
+			</ClayDropDown.ItemList>
+		</ClayDropDown>
+	);
+}
+
+ActiveViewSelector.propTypes = {
+	activeView: PropTypes.number.isRequired,
+	setActiveView: PropTypes.func.isRequired,
+	views: PropTypes.arrayOf(
+		PropTypes.shape({
+			label: PropTypes.string.isRequired,
+			thumbnail: PropTypes.string.isRequired,
+		})
+	),
+};
+
+export default ActiveViewSelector;

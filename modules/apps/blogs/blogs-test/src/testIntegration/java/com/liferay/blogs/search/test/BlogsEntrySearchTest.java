@@ -29,6 +29,7 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
@@ -51,50 +52,62 @@ public class BlogsEntrySearchTest extends BaseSearchTestCase {
 	}
 
 	@Override
+	@Test
 	public void testLocalizedSearch() {
 	}
 
 	@Override
+	@Test
 	public void testParentBaseModelUserPermissions() {
 	}
 
 	@Override
+	@Test
 	public void testSearchAttachments() {
 	}
 
 	@Override
+	@Test
 	public void testSearchByDDMStructureField() {
 	}
 
 	@Override
+	@Test
 	public void testSearchByKeywordsInsideParentBaseModel() {
 	}
 
 	@Override
+	@Test
 	public void testSearchExpireAllVersions() {
 	}
 
 	@Override
+	@Test
 	public void testSearchExpireLatestVersion() {
 	}
 
 	@Override
+	@Test
 	public void testSearchMyEntries() {
 	}
 
 	@Override
+	@Test
 	public void testSearchRecentEntries() {
 	}
 
 	@Override
+	@Test
 	public void testSearchStatus() {
 	}
 
 	@Override
+	@Test
 	public void testSearchVersions() {
 	}
 
 	@Override
+	@Test
 	public void testSearchWithinDDMStructure() {
 	}
 

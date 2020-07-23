@@ -22,6 +22,8 @@ String analyticsClientConfig = (String)request.getAttribute(AnalyticsWebKeys.ANA
 String analyticsClientGroupIds = (String)request.getAttribute(AnalyticsWebKeys.ANALYTICS_CLIENT_GROUP_IDS);
 %>
 
+<meta content="<%= (String)request.getAttribute(AnalyticsWebKeys.ANALYTICS_CLIENT_READABLE_CONTENT) %>" name="data-analytics-readable-content" />
+
 <script data-senna-track="temporary" type="text/javascript">
 	var runMiddlewares = function () {
 		<liferay-util:dynamic-include key="/dynamic_include/top_head.jsp#analytics" />

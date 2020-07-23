@@ -33,6 +33,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
@@ -55,18 +56,22 @@ public class BlogsEntryAssetSearchTest extends BaseAssetSearchTestCase {
 	}
 
 	@Override
+	@Test
 	public void testClassTypeIds1() {
 	}
 
 	@Override
+	@Test
 	public void testClassTypeIds2() {
 	}
 
 	@Override
+	@Test
 	public void testOrderByExpirationDateAsc() {
 	}
 
 	@Override
+	@Test
 	public void testOrderByExpirationDateDesc() {
 	}
 

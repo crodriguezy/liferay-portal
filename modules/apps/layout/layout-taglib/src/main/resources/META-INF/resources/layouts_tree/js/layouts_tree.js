@@ -17,8 +17,6 @@ AUI.add(
 	(A) => {
 		var Lang = A.Lang;
 
-		var LString = Lang.String;
-
 		var NODE_ID_TPL =
 			'{treeId}_layout_{layoutId}_plid_{plid}_groupId_{groupId}';
 
@@ -154,7 +152,7 @@ AUI.add(
 				});
 
 				data.id = data.url
-					? LString.escapeHTML(
+					? Liferay.Util.escapeHTML(
 							instance._treeId +
 								'_layout_' +
 								data.url.substring(1)
@@ -163,31 +161,25 @@ AUI.add(
 
 				data.title = data.title ? data.title : STR_EMPTY;
 
-				data.url = data.url ? LString.escapeHTML(data.url) : STR_EMPTY;
+				data.url = data.url
+					? Liferay.Util.escapeHTML(data.url)
+					: STR_EMPTY;
 
 				data.uuid = data.uuid
-					? LString.escapeHTML(data.uuid)
+					? Liferay.Util.escapeHTML(data.uuid)
 					: STR_EMPTY;
 
 				return A.Lang.sub(template, data);
 			},
 
-			_displayNotice(message, type, timeout, useAnimation) {
-				new Liferay.Notice({
-					closeText: false,
-					content:
-						message +
-						'<button aria-label="' +
-						Liferay.Language.get('close') +
-						'" class="close" type="button">&times;</button>',
-					noticeClass: 'hide',
-					timeout: timeout || 10000,
-					toggleText: false,
-					type: type || 'warning',
-					useAnimation: Lang.isValue(useAnimation)
-						? useAnimation
-						: true,
-				}).show();
+			_displayNotice(message, type, timeout) {
+				Liferay.Util.openToast({
+					message,
+					toastProps: {
+						autoClose: timeout,
+					},
+					type,
+				});
 			},
 
 			_formatJSONResults(json) {
@@ -271,7 +263,7 @@ AUI.add(
 				var cssClass = STR_EMPTY;
 				var title = STR_EMPTY;
 
-				var name = LString.escapeHTML(node.name);
+				var name = Liferay.Util.escapeHTML(node.name);
 
 				if (node.layoutRevisionId) {
 					if (!node.layoutRevisionHead) {
@@ -280,7 +272,7 @@ AUI.add(
 						);
 					}
 					else if (node.layoutBranchName) {
-						node.layoutBranchName = LString.escapeHTML(
+						node.layoutBranchName = Liferay.Util.escapeHTML(
 							node.layoutBranchName
 						);
 
@@ -343,7 +335,7 @@ AUI.add(
 				var rootLabel = instance._createNodeLink(
 					A.merge(
 						{
-							label: LString.escapeHTML(rootConfig.label),
+							label: Liferay.Util.escapeHTML(rootConfig.label),
 							plid: rootConfig.defaultParentLayoutId,
 						},
 						rootConfig
@@ -494,12 +486,7 @@ AUI.add(
 			_restoreNodePosition(response) {
 				var instance = this;
 
-				instance._displayNotice(
-					response.message,
-					'warning',
-					10000,
-					true
-				);
+				instance._displayNotice(response.message, 'warning', 10000);
 
 				var nodeId = A.Lang.sub(NODE_ID_TPL, {
 					groupId: response.groupId,

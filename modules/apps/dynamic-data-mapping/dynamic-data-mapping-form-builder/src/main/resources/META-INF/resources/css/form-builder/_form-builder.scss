@@ -6,7 +6,6 @@
 @import './form-pagination';
 @import './moveable';
 @import './resizeable';
-@import './share_url_popover';
 @import './sidebar';
 
 $c: '.ddm-form-builder';
@@ -62,7 +61,7 @@ $c: '.ddm-form-builder';
 	}
 
 	.form-builder-layout {
-		padding: 1em;
+		padding: 1em 1.5rem;
 	}
 }
 

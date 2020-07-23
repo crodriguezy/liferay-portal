@@ -30,6 +30,11 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class ResourceActionsUtil {
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 * 				#check(String)}
+	 */
+	@Deprecated
 	public static void check(Portlet portlet) {
 		getResourceActions().check(portlet);
 	}
@@ -161,6 +166,10 @@ public class ResourceActionsUtil {
 		return getResourceActions().getPortletNames();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static List<String> getPortletResourceActions(Portlet portlet) {
 		return getResourceActions().getPortletResourceActions(portlet);
 	}

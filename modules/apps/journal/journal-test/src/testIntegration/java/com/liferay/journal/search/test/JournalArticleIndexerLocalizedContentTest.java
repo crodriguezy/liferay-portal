@@ -223,7 +223,11 @@ public class JournalArticleIndexerLocalizedContentTest {
 
 		String articleId = journalArticle.getArticleId();
 
-		Map<String, String> titleStrings = Collections.emptyMap();
+		Map<String, String> titleStrings = HashMapBuilder.put(
+			"title_en_US", originalTitle
+		).put(
+			"title_pt_BR", translatedTitle
+		).build();
 
 		Map<String, String> contentStrings = Collections.emptyMap();
 

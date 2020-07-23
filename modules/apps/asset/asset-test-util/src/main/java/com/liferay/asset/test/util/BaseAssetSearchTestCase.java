@@ -1003,13 +1003,12 @@ public abstract class BaseAssetSearchTestCase {
 		List<Map<Locale, String>> titleMaps = new ArrayList<>();
 
 		for (int i = 0; i < defaultTitles.length; i++) {
-			Map<Locale, String> titleMap = HashMapBuilder.put(
-				LocaleUtil.getDefault(), defaultTitles[i]
-			).put(
-				LocaleUtil.FRANCE, frenchTitles[i]
-			).build();
-
-			titleMaps.add(titleMap);
+			titleMaps.add(
+				HashMapBuilder.put(
+					LocaleUtil.getDefault(), defaultTitles[i]
+				).put(
+					LocaleUtil.FRANCE, frenchTitles[i]
+				).build());
 		}
 
 		String[] defaultOrderedTitles = {
@@ -1060,13 +1059,12 @@ public abstract class BaseAssetSearchTestCase {
 		List<Map<Locale, String>> titleMaps = new ArrayList<>();
 
 		for (int i = 0; i < defaultTitles.length; i++) {
-			Map<Locale, String> titleMap = HashMapBuilder.put(
-				LocaleUtil.getDefault(), defaultTitles[i]
-			).put(
-				LocaleUtil.FRANCE, frenchTitles[i]
-			).build();
-
-			titleMaps.add(titleMap);
+			titleMaps.add(
+				HashMapBuilder.put(
+					LocaleUtil.getDefault(), defaultTitles[i]
+				).put(
+					LocaleUtil.FRANCE, frenchTitles[i]
+				).build());
 		}
 
 		String[] defaultOrderedTitles = {
@@ -1229,7 +1227,8 @@ public abstract class BaseAssetSearchTestCase {
 
 		for (int i = 0; i < size; i++) {
 			Date date = new Date(
-				startDate.getTime() + (RandomUtil.nextInt(365) + 1) * Time.DAY);
+				startDate.getTime() +
+					((RandomUtil.nextInt(365) + 1) * Time.DAY));
 
 			Calendar calendar = new GregorianCalendar();
 

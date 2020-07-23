@@ -1,4 +1,4 @@
-create index IX_50E9112C on KaleoAction (companyId);
+create index IX_3D016038 on KaleoAction (companyId, kaleoClassName[$COLUMN_LENGTH:200$], kaleoClassPK, executionType[$COLUMN_LENGTH:20$]);
 create index IX_4B2545E8 on KaleoAction (kaleoClassName[$COLUMN_LENGTH:200$], kaleoClassPK, executionType[$COLUMN_LENGTH:20$]);
 create index IX_F8808C50 on KaleoAction (kaleoDefinitionVersionId);
 
@@ -16,6 +16,7 @@ create index IX_58D85ECB on KaleoInstance (className[$COLUMN_LENGTH:200$], class
 create index IX_BF5839F8 on KaleoInstance (companyId, kaleoDefinitionName[$COLUMN_LENGTH:200$], kaleoDefinitionVersion, completionDate);
 create index IX_C6D7A867 on KaleoInstance (companyId, userId);
 create index IX_3DA1A5AC on KaleoInstance (kaleoDefinitionVersionId, completed);
+create index IX_6D12641D on KaleoInstance (kaleoInstanceId, companyId, userId);
 
 create index IX_360D34D9 on KaleoInstanceToken (companyId, parentKaleoInstanceTokenId, completionDate);
 create index IX_1181057E on KaleoInstanceToken (kaleoDefinitionVersionId);

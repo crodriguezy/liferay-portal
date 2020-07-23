@@ -47,6 +47,56 @@ public class CheckboxMultipleDDMFormFieldTypeReportProcessorTest
 	}
 
 	@Test
+	public void testProcessDDMFormInstanceReportOnDeleteEvent()
+		throws Exception {
+
+		DDMFormFieldValue ddmFormFieldValue = mock(DDMFormFieldValue.class);
+
+		when(
+			ddmFormFieldValue.getName()
+		).thenReturn(
+			"field1"
+		);
+
+		when(
+			ddmFormFieldValue.getType()
+		).thenReturn(
+			DDMFormFieldType.CHECKBOX_MULTIPLE
+		);
+
+		Value value = new LocalizedValue();
+
+		value.addString(
+			value.getDefaultLocale(),
+			JSONUtil.put(
+				"option1"
+			).toString());
+		value.setDefaultLocale(LocaleUtil.US);
+
+		when(
+			ddmFormFieldValue.getValue()
+		).thenReturn(
+			value
+		);
+
+		JSONObject fieldJSONObject = JSONUtil.put(
+			"type", DDMFormFieldType.CHECKBOX_MULTIPLE
+		).put(
+			"values", JSONUtil.put("option1", 1)
+		);
+
+		JSONObject processedFieldJSONObject =
+			_checkboxMultipleDDMFormFieldTypeReportProcessor.process(
+				ddmFormFieldValue, fieldJSONObject, 0,
+				DDMFormInstanceReportConstants.EVENT_DELETE_RECORD_VERSION);
+
+		JSONObject valuesJSONObject = processedFieldJSONObject.getJSONObject(
+			"values");
+
+		Assert.assertEquals(0, valuesJSONObject.getLong("option1"));
+	}
+
+	@Test
 	public void testProcessDDMFormInstanceReportWithEmptyData()
 		throws Exception {
 
@@ -66,7 +116,11 @@ public class CheckboxMultipleDDMFormFieldTypeReportProcessorTest
 
 		Value value = new LocalizedValue();
 
-		value.addString(value.getDefaultLocale(), "[\"option1\"]");
+		value.addString(
+			value.getDefaultLocale(),
+			JSONUtil.put(
+				"option1"
+			).toString());
 		value.setDefaultLocale(LocaleUtil.US);
 
 		when(
@@ -75,23 +129,22 @@ public class CheckboxMultipleDDMFormFieldTypeReportProcessorTest
 			value
 		);
 
-		CheckboxMultipleDDMFormFieldTypeReportProcessor
-			checkboxMultipleDDMFormFieldTypeReportProcessor =
-				new CheckboxMultipleDDMFormFieldTypeReportProcessor();
-
-		JSONObject processedFormInstanceReportDataJSONObject =
-			checkboxMultipleDDMFormFieldTypeReportProcessor.process(
-				ddmFormFieldValue, JSONFactoryUtil.createJSONObject(),
-				DDMFormInstanceReportConstants.EVENT_ADD_RECORD_VERSION);
-
-		JSONObject fieldJSONObject =
-			processedFormInstanceReportDataJSONObject.getJSONObject("field1");
+		JSONObject processedFieldJSONObject =
+			_checkboxMultipleDDMFormFieldTypeReportProcessor.process(
+				ddmFormFieldValue,
+				JSONUtil.put(
+					"type", DDMFormFieldType.CHECKBOX_MULTIPLE
+				).put(
+					"values", JSONFactoryUtil.createJSONObject()
+				),
+				0, DDMFormInstanceReportConstants.EVENT_ADD_RECORD_VERSION);
 
 		Assert.assertEquals(
 			DDMFormFieldType.CHECKBOX_MULTIPLE,
-			fieldJSONObject.getString("type"));
+			processedFieldJSONObject.getString("type"));
 
-		JSONObject valuesJSONObject = fieldJSONObject.getJSONObject("values");
+		JSONObject valuesJSONObject = processedFieldJSONObject.getJSONObject(
+			"values");
 
 		Assert.assertEquals(1, valuesJSONObject.getLong("option1"));
 	}
@@ -116,7 +169,11 @@ public class CheckboxMultipleDDMFormFieldTypeReportProcessorTest
 
 		Value value = new LocalizedValue();
 
-		value.addString(value.getDefaultLocale(), "[\"option1\", \"option2\"]");
+		value.addString(
+			value.getDefaultLocale(),
+			JSONUtil.putAll(
+				"option1", "option2"
+			).toString());
 		value.setDefaultLocale(LocaleUtil.US);
 
 		when(
@@ -125,31 +182,21 @@ public class CheckboxMultipleDDMFormFieldTypeReportProcessorTest
 			value
 		);
 
-		JSONObject formInstanceReportDataJSONObject = JSONUtil.put(
-			ddmFormFieldValue.getName(),
-			JSONUtil.put(
-				"type", DDMFormFieldType.CHECKBOX_MULTIPLE
-			).put(
-				"values", JSONFactoryUtil.createJSONObject("{option1: 1}")
-			));
+		JSONObject processedFieldJSONObject =
+			_checkboxMultipleDDMFormFieldTypeReportProcessor.process(
+				ddmFormFieldValue,
+				JSONUtil.put(
+					"type", DDMFormFieldType.CHECKBOX_MULTIPLE
+				).put(
+					"values", JSONUtil.put("option1", 1)
+				),
+				0, DDMFormInstanceReportConstants.EVENT_ADD_RECORD_VERSION);
 
-		CheckboxMultipleDDMFormFieldTypeReportProcessor
-			checkboxMultipleDDMFormFieldTypeReportProcessor =
-				new CheckboxMultipleDDMFormFieldTypeReportProcessor();
-
-		JSONObject processedFormInstanceReportDataJSONObject =
-			checkboxMultipleDDMFormFieldTypeReportProcessor.process(
-				ddmFormFieldValue, formInstanceReportDataJSONObject,
-				DDMFormInstanceReportConstants.EVENT_ADD_RECORD_VERSION);
-
-		JSONObject fieldJSONObject =
-			processedFormInstanceReportDataJSONObject.getJSONObject("field1");
-
-		JSONObject fieldValueJSONObject = fieldJSONObject.getJSONObject(
+		JSONObject valuesJSONObject = processedFieldJSONObject.getJSONObject(
 			"values");
 
-		Assert.assertEquals(2, fieldValueJSONObject.getLong("option1"));
-		Assert.assertEquals(1, fieldValueJSONObject.getLong("option2"));
+		Assert.assertEquals(2, valuesJSONObject.getLong("option1"));
+		Assert.assertEquals(1, valuesJSONObject.getLong("option2"));
 	}
 
 	private void _setUpJSONFactoryUtil() {
@@ -157,5 +204,9 @@ public class CheckboxMultipleDDMFormFieldTypeReportProcessorTest
 
 		jsonFactoryUtil.setJSONFactory(new JSONFactoryImpl());
 	}
+
+	private final CheckboxMultipleDDMFormFieldTypeReportProcessor
+		_checkboxMultipleDDMFormFieldTypeReportProcessor =
+			new CheckboxMultipleDDMFormFieldTypeReportProcessor();
 
 }

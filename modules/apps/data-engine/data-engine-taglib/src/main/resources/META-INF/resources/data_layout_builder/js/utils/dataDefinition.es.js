@@ -80,10 +80,22 @@ export const getDataDefinitionField = (
 	return field;
 };
 
+export const getDataDefinitionFieldSet = (dataDefinitionFields, fieldSetId) =>
+	dataDefinitionFields.find(
+		({customProperties: {ddmStructureId}}) => ddmStructureId == fieldSetId
+	);
+
 export const getFieldLabel = (dataDefinition, fieldName) => {
 	const field = getDataDefinitionField(dataDefinition, fieldName);
 
-	return field ? field.label[themeDisplay.getLanguageId()] : fieldName;
+	if (field) {
+		return (
+			field.label[Liferay.ThemeDisplay.getLanguageId()] ||
+			field.label[dataDefinition.defaultLanguageId]
+		);
+	}
+
+	return fieldName;
 };
 
 export const getOptionLabel = (options = {}, value) => {

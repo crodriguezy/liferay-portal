@@ -125,6 +125,10 @@ public class MBMessagePersistenceTest {
 
 		MBMessage newMBMessage = _persistence.create(pk);
 
+		newMBMessage.setMvccVersion(RandomTestUtil.nextLong());
+
+		newMBMessage.setCtCollectionId(RandomTestUtil.nextLong());
+
 		newMBMessage.setUuid(RandomTestUtil.randomString());
 
 		newMBMessage.setGroupId(RandomTestUtil.nextLong());
@@ -184,6 +188,11 @@ public class MBMessagePersistenceTest {
 		MBMessage existingMBMessage = _persistence.findByPrimaryKey(
 			newMBMessage.getPrimaryKey());
 
+		Assert.assertEquals(
+			existingMBMessage.getMvccVersion(), newMBMessage.getMvccVersion());
+		Assert.assertEquals(
+			existingMBMessage.getCtCollectionId(),
+			newMBMessage.getCtCollectionId());
 		Assert.assertEquals(
 			existingMBMessage.getUuid(), newMBMessage.getUuid());
 		Assert.assertEquals(
@@ -552,9 +561,10 @@ public class MBMessagePersistenceTest {
 
 	protected OrderByComparator<MBMessage> getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create(
-			"MBMessage", "uuid", true, "messageId", true, "groupId", true,
-			"companyId", true, "userId", true, "userName", true, "createDate",
-			true, "modifiedDate", true, "classNameId", true, "classPK", true,
+			"MBMessage", "mvccVersion", true, "ctCollectionId", true, "uuid",
+			true, "messageId", true, "groupId", true, "companyId", true,
+			"userId", true, "userName", true, "createDate", true,
+			"modifiedDate", true, "classNameId", true, "classPK", true,
 			"categoryId", true, "threadId", true, "rootMessageId", true,
 			"parentMessageId", true, "treePath", true, "subject", true,
 			"urlSubject", true, "format", true, "anonymous", true, "priority",
@@ -804,6 +814,10 @@ public class MBMessagePersistenceTest {
 		long pk = RandomTestUtil.nextLong();
 
 		MBMessage mbMessage = _persistence.create(pk);
+
+		mbMessage.setMvccVersion(RandomTestUtil.nextLong());
+
+		mbMessage.setCtCollectionId(RandomTestUtil.nextLong());
 
 		mbMessage.setUuid(RandomTestUtil.randomString());
 

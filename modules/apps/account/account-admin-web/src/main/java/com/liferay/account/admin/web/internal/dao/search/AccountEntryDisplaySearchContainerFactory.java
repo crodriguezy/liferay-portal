@@ -16,14 +16,17 @@ package com.liferay.account.admin.web.internal.dao.search;
 
 import com.liferay.account.admin.web.internal.display.AccountEntryDisplay;
 import com.liferay.account.model.AccountEntry;
+import com.liferay.account.service.AccountEntryLocalServiceUtil;
 import com.liferay.account.service.AccountEntryServiceUtil;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.util.LinkedHashMapBuilder;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.vulcan.util.TransformUtil;
 
@@ -42,25 +45,26 @@ public class AccountEntryDisplaySearchContainerFactory {
 
 		return _create(
 			liferayPortletRequest, liferayPortletResponse,
-			new LinkedHashMap<>());
+			new LinkedHashMap<>(), true);
 	}
 
 	public static SearchContainer<AccountEntryDisplay> create(
 		long userId, LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse) {
 
-		LinkedHashMap<String, Object> params =
+		return _create(
+			liferayPortletRequest, liferayPortletResponse,
 			LinkedHashMapBuilder.<String, Object>put(
 				"accountUserIds", new long[] {userId}
-			).build();
-
-		return _create(liferayPortletRequest, liferayPortletResponse, params);
+			).build(),
+			false);
 	}
 
 	private static SearchContainer<AccountEntryDisplay> _create(
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse,
-		LinkedHashMap<String, Object> params) {
+		LinkedHashMap<String, Object> params,
+		boolean filterManageableAccountEntries) {
 
 		SearchContainer<AccountEntryDisplay>
 			accountEntryDisplaySearchContainer = new SearchContainer(
@@ -90,11 +94,27 @@ public class AccountEntryDisplaySearchContainerFactory {
 
 		params.put("status", _getStatus(navigation));
 
-		BaseModelSearchResult<AccountEntry> baseModelSearchResult =
-			AccountEntryServiceUtil.search(
+		String type = ParamUtil.getString(liferayPortletRequest, "type");
+
+		if (Validator.isNotNull(type) && !type.equals("all")) {
+			params.put("type", type);
+		}
+
+		BaseModelSearchResult<AccountEntry> baseModelSearchResult;
+
+		if (filterManageableAccountEntries) {
+			baseModelSearchResult = AccountEntryServiceUtil.search(
 				keywords, params, accountEntryDisplaySearchContainer.getStart(),
 				accountEntryDisplaySearchContainer.getDelta(), orderByCol,
 				_isReverseOrder(orderByType));
+		}
+		else {
+			baseModelSearchResult = AccountEntryLocalServiceUtil.search(
+				CompanyThreadLocal.getCompanyId(), keywords, params,
+				accountEntryDisplaySearchContainer.getStart(),
+				accountEntryDisplaySearchContainer.getDelta(), orderByCol,
+				_isReverseOrder(orderByType));
+		}
 
 		List<AccountEntryDisplay> accountEntryDisplays =
 			TransformUtil.transform(

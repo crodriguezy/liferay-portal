@@ -34,6 +34,10 @@ public class AccountEntryTable extends BaseTable<AccountEntryTable> {
 
 	public final Column<AccountEntryTable, Long> mvccVersion = createColumn(
 		"mvccVersion", Long.class, Types.BIGINT, Column.FLAG_NULLITY);
+	public final Column<AccountEntryTable, String> externalReferenceCode =
+		createColumn(
+			"externalReferenceCode", String.class, Types.VARCHAR,
+			Column.FLAG_DEFAULT);
 	public final Column<AccountEntryTable, Long> accountEntryId = createColumn(
 		"accountEntryId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
 	public final Column<AccountEntryTable, Long> companyId = createColumn(
@@ -58,6 +62,10 @@ public class AccountEntryTable extends BaseTable<AccountEntryTable> {
 		"domains", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<AccountEntryTable, Long> logoId = createColumn(
 		"logoId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
+	public final Column<AccountEntryTable, String> taxIdNumber = createColumn(
+		"taxIdNumber", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
+	public final Column<AccountEntryTable, String> type = createColumn(
+		"type_", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<AccountEntryTable, Integer> status = createColumn(
 		"status", Integer.class, Types.INTEGER, Column.FLAG_DEFAULT);
 

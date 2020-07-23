@@ -12,6 +12,9 @@
  * details.
  */
 
+/**
+ * @deprecated As of Athanasius (7.3.x), with no direct replacement
+ */
 (function () {
 	var LiferayAUI = Liferay.AUI;
 
@@ -274,8 +277,12 @@
 							'liferay-input-move-boxes-touch': {
 								condition: {
 									name: 'liferay-input-move-boxes-touch',
+									test(A) {
+										return (
+											A.UA.touchEnabled && !!A.UA.mobile
+										);
+									},
 									trigger: 'liferay-input-move-boxes',
-									ua: 'touchMobile',
 								},
 							},
 						},
@@ -344,11 +351,7 @@
 					},
 					'liferay-logo-editor': {
 						path: 'logo_editor.js',
-						requires: [
-							'aui-image-cropper',
-							'liferay-alert',
-							'liferay-portlet-base',
-						],
+						requires: ['aui-image-cropper', 'liferay-portlet-base'],
 					},
 					'liferay-logo-selector': {
 						path: 'logo_selector.js',
@@ -390,8 +393,10 @@
 								condition: {
 									name:
 										'liferay-navigation-interaction-touch',
+									test(A) {
+										return A.UA.touchEnabled;
+									},
 									trigger: 'liferay-navigation-interaction',
-									ua: 'touch',
 								},
 							},
 						},
@@ -512,9 +517,11 @@
 					'liferay-session': {
 						path: 'session.js',
 						requires: [
+							'aui-base',
+							'aui-component',
 							'aui-timer',
 							'cookie',
-							'liferay-notification',
+							'plugin',
 						],
 					},
 					'liferay-sign-in-modal': {

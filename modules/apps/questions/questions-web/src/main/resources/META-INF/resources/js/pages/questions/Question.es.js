@@ -12,13 +12,12 @@
  * details.
  */
 
+import {useMutation, useQuery} from '@apollo/client';
 import ClayButton from '@clayui/button';
 import ClayForm from '@clayui/form';
 import ClayIcon from '@clayui/icon';
-import ClayLink from '@clayui/link';
 import ClayNavigationBar from '@clayui/navigation-bar';
-import {ClayPaginationWithBasicItems} from '@clayui/pagination';
-import {Editor} from 'frontend-editor-ckeditor-web';
+import classNames from 'classnames';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {withRouter} from 'react-router-dom';
 
@@ -26,163 +25,176 @@ import {AppContext} from '../../AppContext.es';
 import Answer from '../../components/Answer.es';
 import ArticleBodyRenderer from '../../components/ArticleBodyRenderer.es';
 import CreatorRow from '../../components/CreatorRow.es';
+import DeleteThread from '../../components/DeleteThread.es';
 import Link from '../../components/Link.es';
-import Modal from '../../components/Modal.es';
+import PaginatedList from '../../components/PaginatedList.es';
+import QuestionsEditor from '../../components/QuestionsEditor';
 import Rating from '../../components/Rating.es';
 import RelatedQuestions from '../../components/RelatedQuestions.es';
 import SectionLabel from '../../components/SectionLabel.es';
 import Subscription from '../../components/Subscription.es';
 import TagList from '../../components/TagList.es';
+import TextLengthValidation from '../../components/TextLengthValidation.es';
+import useQueryParams from '../../hooks/useQueryParams.es';
 import {
-	createAnswer,
-	deleteMessageBoardThread,
-	getMessages,
-	getThread,
-	markAsAnswerMessageBoardMessage,
+	createAnswerQuery,
+	getMessagesQuery,
+	getThreadQuery,
+	markAsAnswerMessageBoardMessageQuery,
 } from '../../utils/client.es';
 import lang from '../../utils/lang.es';
 import {
 	dateToBriefInternationalHuman,
-	getCKEditorConfig,
-	onBeforeLoadCKEditor,
+	getContextLink,
+	stripHTML,
 } from '../../utils/utils.es';
 
 export default withRouter(
 	({
-		history,
-		location: key,
+		location,
 		match: {
-			params: {questionId},
+			params: {questionId, sectionTitle},
 			url,
 		},
 	}) => {
 		const context = useContext(AppContext);
 
-		const [answers, setAnswers] = useState([]);
+		const queryParams = useQueryParams(location);
+
+		const sort = queryParams.get('sort') || 'active';
+
 		const [articleBody, setArticleBody] = useState();
-		const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+		const [showDeleteModalPanel, setShowDeleteModalPanel] = useState(false);
+
 		const [page, setPage] = useState(1);
-		const [question, setQuestion] = useState();
-		const [sectionTitle, setSectionTitle] = useState('');
-		const [filter, setFilter] = useState('active');
+		const [pageSize, setPageSize] = useState(20);
+
+		const {
+			loading,
+			data: {messageBoardThreadByFriendlyUrlPath: question = {}} = {},
+		} = useQuery(getThreadQuery, {
+			context: {
+				uri: '/o/graphql?nestedFields=lastPostDate',
+			},
+			variables: {
+				friendlyUrlPath: questionId,
+				siteKey: context.siteKey,
+			},
+		});
+
+		const {
+			data: {messageBoardThreadMessageBoardMessages = {}} = {},
+			refetch,
+		} = useQuery(getMessagesQuery, {
+			context: {
+				uri: '/o/graphql?nestedFields=lastPostDate',
+			},
+			skip: !question || !question.id,
+			variables: {
+				messageBoardThreadId: question.id,
+				page: sort === 'votes' ? 1 : page,
+				pageSize: sort === 'votes' ? 100 : pageSize,
+				sort:
+					sort === 'votes' || sort === 'active'
+						? 'dateModified:desc'
+						: 'dateCreated:desc',
+			},
+		});
+
+		const [answers, setAnswers] = useState({});
 
 		useEffect(() => {
-			loadThread();
-		}, [key, loadThread]);
+			if (messageBoardThreadMessageBoardMessages.totalCount) {
+				if (sort !== 'votes') {
+					setAnswers({...messageBoardThreadMessageBoardMessages});
+				}
+				else {
+					const items = [
+						...[
+							...messageBoardThreadMessageBoardMessages.items,
+						].sort((answer1, answer2) => {
+							if (answer2.showAsAnswer) {
+								return 1;
+							}
+							if (answer1.showAsAnswer) {
+								return -1;
+							}
 
-		const loadThread = useCallback(
-			() =>
-				getThread(questionId, context.siteKey, page).then((data) => {
-					setQuestion(data);
-					setAnswers(data.messageBoardMessages.items);
-					setSectionTitle(data.messageBoardSection.title);
-				}),
-			[context.siteKey, page, questionId]
-		);
+							const ratingValue1 =
+								(answer1.aggregateRating &&
+									answer1.aggregateRating.ratingValue) ||
+								0;
+							const ratingValue2 =
+								(answer2.aggregateRating &&
+									answer2.aggregateRating.ratingValue) ||
+								0;
 
-		const postAnswer = () => {
-			createAnswer(articleBody, question.id).then(() => {
+							return ratingValue2 - ratingValue1;
+						}),
+					];
+
+					setAnswers({
+						...messageBoardThreadMessageBoardMessages,
+						items,
+					});
+				}
+			}
+		}, [messageBoardThreadMessageBoardMessages, pageSize, sort]);
+
+		const [createAnswer] = useMutation(createAnswerQuery, {
+			context: getContextLink(`${sectionTitle}/${questionId}`),
+			onCompleted() {
 				setArticleBody('');
-
-				return loadThread();
-			});
-		};
-
-		const updateMarkAsAnswer = useCallback(
-			(answerId) => {
-				setAnswers([
-					...answers.map((otherAnswer) => {
-						otherAnswer.showAsAnswer = otherAnswer.id === answerId;
-
-						return otherAnswer;
-					}),
-				]);
+				refetch();
 			},
-			[answers]
-		);
-
-		const deleteThread = () => {
-			deleteMessageBoardThread(question.id).then(() => history.goBack());
-		};
+		});
 
 		const deleteAnswer = useCallback(
 			(answer) => {
-				setAnswers([
-					...answers.filter(
-						(otherAnswer) => answer.id !== otherAnswer.id
-					),
-				]);
+				setAnswers({
+					...answers,
+					items: [
+						...answers.items.filter(
+							(otherAnswer) => answer.id !== otherAnswer.id
+						),
+					],
+					totalCount: answers.totalCount - 1,
+				});
 			},
 			[answers]
+		);
+
+		const [markAsAnswerMessageBoardMessage] = useMutation(
+			markAsAnswerMessageBoardMessageQuery,
+			{
+				onCompleted() {
+					refetch();
+				},
+			}
 		);
 
 		const answerChange = useCallback(
 			(answerId) => {
-				const answer = answers.find(
+				const answer = answers.items.find(
 					(answer) => answer.showAsAnswer && answer.id !== answerId
 				);
 
 				if (answer) {
-					markAsAnswerMessageBoardMessage(answer.id, false).then(
-						() => {
-							updateMarkAsAnswer(answerId);
-						}
-					);
-				}
-				else {
-					updateMarkAsAnswer(answerId);
+					markAsAnswerMessageBoardMessage({
+						variables: {
+							messageBoardMessageId: answer.id,
+							showAsAnswer: false,
+						},
+					});
 				}
 			},
-			[answers, updateMarkAsAnswer]
+			[markAsAnswerMessageBoardMessage, answers.items]
 		);
-
-		const filterBy = (filterBy) => {
-			let promise;
-			if (filterBy === 'votes') {
-				promise = getMessages(
-					question.id,
-					'dateModified:desc',
-					1,
-					100
-				).then((answers) =>
-					answers.sort((answer1, answer2) => {
-						if (answer2.showAsAnswer) {
-							return 1;
-						}
-						if (answer1.showAsAnswer) {
-							return -1;
-						}
-
-						const ratingValue1 =
-							(answer1.aggregateRating &&
-								answer1.aggregateRating.ratingValue) ||
-							0;
-						const ratingValue2 =
-							(answer2.aggregateRating &&
-								answer2.aggregateRating.ratingValue) ||
-							0;
-
-						return ratingValue2 - ratingValue1;
-					})
-				);
-			}
-			else if (filterBy === 'active') {
-				promise = getMessages(question.id, 'dateModified:desc');
-			}
-			else {
-				promise = getMessages(question.id, 'dateModified:asc');
-			}
-
-			promise.then((x) => {
-				setFilter(filterBy);
-				setAnswers(x);
-			});
-		};
 
 		return (
 			<section className="c-mt-5 questions-section questions-section-single">
 				<div className="questions-container">
-					{question && (
+					{!loading && (
 						<div className="row">
 							<div className="col-md-1 text-md-center">
 								<Rating
@@ -198,16 +210,30 @@ export default withRouter(
 
 							<div className="col-md-10">
 								<div className="align-items-end flex-column-reverse flex-md-row row">
-									<div className="c-mt-4 c-mt-md-0 col-md-9">
-										<Link to={`/questions/${sectionTitle}`}>
-											<SectionLabel
-												section={
-													question.messageBoardSection
-												}
-											/>
-										</Link>
+									<div className="c-mt-4 c-mt-md-0 col-md-8">
+										{!!question.messageBoardSection
+											.numberOfMessageBoardSections && (
+											<Link
+												to={`/questions/${question.messageBoardSection.title}`}
+											>
+												<SectionLabel
+													section={
+														question.messageBoardSection
+													}
+												/>
+											</Link>
+										)}
 
-										<h1 className="c-mt-2 question-headline">
+										<h1
+											className={classNames(
+												'c-mt-2',
+												'question-headline',
+												{
+													'question-seen':
+														question.seen,
+												}
+											)}
+										>
 											{question.headline}
 										</h1>
 
@@ -233,52 +259,29 @@ export default withRouter(
 										</p>
 									</div>
 
-									<div className="col-md-3 text-right">
+									<div className="col-md-4 text-right">
 										<ClayButton.Group
 											className="questions-actions"
 											spaced={true}
 										>
 											{question.actions.subscribe && (
 												<Subscription
-													onSubscription={(
-														subscribed
-													) =>
-														setQuestion({
-															...question,
-															subscribed,
-														})
-													}
 													question={question}
 												/>
 											)}
 
 											{question.actions.delete && (
 												<>
-													<Modal
-														body={Liferay.Language.get(
-															'do-you-want-to-delete–this-thread'
-														)}
-														callback={deleteThread}
-														onClose={() =>
-															setDeleteModalVisible(
-																false
-															)
-														}
-														status="warning"
-														textPrimaryButton={Liferay.Language.get(
-															'delete'
-														)}
-														title={Liferay.Language.get(
-															'delete-thread'
-														)}
-														visible={
-															deleteModalVisible
+													<DeleteThread
+														question={question}
+														showDeleteModalPanel={
+															showDeleteModalPanel
 														}
 													/>
 													<ClayButton
 														displayType="secondary"
 														onClick={() =>
-															setDeleteModalVisible(
+															setShowDeleteModalPanel(
 																true
 															)
 														}
@@ -306,7 +309,13 @@ export default withRouter(
 								</div>
 
 								<div className="c-mt-4">
-									<TagList tags={question.keywords} />
+									<TagList
+										sectionTitle={
+											question.messageBoardSection &&
+											question.messageBoardSection.title
+										}
+										tags={question.keywords}
+									/>
 								</div>
 
 								<div className="c-mt-4 position-relative questions-creator text-center text-md-right">
@@ -314,87 +323,73 @@ export default withRouter(
 								</div>
 
 								<h3 className="c-mt-4 text-secondary">
-									{answers.length}{' '}
+									{answers.totalCount}{' '}
 									{Liferay.Language.get('answers')}
 								</h3>
 
-								{!!answers.length && (
+								{!!answers.totalCount && (
 									<div className="border-bottom c-mt-3">
 										<ClayNavigationBar triggerLabel="Active">
 											<ClayNavigationBar.Item
-												active={filter === 'active'}
+												active={sort === 'active'}
 											>
-												<ClayLink
-													className="nav-link"
-													displayType="unstyled"
-													onClick={() =>
-														filterBy('active')
-													}
+												<Link
+													className="link-unstyled nav-link"
+													to={`${url}?sort=active`}
 												>
 													{Liferay.Language.get(
 														'active'
 													)}
-												</ClayLink>
+												</Link>
 											</ClayNavigationBar.Item>
 
 											<ClayNavigationBar.Item
-												active={filter === 'oldest'}
+												active={sort === 'oldest'}
 											>
-												<ClayLink
-													className="nav-link"
-													displayType="unstyled"
-													onClick={() =>
-														filterBy('oldest')
-													}
+												<Link
+													className="link-unstyled nav-link"
+													to={`${url}?sort=oldest`}
 												>
 													{Liferay.Language.get(
 														'oldest'
 													)}
-												</ClayLink>
+												</Link>
 											</ClayNavigationBar.Item>
 
 											<ClayNavigationBar.Item
-												active={filter === 'votes'}
+												active={sort === 'votes'}
 											>
-												<ClayLink
-													className="nav-link"
-													displayType="unstyled"
-													onClick={() =>
-														filterBy('votes')
-													}
+												<Link
+													className="link-unstyled nav-link"
+													to={`${url}?sort=votes`}
 												>
 													{Liferay.Language.get(
 														'votes'
 													)}
-												</ClayLink>
+												</Link>
 											</ClayNavigationBar.Item>
 										</ClayNavigationBar>
 									</div>
 								)}
 
 								<div className="c-mt-3">
-									{answers.map((answer) => (
-										<Answer
-											answer={answer}
-											answerChange={answerChange}
-											deleteAnswer={deleteAnswer}
-											key={answer.id}
-										/>
-									))}
+									<PaginatedList
+										activeDelta={pageSize}
+										activePage={page}
+										changeDelta={setPageSize}
+										changePage={setPage}
+										data={answers}
+									>
+										{(answer) => (
+											<Answer
+												answer={answer}
+												answerChange={answerChange}
+												deleteAnswer={deleteAnswer}
+												key={answer.id}
+											/>
+										)}
+									</PaginatedList>
 								</div>
-
-								{!!answers.totalCount &&
-									answers.totalCount > answers.pageSize && (
-										<ClayPaginationWithBasicItems
-											activePage={page}
-											ellipsisBuffer={2}
-											onPageChange={setPage}
-											totalPages={Math.ceil(
-												answers.totalCount /
-													answers.pageSize
-											)}
-										/>
-									)}
 
 								{question &&
 									question.actions &&
@@ -413,31 +408,48 @@ export default withRouter(
 													</label>
 
 													<div className="c-mt-2">
-														<Editor
-															config={getCKEditorConfig()}
-															data={articleBody}
-															onBeforeLoad={(
-																editor
-															) =>
-																onBeforeLoadCKEditor(
-																	editor,
-																	context.imageBrowseURL
-																)
+														<QuestionsEditor
+															contents={
+																articleBody
 															}
-															onChange={(event) =>
+															onChange={(
+																event
+															) => {
 																setArticleBody(
 																	event.editor.getData()
-																)
-															}
+																);
+															}}
 														/>
 													</div>
+
+													<ClayForm.FeedbackGroup>
+														<ClayForm.FeedbackItem>
+															<TextLengthValidation
+																text={
+																	articleBody
+																}
+															/>
+														</ClayForm.FeedbackItem>
+													</ClayForm.FeedbackGroup>
 												</ClayForm.Group>
 											</ClayForm>
 
 											<ClayButton
-												disabled={!articleBody}
+												disabled={
+													!articleBody ||
+													stripHTML(articleBody)
+														.length < 15
+												}
 												displayType="primary"
-												onClick={postAnswer}
+												onClick={() => {
+													createAnswer({
+														variables: {
+															articleBody,
+															messageBoardThreadId:
+																question.id,
+														},
+													});
+												}}
 											>
 												{Liferay.Language.get(
 													'post-answer'

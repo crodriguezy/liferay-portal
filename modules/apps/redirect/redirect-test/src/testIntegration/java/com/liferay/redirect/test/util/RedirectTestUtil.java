@@ -36,11 +36,25 @@ import java.util.Dictionary;
  */
 public class RedirectTestUtil {
 
-	public static void withRedirectDisabled(
+	public static void withMaximumNumberOfRedirectNotFoundEntries(
+			int maximumNumberOfRedirectNotFoundEntries,
 			UnsafeRunnable<Exception> unsafeRunnable)
 		throws Exception {
 
-		_withRedirect(false, unsafeRunnable);
+		Dictionary<String, Object> dictionary = new HashMapDictionary<>();
+
+		dictionary.put(
+			"maximumNumberOfRedirectNotFoundEntries",
+			maximumNumberOfRedirectNotFoundEntries);
+
+		try (ConfigurationTemporarySwapper configurationTemporarySwapper =
+				new ConfigurationTemporarySwapper(
+					"com.liferay.redirect.internal.configuration." +
+						"RedirectConfiguration",
+					dictionary)) {
+
+			unsafeRunnable.run();
+		}
 	}
 
 	public static void withRegularUser(
@@ -48,24 +62,6 @@ public class RedirectTestUtil {
 		throws Exception {
 
 		_withUser(unsafeBiConsumer, RoleConstants.TYPE_REGULAR);
-	}
-
-	private static void _withRedirect(
-			boolean enabled, UnsafeRunnable<Exception> unsafeRunnable)
-		throws Exception {
-
-		Dictionary<String, Object> dictionary = new HashMapDictionary<>();
-
-		dictionary.put("enabled", enabled);
-
-		try (ConfigurationTemporarySwapper configurationTemporarySwapper =
-				new ConfigurationTemporarySwapper(
-					"com.liferay.redirect.internal.configuration." +
-						"FFRedirectConfiguration",
-					dictionary)) {
-
-			unsafeRunnable.run();
-		}
 	}
 
 	private static void _withUser(

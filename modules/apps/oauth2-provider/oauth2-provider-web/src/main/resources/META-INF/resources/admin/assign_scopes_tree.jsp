@@ -33,16 +33,16 @@ pageContext.setAttribute("scopeAliasesDescriptionsMap", scopeAliasesDescriptions
 %>
 
 <clay:container-fluid
-	className="container-view"
+	cssClass="container-view"
 >
-	<div class="sheet">
-		<div class="sheet-header">
+	<clay:sheet>
+		<clay:sheet-header>
 			<h2 class="sheet-title"><liferay-ui:message key="scopes" /></h2>
 
 			<div class="sheet-text"><liferay-ui:message key="scopes-description" /></div>
-		</div>
+		</clay:sheet-header>
 
-		<div class="sheet-section">
+		<clay:sheet-section>
 			<liferay-ui:error exception="<%= OAuth2ApplicationClientCredentialUserIdException.class %>">
 
 				<%
@@ -60,7 +60,7 @@ pageContext.setAttribute("scopeAliasesDescriptionsMap", scopeAliasesDescriptions
 			</liferay-ui:error>
 
 			<clay:row>
-				<div class="col-lg-12">
+				<clay:col>
 					<portlet:actionURL name="/admin/assign_scopes" var="assignScopesURL">
 						<portlet:param name="mvcRenderCommandName" value="/admin/assign_scopes" />
 						<portlet:param name="navigation" value="assign_scopes" />
@@ -73,39 +73,43 @@ pageContext.setAttribute("scopeAliasesDescriptionsMap", scopeAliasesDescriptions
 							<oauth2-tree:tree
 								trees="<%= (Collection)scopeAliasTreeNode.getTrees() %>"
 							>
-								<jsp:attribute
-									name="nodeJspFragment"
-								>
-								<li class="borderless list-group-item<c:if test="${assignedDeletedScopeAliases.contains(tree.value)}"> removed-scope</c:if>" id="${tree.value}-container">
-									<clay:row>
-											<c:choose>
-												<c:when test="${parentNodes.size() > 0}">
-												<div class="col-md-6">
-													<div class="scope-children-${parentNodes.size()}">
-														<aui:input checked="${assignedScopeAliases.contains(tree.value)}" data-has-childrens="true" data-parent="${parentNodes.getFirst().value}" disabled="${assignedDeletedScopeAliases.contains(tree.value)}" id="${tree.value}" label="${tree.value}" name="scopeAliases" type="checkbox" value="${tree.value}" />
+								<oauth2-tree:node>
+									<li class="borderless list-group-item<c:if test="${assignedDeletedScopeAliases.contains(tree.value)}"> removed-scope</c:if>" id="${tree.value}-container">
+										<clay:row>
+												<c:choose>
+													<c:when test="${parentNodes.size() > 0}">
+													<div class="col-md-6">
+														<div class="scope-children-${parentNodes.size()}">
+															<aui:input checked="${assignedScopeAliases.contains(tree.value)}" data-has-childrens="true" data-parent="${parentNodes.getFirst().value}" disabled="${assignedDeletedScopeAliases.contains(tree.value)}" id="${tree.value}" label="${tree.value}" name="scopeAliases" type="checkbox" value="${tree.value}" />
+														</div>
 													</div>
-												</div>
-												</c:when>
-												<c:otherwise>
-												<div class="col-md-6">
-													<aui:input checked="${assignedScopeAliases.contains(tree.value)}" data-has-childrens="true" disabled="${assignedDeletedScopeAliases.contains(tree.value)}" id="${tree.value}" label="${tree.value}" name="scopeAliases" type="checkbox" value="${tree.value}" />
-												</div>
-												</c:otherwise>
-											</c:choose>
-										<div class="col-md-6 text-left">
-											${scopeAliasesDescriptionsMap.get(tree.value)}
-										</div>
-									</clay:row>
-								</li>
+													</c:when>
+													<c:otherwise>
+													<div class="col-md-6">
+														<aui:input checked="${assignedScopeAliases.contains(tree.value)}" data-has-childrens="true" disabled="${assignedDeletedScopeAliases.contains(tree.value)}" id="${tree.value}" label="${tree.value}" name="scopeAliases" type="checkbox" value="${tree.value}" />
+													</div>
+													</c:otherwise>
+												</c:choose>
 
-								<oauth2-tree:render-children />
-								</jsp:attribute>
+												<div class="col-md-6 text-left">
+													<c:choose>
+														<c:when test="${assignedDeletedScopeAliases.contains(tree.value)}">
+															<liferay-ui:message key="this-scope-is-no-longer-available" />
+														</c:when>
+														<c:otherwise>
+															${scopeAliasesDescriptionsMap.get(tree.value)}
+														</c:otherwise>
+													</c:choose>
+												</div>
+										</clay:row>
+									</li>
 
-								<jsp:attribute
-									name="leafJspFragment"
-								>
-								<li class="borderless list-group-item<c:if test="${assignedDeletedScopeAliases.contains(tree.value)}"> removed-scope</c:if>" id="${tree.value}-container">
-									<clay:row>
+									<oauth2-tree:render-children />
+								</oauth2-tree:node>
+
+								<oauth2-tree:leaf>
+									<li class="borderless list-group-item<c:if test="${assignedDeletedScopeAliases.contains(tree.value)}"> removed-scope</c:if>" id="${tree.value}-container">
+										<clay:row>
 											<c:choose>
 												<c:when test="${parentNodes.size() > 0}">
 												<div class="col-md-6">
@@ -120,12 +124,20 @@ pageContext.setAttribute("scopeAliasesDescriptionsMap", scopeAliasesDescriptions
 												</div>
 												</c:otherwise>
 											</c:choose>
-										<div class="col-md-6 text-left">
-											${scopeAliasesDescriptionsMap.get(tree.value)}
-										</div>
-									</clay:row>
-								</li>
-								</jsp:attribute>
+
+											<div class="col-md-6 text-left">
+												<c:choose>
+													<c:when test="${assignedDeletedScopeAliases.contains(tree.value)}">
+														<liferay-ui:message key="this-scope-is-no-longer-available" />
+													</c:when>
+													<c:otherwise>
+														${scopeAliasesDescriptionsMap.get(tree.value)}
+													</c:otherwise>
+												</c:choose>
+											</div>
+										</clay:row>
+									</li>
+								</oauth2-tree:leaf>
 							</oauth2-tree:tree>
 							</li>
 						</ul>
@@ -136,10 +148,10 @@ pageContext.setAttribute("scopeAliasesDescriptionsMap", scopeAliasesDescriptions
 							<aui:button href="<%= PortalUtil.escapeRedirect(redirect) %>" type="cancel" />
 						</aui:button-row>
 					</aui:form>
-				</div>
+				</clay:col>
 			</clay:row>
-		</div>
-	</div>
+		</clay:sheet-section>
+	</clay:sheet>
 </clay:container-fluid>
 
 <aui:script require="metal-dom/src/dom as dom">

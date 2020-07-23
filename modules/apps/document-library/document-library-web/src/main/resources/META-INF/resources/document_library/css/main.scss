@@ -151,6 +151,27 @@ $productMenuWidth: 320px;
 				}
 			}
 		}
+
+		.contextual-sidebar-content {
+			margin-top: $toolbarHeight;
+
+			@include media-breakpoint-up(lg) {
+				margin-top: $toolbarDesktopHeight;
+			}
+
+			@media (max-width: 769px) {
+				> .container-fluid {
+					margin: 0;
+					padding: 0;
+
+					> .sheet {
+						border: none;
+						border-radius: 0;
+						min-height: calc(100vh - #{$toolbarHeight});
+					}
+				}
+			}
+		}
 	}
 
 	.file-entry-actions > a {
@@ -718,17 +739,4 @@ $productMenuWidth: 320px;
 
 .autocomplete-dropdown-menu {
 	z-index: 2000;
-}
-
-.firefox {
-	.portlet-document-library,
-	.portlet-document-library-display {
-		.audio-node {
-			height: 28px;
-		}
-
-		.common-file-metadata-container fieldset {
-			display: table-cell;
-		}
-	}
 }

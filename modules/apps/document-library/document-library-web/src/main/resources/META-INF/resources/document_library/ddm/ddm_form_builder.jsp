@@ -85,17 +85,11 @@ DLEditFileEntryTypeDisplayContext dlEditFileEntryTypeDisplayContext = (DLEditFil
 	var availableFields;
 
 	var displayWarning = function (message) {
-		new Liferay.Notification({
-			closeable: true,
-			delay: {
-				hide: 5000,
-				show: 0,
-			},
-			duration: 500,
+		Liferay.Util.openToast({
 			message: message,
 			title: Liferay.Language.get('warning'),
 			type: 'warning',
-		}).render('body');
+		});
 	};
 
 	var formEditor;
@@ -232,7 +226,7 @@ DLEditFileEntryTypeDisplayContext dlEditFileEntryTypeDisplayContext = (DLEditFil
 
 		portletNamespace: '<portlet:namespace />',
 		portletResourceNamespace:
-			'<%= HtmlUtil.escapeJS(renderResponse.getNamespace()) %>',
+			'<%= HtmlUtil.escapeJS(liferayPortletResponse.getNamespace()) %>',
 		readOnly: <%= ParamUtil.getBoolean(request, "formBuilderReadOnly") %>,
 		srcNode: '#<portlet:namespace />formBuilderContent',
 		translationManager: {
@@ -292,11 +286,11 @@ DLEditFileEntryTypeDisplayContext dlEditFileEntryTypeDisplayContext = (DLEditFil
 	Liferay.on('destroyPortlet', onDestroyPortlet);
 
 	window[
-		'<%= HtmlUtil.escapeJS(renderResponse.getNamespace()) %>formBuilder'
+		'<%= HtmlUtil.escapeJS(liferayPortletResponse.getNamespace()) %>formBuilder'
 	] = formBuilder;
 
 	window[
-		'<%= HtmlUtil.escapeJS(renderResponse.getNamespace()) %>getContentValue'
+		'<%= HtmlUtil.escapeJS(liferayPortletResponse.getNamespace()) %>getContentValue'
 	] = getContentValue;
 
 	Liferay.on('<portlet:namespace />saveTemplate', function (event) {

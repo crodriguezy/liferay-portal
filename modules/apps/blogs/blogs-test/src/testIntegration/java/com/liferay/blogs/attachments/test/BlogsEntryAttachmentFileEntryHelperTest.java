@@ -21,7 +21,7 @@ import com.liferay.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.blogs.test.util.BlogsTestUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.editor.EditorConstants;
+import com.liferay.portal.kernel.editor.constants.EditorConstants;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portletfilerepository.PortletFileRepository;
@@ -264,15 +264,15 @@ public class BlogsEntryAttachmentFileEntryHelperTest {
 
 	private FileEntry _addBlogsEntryAttachmentFileEntry(
 			long groupId, long userId, long blogsEntryId, long folderId,
-			String fileName, String mimeType, InputStream is)
+			String fileName, String mimeType, InputStream inputStream)
 		throws Exception {
 
 		String uniqueFileName = _getUniqueFileName(groupId, fileName, folderId);
 
 		return PortletFileRepositoryUtil.addPortletFileEntry(
 			groupId, userId, BlogsEntry.class.getName(), blogsEntryId,
-			BlogsConstants.SERVICE_NAME, folderId, is, uniqueFileName, mimeType,
-			true);
+			BlogsConstants.SERVICE_NAME, folderId, inputStream, uniqueFileName,
+			mimeType, true);
 	}
 
 	private List<FileEntry> _getTempBlogsEntryAttachmentFileEntries(

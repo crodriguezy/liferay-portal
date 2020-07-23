@@ -18,12 +18,12 @@ import {ClayActionsDropdown, ClayDropdownBase} from 'clay-dropdown';
 import {ClayIcon} from 'clay-icon';
 import ClayModal from 'clay-modal';
 import {
+	Form,
 	FormSupport,
 	PagesVisitor,
 	generateInstanceId,
 	generateName,
 } from 'dynamic-data-mapping-form-renderer';
-import Form from 'dynamic-data-mapping-form-renderer/js/containers/Form/Form.es';
 import {makeFetch} from 'dynamic-data-mapping-form-renderer/js/util/fetch.es';
 import dom from 'metal-dom';
 import {Drag, DragDrop} from 'metal-drag-drop';
@@ -87,6 +87,7 @@ class Sidebar extends Component {
 				defaultLanguageId,
 				editingLanguageId
 			),
+			changedFieldType: true,
 			instanceId: generateInstanceId(8),
 			settingsContext,
 			type: newFieldType.name,
@@ -159,7 +160,12 @@ class Sidebar extends Component {
 	}
 
 	getSettingsFormContext() {
-		const {defaultLanguageId, editingLanguageId, focusedField} = this.props;
+		const {
+			defaultLanguageId,
+			editingLanguageId,
+			focusedField,
+			readOnlyFieldName,
+		} = this.props;
 		const {settingsContext} = focusedField;
 		const visitor = new PagesVisitor(settingsContext.pages);
 
@@ -170,7 +176,14 @@ class Sidebar extends Component {
 					...field,
 					defaultLanguageId,
 					editingLanguageId,
-					readOnly: this.isFieldReadOnly(field),
+					keywordReadOnly:
+						field.fieldName == 'columns' ||
+						field.fieldName == 'options' ||
+						field.fieldName == 'rows'
+							? readOnlyFieldName
+							: false,
+					readOnly:
+						field.fieldName == 'name' ? readOnlyFieldName : false,
 				};
 
 				return {
@@ -179,26 +192,6 @@ class Sidebar extends Component {
 				};
 			}),
 		};
-	}
-
-	isActionsDisabled() {
-		const {defaultLanguageId, editingLanguageId} = this.props;
-
-		return defaultLanguageId !== editingLanguageId;
-	}
-
-	isChangeFieldTypeEnabled() {
-		return !this.isActionsDisabled();
-	}
-
-	isFieldReadOnly({localizable, type}) {
-		const {defaultLanguageId, editingLanguageId} = this.props;
-
-		if (type === 'validation') {
-			return false;
-		}
-
-		return defaultLanguageId !== editingLanguageId && !localizable;
 	}
 
 	open() {
@@ -342,8 +335,8 @@ class Sidebar extends Component {
 		const {evaluableForm} = this.refs;
 		const {focusedField} = this.props;
 
-		if (evaluableForm) {
-			evaluableForm
+		if (evaluableForm && evaluableForm.reactComponentRef.current) {
+			evaluableForm.reactComponentRef.current
 				.evaluate()
 				.then((pages) => {
 					dispatch('focusedFieldEvaluationEnded', {
@@ -735,7 +728,11 @@ class Sidebar extends Component {
 	}
 
 	_handleSettingsFormAttached() {
-		this.refs.evaluableForm.evaluate();
+		const reactForm = this.refs.evaluableForm.reactComponentRef.current;
+
+		if (reactForm) {
+			reactForm.evaluate();
+		}
 	}
 
 	_handleTabItemClicked(event) {
@@ -1141,12 +1138,10 @@ class Sidebar extends Component {
 		const editMode = this._isEditMode();
 		const fieldActions = [
 			{
-				disabled: this.isActionsDisabled(),
 				label: Liferay.Language.get('duplicate-field'),
 				settingsItem: 'duplicate-field',
 			},
 			{
-				disabled: this.isActionsDisabled(),
 				label: Liferay.Language.get('remove-field'),
 				settingsItem: 'delete-field',
 			},
@@ -1179,7 +1174,7 @@ class Sidebar extends Component {
 					<Fragment>
 						<li class="tbar-item">
 							<ClayButton
-								disabled={this.isActionsDisabled()}
+								elementClasses="nav-link"
 								events={previousButtonEvents}
 								icon="angle-left"
 								ref="previousButton"
@@ -1191,7 +1186,6 @@ class Sidebar extends Component {
 						<li class="tbar-item ddm-fieldtypes-dropdown tbar-item-expand text-left">
 							<div>
 								<ClayDropdownBase
-									disabled={!this.isChangeFieldTypeEnabled()}
 									events={{
 										itemClicked: this
 											._handleChangeFieldTypeItemClicked,
@@ -1224,7 +1218,7 @@ class Sidebar extends Component {
 					<a
 						class="component-action sidebar-close"
 						data-onclick={this._handleCloseButtonClicked}
-						href="#1"
+						href="javascript:;"
 						ref="closeButton"
 						role="button"
 					>
@@ -1357,6 +1351,15 @@ Sidebar.PROPS = {
 	 */
 
 	portletNamespace: Config.string(),
+
+	/**
+	 * @default undefined
+	 * @instance
+	 * @memberof Sidebar
+	 * @type {?bool}
+	 */
+
+	readOnlyFieldName: Config.bool().value(true),
 
 	/**
 	 * @default undefined

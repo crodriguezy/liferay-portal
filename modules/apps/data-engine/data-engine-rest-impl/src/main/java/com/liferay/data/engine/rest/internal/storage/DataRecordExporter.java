@@ -16,6 +16,7 @@ package com.liferay.data.engine.rest.internal.storage;
 
 import com.liferay.data.engine.rest.dto.v2_0.DataDefinition;
 import com.liferay.data.engine.rest.dto.v2_0.DataRecord;
+import com.liferay.data.engine.rest.internal.content.type.DataDefinitionContentTypeTracker;
 import com.liferay.data.engine.rest.internal.dto.v2_0.util.DataDefinitionUtil;
 import com.liferay.data.engine.rest.internal.dto.v2_0.util.DataRecordValuesUtil;
 import com.liferay.dynamic.data.lists.model.DDLRecordSet;
@@ -36,10 +37,12 @@ import java.util.stream.Stream;
 public class DataRecordExporter {
 
 	public DataRecordExporter(
+		DataDefinitionContentTypeTracker dataDefinitionContentTypeTracker,
 		DDLRecordSetLocalService ddlRecordSetLocalService,
 		DDMFormFieldTypeServicesTracker ddmFormFieldTypeServicesTracker,
 		SPIDDMFormRuleConverter spiDDMFormRuleConverter) {
 
+		_dataDefinitionContentTypeTracker = dataDefinitionContentTypeTracker;
 		_ddlRecordSetLocalService = ddlRecordSetLocalService;
 		_ddmFormFieldTypeServicesTracker = ddmFormFieldTypeServicesTracker;
 		_spiDDMFormRuleConverter = spiDDMFormRuleConverter;
@@ -56,8 +59,8 @@ public class DataRecordExporter {
 			dataRecord.getDataRecordCollectionId());
 
 		DataDefinition dataDefinition = DataDefinitionUtil.toDataDefinition(
-			_ddmFormFieldTypeServicesTracker, ddlRecordSet.getDDMStructure(),
-			_spiDDMFormRuleConverter);
+			_dataDefinitionContentTypeTracker, _ddmFormFieldTypeServicesTracker,
+			ddlRecordSet.getDDMStructure(), _spiDDMFormRuleConverter);
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
@@ -84,6 +87,8 @@ public class DataRecordExporter {
 		}
 	}
 
+	private final DataDefinitionContentTypeTracker
+		_dataDefinitionContentTypeTracker;
 	private final DDLRecordSetLocalService _ddlRecordSetLocalService;
 	private final DDMFormFieldTypeServicesTracker
 		_ddmFormFieldTypeServicesTracker;

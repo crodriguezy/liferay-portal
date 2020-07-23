@@ -5,11 +5,6 @@ definition {
 
 		Pause(locator1 = "3000");
 
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(
 			key_accountName = "${accountName}",
 			key_assigneeType = "${assigneeType}",
@@ -50,6 +45,28 @@ definition {
 
 		if (isSet(accountLogo)) {
 			User.changeProfileImage(imageName = "${accountLogo}");
+		}
+
+		if (isSet(accountType)) {
+			SelectField.select(
+				selectFieldLabel = "Type",
+				selectFieldValue = "${accountType}");
+
+			if ("${accountType}" == "Person") {
+				AssertElementPresent(
+					key_hidedSection = "${hidedSection}",
+					locator1 = "Account#HIDED_DOMAIN_SECTION");
+
+				AssertElementPresent(
+					key_hidedSection = "${hidedSection}",
+					locator1 = "Account#HIDED_PARENT_ACCOUNT_SECTION");
+			}
+		}
+
+		if (isSet(accountTaxID)) {
+			PortletEntry.inputText(
+				fieldLabel = "Tax ID",
+				text = "${accountTaxID}");
 		}
 
 		if ("${accountStatus}" == "Inactive") {
@@ -211,9 +228,9 @@ definition {
 	}
 
 	macro tearDownCP {
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Accounts",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Accounts");
 
 		PortletEntry.selectAll();
@@ -246,6 +263,51 @@ definition {
 		Alert.viewSuccessMessage();
 	}
 
+	macro viewAccountDetails {
+		LexiconEntry.gotoEntry(rowEntry = "${accountName}");
+
+		AssertTextEquals(
+			locator1 = "TextInput#NAME",
+			value1 = "${accountName}");
+
+		if (isSet(accountDescription)) {
+			AssertTextEquals(
+				locator1 = "TextArea#DESCRIPTION",
+				value1 = "${accountDescription}");
+		}
+
+		if (isSet(accountType)) {
+			AssertTextEquals(
+				key_typeName = "${accountType}",
+				locator1 = "Select#TYPE_SELECTED",
+				value1 = "${accountType}");
+		}
+
+		AssertElementPresent(
+			key_selectFieldLabel = "Type",
+			locator1 = "Select#ANY_DISABLED");
+
+		if (isSet(accountTaxID)) {
+			AssertTextEquals(
+				key_fieldLabel = "Tax ID",
+				locator1 = "TextInput#GENERIC_TEXT_INPUT",
+				value1 = "${accountTaxID}");
+		}
+
+		AssertTextEquals(
+			key_fieldLabel = "Tax ID",
+			locator1 = "Icon#HELPER",
+			value1 = "Enter the account's tax ID (EIN, VAT number, etc.).");
+
+		if (isSet(domainName)) {
+			LexiconEntry.viewEntryName(rowEntry = "${domainName}");
+		}
+
+		if (isSet(parentAccount)) {
+			LexiconEntry.viewEntryName(rowEntry = "${parentAccount}");
+		}
+	}
+
 	macro viewAssignee {
 		AssertTextEquals.assertPartialText(
 			key_tableEntry = "${assigneeName}",
@@ -260,7 +322,7 @@ definition {
 
 		LexiconEntry.viewEntryStatus(
 			rowEntry = "${accountName}",
-			rowStatus = "INACTIVE");
+			rowStatus = "Inactive");
 	}
 
 	macro viewNoAssignee {

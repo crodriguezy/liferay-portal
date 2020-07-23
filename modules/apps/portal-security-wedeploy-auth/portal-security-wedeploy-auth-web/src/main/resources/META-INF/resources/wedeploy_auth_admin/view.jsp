@@ -21,7 +21,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("mvcRenderCommandName", "/wedeploy_auth_admin/view");
 
-SearchContainer weDeployAuthAppsSearchContainer = new SearchContainer(renderRequest, portletURL, null, "no-wedeploy-apps-were-found");
+SearchContainer<WeDeployAuthApp> weDeployAuthAppsSearchContainer = new SearchContainer(renderRequest, portletURL, null, "no-wedeploy-apps-were-found");
 
 int weDeployAuthAppsCount = WeDeployAuthAppLocalServiceUtil.getWeDeployAuthAppsCount();
 
@@ -37,7 +37,7 @@ weDeployAuthAppsSearchContainer.setResults(weDeployAuthApps);
 />
 
 <clay:container-fluid
-	className="container-view"
+	cssClass="container-view"
 >
 	<liferay-ui:search-container
 		id="weDeployAuthApps"

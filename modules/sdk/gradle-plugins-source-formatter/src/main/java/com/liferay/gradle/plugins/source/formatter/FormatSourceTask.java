@@ -14,39 +14,39 @@
 
 package com.liferay.gradle.plugins.source.formatter;
 
+import com.liferay.gradle.util.FileUtil;
 import com.liferay.gradle.util.GradleUtil;
-import com.liferay.gradle.util.tasks.ExecuteJavaTask;
 import com.liferay.source.formatter.SourceFormatterArgs;
 
 import java.io.File;
-
-import java.nio.file.Path;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.gradle.api.Project;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.CacheableTask;
+import org.gradle.api.tasks.JavaExec;
 import org.gradle.util.CollectionUtils;
-import org.gradle.workers.WorkerExecutor;
 
 /**
  * @author Raymond Augé
  * @author Andrea Di Giorgi
  */
 @CacheableTask
-public class FormatSourceTask extends ExecuteJavaTask {
+public class FormatSourceTask extends JavaExec {
 
-	@Inject
-	public FormatSourceTask(WorkerExecutor workerExecutor) {
-		super(workerExecutor);
+	public FormatSourceTask() {
+		setMain("com.liferay.source.formatter.SourceFormatter");
+	}
 
-		setFork(true);
+	@Override
+	public void exec() {
+		setArgs(_getCompleteArgs());
+
+		super.exec();
 	}
 
 	public File getBaseDir() {
@@ -56,11 +56,6 @@ public class FormatSourceTask extends ExecuteJavaTask {
 
 	public String getBaseDirName() {
 		return _sourceFormatterArgs.getBaseDirName();
-	}
-
-	@Override
-	public FileCollection getClasspath() {
-		return _classpath;
 	}
 
 	public List<String> getFileExtensions() {
@@ -99,6 +94,14 @@ public class FormatSourceTask extends ExecuteJavaTask {
 		return _sourceFormatterArgs.isAutoFix();
 	}
 
+	public boolean isFailOnAutoFix() {
+		return _sourceFormatterArgs.isFailOnAutoFix();
+	}
+
+	public boolean isFailOnHasWarning() {
+		return _sourceFormatterArgs.isFailOnHasWarning();
+	}
+
 	public boolean isFormatCurrentBranch() {
 		return _sourceFormatterArgs.isFormatCurrentBranch();
 	}
@@ -131,10 +134,6 @@ public class FormatSourceTask extends ExecuteJavaTask {
 		return _sourceFormatterArgs.isShowStatusUpdates();
 	}
 
-	public boolean isThrowException() {
-		return _sourceFormatterArgs.isThrowException();
-	}
-
 	public void setAutoFix(boolean autoFix) {
 		_sourceFormatterArgs.setAutoFix(autoFix);
 	}
@@ -143,8 +142,12 @@ public class FormatSourceTask extends ExecuteJavaTask {
 		_sourceFormatterArgs.setBaseDirName(baseDirName);
 	}
 
-	public void setClasspath(FileCollection classpath) {
-		_classpath = classpath;
+	public void setFailOnAutoFix(boolean failOnAutoFix) {
+		_sourceFormatterArgs.setFailOnAutoFix(failOnAutoFix);
+	}
+
+	public void setFailOnHasWarning(boolean failOnHasWarning) {
+		_sourceFormatterArgs.setFailOnHasWarning(failOnHasWarning);
 	}
 
 	public void setFileExtensions(Iterable<String> fileExtensions) {
@@ -210,13 +213,8 @@ public class FormatSourceTask extends ExecuteJavaTask {
 		_sourceFormatterArgs.setShowStatusUpdates(showStatusUpdates);
 	}
 
-	public void setThrowException(boolean throwException) {
-		_sourceFormatterArgs.setThrowException(throwException);
-	}
-
-	@Override
-	protected List<String> getArgs() {
-		List<String> args = new ArrayList<>();
+	private List<String> _getCompleteArgs() {
+		List<String> args = new ArrayList<>(getArgs());
 
 		args.add("format.current.branch=" + isFormatCurrentBranch());
 		args.add("format.latest.author=" + isFormatLatestAuthor());
@@ -229,30 +227,28 @@ public class FormatSourceTask extends ExecuteJavaTask {
 		args.add("show.documentation=" + isShowDocumentation());
 		args.add("show.status.updates=" + isShowStatusUpdates());
 		args.add("source.auto.fix=" + isAutoFix());
+		args.add("source.fail.on.auto.fix=" + isFailOnAutoFix());
+		args.add("source.fail.on.has.warning=" + isFailOnHasWarning());
 		args.add(
 			"source.file.extensions=" +
 				CollectionUtils.join(",", getFileExtensions()));
 		args.add("source.print.errors=" + isPrintErrors());
-		args.add("source.throw.exception=" + isThrowException());
 
 		FileCollection fileCollection = getFiles();
 
 		if (fileCollection.isEmpty()) {
-			args.add("source.base.dir=" + _normalize(getBaseDir()));
+			args.add(
+				"source.base.dir=" +
+					_relativizeDir(getBaseDir(), getWorkingDir()));
 		}
 		else {
-			args.add("source.files=" + _merge(fileCollection));
+			args.add("source.files=" + _merge(fileCollection, getWorkingDir()));
 		}
 
 		return args;
 	}
 
-	@Override
-	protected String getMain() {
-		return "com.liferay.source.formatter.SourceFormatter";
-	}
-
-	private String _merge(Iterable<File> files) {
+	private String _merge(Iterable<File> files, File startFile) {
 		StringBuilder sb = new StringBuilder();
 
 		int i = 0;
@@ -262,7 +258,7 @@ public class FormatSourceTask extends ExecuteJavaTask {
 				sb.append(',');
 			}
 
-			sb.append(_normalize(file));
+			sb.append(FileUtil.relativize(file, startFile));
 
 			i++;
 		}
@@ -270,23 +266,22 @@ public class FormatSourceTask extends ExecuteJavaTask {
 		return sb.toString();
 	}
 
-	private String _normalize(File file) {
-		Path path = file.toPath();
+	private String _relativizeDir(File dir, File startDir) {
+		String relativePath = FileUtil.relativize(dir, startDir);
 
-		String pathString = path.toString();
+		if (!relativePath.isEmpty()) {
+			if (File.separatorChar != '/') {
+				relativePath = relativePath.replace(File.separatorChar, '/');
+			}
 
-		if (File.separatorChar != '/') {
-			pathString = pathString.replace(File.separatorChar, '/');
+			if (relativePath.charAt(relativePath.length() - 1) != '/') {
+				relativePath += '/';
+			}
 		}
 
-		if (pathString.charAt(pathString.length() - 1) != '/') {
-			pathString += '/';
-		}
-
-		return pathString;
+		return relativePath;
 	}
 
-	private FileCollection _classpath;
 	private final SourceFormatterArgs _sourceFormatterArgs =
 		new SourceFormatterArgs();
 

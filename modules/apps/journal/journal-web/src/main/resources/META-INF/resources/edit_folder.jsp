@@ -85,11 +85,11 @@ renderResponse.setTitle(title);
 
 		<liferay-ui:error exception="<%= FolderNameException.class %>">
 			<p>
-				<liferay-ui:message arguments="<%= new String[] {JournalFolderConstants.NAME_RESERVED_WORDS} %>" key="the-folder-name-cannot-be-blank-or-a-reserved-word-such-as-x" />
+				<liferay-ui:message arguments="<%= JournalFolderConstants.NAME_RESERVED_WORDS %>" key="the-folder-name-cannot-be-blank-or-a-reserved-word-such-as-x" />
 			</p>
 
 			<p>
-				<liferay-ui:message arguments="<%= new String[] {JournalFolderConstants.getNameInvalidCharacters(journalDisplayContext.getCharactersBlacklist())} %>" key="the-folder-name-cannot-contain-the-following-invalid-characters-x" />
+				<liferay-ui:message arguments="<%= JournalFolderConstants.getNameInvalidCharacters(journalDisplayContext.getCharactersBlacklist()) %>" key="the-folder-name-cannot-contain-the-following-invalid-characters-x" />
 			</p>
 		</liferay-ui:error>
 
@@ -193,7 +193,7 @@ renderResponse.setTitle(title);
 						</aui:script>
 
 						<%
-						String taglibRemoveFolder = "Liferay.Util.removeEntitySelection('parentFolderId', 'parentFolderName', this, '" + renderResponse.getNamespace() + "');";
+						String taglibRemoveFolder = "Liferay.Util.removeEntitySelection('parentFolderId', 'parentFolderName', this, '" + liferayPortletResponse.getNamespace() + "');";
 						%>
 
 						<aui:button disabled="<%= parentFolderId <= 0 %>" name="removeFolderButton" onClick="<%= taglibRemoveFolder %>" value="remove" />
@@ -393,21 +393,11 @@ renderResponse.setTitle(title);
 
 	if (selectDDMStructureButton) {
 		selectDDMStructureButton.addEventListener('click', function (event) {
-			Liferay.Util.selectEntity(
-				{
-					dialog: {
-						constrain: true,
-						modal: true,
-					},
-					eventName: '<portlet:namespace />selectDDMStructure',
-					title: '<%= UnicodeLanguageUtil.get(request, "structures") %>',
-					uri:
-						'<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/select_ddm_structure.jsp" /></portlet:renderURL>',
-				},
-				function (event) {
+			Liferay.Util.openModal({
+				onSelect: function (selectedItem) {
 					var ddmStructureLink =
 						'<a class="modify-link" data-rowId="' +
-						event.ddmstructureid +
+						selectedItem.ddmstructureid +
 						'" href="javascript:;"><%= UnicodeFormatter.toString(removeDDMStructureIcon) %></a>';
 
 					<c:choose>
@@ -417,25 +407,29 @@ renderResponse.setTitle(title);
 
 							workflowDefinitions = workflowDefinitions.replace(
 								/LIFERAY_WORKFLOW_DEFINITION_DDM_STRUCTURE/g,
-								'workflowDefinition' + event.ddmstructureid
+								'workflowDefinition' + selectedItem.ddmstructureid
 							);
 
 							searchContainer.addRow(
-								[event.name, workflowDefinitions, ddmStructureLink],
-								event.ddmstructureid
+								[selectedItem.name, workflowDefinitions, ddmStructureLink],
+								selectedItem.ddmstructureid
 							);
 						</c:when>
 						<c:otherwise>
 							searchContainer.addRow(
-								[event.name, ddmStructureLink],
-								event.ddmstructureid
+								[selectedItem.name, ddmStructureLink],
+								selectedItem.ddmstructureid
 							);
 						</c:otherwise>
 					</c:choose>
 
 					searchContainer.updateDataStore();
-				}
-			);
+				},
+				selectEventName: '<portlet:namespace />selectDDMStructure',
+				title: '<%= UnicodeLanguageUtil.get(request, "structures") %>',
+				url:
+					'<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/select_ddm_structure.jsp" /></portlet:renderURL>',
+			});
 		});
 	}
 

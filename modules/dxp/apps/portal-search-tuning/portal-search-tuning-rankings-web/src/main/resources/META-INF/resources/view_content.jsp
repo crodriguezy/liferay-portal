@@ -24,14 +24,11 @@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
-page import="com.liferay.portal.kernel.util.HashMapBuilder" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.PortalUtil" %><%@
 page import="com.liferay.portal.search.tuning.rankings.web.internal.display.context.RankingResultContentDisplayBuilder" %><%@
 page import="com.liferay.portal.search.tuning.rankings.web.internal.display.context.RankingResultContentDisplayContext" %>
-
-<%@ page import="java.util.Map" %>
 
 <liferay-theme:defineObjects />
 
@@ -53,54 +50,47 @@ RankingResultContentDisplayContext rankingResultContentDisplayContext = rankingR
 %>
 
 <clay:container-fluid
-	className="container-no-gutters-sm-down container-view"
+	cssClass="container-no-gutters-sm-down container-view"
 >
 	<c:choose>
 		<c:when test="<%= rankingResultContentDisplayContext.isVisible() %>">
-			<div class="result-rankings-view-content-container sheet sheet-lg">
-				<div class="autofit-row">
-					<div class="autofit-col autofit-col-expand">
+			<clay:sheet
+				cssClass="result-rankings-view-content-container"
+			>
+				<clay:content-row>
+					<clay:content-col
+						expand="<%= true %>"
+					>
 						<div class="sheet-title">
 							<%= rankingResultContentDisplayContext.getHeaderTitle() %>
 						</div>
-					</div>
+					</clay:content-col>
 
-					<div class="autofit-col visible-interaction">
+					<clay:content-col
+						cssClass="visible-interaction"
+					>
 						<c:if test="<%= rankingResultContentDisplayContext.hasEditPermission() %>">
 							<div class="asset-actions lfr-meta-actions">
-
-								<%
-								Map<String, Object> data = HashMapBuilder.<String, Object>put(
-									"destroyOnHide", true
-								).put(
-									"id", HtmlUtil.escape(portletDisplay.getNamespace()) + "editAsset"
-								).put(
-									"title", LanguageUtil.format(request, "edit-x", HtmlUtil.escape(rankingResultContentDisplayContext.getIconEditTarget()), false)
-								).build();
-								%>
-
 								<liferay-ui:icon
 									cssClass="visible-interaction"
-									data="<%= data %>"
 									icon="pencil"
 									label="<%= false %>"
 									markupView="lexicon"
 									message='<%= LanguageUtil.format(request, "edit-x-x", new Object[] {"hide-accessible", HtmlUtil.escape(rankingResultContentDisplayContext.getIconEditTarget())}, false) %>'
 									method="get"
 									url="<%= rankingResultContentDisplayContext.getIconURLString() %>"
-									useDialog="<%= true %>"
 								/>
 							</div>
 						</c:if>
-					</div>
-				</div>
+					</clay:content-col>
+				</clay:content-row>
 
 				<liferay-asset:asset-display
 					assetEntry="<%= rankingResultContentDisplayContext.getAssetEntry() %>"
 					assetRenderer="<%= rankingResultContentDisplayContext.getAssetRenderer() %>"
 					assetRendererFactory="<%= rankingResultContentDisplayContext.getAssetRendererFactory() %>"
 				/>
-			</div>
+			</clay:sheet>
 		</c:when>
 		<c:otherwise>
 			<div class="alert alert-danger">

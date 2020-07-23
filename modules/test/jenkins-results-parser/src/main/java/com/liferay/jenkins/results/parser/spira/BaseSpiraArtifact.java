@@ -57,14 +57,14 @@ public abstract class BaseSpiraArtifact implements SpiraArtifact {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (!Objects.equals(getClass(), o.getClass())) {
+	public boolean equals(Object object) {
+		if (!Objects.equals(getClass(), object.getClass())) {
 			return false;
 		}
 
-		SpiraArtifact spiraArtifact = (SpiraArtifact)o;
+		SpiraArtifact spiraArtifact = (SpiraArtifact)object;
 
-		if (!(o instanceof SpiraProject)) {
+		if (!(object instanceof SpiraProject)) {
 			SpiraProject spiraProject = spiraArtifact.getSpiraProject();
 
 			if (!spiraProject.equals(getSpiraProject())) {
@@ -135,6 +135,50 @@ public abstract class BaseSpiraArtifact implements SpiraArtifact {
 			_putIndentLevelSpiraArtifact(
 				spiraArtifactClass, indentLevelSpiraArtifact);
 		}
+	}
+
+	protected static void clearCachedSpiraArtifacts(
+		Class<? extends SpiraArtifact> spiraArtifactClass) {
+
+		int cachedSpiraArtifactCount = 0;
+
+		synchronized (_idSpiraArtifactsMap) {
+			Map<Integer, SpiraArtifact> idSpiraArtifactsMap =
+				_getIDSpiraArtifactsMap(spiraArtifactClass);
+
+			cachedSpiraArtifactCount += idSpiraArtifactsMap.size();
+
+			idSpiraArtifactsMap.clear();
+		}
+
+		synchronized (_indentLevelSpiraArtifactsMap) {
+			Map<String, IndentLevelSpiraArtifact> indentLevelSpiraArtifactsMap =
+				_getIndentLevelSpiraArtifactsMap(spiraArtifactClass);
+
+			cachedSpiraArtifactCount += indentLevelSpiraArtifactsMap.size();
+
+			indentLevelSpiraArtifactsMap.clear();
+		}
+
+		synchronized (_pathSpiraArtifactsMap) {
+			Map<String, PathSpiraArtifact> pathSpiraArtifactsMap =
+				_getPathSpiraArtifactsMap(spiraArtifactClass);
+
+			cachedSpiraArtifactCount += pathSpiraArtifactsMap.size();
+
+			pathSpiraArtifactsMap.clear();
+		}
+
+		String artifactTypeName = getArtifactTypeName(spiraArtifactClass);
+
+		System.out.println(
+			JenkinsResultsParserUtil.combine(
+				"Cleared ", String.valueOf(cachedSpiraArtifactCount),
+				" cached ",
+				JenkinsResultsParserUtil.getNounForm(
+					cachedSpiraArtifactCount, artifactTypeName + "s",
+					artifactTypeName),
+				" from memory."));
 	}
 
 	protected static <S extends SpiraArtifact> List<S> getSpiraArtifacts(

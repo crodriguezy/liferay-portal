@@ -8,10 +8,19 @@ create table AppBuilderApp (
 	createDate DATE null,
 	modifiedDate DATE null,
 	active_ BOOLEAN,
+	ddlRecordSetId LONG,
 	ddmStructureId LONG,
 	ddmStructureLayoutId LONG,
 	deDataListViewId LONG,
-	name STRING null
+	name STRING null,
+	scope VARCHAR(75) null
+);
+
+create table AppBuilderAppDataRecordLink (
+	appBuilderAppDataRecordLinkId LONG not null primary key,
+	companyId LONG,
+	appBuilderAppId LONG,
+	ddlRecordId LONG
 );
 
 create table AppBuilderAppDeployment (

@@ -327,6 +327,7 @@ definition {
 
 	@priority = "5"
 	test AssetPublisherCategoriesNavigation {
+		property portal.acceptance = "true";
 		property testray.component.names = "Training";
 
 		JSONCategory.addVocabulary(
@@ -422,6 +423,7 @@ definition {
 
 	@priority = "5"
 	test AssetPublisherFilterAndOrderByFieldType {
+		property portal.acceptance = "true";
 		property testray.component.names = "Training";
 
 		WebContentNavigator.openWebContentAdmin(siteURLKey = "test-site-name");
@@ -1011,6 +1013,7 @@ definition {
 
 	@priority = "5"
 	test ViewAssetPaginationAndShowContentAddButtonViaAP {
+		property portal.acceptance = "true";
 		property testray.component.names = "Training";
 
 		Navigator.gotoSitePage(

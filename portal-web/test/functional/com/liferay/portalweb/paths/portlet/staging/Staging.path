@@ -72,6 +72,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>STAGING_PUBLISH_TEMPLATE_LINK</td>
+	<td>//div[contains(@class,'dropdown-menu show')]//a[contains(@class,'dropdown-item') and contains(.,'${key_publishTemplateName}')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>STAGING_PUBLISH_TO_LIVE_BUTTON</td>
 	<td>//button[contains(.,'Publish to Live')]</td>
 	<td></td>
@@ -244,7 +249,7 @@
 <!--PUBLICATION_SUMMARY-->
 <tr>
 	<td>PUBLICATION_CONTENT</td>
-	<td>//div[@class='process-summary-section' and contains(.,'${key_contentName}')]</td>
+	<td>//div[@class='process-summary-subsection' and contains(.,'${key_contentName}')]</td>
 	<td></td>
 </tr>
 <tr>

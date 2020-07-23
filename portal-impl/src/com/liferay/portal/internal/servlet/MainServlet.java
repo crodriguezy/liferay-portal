@@ -763,7 +763,7 @@ public class MainServlet extends HttpServlet {
 
 		if (StartupHelperUtil.isDBNew()) {
 			CompanyLocalServiceUtil.addCompany(
-				PropsValues.COMPANY_DEFAULT_WEB_ID, "localhost",
+				null, PropsValues.COMPANY_DEFAULT_WEB_ID, "localhost",
 				PropsValues.COMPANY_DEFAULT_WEB_ID, false, 0, true);
 		}
 
@@ -841,9 +841,7 @@ public class MainServlet extends HttpServlet {
 			sb.append(TemplateManager.class.getName());
 			sb.append("))");
 
-			Filter filter = registry.getFilter(sb.toString());
-
-			filters.add(filter);
+			filters.add(registry.getFilter(sb.toString()));
 		}
 
 		serviceDependencyManager.registerDependencies(
@@ -980,7 +978,8 @@ public class MainServlet extends HttpServlet {
 	private void _initResourceActions(List<Portlet> portlets) throws Exception {
 		for (Portlet portlet : portlets) {
 			List<String> portletActions =
-				ResourceActionsUtil.getPortletResourceActions(portlet);
+				ResourceActionsUtil.getPortletResourceActions(
+					portlet.getPortletId());
 
 			ResourceActionLocalServiceUtil.checkResourceActions(
 				portlet.getPortletId(), portletActions);

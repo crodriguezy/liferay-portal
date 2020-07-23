@@ -69,7 +69,7 @@ public class CalendarResourceUtil {
 			return calendarResource;
 		}
 		else if (group.hasStagingGroup() &&
-				 group.isStagedPortlet(CalendarPortletKeys.CALENDAR)) {
+				 group.isStagedPortlet(CalendarPortletKeys.CALENDAR_ADMIN)) {
 
 			return null;
 		}
@@ -107,11 +107,9 @@ public class CalendarResourceUtil {
 			long userId, ServiceContext serviceContext)
 		throws PortalException {
 
-		long classNameId = PortalUtil.getClassNameId(User.class);
-
 		CalendarResource calendarResource =
 			CalendarResourceLocalServiceUtil.fetchCalendarResource(
-				classNameId, userId);
+				PortalUtil.getClassNameId(User.class), userId);
 
 		if (calendarResource != null) {
 			return calendarResource;

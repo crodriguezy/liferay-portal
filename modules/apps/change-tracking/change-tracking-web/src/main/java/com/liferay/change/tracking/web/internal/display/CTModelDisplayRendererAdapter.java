@@ -14,12 +14,27 @@
 
 package com.liferay.change.tracking.web.internal.display;
 
-import com.liferay.change.tracking.display.CTDisplayRenderer;
+import com.liferay.change.tracking.spi.display.CTDisplayRenderer;
+import com.liferay.change.tracking.spi.display.context.DisplayContext;
+import com.liferay.portal.kernel.dao.orm.ORMException;
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.change.tracking.CTModel;
+import com.liferay.portal.kernel.service.change.tracking.CTService;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 
+import java.io.InputStream;
 import java.io.Writer;
 
+import java.sql.Blob;
+import java.sql.SQLException;
+
+import java.text.Format;
+
+import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
@@ -30,16 +45,47 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Samuel Trong Tran
  */
-public class CTModelDisplayRendererAdapter<T extends CTModel<T>>
+public class CTModelDisplayRendererAdapter<T extends BaseModel<T>>
 	implements CTDisplayRenderer<T> {
 
-	@SuppressWarnings("unchecked")
-	public static <T extends CTModel<T>> CTDisplayRenderer<T> getInstance() {
-		return (CTDisplayRenderer<T>)_INSTANCE;
+	public CTModelDisplayRendererAdapter(
+		CTDisplayRendererRegistry ctDisplayRendererRegistry) {
+
+		_ctDisplayRendererRegistry = ctDisplayRendererRegistry;
 	}
 
 	@Override
-	public String getEditURL(HttpServletRequest httpServletRequest, T ctModel) {
+	public InputStream getDownloadInputStream(T model, String key) {
+		if (model instanceof CTModel<?>) {
+			CTModel<?> ctModel = (CTModel<?>)model;
+
+			CTService<?> ctService = _ctDisplayRendererRegistry.getCTService(
+				ctModel);
+
+			return ctService.updateWithUnsafeFunction(
+				ctPersistence -> {
+					Map<String, Function<T, Object>> attributeGetterFunctions =
+						model.getAttributeGetterFunctions();
+
+					Function<T, Object> function = attributeGetterFunctions.get(
+						key);
+
+					Blob blob = (Blob)function.apply(model);
+
+					try {
+						return blob.getBinaryStream();
+					}
+					catch (SQLException sqlException) {
+						throw new ORMException(sqlException);
+					}
+				});
+		}
+
+		return null;
+	}
+
+	@Override
+	public String getEditURL(HttpServletRequest httpServletRequest, T model) {
 		return null;
 	}
 
@@ -49,22 +95,38 @@ public class CTModelDisplayRendererAdapter<T extends CTModel<T>>
 	}
 
 	@Override
+	public String getTitle(Locale locale, T model) {
+		return null;
+	}
+
+	@Override
 	public String getTypeName(Locale locale) {
 		return null;
 	}
 
 	@Override
-	public void render(
-			HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse, T ctModel)
-		throws Exception {
+	public void render(DisplayContext<T> displayContext) throws Exception {
+		HttpServletResponse httpServletResponse =
+			displayContext.getHttpServletResponse();
 
 		Writer writer = httpServletResponse.getWriter();
 
 		writer.write("<div class=\"table-responsive\"><table class=\"table\">");
 
+		HttpServletRequest httpServletRequest =
+			displayContext.getHttpServletRequest();
+
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		Format format = FastDateFormatFactoryUtil.getDateTime(
+			themeDisplay.getLocale(), themeDisplay.getTimeZone());
+
+		T model = displayContext.getModel();
+
 		Map<String, Function<T, Object>> attributeGetterFunctions =
-			ctModel.getAttributeGetterFunctions();
+			model.getAttributeGetterFunctions();
 
 		for (Map.Entry<String, Function<T, Object>> entry :
 				attributeGetterFunctions.entrySet()) {
@@ -75,9 +137,30 @@ public class CTModelDisplayRendererAdapter<T extends CTModel<T>>
 			writer.write(entry.getKey());
 			writer.write("</td><td>");
 
-			Object attributeValue = function.apply(ctModel);
+			Object attributeValue = function.apply(model);
 
-			if (attributeValue instanceof String) {
+			if (attributeValue instanceof Blob) {
+				String downloadURL = displayContext.getDownloadURL(
+					entry.getKey(), 0, null);
+
+				if (downloadURL == null) {
+					writer.write(
+						LanguageUtil.get(
+							themeDisplay.getLocale(), "no-download"));
+				}
+				else {
+					writer.write("<a href=\"");
+					writer.write(downloadURL);
+					writer.write("\" >");
+					writer.write(
+						LanguageUtil.get(themeDisplay.getLocale(), "download"));
+					writer.write("</a>");
+				}
+			}
+			else if (attributeValue instanceof Date) {
+				writer.write(format.format(attributeValue));
+			}
+			else if (attributeValue instanceof String) {
 				writer.write(HtmlUtil.escape(attributeValue.toString()));
 			}
 			else {
@@ -90,10 +173,6 @@ public class CTModelDisplayRendererAdapter<T extends CTModel<T>>
 		writer.write("</table></div>");
 	}
 
-	private CTModelDisplayRendererAdapter() {
-	}
-
-	private static final CTDisplayRenderer<?> _INSTANCE =
-		new CTModelDisplayRendererAdapter<>();
+	private final CTDisplayRendererRegistry _ctDisplayRendererRegistry;
 
 }

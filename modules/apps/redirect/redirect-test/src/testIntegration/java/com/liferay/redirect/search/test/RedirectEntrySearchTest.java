@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.SearchEngine;
+import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.search.SearchResult;
 import com.liferay.portal.kernel.search.SearchResultUtil;
 import com.liferay.portal.kernel.search.Sort;
@@ -66,27 +68,36 @@ public class RedirectEntrySearchTest extends BaseSearchTestCase {
 	}
 
 	@Override
+	@Test
 	public void testBaseModelUserPermissions() {
 	}
 
 	@Override
+	@Test
 	public void testLocalizedSearch() {
 	}
 
 	@Override
+	@Test
 	public void testParentBaseModelUserPermissions() {
 	}
 
 	@Override
+	@Test
 	public void testSearchAttachments() {
 	}
 
 	@Override
+	@Test
 	public void testSearchBaseModelWithTrash() {
 	}
 
 	@Test
 	public void testSearchByAbsoluteSourceURL() throws Exception {
+		if (!_isSearchEngine("Elasticsearch")) {
+			return;
+		}
+
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(group.getGroupId());
 
@@ -114,6 +125,7 @@ public class RedirectEntrySearchTest extends BaseSearchTestCase {
 	}
 
 	@Override
+	@Test
 	public void testSearchByDDMStructureField() {
 	}
 
@@ -200,6 +212,7 @@ public class RedirectEntrySearchTest extends BaseSearchTestCase {
 	}
 
 	@Override
+	@Test
 	public void testSearchByKeywordsInsideParentBaseModel() {
 	}
 
@@ -214,6 +227,33 @@ public class RedirectEntrySearchTest extends BaseSearchTestCase {
 				null, false, "test", serviceContext);
 
 		List<SearchResult> searchResults = _getSearchResults("test");
+
+		Assert.assertEquals(searchResults.toString(), 1, searchResults.size());
+
+		SearchResult searchResult = searchResults.get(0);
+
+		Assert.assertEquals(
+			redirectEntry.getRedirectEntryId(), searchResult.getClassPK());
+	}
+
+	@Test
+	public void testSearchBySourceURLAfterUpdatingChainedRedirectEntries()
+		throws Exception {
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(group.getGroupId());
+
+		_redirectEntryLocalService.addRedirectEntry(
+			serviceContext.getScopeGroupId(), "http://localhost/site/page2",
+			null, false, "page1", serviceContext);
+
+		RedirectEntry redirectEntry =
+			_redirectEntryLocalService.addRedirectEntry(
+				serviceContext.getScopeGroupId(), "http://localhost/site/page3",
+				null, "http://localhost/site", false, "page2", true,
+				serviceContext);
+
+		List<SearchResult> searchResults = _getSearchResults("page2");
 
 		Assert.assertEquals(searchResults.toString(), 1, searchResults.size());
 
@@ -244,30 +284,37 @@ public class RedirectEntrySearchTest extends BaseSearchTestCase {
 	}
 
 	@Override
+	@Test
 	public void testSearchComments() {
 	}
 
 	@Override
+	@Test
 	public void testSearchCommentsByKeywords() {
 	}
 
 	@Override
+	@Test
 	public void testSearchExpireAllVersions() {
 	}
 
 	@Override
+	@Test
 	public void testSearchExpireLatestVersion() {
 	}
 
 	@Override
+	@Test
 	public void testSearchMixedPhraseKeywords() {
 	}
 
 	@Override
+	@Test
 	public void testSearchMyEntries() {
 	}
 
 	@Override
+	@Test
 	public void testSearchRecentEntries() {
 	}
 
@@ -324,14 +371,17 @@ public class RedirectEntrySearchTest extends BaseSearchTestCase {
 	}
 
 	@Override
+	@Test
 	public void testSearchStatus() {
 	}
 
 	@Override
+	@Test
 	public void testSearchVersions() {
 	}
 
 	@Override
+	@Test
 	public void testSearchWithinDDMStructure() {
 	}
 
@@ -425,6 +475,18 @@ public class RedirectEntrySearchTest extends BaseSearchTestCase {
 
 		return _getSearchResults(searchContext);
 	}
+
+	private boolean _isSearchEngine(String engine) {
+		SearchEngine searchEngine = _searchEngineHelper.getSearchEngine(
+			_searchEngineHelper.getDefaultSearchEngineId());
+
+		String vendor = searchEngine.getVendor();
+
+		return vendor.equals(engine);
+	}
+
+	@Inject
+	private static SearchEngineHelper _searchEngineHelper;
 
 	@Inject
 	private RedirectEntryLocalService _redirectEntryLocalService;

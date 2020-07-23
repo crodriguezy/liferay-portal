@@ -80,7 +80,7 @@ const AllowedFragmentSelector = ({dropZoneConfig, onSelectedFragment}) => {
 					type="text"
 				/>
 
-				<div className="page-editor__allowed-fragment__tree">
+				<div className="mb-2 page-editor__allowed-fragment__tree">
 					<Treeview
 						filterQuery={filter}
 						inheritSelection
@@ -137,21 +137,30 @@ const getSelectedNodeIds = (
 const toNodes = (collections) => {
 	return [
 		{
-			children: collections.map((collection) => {
-				const children = collection.fragmentEntries.map(
-					(fragmentEntry) => ({
-						id: fragmentEntry.fragmentEntryKey,
-						name: fragmentEntry.name,
-					})
-				);
+			children: collections
+				.filter(
+					(collection) =>
+						collection.fragmentCollectionId !== 'layout-elements'
+				)
+				.map((collection) => {
+					const children = collection.fragmentEntries
+						.filter(
+							(fragmentEntry) =>
+								fragmentEntry.fragmentEntryKey &&
+								fragmentEntry.name
+						)
+						.map((fragmentEntry) => ({
+							id: fragmentEntry.fragmentEntryKey,
+							name: fragmentEntry.name,
+						}));
 
-				return {
-					children,
-					expanded: false,
-					id: collection.fragmentCollectionId,
-					name: collection.name,
-				};
-			}),
+					return {
+						children,
+						expanded: false,
+						id: collection.fragmentCollectionId,
+						name: collection.name,
+					};
+				}),
 			expanded: true,
 			id: 'lfr-all-fragments-id',
 			name: Liferay.Language.get('all-fragments'),

@@ -34,6 +34,7 @@ import com.liferay.wiki.test.util.WikiTestUtil;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
@@ -51,6 +52,7 @@ public class WikiSubscriptionBaseModelTest
 			new LiferayIntegrationTestRule(), SynchronousMailTestRule.INSTANCE);
 
 	@Override
+	@Test
 	public void testSubscriptionBaseModelWhenInRootContainerModel() {
 	}
 

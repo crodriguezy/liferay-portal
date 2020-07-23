@@ -53,6 +53,7 @@ import org.junit.runner.RunWith;
 public class DataLayoutResourceTest extends BaseDataLayoutResourceTestCase {
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 
@@ -146,6 +147,7 @@ public class DataLayoutResourceTest extends BaseDataLayoutResourceTestCase {
 	}
 
 	@Override
+	@Test
 	public void testGraphQLGetSiteDataLayoutByContentTypeByDataLayoutKeyNotFound()
 		throws Exception {
 

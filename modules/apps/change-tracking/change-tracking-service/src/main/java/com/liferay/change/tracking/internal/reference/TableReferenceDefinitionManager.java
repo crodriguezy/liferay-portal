@@ -14,8 +14,7 @@
 
 package com.liferay.change.tracking.internal.reference;
 
-import com.liferay.change.tracking.internal.reference.builder.TableReferenceInfoBuilderImpl;
-import com.liferay.change.tracking.reference.TableReferenceDefinition;
+import com.liferay.change.tracking.spi.reference.TableReferenceDefinition;
 import com.liferay.petra.sql.dsl.Column;
 import com.liferay.petra.sql.dsl.Table;
 import com.liferay.portal.kernel.log.Log;
@@ -88,7 +87,9 @@ public class TableReferenceDefinitionManager {
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		_serviceTracker = new ServiceTracker<>(
-			bundleContext, TableReferenceDefinition.class,
+			bundleContext,
+			(Class<TableReferenceDefinition<?>>)
+				(Class<?>)TableReferenceDefinition.class,
 			new TableReferenceDefinitionServiceTrackerCustomizer(
 				bundleContext));
 
@@ -214,11 +215,11 @@ public class TableReferenceDefinitionManager {
 
 	private class TableReferenceDefinitionServiceTrackerCustomizer
 		implements ServiceTrackerCustomizer
-			<TableReferenceDefinition, TableReferenceInfo<?>> {
+			<TableReferenceDefinition<?>, TableReferenceInfo<?>> {
 
 		@Override
 		public TableReferenceInfo<?> addingService(
-			ServiceReference<TableReferenceDefinition> serviceReference) {
+			ServiceReference<TableReferenceDefinition<?>> serviceReference) {
 
 			TableReferenceDefinition<?> tableReferenceDefinition =
 				_bundleContext.getService(serviceReference);
@@ -228,13 +229,13 @@ public class TableReferenceDefinitionManager {
 
 		@Override
 		public void modifiedService(
-			ServiceReference<TableReferenceDefinition> serviceReference,
+			ServiceReference<TableReferenceDefinition<?>> serviceReference,
 			TableReferenceInfo<?> tableReferenceInfo) {
 		}
 
 		@Override
 		public void removedService(
-			ServiceReference<TableReferenceDefinition> serviceReference,
+			ServiceReference<TableReferenceDefinition<?>> serviceReference,
 			TableReferenceInfo<?> tableReferenceInfo) {
 
 			synchronized (TableReferenceDefinitionManager.this) {
@@ -271,24 +272,15 @@ public class TableReferenceDefinitionManager {
 				return null;
 			}
 
-			TableReferenceInfoBuilderImpl<T> tableReferenceInfoBuilderImpl =
-				new TableReferenceInfoBuilderImpl<>(
+			TableReferenceInfo<T> tableReferenceInfo =
+				TableReferenceInfoFactory.create(
 					tableReferenceDefinition, primaryKeyColumn);
 
-			tableReferenceDefinition.defineTableReferences(
-				tableReferenceInfoBuilderImpl);
+			synchronized (TableReferenceDefinitionManager.this) {
+				_tableReferenceInfos.put(
+					tableReferenceDefinition.getTable(), tableReferenceInfo);
 
-			TableReferenceInfo<T> tableReferenceInfo =
-				tableReferenceInfoBuilderImpl.build();
-
-			if (tableReferenceInfo != null) {
-				synchronized (TableReferenceDefinitionManager.this) {
-					_tableReferenceInfos.put(
-						tableReferenceDefinition.getTable(),
-						tableReferenceInfo);
-
-					_combinedTableReferenceInfos = null;
-				}
+				_combinedTableReferenceInfos = null;
 			}
 
 			return tableReferenceInfo;

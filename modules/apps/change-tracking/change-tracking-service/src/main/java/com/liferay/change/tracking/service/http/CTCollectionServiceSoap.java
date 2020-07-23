@@ -116,6 +116,21 @@ public class CTCollectionServiceSoap {
 		}
 	}
 
+	public static void discardCTEntry(
+			long ctCollectionId, long modelClassNameId, long modelClassPK)
+		throws RemoteException {
+
+		try {
+			CTCollectionServiceUtil.discardCTEntry(
+				ctCollectionId, modelClassNameId, modelClassPK);
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
 	public static com.liferay.change.tracking.model.CTCollectionSoap[]
 			getCTCollections(
 				long companyId, int status, int start, int end,
@@ -143,13 +158,14 @@ public class CTCollectionServiceSoap {
 			getCTCollections(
 				long companyId, int status, String keywords, int start, int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.change.tracking.model.CTCollection> obc)
+					<com.liferay.change.tracking.model.CTCollection>
+						orderByComparator)
 		throws RemoteException {
 
 		try {
 			java.util.List<com.liferay.change.tracking.model.CTCollection>
 				returnValue = CTCollectionServiceUtil.getCTCollections(
-					companyId, status, keywords, start, end, obc);
+					companyId, status, keywords, start, end, orderByComparator);
 
 			return com.liferay.change.tracking.model.CTCollectionSoap.
 				toSoapModels(returnValue);

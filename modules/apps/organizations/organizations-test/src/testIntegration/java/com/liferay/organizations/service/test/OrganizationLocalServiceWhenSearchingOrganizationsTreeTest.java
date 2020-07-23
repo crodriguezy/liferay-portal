@@ -40,7 +40,8 @@ import com.liferay.portal.kernel.test.util.RoleTestUtil;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.LinkedHashMapBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.comparator.OrganizationIdComparator;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.comparator.OrganizationNameComparator;
 import com.liferay.portal.search.test.util.AssertUtils;
 import com.liferay.portal.search.test.util.SearchStreamUtil;
 import com.liferay.portal.search.test.util.SearchTestRule;
@@ -80,15 +81,17 @@ public class OrganizationLocalServiceWhenSearchingOrganizationsTreeTest {
 		_originalPermissionChecker =
 			PermissionThreadLocal.getPermissionChecker();
 
-		Organization rootOrganization = OrganizationTestUtil.addOrganization();
+		Organization rootOrganization = OrganizationTestUtil.addOrganization(
+			OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID,
+			StringUtil.toLowerCase(RandomTestUtil.randomString()), false);
 
 		_organization = OrganizationTestUtil.addOrganization(
-			rootOrganization.getOrganizationId(), RandomTestUtil.randomString(),
-			false);
+			rootOrganization.getOrganizationId(),
+			StringUtil.toLowerCase(RandomTestUtil.randomString()), false);
 
 		Organization suborganization = OrganizationTestUtil.addOrganization(
-			_organization.getOrganizationId(), RandomTestUtil.randomString(),
-			false);
+			_organization.getOrganizationId(),
+			StringUtil.toLowerCase(RandomTestUtil.randomString()), false);
 
 		_organizations.add(suborganization);
 
@@ -171,7 +174,7 @@ public class OrganizationLocalServiceWhenSearchingOrganizationsTreeTest {
 			_user.getCompanyId(),
 			OrganizationConstants.ANY_PARENT_ORGANIZATION_ID, null,
 			organizationParams, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-			new Sort("organizationId", false));
+			new Sort("name", false));
 	}
 
 	protected String toString(Organization organization) {
@@ -249,7 +252,13 @@ public class OrganizationLocalServiceWhenSearchingOrganizationsTreeTest {
 			String.valueOf(organizationParams),
 			toStringList(
 				ListUtil.sort(
-					expectedSearchResults, new OrganizationIdComparator(true))),
+					expectedSearchResults,
+					(organization1, organization2) -> {
+						String name1 = organization1.getName();
+						String name2 = organization2.getName();
+
+						return name1.compareToIgnoreCase(name2);
+					})),
 			toStringList(indexerSearchResults));
 
 		List<Organization> finderSearchResults =
@@ -257,7 +266,7 @@ public class OrganizationLocalServiceWhenSearchingOrganizationsTreeTest {
 				_user.getCompanyId(),
 				OrganizationConstants.ANY_PARENT_ORGANIZATION_ID, null, null,
 				null, null, organizationParams, QueryUtil.ALL_POS,
-				QueryUtil.ALL_POS, new OrganizationIdComparator(true));
+				QueryUtil.ALL_POS, new OrganizationNameComparator(true));
 
 		AssertUtils.assertEquals(
 			String.valueOf(organizationParams),

@@ -14,7 +14,11 @@
 
 CKEDITOR.on('dialogDefinition', (event) => {
 	if (event.editor === ckEditor) {
+		var boundingWindow = event.editor.window;
+
 		var dialogDefinition = event.data.definition;
+
+		var dialog = event.data.dialog;
 
 		var onShow = dialogDefinition.onShow;
 
@@ -23,13 +27,17 @@ CKEDITOR.on('dialogDefinition', (event) => {
 				onShow.apply(this, arguments);
 			}
 
-			var editorElement = this.getParentEditor().container;
+			centerDialog();
+		};
+
+		var centerDialog = function () {
+			var editorElement = dialog.getParentEditor().container;
 
 			var documentPosition = editorElement
 				.getLast()
 				.getDocumentPosition();
 
-			var dialogSize = this.getSize();
+			var dialogSize = dialog.getSize();
 
 			var x =
 				documentPosition.x +
@@ -44,7 +52,22 @@ CKEDITOR.on('dialogDefinition', (event) => {
 					2 -
 					window.scrollY);
 
-			this.move(x, y, false);
+			dialog.move(x, y, false);
 		};
+
+		AUI().use('aui-debounce', (A) => {
+			boundingWindow.on(
+				'resize',
+				A.debounce(() => {
+					centerDialog();
+				}, 250)
+			);
+		});
+
+		var clearEventHandler = function () {
+			Liferay.detach('resize', boundingWindow);
+		};
+
+		Liferay.once('destroyPortlet', clearEventHandler);
 	}
 });

@@ -32,9 +32,10 @@ import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.fragment.service.FragmentEntryServiceUtil;
 import com.liferay.fragment.util.comparator.FragmentCollectionContributorNameComparator;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
-import com.liferay.info.display.contributor.InfoDisplayContributor;
 import com.liferay.info.display.contributor.InfoDisplayContributorTracker;
 import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
+import com.liferay.info.item.InfoItemServiceTracker;
+import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorCriterion;
 import com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorReturnType;
 import com.liferay.item.selector.ItemSelector;
@@ -52,6 +53,7 @@ import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortlet
 import com.liferay.layout.content.page.editor.sidebar.panel.ContentPageEditorSidebarPanel;
 import com.liferay.layout.content.page.editor.web.internal.comment.CommentUtil;
 import com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration;
+import com.liferay.layout.content.page.editor.web.internal.configuration.PageEditorConfiguration;
 import com.liferay.layout.content.page.editor.web.internal.constants.ContentPageEditorActionKeys;
 import com.liferay.layout.content.page.editor.web.internal.constants.ContentPageEditorConstants;
 import com.liferay.layout.content.page.editor.web.internal.util.ContentUtil;
@@ -86,16 +88,23 @@ import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletApp;
 import com.liferay.portal.kernel.model.PortletCategory;
+import com.liferay.portal.kernel.model.PortletItem;
+import com.liferay.portal.kernel.model.PortletPreferences;
 import com.liferay.portal.kernel.model.Theme;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.portlet.PortletConfigFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
+import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.service.PortletItemLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
@@ -105,6 +114,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -172,8 +182,10 @@ public class ContentPageEditorDisplayContext {
 		FragmentRendererTracker fragmentRendererTracker,
 		HttpServletRequest httpServletRequest,
 		InfoDisplayContributorTracker infoDisplayContributorTracker,
-		ItemSelector itemSelector, PortletRequest portletRequest,
-		RenderResponse renderResponse) {
+		InfoItemServiceTracker infoItemServiceTracker,
+		ItemSelector itemSelector,
+		PageEditorConfiguration pageEditorConfiguration,
+		PortletRequest portletRequest, RenderResponse renderResponse) {
 
 		_commentManager = commentManager;
 		_contentPageEditorSidebarPanels = contentPageEditorSidebarPanels;
@@ -185,11 +197,13 @@ public class ContentPageEditorDisplayContext {
 		_fragmentRendererController = fragmentRendererController;
 		_fragmentRendererTracker = fragmentRendererTracker;
 		_itemSelector = itemSelector;
+		_pageEditorConfiguration = pageEditorConfiguration;
 		_portletRequest = portletRequest;
 		_renderResponse = renderResponse;
 
 		this.httpServletRequest = httpServletRequest;
 		this.infoDisplayContributorTracker = infoDisplayContributorTracker;
+		this.infoItemServiceTracker = infoItemServiceTracker;
 
 		themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -223,11 +237,18 @@ public class ContentPageEditorDisplayContext {
 				"addPortletURL",
 				getFragmentEntryActionURL("/content_layout/add_portlet")
 			).put(
+				"autoExtendSessionEnabled",
+				_pageEditorConfiguration.autoExtendSessionEnabled()
+			).put(
 				"availableLanguages", _getAvailableLanguages()
 			).put(
 				"availableViewportSizes", _getAvailableViewportSizes()
 			).put(
 				"collectionSelectorURL", _getCollectionSelectorURL()
+			).put(
+				"containerItemFlexEnabled",
+				_ffLayoutContentPageEditorConfiguration.
+					containerItemFlexEnabled()
 			).put(
 				"defaultEditorConfigurations", _getDefaultConfigurations()
 			).put(
@@ -270,6 +291,10 @@ public class ContentPageEditorDisplayContext {
 				"getAssetMappingFieldsURL",
 				getResourceURL("/content_layout/get_asset_mapping_fields")
 			).put(
+				"getAvailableListItemRenderersURL",
+				getResourceURL(
+					"/content_layout/get_available_list_item_renderers")
+			).put(
 				"getAvailableListRenderersURL",
 				getResourceURL("/content_layout/get_available_list_renderers")
 			).put(
@@ -284,6 +309,22 @@ public class ContentPageEditorDisplayContext {
 			).put(
 				"getExperienceUsedPortletsURL",
 				getResourceURL("/content_layout/get_experience_used_portlets")
+			).put(
+				"getIframeContentCssURL",
+				PortalUtil.getStaticResourceURL(
+					httpServletRequest,
+					PortalUtil.getPathModule() +
+						"/layout-content-page-editor-web/page_editor/app" +
+							"/components/App.css")
+			).put(
+				"getIframeContentURL",
+				() -> {
+					String layoutURL = PortalUtil.getLayoutFriendlyURL(
+						themeDisplay.getLayout(), themeDisplay);
+
+					return HttpUtil.addParameter(
+						layoutURL, "p_l_mode", Constants.PREVIEW);
+				}
 			).put(
 				"getPageContentsURL",
 				getResourceURL("/content_layout/get_page_contents")
@@ -352,6 +393,10 @@ public class ContentPageEditorDisplayContext {
 			).put(
 				"portletNamespace", getPortletNamespace()
 			).put(
+				"previewPageURL",
+				getResourceURL(
+					"/content_layout/get_page_preview", !isLayoutPageTemplate())
+			).put(
 				"publishURL", getPublishURL()
 			).put(
 				"redirectURL", _getRedirect()
@@ -359,15 +404,13 @@ public class ContentPageEditorDisplayContext {
 				"renderFragmentEntryURL",
 				getResourceURL("/content_layout/get_fragment_entry_link")
 			).put(
-				"responsiveEnabled",
-				_ffLayoutContentPageEditorConfiguration.responsiveEnabled()
-			).put(
 				"sidebarPanels", getSidebarPanels()
 			).put(
 				"themeColorsCssClasses", _getThemeColorsCssClasses()
 			).put(
-				"undoEnabled",
-				_ffLayoutContentPageEditorConfiguration.undoEnabled()
+				"unmarkItemForDeletionURL",
+				getFragmentEntryActionURL(
+					"/content_layout/unmark_item_for_deletion")
 			).put(
 				"updateConfigurationValuesURL",
 				getFragmentEntryActionURL(
@@ -522,6 +565,28 @@ public class ContentPageEditorDisplayContext {
 			resourceURL.toString(), "p_l_mode", Constants.EDIT);
 	}
 
+	protected String getResourceURL(String resourceID, boolean doAsGuest)
+		throws Exception {
+
+		LiferayPortletResponse liferayPortletResponse =
+			PortalUtil.getLiferayPortletResponse(_renderResponse);
+
+		LiferayPortletURL resourceURL =
+			liferayPortletResponse.createResourceURL(
+				ContentPageEditorPortletKeys.CONTENT_PAGE_EDITOR_PORTLET);
+
+		if (doAsGuest) {
+			User defaultUser = UserLocalServiceUtil.getDefaultUser(
+				themeDisplay.getCompanyId());
+
+			resourceURL.setDoAsUserId(defaultUser.getUserId());
+		}
+
+		resourceURL.setResourceID(resourceID);
+
+		return resourceURL.toString();
+	}
+
 	protected long getSegmentsExperienceId() {
 		return SegmentsExperienceConstants.ID_DEFAULT;
 	}
@@ -577,8 +642,23 @@ public class ContentPageEditorDisplayContext {
 		return _sidebarPanels;
 	}
 
+	protected boolean isLayoutPageTemplate() {
+		Layout publishedLayout = _getPublishedLayout();
+
+		LayoutPageTemplateEntry layoutPageTemplateEntry =
+			LayoutPageTemplateEntryLocalServiceUtil.
+				fetchLayoutPageTemplateEntryByPlid(publishedLayout.getPlid());
+
+		if (layoutPageTemplateEntry != null) {
+			return true;
+		}
+
+		return false;
+	}
+
 	protected final HttpServletRequest httpServletRequest;
 	protected final InfoDisplayContributorTracker infoDisplayContributorTracker;
+	protected final InfoItemServiceTracker infoItemServiceTracker;
 	protected final ThemeDisplay themeDisplay;
 
 	private Map<String, Object> _getAvailableLanguages() {
@@ -645,7 +725,7 @@ public class ContentPageEditorDisplayContext {
 			new InfoListItemSelectorCriterion();
 
 		infoListItemSelectorCriterion.setItemTypes(
-			_getInfoDisplayContributorsClassNames());
+			_getInfoItemFormProviderClassNames());
 
 		infoListItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
 			new InfoListItemSelectorReturnType());
@@ -654,11 +734,11 @@ public class ContentPageEditorDisplayContext {
 			infoListProviderItemSelectorCriterion =
 				new InfoListProviderItemSelectorCriterion();
 
-		infoListProviderItemSelectorCriterion.setItemTypes(
-			_getInfoDisplayContributorsClassNames());
-
 		infoListProviderItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
 			new InfoListProviderItemSelectorReturnType());
+		infoListProviderItemSelectorCriterion.setItemTypes(
+			_getInfoItemFormProviderClassNames());
+		infoListProviderItemSelectorCriterion.setPlid(themeDisplay.getPlid());
 
 		PortletURL infoListSelectorURL = _itemSelector.getItemSelectorURL(
 			RequestBackedPortletURLFactoryUtil.create(httpServletRequest),
@@ -751,8 +831,18 @@ public class ContentPageEditorDisplayContext {
 		if (!Objects.equals(
 				publishedLayout.getType(), LayoutConstants.TYPE_PORTLET)) {
 
-			return getFragmentEntryActionURL(
-				"/content_layout/discard_draft_layout");
+			PortletURL discardDraftURL = PortletURLFactoryUtil.create(
+				httpServletRequest, LayoutAdminPortletKeys.GROUP_PAGES,
+				PortletRequest.ACTION_PHASE);
+
+			discardDraftURL.setParameter(
+				ActionRequest.ACTION_NAME, "/layout/discard_draft_layout");
+			discardDraftURL.setParameter(
+				"redirect", themeDisplay.getURLCurrent());
+			discardDraftURL.setParameter(
+				"selPlid", String.valueOf(themeDisplay.getPlid()));
+
+			return discardDraftURL.toString();
 		}
 
 		PortletURL deleteLayoutURL = PortalUtil.getControlPanelPortletURL(
@@ -771,10 +861,8 @@ public class ContentPageEditorDisplayContext {
 
 		deleteLayoutURL.setParameter("redirect", redirectURL.toString());
 
-		Layout draftLayout = themeDisplay.getLayout();
-
 		deleteLayoutURL.setParameter(
-			"selPlid", String.valueOf(draftLayout.getPlid()));
+			"selPlid", String.valueOf(themeDisplay.getPlid()));
 
 		return deleteLayoutURL.toString();
 	}
@@ -802,6 +890,8 @@ public class ContentPageEditorDisplayContext {
 			Map<String, Object> dynamicFragment =
 				HashMapBuilder.<String, Object>put(
 					"fragmentEntryKey", fragmentRenderer.getKey()
+				).put(
+					"icon", fragmentRenderer.getIcon()
 				).put(
 					"imagePreviewURL",
 					fragmentRenderer.getImagePreviewURL(httpServletRequest)
@@ -985,6 +1075,8 @@ public class ContentPageEditorDisplayContext {
 				).put(
 					"groupId", fragmentComposition.getGroupId()
 				).put(
+					"icon", fragmentComposition.getIcon()
+				).put(
 					"imagePreviewURL",
 					fragmentComposition.getImagePreviewURL(themeDisplay)
 				).put(
@@ -1014,6 +1106,8 @@ public class ContentPageEditorDisplayContext {
 					"fragmentEntryKey", fragmentEntry.getFragmentEntryKey()
 				).put(
 					"groupId", fragmentEntry.getGroupId()
+				).put(
+					"icon", fragmentEntry.getIcon()
 				).put(
 					"imagePreviewURL",
 					fragmentEntry.getImagePreviewURL(themeDisplay)
@@ -1169,9 +1263,8 @@ public class ContentPageEditorDisplayContext {
 		Map<String, Object> fragmentEntryLinksMap = new HashMap<>();
 
 		List<FragmentEntryLink> fragmentEntryLinks = new ArrayList<>(
-			FragmentEntryLinkLocalServiceUtil.getFragmentEntryLinks(
-				getGroupId(), PortalUtil.getClassNameId(Layout.class.getName()),
-				themeDisplay.getPlid()));
+			FragmentEntryLinkLocalServiceUtil.getFragmentEntryLinksByPlid(
+				getGroupId(), themeDisplay.getPlid()));
 
 		Layout layout = themeDisplay.getLayout();
 
@@ -1182,10 +1275,8 @@ public class ContentPageEditorDisplayContext {
 						layout.getMasterLayoutPlid());
 
 			fragmentEntryLinks.addAll(
-				FragmentEntryLinkLocalServiceUtil.getFragmentEntryLinks(
-					getGroupId(),
-					PortalUtil.getClassNameId(Layout.class.getName()),
-					masterLayoutPageTemplateEntry.getPlid()));
+				FragmentEntryLinkLocalServiceUtil.getFragmentEntryLinksByPlid(
+					getGroupId(), masterLayoutPageTemplateEntry.getPlid()));
 		}
 
 		boolean isolated = themeDisplay.isIsolated();
@@ -1267,7 +1358,7 @@ public class ContentPageEditorDisplayContext {
 					).put(
 						"masterLayout",
 						layout.getMasterLayoutPlid() ==
-							fragmentEntryLink.getClassPK()
+							fragmentEntryLink.getPlid()
 					).putAll(
 						_getFragmentEntry(
 							fragmentEntryLink, fragmentEntry, content)
@@ -1303,24 +1394,17 @@ public class ContentPageEditorDisplayContext {
 		return _imageItemSelectorCriterion;
 	}
 
-	private List<String> _getInfoDisplayContributorsClassNames() {
-		List<String> infoDisplayContributorsClassNames = new ArrayList<>();
+	private List<String> _getInfoItemFormProviderClassNames() {
+		List<String> infoItemClassNames =
+			infoItemServiceTracker.getInfoItemClassNames(
+				InfoItemFormProvider.class);
 
-		for (InfoDisplayContributor infoDisplayContributor :
-				infoDisplayContributorTracker.getInfoDisplayContributors()) {
-
-			// LPS-111037
-
-			String className = infoDisplayContributor.getClassName();
-
-			if (Objects.equals(FileEntry.class.getName(), className)) {
-				className = DLFileEntryConstants.getClassName();
-			}
-
-			infoDisplayContributorsClassNames.add(className);
+		if (infoItemClassNames.contains(FileEntry.class.getName())) {
+			infoItemClassNames.add(DLFileEntryConstants.getClassName());
+			infoItemClassNames.remove(FileEntry.class.getName());
 		}
 
-		return infoDisplayContributorsClassNames;
+		return infoItemClassNames;
 	}
 
 	private String _getInfoItemSelectorURL() {
@@ -1355,6 +1439,7 @@ public class ContentPageEditorDisplayContext {
 
 		infoListProviderItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
 			new InfoListProviderItemSelectorReturnType());
+		infoListProviderItemSelectorCriterion.setPlid(themeDisplay.getPlid());
 
 		PortletURL infoListSelectorURL = _itemSelector.getItemSelectorURL(
 			RequestBackedPortletURLFactoryUtil.create(httpServletRequest),
@@ -1407,11 +1492,11 @@ public class ContentPageEditorDisplayContext {
 	private Set<Map<String, Object>> _getMappedInfoItems() throws Exception {
 		Set<Map<String, Object>> mappedInfoItems = new HashSet<>();
 
-		Set<InfoDisplayObjectProvider> infoDisplayObjectProviders =
+		Set<InfoDisplayObjectProvider<?>> infoDisplayObjectProviders =
 			ContentUtil.getMappedInfoDisplayObjectProviders(
 				getGroupId(), themeDisplay.getPlid());
 
-		for (InfoDisplayObjectProvider infoDisplayObjectProvider :
+		for (InfoDisplayObjectProvider<?> infoDisplayObjectProvider :
 				infoDisplayObjectProviders) {
 
 			mappedInfoItems.add(
@@ -1552,16 +1637,45 @@ public class ContentPageEditorDisplayContext {
 		return PortletIdCodec.decodePortletName(id.substring(8));
 	}
 
-	private List<HashMap<String, Object>> _getPortlets(
+	private List<Map<String, Object>> _getPortletItems(Portlet portlet) {
+		List<PortletItem> portletItems =
+			PortletItemLocalServiceUtil.getPortletItems(
+				themeDisplay.getScopeGroupId(), portlet.getPortletId(),
+				PortletPreferences.class.getName());
+
+		if (ListUtil.isEmpty(portletItems)) {
+			return Collections.emptyList();
+		}
+
+		Stream<PortletItem> stream = portletItems.stream();
+
+		return stream.map(
+			portletItem -> HashMapBuilder.<String, Object>put(
+				"instanceable", portlet.isInstanceable()
+			).put(
+				"portletId", portlet.getPortletId()
+			).put(
+				"portletItemId", portletItem.getPortletItemId()
+			).put(
+				"title", HtmlUtil.escape(portletItem.getName())
+			).put(
+				"used", _isUsed(portlet)
+			).build()
+		).collect(
+			Collectors.toList()
+		);
+	}
+
+	private List<Map<String, Object>> _getPortlets(
 		PortletCategory portletCategory) {
+
+		HttpSession httpSession = httpServletRequest.getSession();
+
+		ServletContext servletContext = httpSession.getServletContext();
 
 		Set<String> portletIds = portletCategory.getPortletIds();
 
 		Stream<String> stream = portletIds.stream();
-
-		HttpSession session = httpServletRequest.getSession();
-
-		ServletContext servletContext = session.getServletContext();
 
 		return stream.map(
 			portletId -> PortletLocalServiceUtil.getPortletById(
@@ -1602,11 +1716,13 @@ public class ContentPageEditorDisplayContext {
 			).put(
 				"portletId", portlet.getPortletId()
 			).put(
+				"portletItems", _getPortletItems(portlet)
+			).put(
 				"title",
 				PortalUtil.getPortletTitle(
 					portlet, servletContext, themeDisplay.getLocale())
 			).put(
-				"used", _isUsed(portlet, themeDisplay.getPlid())
+				"used", _isUsed(portlet)
 			).build()
 		).collect(
 			Collectors.toList()
@@ -1685,19 +1801,19 @@ public class ContentPageEditorDisplayContext {
 		return stream.sorted(
 			new PortletCategoryComparator(themeDisplay.getLocale())
 		).filter(
-			category -> !category.isHidden()
+			currentPortletCategory -> !currentPortletCategory.isHidden()
 		).map(
-			category -> HashMapBuilder.<String, Object>put(
-				"categories", _getWidgetCategories(category)
+			currentPortletCategory -> HashMapBuilder.<String, Object>put(
+				"categories", _getWidgetCategories(currentPortletCategory)
 			).put(
 				"path",
 				StringUtil.replace(
-					category.getPath(), new String[] {"/", "."},
+					currentPortletCategory.getPath(), new String[] {"/", "."},
 					new String[] {"-", "-"})
 			).put(
-				"portlets", _getPortlets(category)
+				"portlets", _getPortlets(currentPortletCategory)
 			).put(
-				"title", _getPortletCategoryTitle(category)
+				"title", _getPortletCategoryTitle(currentPortletCategory)
 			).build()
 		).collect(
 			Collectors.toList()
@@ -1824,16 +1940,15 @@ public class ContentPageEditorDisplayContext {
 		return false;
 	}
 
-	private boolean _isUsed(Portlet portlet, long plid) {
+	private boolean _isUsed(Portlet portlet) {
 		if (portlet.isInstanceable()) {
 			return false;
 		}
 
 		long count =
 			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
-				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, plid,
-				PortletIdCodec.encode(
-					portlet.getPortletId(), String.valueOf(CharPool.NUMBER_0)));
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, themeDisplay.getPlid(),
+				portlet.getPortletId());
 
 		if (count > 0) {
 			return true;
@@ -1869,6 +1984,7 @@ public class ContentPageEditorDisplayContext {
 	private final ItemSelector _itemSelector;
 	private LayoutStructure _layoutStructure;
 	private LayoutStructure _masterLayoutStructure;
+	private final PageEditorConfiguration _pageEditorConfiguration;
 	private Integer _pageType;
 	private final PortletRequest _portletRequest;
 	private Layout _publishedLayout;

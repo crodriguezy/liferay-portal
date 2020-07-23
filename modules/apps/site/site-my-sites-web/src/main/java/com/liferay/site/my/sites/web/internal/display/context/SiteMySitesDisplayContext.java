@@ -63,16 +63,6 @@ public class SiteMySitesDisplayContext {
 		_httpServletRequest = PortalUtil.getHttpServletRequest(renderRequest);
 	}
 
-	public List<DropdownItem> getArticleActionDropdownItems(Group group)
-		throws Exception {
-
-		SiteActionDropdownItemsProvider siteActionDropdownItemsProvider =
-			new SiteActionDropdownItemsProvider(
-				group, _renderRequest, _renderResponse, getTabs1());
-
-		return siteActionDropdownItemsProvider.getActionDropdownItems();
-	}
-
 	public String getDisplayStyle() {
 		if (Validator.isNotNull(_displayStyle)) {
 			return _displayStyle;
@@ -82,6 +72,16 @@ public class SiteMySitesDisplayContext {
 			_renderRequest, "displayStyle", "descriptive");
 
 		return _displayStyle;
+	}
+
+	public List<DropdownItem> getGroupActionDropdownItems(Group group)
+		throws Exception {
+
+		SiteActionDropdownItemsProvider siteActionDropdownItemsProvider =
+			new SiteActionDropdownItemsProvider(
+				group, _renderRequest, _renderResponse, getTabs1());
+
+		return siteActionDropdownItemsProvider.getActionDropdownItems();
 	}
 
 	public GroupSearch getGroupSearchContainer() {

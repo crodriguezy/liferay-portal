@@ -75,6 +75,10 @@ public interface AccountEntryLocalService
 	/**
 	 * Adds the account entry to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AccountEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param accountEntry the account entry
 	 * @return the account entry that was added
 	 */
@@ -84,7 +88,7 @@ public interface AccountEntryLocalService
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 #addAccountEntry(long, long, String, String, String[],
-	 byte[], int, ServiceContext)}
+	 byte[], String, String, int, ServiceContext)}
 	 */
 	@Deprecated
 	public AccountEntry addAccountEntry(
@@ -92,9 +96,22 @@ public interface AccountEntryLocalService
 			String description, String[] domains, byte[] logoBytes, int status)
 		throws PortalException;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 #addAccountEntry(long, long, String, String, String[],
+	 byte[], String, String, int, ServiceContext)}
+	 */
+	@Deprecated
 	public AccountEntry addAccountEntry(
 			long userId, long parentAccountEntryId, String name,
 			String description, String[] domains, byte[] logoBytes, int status,
+			ServiceContext serviceContext)
+		throws PortalException;
+
+	public AccountEntry addAccountEntry(
+			long userId, long parentAccountEntryId, String name,
+			String description, String[] domains, byte[] logoBytes,
+			String taxIdNumber, String type, int status,
 			ServiceContext serviceContext)
 		throws PortalException;
 
@@ -129,6 +146,10 @@ public interface AccountEntryLocalService
 	/**
 	 * Deletes the account entry from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AccountEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param accountEntry the account entry
 	 * @return the account entry that was removed
 	 * @throws PortalException
@@ -139,6 +160,10 @@ public interface AccountEntryLocalService
 
 	/**
 	 * Deletes the account entry with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AccountEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param accountEntryId the primary key of the account entry
 	 * @return the account entry that was removed
@@ -228,6 +253,17 @@ public interface AccountEntryLocalService
 	public AccountEntry fetchAccountEntry(long accountEntryId);
 
 	/**
+	 * Returns the account entry with the matching external reference code and company.
+	 *
+	 * @param companyId the primary key of the company
+	 * @param externalReferenceCode the account entry's external reference code
+	 * @return the matching account entry, or <code>null</code> if a matching account entry could not be found
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public AccountEntry fetchAccountEntryByReferenceCode(
+		long companyId, String externalReferenceCode);
+
+	/**
 	 * Returns a range of all the account entries.
 	 *
 	 * <p>
@@ -244,7 +280,7 @@ public interface AccountEntryLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<AccountEntry> getAccountEntries(
 		long companyId, int status, int start, int end,
-		OrderByComparator<AccountEntry> obc);
+		OrderByComparator<AccountEntry> orderByComparator);
 
 	/**
 	 * Returns the number of account entries.
@@ -297,6 +333,10 @@ public interface AccountEntryLocalService
 	/**
 	 * Updates the account entry in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AccountEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param accountEntry the account entry
 	 * @return the account entry that was updated
 	 */
@@ -306,7 +346,7 @@ public interface AccountEntryLocalService
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 #updateAccountEntry(Long, long, String, String, boolean,
-	 String[], byte[], int, ServiceContext)}
+	 String[], byte[], String, int, ServiceContext)}
 	 */
 	@Deprecated
 	public AccountEntry updateAccountEntry(
@@ -315,10 +355,23 @@ public interface AccountEntryLocalService
 			byte[] logoBytes, int status)
 		throws PortalException;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 #updateAccountEntry(Long, long, String, String, boolean,
+	 String[], byte[], String, int, ServiceContext)}
+	 */
+	@Deprecated
 	public AccountEntry updateAccountEntry(
 			Long accountEntryId, long parentAccountEntryId, String name,
 			String description, boolean deleteLogo, String[] domains,
 			byte[] logoBytes, int status, ServiceContext serviceContext)
+		throws PortalException;
+
+	public AccountEntry updateAccountEntry(
+			Long accountEntryId, long parentAccountEntryId, String name,
+			String description, boolean deleteLogo, String[] domains,
+			byte[] logoBytes, String taxIdNumber, int status,
+			ServiceContext serviceContext)
 		throws PortalException;
 
 	public AccountEntry updateStatus(AccountEntry accountEntry, int status);

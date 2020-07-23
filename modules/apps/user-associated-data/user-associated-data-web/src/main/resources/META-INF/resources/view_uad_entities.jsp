@@ -71,8 +71,8 @@ long[] groupIds = viewUADEntitiesDisplay.getGroupIds();
 	</c:choose>
 
 	<clay:container-fluid
-		className="closed sidenav-container sidenav-right"
-		id='<%= renderResponse.getNamespace() + "infoPanelId" %>'
+		cssClass="closed sidenav-container sidenav-right"
+		id='<%= liferayPortletResponse.getNamespace() + "infoPanelId" %>'
 	>
 		<div id="breadcrumb">
 			<liferay-ui:breadcrumb
@@ -100,7 +100,7 @@ long[] groupIds = viewUADEntitiesDisplay.getGroupIds();
 
 			<liferay-frontend:sidebar-panel
 				resourceURL="<%= entityTypeSidebarURL %>"
-				searchContainerId="<%= viewUADEntitiesDisplay.getSearchContainerID(request, renderResponse.getNamespace()) %>"
+				searchContainerId="<%= viewUADEntitiesDisplay.getSearchContainerID(request, liferayPortletResponse.getNamespace()) %>"
 			>
 				<liferay-util:include page="/info_panel.jsp" servletContext="<%= application %>" />
 			</liferay-frontend:sidebar-panel>
@@ -150,9 +150,9 @@ long[] groupIds = viewUADEntitiesDisplay.getGroupIds();
 
 							<c:if test='<%= columnEntryKey.equals("name") || columnEntryKey.equals("title") %>'>
 								<c:if test="<%= uadEntity.isInTrash() %>">
-									<span class="label label-secondary">
-										<span class="label-item label-item-expand"><%= StringUtil.toUpperCase(LanguageUtil.get(request, "in-trash"), locale) %></span>
-									</span>
+									<clay:label
+										label="in-trash"
+									/>
 								</c:if>
 
 								<c:if test="<%= showUserIcon %>">

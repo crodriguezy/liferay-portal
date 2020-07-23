@@ -39,6 +39,26 @@ import java.util.Set;
  */
 public class GitUtil {
 
+	public static List<String> getCurrentBranchCommitMessages(
+			String baseDirName, String gitWorkingBranchName)
+		throws Exception {
+
+		String commitId = getCurrentBranchCommitId(gitWorkingBranchName);
+
+		List<String> commitMessages = new ArrayList<>();
+
+		UnsyncBufferedReader unsyncBufferedReader = getGitCommandReader(
+			"git log --pretty=format:%s " + commitId + "..HEAD");
+
+		String line = null;
+
+		while ((line = unsyncBufferedReader.readLine()) != null) {
+			commitMessages.add(line);
+		}
+
+		return commitMessages;
+	}
+
 	public static String getCurrentBranchFileContent(
 			String gitWorkingBranchName, String fileName)
 		throws Exception {
@@ -204,14 +224,9 @@ public class GitUtil {
 		List<String> fileNames = new ArrayList<>();
 
 		UnsyncBufferedReader unsyncBufferedReader = getGitCommandReader(
-			"git rev-parse HEAD");
-
-		String latestCommitId = unsyncBufferedReader.readLine();
-
-		unsyncBufferedReader = getGitCommandReader(
 			StringBundler.concat(
 				"git diff --diff-filter=RD --name-status ", commitId, " ",
-				latestCommitId));
+				_getLatestCommitId()));
 
 		String line = null;
 
@@ -305,14 +320,9 @@ public class GitUtil {
 		List<String> fileNames = new ArrayList<>();
 
 		UnsyncBufferedReader unsyncBufferedReader = getGitCommandReader(
-			"git rev-parse HEAD");
-
-		String latestCommitId = unsyncBufferedReader.readLine();
-
-		unsyncBufferedReader = getGitCommandReader(
 			StringBundler.concat(
 				"git diff --diff-filter=AMR --name-only ", commitId, " ",
-				latestCommitId));
+				_getLatestCommitId()));
 
 		String line = null;
 
@@ -377,31 +387,29 @@ public class GitUtil {
 
 	protected static String getLatestAuthorCommitId() throws Exception {
 		UnsyncBufferedReader unsyncBufferedReader = getGitCommandReader(
-			"git log");
+			"git log --pretty=format:%H:%an");
+
+		String latestAuthor = null;
 
 		String line = null;
 
-		String firstDifferentAuthorCommitId = null;
-		String latestAuthor = null;
-
 		while ((line = unsyncBufferedReader.readLine()) != null) {
-			if (line.startsWith("commit ")) {
-				firstDifferentAuthorCommitId = line.substring(7);
-			}
-			else if (line.startsWith("Author: ")) {
-				if (latestAuthor == null) {
-					int x = line.lastIndexOf(CharPool.LESS_THAN);
-					int y = line.lastIndexOf(CharPool.GREATER_THAN);
+			String[] parts = line.split(StringPool.COLON);
 
-					latestAuthor = line.substring(x + 1, y);
-				}
-				else if (!line.endsWith("<" + latestAuthor + ">")) {
-					break;
-				}
+			String author = parts[1];
+
+			if (latestAuthor == null) {
+				latestAuthor = author;
+
+				continue;
+			}
+
+			if (!latestAuthor.equals(author)) {
+				return parts[0];
 			}
 		}
 
-		return firstDifferentAuthorCommitId;
+		return null;
 	}
 
 	protected static List<String> getLocalChangesFileNames(
@@ -451,6 +459,13 @@ public class GitUtil {
 				return null;
 			}
 		}
+	}
+
+	private static String _getLatestCommitId() throws Exception {
+		UnsyncBufferedReader unsyncBufferedReader = getGitCommandReader(
+			"git rev-parse HEAD");
+
+		return unsyncBufferedReader.readLine();
 	}
 
 }

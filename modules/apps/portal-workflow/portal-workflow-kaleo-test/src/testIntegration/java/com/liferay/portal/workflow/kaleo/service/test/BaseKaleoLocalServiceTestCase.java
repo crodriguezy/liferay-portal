@@ -51,7 +51,6 @@ import java.io.Serializable;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.Map;
 
 import org.apache.log4j.Level;
 
@@ -89,7 +88,8 @@ public abstract class BaseKaleoLocalServiceTestCase {
 			_kaleoDefinitionLocalService.addKaleoDefinition(
 				StringUtil.randomString(), StringUtil.randomString(),
 				StringUtil.randomString(),
-				_read("legal-marketing-definition.xml"), 1, serviceContext);
+				_read("legal-marketing-definition.xml"), StringPool.BLANK, 1,
+				serviceContext);
 
 		_kaleoDefinitionLocalService.activateKaleoDefinition(
 			kaleoDefinition.getKaleoDefinitionId(), serviceContext);
@@ -98,7 +98,8 @@ public abstract class BaseKaleoLocalServiceTestCase {
 	}
 
 	protected KaleoInstance addKaleoInstance() throws Exception {
-		Map<String, Serializable> workflowContext =
+		return _kaleoInstanceLocalService.addKaleoInstance(
+			1, 1, "Test", 1,
 			HashMapBuilder.<String, Serializable>put(
 				WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME,
 				(Serializable)BlogsEntry.class.getName()
@@ -108,10 +109,8 @@ public abstract class BaseKaleoLocalServiceTestCase {
 			).put(
 				WorkflowConstants.CONTEXT_SERVICE_CONTEXT,
 				(Serializable)serviceContext
-			).build();
-
-		return _kaleoInstanceLocalService.addKaleoInstance(
-			1, 1, "Test", 1, workflowContext, serviceContext);
+			).build(),
+			serviceContext);
 	}
 
 	protected KaleoInstanceToken addKaleoInstanceToken(

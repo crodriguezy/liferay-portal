@@ -36,17 +36,17 @@ public class AppBuilderAppCacheModel
 	implements CacheModel<AppBuilderApp>, Externalizable {
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof AppBuilderAppCacheModel)) {
+		if (!(object instanceof AppBuilderAppCacheModel)) {
 			return false;
 		}
 
 		AppBuilderAppCacheModel appBuilderAppCacheModel =
-			(AppBuilderAppCacheModel)obj;
+			(AppBuilderAppCacheModel)object;
 
 		if (appBuilderAppId == appBuilderAppCacheModel.appBuilderAppId) {
 			return true;
@@ -62,7 +62,7 @@ public class AppBuilderAppCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(27);
+		StringBundler sb = new StringBundler(31);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -82,6 +82,8 @@ public class AppBuilderAppCacheModel
 		sb.append(modifiedDate);
 		sb.append(", active=");
 		sb.append(active);
+		sb.append(", ddlRecordSetId=");
+		sb.append(ddlRecordSetId);
 		sb.append(", ddmStructureId=");
 		sb.append(ddmStructureId);
 		sb.append(", ddmStructureLayoutId=");
@@ -90,6 +92,8 @@ public class AppBuilderAppCacheModel
 		sb.append(deDataListViewId);
 		sb.append(", name=");
 		sb.append(name);
+		sb.append(", scope=");
+		sb.append(scope);
 		sb.append("}");
 
 		return sb.toString();
@@ -133,6 +137,7 @@ public class AppBuilderAppCacheModel
 		}
 
 		appBuilderAppImpl.setActive(active);
+		appBuilderAppImpl.setDdlRecordSetId(ddlRecordSetId);
 		appBuilderAppImpl.setDdmStructureId(ddmStructureId);
 		appBuilderAppImpl.setDdmStructureLayoutId(ddmStructureLayoutId);
 		appBuilderAppImpl.setDeDataListViewId(deDataListViewId);
@@ -142,6 +147,13 @@ public class AppBuilderAppCacheModel
 		}
 		else {
 			appBuilderAppImpl.setName(name);
+		}
+
+		if (scope == null) {
+			appBuilderAppImpl.setScope("");
+		}
+		else {
+			appBuilderAppImpl.setScope(scope);
 		}
 
 		appBuilderAppImpl.resetOriginalValues();
@@ -166,12 +178,15 @@ public class AppBuilderAppCacheModel
 
 		active = objectInput.readBoolean();
 
+		ddlRecordSetId = objectInput.readLong();
+
 		ddmStructureId = objectInput.readLong();
 
 		ddmStructureLayoutId = objectInput.readLong();
 
 		deDataListViewId = objectInput.readLong();
 		name = objectInput.readUTF();
+		scope = objectInput.readUTF();
 	}
 
 	@Override
@@ -203,6 +218,8 @@ public class AppBuilderAppCacheModel
 
 		objectOutput.writeBoolean(active);
 
+		objectOutput.writeLong(ddlRecordSetId);
+
 		objectOutput.writeLong(ddmStructureId);
 
 		objectOutput.writeLong(ddmStructureLayoutId);
@@ -215,6 +232,13 @@ public class AppBuilderAppCacheModel
 		else {
 			objectOutput.writeUTF(name);
 		}
+
+		if (scope == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(scope);
+		}
 	}
 
 	public String uuid;
@@ -226,9 +250,11 @@ public class AppBuilderAppCacheModel
 	public long createDate;
 	public long modifiedDate;
 	public boolean active;
+	public long ddlRecordSetId;
 	public long ddmStructureId;
 	public long ddmStructureLayoutId;
 	public long deDataListViewId;
 	public String name;
+	public String scope;
 
 }

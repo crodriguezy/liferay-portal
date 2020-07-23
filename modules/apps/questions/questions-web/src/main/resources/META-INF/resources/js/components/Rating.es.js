@@ -12,14 +12,18 @@
  * details.
  */
 
+import {useMutation} from '@apollo/client';
 import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
 import React, {useEffect, useState} from 'react';
 
-import {createVoteMessage, createVoteThread} from '../utils/client.es';
+import {
+	createVoteMessageQuery,
+	createVoteThreadQuery,
+} from '../utils/client.es';
 import {normalize, normalizeRating} from '../utils/utils.es';
 
-export default ({aggregateRating, entityId, myRating, ratingChange, type}) => {
+export default ({aggregateRating, entityId, myRating, type}) => {
 	const [userRating, setUserRating] = useState(0);
 	const [rating, setRating] = useState(0);
 
@@ -31,30 +35,36 @@ export default ({aggregateRating, entityId, myRating, ratingChange, type}) => {
 		setUserRating(myRating === null ? 0 : normalize(myRating));
 	}, [myRating]);
 
+	const [createVoteMessage] = useMutation(createVoteMessageQuery);
+	const [createVoteThread] = useMutation(createVoteThreadQuery);
+
 	const voteChange = (value) => {
 		if (userRating === value) {
 			return;
 		}
 
 		const newUserRating = userRating + value;
-		const normalizedValue = (newUserRating + 1) / 2;
-		const votePromise =
-			type === 'Thread'
-				? createVoteThread(entityId, normalizedValue)
-				: createVoteMessage(entityId, normalizedValue);
+		const normalizedValue = (userRating + value + 1) / 2;
 
-		votePromise.then(({ratingValue}) => {
-			const denormalizedValue = normalize(ratingValue);
+		setUserRating(newUserRating);
+		setRating(rating - userRating + newUserRating);
 
-			const newRating = rating - userRating + denormalizedValue;
-
-			setRating(newRating);
-			setUserRating(newUserRating);
-
-			if (ratingChange) {
-				ratingChange(newRating);
-			}
-		});
+		if (type === 'Thread') {
+			createVoteThread({
+				variables: {
+					messageBoardThreadId: entityId,
+					ratingValue: normalizedValue,
+				},
+			});
+		}
+		else {
+			createVoteMessage({
+				variables: {
+					messageBoardMessageId: entityId,
+					ratingValue: normalizedValue,
+				},
+			});
+		}
 	};
 
 	return (

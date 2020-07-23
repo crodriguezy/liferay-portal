@@ -23,6 +23,7 @@ import {
 } from 'recharts';
 
 import colors from '../../../utils/colors.es';
+import {roundPercentage} from '../../../utils/data.es';
 import Legend from '../Legend.es';
 import TooltipContent from '../TooltipContent.es';
 
@@ -79,7 +80,7 @@ export default ({data, height, totalEntries, width}) => {
 				x={x}
 				y={y}
 			>
-				{`${(percent * 100).toFixed(0)}%`}
+				{roundPercentage(percent)}
 			</text>
 		);
 	};
@@ -104,7 +105,7 @@ export default ({data, height, totalEntries, width}) => {
 						labelLine={false}
 						nameKey="label"
 						onMouseOver={(_, index) => handleOnMouseOver(index)}
-						outerRadius={130}
+						outerRadius={135}
 						paddingAngle={0}
 					>
 						{data.map((_, index) => (
@@ -115,7 +116,8 @@ export default ({data, height, totalEntries, width}) => {
 					<Tooltip
 						content={
 							<TooltipContent
-								activeIndex={activeIndex}
+								showBullet={true}
+								showHeader={false}
 								totalEntries={totalEntries}
 							/>
 						}

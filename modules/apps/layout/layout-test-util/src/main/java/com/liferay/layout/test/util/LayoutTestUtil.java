@@ -231,26 +231,24 @@ public class LayoutTestUtil {
 	public static LayoutPrototype addLayoutPrototype(String name)
 		throws Exception {
 
-		HashMap<Locale, String> nameMap = HashMapBuilder.put(
-			LocaleUtil.getDefault(), name
-		).build();
-
 		return LayoutPrototypeLocalServiceUtil.addLayoutPrototype(
 			TestPropsValues.getUserId(), TestPropsValues.getCompanyId(),
-			nameMap, (Map<Locale, String>)null, true,
+			HashMapBuilder.put(
+				LocaleUtil.getDefault(), name
+			).build(),
+			(Map<Locale, String>)null, true,
 			ServiceContextTestUtil.getServiceContext());
 	}
 
 	public static LayoutSetPrototype addLayoutSetPrototype(String name)
 		throws Exception {
 
-		HashMap<Locale, String> nameMap = HashMapBuilder.put(
-			LocaleUtil.getDefault(), name
-		).build();
-
 		return LayoutSetPrototypeLocalServiceUtil.addLayoutSetPrototype(
 			TestPropsValues.getUserId(), TestPropsValues.getCompanyId(),
-			nameMap, (Map<Locale, String>)null, true, true,
+			HashMapBuilder.put(
+				LocaleUtil.getDefault(), name
+			).build(),
+			(Map<Locale, String>)null, true, true,
 			ServiceContextTestUtil.getServiceContext());
 	}
 

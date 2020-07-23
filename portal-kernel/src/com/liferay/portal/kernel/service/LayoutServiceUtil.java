@@ -698,14 +698,25 @@ public class LayoutServiceUtil {
 
 	public static java.util.List<com.liferay.portal.kernel.model.Layout>
 			getLayouts(
-				long groupId, boolean privateLayout, String keywords,
-				String[] types, int start, int end,
-				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.portal.kernel.model.Layout> obc)
+				long groupId, boolean privateLayout, String type, int start,
+				int end)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().getLayouts(
-			groupId, privateLayout, keywords, types, start, end, obc);
+			groupId, privateLayout, type, start, end);
+	}
+
+	public static java.util.List<com.liferay.portal.kernel.model.Layout>
+			getLayouts(
+				long groupId, boolean privateLayout, String keywords,
+				String[] types, int start, int end,
+				com.liferay.portal.kernel.util.OrderByComparator
+					<com.liferay.portal.kernel.model.Layout> orderByComparator)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return getService().getLayouts(
+			groupId, privateLayout, keywords, types, start, end,
+			orderByComparator);
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.Layout>
@@ -737,6 +748,12 @@ public class LayoutServiceUtil {
 
 		return getService().getLayoutsCount(
 			groupId, privateLayout, parentLayoutId, priority);
+	}
+
+	public static int getLayoutsCount(
+		long groupId, boolean privateLayout, String type) {
+
+		return getService().getLayoutsCount(groupId, privateLayout, type);
 	}
 
 	public static int getLayoutsCount(

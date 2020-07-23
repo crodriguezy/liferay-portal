@@ -26,6 +26,7 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.plugins.PluginContainer;
 import org.gradle.api.tasks.TaskContainer;
 
 /**
@@ -41,57 +42,14 @@ public class AlloyTaglibDefaultsPlugin
 
 	@Override
 	protected void applyPluginDefaults(
-		Project project, AlloyTaglibPlugin alloyTaglibPlugin) {
+		final Project project, AlloyTaglibPlugin alloyTaglibPlugin) {
 
-		_addPortalToolDependencies(project);
+		// Configurations
 
-		_configureTasksBuildTaglibs(project);
-	}
+		final Configuration portalToolConfiguration =
+			_addConfigurationPortalTool(project);
 
-	@Override
-	protected Class<AlloyTaglibPlugin> getPluginClass() {
-		return AlloyTaglibPlugin.class;
-	}
-
-	private AlloyTaglibDefaultsPlugin() {
-	}
-
-	private Configuration _addPortalToolConfiguration(final Project project) {
-		final Configuration configuration = GradleUtil.addConfiguration(
-			project, _PORTAL_TOOL_CONFIGURATION_NAME);
-
-		configuration.setDescription(
-			"Configures the Alloy Taglib tool for this project.");
-		configuration.setVisible(false);
-
-		GradleUtil.withPlugin(
-			project, LiferayBasePlugin.class,
-			new Action<LiferayBasePlugin>() {
-
-				@Override
-				public void execute(LiferayBasePlugin liferayBasePlugin) {
-					Configuration portalConfiguration =
-						GradleUtil.getConfiguration(
-							project,
-							LiferayBasePlugin.PORTAL_CONFIGURATION_NAME);
-
-					configuration.extendsFrom(portalConfiguration);
-				}
-
-			});
-
-		// AlloyTaglibPlugin has already applied JavaPlugin
-
-		Configuration runtimeConfiguration = GradleUtil.getConfiguration(
-			project, JavaPlugin.RUNTIME_CONFIGURATION_NAME);
-
-		configuration.extendsFrom(runtimeConfiguration);
-
-		return configuration;
-	}
-
-	private void _addPortalToolDependencies(Project project) {
-		_addPortalToolConfiguration(project);
+		// Dependencies
 
 		PortalTools.addPortalToolDependencies(
 			project, _PORTAL_TOOL_CONFIGURATION_NAME, _PORTAL_TOOL_GROUP,
@@ -100,16 +58,9 @@ public class AlloyTaglibDefaultsPlugin
 		GradleUtil.addDependency(
 			project, _PORTAL_TOOL_CONFIGURATION_NAME, "org.freemarker",
 			"freemarker", "2.3.23");
-	}
 
-	private void _configureTaskBuildTaglibs(BuildTaglibsTask buildTaglibsTask) {
-		Configuration configuration = GradleUtil.getConfiguration(
-			buildTaglibsTask.getProject(), _PORTAL_TOOL_CONFIGURATION_NAME);
+		// Other
 
-		buildTaglibsTask.setClasspath(configuration);
-	}
-
-	private void _configureTasksBuildTaglibs(Project project) {
 		TaskContainer taskContainer = project.getTasks();
 
 		taskContainer.withType(
@@ -122,6 +73,60 @@ public class AlloyTaglibDefaultsPlugin
 				}
 
 			});
+
+		PluginContainer pluginContainer = project.getPlugins();
+
+		pluginContainer.withType(
+			LiferayBasePlugin.class,
+			new Action<LiferayBasePlugin>() {
+
+				@Override
+				public void execute(LiferayBasePlugin liferayBasePlugin) {
+					_configurePluginLiferayBase(
+						project, portalToolConfiguration);
+				}
+
+			});
+	}
+
+	@Override
+	protected Class<AlloyTaglibPlugin> getPluginClass() {
+		return AlloyTaglibPlugin.class;
+	}
+
+	private AlloyTaglibDefaultsPlugin() {
+	}
+
+	private Configuration _addConfigurationPortalTool(Project project) {
+		Configuration configuration = GradleUtil.addConfiguration(
+			project, _PORTAL_TOOL_CONFIGURATION_NAME);
+
+		configuration.setDescription(
+			"Configures the Alloy Taglib tool for this project.");
+		configuration.setVisible(false);
+
+		Configuration runtimeConfiguration = GradleUtil.getConfiguration(
+			project, JavaPlugin.RUNTIME_CONFIGURATION_NAME);
+
+		configuration.extendsFrom(runtimeConfiguration);
+
+		return configuration;
+	}
+
+	private void _configurePluginLiferayBase(
+		Project project, Configuration portalToolConfiguration) {
+
+		Configuration portalConfiguration = GradleUtil.getConfiguration(
+			project, LiferayBasePlugin.PORTAL_CONFIGURATION_NAME);
+
+		portalToolConfiguration.extendsFrom(portalConfiguration);
+	}
+
+	private void _configureTaskBuildTaglibs(BuildTaglibsTask buildTaglibsTask) {
+		Configuration configuration = GradleUtil.getConfiguration(
+			buildTaglibsTask.getProject(), _PORTAL_TOOL_CONFIGURATION_NAME);
+
+		buildTaglibsTask.setClasspath(configuration);
 	}
 
 	private static final String _PORTAL_TOOL_CONFIGURATION_NAME = "alloyTaglib";

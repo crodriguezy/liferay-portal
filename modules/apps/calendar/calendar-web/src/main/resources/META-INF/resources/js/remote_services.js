@@ -16,7 +16,6 @@ AUI.add(
 	'liferay-calendar-remote-services',
 	(A) => {
 		var Lang = A.Lang;
-		var LString = Lang.String;
 
 		var isString = Lang.isString;
 		var toInt = Lang.toInt;
@@ -179,7 +178,7 @@ AUI.add(
 								if (success) {
 									success.call(instance, data);
 									MessageUtil.showSuccessMessage(
-										instance.get('rootNode')
+										instance.get('rootNode')._node
 									);
 								}
 							},
@@ -208,7 +207,7 @@ AUI.add(
 								if (success) {
 									success.call(instance, data);
 									MessageUtil.showSuccessMessage(
-										instance.get('rootNode')
+										instance.get('rootNode')._node
 									);
 								}
 							},
@@ -473,7 +472,7 @@ AUI.add(
 								if (data.exception) {
 									CalendarUtil.destroyEvent(schedulerEvent);
 									MessageUtil.showErrorMessage(
-										instance.get('rootNode'),
+										instance.get('rootNode')._node,
 										data.exception
 									);
 								}
@@ -486,7 +485,7 @@ AUI.add(
 									if (success) {
 										success.call(instance, data);
 										MessageUtil.showSuccessMessage(
-											instance.get('rootNode')
+											instance.get('rootNode')._node
 										);
 									}
 								}
@@ -511,7 +510,7 @@ AUI.add(
 							startTimeMinute: startDate.getMinutes(),
 							startTimeMonth: startDate.getMonth(),
 							startTimeYear: startDate.getFullYear(),
-							title: LString.unescapeHTML(
+							title: Liferay.Util.unescapeHTML(
 								schedulerEvent.get('content')
 							),
 							updateInstance,

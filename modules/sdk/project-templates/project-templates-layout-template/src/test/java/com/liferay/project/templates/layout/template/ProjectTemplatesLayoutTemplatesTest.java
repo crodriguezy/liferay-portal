@@ -48,7 +48,7 @@ public class ProjectTemplatesLayoutTemplatesTest
 	@Parameterized.Parameters(name = "Testcase-{index}: testing {0}")
 	public static Iterable<Object[]> data() {
 		return Arrays.asList(
-			new Object[][] {{"7.0.6"}, {"7.1.3"}, {"7.2.1"}, {"7.3.1"}});
+			new Object[][] {{"7.0.6"}, {"7.1.3"}, {"7.2.1"}, {"7.3.2"}});
 	}
 
 	@BeforeClass
@@ -80,10 +80,11 @@ public class ProjectTemplatesLayoutTemplatesTest
 			temporaryFolder, "gradle", "gradleWS", _liferayVersion,
 			mavenExecutor);
 
-		File gradleWorkspaceWarsDir = new File(gradleWorkspaceDir, "wars");
+		File gradleWorkspaceModulesDir = new File(
+			gradleWorkspaceDir, "modules");
 
 		File gradleProjectDir = buildTemplateWithGradle(
-			gradleWorkspaceWarsDir, template, name, "--liferay-version",
+			gradleWorkspaceModulesDir, template, name, "--liferay-version",
 			_liferayVersion);
 
 		if (_liferayVersion.startsWith("7.0")) {
@@ -132,10 +133,10 @@ public class ProjectTemplatesLayoutTemplatesTest
 			temporaryFolder, "maven", "mavenWS", _liferayVersion,
 			mavenExecutor);
 
-		File mavenWarsDir = new File(mavenWorkspaceDir, "wars");
+		File mavenModulesDir = new File(mavenWorkspaceDir, "modules");
 
 		File mavenProjectDir = buildTemplateWithMaven(
-			mavenWarsDir, mavenWarsDir, template, name, "com.test",
+			mavenModulesDir, mavenModulesDir, template, name, "com.test",
 			mavenExecutor, "-DliferayVersion=" + _liferayVersion);
 
 		createNewFiles(
@@ -148,7 +149,7 @@ public class ProjectTemplatesLayoutTemplatesTest
 			buildProjects(
 				_gradleDistribution, mavenExecutor, gradleWorkspaceDir,
 				mavenProjectDir, gradleOutputDir, mavenOutputDir,
-				":wars:" + name + GRADLE_TASK_PATH_BUILD);
+				":modules:" + name + GRADLE_TASK_PATH_BUILD);
 		}
 	}
 

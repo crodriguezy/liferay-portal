@@ -63,6 +63,10 @@ public interface ClassNameLocalService
 	/**
 	 * Adds the class name to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect ClassNameLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param className the class name
 	 * @return the class name that was added
 	 */
@@ -93,6 +97,10 @@ public interface ClassNameLocalService
 	/**
 	 * Deletes the class name from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect ClassNameLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param className the class name
 	 * @return the class name that was removed
 	 */
@@ -101,6 +109,10 @@ public interface ClassNameLocalService
 
 	/**
 	 * Deletes the class name with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect ClassNameLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param classNameId the primary key of the class name
 	 * @return the class name that was removed
@@ -263,6 +275,10 @@ public interface ClassNameLocalService
 
 	/**
 	 * Updates the class name in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect ClassNameLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param className the class name
 	 * @return the class name that was updated

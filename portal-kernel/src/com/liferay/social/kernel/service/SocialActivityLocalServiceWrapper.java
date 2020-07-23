@@ -14,7 +14,10 @@
 
 package com.liferay.social.kernel.service;
 
+import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.portal.kernel.service.ServiceWrapper;
+import com.liferay.portal.kernel.service.persistence.change.tracking.CTPersistence;
+import com.liferay.social.kernel.model.SocialActivity;
 
 /**
  * Provides a wrapper for {@link SocialActivityLocalService}.
@@ -107,8 +110,7 @@ public class SocialActivityLocalServiceWrapper
 
 	@Override
 	public void addActivity(
-			com.liferay.social.kernel.model.SocialActivity activity,
-			com.liferay.social.kernel.model.SocialActivity mirrorActivity)
+			SocialActivity activity, SocialActivity mirrorActivity)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		_socialActivityLocalService.addActivity(activity, mirrorActivity);
@@ -117,13 +119,15 @@ public class SocialActivityLocalServiceWrapper
 	/**
 	 * Adds the social activity to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect SocialActivityLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param socialActivity the social activity
 	 * @return the social activity that was added
 	 */
 	@Override
-	public com.liferay.social.kernel.model.SocialActivity addSocialActivity(
-		com.liferay.social.kernel.model.SocialActivity socialActivity) {
-
+	public SocialActivity addSocialActivity(SocialActivity socialActivity) {
 		return _socialActivityLocalService.addSocialActivity(socialActivity);
 	}
 
@@ -203,9 +207,7 @@ public class SocialActivityLocalServiceWrapper
 	 * @return the new social activity
 	 */
 	@Override
-	public com.liferay.social.kernel.model.SocialActivity createSocialActivity(
-		long activityId) {
-
+	public SocialActivity createSocialActivity(long activityId) {
 		return _socialActivityLocalService.createSocialActivity(activityId);
 	}
 
@@ -259,8 +261,7 @@ public class SocialActivityLocalServiceWrapper
 	 * @param activity the activity to be removed
 	 */
 	@Override
-	public void deleteActivity(
-			com.liferay.social.kernel.model.SocialActivity activity)
+	public void deleteActivity(SocialActivity activity)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		_socialActivityLocalService.deleteActivity(activity);
@@ -280,13 +281,16 @@ public class SocialActivityLocalServiceWrapper
 	/**
 	 * Deletes the social activity with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect SocialActivityLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param activityId the primary key of the social activity
 	 * @return the social activity that was removed
 	 * @throws PortalException if a social activity with the primary key could not be found
 	 */
 	@Override
-	public com.liferay.social.kernel.model.SocialActivity deleteSocialActivity(
-			long activityId)
+	public SocialActivity deleteSocialActivity(long activityId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _socialActivityLocalService.deleteSocialActivity(activityId);
@@ -295,13 +299,15 @@ public class SocialActivityLocalServiceWrapper
 	/**
 	 * Deletes the social activity from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect SocialActivityLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param socialActivity the social activity
 	 * @return the social activity that was removed
 	 */
 	@Override
-	public com.liferay.social.kernel.model.SocialActivity deleteSocialActivity(
-		com.liferay.social.kernel.model.SocialActivity socialActivity) {
-
+	public SocialActivity deleteSocialActivity(SocialActivity socialActivity) {
 		return _socialActivityLocalService.deleteSocialActivity(socialActivity);
 	}
 
@@ -419,7 +425,7 @@ public class SocialActivityLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.social.kernel.model.SocialActivity fetchFirstActivity(
+	public SocialActivity fetchFirstActivity(
 		String className, long classPK, int type) {
 
 		return _socialActivityLocalService.fetchFirstActivity(
@@ -427,9 +433,7 @@ public class SocialActivityLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.social.kernel.model.SocialActivity fetchSocialActivity(
-		long activityId) {
-
+	public SocialActivity fetchSocialActivity(long activityId) {
 		return _socialActivityLocalService.fetchSocialActivity(activityId);
 	}
 
@@ -459,8 +463,8 @@ public class SocialActivityLocalServiceWrapper
 	 * @return the range of matching activities
 	 */
 	@Override
-	public java.util.List<com.liferay.social.kernel.model.SocialActivity>
-		getActivities(long classNameId, int start, int end) {
+	public java.util.List<SocialActivity> getActivities(
+		long classNameId, int start, int end) {
 
 		return _socialActivityLocalService.getActivities(
 			classNameId, start, end);
@@ -488,10 +492,9 @@ public class SocialActivityLocalServiceWrapper
 	 * @return the range of matching activities
 	 */
 	@Override
-	public java.util.List<com.liferay.social.kernel.model.SocialActivity>
-		getActivities(
-			long mirrorActivityId, long classNameId, long classPK, int start,
-			int end) {
+	public java.util.List<SocialActivity> getActivities(
+		long mirrorActivityId, long classNameId, long classPK, int start,
+		int end) {
 
 		return _socialActivityLocalService.getActivities(
 			mirrorActivityId, classNameId, classPK, start, end);
@@ -519,10 +522,9 @@ public class SocialActivityLocalServiceWrapper
 	 * @return the range of matching activities
 	 */
 	@Override
-	public java.util.List<com.liferay.social.kernel.model.SocialActivity>
-		getActivities(
-			long mirrorActivityId, String className, long classPK, int start,
-			int end) {
+	public java.util.List<SocialActivity> getActivities(
+		long mirrorActivityId, String className, long classPK, int start,
+		int end) {
 
 		return _socialActivityLocalService.getActivities(
 			mirrorActivityId, className, classPK, start, end);
@@ -547,8 +549,8 @@ public class SocialActivityLocalServiceWrapper
 	 * @return the range of matching activities
 	 */
 	@Override
-	public java.util.List<com.liferay.social.kernel.model.SocialActivity>
-		getActivities(String className, int start, int end) {
+	public java.util.List<SocialActivity> getActivities(
+		String className, int start, int end) {
 
 		return _socialActivityLocalService.getActivities(className, start, end);
 	}
@@ -629,16 +631,15 @@ public class SocialActivityLocalServiceWrapper
 	 * @return Returns the activity
 	 */
 	@Override
-	public com.liferay.social.kernel.model.SocialActivity getActivity(
-			long activityId)
+	public SocialActivity getActivity(long activityId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _socialActivityLocalService.getActivity(activityId);
 	}
 
 	@Override
-	public java.util.List<com.liferay.social.kernel.model.SocialActivity>
-		getActivitySetActivities(long activitySetId, int start, int end) {
+	public java.util.List<SocialActivity> getActivitySetActivities(
+		long activitySetId, int start, int end) {
 
 		return _socialActivityLocalService.getActivitySetActivities(
 			activitySetId, start, end);
@@ -666,8 +667,8 @@ public class SocialActivityLocalServiceWrapper
 	 * @return the range of matching activities
 	 */
 	@Override
-	public java.util.List<com.liferay.social.kernel.model.SocialActivity>
-		getGroupActivities(long groupId, int start, int end) {
+	public java.util.List<SocialActivity> getGroupActivities(
+		long groupId, int start, int end) {
 
 		return _socialActivityLocalService.getGroupActivities(
 			groupId, start, end);
@@ -711,8 +712,8 @@ public class SocialActivityLocalServiceWrapper
 	 * @return the range of matching activities
 	 */
 	@Override
-	public java.util.List<com.liferay.social.kernel.model.SocialActivity>
-		getGroupUsersActivities(long groupId, int start, int end) {
+	public java.util.List<SocialActivity> getGroupUsersActivities(
+		long groupId, int start, int end) {
 
 		return _socialActivityLocalService.getGroupUsersActivities(
 			groupId, start, end);
@@ -749,8 +750,7 @@ public class SocialActivityLocalServiceWrapper
 	 * @return Returns the mirror activity
 	 */
 	@Override
-	public com.liferay.social.kernel.model.SocialActivity getMirrorActivity(
-			long mirrorActivityId)
+	public SocialActivity getMirrorActivity(long mirrorActivityId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _socialActivityLocalService.getMirrorActivity(mirrorActivityId);
@@ -775,8 +775,8 @@ public class SocialActivityLocalServiceWrapper
 	 * @return the range of matching activities
 	 */
 	@Override
-	public java.util.List<com.liferay.social.kernel.model.SocialActivity>
-		getOrganizationActivities(long organizationId, int start, int end) {
+	public java.util.List<SocialActivity> getOrganizationActivities(
+		long organizationId, int start, int end) {
 
 		return _socialActivityLocalService.getOrganizationActivities(
 			organizationId, start, end);
@@ -814,9 +814,8 @@ public class SocialActivityLocalServiceWrapper
 	 * @return the range of matching activities
 	 */
 	@Override
-	public java.util.List<com.liferay.social.kernel.model.SocialActivity>
-		getOrganizationUsersActivities(
-			long organizationId, int start, int end) {
+	public java.util.List<SocialActivity> getOrganizationUsersActivities(
+		long organizationId, int start, int end) {
 
 		return _socialActivityLocalService.getOrganizationUsersActivities(
 			organizationId, start, end);
@@ -875,8 +874,8 @@ public class SocialActivityLocalServiceWrapper
 	 * @return the range of matching activities
 	 */
 	@Override
-	public java.util.List<com.liferay.social.kernel.model.SocialActivity>
-		getRelationActivities(long userId, int start, int end) {
+	public java.util.List<SocialActivity> getRelationActivities(
+		long userId, int start, int end) {
 
 		return _socialActivityLocalService.getRelationActivities(
 			userId, start, end);
@@ -903,8 +902,8 @@ public class SocialActivityLocalServiceWrapper
 	 * @return the range of matching activities
 	 */
 	@Override
-	public java.util.List<com.liferay.social.kernel.model.SocialActivity>
-		getRelationActivities(long userId, int type, int start, int end) {
+	public java.util.List<SocialActivity> getRelationActivities(
+		long userId, int type, int start, int end) {
 
 		return _socialActivityLocalService.getRelationActivities(
 			userId, type, start, end);
@@ -949,8 +948,8 @@ public class SocialActivityLocalServiceWrapper
 	 * @return the range of social activities
 	 */
 	@Override
-	public java.util.List<com.liferay.social.kernel.model.SocialActivity>
-		getSocialActivities(int start, int end) {
+	public java.util.List<SocialActivity> getSocialActivities(
+		int start, int end) {
 
 		return _socialActivityLocalService.getSocialActivities(start, end);
 	}
@@ -973,8 +972,7 @@ public class SocialActivityLocalServiceWrapper
 	 * @throws PortalException if a social activity with the primary key could not be found
 	 */
 	@Override
-	public com.liferay.social.kernel.model.SocialActivity getSocialActivity(
-			long activityId)
+	public SocialActivity getSocialActivity(long activityId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _socialActivityLocalService.getSocialActivity(activityId);
@@ -998,8 +996,8 @@ public class SocialActivityLocalServiceWrapper
 	 * @return the range of matching activities
 	 */
 	@Override
-	public java.util.List<com.liferay.social.kernel.model.SocialActivity>
-		getUserActivities(long userId, int start, int end) {
+	public java.util.List<SocialActivity> getUserActivities(
+		long userId, int start, int end) {
 
 		return _socialActivityLocalService.getUserActivities(
 			userId, start, end);
@@ -1035,8 +1033,8 @@ public class SocialActivityLocalServiceWrapper
 	 * @return the range of matching activities
 	 */
 	@Override
-	public java.util.List<com.liferay.social.kernel.model.SocialActivity>
-		getUserGroupsActivities(long userId, int start, int end) {
+	public java.util.List<SocialActivity> getUserGroupsActivities(
+		long userId, int start, int end) {
 
 		return _socialActivityLocalService.getUserGroupsActivities(
 			userId, start, end);
@@ -1073,7 +1071,7 @@ public class SocialActivityLocalServiceWrapper
 	 * @return the range of matching activities
 	 */
 	@Override
-	public java.util.List<com.liferay.social.kernel.model.SocialActivity>
+	public java.util.List<SocialActivity>
 		getUserGroupsAndOrganizationsActivities(
 			long userId, int start, int end) {
 
@@ -1113,8 +1111,8 @@ public class SocialActivityLocalServiceWrapper
 	 * @return the range of matching activities
 	 */
 	@Override
-	public java.util.List<com.liferay.social.kernel.model.SocialActivity>
-		getUserOrganizationsActivities(long userId, int start, int end) {
+	public java.util.List<SocialActivity> getUserOrganizationsActivities(
+		long userId, int start, int end) {
 
 		return _socialActivityLocalService.getUserOrganizationsActivities(
 			userId, start, end);
@@ -1136,14 +1134,36 @@ public class SocialActivityLocalServiceWrapper
 	/**
 	 * Updates the social activity in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect SocialActivityLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param socialActivity the social activity
 	 * @return the social activity that was updated
 	 */
 	@Override
-	public com.liferay.social.kernel.model.SocialActivity updateSocialActivity(
-		com.liferay.social.kernel.model.SocialActivity socialActivity) {
-
+	public SocialActivity updateSocialActivity(SocialActivity socialActivity) {
 		return _socialActivityLocalService.updateSocialActivity(socialActivity);
+	}
+
+	@Override
+	public CTPersistence<SocialActivity> getCTPersistence() {
+		return _socialActivityLocalService.getCTPersistence();
+	}
+
+	@Override
+	public Class<SocialActivity> getModelClass() {
+		return _socialActivityLocalService.getModelClass();
+	}
+
+	@Override
+	public <R, E extends Throwable> R updateWithUnsafeFunction(
+			UnsafeFunction<CTPersistence<SocialActivity>, R, E>
+				updateUnsafeFunction)
+		throws E {
+
+		return _socialActivityLocalService.updateWithUnsafeFunction(
+			updateUnsafeFunction);
 	}
 
 	@Override

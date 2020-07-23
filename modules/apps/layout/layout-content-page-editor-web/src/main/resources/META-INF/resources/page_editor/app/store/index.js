@@ -19,13 +19,18 @@ import React, {
 	useMemo,
 	useReducer,
 	useRef,
-	useState,
 } from 'react';
 
 import useThunk from '../../core/hooks/useThunk';
 import useUndo from '../components/undo/useUndo';
 
-const StoreContext = React.createContext(null);
+const StoreDispatchContext = React.createContext(() => {});
+const StoreGetStateContext = React.createContext(null);
+const StoreSubscriptionContext = React.createContext([() => {}, () => {}]);
+
+const DEFAULT_COMPARE_EQUAL = (a, b) => a === b;
+const DEFAULT_DISPATCH = () => {};
+const DEFAULT_GET_STATE = () => ({});
 
 /**
  * Although StoreContextProvider creates a full functional store,
@@ -38,9 +43,11 @@ const StoreContext = React.createContext(null);
  */
 export const StoreAPIContextProvider = ({
 	children,
-	dispatch = () => {},
-	getState = () => ({}),
+	dispatch = DEFAULT_DISPATCH,
+	getState = DEFAULT_GET_STATE,
 }) => {
+	const state = getState();
+
 	const subscribers = useRef([]);
 
 	const subscribe = useCallback((subscriber) => {
@@ -53,26 +60,20 @@ export const StoreAPIContextProvider = ({
 		);
 	}, []);
 
-	useEffect(() => {
-		storeRef.current.dispatch = dispatch;
-	}, [dispatch]);
+	const subscriptionContext = useRef([subscribe, unsubscribe]);
 
 	useEffect(() => {
-		storeRef.current.getState = getState;
-		subscribers.current.forEach((subscriber) => subscriber());
-	}, [getState]);
-
-	const storeRef = useRef({
-		dispatch,
-		getState,
-		subscribe,
-		unsubscribe,
-	});
+		subscribers.current.forEach((subscriber) => subscriber(state));
+	}, [state]);
 
 	return (
-		<StoreContext.Provider value={storeRef}>
-			{children}
-		</StoreContext.Provider>
+		<StoreSubscriptionContext.Provider value={subscriptionContext.current}>
+			<StoreDispatchContext.Provider value={dispatch}>
+				<StoreGetStateContext.Provider value={getState}>
+					{children}
+				</StoreGetStateContext.Provider>
+			</StoreDispatchContext.Provider>
+		</StoreSubscriptionContext.Provider>
 	);
 };
 
@@ -89,7 +90,10 @@ export const StoreContextProvider = ({children, initialState, reducer}) => {
 		useUndo(useReducer(reducer, initialState))
 	);
 
-	const getState = useCallback(() => state, [state]);
+	const stateRef = useRef(state);
+	const getState = useCallback(() => stateRef.current, []);
+
+	stateRef.current = state;
 
 	return (
 		<StoreAPIContextProvider dispatch={dispatch} getState={getState}>
@@ -101,28 +105,18 @@ export const StoreContextProvider = ({children, initialState, reducer}) => {
 /**
  * @see https://react-redux.js.org/api/hooks#usedispatch
  */
-export const useDispatch = () => {
-	const storeRef = useContext(StoreContext);
+export const useDispatch = () => useContext(StoreDispatchContext);
 
-	if (process.env.NODE_ENV === 'test' && !storeRef) {
-		throw new Error('StoreContextProvider was not found');
-	}
-
-	return storeRef.current.dispatch;
-};
-
-/**
- * @see https://react-redux.js.org/api/hooks#useselector
- */
-export const useSelector = (selector, compareEqual = (a, b) => a === b) => {
-	const storeRef = useContext(StoreContext);
-
-	if (process.env.NODE_ENV === 'test' && !storeRef) {
-		throw new Error('StoreContextProvider was not found');
-	}
+export const useSelectorCallback = (
+	selector,
+	dependencies,
+	compareEqual = DEFAULT_COMPARE_EQUAL
+) => {
+	const getState = useContext(StoreGetStateContext);
+	const [subscribe, unsubscribe] = useContext(StoreSubscriptionContext);
 
 	const initialState = useMemo(
-		() => selector(storeRef.current.getState()),
+		() => selector(getState()),
 
 		// We really want to call selector here just on component mount.
 		// This provides an initial value that will be recalculated when
@@ -131,25 +125,32 @@ export const useSelector = (selector, compareEqual = (a, b) => a === b) => {
 		[]
 	);
 
-	const [selectorState, setSelectorState] = useState(initialState);
+	const [selectorState, setSelectorState] = useReducer(
+		(state, nextState) =>
+			compareEqual(state, nextState) ? state : nextState,
+		initialState
+	);
+
+	const selectorCallback = useCallback(selector, dependencies);
 
 	useEffect(() => {
-		const store = storeRef.current;
-
-		const onStoreChange = () => {
-			const nextState = selector(storeRef.current.getState());
-
-			if (!compareEqual(selectorState, nextState)) {
-				setSelectorState(nextState);
-			}
+		const onStoreChange = (nextState) => {
+			setSelectorState(selectorCallback(nextState));
 		};
 
-		store.subscribe(onStoreChange);
+		setSelectorState(selectorCallback(getState()));
+		subscribe(onStoreChange);
 
 		return () => {
-			store.unsubscribe(onStoreChange);
+			unsubscribe(onStoreChange);
 		};
-	}, [selectorState, storeRef, selector, compareEqual]);
+	}, [getState, selectorCallback, subscribe, unsubscribe]);
 
 	return selectorState;
 };
+
+/**
+ * @see https://react-redux.js.org/api/hooks#useselector
+ */
+export const useSelector = (selector, compareEqual = DEFAULT_COMPARE_EQUAL) =>
+	useSelectorCallback(selector, [], compareEqual);

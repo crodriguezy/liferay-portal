@@ -5,6 +5,7 @@ definition {
 	property app.server.bundles.size = "1";
 	property cluster.enabled = "true";
 	property portal.release = "true";
+	property portal.suite.search.engine = "elasticsearch7";
 	property portal.upstream = "true";
 	property remote.elasticsearch.enabled = "false";
 	property test.assert.warning.exceptions = "true";
@@ -26,7 +27,7 @@ definition {
 	test AddAndRemoveSidecarNodes {
 		property app.server.bundles.size = "2";
 		property skip.start.app.server.index = "2";
-		property test.name.skip.portal.instance = "ClusterSidecar#AddAndRemoveSidecarNodes";
+		property test.name.skip.portal.instance = "ClusteringSidecar#AddAndRemoveSidecarNodes";
 
 		User.loginPG(
 			password = "test",
@@ -36,7 +37,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Web Content");
 
 		WebContentNavigator.gotoAddCP();
@@ -60,11 +60,11 @@ definition {
 
 		Clustering.viewSidecarInfoViaSidecarURL(
 			sidecarInfo = '''"status" : "green"''',
-			url = "http://127.0.0.1:9201/_cluster/health?pretty");
+			url = "http://127.0.0.1:9202/_cluster/health?pretty");
 
 		Clustering.viewSidecarInfoViaSidecarURL(
 			sidecarInfo = '''"number_of_nodes" : 1''',
-			url = "http://127.0.0.1:9201/_cluster/health?pretty");
+			url = "http://127.0.0.1:9202/_cluster/health?pretty");
 
 		User.loginPG(
 			nodePort = "9080",
@@ -75,8 +75,7 @@ definition {
 
 		SearchPortlets.searchEmbedded(searchTerm = "WC WebContent Title");
 
-		SearchResultPortlet.viewSearchResults(
-			searchAssetSummary = "WC WebContent Content",
+		SearchResultPortlet.viewSearchResultNotPresent(
 			searchAssetTitle = "WC WebContent Title",
 			searchAssetType = "Web Content Article");
 
@@ -99,8 +98,7 @@ definition {
 
 		SearchPortlets.searchEmbedded(searchTerm = "WC WebContent Title");
 
-		SearchResultPortlet.viewSearchResults(
-			searchAssetSummary = "WC WebContent Content",
+		SearchResultPortlet.viewSearchResultNotPresent(
 			searchAssetTitle = "WC WebContent Title",
 			searchAssetType = "Web Content Article");
 
@@ -109,7 +107,7 @@ definition {
 
 	@priority = "5"
 	test AssertClusterSidecarStarted {
-		property test.name.skip.portal.instance = "ClusterSidecar#AssertClusterSidecarStarted";
+		property test.name.skip.portal.instance = "ClusteringSidecar#AssertClusterSidecarStarted";
 
 		var sidecarNode1Name = Clustering.getClusterSidecarNodeName(nodePort = "8080");
 		var sidecarNode2Name = Clustering.getClusterSidecarNodeName(nodePort = "9080");
@@ -117,28 +115,28 @@ definition {
 		Clustering.viewClusterStatusInConsole();
 
 		Clustering.viewTextPresentOnSpecificNode(
-			expectedText = "Sidecar ${sidecarNode1Name} is at 127.0.0.1:9200",
+			expectedText = "Sidecar Elasticsearch ${sidecarNode1Name} is at 127.0.0.1:9201",
 			nodePort = "8080");
 
 		Clustering.viewTextPresentOnSpecificNode(
-			expectedText = "Sidecar ${sidecarNode2Name} is at 127.0.0.1:9201",
+			expectedText = "Sidecar Elasticsearch ${sidecarNode2Name} is at 127.0.0.1:9202",
 			nodePort = "9080");
 
 		Clustering.viewSidecarInfoViaSidecarURL(
 			sidecarInfo = "${sidecarNode1Name}",
-			url = "http://127.0.0.1:9200");
-
-		Clustering.viewSidecarInfoViaSidecarURL(
-			sidecarInfo = "${sidecarNode2Name}",
 			url = "http://127.0.0.1:9201");
 
 		Clustering.viewSidecarInfoViaSidecarURL(
-			sidecarInfo = '''"status" : "green"''',
-			url = "http://127.0.0.1:9200/_cluster/health?pretty");
+			sidecarInfo = "${sidecarNode2Name}",
+			url = "http://127.0.0.1:9202");
 
 		Clustering.viewSidecarInfoViaSidecarURL(
-			sidecarInfo = '''"number_of_nodes" : 2''',
-			url = "http://127.0.0.1:9200/_cluster/health?pretty");
+			sidecarInfo = '''"status" : "green"''',
+			url = "http://127.0.0.1:9201/_cluster/health?pretty");
+
+		Clustering.viewSidecarInfoViaSidecarURL(
+			sidecarInfo = '''"number_of_nodes" : 1''',
+			url = "http://127.0.0.1:9201/_cluster/health?pretty");
 
 		User.loginPG(
 			password = "test",
@@ -146,20 +144,18 @@ definition {
 
 		Page.assertNodePortPG(nodePort = "8080");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "Search");
 
 		AssertTextEquals.assertPartialText(
 			locator1 = "SearchAdmin#SEARCH_ENGINE_VENDOR",
-			value1 = "Elasticsearch (Embedded)");
-
-		// Workaround of LPS-109110
+			value1 = "Elasticsearch (Sidecar)");
 
 		AssertTextEquals(
 			locator1 = "SearchAdmin#ACTIVE_CONNECTION_COUNT",
-			value1 = "2");
+			value1 = "1");
 
 		AssertTextEquals.assertPartialText(
 			locator1 = "SearchAdmin#SIDECAR_CLUSTER_NAME",
@@ -188,19 +184,14 @@ definition {
 
 		Page.assertNodePortPG(nodePort = "9080");
 
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
-			panel = "Control Panel",
-			portlet = "Search");
-
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "Search");
 
 		AssertTextEquals.assertPartialText(
 			locator1 = "SearchAdmin#SEARCH_ENGINE_VENDOR",
-			value1 = "Elasticsearch (Embedded)");
+			value1 = "Elasticsearch (Sidecar)");
 
 		AssertTextEquals(
 			locator1 = "SearchAdmin#ACTIVE_CONNECTION_COUNT",

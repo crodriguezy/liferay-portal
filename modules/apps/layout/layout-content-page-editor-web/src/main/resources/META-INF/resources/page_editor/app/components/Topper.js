@@ -16,7 +16,7 @@ import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
 	LayoutDataPropTypes,
@@ -25,25 +25,23 @@ import {
 import {switchSidebarPanel} from '../actions/index';
 import {LAYOUT_DATA_ITEM_TYPES} from '../config/constants/layoutDataItemTypes';
 import {config} from '../config/index';
-import selectCanUpdate from '../selectors/selectCanUpdate';
+import selectCanUpdateItemConfiguration from '../selectors/selectCanUpdateItemConfiguration';
+import selectCanUpdatePageStructure from '../selectors/selectCanUpdatePageStructure';
 import {useDispatch, useSelector} from '../store/index';
-import deleteItem from '../thunks/deleteItem';
 import moveItem from '../thunks/moveItem';
+import getLayoutDataItemLabel from '../utils/getLayoutDataItemLabel';
 import {
 	TARGET_POSITION,
 	useDragItem,
 	useDropTarget,
 } from '../utils/useDragAndDrop';
 import {
-	useActiveItemId,
 	useHoverItem,
-	useHoveredItemId,
 	useIsActive,
 	useIsHovered,
 	useSelectItem,
 } from './Controls';
-import getLabelName from './layout-data-items/getLabelName';
-import hasDropZoneChild from './layout-data-items/hasDropZoneChild';
+import ItemActions from './ItemActions';
 
 const TOPPER_BAR_HEIGHT = 24;
 
@@ -74,20 +72,49 @@ TopperListItem.propTypes = {
 	expand: PropTypes.bool,
 };
 
-export default function ({children, ...props}) {
-	const canUpdate = useSelector(selectCanUpdate);
+const MemoizedTopperContent = React.memo(TopperContent);
 
-	return canUpdate ? <Topper {...props}>{children}</Topper> : children;
-}
-
-function Topper({children, item, itemElement, layoutData}) {
-	const dispatch = useDispatch();
-	const store = useSelector((state) => state);
-	const activeItemId = useActiveItemId();
-	const hoveredItemId = useHoveredItemId();
-	const hoverItem = useHoverItem();
+export default function Topper({children, item, ...props}) {
+	const canUpdatePageStructure = useSelector(selectCanUpdatePageStructure);
+	const canUpdateItemConfiguration = useSelector(
+		selectCanUpdateItemConfiguration
+	);
 	const isHovered = useIsHovered();
 	const isActive = useIsActive();
+
+	if (canUpdatePageStructure || canUpdateItemConfiguration) {
+		return (
+			<MemoizedTopperContent
+				isActive={isActive(item.itemId)}
+				isHovered={isHovered(item.itemId)}
+				item={item}
+				{...props}
+			>
+				{children}
+			</MemoizedTopperContent>
+		);
+	}
+
+	return children;
+}
+
+function TopperContent({
+	children,
+	className,
+	isActive,
+	isHovered,
+	item,
+	itemElement,
+	layoutData,
+}) {
+	const canUpdatePageStructure = useSelector(selectCanUpdatePageStructure);
+	const dispatch = useDispatch();
+	const segmentsExperienceId = useSelector(
+		(state) => state.segmentsExperienceId
+	);
+	const hoverItem = useHoverItem();
+	const fragmentEntryLinks = useSelector((state) => state.fragmentEntryLinks);
+
 	const selectItem = useSelectItem();
 
 	const {
@@ -106,89 +133,28 @@ function Topper({children, item, itemElement, layoutData}) {
 					itemId: item.itemId,
 					parentItemId,
 					position,
-					store,
+					segmentsExperienceId,
 				})
 			)
 	);
 
-	const itemIsRemovable = useMemo(() => isRemovable(item, layoutData), [
-		item,
-		layoutData,
-	]);
+	const commentsPanelId = config.sidebarPanels?.comments?.sidebarPanelId;
 
-	const commentsPanelId = config.sidebarPanels.comments.sidebarPanelId;
-
-	const fragmentEntryLinks = store.fragmentEntryLinks;
-
-	const [isInset, setIsInset] = useState(false);
-	const [windowScrollPosition, setWindowScrollPosition] = useState(0);
-
-	const fragmentShouldBeHovered = () => {
-		const [activeItemfragmentEntryLinkId] = activeItemId
-			? activeItemId.split('-')
-			: '';
-		const [hoveredItemfragmentEntryLinkId] = hoveredItemId
-			? hoveredItemId.split('-')
-			: '';
-
-		const childIsActive =
-			Number(activeItemfragmentEntryLinkId) ===
-			item.config.fragmentEntryLinkId;
-		const childIsHovered =
-			Number(hoveredItemfragmentEntryLinkId) ===
-			item.config.fragmentEntryLinkId;
-
-		return (
-			item.type === LAYOUT_DATA_ITEM_TYPES.fragment &&
-			(isHovered(item.itemId) || (childIsActive && childIsHovered))
-		);
-	};
-
-	useEffect(() => {
-		const handleWindowScroll = () => {
-			setWindowScrollPosition(window.scrollY);
-		};
-
-		window.addEventListener('scroll', handleWindowScroll);
-
-		return () => {
-			window.removeEventListener('scroll', handleWindowScroll);
-		};
-	}, []);
-
-	useEffect(() => {
-		if (itemElement) {
-			const itemTop =
-				itemElement.getBoundingClientRect().top - TOPPER_BAR_HEIGHT;
-
-			const controlMenuContainerHeight = document.querySelector(
-				'.control-menu-container'
-			).offsetHeight;
-
-			if (itemTop < controlMenuContainerHeight) {
-				setIsInset(true);
-			}
-			else {
-				setIsInset(false);
-			}
-		}
-	}, [itemElement, layoutData, windowScrollPosition]);
-
-	const dataAdvice =
+	const notDroppableMessage =
 		isOverTarget && !canDropOverTarget
 			? Liferay.Util.sub(
 					Liferay.Language.get('a-x-cannot-be-dropped-inside-a-x'),
 					[
-						getLabelName(sourceItem, fragmentEntryLinks),
-						getLabelName(item, fragmentEntryLinks),
+						getLayoutDataItemLabel(sourceItem, fragmentEntryLinks),
+						getLayoutDataItemLabel(item, fragmentEntryLinks),
 					]
 			  )
 			: null;
 
 	return (
 		<div
-			className={classNames('page-editor__topper', {
-				active: isActive(item.itemId),
+			className={classNames(className, 'page-editor__topper', {
+				active: isActive,
 				'drag-over-bottom':
 					isOverTarget && targetPosition === TARGET_POSITION.BOTTOM,
 				'drag-over-middle':
@@ -196,8 +162,8 @@ function Topper({children, item, itemElement, layoutData}) {
 				'drag-over-top':
 					isOverTarget && targetPosition === TARGET_POSITION.TOP,
 				dragged: isDraggingSource,
-				hovered: isHovered(item.itemId) || fragmentShouldBeHovered(),
-				'not-droppable': !!dataAdvice,
+				hovered: isHovered,
+				'not-droppable': !!notDroppableMessage,
 				'page-editor__topper--mapped': itemIsMappedCollection(item),
 			})}
 			onClick={(event) => {
@@ -216,7 +182,7 @@ function Topper({children, item, itemElement, layoutData}) {
 					return;
 				}
 
-				if (isHovered(item.itemId)) {
+				if (isHovered) {
 					hoverItem(null);
 				}
 			}}
@@ -229,28 +195,27 @@ function Topper({children, item, itemElement, layoutData}) {
 
 				hoverItem(item.itemId);
 			}}
-			ref={handlerRef}
+			ref={canUpdatePageStructure ? handlerRef : null}
 		>
-			<div
-				className={classNames('page-editor__topper__bar', 'tbar', {
-					'page-editor__topper__bar--inset': isInset,
-					'page-editor__topper__bar--mapped': itemIsMappedCollection(
-						item
-					),
-				})}
+			<TopperLabel
+				isActive={isActive}
+				item={item}
+				itemElement={itemElement}
 			>
 				<ul className="tbar-nav">
 					<TopperListItem className="page-editor__topper__drag-handler">
-						<ClayIcon
-							className="page-editor__topper__drag-icon page-editor__topper__icon"
-							symbol="drag"
-						/>
+						{canUpdatePageStructure && (
+							<ClayIcon
+								className="page-editor__topper__drag-icon page-editor__topper__icon"
+								symbol="drag"
+							/>
+						)}
 					</TopperListItem>
 					<TopperListItem
 						className="page-editor__topper__title"
 						expand
 					>
-						{getLabelName(item, fragmentEntryLinks) ||
+						{getLayoutDataItemLabel(item, fragmentEntryLinks) ||
 							Liferay.Language.get('element')}
 					</TopperListItem>
 					{item.type === LAYOUT_DATA_ITEM_TYPES.fragment && (
@@ -275,56 +240,86 @@ function Topper({children, item, itemElement, layoutData}) {
 							</ClayButton>
 						</TopperListItem>
 					)}
-					{itemIsRemovable && (
+					{canUpdatePageStructure && (
 						<TopperListItem>
-							<ClayButton
-								displayType="unstyled"
-								onClick={(event) => {
-									event.stopPropagation();
-
-									dispatch(
-										deleteItem({
-											itemId: item.itemId,
-											store,
-										})
-									);
-								}}
-								small
-								title={Liferay.Language.get('remove')}
-							>
-								<ClayIcon
-									className="page-editor__topper__icon"
-									symbol="times-circle"
-								/>
-							</ClayButton>
+							<ItemActions item={item} />
 						</TopperListItem>
 					)}
 				</ul>
-			</div>
+			</TopperLabel>
+
 			<div className="page-editor__topper__content" ref={targetRef}>
-				{dataAdvice
-					? React.cloneElement(children, {
-							data: {'data-advice': dataAdvice},
-					  })
-					: children}
+				{React.cloneElement(children, {
+					data: notDroppableMessage
+						? {
+								'data-not-droppable-message': notDroppableMessage,
+						  }
+						: null,
+					withinTopper: true,
+				})}
 			</div>
 		</div>
 	);
 }
 
-Topper.propTypes = {
+TopperContent.propTypes = {
 	item: getLayoutDataItemPropTypes().isRequired,
 	itemElement: PropTypes.object,
 	layoutData: LayoutDataPropTypes.isRequired,
 };
 
-function isRemovable(item, layoutData) {
-	if (
-		item.type === LAYOUT_DATA_ITEM_TYPES.dropZone ||
-		item.type === LAYOUT_DATA_ITEM_TYPES.column
-	) {
-		return false;
-	}
+function TopperLabel({children, isActive, item, itemElement}) {
+	const [isInset, setIsInset] = useState(false);
+	const [windowScrollPosition, setWindowScrollPosition] = useState(0);
 
-	return !hasDropZoneChild(item, layoutData);
+	useEffect(() => {
+		if (isActive) {
+			const handleWindowScroll = () => {
+				setWindowScrollPosition(window.scrollY);
+			};
+
+			window.addEventListener('scroll', handleWindowScroll);
+
+			return () => {
+				window.removeEventListener('scroll', handleWindowScroll);
+			};
+		}
+	}, [isActive]);
+
+	useEffect(() => {
+		if (itemElement && isActive) {
+			const itemTop =
+				itemElement.getBoundingClientRect().top - TOPPER_BAR_HEIGHT;
+
+			const controlMenuContainerHeight =
+				document.querySelector('.control-menu-container')
+					?.offsetHeight ?? 0;
+
+			if (itemTop < controlMenuContainerHeight) {
+				setIsInset(true);
+			}
+			else {
+				setIsInset(false);
+			}
+		}
+	}, [isActive, itemElement, windowScrollPosition]);
+
+	return (
+		<div
+			className={classNames('page-editor__topper__bar', 'tbar', {
+				'page-editor__topper__bar--inset': isInset,
+				'page-editor__topper__bar--mapped': itemIsMappedCollection(
+					item
+				),
+			})}
+		>
+			{children}
+		</div>
+	);
 }
+
+TopperLabel.propTypes = {
+	isActive: PropTypes.bool,
+	item: getLayoutDataItemPropTypes().isRequired,
+	itemElement: PropTypes.object,
+};

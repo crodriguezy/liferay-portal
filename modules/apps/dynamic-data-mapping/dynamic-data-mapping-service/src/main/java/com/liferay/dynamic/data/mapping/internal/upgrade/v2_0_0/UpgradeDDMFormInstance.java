@@ -15,8 +15,8 @@
 package com.liferay.dynamic.data.mapping.internal.upgrade.v2_0_0;
 
 import com.liferay.counter.kernel.service.CounterLocalService;
+import com.liferay.dynamic.data.mapping.constants.DDMFormInstanceConstants;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
-import com.liferay.dynamic.data.mapping.model.DDMFormInstanceConstants;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
@@ -274,8 +274,7 @@ public class UpgradeDDMFormInstance extends UpgradeProcess {
 		Class<?> clazz = getClass();
 
 		_resourceActions.readAndCheck(
-			null, clazz.getClassLoader(),
-			"/META-INF/resource-actions/default.xml");
+			null, clazz.getClassLoader(), "/resource-actions/default.xml");
 	}
 
 	protected void updateDDMStructure(long ddmStructureId) throws Exception {

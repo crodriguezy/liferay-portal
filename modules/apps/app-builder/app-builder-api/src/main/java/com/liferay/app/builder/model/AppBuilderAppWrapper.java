@@ -52,10 +52,12 @@ public class AppBuilderAppWrapper
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("active", isActive());
+		attributes.put("ddlRecordSetId", getDdlRecordSetId());
 		attributes.put("ddmStructureId", getDdmStructureId());
 		attributes.put("ddmStructureLayoutId", getDdmStructureLayoutId());
 		attributes.put("deDataListViewId", getDeDataListViewId());
 		attributes.put("name", getName());
+		attributes.put("scope", getScope());
 
 		return attributes;
 	}
@@ -116,6 +118,12 @@ public class AppBuilderAppWrapper
 			setActive(active);
 		}
 
+		Long ddlRecordSetId = (Long)attributes.get("ddlRecordSetId");
+
+		if (ddlRecordSetId != null) {
+			setDdlRecordSetId(ddlRecordSetId);
+		}
+
 		Long ddmStructureId = (Long)attributes.get("ddmStructureId");
 
 		if (ddmStructureId != null) {
@@ -139,6 +147,12 @@ public class AppBuilderAppWrapper
 
 		if (name != null) {
 			setName(name);
+		}
+
+		String scope = (String)attributes.get("scope");
+
+		if (scope != null) {
+			setScope(scope);
 		}
 	}
 
@@ -185,6 +199,16 @@ public class AppBuilderAppWrapper
 	@Override
 	public Date getCreateDate() {
 		return model.getCreateDate();
+	}
+
+	/**
+	 * Returns the ddl record set ID of this app builder app.
+	 *
+	 * @return the ddl record set ID of this app builder app
+	 */
+	@Override
+	public long getDdlRecordSetId() {
+		return model.getDdlRecordSetId();
 	}
 
 	/**
@@ -329,6 +353,16 @@ public class AppBuilderAppWrapper
 	}
 
 	/**
+	 * Returns the scope of this app builder app.
+	 *
+	 * @return the scope of this app builder app
+	 */
+	@Override
+	public String getScope() {
+		return model.getScope();
+	}
+
+	/**
 	 * Returns the user ID of this app builder app.
 	 *
 	 * @return the user ID of this app builder app
@@ -436,6 +470,16 @@ public class AppBuilderAppWrapper
 	@Override
 	public void setCreateDate(Date createDate) {
 		model.setCreateDate(createDate);
+	}
+
+	/**
+	 * Sets the ddl record set ID of this app builder app.
+	 *
+	 * @param ddlRecordSetId the ddl record set ID of this app builder app
+	 */
+	@Override
+	public void setDdlRecordSetId(long ddlRecordSetId) {
+		model.setDdlRecordSetId(ddlRecordSetId);
 	}
 
 	/**
@@ -559,6 +603,16 @@ public class AppBuilderAppWrapper
 	@Override
 	public void setPrimaryKey(long primaryKey) {
 		model.setPrimaryKey(primaryKey);
+	}
+
+	/**
+	 * Sets the scope of this app builder app.
+	 *
+	 * @param scope the scope of this app builder app
+	 */
+	@Override
+	public void setScope(String scope) {
+		model.setScope(scope);
 	}
 
 	/**

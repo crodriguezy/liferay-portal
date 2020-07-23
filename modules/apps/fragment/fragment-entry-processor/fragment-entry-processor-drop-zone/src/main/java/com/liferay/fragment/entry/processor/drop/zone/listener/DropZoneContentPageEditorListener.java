@@ -16,8 +16,9 @@ package com.liferay.fragment.entry.processor.drop.zone.listener;
 
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.model.FragmentEntryLink;
+import com.liferay.fragment.processor.DefaultFragmentEntryProcessorContext;
+import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
 import com.liferay.fragment.renderer.DefaultFragmentRendererContext;
-import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.layout.content.page.editor.listener.ContentPageEditorListener;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
@@ -103,8 +104,7 @@ public class DropZoneContentPageEditorListener
 			_layoutPageTemplateStructureLocalService.
 				fetchLayoutPageTemplateStructure(
 					fragmentEntryLink.getGroupId(),
-					fragmentEntryLink.getClassNameId(),
-					fragmentEntryLink.getClassPK());
+					fragmentEntryLink.getPlid());
 
 		if (layoutPageTemplateStructure == null) {
 			return null;
@@ -132,9 +132,13 @@ public class DropZoneContentPageEditorListener
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
-		String processedHTML = _fragmentRendererController.render(
-			defaultFragmentRendererContext, serviceContext.getRequest(),
-			serviceContext.getResponse());
+		String processedHTML =
+			_fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
+				fragmentEntryLink,
+				new DefaultFragmentEntryProcessorContext(
+					serviceContext.getRequest(), serviceContext.getResponse(),
+					FragmentEntryLinkConstants.EDIT,
+					serviceContext.getLocale()));
 
 		Document document = _getDocument(processedHTML);
 
@@ -162,20 +166,27 @@ public class DropZoneContentPageEditorListener
 		List<String> childrenItemIds =
 			parentLayoutStructureItem.getChildrenItemIds();
 
-		if (childrenItemIds.size() >= elements.size()) {
+		if (childrenItemIds.size() == elements.size()) {
 			return;
 		}
 
-		for (int i = childrenItemIds.size(); i < elements.size(); i++) {
-			layoutStructure.addFragmentDropZoneLayoutStructureItem(
-				parentLayoutStructureItem.getItemId(), 0);
+		if (childrenItemIds.size() > elements.size()) {
+			List<String> childrenItemIdsToRemove = childrenItemIds.subList(
+				elements.size(), childrenItemIds.size());
+
+			childrenItemIdsToRemove.forEach(
+				layoutStructure::deleteLayoutStructureItem);
+		}
+		else {
+			for (int i = childrenItemIds.size(); i < elements.size(); i++) {
+				layoutStructure.addFragmentDropZoneLayoutStructureItem(
+					parentLayoutStructureItem.getItemId(), 0);
+			}
 		}
 
 		_layoutPageTemplateStructureLocalService.
-			updateLayoutPageTemplateStructure(
-				fragmentEntryLink.getGroupId(),
-				fragmentEntryLink.getClassNameId(),
-				fragmentEntryLink.getClassPK(),
+			updateLayoutPageTemplateStructureData(
+				fragmentEntryLink.getGroupId(), fragmentEntryLink.getPlid(),
 				fragmentEntryLink.getSegmentsExperienceId(),
 				layoutStructure.toString());
 	}
@@ -184,7 +195,7 @@ public class DropZoneContentPageEditorListener
 		DropZoneContentPageEditorListener.class);
 
 	@Reference
-	private FragmentRendererController _fragmentRendererController;
+	private FragmentEntryProcessorRegistry _fragmentEntryProcessorRegistry;
 
 	@Reference
 	private LayoutPageTemplateStructureLocalService

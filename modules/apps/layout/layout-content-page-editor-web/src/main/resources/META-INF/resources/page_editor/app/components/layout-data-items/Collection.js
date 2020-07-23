@@ -12,11 +12,13 @@
  * details.
  */
 
+import ClayLayout from '@clayui/layout';
 import React, {useEffect, useState} from 'react';
 
 import CollectionService from '../../services/CollectionService';
 import {useDispatch, useSelector} from '../../store/index';
 import {CollectionItemContextProvider} from '../CollectionItemContext';
+import UnsafeHTML from '../UnsafeHTML';
 
 const COLLECTION_ID_DIVIDER = '$';
 
@@ -48,12 +50,6 @@ export function fromControlsId(controlsItemId) {
 	return itemId || controlsItemId;
 }
 
-const NoItemsMessage = () => (
-	<div className="page-editor__collection__no-items-message">
-		{Liferay.Language.get('you-do-not-have-any-items-in-this-collection')}
-	</div>
-);
-
 const NotCollectionSelectedMessage = () => (
 	<div className="page-editor__collection__not-collection-selected-message">
 		{Liferay.Language.get('no-collection-selected-yet')}
@@ -83,10 +79,7 @@ const Grid = ({
 				const itemCount = i * numberOfColumns + j;
 
 				columns.push(
-					<div
-						className={`col col-${12 / numberOfColumns}`}
-						key={index}
-					>
+					<ClayLayout.Col key={index} size={12 / numberOfColumns}>
 						{itemCount < maxNumberOfItems && (
 							<CollectionItemContextProvider
 								key={index}
@@ -110,21 +103,22 @@ const Grid = ({
 								{React.cloneElement(child)}
 							</CollectionItemContextProvider>
 						)}
-					</div>
+					</ClayLayout.Col>
 				);
 			}
 
-			rows.push(
-				<div className="row" key={i}>
-					{columns}
-				</div>
-			);
+			rows.push(<ClayLayout.Row key={i}>{columns}</ClayLayout.Row>);
 		}
 
 		return rows;
 	};
 
 	return createRows();
+};
+
+const DEFAULT_COLLECTION = {
+	items: [{defaultTitle: Liferay.Language.get('title')}],
+	length: 1,
 };
 
 const Collection = React.forwardRef(({children, item}, ref) => {
@@ -137,21 +131,23 @@ const Collection = React.forwardRef(({children, item}, ref) => {
 		(state) => state.segmentsExperienceId
 	);
 
-	const [collection, setCollection] = useState({
-		items: [],
-		length: 0,
-	});
+	const [collection, setCollection] = useState(DEFAULT_COLLECTION);
 
 	useEffect(() => {
 		if (collectionConfig.collection) {
 			CollectionService.getCollectionField({
 				collection: collectionConfig.collection,
+				listItemStyle: collectionConfig.listItemStyle || null,
+				listStyle: collectionConfig.listStyle,
 				onNetworkStatus: dispatch,
 				segmentsExperienceId,
 				size: collectionConfig.numberOfItems,
+				templateKey: collectionConfig.templateKey || null,
 			})
 				.then((response) => {
-					setCollection(response);
+					setCollection(
+						response.length > 0 ? response : DEFAULT_COLLECTION
+					);
 				})
 				.catch((error) => {
 					if (process.env.NODE_ENV === 'development') {
@@ -161,7 +157,10 @@ const Collection = React.forwardRef(({children, item}, ref) => {
 		}
 	}, [
 		collectionConfig.collection,
+		collectionConfig.listItemStyle,
+		collectionConfig.listStyle,
 		collectionConfig.numberOfItems,
+		collectionConfig.templateKey,
 		dispatch,
 		segmentsExperienceId,
 	]);
@@ -188,8 +187,11 @@ const Collection = React.forwardRef(({children, item}, ref) => {
 
 	return (
 		<div className="page-editor__collection" ref={ref}>
-			{collectionIsMapped(collectionConfig) &&
-			collection.items.length > 0 ? (
+			{!collectionIsMapped(collectionConfig) ? (
+				<NotCollectionSelectedMessage />
+			) : collection.content ? (
+				<UnsafeHTML markup={collection.content} />
+			) : (
 				<Grid
 					child={child}
 					collection={collection.items}
@@ -199,10 +201,6 @@ const Collection = React.forwardRef(({children, item}, ref) => {
 					numberOfColumns={collectionConfig.numberOfColumns}
 					numberOfItems={collectionConfig.numberOfItems}
 				/>
-			) : collectionIsMapped(collectionConfig) ? (
-				<NoItemsMessage />
-			) : (
-				<NotCollectionSelectedMessage />
 			)}
 		</div>
 	);

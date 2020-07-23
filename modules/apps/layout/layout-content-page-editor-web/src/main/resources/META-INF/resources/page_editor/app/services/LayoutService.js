@@ -72,8 +72,9 @@ export default {
 	/**
 	 * Marks an item for deletion
 	 * @param {object} options
-	 * @param {object} options.itemConfig Updated item config
 	 * @param {string} options.itemId id of the item to be updated
+	 * @param {string} options.portletIds the list of non instanceable portlets Ids
+	 * contained in the item
 	 * @param {string} options.segmentsExperienceId Segments experience id
 	 * @param {function} options.onNetworkStatus
 	 * @return {Promise<void>}
@@ -81,7 +82,7 @@ export default {
 	markItemForDeletion({
 		itemId,
 		onNetworkStatus,
-		portletIds,
+		portletIds = [],
 		segmentsExperienceId,
 	}) {
 		return layoutServiceFetch(
@@ -121,6 +122,27 @@ export default {
 					itemId,
 					parentItemId,
 					position,
+					segmentsExperienceId,
+				},
+			},
+			onNetworkStatus
+		);
+	},
+
+	/**
+	 * Unmarks an item for deletion
+	 * @param {object} options
+	 * @param {string} options.itemId id of the item to be updated
+	 * @param {string} options.segmentsExperienceId Segments experience id
+	 * @param {function} options.onNetworkStatus
+	 * @return {Promise<void>}
+	 */
+	unmarkItemForDeletion({itemId, onNetworkStatus, segmentsExperienceId}) {
+		return layoutServiceFetch(
+			config.unmarkItemForDeletionURL,
+			{
+				body: {
+					itemId,
 					segmentsExperienceId,
 				},
 			},

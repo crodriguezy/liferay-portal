@@ -517,7 +517,7 @@
 
 					var events = 'focus';
 
-					if (!A.UA.touch) {
+					if (!A.UA.touchEnabled) {
 						events = ['focus', 'mousemove'];
 					}
 

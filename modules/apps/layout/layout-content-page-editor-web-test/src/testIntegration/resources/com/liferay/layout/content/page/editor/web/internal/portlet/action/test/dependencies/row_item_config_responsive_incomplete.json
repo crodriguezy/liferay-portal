@@ -1,0 +1,12 @@
+{
+	"portraitMobile": {
+		"modulesPerRow": 3,
+		"reverseOrder": true,
+		"verticalAlignment": "bottom"
+	},
+	"tablet": {
+		"modulesPerRow": 2,
+		"reverseOrder": true,
+		"verticalAlignment": "middle"
+	}
+}

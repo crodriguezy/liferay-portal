@@ -17,7 +17,7 @@
 <%@ include file="/blogs/init.jsp" %>
 
 <%
-SearchContainer<BaseModel> searchContainer = (SearchContainer)request.getAttribute("view_entry_content.jsp-searchContainer");
+SearchContainer<BaseModel<?>> searchContainer = (SearchContainer)request.getAttribute("view_entry_content.jsp-searchContainer");
 
 BlogsEntry entry = (BlogsEntry)request.getAttribute("view_entry_content.jsp-entry");
 
@@ -42,10 +42,10 @@ BlogsPortletInstanceConfiguration blogsPortletInstanceConfiguration = BlogsPortl
 
 		<div class="widget-mode-simple-entry">
 			<clay:content-row
-				className="widget-topbar"
+				cssClass="widget-topbar"
 			>
 				<clay:content-col
-					expand="true"
+					expand="<%= true %>"
 				>
 					<h3 class="title">
 						<aui:a cssClass="title-link" href="<%= viewEntryURL %>"><%= HtmlUtil.escape(BlogsEntryUtil.getDisplayTitle(resourceBundle, entry)) %></aui:a>
@@ -61,7 +61,7 @@ BlogsPortletInstanceConfiguration blogsPortletInstanceConfiguration = BlogsPortl
 				</clay:content-col>
 
 				<clay:content-col
-					className="visible-interaction"
+					cssClass="visible-interaction"
 				>
 					<div class="dropdown dropdown-action">
 						<liferay-util:include page="/blogs/entry_action.jsp" servletContext="<%= application %>" />
@@ -70,7 +70,7 @@ BlogsPortletInstanceConfiguration blogsPortletInstanceConfiguration = BlogsPortl
 			</clay:content-row>
 
 			<clay:content-row
-				className="widget-metadata"
+				cssClass="widget-metadata"
 			>
 
 				<%
@@ -84,7 +84,7 @@ BlogsPortletInstanceConfiguration blogsPortletInstanceConfiguration = BlogsPortl
 				%>
 
 				<clay:content-col
-					className="inline-item-before"
+					cssClass="inline-item-before"
 				>
 					<liferay-ui:user-portrait
 						user="<%= entryUser %>"
@@ -92,11 +92,11 @@ BlogsPortletInstanceConfiguration blogsPortletInstanceConfiguration = BlogsPortl
 				</clay:content-col>
 
 				<clay:content-col
-					expand="true"
+					expand="<%= true %>"
 				>
 					<clay:content-row>
 						<clay:content-col
-							expand="true"
+							expand="<%= true %>"
 						>
 							<div class="text-truncate-inline">
 								<a class="text-truncate username" href="<%= entryUserURL %>"><%= HtmlUtil.escape(entry.getUserName()) %></a>
@@ -137,6 +137,11 @@ BlogsPortletInstanceConfiguration blogsPortletInstanceConfiguration = BlogsPortl
 
 				<c:choose>
 					<c:when test="<%= blogsPortletInstanceConfiguration.displayStyle().equals(BlogsUtil.DISPLAY_STYLE_ABSTRACT) %>">
+						<c:if test="<%= entry.isSmallImage() && Validator.isNull(coverImageURL) %>">
+							<div class="asset-small-image">
+								<img alt="" class="asset-small-image img-thumbnail" src="<%= HtmlUtil.escape(entry.getSmallImageURL(themeDisplay)) %>" width="150" />
+							</div>
+						</c:if>
 
 						<%
 						String summary = entry.getDescription();

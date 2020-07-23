@@ -17,6 +17,7 @@ package com.liferay.gradle.plugins.workspace.configurators;
 import com.liferay.ant.bnd.metatype.MetatypePlugin;
 import com.liferay.gradle.plugins.JspCDefaultsPlugin;
 import com.liferay.gradle.plugins.LiferayOSGiPlugin;
+import com.liferay.gradle.plugins.extensions.BundleExtension;
 import com.liferay.gradle.plugins.extensions.LiferayOSGiExtension;
 import com.liferay.gradle.plugins.service.builder.ServiceBuilderPlugin;
 import com.liferay.gradle.plugins.test.integration.TestIntegrationBasePlugin;
@@ -153,7 +154,7 @@ public class ModulesProjectConfigurator extends BaseProjectConfigurator {
 			File packageJsonFile = project.file("package.json");
 
 			if (packageJsonFile.exists() &&
-				_hasNpmBuildScript(packageJsonFile.toPath())) {
+				_hasJsPortletBuildScript(packageJsonFile.toPath())) {
 
 				GradleUtil.applyPlugin(project, FrontendPlugin.class);
 
@@ -178,6 +179,9 @@ public class ModulesProjectConfigurator extends BaseProjectConfigurator {
 			}
 		}
 
+		final BundleExtension bundleExtension = BndUtil.getBundleExtension(
+			project.getExtensions());
+
 		final WorkspaceExtension workspaceExtension = _getWorkspaceExtension(
 			project);
 
@@ -195,7 +199,8 @@ public class ModulesProjectConfigurator extends BaseProjectConfigurator {
 
 					if (deployFastTask != null) {
 						_configureTaskDeployFast(
-							(Copy)deployFastTask, workspaceExtension);
+							(Copy)deployFastTask, bundleExtension,
+							workspaceExtension);
 					}
 
 					Task setUpTestableTomcatTask = taskContainer.findByName(
@@ -256,17 +261,14 @@ public class ModulesProjectConfigurator extends BaseProjectConfigurator {
 
 					String dirName = dirNamePath.toString();
 
-					if (dirName.equals("build") || dirName.equals("dist") ||
-						dirName.equals("node_modules") ||
-						dirName.equals("node_modules_cache")) {
-
+					if (isExcludedDirName(dirName)) {
 						return FileVisitResult.SKIP_SUBTREE;
 					}
 
 					Path packageJsonPath = dirPath.resolve("package.json");
 
 					if (Files.exists(packageJsonPath) &&
-						_hasNpmBuildScript(packageJsonPath)) {
+						_hasJsPortletBuildScript(packageJsonPath)) {
 
 						projectDirs.add(dirPath.toFile());
 
@@ -335,14 +337,15 @@ public class ModulesProjectConfigurator extends BaseProjectConfigurator {
 	}
 
 	private void _configureTaskDeployFast(
-		Copy deployFastTask, WorkspaceExtension workspaceExtension) {
+		Copy deployFastTask, BundleExtension bundleExtension,
+		WorkspaceExtension workspaceExtension) {
 
 		Project project = deployFastTask.getProject();
 
-		String bundleSymbolicName = BndUtil.getInstruction(
-			project, Constants.BUNDLE_SYMBOLICNAME);
-		String bundleVersion = BndUtil.getInstruction(
-			project, Constants.BUNDLE_VERSION);
+		String bundleSymbolicName = bundleExtension.getInstruction(
+			Constants.BUNDLE_SYMBOLICNAME);
+		String bundleVersion = bundleExtension.getInstruction(
+			Constants.BUNDLE_VERSION);
 
 		StringBuilder sb = new StringBuilder();
 
@@ -501,14 +504,19 @@ public class ModulesProjectConfigurator extends BaseProjectConfigurator {
 	}
 
 	@SuppressWarnings("unchecked")
-	private boolean _hasNpmBuildScript(Path packageJsonPath) {
+	private boolean _hasJsPortletBuildScript(Path packageJsonPath) {
 		Map<String, Object> packageJsonMap = _getPackageJsonMap(
 			packageJsonPath.toFile());
+
+		Map<String, Object> portlet = (Map<String, Object>)packageJsonMap.get(
+			"portlet");
 
 		Map<String, Object> scripts = (Map<String, Object>)packageJsonMap.get(
 			"scripts");
 
-		if ((scripts != null) && (scripts.get("build") != null)) {
+		if ((portlet != null) && (scripts != null) &&
+			(scripts.get("build") != null)) {
+
 			return true;
 		}
 

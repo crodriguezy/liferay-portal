@@ -38,8 +38,8 @@ public class RenderChildrenTag extends TreeTag {
 
 		if (!(treeObject instanceof Tree.Node)) {
 			throw new IllegalStateException(
-				"Render children has to be used inside the node fragment of " +
-					"a tree tag");
+				"Render children must be used inside the node fragment of a " +
+					"tree tag");
 		}
 
 		Deque<Tree.Node<?>> parentNodes =
@@ -93,15 +93,14 @@ public class RenderChildrenTag extends TreeTag {
 		throw new IllegalStateException("Unable to get node JSP fragment");
 	}
 
+	@Override
 	public void setLeafJspFragment(JspFragment leafJspFragment) {
 		this.leafJspFragment = leafJspFragment;
 	}
 
+	@Override
 	public void setNodeJspFragment(JspFragment nodeJspFragment) {
 		this.nodeJspFragment = nodeJspFragment;
 	}
-
-	protected JspFragment leafJspFragment;
-	protected JspFragment nodeJspFragment;
 
 }

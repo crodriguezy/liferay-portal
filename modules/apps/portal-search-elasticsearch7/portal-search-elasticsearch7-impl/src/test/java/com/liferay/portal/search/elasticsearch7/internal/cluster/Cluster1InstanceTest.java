@@ -15,9 +15,12 @@
 package com.liferay.portal.search.elasticsearch7.internal.cluster;
 
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchConnectionFixture;
+import com.liferay.portal.search.elasticsearch7.internal.connection.HealthExpectations;
 import com.liferay.portal.search.elasticsearch7.internal.connection.Index;
 import com.liferay.portal.search.elasticsearch7.internal.connection.IndexCreator;
 import com.liferay.portal.search.elasticsearch7.internal.connection.IndexName;
+
+import org.elasticsearch.cluster.health.ClusterHealthStatus;
 
 import org.junit.After;
 import org.junit.Before;
@@ -43,11 +46,22 @@ public class Cluster1InstanceTest {
 	@Test
 	public void test1PrimaryShardByDefault() throws Exception {
 		ElasticsearchConnectionFixture elasticsearchConnectionFixture =
-			_testCluster.getNode(0);
+			_testCluster.getNode(1);
 
 		createIndex(elasticsearchConnectionFixture);
 
-		ClusterAssert.assert1PrimaryShardOnly(elasticsearchConnectionFixture);
+		ClusterAssert.assertHealth(
+			elasticsearchConnectionFixture,
+			new HealthExpectations() {
+				{
+					setActivePrimaryShards(1);
+					setActiveShards(1);
+					setNumberOfDataNodes(1);
+					setNumberOfNodes(1);
+					setStatus(ClusterHealthStatus.GREEN);
+					setUnassignedShards(0);
+				}
+			});
 	}
 
 	@Rule

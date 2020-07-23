@@ -20,7 +20,7 @@
 String tabs1 = ParamUtil.getString(request, "tabs1", "published");
 
 String redirect = ParamUtil.getString(request, "redirect");
-String backURL = HttpUtil.setParameter(currentURL, renderResponse.getNamespace() + "historyKey", "workflow");
+String backURL = HttpUtil.setParameter(currentURL, liferayPortletResponse.getNamespace() + "historyKey", "workflow");
 
 KaleoProcess kaleoProcess = (KaleoProcess)request.getAttribute(KaleoFormsWebKeys.KALEO_PROCESS);
 
@@ -95,7 +95,7 @@ if (tabs1.equals("published")) {
 		<portlet:param name="closeRedirect" value="<%= backURL %>" />
 	</liferay-portlet:renderURL>
 
-	<aui:button onClick='<%= "javascript:" + renderResponse.getNamespace() + "editWorkflow('" + addURL + "');" %>' primary="<%= true %>" value="add-workflow" />
+	<aui:button onClick='<%= "javascript:" + liferayPortletResponse.getNamespace() + "editWorkflow('" + addURL + "');" %>' primary="<%= true %>" value="add-workflow" />
 
 	<div class="separator"><!-- --></div>
 
@@ -257,12 +257,8 @@ if (tabs1.equals("published")) {
 		['aui-base']
 	);
 
-	Liferay.provide(
-		window,
-		'<portlet:namespace />editWorkflow',
-		function (uri) {
-			var A = AUI();
-
+	window['<portlet:namespace />editWorkflow'] = function (uri) {
+		AUI().use('liferay-util', function (A) {
 			var WIN = A.config.win;
 
 			Liferay.Util.openWindow({
@@ -271,7 +267,6 @@ if (tabs1.equals("published")) {
 				title: '<liferay-ui:message key="workflow" />',
 				uri: uri,
 			});
-		},
-		['liferay-util']
-	);
+		});
+	};
 </aui:script>

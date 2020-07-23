@@ -43,6 +43,10 @@ public class CTPreferencesLocalServiceWrapper
 	/**
 	 * Adds the ct preferences to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect CTPreferencesLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param ctPreferences the ct preferences
 	 * @return the ct preferences that was added
 	 */
@@ -80,6 +84,10 @@ public class CTPreferencesLocalServiceWrapper
 	/**
 	 * Deletes the ct preferences from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect CTPreferencesLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param ctPreferences the ct preferences
 	 * @return the ct preferences that was removed
 	 */
@@ -92,6 +100,10 @@ public class CTPreferencesLocalServiceWrapper
 
 	/**
 	 * Deletes the ct preferences with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect CTPreferencesLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param ctPreferencesId the primary key of the ct preferences
 	 * @return the ct preferences that was removed
@@ -313,6 +325,10 @@ public class CTPreferencesLocalServiceWrapper
 
 	/**
 	 * Updates the ct preferences in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect CTPreferencesLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param ctPreferences the ct preferences
 	 * @return the ct preferences that was updated

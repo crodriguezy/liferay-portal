@@ -62,9 +62,9 @@ definition {
 
 			Vocabulary.addCP(vocabularyName = "Vocabulary Name");
 
-			LexiconEntry.gotoEntryMenuItem(
-				menuItem = "Add Category",
-				rowEntry = "Vocabulary Name");
+			Navigator.gotoNavNested(navNested = "Vocabulary Name");
+
+			LexiconEntry.gotoAdd();
 
 			PortletEntry.inputTitle(title = "${inputText}");
 
@@ -151,9 +151,9 @@ definition {
 
 			Vocabulary.addCP(vocabularyName = "Vocabulary Name");
 
-			LexiconEntry.gotoEntryMenuItem(
-				menuItem = "Add Category",
-				rowEntry = "Vocabulary Name");
+			Navigator.gotoNavNested(navNested = "Vocabulary Name");
+
+			LexiconEntry.gotoAdd();
 
 			PortletEntry.inputTitle(title = "${inputText}");
 
@@ -212,6 +212,8 @@ definition {
 	@description = "This is a use case for LPS-107730. Can input 255 characters to name field, key field and value field of category."
 	@priority = "5"
 	test Input255CharactersIntoNameFieldKeyFieldAndValueField {
+		property portal.acceptance = "true";
+
 		var inputText = "The number of characters is 255.The number of characters is 255.The number of characters is 255.The number of characters is 255.The number of characters is 255.The number of characters is 255.The number of characters is 255.The number of characters is 255";
 
 		task ("Assert input 255 characters to name field of category") {
@@ -219,9 +221,9 @@ definition {
 
 			Vocabulary.addCP(vocabularyName = "Vocabulary Name");
 
-			LexiconEntry.gotoEntryMenuItem(
-				menuItem = "Add Category",
-				rowEntry = "Vocabulary Name");
+			Navigator.gotoNavNested(navNested = "Vocabulary Name");
+
+			LexiconEntry.gotoAdd();
 
 			PortletEntry.inputTitle(title = "${inputText}");
 

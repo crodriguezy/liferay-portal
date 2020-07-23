@@ -99,7 +99,7 @@ function trackFieldBlurred(analytics) {
 
 		const perfData = performance.getEntriesByName('focusDuration').pop();
 
-		const focusDuration = perfData.duration;
+		const focusDuration = ~~perfData.duration;
 
 		analytics.send('fieldBlurred', applicationId, {
 			...payload,

@@ -14,6 +14,7 @@
 
 package com.liferay.data.engine.taglib.servlet.taglib.util;
 
+import com.liferay.data.engine.field.type.util.LocalizedValueUtil;
 import com.liferay.data.engine.renderer.DataLayoutRenderer;
 import com.liferay.data.engine.renderer.DataLayoutRendererContext;
 import com.liferay.data.engine.rest.dto.v2_0.DataDefinition;
@@ -136,6 +137,8 @@ public class DataLayoutTaglibUtil {
 			"allowMultiplePages",
 			dataLayoutBuilderDefinition.allowMultiplePages()
 		).put(
+			"allowNestedFields", dataLayoutBuilderDefinition.allowNestedFields()
+		).put(
 			"allowRules", dataLayoutBuilderDefinition.allowRules()
 		).put(
 			"allowSuccessPage", dataLayoutBuilderDefinition.allowSuccessPage()
@@ -193,6 +196,14 @@ public class DataLayoutTaglibUtil {
 
 		return _dataLayoutTaglibUtil._getDataRecordValues(
 			dataRecordId, httpServletRequest);
+	}
+
+	public static Long getDefaultDataLayoutId(
+			Long dataDefinitionId, HttpServletRequest httpServletRequest)
+		throws Exception {
+
+		return _dataLayoutTaglibUtil._getDefaultDataLayoutId(
+			dataDefinitionId, httpServletRequest);
 	}
 
 	public static JSONArray getFieldTypesJSONArray(
@@ -405,6 +416,26 @@ public class DataLayoutTaglibUtil {
 	private String _getDDMDataProviderInstancesURL() {
 		return _ddmFormBuilderSettingsRetrieverHelper.
 			getDDMDataProviderInstancesURL();
+	}
+
+	private Long _getDefaultDataLayoutId(
+			Long dataDefinitionId, HttpServletRequest httpServletRequest)
+		throws Exception {
+
+		DataDefinition dataDefinition = getDataDefinition(
+			dataDefinitionId, httpServletRequest);
+
+		if (dataDefinition == null) {
+			return 0L;
+		}
+
+		DataLayout dataLayout = dataDefinition.getDefaultDataLayout();
+
+		if (dataLayout == null) {
+			return 0L;
+		}
+
+		return dataLayout.getId();
 	}
 
 	private JSONArray _getFieldTypesJSONArray(
@@ -765,7 +796,9 @@ public class DataLayoutTaglibUtil {
 				dataRuleJSONObject.put(
 					"conditions", jsonArray
 				).put(
-					"logical-operator", dataRule.getLogicalOperator()
+					"logicalOperator", dataRule.getLogicalOperator()
+				).put(
+					"name", LocalizedValueUtil.toJSONObject(dataRule.getName())
 				);
 
 				dataRulesJSONArray.put(dataRuleJSONObject);
@@ -841,9 +874,7 @@ public class DataLayoutTaglibUtil {
 			List<Map<String, Object>> nestedFieldsList = new ArrayList<>(
 				Arrays.asList(field));
 
-			if (_isFieldSet(field)) {
-				nestedFieldsList.addAll(_getNestedFields(field));
-			}
+			nestedFieldsList.addAll(_getNestedFields(field));
 
 			return nestedFieldsList.stream();
 		}

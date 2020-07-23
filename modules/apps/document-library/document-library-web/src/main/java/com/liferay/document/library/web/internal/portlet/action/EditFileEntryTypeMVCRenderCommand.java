@@ -98,7 +98,7 @@ public class EditFileEntryTypeMVCRenderCommand implements MVCRenderCommand {
 
 			renderRequest.setAttribute(
 				WebKeys.DOCUMENT_LIBRARY_DYNAMIC_DATA_MAPPING_STRUCTURE,
-				_getDDMStructure(dlFileEntryType));
+				_fetchDDMStructure(dlFileEntryType));
 
 			return "/document_library/edit_file_entry_type.jsp";
 		}
@@ -112,7 +112,7 @@ public class EditFileEntryTypeMVCRenderCommand implements MVCRenderCommand {
 		}
 	}
 
-	private DDMStructure _getDDMStructure(DLFileEntryType dlFileEntryType) {
+	private DDMStructure _fetchDDMStructure(DLFileEntryType dlFileEntryType) {
 		DDMStructure ddmStructure = _ddmStructureLocalService.fetchStructure(
 			dlFileEntryType.getGroupId(),
 			_portal.getClassNameId(DLFileEntryMetadata.class),
@@ -143,12 +143,6 @@ public class EditFileEntryTypeMVCRenderCommand implements MVCRenderCommand {
 
 	@Reference
 	private DDMStructureLocalService _ddmStructureLocalService;
-
-	@Reference(
-		target = "(model.class.name=com.liferay.dynamic.data.mapping.model.DDMStructure)"
-	)
-	private ModelResourcePermission<DDMStructure>
-		_ddmStructureModelResourcePermission;
 
 	@Reference(
 		target = "(model.class.name=com.liferay.document.library.kernel.model.DLFileEntryType)"

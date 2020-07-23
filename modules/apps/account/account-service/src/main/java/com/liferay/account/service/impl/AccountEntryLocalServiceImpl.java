@@ -17,6 +17,7 @@ package com.liferay.account.service.impl;
 import com.liferay.account.constants.AccountConstants;
 import com.liferay.account.exception.AccountEntryDomainsException;
 import com.liferay.account.exception.AccountEntryNameException;
+import com.liferay.account.exception.AccountEntryTypeException;
 import com.liferay.account.model.AccountEntry;
 import com.liferay.account.service.base.AccountEntryLocalServiceBaseImpl;
 import com.liferay.petra.string.StringPool;
@@ -100,7 +101,7 @@ public class AccountEntryLocalServiceImpl
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 *             #addAccountEntry(long, long, String, String, String[],
-	 *             byte[], int, ServiceContext)}
+	 *             byte[], String, String, int, ServiceContext)}
 	 */
 	@Deprecated
 	@Override
@@ -111,13 +112,33 @@ public class AccountEntryLocalServiceImpl
 
 		return addAccountEntry(
 			userId, parentAccountEntryId, name, description, domains, logoBytes,
-			status, null);
+			null, AccountConstants.ACCOUNT_ENTRY_TYPE_BUSINESS, status, null);
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #addAccountEntry(long, long, String, String, String[],
+	 *             byte[], String, String, int, ServiceContext)}
+	 */
+	@Deprecated
+	@Override
+	public AccountEntry addAccountEntry(
+			long userId, long parentAccountEntryId, String name,
+			String description, String[] domains, byte[] logoBytes, int status,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		return addAccountEntry(
+			userId, parentAccountEntryId, name, description, domains, logoBytes,
+			null, AccountConstants.ACCOUNT_ENTRY_TYPE_BUSINESS, status,
+			serviceContext);
 	}
 
 	@Override
 	public AccountEntry addAccountEntry(
 			long userId, long parentAccountEntryId, String name,
-			String description, String[] domains, byte[] logoBytes, int status,
+			String description, String[] domains, byte[] logoBytes,
+			String taxIdNumber, String type, int status,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -156,6 +177,12 @@ public class AccountEntryLocalServiceImpl
 			_userFileUploadsSettings.getImageMaxSize(),
 			_userFileUploadsSettings.getImageMaxHeight(),
 			_userFileUploadsSettings.getImageMaxWidth());
+
+		accountEntry.setTaxIdNumber(taxIdNumber);
+
+		_validateType(type);
+
+		accountEntry.setType(type);
 
 		accountEntry.setStatus(status);
 
@@ -265,10 +292,10 @@ public class AccountEntryLocalServiceImpl
 	@Override
 	public List<AccountEntry> getAccountEntries(
 		long companyId, int status, int start, int end,
-		OrderByComparator<AccountEntry> obc) {
+		OrderByComparator<AccountEntry> orderByComparator) {
 
 		return accountEntryPersistence.findByC_S(
-			companyId, status, start, end, obc);
+			companyId, status, start, end, orderByComparator);
 	}
 
 	@Override
@@ -316,7 +343,7 @@ public class AccountEntryLocalServiceImpl
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 *             #updateAccountEntry(Long, long, String, String, boolean,
-	 *             String[], byte[], int, ServiceContext)}
+	 *             String[], byte[], String, int, ServiceContext)}
 	 */
 	@Deprecated
 	@Override
@@ -328,14 +355,33 @@ public class AccountEntryLocalServiceImpl
 
 		return updateAccountEntry(
 			accountEntryId, parentAccountEntryId, name, description, deleteLogo,
-			domains, logoBytes, status, null);
+			domains, logoBytes, null, status, null);
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #updateAccountEntry(Long, long, String, String, boolean,
+	 *             String[], byte[], String, int, ServiceContext)}
+	 */
+	@Deprecated
+	@Override
+	public AccountEntry updateAccountEntry(
+			Long accountEntryId, long parentAccountEntryId, String name,
+			String description, boolean deleteLogo, String[] domains,
+			byte[] logoBytes, int status, ServiceContext serviceContext)
+		throws PortalException {
+
+		return updateAccountEntry(
+			accountEntryId, parentAccountEntryId, name, description, deleteLogo,
+			domains, logoBytes, null, status, serviceContext);
 	}
 
 	@Override
 	public AccountEntry updateAccountEntry(
 			Long accountEntryId, long parentAccountEntryId, String name,
 			String description, boolean deleteLogo, String[] domains,
-			byte[] logoBytes, int status, ServiceContext serviceContext)
+			byte[] logoBytes, String taxIdNumber, int status,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		AccountEntry accountEntry = accountEntryPersistence.fetchByPrimaryKey(
@@ -359,6 +405,7 @@ public class AccountEntryLocalServiceImpl
 			_userFileUploadsSettings.getImageMaxHeight(),
 			_userFileUploadsSettings.getImageMaxWidth());
 
+		accountEntry.setTaxIdNumber(taxIdNumber);
 		accountEntry.setStatus(status);
 
 		// Asset
@@ -480,7 +527,13 @@ public class AccountEntryLocalServiceImpl
 		int status = GetterUtil.getInteger(
 			params.get("status"), WorkflowConstants.STATUS_APPROVED);
 
-		searchContext.setAttribute("status", status);
+		searchContext.setAttribute(Field.STATUS, status);
+
+		String type = (String)params.get("type");
+
+		if (Validator.isNotNull(type)) {
+			searchContext.setAttribute(Field.TYPE, type);
+		}
 	}
 
 	private void _updateAsset(
@@ -519,6 +572,12 @@ public class AccountEntryLocalServiceImpl
 	private void _validateName(String name) throws PortalException {
 		if (Validator.isNull(name)) {
 			throw new AccountEntryNameException();
+		}
+	}
+
+	private void _validateType(String type) throws PortalException {
+		if (!ArrayUtil.contains(AccountConstants.ACCOUNT_ENTRY_TYPES, type)) {
+			throw new AccountEntryTypeException();
 		}
 	}
 

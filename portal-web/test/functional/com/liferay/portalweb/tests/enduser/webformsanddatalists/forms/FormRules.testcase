@@ -23,10 +23,13 @@ definition {
 
 			ProductMenu.gotoPortlet(
 				category = "Content &amp; Data",
-				panel = "Site Administration",
 				portlet = "Forms");
 
 			FormsAdmin.teardownForms();
+
+			Navigator.gotoNavItem(navItem = "Data Providers");
+
+			FormsAdmin.teardownDataProviders();
 
 			Page.tearDownCP();
 		}
@@ -35,7 +38,7 @@ definition {
 	@description = "This is a use case for LPS-70446."
 	@priority = "5"
 	test ConfigureAutofillRule {
-		property portal.acceptance = "false";
+		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "FormRules#ConfigureAutofillRule";
 		var portalURL = PropsUtil.get("portal.url");
 
@@ -45,7 +48,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		Navigator.gotoNavItem(navItem = "Data Providers");
@@ -68,7 +70,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -113,36 +114,15 @@ definition {
 
 		FormsAdminNavigator.gotoFormBuilder();
 
-		Form.save();
+		Form.publishForm();
 
-		ProductMenu.gotoPortlet(
-			category = "Site Builder",
-			panel = "Site Administration",
-			portlet = "Pages");
+		FormsAdminNavigator.gotoPublishedForm();
 
-		SitePages.addPublicPage(pageName = "Form Page");
-
-		Navigator.gotoPage(pageName = "Form Page");
-
-		Portlet.addPG(
-			pageName = "Form Page",
-			portletName = "Form");
-
-		FormPortletNavigator.gotoSelectForm();
-
-		FormPortletConfiguration.selectForm();
-
-		PortletEntry.save();
-
-		Navigator.gotoPage(pageName = "Form Page");
-
-		Pause(locator1 = "5000");
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.viewTextLabel(
 			fieldLabel = "Text Field",
 			fieldName = "TextField");
-
-		Pause(locator1 = "5000");
 
 		FormFields.editText(
 			fieldName = "TextField",
@@ -151,8 +131,6 @@ definition {
 		FormFields.viewSelectOptionsList(
 			fieldName = "Countries",
 			selectOption = "Option");
-
-		Refresh();
 
 		FormFields.editText(
 			fieldName = "TextField",
@@ -166,15 +144,14 @@ definition {
 	@description = "This is a use case for LPS-71592."
 	@priority = "5"
 	test ConfigureCalculateRule {
-		property portal.acceptance = "quarantine";
 		property test.name.skip.portal.instance = "FormRules#ConfigureCalculateRule";
+		property portal.acceptance = "true";
 		var portalURL = PropsUtil.get("portal.url");
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -237,7 +214,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -256,7 +232,7 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
-		Pause(locator1 = "5000");
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.editText(
 			fieldName = "Value",
@@ -281,7 +257,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -326,7 +301,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -345,7 +319,7 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
-		Pause(locator1 = "5000");
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.viewRequiredAsteriskNotPresent();
 
@@ -360,10 +334,8 @@ definition {
 
 	// Ignored because of the ticket LRQA-57207
 
-	@ignore = "true"
 	@priority = "5"
 	test ConfigureShowRuleUsingAndCondition {
-		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "FormRules#ConfigureShowRuleUsingAndCondition";
 		var portalURL = PropsUtil.get("portal.url");
 
@@ -371,7 +343,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -441,7 +412,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -460,7 +430,7 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
-		Pause(locator1 = "5000");
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.editText(
 			fieldName = "TextField1",
@@ -482,19 +452,22 @@ definition {
 	@priority = "4"
 	test ConfigureUserBelongsToRule {
 		property test.name.skip.portal.instance = "FormRules#ConfigureUserBelongsToRule";
+		property portal.acceptance = "true";
 		Navigator.openURL();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "Search");
 
 		SearchAdministration.executeSearchActions(actionsDescription = "Reindex all search indexes.");
 
+		Navigator.openURL();
+
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
-			portlet = "Forms");
+			portlet = "Forms",
+			site = "Guest");
 
 		FormsAdminNavigator.gotoAddForm();
 
@@ -558,7 +531,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Form Page");
@@ -577,7 +549,7 @@ definition {
 
 		Navigator.gotoPage(pageName = "Form Page");
 
-		Pause(locator1 = "5000");
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.viewTextField(
 			fieldLabel = "Public",
@@ -587,7 +559,9 @@ definition {
 			fieldLabel = "Manager",
 			fieldName = "Manager");
 
-		ProductMenu.gotoPortlet(
+		Navigator.openURL();
+
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -596,9 +570,11 @@ definition {
 			siteRoleName = "Site Administrator",
 			userScreenName = "test");
 
+		Navigator.openURL();
+
 		Navigator.gotoPage(pageName = "Form Page");
 
-		Pause(locator1 = "5000");
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.viewTextField(
 			fieldLabel = "Public",
@@ -626,7 +602,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoViewEntries();
@@ -644,11 +619,11 @@ definition {
 	@priority = "5"
 	test EditRule {
 		property test.name.skip.portal.instance = "FormRules#EditRule";
+		property portal.acceptance = "true";
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -697,7 +672,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoEditFormByName();
@@ -725,12 +699,12 @@ definition {
 	@priority = "4"
 	test UseIsNotEmptyRuleToShowField {
 		property test.name.skip.portal.instance = "FormRules#UseIsNotEmptyRuleToShowField";
+		property portal.acceptance = "true";
 
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -771,9 +745,17 @@ definition {
 
 		Form.save();
 
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		FormsAdminNavigator.gotoEditFormByName();
+
 		Form.publishForm();
 
-		FormsAdminNavigator.openPublishURL(publishFormURL = "${publishedFormPublicURL}");
+		FormsAdminNavigator.gotoPublishedForm();
+
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.viewDateFieldNotPresent(
 			fieldLabel = "Date Field",
@@ -813,11 +795,12 @@ definition {
 	@description = "This is a use case for LPS-73332."
 	@priority = "2"
 	test ViewExistingFormRuleIsNotCopiedToNewForm {
+		property portal.acceptance = "true";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -860,7 +843,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -874,11 +856,11 @@ definition {
 	@priority = "2"
 	test ViewPredefinedValueCanBeUsedToRequireAnotherField {
 		property test.name.skip.portal.instance = "FormRules#ViewPredefinedValueCanBeUsedToRequireAnotherField";
+		property portal.acceptance = "true";
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -935,7 +917,7 @@ definition {
 
 		FormsAdminNavigator.gotoPublishedForm();
 
-		Pause(locator1 = "5000");
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.viewRequiredAsterisk();
 
@@ -960,11 +942,11 @@ definition {
 	@priority = "2"
 	test ViewPreviousFormRuleIsCopiedToNewDuplicatedForm {
 		property test.name.skip.portal.instance = "FormRules#ViewPreviousFormRuleIsCopiedToNewDuplicatedForm";
+		property portal.acceptance = "true";
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -1007,7 +989,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		Form.duplicate(formName = "Test Form");
@@ -1030,12 +1011,12 @@ definition {
 	@description = "This is a use case for LPS-69733."
 	@priority = "2"
 	test ViewRuleConditionOperatorFieldOptions {
+		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "FormRules#ViewRuleConditionOperatorFieldOptions";
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -1065,11 +1046,11 @@ definition {
 	@priority = "3"
 	test ViewShowRuleActivationAfterInputtingUnrelatedField {
 		property test.name.skip.portal.instance = "FormRules#ViewShowRuleActivationAfterInputtingUnrelatedField";
+		property portal.acceptance = "true";
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Forms");
 
 		FormsAdminNavigator.gotoAddForm();
@@ -1120,11 +1101,17 @@ definition {
 
 		Form.save();
 
+		ProductMenu.gotoPortlet(
+			category = "Content &amp; Data",
+			portlet = "Forms");
+
+		FormsAdminNavigator.gotoEditFormByName(formName = "Test Form");
+
 		Form.publishForm();
 
 		FormsAdminNavigator.gotoPublishedForm();
 
-		Pause(locator1 = "5000");
+		FormPortlet.waitFormRenderer(text = "Submit");
 
 		FormFields.editText(
 			fieldName = "TextField2",

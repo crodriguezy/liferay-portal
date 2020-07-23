@@ -931,10 +931,10 @@ public class JournalArticleFinderImpl
 				queryPos.add(folderId);
 			}
 
-			Iterator<Long> itr = sqlQuery.iterate();
+			Iterator<Long> iterator = sqlQuery.iterate();
 
-			if (itr.hasNext()) {
-				Long count = itr.next();
+			if (iterator.hasNext()) {
+				Long count = iterator.next();
 
 				if (count != null) {
 					return count.intValue();
@@ -979,10 +979,10 @@ public class JournalArticleFinderImpl
 			queryPos.add(groupId);
 			queryPos.add(status);
 
-			Iterator<Long> itr = sqlQuery.iterate();
+			Iterator<Long> iterator = sqlQuery.iterate();
 
-			if (itr.hasNext()) {
-				Long count = itr.next();
+			if (iterator.hasNext()) {
+				Long count = iterator.next();
 
 				if (count != null) {
 					return count.intValue();
@@ -1044,10 +1044,10 @@ public class JournalArticleFinderImpl
 			queryPos.add(ddmStructureKeys);
 			queryPos.add(queryDefinition.getStatus());
 
-			Iterator<Long> itr = sqlQuery.iterate();
+			Iterator<Long> iterator = sqlQuery.iterate();
 
-			if (itr.hasNext()) {
-				Long count = itr.next();
+			if (iterator.hasNext()) {
+				Long count = iterator.next();
 
 				if (count != null) {
 					return count.intValue();
@@ -1118,10 +1118,10 @@ public class JournalArticleFinderImpl
 
 			queryPos.add(queryDefinition.getStatus());
 
-			Iterator<Long> itr = sqlQuery.iterate();
+			Iterator<Long> iterator = sqlQuery.iterate();
 
-			if (itr.hasNext()) {
-				Long count = itr.next();
+			if (iterator.hasNext()) {
+				Long count = iterator.next();
 
 				if (count != null) {
 					return count.intValue();
@@ -1270,10 +1270,10 @@ public class JournalArticleFinderImpl
 			queryPos.add(reviewDate_TS);
 			queryPos.add(reviewDate_TS);
 
-			Iterator<Long> itr = sqlQuery.iterate();
+			Iterator<Long> iterator = sqlQuery.iterate();
 
-			if (itr.hasNext()) {
-				Long count = itr.next();
+			if (iterator.hasNext()) {
+				Long count = iterator.next();
 
 				if (count != null) {
 					return count.intValue();
@@ -1983,7 +1983,7 @@ public class JournalArticleFinderImpl
 			return StringPool.BLANK;
 		}
 
-		StringBundler sb = new StringBundler(ddmStructureKeys.length * 3 + 1);
+		StringBundler sb = new StringBundler((ddmStructureKeys.length * 3) + 1);
 
 		sb.append(StringPool.OPEN_PARENTHESIS);
 
@@ -2005,7 +2005,7 @@ public class JournalArticleFinderImpl
 			return StringPool.BLANK;
 		}
 
-		StringBundler sb = new StringBundler(folderIds.size() * 3 + 1);
+		StringBundler sb = new StringBundler((folderIds.size() * 3) + 1);
 
 		sb.append(StringPool.OPEN_PARENTHESIS);
 
@@ -2068,8 +2068,8 @@ public class JournalArticleFinderImpl
 			return true;
 		}
 
-		for (Object obj : array) {
-			if (Validator.isNotNull(obj)) {
+		for (Object object : array) {
+			if (Validator.isNotNull(object)) {
 				return false;
 			}
 		}
@@ -2154,7 +2154,7 @@ public class JournalArticleFinderImpl
 	}
 
 	private static boolean _isOrderByTitle(
-		OrderByComparator orderByComparator) {
+		OrderByComparator<JournalArticle> orderByComparator) {
 
 		if ((orderByComparator != null) &&
 			(StringUtil.containsIgnoreCase(

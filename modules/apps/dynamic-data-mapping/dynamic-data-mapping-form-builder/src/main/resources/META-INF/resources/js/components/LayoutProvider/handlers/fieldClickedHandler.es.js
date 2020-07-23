@@ -18,6 +18,7 @@ import {getParentFieldSet, localizeField} from '../../../util/fieldSupport.es';
 
 const handleFieldClicked = (props, state, event) => {
 	let {fieldName} = event;
+	const {activePage} = event;
 	const {pages} = state;
 
 	const parentFieldSet = getParentFieldSet(pages, fieldName);
@@ -34,6 +35,7 @@ const handleFieldClicked = (props, state, event) => {
 		...fieldProperties,
 		settingsContext: {
 			...settingsContext,
+			currentPage: activePage,
 			pages: visitor.mapFields((field) => {
 				const {fieldName} = field;
 				const {defaultLanguageId, editingLanguageId} = props;
@@ -58,6 +60,7 @@ const handleFieldClicked = (props, state, event) => {
 	};
 
 	return {
+		activePage,
 		focusedField,
 		previousFocusedField: focusedField,
 	};

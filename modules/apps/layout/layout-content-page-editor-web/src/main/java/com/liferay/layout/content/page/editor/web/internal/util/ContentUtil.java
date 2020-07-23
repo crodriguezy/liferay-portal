@@ -39,7 +39,6 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
@@ -69,7 +68,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class ContentUtil {
 
-	public static Set<InfoDisplayObjectProvider>
+	public static Set<InfoDisplayObjectProvider<?>>
 		getFragmentEntryLinkMappedInfoDisplayObjectProviders(
 			FragmentEntryLink fragmentEntryLink) {
 
@@ -77,20 +76,20 @@ public class ContentUtil {
 			fragmentEntryLink, new HashSet<>());
 	}
 
-	public static Set<InfoDisplayObjectProvider>
+	public static Set<InfoDisplayObjectProvider<?>>
 		getLayoutMappedInfoDisplayObjectProviders(String layoutData) {
 
 		return _getLayoutMappedInfoDisplayObjectProviders(
 			LayoutStructure.of(layoutData), new HashSet<>());
 	}
 
-	public static Set<InfoDisplayObjectProvider>
+	public static Set<InfoDisplayObjectProvider<?>>
 			getMappedInfoDisplayObjectProviders(long groupId, long plid)
 		throws PortalException {
 
 		Set<Long> mappedClassPKs = new HashSet<>();
 
-		Set<InfoDisplayObjectProvider> infoDisplayObjectProviders =
+		Set<InfoDisplayObjectProvider<?>> infoDisplayObjectProviders =
 			_getFragmentEntryLinksMappedInfoDisplayObjectProviders(
 				groupId, plid, mappedClassPKs);
 
@@ -162,11 +161,11 @@ public class ContentUtil {
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
-		InfoDisplayContributor infoDisplayContributor =
+		InfoDisplayContributor<?> infoDisplayContributor =
 			InfoDisplayContributorTrackerUtil.getInfoDisplayContributor(
 				layoutClassedModelUsage.getClassName());
 
-		InfoDisplayObjectProvider infoDisplayObjectProvider =
+		InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
 			infoDisplayContributor.getInfoDisplayObjectProvider(
 				layoutClassedModelUsage.getClassPK());
 
@@ -219,7 +218,7 @@ public class ContentUtil {
 		return jsonObject.put("viewUsagesURL", viewUsagesURL.toString());
 	}
 
-	private static Set<InfoDisplayObjectProvider>
+	private static Set<InfoDisplayObjectProvider<?>>
 		_getFragmentEntryLinkMappedInfoDisplayObjectProviders(
 			FragmentEntryLink fragmentEntryLink, Set<Long> mappedClassPKs) {
 
@@ -240,7 +239,7 @@ public class ContentUtil {
 			return Collections.emptySet();
 		}
 
-		Set<InfoDisplayObjectProvider> infoDisplayObjectProviders =
+		Set<InfoDisplayObjectProvider<?>> infoDisplayObjectProviders =
 			new HashSet<>();
 
 		Iterator<String> keysIterator = editableValuesJSONObject.keys();
@@ -274,7 +273,7 @@ public class ContentUtil {
 				if ((configJSONObject != null) &&
 					(configJSONObject.length() > 0)) {
 
-					InfoDisplayObjectProvider infoDisplayObjectProvider =
+					InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
 						_getInfoDisplayObjectProvider(
 							configJSONObject, mappedClassPKs);
 
@@ -290,7 +289,7 @@ public class ContentUtil {
 				if ((itemSelectorJSONObject != null) &&
 					(itemSelectorJSONObject.length() > 0)) {
 
-					InfoDisplayObjectProvider infoDisplayObjectProvider =
+					InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
 						_getInfoDisplayObjectProvider(
 							itemSelectorJSONObject, mappedClassPKs);
 
@@ -300,7 +299,7 @@ public class ContentUtil {
 					}
 				}
 
-				InfoDisplayObjectProvider infoDisplayObjectProvider =
+				InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
 					_getInfoDisplayObjectProvider(
 						editableJSONObject, mappedClassPKs);
 
@@ -315,17 +314,16 @@ public class ContentUtil {
 		return infoDisplayObjectProviders;
 	}
 
-	private static Set<InfoDisplayObjectProvider>
+	private static Set<InfoDisplayObjectProvider<?>>
 		_getFragmentEntryLinksMappedInfoDisplayObjectProviders(
 			long groupId, long plid, Set<Long> mappedClassPKs) {
 
-		Set<InfoDisplayObjectProvider> infoDisplayObjectProviders =
+		Set<InfoDisplayObjectProvider<?>> infoDisplayObjectProviders =
 			new HashSet<>();
 
 		List<FragmentEntryLink> fragmentEntryLinks =
-			FragmentEntryLinkLocalServiceUtil.getFragmentEntryLinks(
-				groupId, PortalUtil.getClassNameId(Layout.class.getName()),
-				plid);
+			FragmentEntryLinkLocalServiceUtil.getFragmentEntryLinksByPlid(
+				groupId, plid);
 
 		for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
 			infoDisplayObjectProviders.addAll(
@@ -336,7 +334,7 @@ public class ContentUtil {
 		return infoDisplayObjectProviders;
 	}
 
-	private static InfoDisplayObjectProvider _getInfoDisplayObjectProvider(
+	private static InfoDisplayObjectProvider<?> _getInfoDisplayObjectProvider(
 		JSONObject jsonObject, Set<Long> mappedClassPKs) {
 
 		if (!jsonObject.has("classNameId") || !jsonObject.has("classPK")) {
@@ -362,7 +360,7 @@ public class ContentUtil {
 		}
 
 		try {
-			InfoDisplayContributor infoDisplayContributor =
+			InfoDisplayContributor<?> infoDisplayContributor =
 				InfoDisplayContributorTrackerUtil.getInfoDisplayContributor(
 					PortalUtil.getClassName(classNameId));
 
@@ -385,11 +383,11 @@ public class ContentUtil {
 		return null;
 	}
 
-	private static Set<InfoDisplayObjectProvider>
+	private static Set<InfoDisplayObjectProvider<?>>
 		_getLayoutMappedInfoDisplayObjectProviders(
 			LayoutStructure layoutStructure, Set<Long> mappedClassPKs) {
 
-		Set<InfoDisplayObjectProvider> infoDisplayObjectProviders =
+		Set<InfoDisplayObjectProvider<?>> infoDisplayObjectProviders =
 			new HashSet<>();
 
 		for (LayoutStructureItem layoutStructureItem :
@@ -408,9 +406,22 @@ public class ContentUtil {
 				containerLayoutStructureItem.getBackgroundImageJSONObject();
 
 			if (backgroundImageJSONObject != null) {
-				InfoDisplayObjectProvider infoDisplayObjectProvider =
+				InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
 					_getInfoDisplayObjectProvider(
 						backgroundImageJSONObject, mappedClassPKs);
+
+				if (infoDisplayObjectProvider != null) {
+					infoDisplayObjectProviders.add(infoDisplayObjectProvider);
+				}
+			}
+
+			JSONObject linkJSONObject =
+				containerLayoutStructureItem.getLinkJSONObject();
+
+			if (linkJSONObject != null) {
+				InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
+					_getInfoDisplayObjectProvider(
+						linkJSONObject, mappedClassPKs);
 
 				if (infoDisplayObjectProvider != null) {
 					infoDisplayObjectProviders.add(infoDisplayObjectProvider);
@@ -421,7 +432,7 @@ public class ContentUtil {
 		return infoDisplayObjectProviders;
 	}
 
-	private static Set<InfoDisplayObjectProvider>
+	private static Set<InfoDisplayObjectProvider<?>>
 			_getLayoutMappedInfoDisplayObjectProviders(
 				long groupId, long plid, Set<Long> mappedClassPKs)
 		throws PortalException {
@@ -455,11 +466,11 @@ public class ContentUtil {
 			"classPK", layoutClassedModelUsage.getClassPK()
 		);
 
-		InfoDisplayContributor infoDisplayContributor =
+		InfoDisplayContributor<?> infoDisplayContributor =
 			InfoDisplayContributorTrackerUtil.getInfoDisplayContributor(
 				layoutClassedModelUsage.getClassName());
 
-		InfoDisplayObjectProvider infoDisplayObjectProvider =
+		InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
 			infoDisplayContributor.getInfoDisplayObjectProvider(
 				layoutClassedModelUsage.getClassPK());
 

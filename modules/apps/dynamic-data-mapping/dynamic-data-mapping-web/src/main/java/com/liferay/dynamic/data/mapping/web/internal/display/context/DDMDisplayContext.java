@@ -16,10 +16,10 @@ package com.liferay.dynamic.data.mapping.web.internal.display.context;
 
 import com.liferay.dynamic.data.mapping.configuration.DDMGroupServiceConfiguration;
 import com.liferay.dynamic.data.mapping.constants.DDMPortletKeys;
+import com.liferay.dynamic.data.mapping.constants.DDMTemplateConstants;
 import com.liferay.dynamic.data.mapping.constants.DDMWebKeys;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
-import com.liferay.dynamic.data.mapping.model.DDMTemplateConstants;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLinkLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMStructureService;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateService;
@@ -57,6 +57,9 @@ import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
+import com.liferay.portal.kernel.settings.Settings;
+import com.liferay.portal.kernel.settings.SettingsLocatorHelper;
+import com.liferay.portal.kernel.settings.SettingsLocatorHelperUtil;
 import com.liferay.portal.kernel.template.TemplateHandler;
 import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
 import com.liferay.portal.kernel.template.comparator.TemplateHandlerComparator;
@@ -209,7 +212,6 @@ public class DDMDisplayContext {
 		return NavigationItemListBuilder.add(
 			navigationItem -> {
 				navigationItem.setActive(true);
-				navigationItem.setHref(StringPool.BLANK);
 				navigationItem.setLabel(getScopedStructureLabel());
 			}
 		).build();
@@ -683,15 +685,15 @@ public class DDMDisplayContext {
 
 		ThemeDisplay themeDisplay = _ddmWebRequestHelper.getThemeDisplay();
 
-		if ((classNameId == 0) || (resourceClassNameId == 0)) {
-			return ddmDisplay.isShowAddButton(themeDisplay.getScopeGroup());
-		}
+		if (_isEnableTemplateCreation() &&
+			ddmDisplay.isShowAddButton(themeDisplay.getScopeGroup())) {
 
-		if (ddmDisplay.isShowAddButton(themeDisplay.getScopeGroup()) &&
-			DDMTemplatePermission.containsAddTemplatePermission(
-				_ddmWebRequestHelper.getPermissionChecker(),
-				_ddmWebRequestHelper.getScopeGroupId(), classNameId,
-				resourceClassNameId)) {
+			if ((classNameId != 0) && (resourceClassNameId != 0)) {
+				return DDMTemplatePermission.containsAddTemplatePermission(
+					_ddmWebRequestHelper.getPermissionChecker(),
+					_ddmWebRequestHelper.getScopeGroupId(), classNameId,
+					resourceClassNameId);
+			}
 
 			return true;
 		}
@@ -934,15 +936,15 @@ public class DDMDisplayContext {
 			templateHandlers =
 				PortletDisplayTemplateUtil.getPortletDisplayTemplateHandlers();
 
-			Iterator<TemplateHandler> itr = templateHandlers.iterator();
+			Iterator<TemplateHandler> iterator = templateHandlers.iterator();
 
-			while (itr.hasNext()) {
-				TemplateHandler templateHandler = itr.next();
+			while (iterator.hasNext()) {
+				TemplateHandler templateHandler = iterator.next();
 
 				if (!containsAddPortletDisplayTemplatePermission(
 						templateHandler.getResourceName())) {
 
-					itr.remove();
+					iterator.remove();
 				}
 			}
 		}
@@ -1119,6 +1121,17 @@ public class DDMDisplayContext {
 		return null;
 	}
 
+	private boolean _isEnableTemplateCreation() {
+		Settings ddmWebConfigurationSettings =
+			_settingsLocatorHelper.getConfigurationBeanSettings(
+				"com.liferay.dynamic.data.mapping.web.internal.configuration." +
+					"DDMWebConfiguration");
+
+		return GetterUtil.getBoolean(
+			ddmWebConfigurationSettings.getValue(
+				"enableTemplateCreation", "true"));
+	}
+
 	private final DDMDisplayRegistry _ddmDisplayRegistry;
 	private final DDMStructureLinkLocalService _ddmStructureLinkLocalService;
 	private final DDMStructureService _ddmStructureService;
@@ -1128,6 +1141,8 @@ public class DDMDisplayContext {
 	private final DDMWebRequestHelper _ddmWebRequestHelper;
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
+	private final SettingsLocatorHelper _settingsLocatorHelper =
+		SettingsLocatorHelperUtil.getSettingsLocatorHelper();
 	private final StorageAdapterRegistry _storageAdapterRegistry;
 
 }

@@ -64,6 +64,7 @@ public class MessageBoardThreadResourceTest
 	}
 
 	@Override
+	@Test
 	public void testGetMessageBoardThreadsRankedPageWithSortString()
 		throws Exception {
 
@@ -99,6 +100,7 @@ public class MessageBoardThreadResourceTest
 			(List<MessageBoardThread>)descPage.getItems());
 	}
 
+	@Override
 	@Test
 	public void testGraphQLGetSiteMessageBoardThreadsPage() throws Exception {
 		Long siteId = testGetSiteMessageBoardThreadsPage_getSiteId();

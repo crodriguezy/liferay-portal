@@ -412,10 +412,10 @@ public class SoyPortlet extends MVCPortlet {
 	private void _copyRequestAttributes(
 		PortletRequest portletRequest, ResourceRequest resourceRequest) {
 
-		Enumeration<String> attributeNames = portletRequest.getAttributeNames();
+		Enumeration<String> enumeration = portletRequest.getAttributeNames();
 
-		while (attributeNames.hasMoreElements()) {
-			String attributeName = attributeNames.nextElement();
+		while (enumeration.hasMoreElements()) {
+			String attributeName = enumeration.nextElement();
 
 			resourceRequest.setAttribute(
 				attributeName, portletRequest.getAttribute(attributeName));
@@ -617,9 +617,9 @@ public class SoyPortlet extends MVCPortlet {
 				"portal-portlet-bridge-soy-impl/router/SoyPortletRouter as " +
 					"SoyPortletRouter"));
 
-		String path = getPath(portletRequest, portletResponse);
-
-		requiredModules.addAll(getJavaScriptRequiredModules(path));
+		requiredModules.addAll(
+			getJavaScriptRequiredModules(
+				getPath(portletRequest, portletResponse)));
 
 		String requiredModulesString = StringUtil.merge(requiredModules);
 

@@ -14,6 +14,7 @@
 
 package com.liferay.asset.taglib.servlet.taglib;
 
+import com.liferay.asset.categories.configuration.AssetCategoriesCompanyConfiguration;
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetCategoryConstants;
 import com.liferay.asset.kernel.model.AssetVocabulary;
@@ -25,11 +26,10 @@ import com.liferay.asset.taglib.internal.util.AssetVocabularyUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProviderUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
-import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
@@ -279,7 +279,7 @@ public class AssetCategoriesSelectorTag extends IncludeTag {
 
 			portletURL.setParameter("eventName", getEventName());
 			portletURL.setParameter(
-				"selectedCategoryIds", "{selectedCategoryIds}");
+				"selectedCategories", "{selectedCategories}");
 			portletURL.setParameter("singleSelect", "{singleSelect}");
 			portletURL.setParameter("vocabularyIds", "{vocabularyIds}");
 
@@ -310,25 +310,6 @@ public class AssetCategoriesSelectorTag extends IncludeTag {
 
 			Map<String, Object> vocabularyMap =
 				HashMapBuilder.<String, Object>put(
-					"group",
-					() -> {
-						String vocabularyGroupName = StringPool.BLANK;
-
-						if (vocabulary.getGroupId() !=
-								themeDisplay.getSiteGroupId()) {
-
-							Group vocabularyGroup =
-								GroupLocalServiceUtil.getGroup(
-									vocabulary.getGroupId());
-
-							vocabularyGroupName =
-								vocabularyGroup.getDescriptiveName(
-									themeDisplay.getLocale());
-						}
-
-						return vocabularyGroupName;
-					}
-				).put(
 					"id", vocabulary.getVocabularyId()
 				).put(
 					"required",
@@ -336,9 +317,12 @@ public class AssetCategoriesSelectorTag extends IncludeTag {
 						PortalUtil.getClassNameId(_className), _classTypePK) &&
 					_showRequiredLabel
 				).put(
-					"selectedCategoryIds", selectedCategoryIds
+					"selectedCategories", selectedCategoryIds
 				).put(
-					"title", vocabulary.getTitle(themeDisplay.getLocale())
+					"title",
+					vocabulary.getUnambiguousTitle(
+						vocabularies, themeDisplay.getScopeGroupId(),
+						themeDisplay.getLocale())
 				).build();
 
 			if (Validator.isNotNull(selectedCategoryIds)) {
@@ -352,14 +336,12 @@ public class AssetCategoriesSelectorTag extends IncludeTag {
 					AssetCategoryUtil.CATEGORY_SEPARATOR);
 
 				for (int j = 0; j < categoryIds.length; j++) {
-					Map<String, Object> category =
+					selectedItems.add(
 						HashMapBuilder.<String, Object>put(
 							"label", categoryTitles[j]
 						).put(
 							"value", categoryIds[j]
-						).build();
-
-					selectedItems.add(category);
+						).build());
 				}
 
 				vocabularyMap.put("selectedItems", selectedItems);
@@ -376,22 +358,39 @@ public class AssetCategoriesSelectorTag extends IncludeTag {
 	@Override
 	protected void setAttributes(HttpServletRequest httpServletRequest) {
 		try {
-			Map<String, Object> data = HashMapBuilder.<String, Object>put(
-				"eventName", getEventName()
-			).put(
-				"groupIds", ListUtil.fromArray(getGroupIds())
-			).put(
-				"id", _getNamespace() + _getId() + "assetCategoriesSelector"
-			).put(
-				"inputName", _getInputName()
-			).put(
-				"portletURL", getPortletURL().toString()
-			).put(
-				"vocabularies", getVocabularies()
-			).build();
-
 			httpServletRequest.setAttribute(
-				"liferay-asset:asset-categories-selector:data", data);
+				"liferay-asset:asset-categories-selector:data",
+				HashMapBuilder.<String, Object>put(
+					"eventName", getEventName()
+				).put(
+					"groupIds", ListUtil.fromArray(getGroupIds())
+				).put(
+					"id", _getNamespace() + _getId() + "assetCategoriesSelector"
+				).put(
+					"inputName", _getInputName()
+				).put(
+					"learnHowURL",
+					() -> {
+						ThemeDisplay themeDisplay =
+							(ThemeDisplay)httpServletRequest.getAttribute(
+								WebKeys.THEME_DISPLAY);
+
+						AssetCategoriesCompanyConfiguration
+							assetCategoriesCompanyConfiguration =
+								ConfigurationProviderUtil.
+									getCompanyConfiguration(
+										AssetCategoriesCompanyConfiguration.
+											class,
+										themeDisplay.getCompanyId());
+
+						return assetCategoriesCompanyConfiguration.
+							linkToDocumentationURL();
+					}
+				).put(
+					"portletURL", getPortletURL().toString()
+				).put(
+					"vocabularies", getVocabularies()
+				).build());
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -453,15 +452,7 @@ public class AssetCategoriesSelectorTag extends IncludeTag {
 					return false;
 				}
 
-				int vocabularyCategoriesCount =
-					AssetCategoryServiceUtil.getVocabularyCategoriesCount(
-						vocabulary.getGroupId(), vocabulary.getVocabularyId());
-
-				if (vocabularyCategoriesCount > 0) {
-					return true;
-				}
-
-				return false;
+				return true;
 			});
 	}
 

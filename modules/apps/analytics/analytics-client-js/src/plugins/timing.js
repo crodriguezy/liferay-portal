@@ -12,6 +12,8 @@
  * details.
  */
 
+import {MARK_NAVIGATION_START, MARK_VIEW_DURATION} from '../utils/constants';
+
 const applicationId = 'Page';
 
 /**
@@ -35,11 +37,21 @@ function onload(analytics) {
  * @param {Object} analytics The Analytics client
  */
 function unload(analytics) {
-	const perfData = window.performance.timing;
-	const viewDuration = new Date().getTime() - perfData.navigationStart;
+	const navigationStartMark = window.performance.getEntriesByName(
+		MARK_NAVIGATION_START
+	);
+	const navigationStart = navigationStartMark.length
+		? MARK_NAVIGATION_START
+		: 'navigationStart';
+
+	window.performance.measure(MARK_VIEW_DURATION, navigationStart);
+
+	const {duration} = window.performance
+		.getEntriesByName(MARK_VIEW_DURATION)
+		.pop();
 
 	const props = {
-		viewDuration,
+		viewDuration: ~~duration,
 	};
 
 	analytics.send('pageUnloaded', applicationId, props);

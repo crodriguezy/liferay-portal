@@ -254,7 +254,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 		<#if !serviceBuilder.isVersionLTE_7_1_0()>
 			setModelImplClass(${entity.name}Impl.class);
 			setModelPKClass(${entity.PKClassName}.class);
-			<#if !dependencyInjectorDS>
+			<#if serviceBuilder.isVersionLTE_7_2_0() && !dependencyInjectorDS>
 				setEntityCacheEnabled(${entityCacheEnabled});
 			</#if>
 		</#if>
@@ -279,7 +279,11 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 			}
 		</#if>
 
-		${entityCache}.putResult(${entityCacheEnabled}, ${entity.name}Impl.class, ${entity.varName}.getPrimaryKey(), ${entity.varName});
+		${entityCache}.putResult(
+				<#if serviceBuilder.isVersionLTE_7_2_0()>
+					${entityCacheEnabled},
+				</#if>
+				${entity.name}Impl.class, ${entity.varName}.getPrimaryKey(), ${entity.varName});
 
 		<#list entity.uniqueEntityFinders as uniqueEntityFinder>
 			<#assign entityColumns = uniqueEntityFinder.entityColumns />
@@ -321,7 +325,11 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 				}
 			</#if>
 
-			if (${entityCache}.getResult(${entityCacheEnabled}, ${entity.name}Impl.class, ${entity.varName}.getPrimaryKey()) == null) {
+			if (${entityCache}.getResult(
+				<#if serviceBuilder.isVersionLTE_7_2_0()>
+					${entityCacheEnabled},
+				</#if>
+				${entity.name}Impl.class, ${entity.varName}.getPrimaryKey()) == null) {
 				cacheResult(${entity.varName});
 			}
 			else {
@@ -355,7 +363,11 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 	 */
 	@Override
 	public void clearCache(${entity.name} ${entity.varName}) {
-		${entityCache}.removeResult(${entityCacheEnabled}, ${entity.name}Impl.class, ${entity.varName}.getPrimaryKey());
+		${entityCache}.removeResult(
+			<#if serviceBuilder.isVersionLTE_7_2_0()>
+				${entityCacheEnabled},
+			</#if>
+			${entity.name}Impl.class, ${entity.varName}.getPrimaryKey());
 
 		${finderCache}.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		${finderCache}.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
@@ -371,7 +383,11 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 		${finderCache}.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
 		for (${entity.name} ${entity.varName} : ${entity.pluralVarName}) {
-			${entityCache}.removeResult(${entityCacheEnabled}, ${entity.name}Impl.class, ${entity.varName}.getPrimaryKey());
+			${entityCache}.removeResult(
+				<#if serviceBuilder.isVersionLTE_7_2_0()>
+					${entityCacheEnabled},
+				</#if>
+				${entity.name}Impl.class, ${entity.varName}.getPrimaryKey());
 
 			<#if entity.uniqueEntityFinders?size &gt; 0>
 				clearUniqueFindersCache((${entity.name}ModelImpl)${entity.varName}, true);
@@ -388,7 +404,11 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 		${finderCache}.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
 		for (Serializable primaryKey : primaryKeys) {
-			${entityCache}.removeResult(${entityCacheEnabled}, ${entity.name}Impl.class, primaryKey);
+			${entityCache}.removeResult(
+				<#if serviceBuilder.isVersionLTE_7_2_0()>
+					${entityCacheEnabled},
+				</#if>
+				${entity.name}Impl.class, primaryKey);
 		}
 	}
 
@@ -811,7 +831,7 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 
 		${finderCache}.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 
-		<#if columnBitmaskEnabled>
+		<#if serviceBuilder.isVersionLTE_7_2_0() && columnBitmaskEnabled>
 			if (!${columnBitmaskCacheEnabled}) {
 				${finderCache}.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 			}
@@ -911,7 +931,11 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 			}
 		</#if>
 
-		${entityCache}.putResult(${entityCacheEnabled}, ${entity.name}Impl.class, ${entity.varName}.getPrimaryKey(), ${entity.varName}, false);
+		${entityCache}.putResult(
+			<#if serviceBuilder.isVersionLTE_7_2_0()>
+				${entityCacheEnabled},
+			</#if>
+			${entity.name}Impl.class, ${entity.varName}.getPrimaryKey(), ${entity.varName}, false);
 
 		<#if entity.uniqueEntityFinders?size &gt; 0>
 			clearUniqueFindersCache(${entity.varName}ModelImpl, false);
@@ -990,7 +1014,9 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 					}
 				}
 				catch (Exception exception) {
-					${entityCache}.removeResult(${entityCacheEnabled}, ${entity.name}Impl.class, primaryKey);
+					<#if serviceBuilder.isVersionLTE_7_2_0()>
+						${entityCache}.removeResult(${entityCacheEnabled}, ${entity.name}Impl.class, primaryKey);
+					</#if>
 
 					throw processException(exception);
 				}
@@ -1354,9 +1380,11 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 				}
 			}
 			catch (Exception exception) {
-				if (${useCache}) {
-					${finderCache}.removeResult(finderPath, finderArgs);
-				}
+				<#if serviceBuilder.isVersionLTE_7_2_0()>
+					if (${useCache}) {
+						${finderCache}.removeResult(finderPath, finderArgs);
+					}
+				</#if>
 
 				throw processException(exception);
 			}
@@ -1417,12 +1445,14 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 				</#if>
 			}
 			catch (Exception exception) {
-				<#if entity.isChangeTrackingEnabled()>
-					if (productionMode) {
+				<#if serviceBuilder.isVersionLTE_7_2_0()>
+					<#if entity.isChangeTrackingEnabled()>
+						if (productionMode) {
+							${finderCache}.removeResult(_finderPathCountAll, FINDER_ARGS_EMPTY);
+						}
+					<#else>
 						${finderCache}.removeResult(_finderPathCountAll, FINDER_ARGS_EMPTY);
-					}
-				<#else>
-					${finderCache}.removeResult(_finderPathCountAll, FINDER_ARGS_EMPTY);
+					</#if>
 				</#if>
 
 				throw processException(exception);
@@ -1906,7 +1936,9 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 					${finderCache}.putResult(_finderPathWithPaginationCountAncestors, finderArgs, count);
 				}
 				catch (SystemException systemException) {
-					${finderCache}.removeResult(_finderPathWithPaginationCountAncestors, finderArgs);
+					<#if serviceBuilder.isVersionLTE_7_2_0()>
+						${finderCache}.removeResult(_finderPathWithPaginationCountAncestors, finderArgs);
+					</#if>
 
 					throw systemException;
 				}
@@ -1928,7 +1960,9 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 					${finderCache}.putResult(_finderPathWithPaginationCountDescendants, finderArgs, count);
 				}
 				catch (SystemException systemException) {
-					${finderCache}.removeResult(_finderPathWithPaginationCountDescendants, finderArgs);
+					<#if serviceBuilder.isVersionLTE_7_2_0()>
+						${finderCache}.removeResult(_finderPathWithPaginationCountDescendants, finderArgs);
+					</#if>
 
 					throw systemException;
 				}
@@ -1962,7 +1996,9 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 					${finderCache}.putResult(_finderPathWithPaginationGetAncestors, finderArgs, list);
 				}
 				catch (SystemException systemException) {
-					${finderCache}.removeResult(_finderPathWithPaginationGetAncestors, finderArgs);
+					<#if serviceBuilder.isVersionLTE_7_2_0()>
+						${finderCache}.removeResult(_finderPathWithPaginationGetAncestors, finderArgs);
+					</#if>
 
 					throw systemException;
 				}
@@ -1996,7 +2032,9 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 					${finderCache}.putResult(_finderPathWithPaginationGetDescendants, finderArgs, list);
 				}
 				catch (SystemException systemException) {
-					${finderCache}.removeResult(_finderPathWithPaginationGetDescendants, finderArgs);
+					<#if serviceBuilder.isVersionLTE_7_2_0()>
+						${finderCache}.removeResult(_finderPathWithPaginationGetDescendants, finderArgs);
+					</#if>
 
 					throw systemException;
 				}
@@ -2113,8 +2151,10 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 	<#if dependencyInjectorDS>
 		@Activate
 		public void activate() {
-			${entity.name}ModelImpl.setEntityCacheEnabled(entityCacheEnabled);
-			${entity.name}ModelImpl.setFinderCacheEnabled(finderCacheEnabled);
+			<#if serviceBuilder.isVersionLTE_7_2_0()>
+				${entity.name}ModelImpl.setEntityCacheEnabled(entityCacheEnabled);
+				${entity.name}ModelImpl.setFinderCacheEnabled(finderCacheEnabled);
+			</#if>
 
 	<#else>
 		public void afterPropertiesSet() {
@@ -2139,54 +2179,68 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 		</#list>
 
 		_finderPathWithPaginationFindAll = new FinderPath(
-			${entityCacheEnabled},
-			${finderCacheEnabled},
+			<#if serviceBuilder.isVersionLTE_7_2_0()>
+				${entityCacheEnabled},
+				${finderCacheEnabled},
+			</#if>
 			${entity.name}Impl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
 			"findAll", new String[0]);
 
 		_finderPathWithoutPaginationFindAll = new FinderPath(
-			${entityCacheEnabled},
-			${finderCacheEnabled},
+			<#if serviceBuilder.isVersionLTE_7_2_0()>
+				${entityCacheEnabled},
+				${finderCacheEnabled},
+			</#if>
 			${entity.name}Impl.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
 			"findAll", new String[0]);
 
 		_finderPathCountAll = new FinderPath(
-			${entityCacheEnabled},
-			${finderCacheEnabled},
+			<#if serviceBuilder.isVersionLTE_7_2_0()>
+				${entityCacheEnabled},
+				${finderCacheEnabled},
+			</#if>
 			Long.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
 			"countAll", new String[0]);
 
 		<#if entity.isHierarchicalTree()>
 			_finderPathWithPaginationCountAncestors = new FinderPath(
-				${entityCacheEnabled},
-				${finderCacheEnabled},
+				<#if serviceBuilder.isVersionLTE_7_2_0()>
+					${entityCacheEnabled},
+					${finderCacheEnabled},
+				</#if>
 				Long.class,
 				FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
 				"countAncestors",
 				new String[] {Long.class.getName(), Long.class.getName(), Long.class.getName()});
 
 			_finderPathWithPaginationCountDescendants = new FinderPath(
-				${entityCacheEnabled},
-				${finderCacheEnabled},
+				<#if serviceBuilder.isVersionLTE_7_2_0()>
+					${entityCacheEnabled},
+					${finderCacheEnabled},
+				</#if>
 				Long.class,
 				FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
 				"countDescendants",
 				new String[] {Long.class.getName(), Long.class.getName(), Long.class.getName()});
 
 			_finderPathWithPaginationGetAncestors = new FinderPath(
-				${entityCacheEnabled},
-				${finderCacheEnabled},
+				<#if serviceBuilder.isVersionLTE_7_2_0()>
+					${entityCacheEnabled},
+					${finderCacheEnabled},
+				</#if>
 				${entity.name}Impl.class,
 				FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
 				"getAncestors",
 				new String[] {Long.class.getName(), Long.class.getName(), Long.class.getName()});
 
 			_finderPathWithPaginationGetDescendants = new FinderPath(
-				${entityCacheEnabled},
-				${finderCacheEnabled},
+				<#if serviceBuilder.isVersionLTE_7_2_0()>
+					${entityCacheEnabled},
+					${finderCacheEnabled},
+				</#if>
 				${entity.name}Impl.class,
 				FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
 				"getDescendants",
@@ -2198,8 +2252,10 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 
 			<#if entityFinder.isCollection()>
 				_finderPathWithPaginationFindBy${entityFinder.name} = new FinderPath(
-					${entityCacheEnabled},
-					${finderCacheEnabled},
+					<#if serviceBuilder.isVersionLTE_7_2_0()>
+						${entityCacheEnabled},
+						${finderCacheEnabled},
+					</#if>
 					${entity.name}Impl.class,
 					FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
 					"findBy${entityFinder.name}",
@@ -2213,8 +2269,10 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 
 				<#if !entityFinder.hasCustomComparator()>
 					_finderPathWithoutPaginationFindBy${entityFinder.name} = new FinderPath(
-						${entityCacheEnabled},
-						${finderCacheEnabled},
+						<#if serviceBuilder.isVersionLTE_7_2_0()>
+							${entityCacheEnabled},
+							${finderCacheEnabled},
+						</#if>
 						${entity.name}Impl.class,
 						FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
 						"findBy${entityFinder.name}",
@@ -2254,8 +2312,10 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 
 			<#if !entityFinder.isCollection() || entityFinder.isUnique()>
 				_finderPathFetchBy${entityFinder.name} = new FinderPath(
-					${entityCacheEnabled},
-					${finderCacheEnabled},
+					<#if serviceBuilder.isVersionLTE_7_2_0()>
+						${entityCacheEnabled},
+						${finderCacheEnabled},
+					</#if>
 					${entity.name}Impl.class,
 					FINDER_CLASS_NAME_ENTITY,
 					"fetchBy${entityFinder.name}",
@@ -2286,8 +2346,10 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 
 			<#if !entityFinder.hasCustomComparator()>
 				_finderPathCountBy${entityFinder.name} = new FinderPath(
-					${entityCacheEnabled},
-					${finderCacheEnabled},
+					<#if serviceBuilder.isVersionLTE_7_2_0()>
+						${entityCacheEnabled},
+						${finderCacheEnabled},
+					</#if>
 					Long.class,
 					FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
 					"countBy${entityFinder.name}",
@@ -2304,8 +2366,10 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 
 			<#if entityFinder.hasArrayableOperator() || entityFinder.hasCustomComparator()>
 				_finderPathWithPaginationCountBy${entityFinder.name} = new FinderPath(
-					${entityCacheEnabled},
-					${finderCacheEnabled},
+					<#if serviceBuilder.isVersionLTE_7_2_0()>
+						${entityCacheEnabled},
+						${finderCacheEnabled},
+					</#if>
 					Long.class,
 					FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
 					"countBy${entityFinder.name}",
@@ -2348,7 +2412,9 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 	<#if dependencyInjectorDS>
 		<#include "persistence_references.ftl">
 
-		private boolean _columnBitmaskEnabled;
+		<#if serviceBuilder.isVersionLTE_7_2_0()>
+			private boolean _columnBitmaskEnabled;
+		</#if>
 	</#if>
 
 	<#if osgiModule>

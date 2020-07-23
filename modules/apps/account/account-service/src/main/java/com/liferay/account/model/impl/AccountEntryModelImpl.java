@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.impl.BaseModelImpl;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 
 import java.io.Serializable;
@@ -71,13 +72,14 @@ public class AccountEntryModelImpl
 	public static final String TABLE_NAME = "AccountEntry";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"mvccVersion", Types.BIGINT}, {"accountEntryId", Types.BIGINT},
-		{"companyId", Types.BIGINT}, {"userId", Types.BIGINT},
-		{"userName", Types.VARCHAR}, {"createDate", Types.TIMESTAMP},
-		{"modifiedDate", Types.TIMESTAMP},
+		{"mvccVersion", Types.BIGINT}, {"externalReferenceCode", Types.VARCHAR},
+		{"accountEntryId", Types.BIGINT}, {"companyId", Types.BIGINT},
+		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
+		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
 		{"parentAccountEntryId", Types.BIGINT}, {"name", Types.VARCHAR},
 		{"description", Types.VARCHAR}, {"domains", Types.VARCHAR},
-		{"logoId", Types.BIGINT}, {"status", Types.INTEGER}
+		{"logoId", Types.BIGINT}, {"taxIdNumber", Types.VARCHAR},
+		{"type_", Types.VARCHAR}, {"status", Types.INTEGER}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -85,6 +87,7 @@ public class AccountEntryModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("externalReferenceCode", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("accountEntryId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("userId", Types.BIGINT);
@@ -96,11 +99,13 @@ public class AccountEntryModelImpl
 		TABLE_COLUMNS_MAP.put("description", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("domains", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("logoId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("taxIdNumber", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("type_", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("status", Types.INTEGER);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table AccountEntry (mvccVersion LONG default 0 not null,accountEntryId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,parentAccountEntryId LONG,name VARCHAR(100) null,description STRING null,domains STRING null,logoId LONG,status INTEGER)";
+		"create table AccountEntry (mvccVersion LONG default 0 not null,externalReferenceCode VARCHAR(75) null,accountEntryId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,parentAccountEntryId LONG,name VARCHAR(100) null,description STRING null,domains STRING null,logoId LONG,taxIdNumber VARCHAR(75) null,type_ VARCHAR(75) null,status INTEGER)";
 
 	public static final String TABLE_SQL_DROP = "drop table AccountEntry";
 
@@ -117,16 +122,24 @@ public class AccountEntryModelImpl
 
 	public static final long COMPANYID_COLUMN_BITMASK = 1L;
 
-	public static final long STATUS_COLUMN_BITMASK = 2L;
+	public static final long EXTERNALREFERENCECODE_COLUMN_BITMASK = 2L;
 
-	public static final long NAME_COLUMN_BITMASK = 4L;
+	public static final long STATUS_COLUMN_BITMASK = 4L;
 
+	public static final long NAME_COLUMN_BITMASK = 8L;
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-		_entityCacheEnabled = entityCacheEnabled;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-		_finderCacheEnabled = finderCacheEnabled;
 	}
 
 	/**
@@ -143,6 +156,7 @@ public class AccountEntryModelImpl
 		AccountEntry model = new AccountEntryImpl();
 
 		model.setMvccVersion(soapModel.getMvccVersion());
+		model.setExternalReferenceCode(soapModel.getExternalReferenceCode());
 		model.setAccountEntryId(soapModel.getAccountEntryId());
 		model.setCompanyId(soapModel.getCompanyId());
 		model.setUserId(soapModel.getUserId());
@@ -154,6 +168,8 @@ public class AccountEntryModelImpl
 		model.setDescription(soapModel.getDescription());
 		model.setDomains(soapModel.getDomains());
 		model.setLogoId(soapModel.getLogoId());
+		model.setTaxIdNumber(soapModel.getTaxIdNumber());
+		model.setType(soapModel.getType());
 		model.setStatus(soapModel.getStatus());
 
 		return model;
@@ -231,9 +247,6 @@ public class AccountEntryModelImpl
 				attributeName,
 				attributeGetterFunction.apply((AccountEntry)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -313,6 +326,12 @@ public class AccountEntryModelImpl
 			"mvccVersion",
 			(BiConsumer<AccountEntry, Long>)AccountEntry::setMvccVersion);
 		attributeGetterFunctions.put(
+			"externalReferenceCode", AccountEntry::getExternalReferenceCode);
+		attributeSetterBiConsumers.put(
+			"externalReferenceCode",
+			(BiConsumer<AccountEntry, String>)
+				AccountEntry::setExternalReferenceCode);
+		attributeGetterFunctions.put(
 			"accountEntryId", AccountEntry::getAccountEntryId);
 		attributeSetterBiConsumers.put(
 			"accountEntryId",
@@ -358,6 +377,14 @@ public class AccountEntryModelImpl
 		attributeGetterFunctions.put("logoId", AccountEntry::getLogoId);
 		attributeSetterBiConsumers.put(
 			"logoId", (BiConsumer<AccountEntry, Long>)AccountEntry::setLogoId);
+		attributeGetterFunctions.put(
+			"taxIdNumber", AccountEntry::getTaxIdNumber);
+		attributeSetterBiConsumers.put(
+			"taxIdNumber",
+			(BiConsumer<AccountEntry, String>)AccountEntry::setTaxIdNumber);
+		attributeGetterFunctions.put("type", AccountEntry::getType);
+		attributeSetterBiConsumers.put(
+			"type", (BiConsumer<AccountEntry, String>)AccountEntry::setType);
 		attributeGetterFunctions.put("status", AccountEntry::getStatus);
 		attributeSetterBiConsumers.put(
 			"status",
@@ -378,6 +405,32 @@ public class AccountEntryModelImpl
 	@Override
 	public void setMvccVersion(long mvccVersion) {
 		_mvccVersion = mvccVersion;
+	}
+
+	@JSON
+	@Override
+	public String getExternalReferenceCode() {
+		if (_externalReferenceCode == null) {
+			return "";
+		}
+		else {
+			return _externalReferenceCode;
+		}
+	}
+
+	@Override
+	public void setExternalReferenceCode(String externalReferenceCode) {
+		_columnBitmask |= EXTERNALREFERENCECODE_COLUMN_BITMASK;
+
+		if (_originalExternalReferenceCode == null) {
+			_originalExternalReferenceCode = _externalReferenceCode;
+		}
+
+		_externalReferenceCode = externalReferenceCode;
+	}
+
+	public String getOriginalExternalReferenceCode() {
+		return GetterUtil.getString(_originalExternalReferenceCode);
 	}
 
 	@JSON
@@ -559,6 +612,38 @@ public class AccountEntryModelImpl
 
 	@JSON
 	@Override
+	public String getTaxIdNumber() {
+		if (_taxIdNumber == null) {
+			return "";
+		}
+		else {
+			return _taxIdNumber;
+		}
+	}
+
+	@Override
+	public void setTaxIdNumber(String taxIdNumber) {
+		_taxIdNumber = taxIdNumber;
+	}
+
+	@JSON
+	@Override
+	public String getType() {
+		if (_type == null) {
+			return "";
+		}
+		else {
+			return _type;
+		}
+	}
+
+	@Override
+	public void setType(String type) {
+		_type = type;
+	}
+
+	@JSON
+	@Override
 	public int getStatus() {
 		return _status;
 	}
@@ -617,6 +702,7 @@ public class AccountEntryModelImpl
 		AccountEntryImpl accountEntryImpl = new AccountEntryImpl();
 
 		accountEntryImpl.setMvccVersion(getMvccVersion());
+		accountEntryImpl.setExternalReferenceCode(getExternalReferenceCode());
 		accountEntryImpl.setAccountEntryId(getAccountEntryId());
 		accountEntryImpl.setCompanyId(getCompanyId());
 		accountEntryImpl.setUserId(getUserId());
@@ -628,6 +714,8 @@ public class AccountEntryModelImpl
 		accountEntryImpl.setDescription(getDescription());
 		accountEntryImpl.setDomains(getDomains());
 		accountEntryImpl.setLogoId(getLogoId());
+		accountEntryImpl.setTaxIdNumber(getTaxIdNumber());
+		accountEntryImpl.setType(getType());
 		accountEntryImpl.setStatus(getStatus());
 
 		accountEntryImpl.resetOriginalValues();
@@ -649,16 +737,16 @@ public class AccountEntryModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof AccountEntry)) {
+		if (!(object instanceof AccountEntry)) {
 			return false;
 		}
 
-		AccountEntry accountEntry = (AccountEntry)obj;
+		AccountEntry accountEntry = (AccountEntry)object;
 
 		long primaryKey = accountEntry.getPrimaryKey();
 
@@ -675,19 +763,30 @@ public class AccountEntryModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	@Override
 	public void resetOriginalValues() {
 		AccountEntryModelImpl accountEntryModelImpl = this;
+
+		accountEntryModelImpl._originalExternalReferenceCode =
+			accountEntryModelImpl._externalReferenceCode;
 
 		accountEntryModelImpl._originalCompanyId =
 			accountEntryModelImpl._companyId;
@@ -709,6 +808,18 @@ public class AccountEntryModelImpl
 			new AccountEntryCacheModel();
 
 		accountEntryCacheModel.mvccVersion = getMvccVersion();
+
+		accountEntryCacheModel.externalReferenceCode =
+			getExternalReferenceCode();
+
+		String externalReferenceCode =
+			accountEntryCacheModel.externalReferenceCode;
+
+		if ((externalReferenceCode != null) &&
+			(externalReferenceCode.length() == 0)) {
+
+			accountEntryCacheModel.externalReferenceCode = null;
+		}
 
 		accountEntryCacheModel.accountEntryId = getAccountEntryId();
 
@@ -769,6 +880,22 @@ public class AccountEntryModelImpl
 		}
 
 		accountEntryCacheModel.logoId = getLogoId();
+
+		accountEntryCacheModel.taxIdNumber = getTaxIdNumber();
+
+		String taxIdNumber = accountEntryCacheModel.taxIdNumber;
+
+		if ((taxIdNumber != null) && (taxIdNumber.length() == 0)) {
+			accountEntryCacheModel.taxIdNumber = null;
+		}
+
+		accountEntryCacheModel.type = getType();
+
+		String type = accountEntryCacheModel.type;
+
+		if ((type != null) && (type.length() == 0)) {
+			accountEntryCacheModel.type = null;
+		}
 
 		accountEntryCacheModel.status = getStatus();
 
@@ -845,10 +972,9 @@ public class AccountEntryModelImpl
 
 	}
 
-	private static boolean _entityCacheEnabled;
-	private static boolean _finderCacheEnabled;
-
 	private long _mvccVersion;
+	private String _externalReferenceCode;
+	private String _originalExternalReferenceCode;
 	private long _accountEntryId;
 	private long _companyId;
 	private long _originalCompanyId;
@@ -863,6 +989,8 @@ public class AccountEntryModelImpl
 	private String _description;
 	private String _domains;
 	private long _logoId;
+	private String _taxIdNumber;
+	private String _type;
 	private int _status;
 	private int _originalStatus;
 	private boolean _setOriginalStatus;

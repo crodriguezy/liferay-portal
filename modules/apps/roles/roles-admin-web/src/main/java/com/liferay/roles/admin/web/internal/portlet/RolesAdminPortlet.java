@@ -453,7 +453,8 @@ public class RolesAdminPortlet extends MVCPortlet {
 				String[] groupIds = StringUtil.split(
 					ParamUtil.getString(actionRequest, "groupIds" + target));
 
-				groupIds = ArrayUtil.distinct(groupIds);
+				groupIds = ArrayUtil.distinct(
+					ArrayUtil.filter(groupIds, Validator::isNotNull));
 
 				int scope = ResourceConstants.SCOPE_COMPANY;
 
@@ -741,8 +742,10 @@ public class RolesAdminPortlet extends MVCPortlet {
 		String selResource = null;
 		String actionId = null;
 
-		if (panelCategoryHelper.containsPortlet(
-				portletId, PanelCategoryKeys.CONTROL_PANEL) &&
+		if ((panelCategoryHelper.containsPortlet(
+				portletId, PanelCategoryKeys.APPLICATIONS_MENU) ||
+			 panelCategoryHelper.containsPortlet(
+				 portletId, PanelCategoryKeys.CONTROL_PANEL)) &&
 			(role.getType() == RoleConstants.TYPE_REGULAR)) {
 
 			selResource = PortletKeys.PORTAL;

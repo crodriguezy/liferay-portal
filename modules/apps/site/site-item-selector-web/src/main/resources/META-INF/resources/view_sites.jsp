@@ -143,9 +143,13 @@ GroupSearch groupSearch = siteItemSelectorViewDisplayContext.getGroupSearch();
 					<liferay-ui:search-container-column-text>
 						<div class="card card-horizontal">
 							<div class="card-body">
-								<div class="card-row">
-									<div class="autofit-col">
-										<span class="sticker sticker-secondary">
+								<clay:content-row
+									cssClass="card-row"
+								>
+									<clay:content-col>
+										<clay:sticker
+											displayType="secondary"
+										>
 											<c:choose>
 												<c:when test="<%= Validator.isNotNull(siteVerticalCard.getImageSrc()) %>">
 													<span class="sticker-overlay">
@@ -153,16 +157,18 @@ GroupSearch groupSearch = siteItemSelectorViewDisplayContext.getGroupSearch();
 													</span>
 												</c:when>
 												<c:otherwise>
-													<liferay-ui:icon
-														icon="<%= group.getIconCssClass() %>"
-														markupView="lexicon"
+													<clay:icon
+														symbol="<%= group.getIconCssClass() %>"
 													/>
 												</c:otherwise>
 											</c:choose>
-										</span>
-									</div>
+										</clay:sticker>
+									</clay:content-col>
 
-									<div class="autofit-col autofit-col-expand autofit-col-gutters">
+									<clay:content-col
+										expand="<%= true %>"
+										gutters="<%= true %>"
+									>
 										<aui:a cssClass="card-title selector-button text-truncate" data="<%= data %>" href="javascript:;" title="<%= siteVerticalCard.getSubtitle() %>">
 											<%= siteVerticalCard.getTitle() %>
 										</aui:a>
@@ -172,14 +178,14 @@ GroupSearch groupSearch = siteItemSelectorViewDisplayContext.getGroupSearch();
 												<%= siteVerticalCard.getSubtitle() %>
 											</aui:a>
 										</c:if>
-									</div>
+									</clay:content-col>
 
 									<c:if test="<%= groupItemSelectorCriterion.isAllowNavigation() %>">
-										<div class="autofit-col">
+										<clay:content-col>
 											<aui:a cssClass="btn btn-outline-borderless btn-outline-secondary" href="<%= siteVerticalCard.getHref() %>" target="_blank" />
-										</div>
+										</clay:content-col>
 									</c:if>
-								</div>
+								</clay:content-row>
 							</div>
 						</div>
 					</liferay-ui:search-container-column-text>

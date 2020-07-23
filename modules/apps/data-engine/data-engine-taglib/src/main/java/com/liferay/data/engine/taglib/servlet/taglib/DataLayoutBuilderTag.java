@@ -16,6 +16,7 @@ package com.liferay.data.engine.taglib.servlet.taglib;
 
 import com.liferay.data.engine.taglib.servlet.taglib.base.BaseDataLayoutBuilderTag;
 import com.liferay.data.engine.taglib.servlet.taglib.util.DataLayoutTaglibUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -23,6 +24,7 @@ import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.LinkedHashMapBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.List;
 import java.util.Locale;
@@ -53,6 +55,15 @@ public class DataLayoutBuilderTag extends BaseDataLayoutBuilderTag {
 				DataLayoutTaglibUtil.resolveModule(
 					"data-engine-taglib/data_layout_builder/js" +
 						"/DataLayoutBuilder.es"));
+
+			if (Validator.isNotNull(getDataDefinitionId()) &&
+				Validator.isNull(getDataLayoutId())) {
+
+				setDataLayoutId(
+					DataLayoutTaglibUtil.getDefaultDataLayoutId(
+						getDataDefinitionId(), httpServletRequest));
+			}
+
 			setNamespacedAttribute(
 				httpServletRequest, "fieldTypes",
 				DataLayoutTaglibUtil.getFieldTypesJSONArray(
@@ -134,7 +145,14 @@ public class DataLayoutBuilderTag extends BaseDataLayoutBuilderTag {
 				).put(
 					"sidebarPanelId", "fields"
 				).build()
-			).put(
+			).build();
+
+		JSONObject dataLayoutConfigJSONObject =
+			DataLayoutTaglibUtil.getDataLayoutConfigJSONObject(
+				getContentType(), httpServletRequest.getLocale());
+
+		if (dataLayoutConfigJSONObject.getBoolean("allowRules")) {
+			sidebarPanels.put(
 				"rules",
 				HashMapBuilder.<String, Object>put(
 					"icon", "rules"
@@ -149,8 +167,8 @@ public class DataLayoutBuilderTag extends BaseDataLayoutBuilderTag {
 							"/rules-sidebar/index.es")
 				).put(
 					"sidebarPanelId", "rules"
-				).build()
-			).build();
+				).build());
+		}
 
 		List<Map<String, Object>> additionalPanels = getAdditionalPanels();
 

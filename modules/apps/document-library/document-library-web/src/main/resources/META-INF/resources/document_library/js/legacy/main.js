@@ -63,6 +63,10 @@ AUI.add(
 					validator: Lang.isBoolean,
 				},
 
+				viewFileEntryTypeURL: {
+					validator: Lang.isString,
+				},
+
 				viewFileEntryURL: {
 					validator: Lang.isString,
 				},
@@ -81,7 +85,7 @@ AUI.add(
 					var selectedElements = event.elements.allSelectedElements;
 
 					if (selectedElements.size() > 0) {
-						instance._selectedFileEntries = selectedElements.attr(
+						instance._selectedFileEntries = selectedElements.get(
 							'value'
 						);
 					}
@@ -380,18 +384,13 @@ AUI.add(
 				},
 
 				handleCreationMenuMoreButtonClicked(event) {
-					event.preventDefault();
-
 					var instance = this;
 
-					Liferay.Util.openWindow({
-						dialog: {
-							destroyOnHide: true,
-							modal: true,
-						},
-						id: instance.ns('selectAddMenuItem'),
+					event.preventDefault();
+
+					Liferay.Util.openModal({
 						title: Liferay.Language.get('more'),
-						uri: instance.get('openViewMoreFileEntryTypesURL'),
+						url: instance.get('openViewMoreFileEntryTypesURL'),
 					});
 				},
 
@@ -434,7 +433,7 @@ AUI.add(
 											uri = Liferay.Util.addParams(
 												instance.ns(
 													'fileEntryTypeId='
-												) + selectedItem,
+												) + selectedItem.value,
 												uri
 											);
 
@@ -534,31 +533,26 @@ AUI.add(
 						);
 					}
 
-					Liferay.Util.selectEntity(
-						{
-							dialog: {
-								constrain: true,
-								destroyOnHide: true,
-								modal: true,
-								width: 680,
-							},
-							id: namespace + 'selectFolder',
-							title: Lang.sub(dialogTitle, [selectedItems]),
-							uri: instance.get('selectFolderURL'),
-						},
-						(event) => {
+					Liferay.Util.openModal({
+						id: namespace + 'selectFolder',
+						onSelect: (selectedItem) => {
 							if (parameterName && parameterValue) {
 								instance._moveSingleElement(
-									event.folderid,
+									selectedItem.folderid,
 									parameterName,
 									parameterValue
 								);
 							}
 							else {
-								instance._moveCurrentSelection(event.folderid);
+								instance._moveCurrentSelection(
+									selectedItem.folderid
+								);
 							}
-						}
-					);
+						},
+						selectEventName: namespace + 'selectFolder',
+						title: Lang.sub(dialogTitle, [selectedItems]),
+						url: instance.get('selectFolderURL'),
+					});
 				},
 			},
 		});
@@ -567,10 +561,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: [
-			'document-library-upload',
-			'liferay-message',
-			'liferay-portlet-base',
-		],
+		requires: ['document-library-upload', 'liferay-portlet-base'],
 	}
 );

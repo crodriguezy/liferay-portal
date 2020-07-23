@@ -19,10 +19,11 @@
 			"config": {
 				"backgroundImage": {
 				},
-				"paddingBottom": 3,
-				"paddingHorizontal": 3,
-				"paddingTop": 3,
-				"type": "fixed"
+				"paddingBottom": 0,
+				"paddingLeft": 0,
+				"paddingRight": 0,
+				"paddingTop": 0,
+				"widthType": "fluid"
 			},
 			"itemId": "ROOT-CONTAINER0",
 			"parentId": "ROOT",
@@ -80,7 +81,7 @@
 			"children": [
 			],
 			"config": {
-				"fragmentEntryLinkId": "column-1:com_liferay_chart_sample_web_portlet_ChartSamplePortlet"
+				"fragmentEntryLinkId": "column-1:${TEST_PORTLET_NAME_4}"
 			},
 			"itemId": "ROOT-CONTAINER0-ROW0-COLUMN0-FRAGMENT0",
 			"parentId": "ROOT-CONTAINER0-ROW0-COLUMN0",
@@ -90,7 +91,7 @@
 			"children": [
 			],
 			"config": {
-				"fragmentEntryLinkId": "column-1:com_liferay_chart_sample_web_portlet_ChartSamplePortlet"
+				"fragmentEntryLinkId": "column-1:${TEST_PORTLET_NAME_4}"
 			},
 			"itemId": "ROOT-CONTAINER0-ROW0-COLUMN0-FRAGMENT1",
 			"parentId": "ROOT-CONTAINER0-ROW0-COLUMN0",
@@ -103,10 +104,11 @@
 			"config": {
 				"backgroundImage": {
 				},
-				"paddingBottom": 3,
-				"paddingHorizontal": 3,
-				"paddingTop": 3,
-				"type": "fixed"
+				"paddingBottom": 0,
+				"paddingLeft": 0,
+				"paddingRight": 0,
+				"paddingTop": 0,
+				"widthType": "fluid"
 			},
 			"itemId": "ROOT-CONTAINER1",
 			"parentId": "ROOT",
@@ -166,7 +168,7 @@
 			"children": [
 			],
 			"config": {
-				"fragmentEntryLinkId": "column-2:com_liferay_hello_velocity_web_portlet_HelloVelocityPortlet"
+				"fragmentEntryLinkId": "column-2:${TEST_PORTLET_NAME_1}"
 			},
 			"itemId": "ROOT-CONTAINER1-ROW0-COLUMN0-FRAGMENT0",
 			"parentId": "ROOT-CONTAINER1-ROW0-COLUMN0",
@@ -176,7 +178,7 @@
 			"children": [
 			],
 			"config": {
-				"fragmentEntryLinkId": "column-2:com_liferay_chart_sample_web_portlet_ChartSamplePortlet"
+				"fragmentEntryLinkId": "column-2:${TEST_PORTLET_NAME_4}"
 			},
 			"itemId": "ROOT-CONTAINER1-ROW0-COLUMN0-FRAGMENT1",
 			"parentId": "ROOT-CONTAINER1-ROW0-COLUMN0",
@@ -198,7 +200,7 @@
 			"children": [
 			],
 			"config": {
-				"fragmentEntryLinkId": "column-3:com_liferay_hello_world_web_portlet_HelloWorldPortlet"
+				"fragmentEntryLinkId": "column-3:${TEST_PORTLET_NAME_2}"
 			},
 			"itemId": "ROOT-CONTAINER1-ROW0-COLUMN1-FRAGMENT0",
 			"parentId": "ROOT-CONTAINER1-ROW0-COLUMN1",
@@ -208,7 +210,7 @@
 			"children": [
 			],
 			"config": {
-				"fragmentEntryLinkId": "column-3:com_liferay_chart_sample_web_portlet_ChartSamplePortlet"
+				"fragmentEntryLinkId": "column-3:${TEST_PORTLET_NAME_4}"
 			},
 			"itemId": "ROOT-CONTAINER1-ROW0-COLUMN1-FRAGMENT1",
 			"parentId": "ROOT-CONTAINER1-ROW0-COLUMN1",
@@ -230,7 +232,7 @@
 			"children": [
 			],
 			"config": {
-				"fragmentEntryLinkId": "column-4:com_liferay_chart_sample_web_portlet_ChartSamplePortlet"
+				"fragmentEntryLinkId": "column-4:${TEST_PORTLET_NAME_4}"
 			},
 			"itemId": "ROOT-CONTAINER1-ROW0-COLUMN2-FRAGMENT0",
 			"parentId": "ROOT-CONTAINER1-ROW0-COLUMN2",
@@ -240,7 +242,7 @@
 			"children": [
 			],
 			"config": {
-				"fragmentEntryLinkId": "column-4:com_liferay_chart_sample_web_portlet_ChartSamplePortlet"
+				"fragmentEntryLinkId": "column-4:${TEST_PORTLET_NAME_4}"
 			},
 			"itemId": "ROOT-CONTAINER1-ROW0-COLUMN2-FRAGMENT1",
 			"parentId": "ROOT-CONTAINER1-ROW0-COLUMN2",
@@ -253,10 +255,11 @@
 			"config": {
 				"backgroundImage": {
 				},
-				"paddingBottom": 3,
-				"paddingHorizontal": 3,
-				"paddingTop": 3,
-				"type": "fixed"
+				"paddingBottom": 0,
+				"paddingLeft": 0,
+				"paddingRight": 0,
+				"paddingTop": 0,
+				"widthType": "fluid"
 			},
 			"itemId": "ROOT-CONTAINER2",
 			"parentId": "ROOT",
@@ -314,7 +317,7 @@
 			"children": [
 			],
 			"config": {
-				"fragmentEntryLinkId": "column-5:com_liferay_chart_sample_web_portlet_ChartSamplePortlet"
+				"fragmentEntryLinkId": "column-5:${TEST_PORTLET_NAME_4}"
 			},
 			"itemId": "ROOT-CONTAINER2-ROW0-COLUMN0-FRAGMENT0",
 			"parentId": "ROOT-CONTAINER2-ROW0-COLUMN0",
@@ -324,7 +327,7 @@
 			"children": [
 			],
 			"config": {
-				"fragmentEntryLinkId": "column-5:com_liferay_chart_sample_web_portlet_ChartSamplePortlet"
+				"fragmentEntryLinkId": "column-5:${TEST_PORTLET_NAME_4}"
 			},
 			"itemId": "ROOT-CONTAINER2-ROW0-COLUMN0-FRAGMENT1",
 			"parentId": "ROOT-CONTAINER2-ROW0-COLUMN0",

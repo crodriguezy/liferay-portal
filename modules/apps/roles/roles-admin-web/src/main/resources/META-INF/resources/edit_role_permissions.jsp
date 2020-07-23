@@ -66,8 +66,8 @@ if (!portletName.equals(PortletKeys.SERVER_ADMIN)) {
 </c:if>
 
 <clay:container-fluid
-	className="container-form-lg"
-	id='<%= renderResponse.getNamespace() + "permissionContainer" %>'
+	cssClass="container-form-lg"
+	id='<%= liferayPortletResponse.getNamespace() + "permissionContainer" %>'
 >
 	<clay:row>
 		<c:if test="<%= !portletName.equals(PortletKeys.SERVER_ADMIN) %>">
@@ -79,8 +79,8 @@ if (!portletName.equals(PortletKeys.SERVER_ADMIN)) {
 		</c:if>
 
 		<clay:col
-			className="lfr-permission-content-container"
-			id='<%= renderResponse.getNamespace() + "permissionContentContainer" %>'
+			cssClass="lfr-permission-content-container"
+			id='<%= liferayPortletResponse.getNamespace() + "permissionContentContainer" %>'
 			md="<%= portletName.equals(PortletKeys.SERVER_ADMIN) ? String.valueOf(12) : String.valueOf(9) %>"
 		>
 			<c:choose>
@@ -113,7 +113,7 @@ if (!portletName.equals(PortletKeys.SERVER_ADMIN)) {
 	}
 </aui:script>
 
-<aui:script use="aui-loading-mask-deprecated,aui-parse-content,aui-toggler,autocomplete-base,autocomplete-filters,liferay-notification">
+<aui:script use="aui-loading-mask-deprecated,aui-parse-content,aui-toggler,autocomplete-base,autocomplete-filters">
 	var AParseContent = A.Plugin.ParseContent;
 
 	var permissionNavigationDataContainer = A.one(
@@ -301,15 +301,8 @@ if (!portletName.equals(PortletKeys.SERVER_ADMIN)) {
 
 						permissionContentContainerNode.unplug(A.LoadingMask);
 
-						new Liferay.Notification({
-							closeable: true,
-							delay: {
-								hide: 0,
-								show: 0,
-							},
-							duration: 500,
+						Liferay.Util.openToast({
 							message: error.message,
-							render: true,
 							title: '<liferay-ui:message key="warning" />',
 							type: 'warning',
 						});

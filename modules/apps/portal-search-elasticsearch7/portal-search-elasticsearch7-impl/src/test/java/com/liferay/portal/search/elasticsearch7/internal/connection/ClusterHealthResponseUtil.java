@@ -41,6 +41,8 @@ public class ClusterHealthResponseUtil {
 
 		ClusterHealthRequest clusterHealthRequest = new ClusterHealthRequest();
 
+		clusterHealthRequest.masterNodeTimeout(
+			new TimeValue(10, TimeUnit.MINUTES));
 		clusterHealthRequest.timeout(new TimeValue(10, TimeUnit.MINUTES));
 		clusterHealthRequest.waitForActiveShards(
 			healthExpectations.getActiveShards());

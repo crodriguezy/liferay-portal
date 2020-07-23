@@ -1,7 +1,15 @@
 Bundle-Name: Liferay Frontend Taglib Clay
 Bundle-SymbolicName: com.liferay.frontend.taglib.clay
-Bundle-Version: 3.5.1
+Bundle-Version: 5.0.0
 Export-Package:\
+	com.liferay.frontend.taglib.clay.data,\
+	com.liferay.frontend.taglib.clay.data.set,\
+	com.liferay.frontend.taglib.clay.data.set.model,\
+	com.liferay.frontend.taglib.clay.data.set.provider,\
+	com.liferay.frontend.taglib.clay.data.set.view.cards,\
+	com.liferay.frontend.taglib.clay.data.set.view.list,\
+	com.liferay.frontend.taglib.clay.data.set.view.table,\
+	com.liferay.frontend.taglib.clay.data.set.view.timeline,\
 	com.liferay.frontend.taglib.clay.servlet.taglib,\
 	com.liferay.frontend.taglib.clay.servlet.taglib.contributor,\
 	com.liferay.frontend.taglib.clay.servlet.taglib.data,\

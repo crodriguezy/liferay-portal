@@ -17,21 +17,17 @@ import {useIsMounted} from 'frontend-js-react-web';
 import PropTypes from 'prop-types';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {updateFragmentEntryLinkContent} from '../../actions/index';
 import {EDITABLE_FLOATING_TOOLBAR_BUTTONS} from '../../config/constants/editableFloatingToolbarButtons';
-import selectCanUpdateLayoutContent from '../../selectors/selectCanUpdateLayoutContent';
+import selectCanConfigureWidgets from '../../selectors/selectCanConfigureWidgets';
+import selectCanUpdateEditables from '../../selectors/selectCanUpdateEditables';
 import selectSegmentsExperienceId from '../../selectors/selectSegmentsExperienceId';
-import {useDispatch, useSelector} from '../../store/index';
-import {
-	useGetContent,
-	useGetFieldValue,
-	useRenderFragmentContent,
-} from '../CollectionItemContext';
-import {useFrameContext} from '../Frame';
+import {useSelector, useSelectorCallback} from '../../store/index';
+import {useGetContent, useGetFieldValue} from '../CollectionItemContext';
+import {useGlobalContext} from '../GlobalContext';
 import Layout from '../Layout';
 import UnsafeHTML from '../UnsafeHTML';
 import {
-	useEditableProcessorUniqueId,
+	useIsProcessorEnabled,
 	useSetEditableProcessorUniqueId,
 } from './EditableProcessorContext';
 import FragmentContentFloatingToolbar from './FragmentContentFloatingToolbar';
@@ -41,212 +37,184 @@ import getAllEditables from './getAllEditables';
 import getEditableUniqueId from './getEditableUniqueId';
 import resolveEditableValue from './resolveEditableValue';
 
-const FragmentContent = React.forwardRef(
-	({fragmentEntryLinkId, itemId}, ref) => {
-		const dispatch = useDispatch();
-		const isMounted = useIsMounted();
-		const editableProcessorUniqueId = useEditableProcessorUniqueId();
-		const frameContext = useFrameContext();
-		const setEditableProcessorUniqueId = useSetEditableProcessorUniqueId();
-		const canUpdateLayoutContent = useSelector(
-			selectCanUpdateLayoutContent
-		);
+const FragmentContent = ({elementRef, fragmentEntryLinkId, itemId}) => {
+	const isMounted = useIsMounted();
+	const isProcessorEnabled = useIsProcessorEnabled();
+	const globalContext = useGlobalContext();
+	const setEditableProcessorUniqueId = useSetEditableProcessorUniqueId();
 
-		const getFieldValue = useGetFieldValue();
-		const getContent = useGetContent();
-		const renderFragmentContent = useRenderFragmentContent();
+	const getFieldValue = useGetFieldValue();
 
-		const [editables, setEditables] = useState([]);
+	const [editables, setEditables] = useState([]);
 
-		const editableElements = useMemo(
-			() => editables.map((editable) => editable.element),
-			[editables]
-		);
+	const canConfigureWidgets = useSelector(selectCanConfigureWidgets);
+	const canUpdateEditables = useSelector(selectCanUpdateEditables);
 
-		/**
-		 * Updates editables array for the rendered fragment.
-		 * @param {HTMLElement} [nextFragmentElement] Fragment element
-		 *  If not specified, fragmentElement state is used instead.
-		 * @return {Array} Updated editables array
-		 */
-		const onRender = useCallback(
-			(fragmentElement) => {
-				let updatedEditableValues = [];
+	const editableElements = useMemo(
+		() => editables.map((editable) => editable.element),
+		[editables]
+	);
 
-				if (isMounted()) {
-					updatedEditableValues = getAllEditables(fragmentElement);
-				}
+	/**
+	 * Updates editables array for the rendered fragment.
+	 * @param {HTMLElement} [nextFragmentElement] Fragment element
+	 *  If not specified, fragmentElement state is used instead.
+	 * @return {Array} Updated editables array
+	 */
+	const onRender = useCallback(
+		(fragmentElement) => {
+			let updatedEditableValues = [];
 
-				setEditables(updatedEditableValues);
-
-				return updatedEditableValues;
-			},
-			[isMounted]
-		);
-
-		const fragmentEntryLinks = useSelector(
-			(state) => state.fragmentEntryLinks
-		);
-
-		const fragmentEntryLink = fragmentEntryLinks[fragmentEntryLinkId];
-		const languageId = useSelector((state) => state.languageId);
-		const segmentsExperienceId = useSelector(selectSegmentsExperienceId);
-
-		const defaultContent = getContent(fragmentEntryLink);
-		const [content, setContent] = useState(defaultContent);
-		const editableValues = fragmentEntryLink
-			? fragmentEntryLink.editableValues
-			: {};
-
-		useEffect(() => {
-			renderFragmentContent({
-				fragmentEntryLinkId,
-				onNetworkStatus: dispatch,
-				segmentsExperienceId,
-			}).then((action) => {
-				dispatch(
-					updateFragmentEntryLinkContent({
-						...action,
-						fragmentEntryLinkId,
-					})
-				);
-			});
-		}, [
-			dispatch,
-			fragmentEntryLinkId,
-			renderFragmentContent,
-			segmentsExperienceId,
-		]);
-
-		/**
-		 * fragmentElement keeps a copy of the fragment real HTML,
-		 * we perform editableValues replacements over this copy
-		 * to avoid multiple re-renders, when every replacement has
-		 * finished, this function must be called.
-		 *
-		 * Synchronizes fragmentElement's content to the real fragment
-		 * content. When this happens, the real re-render is performed.
-		 */
-		useEffect(() => {
-			let fragmentElement = document.createElement('div');
-
-			if (!editableProcessorUniqueId) {
-				fragmentElement.innerHTML = defaultContent;
-
-				Promise.all(
-					getAllEditables(fragmentElement).map((editable) =>
-						resolveEditableValue(
-							editableValues,
-							editable.editableId,
-							editable.editableValueNamespace,
-							languageId,
-							getFieldValue
-						).then(([value, editableConfig]) => {
-							editable.processor.render(
-								editable.element,
-								value,
-								editableConfig
-							);
-
-							editable.element.classList.add(
-								'page-editor__editable'
-							);
-						})
-					)
-				).then(() => {
-					if (isMounted() && fragmentElement) {
-						setContent(fragmentElement.innerHTML);
-					}
-				});
+			if (isMounted()) {
+				updatedEditableValues = getAllEditables(fragmentElement);
 			}
 
-			return () => {
-				fragmentElement = null;
-			};
-		}, [
-			defaultContent,
-			editableProcessorUniqueId,
-			editableValues,
-			getFieldValue,
-			isMounted,
-			languageId,
-		]);
+			setEditables(updatedEditableValues);
 
-		const getPortals = useCallback(
-			(element) =>
-				Array.from(element.querySelectorAll('lfr-drop-zone')).map(
-					(dropZoneElement) => {
-						const mainItemId =
-							dropZoneElement.getAttribute('uuid') || '';
+			return updatedEditableValues;
+		},
+		[isMounted]
+	);
 
-						const Component = () =>
-							mainItemId ? (
-								<Layout mainItemId={mainItemId} />
-							) : null;
+	const fragmentEntryLink = useSelectorCallback(
+		(state) => state.fragmentEntryLinks[fragmentEntryLinkId],
+		[fragmentEntryLinkId]
+	);
 
-						Component.displayName = `DropZone(${mainItemId})`;
+	const languageId = useSelector((state) => state.languageId);
+	const segmentsExperienceId = useSelector(selectSegmentsExperienceId);
 
-						return {
-							Component,
-							element: dropZoneElement,
-						};
-					}
-				),
-			[]
-		);
+	const defaultContent = useGetContent(
+		fragmentEntryLink,
+		segmentsExperienceId
+	);
+	const [content, setContent] = useState(defaultContent);
+	const editableValues = fragmentEntryLink
+		? fragmentEntryLink.editableValues
+		: {};
 
-		const onFloatingToolbarButtonClick = useCallback(
-			(buttonId, editableId) => {
-				if (buttonId === EDITABLE_FLOATING_TOOLBAR_BUTTONS.edit.id) {
-					setEditableProcessorUniqueId(
-						getEditableUniqueId(fragmentEntryLinkId, editableId)
-					);
+	/**
+	 * fragmentElement keeps a copy of the fragment real HTML,
+	 * we perform editableValues replacements over this copy
+	 * to avoid multiple re-renders, when every replacement has
+	 * finished, this function must be called.
+	 *
+	 * Synchronizes fragmentElement's content to the real fragment
+	 * content. When this happens, the real re-render is performed.
+	 */
+	useEffect(() => {
+		let fragmentElement = document.createElement('div');
+
+		if (!isProcessorEnabled()) {
+			fragmentElement.innerHTML = defaultContent;
+
+			Promise.all(
+				getAllEditables(fragmentElement).map((editable) =>
+					resolveEditableValue(
+						editableValues,
+						editable.editableId,
+						editable.editableValueNamespace,
+						languageId,
+						getFieldValue
+					).then(([value, editableConfig]) => {
+						editable.processor.render(
+							editable.element,
+							value,
+							editableConfig
+						);
+
+						editable.element.classList.add('page-editor__editable');
+					})
+				)
+			).then(() => {
+				if (isMounted() && fragmentElement) {
+					setContent(fragmentElement.innerHTML);
 				}
-			},
-			[fragmentEntryLinkId, setEditableProcessorUniqueId]
-		);
+			});
+		}
 
-		return (
-			<>
-				<FragmentContentInteractionsFilter
-					editableElements={editableElements}
-					fragmentEntryLinkId={fragmentEntryLinkId}
-					itemId={itemId}
-				>
-					<UnsafeHTML
-						className={classNames('page-editor__fragment-content', {
-							'page-editor__fragment-content--portlet-topper-hidden': !canUpdateLayoutContent,
-						})}
-						contentRef={ref}
-						getPortals={getPortals}
-						globalContext={frameContext || window}
-						markup={content}
-						onRender={onRender}
-					/>
-				</FragmentContentInteractionsFilter>
+		return () => {
+			fragmentElement = null;
+		};
+	}, [
+		defaultContent,
+		editableValues,
+		getFieldValue,
+		isMounted,
+		isProcessorEnabled,
+		languageId,
+	]);
 
-				{canUpdateLayoutContent && (
-					<FragmentContentFloatingToolbar
-						editables={editables}
-						fragmentEntryLinkId={fragmentEntryLinkId}
-						onButtonClick={onFloatingToolbarButtonClick}
-					/>
-				)}
+	const getPortals = useCallback(
+		(element) =>
+			Array.from(element.querySelectorAll('lfr-drop-zone')).map(
+				(dropZoneElement) => {
+					const mainItemId =
+						dropZoneElement.getAttribute('uuid') || '';
 
-				<FragmentContentProcessor
+					const Component = () =>
+						mainItemId ? <Layout mainItemId={mainItemId} /> : null;
+
+					Component.displayName = `DropZone(${mainItemId})`;
+
+					return {
+						Component,
+						element: dropZoneElement,
+					};
+				}
+			),
+		[]
+	);
+
+	const onFloatingToolbarButtonClick = useCallback(
+		(buttonId, editableId) => {
+			if (buttonId === EDITABLE_FLOATING_TOOLBAR_BUTTONS.edit.id) {
+				setEditableProcessorUniqueId(
+					getEditableUniqueId(fragmentEntryLinkId, editableId)
+				);
+			}
+		},
+		[fragmentEntryLinkId, setEditableProcessorUniqueId]
+	);
+
+	return (
+		<>
+			<FragmentContentInteractionsFilter
+				editableElements={editableElements}
+				fragmentEntryLinkId={fragmentEntryLinkId}
+				itemId={itemId}
+			>
+				<UnsafeHTML
+					className={classNames('page-editor__fragment-content', {
+						'page-editor__fragment-content--portlet-topper-hidden': !canConfigureWidgets,
+					})}
+					contentRef={elementRef}
+					getPortals={getPortals}
+					globalContext={globalContext}
+					markup={content}
+					onRender={onRender}
+				/>
+			</FragmentContentInteractionsFilter>
+
+			{canUpdateEditables && (
+				<FragmentContentFloatingToolbar
 					editables={editables}
 					fragmentEntryLinkId={fragmentEntryLinkId}
+					onButtonClick={onFloatingToolbarButtonClick}
 				/>
-			</>
-		);
-	}
-);
+			)}
 
-FragmentContent.displayName = 'FragmentContent';
+			<FragmentContentProcessor
+				editables={editables}
+				fragmentEntryLinkId={fragmentEntryLinkId}
+			/>
+		</>
+	);
+};
 
 FragmentContent.propTypes = {
 	fragmentEntryLinkId: PropTypes.string.isRequired,
 	itemId: PropTypes.string.isRequired,
 };
 
-export default FragmentContent;
+export default React.memo(FragmentContent);

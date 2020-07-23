@@ -24,6 +24,7 @@ const props = {
 		type: 'radio',
 		...fieldTypes['radio'],
 	},
+	summary: {},
 	totalEntries: 10,
 };
 
@@ -35,8 +36,26 @@ describe('Card', () => {
 		expect(container.querySelector('.card-text').title).toBe('10 entries');
 	});
 
-	it('shows "there are not entries" when totalEntries is zero', () => {
+	it('shows "there are no entries" when totalEntries is zero', () => {
 		const {getAllByText} = render(<Card {...props} totalEntries={0} />);
 		expect(getAllByText('there-are-no-entries').length).toBe(2);
+	});
+
+	it('renders the summary when summary is true', () => {
+		const summary = {
+			average: 2701550114.2,
+			max: 99978663563345345,
+			min: 1029376736,
+			sum: 1.35077506376,
+		};
+
+		const {getByText} = render(<Card {...props} summary={summary} />);
+
+		expect(getByText('average')).toBeTruthy();
+		expect(getByText('max')).toBeTruthy();
+		expect(getByText('min')).toBeTruthy();
+		expect(getByText('sum')).toBeTruthy();
+		expect(getByText('1.350775...')).toBeTruthy();
+		expect(getByText('99978663...')).toBeTruthy();
 	});
 });

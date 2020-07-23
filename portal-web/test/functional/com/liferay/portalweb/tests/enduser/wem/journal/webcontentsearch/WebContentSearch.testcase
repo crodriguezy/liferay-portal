@@ -350,6 +350,7 @@ definition {
 
 	@priority = "5"
 	test SearchWebContentTag {
+		property portal.acceptance = "true";
 		property testray.component.names = "Tags,Training,Web Content Display";
 
 		JSONLayout.addPublicLayout(

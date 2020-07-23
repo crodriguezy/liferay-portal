@@ -22,6 +22,7 @@ definition {
 
 	@priority = "5"
 	test ViewWCDNestedPortlets {
+		property portal.acceptance = "true";
 		property testray.component.names = "Training";
 
 		JSONLayout.addPublicLayout(

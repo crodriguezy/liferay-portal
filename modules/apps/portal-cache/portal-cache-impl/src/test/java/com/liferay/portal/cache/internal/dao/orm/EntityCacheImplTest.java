@@ -47,19 +47,16 @@ public class EntityCacheImplTest {
 		_nullModel = ReflectionTestUtil.getFieldValue(
 			BasePersistenceImpl.class, "nullModel");
 
-		Map<String, Object> properties = HashMapBuilder.<String, Object>put(
-			PropsKeys.VALUE_OBJECT_ENTITY_BLOCKING_CACHE, "true"
-		).put(
-			PropsKeys.VALUE_OBJECT_ENTITY_CACHE_ENABLED, "true"
-		).put(
-			PropsKeys.VALUE_OBJECT_FINDER_CACHE_ENABLED, "true"
-		).put(
-			PropsKeys.VALUE_OBJECT_FINDER_CACHE_LIST_THRESHOLD, "-1"
-		).put(
-			PropsKeys.VALUE_OBJECT_MVCC_ENTITY_CACHE_ENABLED, "true"
-		).build();
-
-		_props = PropsTestUtil.setProps(properties);
+		_props = PropsTestUtil.setProps(
+			HashMapBuilder.<String, Object>put(
+				PropsKeys.VALUE_OBJECT_ENTITY_CACHE_ENABLED, "true"
+			).put(
+				PropsKeys.VALUE_OBJECT_FINDER_CACHE_ENABLED, "true"
+			).put(
+				PropsKeys.VALUE_OBJECT_FINDER_CACHE_LIST_THRESHOLD, "-1"
+			).put(
+				PropsKeys.VALUE_OBJECT_MVCC_ENTITY_CACHE_ENABLED, "true"
+			).build());
 	}
 
 	@Test
@@ -107,11 +104,10 @@ public class EntityCacheImplTest {
 
 		entityCacheImpl.activate();
 
-		entityCacheImpl.putResult(
-			true, EntityCacheImplTest.class, 12345, _nullModel);
+		entityCacheImpl.putResult(EntityCacheImplTest.class, 12345, _nullModel);
 
 		Serializable result = entityCacheImpl.getResult(
-			true, EntityCacheImplTest.class, 12345);
+			EntityCacheImplTest.class, 12345);
 
 		Assert.assertSame(_nullModel, result);
 	}

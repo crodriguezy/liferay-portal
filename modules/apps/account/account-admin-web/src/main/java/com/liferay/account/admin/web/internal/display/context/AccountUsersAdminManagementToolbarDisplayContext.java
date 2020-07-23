@@ -28,6 +28,7 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.LabelItemList;
 import com.liferay.petra.string.StringPool;
 import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -35,10 +36,17 @@ import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.permission.PortalPermissionUtil;
+import com.liferay.portal.kernel.service.permission.UserPermissionUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -64,6 +72,7 @@ public class AccountUsersAdminManagementToolbarDisplayContext
 			searchContainer);
 	}
 
+	@Override
 	public List<DropdownItem> getActionDropdownItems() {
 		return DropdownItemList.of(
 			() -> {
@@ -172,6 +181,36 @@ public class AccountUsersAdminManagementToolbarDisplayContext
 			});
 	}
 
+	public List<String> getAvailableActions(
+			AccountUserDisplay accountUserDisplay)
+		throws PortalException {
+
+		List<String> availableActions = new ArrayList<>();
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		if (!UserPermissionUtil.contains(
+				themeDisplay.getPermissionChecker(),
+				accountUserDisplay.getUserId(), ActionKeys.DELETE)) {
+
+			return availableActions;
+		}
+
+		if (Objects.equals(
+				accountUserDisplay.getStatus(),
+				WorkflowConstants.STATUS_APPROVED)) {
+
+			availableActions.add("deactivateAccountUsers");
+		}
+		else {
+			availableActions.add("activateAccountUsers");
+			availableActions.add("deleteAccountUsers");
+		}
+
+		return availableActions;
+	}
+
 	@Override
 	public String getClearResultsURL() {
 		PortletURL clearResultsURL = getPortletURL();
@@ -184,6 +223,7 @@ public class AccountUsersAdminManagementToolbarDisplayContext
 		return clearResultsURL.toString();
 	}
 
+	@Override
 	public CreationMenu getCreationMenu() {
 		return CreationMenuBuilder.addPrimaryDropdownItem(
 			dropdownItem -> {
@@ -367,6 +407,15 @@ public class AccountUsersAdminManagementToolbarDisplayContext
 	@Override
 	public Boolean isDisabled() {
 		return false;
+	}
+
+	@Override
+	public Boolean isShowCreationMenu() {
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		return PortalPermissionUtil.contains(
+			themeDisplay.getPermissionChecker(), ActionKeys.ADD_USER);
 	}
 
 	@Override

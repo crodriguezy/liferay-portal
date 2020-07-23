@@ -17,22 +17,15 @@ package com.liferay.app.builder.web.internal.deploy;
 import com.liferay.app.builder.constants.AppBuilderPortletKeys;
 import com.liferay.app.builder.deploy.AppDeployer;
 import com.liferay.app.builder.model.AppBuilderApp;
-import com.liferay.app.builder.service.AppBuilderAppLocalService;
 import com.liferay.app.builder.web.internal.portlet.AppPortlet;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
 
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.portlet.Portlet;
-
-import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Gabriel Albuquerque
@@ -41,18 +34,18 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true, property = "app.builder.deploy.type=widget",
 	service = AppDeployer.class
 )
-public class WidgetAppDeployer implements AppDeployer {
+public class WidgetAppDeployer extends BaseAppDeployer {
 
 	@Override
 	public void deploy(long appId) throws Exception {
 		AppBuilderApp appBuilderApp =
-			_appBuilderAppLocalService.getAppBuilderApp(appId);
+			appBuilderAppLocalService.getAppBuilderApp(appId);
 
 		appBuilderApp.setActive(true);
 
-		_serviceRegistrationsMap.computeIfAbsent(
+		serviceRegistrationsMap.computeIfAbsent(
 			appId,
-			key -> new ServiceRegistration[] {
+			key -> ArrayUtil.append(
 				_deployPortlet(
 					appBuilderApp, _getAppName(appBuilderApp, null),
 					_getPortletName(appId, null), true, true),
@@ -61,37 +54,24 @@ public class WidgetAppDeployer implements AppDeployer {
 					_getPortletName(appId, "form_view"), true, false),
 				_deployPortlet(
 					appBuilderApp, _getAppName(appBuilderApp, "Table View"),
-					_getPortletName(appId, "table_view"), false, true)
-			});
+					_getPortletName(appId, "table_view"), false, true)));
 
-		_appBuilderAppLocalService.updateAppBuilderApp(appBuilderApp);
+		appBuilderAppLocalService.updateAppBuilderApp(appBuilderApp);
 	}
 
-	@Override
-	public void undeploy(long appId) throws Exception {
-		undeploy(_appBuilderAppLocalService, appId, _serviceRegistrationsMap);
-	}
-
-	@Activate
-	protected void activate(BundleContext bundleContext) {
-		_bundleContext = bundleContext;
-	}
-
-	private ServiceRegistration<?> _deployPortlet(
+	private ServiceRegistration<?>[] _deployPortlet(
 		AppBuilderApp appBuilderApp, String appName, String portletName,
 		boolean showFormView, boolean showTableView) {
 
-		AppPortlet appPortlet = new AppPortlet(
-			appBuilderApp, "widget", appName, portletName, showFormView,
-			showTableView);
-
-		return _bundleContext.registerService(
-			Portlet.class, appPortlet,
-			appPortlet.getProperties(
-				HashMapBuilder.<String, Object>put(
-					"com.liferay.portlet.display-category",
-					"category.app_builder"
-				).build()));
+		return deployPortlet(
+			new AppPortlet(
+				appBuilderApp, appBuilderAppPortletTabServiceTrackerMap,
+				"widget", appName,
+				appPortletMVCResourceCommandServiceTrackerMap, portletName,
+				showFormView, showTableView),
+			HashMapBuilder.<String, Object>put(
+				"com.liferay.portlet.display-category", "category.app_builder"
+			).build());
 	}
 
 	private String _getAppName(AppBuilderApp appBuilderApp, String suffix) {
@@ -123,12 +103,5 @@ public class WidgetAppDeployer implements AppDeployer {
 
 		return sb.toString();
 	}
-
-	@Reference
-	private AppBuilderAppLocalService _appBuilderAppLocalService;
-
-	private BundleContext _bundleContext;
-	private final ConcurrentHashMap<Long, ServiceRegistration<?>[]>
-		_serviceRegistrationsMap = new ConcurrentHashMap<>();
 
 }

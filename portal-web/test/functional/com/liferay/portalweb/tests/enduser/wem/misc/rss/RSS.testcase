@@ -333,6 +333,7 @@ definition {
 	@description = "This is a use case for LPS-107942.The input field of Entries Per Feed allows integer numbers greater than 10."
 	@priority = "5"
 	test ChangeNumberOfEntriesPerFeedToEleven {
+		property portal.acceptance = "true";
 		property testray.component.names = "RSS";
 
 		JSONLayout.addWidgetToPublicLayout(
@@ -567,7 +568,7 @@ definition {
 		property test.name.skip.portal.instance = "RSS#UpdateRSSFeedViaAssetpublisher";
 		property testray.component.names = "Asset Publisher,RSS";
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "System Settings");

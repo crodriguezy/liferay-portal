@@ -28,17 +28,14 @@ definition {
 
 	@priority = "3"
 	test SitesTemplatePermissionPersistence {
-		property portal.upstream = "quarantine";
 		property testray.component.names = "Permissions,Site Administration";
-
-		// Quarantine for LPS-88600
 
 		SiteTemplates.addSitePageViaSiteTemplateCP(
 			pageName = "search",
 			pageTemplateName = "Search",
 			siteTemplateName = "Community Site");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Sites",
 			panel = "Control Panel",
 			portlet = "Sites");

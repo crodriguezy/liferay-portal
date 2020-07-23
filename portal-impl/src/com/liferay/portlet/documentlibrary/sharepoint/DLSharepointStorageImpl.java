@@ -278,9 +278,9 @@ public class DLSharepointStorageImpl extends BaseSharepointStorageImpl {
 				String description = fileEntry.getDescription();
 				String changeLog = StringPool.BLANK;
 
-				InputStream is = fileEntry.getContentStream();
+				InputStream inputStream = fileEntry.getContentStream();
 
-				file = FileUtil.createTempFile(is);
+				file = FileUtil.createTempFile(inputStream);
 
 				String[] assetTagNames = AssetTagLocalServiceUtil.getTagNames(
 					DLFileEntryConstants.getClassName(),
@@ -322,9 +322,7 @@ public class DLSharepointStorageImpl extends BaseSharepointStorageImpl {
 					folderId, newName, description, serviceContext);
 			}
 
-			Tree folderTree = getFolderTree(folder, newParentFolderPath);
-
-			movedDirsTree.addChild(folderTree);
+			movedDirsTree.addChild(getFolderTree(folder, newParentFolderPath));
 		}
 
 		return new Tree[] {movedDocsTree, movedDirsTree};

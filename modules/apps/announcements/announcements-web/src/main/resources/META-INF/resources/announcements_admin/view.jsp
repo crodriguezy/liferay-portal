@@ -46,7 +46,6 @@ AnnouncementsAdminViewManagementToolbarDisplayContext announcementsAdminViewMana
 %>
 
 <clay:navigation-bar
-	inverted="<%= true %>"
 	navigationItems='<%=
 		new JSPNavigationItemList(pageContext) {
 			{
@@ -79,7 +78,7 @@ AnnouncementsAdminViewManagementToolbarDisplayContext announcementsAdminViewMana
 	itemsTotal="<%= announcementsAdminViewManagementToolbarDisplayContext.getTotal() %>"
 	searchContainerId="announcementsEntries"
 	selectable="<%= true %>"
-	showSearch="false"
+	showSearch="<%= false %>"
 />
 
 <clay:container-fluid>

@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Tuple;
 
 import java.util.Locale;
@@ -36,7 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Pavel Savinov
@@ -78,6 +76,11 @@ public class ContentFlagsFragmentRenderer
 	}
 
 	@Override
+	public String getIcon() {
+		return "web-content";
+	}
+
+	@Override
 	public String getLabel(Locale locale) {
 		ResourceBundle resourceBundle = resourceBundleLoader.loadResourceBundle(
 			locale);
@@ -102,7 +105,7 @@ public class ContentFlagsFragmentRenderer
 
 		flagsTag.setClassPK(classPK);
 
-		flagsTag.setReportedUserId(_portal.getUserId(httpServletRequest));
+		flagsTag.setReportedUserId(portal.getUserId(httpServletRequest));
 
 		FragmentEntryLink fragmentEntryLink =
 			fragmentRendererContext.getFragmentEntryLink();
@@ -117,12 +120,12 @@ public class ContentFlagsFragmentRenderer
 							fragmentEntryLink.getEditableValues(),
 							"message"))));
 
-			InfoDisplayContributor infoDisplayContributor =
-				(InfoDisplayContributor)httpServletRequest.getAttribute(
+			InfoDisplayContributor<?> infoDisplayContributor =
+				(InfoDisplayContributor<?>)httpServletRequest.getAttribute(
 					InfoDisplayWebKeys.INFO_DISPLAY_CONTRIBUTOR);
 
 			if (infoDisplayContributor != null) {
-				InfoDisplayObjectProvider infoDisplayObjectProvider =
+				InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
 					infoDisplayContributor.getInfoDisplayObjectProvider(
 						classPK);
 
@@ -142,8 +145,5 @@ public class ContentFlagsFragmentRenderer
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ContentFlagsFragmentRenderer.class);
-
-	@Reference
-	private Portal _portal;
 
 }

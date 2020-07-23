@@ -558,7 +558,7 @@ components:
 info:
     description:
         "A Java client JAR is available for use with the group ID 'com.liferay', artifact ID
-        'com.liferay.headless.admin.workflow.client', and version '2.0.1'."
+        'com.liferay.headless.admin.workflow.client', and version '2.0.2'."
     license:
         name: "Apache 2.0"
         url: "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -694,37 +694,6 @@ paths:
                       type: boolean
                 - in: query
                   name: name
-                  required: true
-                  schema:
-                      type: string
-                - in: query
-                  name: version
-                  required: true
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/WorkflowDefinition"
-                        application/xml:
-                            schema:
-                                $ref: "#/components/schemas/WorkflowDefinition"
-                    description:
-                        ""
-            tags: ["WorkflowDefinition"]
-    "/workflow-definitions/update-title":
-        post:
-            operationId: postWorkflowDefinitionUpdateTitle
-            parameters:
-                - in: query
-                  name: name
-                  required: true
-                  schema:
-                      type: string
-                - in: query
-                  name: title
                   required: true
                   schema:
                       type: string

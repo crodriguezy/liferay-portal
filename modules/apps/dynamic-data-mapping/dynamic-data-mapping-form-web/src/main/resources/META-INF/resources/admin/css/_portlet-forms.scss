@@ -60,6 +60,7 @@
 	.lfr-ddm-form-page-title {
 		font-weight: normal;
 		resize: none;
+		width: 90%;
 		word-break: normal;
 	}
 
@@ -104,6 +105,10 @@
 		font-size: 28px;
 		margin-bottom: 9px;
 		margin-top: 0;
+	}
+
+	.management-bar {
+		border-bottom: 1px solid #e7e7ed;
 	}
 
 	.checkbox-multiple-options .checkbox-multiple-switcher-inline {

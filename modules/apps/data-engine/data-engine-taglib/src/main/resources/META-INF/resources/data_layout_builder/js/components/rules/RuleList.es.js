@@ -13,6 +13,7 @@
  */
 
 import ClayButton from '@clayui/button';
+import ClayLayout from '@clayui/layout';
 import React, {useContext} from 'react';
 
 import AppContext from '../../AppContext.es';
@@ -26,7 +27,7 @@ export default ({keywords, toggleRulesEditorVisibility}) => {
 		},
 	] = useContext(AppContext);
 
-	const filtereDataRules = dataRules
+	const filteredDataRules = dataRules
 		.map((rule, index) => ({...rule, ruleEditedIndex: index}))
 		.filter(({name}) =>
 			new RegExp(keywords, 'ig').test(
@@ -36,7 +37,7 @@ export default ({keywords, toggleRulesEditorVisibility}) => {
 
 	return (
 		<>
-			{filtereDataRules.length === 0 ? (
+			{!filteredDataRules.length ? (
 				<EmptyState
 					emptyState={{
 						button: () => (
@@ -44,7 +45,7 @@ export default ({keywords, toggleRulesEditorVisibility}) => {
 								displayType="secondary"
 								onClick={() => toggleRulesEditorVisibility()}
 							>
-								{Liferay.Language.get('add-rule')}
+								{Liferay.Language.get('create-new-rule')}
 							</ClayButton>
 						),
 						description: Liferay.Language.get(
@@ -56,9 +57,9 @@ export default ({keywords, toggleRulesEditorVisibility}) => {
 					small
 				/>
 			) : (
-				<div className="autofit-col rule-list">
+				<ClayLayout.ContentCol className="rule-list">
 					<hr />
-					{filtereDataRules.map((rule, index) => (
+					{filteredDataRules.map((rule, index) => (
 						<RuleItem
 							key={index}
 							rule={rule}
@@ -67,7 +68,7 @@ export default ({keywords, toggleRulesEditorVisibility}) => {
 							}
 						/>
 					))}
-				</div>
+				</ClayLayout.ContentCol>
 			)}
 		</>
 	);

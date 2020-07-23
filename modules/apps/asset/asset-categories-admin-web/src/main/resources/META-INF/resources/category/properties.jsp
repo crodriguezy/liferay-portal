@@ -72,10 +72,13 @@ portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(redirect);
 
 renderResponse.setTitle(category.getTitle(locale));
+
+String screenNavigationCategoryKey = ParamUtil.getString(request, "screenNavigationCategoryKey");
 %>
 
 <portlet:actionURL name="editProperties" var="editPropertiesURL">
 	<portlet:param name="mvcPath" value="/edit_category.jsp" />
+	<portlet:param name="screenNavigationCategoryKey" value="<%= screenNavigationCategoryKey %>" />
 	<portlet:param name="vocabularyId" value="<%= String.valueOf(vocabularyId) %>" />
 </portlet:actionURL>
 
@@ -101,11 +104,9 @@ renderResponse.setTitle(category.getTitle(locale));
 					<%
 					for (int i = 0; i < categoryPropertiesIndexes.length; i++) {
 						int categoryPropertiesIndex = categoryPropertiesIndexes[i];
-
-						AssetCategoryProperty categoryProperty = categoryProperties.get(i);
 					%>
 
-						<aui:model-context bean="<%= categoryProperty %>" model="<%= AssetCategoryProperty.class %>" />
+						<aui:model-context bean="<%= categoryProperties.get(i) %>" model="<%= AssetCategoryProperty.class %>" />
 
 						<div class="lfr-form-row lfr-form-row-inline">
 							<div class="row-fields">

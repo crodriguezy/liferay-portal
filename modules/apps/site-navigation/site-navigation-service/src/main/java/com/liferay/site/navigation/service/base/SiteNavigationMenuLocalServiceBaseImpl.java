@@ -81,6 +81,10 @@ public abstract class SiteNavigationMenuLocalServiceBaseImpl
 	/**
 	 * Adds the site navigation menu to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect SiteNavigationMenuLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param siteNavigationMenu the site navigation menu
 	 * @return the site navigation menu that was added
 	 */
@@ -111,6 +115,10 @@ public abstract class SiteNavigationMenuLocalServiceBaseImpl
 	/**
 	 * Deletes the site navigation menu with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect SiteNavigationMenuLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param siteNavigationMenuId the primary key of the site navigation menu
 	 * @return the site navigation menu that was removed
 	 * @throws PortalException if a site navigation menu with the primary key could not be found
@@ -126,6 +134,10 @@ public abstract class SiteNavigationMenuLocalServiceBaseImpl
 
 	/**
 	 * Deletes the site navigation menu from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect SiteNavigationMenuLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param siteNavigationMenu the site navigation menu
 	 * @return the site navigation menu that was removed
@@ -498,6 +510,10 @@ public abstract class SiteNavigationMenuLocalServiceBaseImpl
 
 	/**
 	 * Updates the site navigation menu in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect SiteNavigationMenuLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param siteNavigationMenu the site navigation menu
 	 * @return the site navigation menu that was updated

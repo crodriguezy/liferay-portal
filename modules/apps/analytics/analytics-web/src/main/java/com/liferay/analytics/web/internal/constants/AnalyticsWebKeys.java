@@ -28,4 +28,7 @@ public class AnalyticsWebKeys {
 	public static final String ANALYTICS_CLIENT_GROUP_IDS =
 		"ANALYTICS_CLIENT_GROUP_IDS";
 
+	public static final String ANALYTICS_CLIENT_READABLE_CONTENT =
+		"ANALYTICS_CLIENT_READABLE_CONTENT";
+
 }

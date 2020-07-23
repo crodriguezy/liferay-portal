@@ -18,18 +18,24 @@ import {ITEM_ACTIVATION_ORIGINS} from '../config/constants/itemActivationOrigins
 import {ITEM_TYPES} from '../config/constants/itemTypes';
 import {useFromControlsId, useToControlsId} from './CollectionItemContext';
 
-const INITIAL_STATE = {
+const ACTIVE_INITIAL_STATE = {
 	activationOrigin: null,
 	activeItemId: null,
 	activeItemType: null,
+};
+
+const HOVER_INITIAL_STATE = {
 	hoveredItemId: null,
 };
 
 const HOVER_ITEM = 'HOVER_ITEM';
 const SELECT_ITEM = 'SELECT_ITEM';
 
-const ControlsContext = React.createContext([INITIAL_STATE, () => {}]);
-const ControlsConsumer = ControlsContext.Consumer;
+const ActiveStateContext = React.createContext(ACTIVE_INITIAL_STATE);
+const ActiveDispatchContext = React.createContext(() => {});
+
+const HoverStateContext = React.createContext(HOVER_INITIAL_STATE);
+const HoverDispatchContext = React.createContext(() => {});
 
 const reducer = (state, action) => {
 	const {itemId, itemType, origin, type} = action;
@@ -54,50 +60,59 @@ const reducer = (state, action) => {
 	return nextState;
 };
 
-const ControlsProvider = ({initialState = INITIAL_STATE, children}) => {
-	const stateAndDispatch = useReducer(reducer, initialState);
+const ActiveProvider = ({children, initialState}) => {
+	const [state, dispatch] = useReducer(reducer, initialState);
 
 	return (
-		<ControlsContext.Provider value={stateAndDispatch}>
-			{children}
-		</ControlsContext.Provider>
+		<ActiveDispatchContext.Provider value={dispatch}>
+			<ActiveStateContext.Provider value={state}>
+				{children}
+			</ActiveStateContext.Provider>
+		</ActiveDispatchContext.Provider>
 	);
 };
 
-const useActivationOrigin = () => {
-	const [state] = useContext(ControlsContext);
+const HoverProvider = ({children, initialState}) => {
+	const [state, dispatch] = useReducer(reducer, initialState);
 
-	return state.activationOrigin;
+	return (
+		<HoverDispatchContext.Provider value={dispatch}>
+			<HoverStateContext.Provider value={state}>
+				{children}
+			</HoverStateContext.Provider>
+		</HoverDispatchContext.Provider>
+	);
 };
 
-const useActiveItemId = () => {
-	const [state] = useContext(ControlsContext);
-	const fromControlsId = useFromControlsId();
-
-	return fromControlsId(state.activeItemId);
+const ControlsProvider = ({
+	activeInitialState = ACTIVE_INITIAL_STATE,
+	hoverInitialState = HOVER_INITIAL_STATE,
+	children,
+}) => {
+	return (
+		<ActiveProvider initialState={activeInitialState}>
+			<HoverProvider initialState={hoverInitialState}>
+				{children}
+			</HoverProvider>
+		</ActiveProvider>
+	);
 };
 
-const useActiveItemType = () => {
-	const [state] = useContext(ControlsContext);
+const useActivationOrigin = () =>
+	useContext(ActiveStateContext).activationOrigin;
 
-	return state.activeItemType;
-};
+const useActiveItemId = () =>
+	useFromControlsId()(useContext(ActiveStateContext).activeItemId);
 
-const useHoveredItemId = () => {
-	const [state] = useContext(ControlsContext);
-	const fromControlsId = useFromControlsId();
+const useActiveItemType = () => useContext(ActiveStateContext).activeItemType;
 
-	return fromControlsId(state.hoveredItemId);
-};
+const useHoveredItemId = () =>
+	useFromControlsId()(useContext(HoverStateContext).hoveredItemId);
 
-const useHoveredItemType = () => {
-	const [state] = useContext(ControlsContext);
-
-	return state.hoveredItemType;
-};
+const useHoveredItemType = () => useContext(HoverStateContext).hoveredItemType;
 
 const useHoverItem = () => {
-	const [, dispatch] = useContext(ControlsContext);
+	const dispatch = useContext(HoverDispatchContext);
 	const toControlsId = useToControlsId();
 
 	return useCallback(
@@ -117,27 +132,27 @@ const useHoverItem = () => {
 };
 
 const useIsActive = () => {
-	const [state] = useContext(ControlsContext);
+	const {activeItemId} = useContext(ActiveStateContext);
 	const toControlsId = useToControlsId();
 
-	return useCallback(
-		(itemId) => state.activeItemId === toControlsId(itemId),
-		[state.activeItemId, toControlsId]
-	);
+	return useCallback((itemId) => activeItemId === toControlsId(itemId), [
+		activeItemId,
+		toControlsId,
+	]);
 };
 
 const useIsHovered = () => {
-	const [state] = useContext(ControlsContext);
+	const {hoveredItemId} = useContext(HoverStateContext);
 	const toControlsId = useToControlsId();
 
-	return useCallback(
-		(itemId) => state.hoveredItemId === toControlsId(itemId),
-		[state.hoveredItemId, toControlsId]
-	);
+	return useCallback((itemId) => hoveredItemId === toControlsId(itemId), [
+		hoveredItemId,
+		toControlsId,
+	]);
 };
 
 const useSelectItem = () => {
-	const [, dispatch] = useContext(ControlsContext);
+	const dispatch = useContext(ActiveDispatchContext);
 	const toControlsId = useToControlsId();
 
 	return useCallback(
@@ -161,7 +176,6 @@ const useSelectItem = () => {
 };
 
 export {
-	ControlsConsumer,
 	ControlsProvider,
 	reducer,
 	useActivationOrigin,

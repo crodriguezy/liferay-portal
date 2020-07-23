@@ -12,10 +12,10 @@
 import ClayButton from '@clayui/button';
 import className from 'classnames';
 import PropTypes from 'prop-types';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Cell, Pie, PieChart, Tooltip} from 'recharts';
 
-import {useWarning} from '../context/store';
+import {StoreContext, useWarning} from '../context/store';
 import {numberFormat} from '../utils/numberFormat';
 import EmptyPieChart from './EmptyPieChart';
 import Hint from './Hint';
@@ -49,6 +49,8 @@ export default function TrafficSources({
 
 	const [, addWarning] = useWarning();
 
+	const [{publishedToday}] = useContext(StoreContext);
+
 	const fullPieChart = trafficSources.some((source) => !!source.value);
 
 	const missingTrafficSourceValue = trafficSources.some(
@@ -71,18 +73,19 @@ export default function TrafficSources({
 
 	return (
 		<>
-			<h5 className="mt-2 sheet-subtitle text-secondary">
+			<h5 className="mt-3 sheet-subtitle">
 				{Liferay.Language.get('search-engines-traffic')}
 				<Hint
 					message={Liferay.Language.get(
 						'search-engines-traffic-help'
 					)}
+					secondary={true}
 					title={Liferay.Language.get('search-engines-traffic')}
 				/>
 			</h5>
 
 			{!fullPieChart && !missingTrafficSourceValue && (
-				<div className="mb-2 text-secondary">
+				<div className="mb-3 text-secondary">
 					{Liferay.Language.get(
 						'your-page-has-no-incoming-traffic-from-search-engines-yet'
 					)}
@@ -122,18 +125,22 @@ export default function TrafficSources({
 												)
 											}
 										>
-											<ClayButton
-												className="font-weight-semi-bold px-0 py-1 text-primary"
-												displayType="link"
-												onClick={() =>
-													onTrafficSourceClick(
-														entry.name
-													)
-												}
-												small
-											>
-												{entry.title}
-											</ClayButton>
+											{entry.value > 0 ? (
+												<ClayButton
+													className="font-weight-semi-bold px-0 py-1 text-primary"
+													displayType="link"
+													onClick={() =>
+														onTrafficSourceClick(
+															entry.name
+														)
+													}
+													small
+												>
+													{entry.title}
+												</ClayButton>
+											) : (
+												<span>{entry.title}</span>
+											)}
 										</td>
 										<td className="text-secondary">
 											<Hint
@@ -142,7 +149,8 @@ export default function TrafficSources({
 											/>
 										</td>
 										<td className="font-weight-bold">
-											{entry.value !== undefined
+											{entry.value !== undefined &&
+											!publishedToday
 												? numberFormat(
 														languageTag,
 														entry.value
@@ -209,6 +217,7 @@ export default function TrafficSources({
 							</Pie>
 
 							<Tooltip
+								animationDuration={0}
 								content={<TrafficSourcesCustomTooltip />}
 								formatter={(value, name, iconType) => {
 									return [

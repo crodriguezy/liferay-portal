@@ -163,6 +163,17 @@ public class SQLServerLimitStringUtil {
 					innerOrderBySB.append(StringPool.COMMA);
 				}
 
+				if (orderByColumnName.endsWith("ASC")) {
+					orderByColumnName = orderByColumnName.substring(
+						0, orderByColumnName.lastIndexOf("ASC"));
+					orderByType = "ASC";
+				}
+				else if (orderByColumnName.endsWith("DESC")) {
+					orderByColumnName = orderByColumnName.substring(
+						0, orderByColumnName.lastIndexOf("DESC"));
+					orderByType = "DESC";
+				}
+
 				innerOrderBySB.append(orderByColumnName);
 				innerOrderBySB.append(StringPool.SPACE);
 				innerOrderBySB.append(orderByType);

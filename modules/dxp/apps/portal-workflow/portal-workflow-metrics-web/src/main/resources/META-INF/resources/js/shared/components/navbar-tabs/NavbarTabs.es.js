@@ -11,21 +11,28 @@
 
 import ClayNavigationBar from '@clayui/navigation-bar';
 import React, {useCallback} from 'react';
+import {Link} from 'react-router-dom';
 
 import {useRouter} from '../../hooks/useRouter.es';
-import ChildLink from '../router/ChildLink.es';
 import {getPathname} from '../router/routerUtil.es';
 
 const Item = ({active, name, params, path}) => {
+	const {
+		location: {search},
+	} = useRouter();
+
 	return (
 		<ClayNavigationBar.Item active={active}>
-			<ChildLink
+			<Link
 				className="nav-link"
 				data-testid="tabLink"
-				to={getPathname(params, path)}
+				to={{
+					pathname: getPathname(params, path),
+					search,
+				}}
 			>
 				{name}
-			</ChildLink>
+			</Link>
 		</ClayNavigationBar.Item>
 	);
 };
@@ -42,7 +49,7 @@ const NavbarTabs = ({tabs = []}) => {
 	const {name: activeTabName} = tabs.filter(isActive)[0] || {};
 
 	return (
-		<ClayNavigationBar inverted triggerLabel={activeTabName}>
+		<ClayNavigationBar triggerLabel={activeTabName}>
 			{tabs.map((tab, index) => (
 				<NavbarTabs.Item {...tab} active={isActive(tab)} key={index} />
 			))}

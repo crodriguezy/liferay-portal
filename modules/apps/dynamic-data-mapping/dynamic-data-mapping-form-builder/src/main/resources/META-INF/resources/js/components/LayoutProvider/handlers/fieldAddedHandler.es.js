@@ -70,6 +70,7 @@ export const addField = (
 	}
 
 	return {
+		activePage: pageIndex,
 		focusedField: {
 			...newField,
 		},

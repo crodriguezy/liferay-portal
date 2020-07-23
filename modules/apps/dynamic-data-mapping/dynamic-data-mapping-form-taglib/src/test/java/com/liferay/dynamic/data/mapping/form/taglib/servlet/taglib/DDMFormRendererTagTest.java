@@ -45,7 +45,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.spring.mock.web.portlet.MockRenderResponse;
+import com.liferay.portletmvc4spring.test.mock.web.portlet.MockRenderResponse;
 
 import java.lang.reflect.Field;
 
@@ -241,9 +241,8 @@ public class DDMFormRendererTagTest extends PowerMockito {
 	public void testGetRedirectURLWhenFormInstanceIsNull() {
 		setDDMFormRendererTagInputs(null, null, null, null);
 
-		String redirectURL = _ddmFormRendererTag.getRedirectURL();
-
-		Assert.assertEquals(StringPool.BLANK, redirectURL);
+		Assert.assertEquals(
+			StringPool.BLANK, _ddmFormRendererTag.getRedirectURL());
 	}
 
 	protected Set<Locale> createAvailableLocales(Locale... locales) {

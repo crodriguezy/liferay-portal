@@ -63,7 +63,7 @@ public class DDMDataProviderInstanceLinkModelImpl
 	public static final String TABLE_NAME = "DDMDataProviderInstanceLink";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"mvccVersion", Types.BIGINT},
+		{"mvccVersion", Types.BIGINT}, {"ctCollectionId", Types.BIGINT},
 		{"dataProviderInstanceLinkId", Types.BIGINT},
 		{"companyId", Types.BIGINT}, {"dataProviderInstanceId", Types.BIGINT},
 		{"structureId", Types.BIGINT}
@@ -74,6 +74,7 @@ public class DDMDataProviderInstanceLinkModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("ctCollectionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("dataProviderInstanceLinkId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("dataProviderInstanceId", Types.BIGINT);
@@ -81,7 +82,7 @@ public class DDMDataProviderInstanceLinkModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table DDMDataProviderInstanceLink (mvccVersion LONG default 0 not null,dataProviderInstanceLinkId LONG not null primary key,companyId LONG,dataProviderInstanceId LONG,structureId LONG)";
+		"create table DDMDataProviderInstanceLink (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,dataProviderInstanceLinkId LONG not null,companyId LONG,dataProviderInstanceId LONG,structureId LONG,primary key (dataProviderInstanceLinkId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table DDMDataProviderInstanceLink";
@@ -104,12 +105,18 @@ public class DDMDataProviderInstanceLinkModelImpl
 
 	public static final long DATAPROVIDERINSTANCELINKID_COLUMN_BITMASK = 4L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-		_entityCacheEnabled = entityCacheEnabled;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-		_finderCacheEnabled = finderCacheEnabled;
 	}
 
 	public DDMDataProviderInstanceLinkModelImpl() {
@@ -164,9 +171,6 @@ public class DDMDataProviderInstanceLinkModelImpl
 				attributeGetterFunction.apply(
 					(DDMDataProviderInstanceLink)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -254,6 +258,12 @@ public class DDMDataProviderInstanceLinkModelImpl
 			(BiConsumer<DDMDataProviderInstanceLink, Long>)
 				DDMDataProviderInstanceLink::setMvccVersion);
 		attributeGetterFunctions.put(
+			"ctCollectionId", DDMDataProviderInstanceLink::getCtCollectionId);
+		attributeSetterBiConsumers.put(
+			"ctCollectionId",
+			(BiConsumer<DDMDataProviderInstanceLink, Long>)
+				DDMDataProviderInstanceLink::setCtCollectionId);
+		attributeGetterFunctions.put(
 			"dataProviderInstanceLinkId",
 			DDMDataProviderInstanceLink::getDataProviderInstanceLinkId);
 		attributeSetterBiConsumers.put(
@@ -294,6 +304,16 @@ public class DDMDataProviderInstanceLinkModelImpl
 	@Override
 	public void setMvccVersion(long mvccVersion) {
 		_mvccVersion = mvccVersion;
+	}
+
+	@Override
+	public long getCtCollectionId() {
+		return _ctCollectionId;
+	}
+
+	@Override
+	public void setCtCollectionId(long ctCollectionId) {
+		_ctCollectionId = ctCollectionId;
 	}
 
 	@Override
@@ -399,6 +419,7 @@ public class DDMDataProviderInstanceLinkModelImpl
 			new DDMDataProviderInstanceLinkImpl();
 
 		ddmDataProviderInstanceLinkImpl.setMvccVersion(getMvccVersion());
+		ddmDataProviderInstanceLinkImpl.setCtCollectionId(getCtCollectionId());
 		ddmDataProviderInstanceLinkImpl.setDataProviderInstanceLinkId(
 			getDataProviderInstanceLinkId());
 		ddmDataProviderInstanceLinkImpl.setCompanyId(getCompanyId());
@@ -429,17 +450,17 @@ public class DDMDataProviderInstanceLinkModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof DDMDataProviderInstanceLink)) {
+		if (!(object instanceof DDMDataProviderInstanceLink)) {
 			return false;
 		}
 
 		DDMDataProviderInstanceLink ddmDataProviderInstanceLink =
-			(DDMDataProviderInstanceLink)obj;
+			(DDMDataProviderInstanceLink)object;
 
 		long primaryKey = ddmDataProviderInstanceLink.getPrimaryKey();
 
@@ -456,14 +477,22 @@ public class DDMDataProviderInstanceLinkModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	@Override
@@ -492,6 +521,9 @@ public class DDMDataProviderInstanceLinkModelImpl
 				new DDMDataProviderInstanceLinkCacheModel();
 
 		ddmDataProviderInstanceLinkCacheModel.mvccVersion = getMvccVersion();
+
+		ddmDataProviderInstanceLinkCacheModel.ctCollectionId =
+			getCtCollectionId();
 
 		ddmDataProviderInstanceLinkCacheModel.dataProviderInstanceLinkId =
 			getDataProviderInstanceLinkId();
@@ -582,10 +614,8 @@ public class DDMDataProviderInstanceLinkModelImpl
 
 	}
 
-	private static boolean _entityCacheEnabled;
-	private static boolean _finderCacheEnabled;
-
 	private long _mvccVersion;
+	private long _ctCollectionId;
 	private long _dataProviderInstanceLinkId;
 	private long _companyId;
 	private long _dataProviderInstanceId;

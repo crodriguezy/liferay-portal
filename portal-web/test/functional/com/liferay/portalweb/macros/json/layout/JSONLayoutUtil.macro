@@ -14,16 +14,12 @@ definition {
 			widgetName = "${widgetName}");
 
 		if (contains("${typeSettings}","column-${column}=")) {
-			var typeSettings = StringUtil.regexReplaceFirst("${typeSettings}","(column-${column}=[^\\]*)","$1,${widget}");
+			var typeSettings = StringUtil.regexReplaceFirst("${typeSettings}","(column-${column}=[^%]*)","$1,${widget}");
 		}
 		else {
 			var typeSettings = '''${typeSettings}column-${column}''';
 			var typeSettings = '''${typeSettings}=${widget}''';
 		}
-
-		var typeSettings = StringUtil.regexReplaceAll("${typeSettings}","\\r\\n|\\r|\\n","%0A");
-
-		var typeSettings = StringUtil.replace("${typeSettings}", "=", "%3D");
 
 		return "${typeSettings}";
 	}
@@ -32,7 +28,11 @@ definition {
 	macro _generateWidget {
 		Variables.assertDefined(parameterList = "${widgetName}");
 
-		if ("${widgetName}" == "Asset Publisher") {
+		if ("${widgetName}" == "Announcements") {
+			var portletId = "com_liferay_announcements_web_portlet_AnnouncementsPortlet";
+		}
+
+		else if ("${widgetName}" == "Asset Publisher") {
 			var portletId = "com_liferay_asset_publisher_web_portlet_AssetPublisherPortlet";
 		}
 		else if ("${widgetName}" == "Blogs") {
@@ -113,6 +113,9 @@ definition {
 		else if ("${widgetName}" == "Sign In") {
 			var portletId = "com_liferay_login_web_portlet_LoginPortlet";
 		}
+		else if ("${widgetName}" == "Similar Results") {
+			var portletId = "com_liferay_portal_search_similar_results_web_portlet_SimilarResultsPortlet";
+		}
 		else if ("${widgetName}" == "Site Map") {
 			var portletId = "com_liferay_site_navigation_site_map_web_portlet_SiteNavigationSiteMapPortlet";
 		}
@@ -124,6 +127,9 @@ definition {
 		}
 		else if ("${widgetName}" == "Type Facet") {
 			var portletId = "com_liferay_portal_search_web_type_facet_portlet_TypeFacetPortlet";
+		}
+		else if ("${widgetName}" == "User Statistics") {
+			var portletId = "com_liferay_social_user_statistics_web_portlet_SocialUserStatisticsPortlet";
 		}
 		else if ("${widgetName}" == "Web Content Display") {
 			var portletId = "com_liferay_journal_content_web_portlet_JournalContentPortlet";

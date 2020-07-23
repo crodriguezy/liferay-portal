@@ -91,8 +91,6 @@ definition {
 
 		BlogsNavigator.openBlogsAdmin(siteURLKey = "guest");
 
-		LexiconEntry.changeDisplayStyle(displayStyle = "list");
-
 		Blogs.addEntry(
 			entryContent = "Blogs Entry Content",
 			entryTitle = "Blogs with sharing disabled");
@@ -249,13 +247,8 @@ definition {
 		ManagementBar.setFilterAndOrder(filterBy = "Asset Types");
 
 		AssertTextEquals(
-			locator1 = "Portlet#H3_MODAL_TITLE",
+			locator1 = "Portlet#MODAL_TITLE",
 			value1 = "Select Asset Type");
-
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
 
 		SelectFrame(locator1 = "IFrame#MODAL_IFRAME");
 
@@ -281,13 +274,8 @@ definition {
 		ManagementBar.setFilterAndOrder(filterBy = "Asset Types");
 
 		AssertTextEquals(
-			locator1 = "Portlet#H3_MODAL_TITLE",
+			locator1 = "Portlet#MODAL_TITLE",
 			value1 = "Select Asset Type");
-
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
 
 		SelectFrame(locator1 = "IFrame#MODAL_IFRAME");
 

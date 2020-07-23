@@ -70,7 +70,7 @@ public class WorkflowDefinitionLinkModelImpl
 	public static final String TABLE_NAME = "WorkflowDefinitionLink";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"mvccVersion", Types.BIGINT},
+		{"mvccVersion", Types.BIGINT}, {"ctCollectionId", Types.BIGINT},
 		{"workflowDefinitionLinkId", Types.BIGINT}, {"groupId", Types.BIGINT},
 		{"companyId", Types.BIGINT}, {"userId", Types.BIGINT},
 		{"userName", Types.VARCHAR}, {"createDate", Types.TIMESTAMP},
@@ -85,6 +85,7 @@ public class WorkflowDefinitionLinkModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("ctCollectionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("workflowDefinitionLinkId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
@@ -100,7 +101,7 @@ public class WorkflowDefinitionLinkModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table WorkflowDefinitionLink (mvccVersion LONG default 0 not null,workflowDefinitionLinkId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,typePK LONG,workflowDefinitionName VARCHAR(75) null,workflowDefinitionVersion INTEGER)";
+		"create table WorkflowDefinitionLink (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,workflowDefinitionLinkId LONG not null,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,typePK LONG,workflowDefinitionName VARCHAR(75) null,workflowDefinitionVersion INTEGER,primary key (workflowDefinitionLinkId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table WorkflowDefinitionLink";
@@ -117,20 +118,23 @@ public class WorkflowDefinitionLinkModelImpl
 
 	public static final String TX_MANAGER = "liferayTransactionManager";
 
-	public static final boolean ENTITY_CACHE_ENABLED = GetterUtil.getBoolean(
-		com.liferay.portal.util.PropsUtil.get(
-			"value.object.entity.cache.enabled.com.liferay.portal.kernel.model.WorkflowDefinitionLink"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean ENTITY_CACHE_ENABLED = true;
 
-	public static final boolean FINDER_CACHE_ENABLED = GetterUtil.getBoolean(
-		com.liferay.portal.util.PropsUtil.get(
-			"value.object.finder.cache.enabled.com.liferay.portal.kernel.model.WorkflowDefinitionLink"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean FINDER_CACHE_ENABLED = true;
 
-	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(
-		com.liferay.portal.util.PropsUtil.get(
-			"value.object.column.bitmask.enabled.com.liferay.portal.kernel.model.WorkflowDefinitionLink"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean COLUMN_BITMASK_ENABLED = true;
 
 	public static final long CLASSNAMEID_COLUMN_BITMASK = 1L;
 
@@ -201,9 +205,6 @@ public class WorkflowDefinitionLinkModelImpl
 				attributeName,
 				attributeGetterFunction.apply((WorkflowDefinitionLink)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -288,6 +289,12 @@ public class WorkflowDefinitionLinkModelImpl
 			"mvccVersion",
 			(BiConsumer<WorkflowDefinitionLink, Long>)
 				WorkflowDefinitionLink::setMvccVersion);
+		attributeGetterFunctions.put(
+			"ctCollectionId", WorkflowDefinitionLink::getCtCollectionId);
+		attributeSetterBiConsumers.put(
+			"ctCollectionId",
+			(BiConsumer<WorkflowDefinitionLink, Long>)
+				WorkflowDefinitionLink::setCtCollectionId);
 		attributeGetterFunctions.put(
 			"workflowDefinitionLinkId",
 			WorkflowDefinitionLink::getWorkflowDefinitionLinkId);
@@ -378,6 +385,16 @@ public class WorkflowDefinitionLinkModelImpl
 	@Override
 	public void setMvccVersion(long mvccVersion) {
 		_mvccVersion = mvccVersion;
+	}
+
+	@Override
+	public long getCtCollectionId() {
+		return _ctCollectionId;
+	}
+
+	@Override
+	public void setCtCollectionId(long ctCollectionId) {
+		_ctCollectionId = ctCollectionId;
 	}
 
 	@Override
@@ -673,6 +690,7 @@ public class WorkflowDefinitionLinkModelImpl
 			new WorkflowDefinitionLinkImpl();
 
 		workflowDefinitionLinkImpl.setMvccVersion(getMvccVersion());
+		workflowDefinitionLinkImpl.setCtCollectionId(getCtCollectionId());
 		workflowDefinitionLinkImpl.setWorkflowDefinitionLinkId(
 			getWorkflowDefinitionLinkId());
 		workflowDefinitionLinkImpl.setGroupId(getGroupId());
@@ -709,17 +727,17 @@ public class WorkflowDefinitionLinkModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof WorkflowDefinitionLink)) {
+		if (!(object instanceof WorkflowDefinitionLink)) {
 			return false;
 		}
 
 		WorkflowDefinitionLink workflowDefinitionLink =
-			(WorkflowDefinitionLink)obj;
+			(WorkflowDefinitionLink)object;
 
 		long primaryKey = workflowDefinitionLink.getPrimaryKey();
 
@@ -736,11 +754,19 @@ public class WorkflowDefinitionLinkModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
 		return ENTITY_CACHE_ENABLED;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
 		return FINDER_CACHE_ENABLED;
@@ -795,6 +821,8 @@ public class WorkflowDefinitionLinkModelImpl
 			new WorkflowDefinitionLinkCacheModel();
 
 		workflowDefinitionLinkCacheModel.mvccVersion = getMvccVersion();
+
+		workflowDefinitionLinkCacheModel.ctCollectionId = getCtCollectionId();
 
 		workflowDefinitionLinkCacheModel.workflowDefinitionLinkId =
 			getWorkflowDefinitionLinkId();
@@ -929,6 +957,7 @@ public class WorkflowDefinitionLinkModelImpl
 	}
 
 	private long _mvccVersion;
+	private long _ctCollectionId;
 	private long _workflowDefinitionLinkId;
 	private long _groupId;
 	private long _originalGroupId;

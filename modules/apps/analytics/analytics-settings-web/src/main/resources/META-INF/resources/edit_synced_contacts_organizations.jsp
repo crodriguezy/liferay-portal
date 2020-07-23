@@ -31,7 +31,7 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(resourceBundle, "
 PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(resourceBundle, "sync-by-organizations"), currentURL);
 %>
 
-<portlet:actionURL name="/analytics/edit_synced_contacts" var="editSyncedContactsURL" />
+<portlet:actionURL name="/analytics_settings/edit_synced_contacts" var="editSyncedContactsURL" />
 
 <clay:container-fluid>
 	<clay:row>
@@ -50,19 +50,15 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(resourceBundle, "
 	</clay:row>
 </clay:container-fluid>
 
-<div class="sheet sheet-lg">
-	<h2 class="autofit-row">
-		<span class="autofit-col autofit-col-expand">
-			<liferay-ui:message key="select-contacts-by-organizations" />
-		</span>
+<clay:sheet>
+	<h2>
+		<liferay-ui:message key="select-contacts-by-organizations" />
 	</h2>
 
 	<hr />
 
-	<div class="autofit-row form-text">
-		<span class="autofit-col autofit-col-expand pb-3">
-			<liferay-ui:message key="select-contacts-by-organizations-help" />
-		</span>
+	<div class="c-pb-3 form-text">
+		<liferay-ui:message key="select-contacts-by-organizations-help" />
 	</div>
 
 	<%
@@ -106,4 +102,4 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(resourceBundle, "
 			<aui:button href="<%= redirect %>" type="cancel" value="cancel" />
 		</aui:button-row>
 	</aui:form>
-</div>
+</clay:sheet>

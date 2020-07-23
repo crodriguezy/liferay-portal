@@ -14,22 +14,17 @@
 
 package com.liferay.layout.internal.service;
 
-import com.liferay.fragment.contributor.FragmentCollectionContributorRegistration;
-import com.liferay.layout.internal.importer.DefaultLayoutDefinitionImporter;
-import com.liferay.layout.util.LayoutCopyHelper;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutSetPrototype;
-import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.LayoutSetPrototypeLocalService;
 import com.liferay.portal.kernel.service.LayoutSetPrototypeLocalServiceWrapper;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceWrapper;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 
 import java.util.Locale;
 import java.util.Map;
@@ -73,61 +68,22 @@ public class DefaultLayoutLayoutSetPrototypeLocalServiceWrapper
 				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, "Home", null, null,
 				LayoutConstants.TYPE_CONTENT, false, "/home", serviceContext);
 
-			Layout draftLayout = _layoutLocalService.fetchLayout(
-				_portal.getClassNameId(Layout.class.getName()),
-				defaultLayout.getPlid());
+			Layout draftLayout = defaultLayout.fetchDraftLayout();
 
-			String currentName = PrincipalThreadLocal.getName();
+			UnicodeProperties unicodeProperties =
+				defaultLayout.getTypeSettingsProperties();
 
-			PrincipalThreadLocal.setName(String.valueOf(userId));
+			unicodeProperties.setProperty("published", Boolean.TRUE.toString());
 
-			try {
-				_defaultLayoutDefinitionImporter.importDefaultLayoutDefinition(
-					draftLayout, serviceContext);
+			draftLayout.setTypeSettingsProperties(unicodeProperties);
 
-				defaultLayout = _layoutCopyHelper.copyLayout(
-					draftLayout, defaultLayout);
-
-				_layoutLocalService.updatePriority(
-					defaultLayout.getPlid(), LayoutConstants.FIRST_PRIORITY);
-
-				_layoutLocalService.updateStatus(
-					userId, defaultLayout.getPlid(),
-					WorkflowConstants.STATUS_APPROVED, serviceContext);
-
-				_layoutLocalService.updateStatus(
-					userId, draftLayout.getPlid(),
-					WorkflowConstants.STATUS_APPROVED, serviceContext);
-			}
-			catch (Exception exception) {
-				throw new PortalException(exception);
-			}
-			finally {
-				PrincipalThreadLocal.setName(currentName);
-			}
+			_layoutLocalService.updateLayout(draftLayout);
 		}
 
 		return layoutSetPrototype;
 	}
 
-	@Reference(
-		target = "(fragment.collection.key=BASIC_COMPONENT)", unbind = "-"
-	)
-	protected void setFragmentCollectionContributorRegistration(
-		FragmentCollectionContributorRegistration
-			fragmentCollectionContributorRegistration) {
-	}
-
-	@Reference
-	private DefaultLayoutDefinitionImporter _defaultLayoutDefinitionImporter;
-
-	@Reference
-	private LayoutCopyHelper _layoutCopyHelper;
-
 	@Reference
 	private LayoutLocalService _layoutLocalService;
-
-	@Reference
-	private Portal _portal;
 
 }

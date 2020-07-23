@@ -60,6 +60,10 @@ public class PasswordPolicyLocalServiceUtil {
 	/**
 	 * Adds the password policy to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect PasswordPolicyLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param passwordPolicy the password policy
 	 * @return the password policy that was added
 	 */
@@ -107,6 +111,10 @@ public class PasswordPolicyLocalServiceUtil {
 	/**
 	 * Deletes the password policy with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect PasswordPolicyLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param passwordPolicyId the primary key of the password policy
 	 * @return the password policy that was removed
 	 * @throws PortalException if a password policy with the primary key could not be found
@@ -120,6 +128,10 @@ public class PasswordPolicyLocalServiceUtil {
 
 	/**
 	 * Deletes the password policy from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect PasswordPolicyLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param passwordPolicy the password policy
 	 * @return the password policy that was removed
@@ -396,9 +408,11 @@ public class PasswordPolicyLocalServiceUtil {
 		search(
 			long companyId, String name, int start, int end,
 			com.liferay.portal.kernel.util.OrderByComparator
-				<com.liferay.portal.kernel.model.PasswordPolicy> obc) {
+				<com.liferay.portal.kernel.model.PasswordPolicy>
+					orderByComparator) {
 
-		return getService().search(companyId, name, start, end, obc);
+		return getService().search(
+			companyId, name, start, end, orderByComparator);
 	}
 
 	public static int searchCount(long companyId, String name) {
@@ -429,6 +443,10 @@ public class PasswordPolicyLocalServiceUtil {
 
 	/**
 	 * Updates the password policy in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect PasswordPolicyLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param passwordPolicy the password policy
 	 * @return the password policy that was updated

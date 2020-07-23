@@ -21,7 +21,6 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.Disjunction;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.Order;
 import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
@@ -130,10 +129,10 @@ public class AccountRoleLocalServiceImpl
 		for (AccountRole accountRole :
 				accountRolePersistence.findByCompanyId(companyId)) {
 
+			accountRolePersistence.remove(accountRole);
+
 			userGroupRoleLocalService.deleteUserGroupRolesByRoleId(
 				accountRole.getRoleId());
-
-			accountRolePersistence.remove(accountRole);
 		}
 	}
 
@@ -172,19 +171,20 @@ public class AccountRoleLocalServiceImpl
 	@Override
 	public BaseModelSearchResult<AccountRole> searchAccountRoles(
 		long accountEntryId, String keywords, int start, int end,
-		OrderByComparator obc) {
+		OrderByComparator<?> orderByComparator) {
 
 		return searchAccountRoles(
-			new long[] {accountEntryId}, keywords, start, end, obc);
+			new long[] {accountEntryId}, keywords, start, end,
+			orderByComparator);
 	}
 
 	@Override
 	public BaseModelSearchResult<AccountRole> searchAccountRoles(
 		long[] accountEntryIds, String keywords, int start, int end,
-		OrderByComparator obc) {
+		OrderByComparator<?> orderByComparator) {
 
 		DynamicQuery roleDynamicQuery = _getRoleDynamicQuery(
-			accountEntryIds, keywords, obc);
+			accountEntryIds, keywords, orderByComparator);
 
 		if (roleDynamicQuery == null) {
 			return new BaseModelSearchResult<>(
@@ -217,7 +217,8 @@ public class AccountRoleLocalServiceImpl
 	}
 
 	private DynamicQuery _getRoleDynamicQuery(
-		long[] accountEntryIds, String keywords, OrderByComparator obc) {
+		long[] accountEntryIds, String keywords,
+		OrderByComparator<?> orderByComparator) {
 
 		DynamicQuery accountRoleDynamicQuery =
 			accountRoleLocalService.dynamicQuery();
@@ -253,18 +254,8 @@ public class AccountRoleLocalServiceImpl
 			roleDynamicQuery.add(disjunction);
 		}
 
-		if (obc != null) {
-			Order order;
-
-			if (obc.isAscending()) {
-				order = OrderFactoryUtil.asc(obc.getOrderByFields()[0]);
-			}
-			else {
-				order = OrderFactoryUtil.desc(obc.getOrderByFields()[0]);
-			}
-
-			roleDynamicQuery.addOrder(order);
-		}
+		OrderFactoryUtil.addOrderByComparator(
+			roleDynamicQuery, orderByComparator);
 
 		return roleDynamicQuery;
 	}

@@ -516,7 +516,7 @@
 			</library>
 			<library>
 				<file-name>lib/development/mail.jar</file-name>
-				<version>1.4</version>
+				<version>1.6.2</version>
 				<project-name>JavaMail</project-name>
 				<project-url>http://java.sun.com/products/javamail</project-url>
 				<licenses>
@@ -588,7 +588,7 @@
 			</library>
 			<library>
 				<file-name>lib/development/portletmvc4spring-test.jar</file-name>
-				<version>5.2.0</version>
+				<version>5.2.1</version>
 				<project-name>PortletMVC4Spring</project-name>
 				<project-url>https://github.com/liferay/portletmvc4spring</project-url>
 				<licenses>
@@ -960,7 +960,7 @@
 			</library>
 			<library>
 				<file-name>lib/portal/ant.jar</file-name>
-				<version>1.9.14</version>
+				<version>1.9.15</version>
 				<project-name>Ant</project-name>
 				<project-url>http://ant.apache.org</project-url>
 				<licenses>
@@ -1568,7 +1568,7 @@
 			</library>
 			<library>
 				<file-name>lib/portal/dom4j.jar</file-name>
-				<version>2.1.1</version>
+				<version>2.1.3</version>
 				<project-name>dom4j</project-name>
 				<project-url>http://dom4j.org</project-url>
 				<licenses>
@@ -1769,9 +1769,9 @@
 			</library>
 			<library>
 				<file-name>lib/portal/isoparser.jar</file-name>
-				<version>1.1.22</version>
+				<version>1.9.41.2</version>
 				<project-name>ISO Parser</project-name>
-				<project-url>http://code.google.com/p/mp4parser</project-url>
+				<project-url>https://github.com/tballison/mp4parser</project-url>
 				<licenses>
 					<license>
 						<license-name>Apache License 2.0</license-name>
@@ -2570,7 +2570,7 @@
 			</library>
 			<library>
 				<file-name>lib/portal/pdfbox.jar</file-name>
-				<version>2.0.13</version>
+				<version>2.0.20</version>
 				<project-name>PDFBox</project-name>
 				<project-url>http://pdfbox.apache.org</project-url>
 				<licenses>
@@ -3114,7 +3114,7 @@
 			</library>
 			<library>
 				<file-name>lib/portal/tika-core.jar</file-name>
-				<version>1.24</version>
+				<version>1.24.1</version>
 				<project-name>Tika</project-name>
 				<project-url>http://tika.apache.org</project-url>
 				<licenses>
@@ -3126,7 +3126,7 @@
 			</library>
 			<library>
 				<file-name>lib/portal/tika-parsers.jar</file-name>
-				<version>1.24</version>
+				<version>1.24.1</version>
 				<project-name>Tika</project-name>
 				<project-url>http://tika.apache.org</project-url>
 				<licenses>
@@ -3168,18 +3168,6 @@
 				<licenses>
 					<license>CDDL 1.1</license>
 					<license-url>https://oss.oracle.com/licenses/CDDL-1.1</license-url>
-				</licenses>
-			</library>
-			<library>
-				<file-name>lib/portal/truezip.jar</file-name>
-				<version>6.7</version>
-				<project-name>TrueZIP</project-name>
-				<project-url>http://truezip.dev.java.net</project-url>
-				<licenses>
-					<license>
-						<license-name>Apache License 2.0</license-name>
-						<license-url>http://www.apache.org/licenses/LICENSE-2.0</license-url>
-					</license>
 				</licenses>
 			</library>
 			<library>
@@ -3306,7 +3294,7 @@
 			</library>
 			<library>
 				<file-name>lib/portal/xercesImpl.jar</file-name>
-				<version>2.11.0</version>
+				<version>2.12.0</version>
 				<project-name>Xerces</project-name>
 				<project-url>http://xerces.apache.org/xerces2-j</project-url>
 				<licenses>

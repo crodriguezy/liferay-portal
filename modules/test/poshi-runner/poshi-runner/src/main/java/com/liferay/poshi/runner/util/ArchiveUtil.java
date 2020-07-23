@@ -17,6 +17,7 @@ package com.liferay.poshi.runner.util;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -25,6 +26,8 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -36,33 +39,13 @@ public class ArchiveUtil {
 	public static void archive(File sourceFile, File targetFile) {
 		String targetFileName = targetFile.getName();
 
-		if (!(targetFileName.endsWith(".jar") ||
-			  targetFileName.endsWith(".lar") ||
-			  targetFileName.endsWith(".war") ||
-			  targetFileName.endsWith(".zip"))) {
-
+		if (!targetFileName.matches(".*\\.(jar|lar|war|zip)")) {
 			throw new RuntimeException("Invalid archive path " + targetFile);
 		}
 
-		targetFile.delete();
+		List<ArchiveZipEntry> archiveZipEntries = new ArrayList<>();
 
-		File parentFile = targetFile.getParentFile();
-
-		parentFile.mkdirs();
-
-		File tmpDir = new File(sourceFile.getParentFile(), "tmp");
-
-		tmpDir.mkdir();
-
-		tmpDir.deleteOnExit();
-
-		File tmpFile = new File(tmpDir, targetFileName);
-
-		tmpFile.delete();
-
-		try (ZipOutputStream zipOutputStream = new ZipOutputStream(
-				new FileOutputStream(tmpFile))) {
-
+		try {
 			Path sourceFilePath = Paths.get(sourceFile.getCanonicalPath());
 
 			Files.walkFileTree(
@@ -73,33 +56,44 @@ public class ArchiveUtil {
 					public FileVisitResult visitFile(
 						Path file, BasicFileAttributes attributes) {
 
-						try {
-							Path targetFilePath = sourceFilePath.relativize(
-								file);
+						Path targetFilePath = sourceFilePath.relativize(file);
 
-							String targetFilePathString =
-								targetFilePath.toString();
+						String targetFilePathString = targetFilePath.toString();
 
-							targetFilePathString = StringUtil.replace(
-								targetFilePathString, "\\", "/");
+						targetFilePathString = StringUtil.replace(
+							targetFilePathString, "\\", "/");
 
-							zipOutputStream.putNextEntry(
-								new ZipEntry(targetFilePathString));
-
-							byte[] bytes = Files.readAllBytes(file);
-
-							zipOutputStream.write(bytes, 0, bytes.length);
-
-							zipOutputStream.closeEntry();
-						}
-						catch (IOException ioException) {
-							ioException.printStackTrace();
-						}
+						archiveZipEntries.add(
+							new ArchiveZipEntry(targetFilePathString, file));
 
 						return FileVisitResult.CONTINUE;
 					}
 
 				});
+
+			targetFile.delete();
+
+			File parentFile = targetFile.getParentFile();
+
+			parentFile.mkdirs();
+
+			File tmpDir = new File(sourceFile.getParentFile(), "tmp");
+
+			tmpDir.mkdir();
+
+			tmpDir.deleteOnExit();
+
+			File tmpFile = new File(tmpDir, targetFileName);
+
+			tmpFile.delete();
+
+			try (ZipOutputStream zipOutputStream = new ZipOutputStream(
+					new FileOutputStream(tmpFile))) {
+
+				for (ArchiveZipEntry archiveZipEntry : archiveZipEntries) {
+					archiveZipEntry.writeToZipOutputStream(zipOutputStream);
+				}
+			}
 
 			Files.move(
 				Paths.get(tmpFile.getCanonicalPath()),
@@ -125,6 +119,41 @@ public class ArchiveUtil {
 			targetDir + "/" + sourceDirPath.getFileName() + "." + archiveType;
 
 		archive(sourceFile, archiveFilePath);
+	}
+
+	private static final class ArchiveZipEntry extends ZipEntry {
+
+		public ArchiveZipEntry(String name, Path path) {
+			super(name);
+
+			_path = path;
+		}
+
+		public void writeToZipOutputStream(ZipOutputStream zipOutputStream) {
+			try (InputStream inputStream = Files.newInputStream(_path)) {
+				zipOutputStream.putNextEntry(this);
+
+				byte[] bytes = new byte[1024];
+
+				int bytesRead = inputStream.read(bytes);
+
+				while (bytesRead > 0) {
+					zipOutputStream.write(bytes, 0, bytesRead);
+
+					bytesRead = inputStream.read(bytes);
+				}
+
+				zipOutputStream.flush();
+
+				zipOutputStream.closeEntry();
+			}
+			catch (IOException ioException) {
+				ioException.printStackTrace();
+			}
+		}
+
+		private final Path _path;
+
 	}
 
 }

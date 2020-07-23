@@ -70,7 +70,7 @@ definition {
 
 		DepotNavigator.gotoDepotViaSpaceIcon(depotName = "Test Depot Name");
 
-		ProductMenuHelper.expandPanel(panel = "Site Administration");
+		ProductMenuHelper.openProductMenu();
 
 		AssertTextEquals.assertPartialText(
 			locator1 = "ProductMenu#PRODUCT_MENU_PANEL_SITE_ADMINISTRATION_SITE_NAME",
@@ -95,11 +95,6 @@ definition {
 		if (IsElementNotPresent(locator1 = "IFrame#SELECT_SITES")) {
 			Button.clickAdd();
 		}
-
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
 
 		SelectFrame(locator1 = "IFrame#SELECT_SITES");
 

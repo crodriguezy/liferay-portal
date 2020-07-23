@@ -196,7 +196,9 @@ public class DisplayPageTemplateServiceTest {
 		Registry registry = RegistryUtil.getRegistry();
 
 		_serviceRegistration = registry.registerService(
-			InfoDisplayContributor.class, infoDisplayContributor);
+			(Class<InfoDisplayContributor<?>>)
+				(Class<?>)InfoDisplayContributor.class,
+			infoDisplayContributor);
 	}
 
 	private static final long _CLASS_TYPE_ID = 99999L;
@@ -214,7 +216,7 @@ public class DisplayPageTemplateServiceTest {
 	@DeleteAfterTestRun
 	private Group _group;
 
-	private ServiceRegistration<InfoDisplayContributor> _serviceRegistration;
+	private ServiceRegistration<InfoDisplayContributor<?>> _serviceRegistration;
 
 	private static class TestInfoDisplayContributor
 		implements InfoDisplayContributor<Object> {
@@ -248,13 +250,13 @@ public class DisplayPageTemplateServiceTest {
 
 		@Override
 		public Map<String, Object> getInfoDisplayFieldsValues(
-			Object o, Locale locale) {
+			Object object, Locale locale) {
 
 			return Collections.emptyMap();
 		}
 
 		@Override
-		public InfoDisplayObjectProvider getInfoDisplayObjectProvider(
+		public InfoDisplayObjectProvider<Object> getInfoDisplayObjectProvider(
 			long classPK) {
 
 			return null;

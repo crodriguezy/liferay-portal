@@ -32,7 +32,7 @@ definition {
 		for (var i : list "1,2") {
 			DepotNavigator.openDepotAdmin();
 
-			DepotNavigator.gotoDepot(
+			DepotNavigator.gotoDepotPortlet(
 				depotName = "Test Depot Name",
 				portlet = "Documents and Media");
 
@@ -109,7 +109,8 @@ definition {
 
 		AssetListsAdmin.configureScope(
 			assetListTitle = "Depot Dynamic Asset List",
-			otherSite = "Test Site Name");
+			otherSite = "Test Site Name",
+			selectedAsset = "All Types");
 
 		AssetListsAdmin.openAssetListsAdmin(siteURLKey = "test-depot-name");
 
@@ -229,7 +230,6 @@ definition {
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "Configuration",
 			depotName = "Test Depot Name",
 			portlet = "Settings");
 
@@ -281,7 +281,6 @@ definition {
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "Configuration",
 			depotName = "Test Depot Name",
 			portlet = "Settings");
 
@@ -327,7 +326,6 @@ definition {
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "Configuration",
 			depotName = "Test Depot Name",
 			portlet = "Settings");
 
@@ -628,6 +626,8 @@ definition {
 			assetType = "Web Content Folder,Web Content Article,Document,Documents Folder",
 			dynamicSelection = "true");
 
+		AssetListsAdmin.configureAssetEntryType(selectedAsset = "All Types");
+
 		for (var i : list "1,2,3") {
 			AssetListsAdmin.openAssetListsAdmin(siteURLKey = "test-depot-name");
 
@@ -693,7 +693,8 @@ definition {
 
 		AssetListsAdmin.configureScope(
 			assetListTitle = "Depot Dynamic Asset List",
-			otherSite = "Test Site Name");
+			otherSite = "Test Site Name",
+			selectedAsset = "All Types");
 
 		AssetListsAdmin.openAssetListsAdmin(siteURLKey = "test-depot-name");
 
@@ -830,7 +831,8 @@ definition {
 
 		AssetListsAdmin.configureScope(
 			assetListTitle = "Depot Dynamic Asset List",
-			otherSite = "Test Site Name 1");
+			otherSite = "Test Site Name 1",
+			selectedAsset = "All Types");
 
 		AssetListsAdmin.openAssetListsAdmin(siteURLKey = "test-depot-name");
 
@@ -868,7 +870,8 @@ definition {
 
 		AssetListsAdmin.configureScope(
 			assetListTitle = "Depot Dynamic Asset List",
-			otherSite = "Test Site Name");
+			otherSite = "Test Site Name",
+			selectedAsset = "All Types");
 
 		AssetListsAdmin.openAssetListsAdmin(siteURLKey = "test-depot-name");
 
@@ -953,11 +956,12 @@ definition {
 	@priority = "5"
 	test Smoke {
 		property portal.acceptance = "true";
+		property portal.upstream = "quarantine";
 		property testray.component.names = "Asset Lists";
 
 		DepotNavigator.openDepotAdmin();
 
-		DepotNavigator.gotoDepot(
+		DepotNavigator.gotoDepotPortlet(
 			depotName = "Test Depot Name",
 			portlet = "Collections");
 

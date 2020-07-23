@@ -50,6 +50,7 @@ definition {
 
 	@priority = "5"
 	test AddMemberAssignSiteRole {
+		property portal.acceptance = "true";
 		property testray.component.names = "Site Administration,Training,Users and Organizations";
 
 		JSONUser.addUser(
@@ -96,6 +97,7 @@ definition {
 	@priority = "5"
 	test AddMembersSiteUser {
 		property portal.acceptance = "true";
+		property test.name.skip.portal.instance = "SiteMemberships#AddMembersSiteUser";
 		property testray.component.names = "Site Administration,Users and Organizations";
 
 		JSONUser.addUser(
@@ -105,6 +107,23 @@ definition {
 			userScreenName = "usersn");
 
 		JSONGroup.addGroup(groupName = "Site Name");
+
+		// This is a workarond for managment bar is temporarily unavailable, this error only fail in this case and there is still other case just use Site.assignUserAsMemberCP after adding a user and site.
+
+		Site.openSiteMembershipsAdmin(siteURLKey = "site-name");
+
+		LexiconEntry.gotoAdd();
+
+		SelectFrame(locator1 = "IFrame#ADD_USERS_TO_SITE");
+
+		if (IsElementNotPresent(locator1 = "ManagementBar#FILTER_AND_ORDER")) {
+			ApplicationsMenu.gotoPortlet(
+				category = "Configuration",
+				panel = "Control Panel",
+				portlet = "Search");
+
+			SearchAdministration.executeSearchActions(actionsDescription = "Reindex all search indexes.");
+		}
 
 		Site.openSiteMembershipsAdmin(siteURLKey = "site-name");
 
@@ -253,7 +272,7 @@ definition {
 		property test.name.skip.portal.instance = "SiteMemberships#OrganizationsView";
 		property testray.component.names = "Site Administration,Users and Organizations";
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "Search");
@@ -350,12 +369,9 @@ definition {
 
 		JSONGroup.addGroup(groupName = "Site Name");
 
-		Site.openSiteMembershipsAdmin(siteURLKey = "site-name");
-
-		Site.assignUserAsMemberCP(
-			userFirstName = "userfn",
-			userLastName = "userln",
-			userScreenName = "usersn");
+		JSONUser.addUserToSite(
+			groupName = "Site Name",
+			userEmailAddress = "userea@liferay.com");
 
 		Site.openSiteMembershipsAdmin(siteURLKey = "site-name");
 
@@ -725,7 +741,7 @@ definition {
 
 		Navigator.openURL();
 
-		ProductMenuHelper.expandPanel(panel = "Site Administration");
+		ProductMenuHelper.openProductMenu();
 
 		ProductMenuHelper.expandCategory(category = "People");
 
@@ -737,7 +753,7 @@ definition {
 
 		Navigator.openURL();
 
-		ProductMenuHelper.expandPanel(panel = "Site Administration");
+		ProductMenuHelper.openProductMenu();
 
 		ProductMenuHelper.expandCategory(category = "People");
 

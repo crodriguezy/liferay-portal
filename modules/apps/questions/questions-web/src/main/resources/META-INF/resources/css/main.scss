@@ -8,6 +8,7 @@
 
 .navigation-bar {
 	width: inherit;
+
 	.navbar-nav {
 		width: inherit;
 	}
@@ -15,6 +16,7 @@
 
 .question-row-article-body {
 	height: 2.5rem;
+
 	> * {
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -142,6 +144,7 @@
 	@include media-breakpoint-up(xl) {
 		max-width: 400px;
 	}
+
 	.questions-navigation-section-title {
 		@include media-breakpoint-up(xl) {
 			max-width: 200px;
@@ -156,8 +159,80 @@
 .questions-tag-selector {
 	.form-group {
 		margin-bottom: 1rem;
+
 		.form-control-tag-group.input-group {
 			padding: 0 1rem;
 		}
+	}
+}
+
+.c-empty-state-title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	line-height: 1.2;
+	margin-bottom: 0;
+	margin-top: 2.5rem;
+	max-width: 100%;
+	word-wrap: break-word;
+}
+
+.c-empty-state-text {
+	margin-bottom: 0;
+	margin-top: 0.5rem;
+	max-width: 100%;
+	word-wrap: break-word;
+}
+
+.questions-container {
+	word-break: break-word;
+
+	.cke_contents {
+		border: 1px solid #e7e7ed;
+	}
+
+	blockquote {
+		border-color: #ccc;
+		border-style: solid;
+		border-width: 0 0 0 5px;
+		padding-left: 20px;
+		padding-right: 8px;
+	}
+
+	.nav-item a {
+		cursor: pointer;
+	}
+
+	.subnav-tbar .container-fluid-max-xl {
+		max-width: 100%;
+	}
+}
+
+.cke_dialog_contents_body {
+	width: auto !important;
+}
+
+.question-seen {
+	font-weight: 400;
+}
+
+.questions-root .breadcrumb {
+	.breadcrumb-item {
+		font-size: 1.15rem;
+	}
+
+	.breadcrumb-item + .breadcrumb-item {
+		padding-left: 0.7rem;
+	}
+
+	.questions-breadcrumb-unstyled {
+		padding: 0 0.3rem;
+	}
+
+	.questions-breadcrumb-unstyled:hover {
+		background-color: rgba($dark, 0.06);
+	}
+
+	.questions-breadcrumb-unstyled:focus {
+		box-shadow: none;
 	}
 }

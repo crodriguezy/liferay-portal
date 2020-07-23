@@ -32,6 +32,7 @@ public class AccountEntrySoap implements Serializable {
 		AccountEntrySoap soapModel = new AccountEntrySoap();
 
 		soapModel.setMvccVersion(model.getMvccVersion());
+		soapModel.setExternalReferenceCode(model.getExternalReferenceCode());
 		soapModel.setAccountEntryId(model.getAccountEntryId());
 		soapModel.setCompanyId(model.getCompanyId());
 		soapModel.setUserId(model.getUserId());
@@ -43,6 +44,8 @@ public class AccountEntrySoap implements Serializable {
 		soapModel.setDescription(model.getDescription());
 		soapModel.setDomains(model.getDomains());
 		soapModel.setLogoId(model.getLogoId());
+		soapModel.setTaxIdNumber(model.getTaxIdNumber());
+		soapModel.setType(model.getType());
 		soapModel.setStatus(model.getStatus());
 
 		return soapModel;
@@ -103,6 +106,14 @@ public class AccountEntrySoap implements Serializable {
 
 	public void setMvccVersion(long mvccVersion) {
 		_mvccVersion = mvccVersion;
+	}
+
+	public String getExternalReferenceCode() {
+		return _externalReferenceCode;
+	}
+
+	public void setExternalReferenceCode(String externalReferenceCode) {
+		_externalReferenceCode = externalReferenceCode;
 	}
 
 	public long getAccountEntryId() {
@@ -193,6 +204,22 @@ public class AccountEntrySoap implements Serializable {
 		_logoId = logoId;
 	}
 
+	public String getTaxIdNumber() {
+		return _taxIdNumber;
+	}
+
+	public void setTaxIdNumber(String taxIdNumber) {
+		_taxIdNumber = taxIdNumber;
+	}
+
+	public String getType() {
+		return _type;
+	}
+
+	public void setType(String type) {
+		_type = type;
+	}
+
 	public int getStatus() {
 		return _status;
 	}
@@ -202,6 +229,7 @@ public class AccountEntrySoap implements Serializable {
 	}
 
 	private long _mvccVersion;
+	private String _externalReferenceCode;
 	private long _accountEntryId;
 	private long _companyId;
 	private long _userId;
@@ -213,6 +241,8 @@ public class AccountEntrySoap implements Serializable {
 	private String _description;
 	private String _domains;
 	private long _logoId;
+	private String _taxIdNumber;
+	private String _type;
 	private int _status;
 
 }

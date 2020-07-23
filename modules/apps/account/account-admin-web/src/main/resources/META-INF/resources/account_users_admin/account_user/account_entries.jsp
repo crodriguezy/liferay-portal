@@ -19,7 +19,7 @@
 <%
 String backURL = ParamUtil.getString(request, "backURL", String.valueOf(renderResponse.createRenderURL()));
 
-User selUser = PortalUtil.getSelectedUser(request);
+User selUser = PortalUtil.getSelectedUser(request, false);
 
 SearchContainer<AccountEntryDisplay> accountEntryDisplaySearchContainer = AccountEntryDisplaySearchContainerFactory.create(selUser.getUserId(), liferayPortletRequest, liferayPortletResponse);
 
@@ -50,18 +50,27 @@ portletDisplay.setURLBack(backURL);
 	<aui:input name="addAccountEntryIds" type="hidden" />
 	<aui:input name="deleteAccountEntryIds" type="hidden" />
 
-	<div class="sheet sheet-lg">
+	<clay:sheet>
 		<h2 class="sheet-title">
 			<%= LanguageUtil.get(request, "accounts") %>
 		</h2>
 
-		<h3 class="autofit-row sheet-subtitle">
-			<span class="autofit-col autofit-col-expand">
+		<clay:content-row
+			containerElement="h3"
+			cssClass="sheet-subtitle"
+		>
+			<clay:content-col
+				containerElement="span"
+				expand="<%= true %>"
+			>
 				<span class="heading-text">
 					<liferay-ui:message key="accounts" />
 				</span>
-			</span>
-			<span class="autofit-col">
+			</clay:content-col>
+
+			<clay:content-col
+				containerElement="span"
+			>
 				<span class="heading-end">
 					<liferay-ui:icon
 						cssClass="modify-link"
@@ -73,10 +82,10 @@ portletDisplay.setURLBack(backURL);
 						url="javascript:;"
 					/>
 				</span>
-			</span>
-		</h3>
+			</clay:content-col>
+		</clay:content-row>
 
-		<div class="sheet-section">
+		<clay:sheet-section>
 			<liferay-ui:search-container
 				compactEmptyResultsMessage="<%= true %>"
 				emptyResultsMessage="this-user-does-not-belong-to-any-accounts"
@@ -102,11 +111,13 @@ portletDisplay.setURLBack(backURL);
 					<liferay-ui:search-container-column-text
 						cssClass="table-cell-expand"
 						name="roles"
-						value="<%= accountUserDisplay.getAccountRoleNames(accountEntryDisplay.getAccountEntryId(), locale) %>"
+						value="<%= accountUserDisplay.getAccountRoleNamesString(accountEntryDisplay.getAccountEntryId(), locale) %>"
 					/>
 
 					<liferay-ui:search-container-column-text>
-						<a class="modify-link" data-rowId="<%= accountEntryDisplay.getAccountEntryId() %>" href="javascript:;"><%= removeAccountEntryIcon %></a>
+						<c:if test="<%= AccountEntryPermission.contains(permissionChecker, accountEntryDisplay.getAccountEntryId(), ActionKeys.MANAGE_USERS) %>">
+							<a class="modify-link" data-rowId="<%= accountEntryDisplay.getAccountEntryId() %>" href="javascript:;"><%= removeAccountEntryIcon %></a>
+						</c:if>
 					</liferay-ui:search-container-column-text>
 				</liferay-ui:search-container-row>
 
@@ -114,14 +125,14 @@ portletDisplay.setURLBack(backURL);
 					markupView="lexicon"
 				/>
 			</liferay-ui:search-container>
-		</div>
+		</clay:sheet-section>
 
-		<div class="sheet-footer">
+		<clay:sheet-footer>
 			<aui:button type="submit" />
 
 			<aui:button href="<%= backURL %>" type="cancel" />
-		</div>
-	</div>
+		</clay:sheet-footer>
+	</clay:sheet>
 </aui:form>
 
 <aui:script use="liferay-search-container">
@@ -188,27 +199,14 @@ portletDisplay.setURLBack(backURL);
 				searchContainerData = searchContainerData.split(',');
 			}
 
-			Util.selectEntity(
-				{
-					dialog: {
-						constrain: true,
-						destroyOnHide: true,
-						modal: true,
-					},
-					eventName: '<portlet:namespace />selectAccountEntry',
-					id: '<portlet:namespace />selectAccountEntry',
-					selectedData: searchContainerData,
-					title:
-						'<liferay-ui:message arguments="account" key="select-x" />',
-					uri:
-						'<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/account_users_admin/select_account_entry.jsp" /><portlet:param name="userId" value="<%= String.valueOf(selUser.getUserId()) %>" /></portlet:renderURL>',
-				},
-				function (event) {
-					var entityId = event.entityid;
+			Util.openModal({
+				id: '<portlet:namespace />selectAccountEntry',
+				onSelect: function (selectedItem) {
+					var entityId = selectedItem.entityid;
 
 					var rowColumns = [];
 
-					rowColumns.push(event.entityname);
+					rowColumns.push(selectedItem.entityname);
 					rowColumns.push(<%= StringPool.BLANK %>);
 					rowColumns.push(
 						'<a class="modify-link" data-rowId="' +
@@ -230,8 +228,13 @@ portletDisplay.setURLBack(backURL);
 					document.<portlet:namespace />fm.<portlet:namespace />deleteAccountEntryIds.value = deleteAccountEntryIds.join(
 						','
 					);
-				}
-			);
+				},
+				selectEventName: '<portlet:namespace />selectAccountEntry',
+				selectedData: searchContainerData,
+				title: '<liferay-ui:message arguments="account" key="select-x" />',
+				url:
+					'<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/account_users_admin/select_account_entry.jsp" /><portlet:param name="userId" value="<%= String.valueOf(selUser.getUserId()) %>" /></portlet:renderURL>',
+			});
 		});
 	}
 </aui:script>

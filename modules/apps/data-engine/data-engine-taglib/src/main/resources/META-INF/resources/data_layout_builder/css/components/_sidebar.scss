@@ -49,3 +49,13 @@
 		margin: 2px 0;
 	}
 }
+
+.display-settings.data-layout-builder-sidebar {
+	.sidebar-header {
+		padding-top: 0;
+
+		.component-title {
+			display: none;
+		}
+	}
+}

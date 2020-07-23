@@ -241,7 +241,11 @@ definition {
 	test AddSubcategoryConfigureParentCategory {
 		property test.name.skip.portal.instance = "CategoriesUseCase#AddSubcategoryConfigureParentCategory";
 
-		ProductMenu.gotoPortlet(
+		JSONCategory.addVocabulary(
+			groupName = "Test Site Name",
+			title = "Topic");
+
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "System Settings");
@@ -266,7 +270,7 @@ definition {
 
 		Category.openCategoriesAdmin(siteURLKey = "test-site-name");
 
-		LexiconEntry.gotoEntry(rowEntry = "Topic");
+		Navigator.gotoNavNested(navNested = "Topic");
 
 		Category.viewPath(
 			categoryName = "Category Name",
@@ -359,7 +363,7 @@ definition {
 
 		WebContent.addCP(webContentTitle = "WC Title");
 
-		Panel.expandPanel(panel = "Metadata");
+		Panel.expandPanel(panel = "Categorization");
 
 		AssetCategorization.addCategory(
 			categoryName = "Category Name",
@@ -369,7 +373,7 @@ definition {
 
 		WebContentNavigator.gotoAddWithStructureCP(structureName = "WC Structure Name");
 
-		Panel.expandPanel(panel = "Metadata");
+		Panel.expandPanel(panel = "Categorization");
 
 		AssertTextNotPresent(value1 = "Vocabulary Name");
 	}
@@ -380,7 +384,7 @@ definition {
 
 		Category.openCategoriesAdmin(siteURLKey = "test-site-name");
 
-		LexiconEntry.gotoAdd();
+		Vocabulary.gotoAddVocabulary();
 
 		PortletEntry.inputName(name = "Vocabulary Name");
 
@@ -418,7 +422,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.gotoPageMenuItem(
@@ -505,7 +508,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Bookmarks");
 
 		Bookmark.viewNoCategoryCP(vocabularyName = "Vocabulary Name");
@@ -733,6 +735,7 @@ definition {
 
 	@priority = "5"
 	test ExportImportWCWithCategoryViaAP {
+		property portal.acceptance = "true";
 		property testray.component.names = "Training";
 
 		JSONLayout.addPublicLayout(
@@ -857,6 +860,7 @@ definition {
 
 	@priority = "5"
 	test ImportLAR {
+		property portal.acceptance = "true";
 		property testray.component.names = "Training";
 
 		Category.openCategoriesAdmin(siteURLKey = "test-site-name");
@@ -1124,64 +1128,6 @@ definition {
 		Subcategory.viewSearchResultsCP(nullResult = "true");
 	}
 
-	@priority = "4"
-	test SearchVocabulary {
-		property testray.component.names = "Categories";
-
-		Category.openCategoriesAdmin(siteURLKey = "test-site-name");
-
-		Vocabulary.addCP(
-			vocabularyDescription = "Sushi",
-			vocabularyName = "Food Vocab");
-
-		Category.openCategoriesAdmin(siteURLKey = "test-site-name");
-
-		Vocabulary.addCP(
-			vocabularyDescription = "Futbol",
-			vocabularyName = "Sport Vocab");
-
-		for (var vocabularyName : list "Food,Sport") {
-			Category.openCategoriesAdmin(siteURLKey = "test-site-name");
-
-			Search.searchCP(searchTerm = "${vocabularyName}");
-
-			Vocabulary.viewSearchResultsCP(vocabularyNameList = "${vocabularyName} Vocab");
-		}
-
-		for (var vocabularyDescription : list "Sushi,Futbol") {
-			Category.openCategoriesAdmin(siteURLKey = "test-site-name");
-
-			Search.searchCP(searchTerm = "${vocabularyDescription}");
-
-			Vocabulary.viewSearchResultsCP(vocabularyDefinitionList = "${vocabularyDescription}");
-		}
-
-		Category.openCategoriesAdmin(siteURLKey = "test-site-name");
-
-		Search.searchCP(searchTerm = "Vocab");
-
-		Vocabulary.viewSearchResultsCP(
-			vocabularyDefinitionList = "Sushi,Futbol",
-			vocabularyNameList = "Food Vocab,Sport Vocab");
-	}
-
-	@priority = "3"
-	test SearchVocabularyWithNullResult {
-		property testray.component.names = "Categories";
-
-		Category.openCategoriesAdmin(siteURLKey = "test-site-name");
-
-		Vocabulary.addCP(
-			vocabularyDescription = "Vocabulary Description",
-			vocabularyName = "Vocabulary Name");
-
-		Category.openCategoriesAdmin(siteURLKey = "test-site-name");
-
-		Search.searchCP(searchTerm = "Null");
-
-		Vocabulary.viewSearchResultsCP(nullResult = "true");
-	}
-
 	@Description ="This is for LPS-101409. Validate selecting multiple categories when creating page with blank template."
 	@priority ="4"
 	test SelectMultipleRequiredCategoriesWithBlankPageTemplate {
@@ -1257,7 +1203,6 @@ definition {
 		task ("Navigate to the Pages Administration") {
 			ProductMenu.gotoPortlet(
 				category = "Site Builder",
-				panel = "Site Administration",
 				portlet = "Pages");
 		}
 
@@ -1309,7 +1254,6 @@ definition {
 		task ("Navigate to the Pages Administration") {
 			ProductMenu.gotoPortlet(
 				category = "Site Builder",
-				panel = "Site Administration",
 				portlet = "Pages");
 		}
 
@@ -1332,7 +1276,6 @@ definition {
 		task ("Navigate to the Pages Administration") {
 			ProductMenu.gotoPortlet(
 				category = "Site Builder",
-				panel = "Site Administration",
 				portlet = "Pages");
 		}
 
@@ -1416,7 +1359,11 @@ definition {
 	test ViewFlattenedTreeCategoryNavigationDisplayStyle {
 		property test.name.skip.portal.instance = "CategoriesUseCase#ViewFlattenedTreeCategoryNavigationDisplayStyle";
 
-		ProductMenu.gotoPortlet(
+		JSONCategory.addVocabulary(
+			groupName = "Test Site Name",
+			title = "Topic");
+
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "System Settings");
@@ -1443,7 +1390,7 @@ definition {
 
 		Category.openCategoriesAdmin(siteURLKey = "test-site-name");
 
-		LexiconEntry.gotoEntry(rowEntry = "Topic");
+		Navigator.gotoNavNested(navNested = "Topic");
 
 		Category.viewPath(
 			categoryName = "Category Name",

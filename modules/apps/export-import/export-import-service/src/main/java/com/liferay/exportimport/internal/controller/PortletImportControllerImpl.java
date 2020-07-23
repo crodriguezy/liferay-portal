@@ -49,8 +49,8 @@ import com.liferay.exportimport.kernel.lar.PortletDataHandlerStatusMessageSender
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.exportimport.kernel.lar.UserIdStrategy;
-import com.liferay.exportimport.kernel.lifecycle.ExportImportLifecycleConstants;
 import com.liferay.exportimport.kernel.lifecycle.ExportImportLifecycleManager;
+import com.liferay.exportimport.kernel.lifecycle.constants.ExportImportLifecycleConstants;
 import com.liferay.exportimport.kernel.model.ExportImportConfiguration;
 import com.liferay.exportimport.kernel.staging.MergeLayoutPrototypesThreadLocal;
 import com.liferay.exportimport.lar.PermissionImporter;
@@ -1147,12 +1147,10 @@ public class PortletImportControllerImpl implements PortletImportController {
 		UserIdStrategy userIdStrategy = _exportImportHelper.getUserIdStrategy(
 			userId, userIdStrategyString);
 
-		ZipReader zipReader = ZipReaderFactoryUtil.getZipReader(file);
-
 		PortletDataContext portletDataContext =
 			_portletDataContextFactory.createImportPortletDataContext(
 				layout.getCompanyId(), targetGroupId, parameterMap,
-				userIdStrategy, zipReader);
+				userIdStrategy, ZipReaderFactoryUtil.getZipReader(file));
 
 		portletDataContext.setExportImportProcessId(
 			String.valueOf(
@@ -1352,10 +1350,10 @@ public class PortletImportControllerImpl implements PortletImportController {
 		String[] dataPortletPreferences =
 			portletDataHandler.getDataPortletPreferences();
 
-		Enumeration<String> enu = jxPortletPreferences.getNames();
+		Enumeration<String> enumeration = jxPortletPreferences.getNames();
 
-		while (enu.hasMoreElements()) {
-			String name = enu.nextElement();
+		while (enumeration.hasMoreElements()) {
+			String name = enumeration.nextElement();
 
 			String scopeType = portletDataContext.getScopeType();
 
@@ -1363,9 +1361,8 @@ public class PortletImportControllerImpl implements PortletImportController {
 				(Validator.isNull(portletDataContext.getScopeLayoutUuid()) &&
 				 scopeType.equals("company"))) {
 
-				String[] values = jxPortletPreferences.getValues(name, null);
-
-				portletPreferences.setValues(name, values);
+				portletPreferences.setValues(
+					name, jxPortletPreferences.getValues(name, null));
 			}
 		}
 

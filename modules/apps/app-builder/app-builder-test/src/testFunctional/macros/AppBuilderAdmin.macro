@@ -18,9 +18,6 @@ definition {
 	}
 
 	macro addCustomObject {
-
-		ProductMenuHelper.closeProductMenu();
-
 		if ("${isCreatingViaPlusIcon}" == "false") {
 			AppBuilderAdmin.gotoAddItemViaNewButton();
 		}
@@ -102,12 +99,44 @@ definition {
 		Click(locator1 = "AppBuilder#BUTTON_CANCEL");
 	}
 
+	macro chooseAppSearchFilterByOption {
+		Click(locator1 = "AppBuilder#SEARCH_FILTER_AND_ORDER_MENU");
+
+		Click(
+			key_FilterOption = "${filterOption}",
+			locator1 = "AppBuilder#CHOOSE_APP_SEARCH_FILTER_BY_OPTION");
+
+		Button.clickDone();
+	}
+
+	macro chooseMultipleFilter {
+		Click(locator1 = "AppBuilder#SEARCH_FILTER_AND_ORDER_MENU");
+
+		Click.clickAtNotVisible(
+			key_FilterOption = "${statusFilterOption}",
+			locator1 = "AppBuilder#CHOOSE_APP_SEARCH_FILTER_BY_STATUS");
+
+		Button.clickDone();
+
+		AppBuilderAdmin.filterByDeploymentType(itemName = "${deploymentFilterOption}");
+
+		Click(locator1 = "AppBuilder#SEARCH_FILTER_AND_ORDER_MENU");
+
+		Click.clickAtNotVisible(locator1 = "AppBuilder#CHOOSE_FILTER_BY_AUTHOR_ME");
+
+		Button.clickDone();
+	}
+
 	macro chooseSearchFilterByOption {
 		Click(locator1 = "AppBuilder#SEARCH_FILTER_AND_ORDER_MENU");
 
 		Click(
 			key_FilterOption = "${filterOption}",
 			locator1 = "AppBuilder#CHOOSE_SEARCH_FILTER_BY_OPTION");
+	}
+
+	macro clearFilter {
+		Click(locator1 = "AppBuilder#CLEAR_FILTER");
 	}
 
 	macro clearSearch {
@@ -197,6 +226,16 @@ definition {
 		MenuItem.clickNoError(menuItem = "Edit");
 	}
 
+	macro filterByDeploymentType {
+		var key_itemName = "${itemName}";
+
+		Click(locator1 = "AppBuilder#SEARCH_FILTER_AND_ORDER_MENU");
+
+		Click.clickAtNotVisible(locator1 = "AppBuilder#CHOOSE_FILTER_BY_DEPLOYMENT_TYPE");
+
+		Button.clickDone();
+	}
+
 	macro filterListAscendAndDescend {
 		Click(locator1 = "AppBuilder#FILTER_LIST_ASCEND_AND_DESCEND_BUTTON");
 	}
@@ -219,14 +258,15 @@ definition {
 		}
 	}
 
-	macro gotoCustomAppCP {
-		Refresh();
+	macro gotoCustomAppApplicationsMenuApplications {
+		Navigator.openURL();
 
-		ProductMenuHelper.expandPanel(panel = "${panel}");
+		ProductMenuHelper.closeProductMenu();
 
-		Click(
-			key_portlet = "${portlet}",
-			locator1 = "AppBuilder#CUSTOM_PORTLET");
+		ApplicationsMenu.gotoPortlet(
+			category = "${portlet}",
+			panel = "Applications",
+			portlet = "${portlet}");
 	}
 
 	macro openActionMenu {
@@ -336,9 +376,9 @@ definition {
 	macro teardownAppBuilder {
 		Navigator.openURL();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "App Builder",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Objects");
 
 		Pause(locator1 = "2000");
@@ -372,18 +412,22 @@ definition {
 			value1 = "UNDEPLOYED");
 	}
 
-	macro validateAppIsNotPresentOnControlPanel {
+	macro validateAppIsNotPresentOnApplicationsMenuApplications {
 		Navigator.openURL();
 
-		ProductMenuHelper.expandPanel(panel = "Control Panel");
+		ProductMenuHelper.closeProductMenu();
+
+		ApplicationsMenuHelper.openApplicationsMenu();
+
+		Navigator.gotoNavTab(navTab = "Applications");
 
 		AssertElementNotPresent(
-			key_portlet = "${portlet}",
-			locator1 = "AppBuilder#CUSTOM_PORTLET");
+			key_category = "${portlet}",
+			locator1 = "ApplicationsMenu#CATEGORY");
 	}
 
 	macro validateAppIsNotPresentOnSite {
-		ProductMenuHelper.expandPanel(panel = "Site Administration");
+		ProductMenuHelper.openProductMenu();
 
 		ProductMenuHelper.expandCategory(category = "Content & Data");
 
@@ -412,6 +456,22 @@ definition {
 		AssertElementPresent(
 			key_fieldLabel = "${fieldLabel}",
 			locator1 = "AppBuilder#FIELD_LABEL_IN_TABLE");
+	}
+
+	macro validateFilterAndOrder {
+		Click(locator1 = "AppBuilder#SEARCH_FILTER_AND_ORDER_MENU");
+
+		AssertElementPresent(locator1 = "AppBuilder#VALIDATE_FILTER_BY_DEPLOYMENT_TYPE");
+
+		AssertElementPresent(locator1 = "AppBuilder#VALIDATE_FILTER_BY_STATUS");
+
+		AssertChecked.assertCheckedNotVisible(locator1 = "AppBuilder#VALIDATE_FILTER_BY_STATUS_ANY");
+
+		AssertElementPresent(locator1 = "AppBuilder#VALIDATE_FILTER_BY_AUTHOR");
+
+		AssertElementPresent(locator1 = "AppBuilder#VALIDATE_FILTER_BY_ORDER");
+
+		Button.clickDone();
 	}
 
 	macro validateIfSearchItemIsFound {

@@ -23,13 +23,24 @@ int totalItems = ddmFormReportDisplayContext.getTotalItems();
 <div class="ddm-form-report hide">
 	<div class="ddm-form-report-header">
 		<clay:container-fluid>
-			<div class="align-items-center autofit-row">
+			<clay:content-row
+				cssClass="align-items-center"
+			>
 				<span class="ddm-form-report-header-title text-truncate">
-					<liferay-ui:message arguments="<%= totalItems %>" key="x-entries" />
+					<c:choose>
+						<c:when test="<%= totalItems == 1 %>">
+							<liferay-ui:message arguments="<%= totalItems %>" key="x-entry" />
+						</c:when>
+						<c:otherwise>
+							<liferay-ui:message arguments="<%= totalItems %>" key="x-entries" />
+						</c:otherwise>
+					</c:choose>
 				</span>
-			</div>
+			</clay:content-row>
 
-			<div class="align-items-center autofit-row">
+			<clay:content-row
+				cssClass="align-items-center"
+			>
 				<span class="ddm-form-report-header-subtitle text-truncate">
 					<c:choose>
 						<c:when test="<%= totalItems > 0 %>">
@@ -40,19 +51,18 @@ int totalItems = ddmFormReportDisplayContext.getTotalItems();
 						</c:otherwise>
 					</c:choose>
 				</span>
-			</div>
+			</clay:content-row>
 		</clay:container-fluid>
 	</div>
 
 	<clay:navigation-bar
-		elementClasses="ddm-form-report-tabs"
+		cssClass="ddm-form-report-tabs"
 		navigationItems='<%=
 			new JSPNavigationItemList(pageContext) {
 				{
 					add(
 						navigationItem -> {
 							navigationItem.setActive(true);
-							navigationItem.setHref(StringPool.BLANK);
 							navigationItem.setLabel(LanguageUtil.get(request, "summary"));
 						}
 					);
@@ -79,7 +89,7 @@ int totalItems = ddmFormReportDisplayContext.getTotalItems();
 			var navLink = navItem.querySelector('.nav-link');
 
 			document
-				.querySelector('.ddm-form-report-tabs li > a.active')
+				.querySelector('.ddm-form-report-tabs li > .active')
 				.classList.remove('active');
 			navLink.classList.add('active');
 

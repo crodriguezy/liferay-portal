@@ -163,8 +163,8 @@ if (liveLayout != null) {
 											</clay:col>
 
 											<clay:col
-												className="staging-alert-container"
-												id='<%= renderResponse.getNamespace() + "layoutRevisionStatus" %>'
+												cssClass="staging-alert-container"
+												id='<%= liferayPortletResponse.getNamespace() + "layoutRevisionStatus" %>'
 											>
 												<aui:model-context bean="<%= layoutRevision %>" model="<%= LayoutRevision.class %>" />
 
@@ -172,8 +172,8 @@ if (liveLayout != null) {
 											</clay:col>
 
 											<clay:col
-												className="col-auto staging-alert-container"
-												id='<%= renderResponse.getNamespace() + "layoutRevisionDetails" %>'
+												cssClass="col-auto staging-alert-container"
+												id='<%= liferayPortletResponse.getNamespace() + "layoutRevisionDetails" %>'
 											>
 												<aui:model-context bean="<%= layoutRevision %>" model="<%= LayoutRevision.class %>" />
 
@@ -182,7 +182,7 @@ if (liveLayout != null) {
 										</c:when>
 										<c:otherwise>
 											<clay:col
-												className="staging-alert-container"
+												cssClass="staging-alert-container"
 											>
 												<c:choose>
 													<c:when test="<%= liveLayout == null %>">
@@ -197,7 +197,7 @@ if (liveLayout != null) {
 											</clay:col>
 
 											<clay:col
-												className="staging-button-container"
+												cssClass="staging-button-container"
 												md="2"
 												sm="3"
 											>
@@ -212,7 +212,7 @@ if (liveLayout != null) {
 							</c:when>
 							<c:otherwise>
 								<clay:col
-									className="staging-alert-container"
+									cssClass="staging-alert-container"
 								>
 									<div class="alert alert-warning hide warning-content" id="<portlet:namespace />warningMessage">
 										<liferay-ui:message key="an-inital-staging-publication-is-in-progress" />

@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.portal.kernel.util.HashMapDictionary;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.util.PropsValues;
 
 import java.io.File;
@@ -210,6 +211,11 @@ public class ConfigurationPersistenceManager
 
 			if (pidKey == null) {
 				pidKey = pid;
+			}
+
+			if (pidKey.endsWith(".scoped")) {
+				pidKey = StringUtil.replaceLast(
+					pidKey, ".scoped", StringPool.BLANK);
 			}
 
 			configurationModelListener = _getConfigurationModelListener(pidKey);
@@ -419,10 +425,7 @@ public class ConfigurationPersistenceManager
 		String fileName = dictionary.get(_FELIX_FILE_INSTALL_FILENAME);
 
 		if (fileName != null) {
-			File file = new File(
-				PropsValues.MODULE_FRAMEWORK_CONFIGS_DIR, fileName);
-
-			file = file.getAbsoluteFile();
+			File file = _getCanonicalConfigFile(fileName);
 
 			URI uri = file.toURI();
 
@@ -437,15 +440,22 @@ public class ConfigurationPersistenceManager
 
 		Dictionary<Object, Object> newDictionary = new HashMapDictionary<>();
 
-		Enumeration<?> keys = dictionary.keys();
+		Enumeration<?> enumeration = dictionary.keys();
 
-		while (keys.hasMoreElements()) {
-			Object key = keys.nextElement();
+		while (enumeration.hasMoreElements()) {
+			Object key = enumeration.nextElement();
 
 			newDictionary.put(key, dictionary.get(key));
 		}
 
 		return newDictionary;
+	}
+
+	private File _getCanonicalConfigFile(String fileName) throws IOException {
+		File configFile = new File(
+			PropsValues.MODULE_FRAMEWORK_CONFIGS_DIR, fileName);
+
+		return configFile.getCanonicalFile();
 	}
 
 	private ConfigurationModelListener _getConfigurationModelListener(
@@ -507,11 +517,7 @@ public class ConfigurationPersistenceManager
 			needSave = false;
 		}
 		else {
-			configFile = new File(
-				PropsValues.MODULE_FRAMEWORK_CONFIGS_DIR,
-				felixFileInstallFileName);
-
-			configFile = configFile.getAbsoluteFile();
+			configFile = _getCanonicalConfigFile(felixFileInstallFileName);
 
 			URI uri = configFile.toURI();
 

@@ -23,6 +23,7 @@ import {
 	DELETE_DATA_LAYOUT_RULE,
 	EDIT_CUSTOM_OBJECT_FIELD,
 	SWITCH_SIDEBAR_PANEL,
+	UPDATE_APP_PROPS,
 	UPDATE_CONFIG,
 	UPDATE_DATA_DEFINITION,
 	UPDATE_DATA_LAYOUT,
@@ -42,8 +43,10 @@ import generateDataDefinitionFieldName from './utils/generateDataDefinitionField
 const AppContext = createContext();
 
 const initialState = {
+	appProps: {},
 	config: {
 		allowFieldSets: false,
+		allowNestedFields: true,
 		allowRules: false,
 		disabledProperties: [],
 		disabledTabs: [],
@@ -185,8 +188,11 @@ const setDataDefinitionFields = (
 };
 
 const setDataLayout = (dataLayoutBuilder) => {
-	const {pages} = dataLayoutBuilder.getStore();
-	const {layout} = dataLayoutBuilder.getDataDefinitionAndDataLayout(pages);
+	const {pages, rules} = dataLayoutBuilder.getStore();
+	const {layout} = dataLayoutBuilder.getDataDefinitionAndDataLayout(
+		pages,
+		rules || []
+	);
 
 	return layout;
 };
@@ -319,6 +325,12 @@ const createReducer = (dataLayoutBuilder) => {
 					sidebarPanelId,
 				};
 			}
+			case UPDATE_APP_PROPS: {
+				return {
+					...state,
+					appProps: action.payload,
+				};
+			}
 			case UPDATE_DATA_DEFINITION: {
 				const {dataDefinition} = action.payload;
 
@@ -338,6 +350,9 @@ const createReducer = (dataLayoutBuilder) => {
 					dataLayout: {
 						...state.dataLayout,
 						...dataLayout,
+						dataRules: dataLayoutBuilder
+							.getLayoutProvider()
+							.getRules(),
 					},
 				};
 			}
@@ -400,7 +415,14 @@ const createReducer = (dataLayoutBuilder) => {
 				};
 			}
 			case UPDATE_FIELDSETS: {
-				const {fieldSets} = action.payload;
+				const {dataDefinitionId} = state;
+				let {fieldSets} = action.payload;
+
+				if (dataDefinitionId) {
+					fieldSets = fieldSets.filter(
+						(item) => item.id !== dataDefinitionId
+					);
+				}
 
 				return {
 					...state,
@@ -445,6 +467,7 @@ const createReducer = (dataLayoutBuilder) => {
 								editingLanguageId: state.editingLanguageId,
 							},
 						},
+						sidebarPanelId: 'fields',
 					};
 				}
 

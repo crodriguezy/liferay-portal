@@ -253,6 +253,22 @@ public class ModulesJUnitBatchTestClassGroup extends JUnitBatchTestClassGroup {
 		return relevantTestClassNameRelativeIncludesGlobs;
 	}
 
+	@Override
+	protected void setTestClassNamesExcludesRelativeGlobs() {
+		super.setTestClassNamesExcludesRelativeGlobs();
+
+		if (!testRelevantChanges) {
+			List<File> modulePullSubrepoDirs =
+				portalGitWorkingDirectory.getModulePullSubrepoDirs();
+
+			for (File modulePullSubrepoDir : modulePullSubrepoDirs) {
+				testClassNamesExcludesPathMatchers.addAll(
+					JenkinsResultsParserUtil.toPathMatchers(
+						modulePullSubrepoDir.getAbsolutePath(), "/**"));
+			}
+		}
+	}
+
 	private String _getAppTitle(File appBndFile) {
 		Properties appBndProperties = JenkinsResultsParserUtil.getProperties(
 			appBndFile);

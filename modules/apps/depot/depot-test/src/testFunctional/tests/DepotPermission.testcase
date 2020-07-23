@@ -45,11 +45,10 @@ definition {
 			DepotNavigator.openDepotAdmin();
 
 			DepotNavigator.gotoDepotPortlet(
-				category = "People",
 				depotName = "Test Depot Name",
 				portlet = "Memberships");
 
-			Site.assignUserAsMemberCP(
+			Depot.assignUserAsMember(
 				depotName = "Test Depot Name",
 				userFirstName = "userfn${i}",
 				userLastName = "userln${i}",
@@ -91,12 +90,11 @@ definition {
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 
 		for (var i : list "1,2") {
-			Site.viewMemberCP(
+			Depot.viewMember(
 				userFirstName = "userfn${i}",
 				userLastName = "userln${i}",
 				userScreenName = "usersn${i}");
@@ -116,25 +114,6 @@ definition {
 	@description = "This ensures that the user can only view memberships with view permissions."
 	@priority = "5"
 	test AccessMembershipWithViewOnlyPermissions {
-		JSONUser.addUser(
-			userEmailAddress = "userea1@liferay.com",
-			userFirstName = "userfn1",
-			userLastName = "userln1",
-			userScreenName = "usersn1");
-
-		DepotNavigator.openDepotAdmin();
-
-		DepotNavigator.gotoDepotPortlet(
-			category = "People",
-			depotName = "Test Depot Name",
-			portlet = "Memberships");
-
-		Site.assignUserAsMemberCP(
-			depotName = "Test Depot Name",
-			userFirstName = "userfn1",
-			userLastName = "userln1",
-			userScreenName = "usersn1");
-
 		Permissions.setUpRegRoleLoginUserCP(
 			roleTitle = "Depot Regrole Name",
 			userEmailAddress = "userea1@liferay.com",
@@ -163,6 +142,23 @@ definition {
 				roleTitle = "Depot Regrole Name");
 		}
 
+		Permissions.definePermissionViaJSONAPI(
+			resourceAction = "ACCESS_IN_CONTROL_PANEL",
+			resourceName = "com_liferay_site_memberships_web_portlet_SiteMembershipsPortlet",
+			roleTitle = "Depot Regrole Name");
+
+		DepotNavigator.openDepotAdmin();
+
+		DepotNavigator.gotoDepotPortlet(
+			depotName = "Test Depot Name",
+			portlet = "Memberships");
+
+		Depot.assignUserAsMember(
+			depotName = "Test Depot Name",
+			userFirstName = "userfn1",
+			userLastName = "userln1",
+			userScreenName = "usersn1");
+
 		User.logoutAndLoginPG(
 			userLoginEmailAddress = "userea1@liferay.com",
 			userLoginFullName = "userfn1 userln1");
@@ -170,11 +166,10 @@ definition {
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 
-		Site.viewMemberCP(
+		Depot.viewMember(
 			userFirstName = "userfn1",
 			userLastName = "userln1",
 			userScreenName = "usersn1");
@@ -208,7 +203,7 @@ definition {
 			userLoginFullName = "test test",
 			userScreenName = "usersn");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -217,7 +212,7 @@ definition {
 			siteName = "Site Name",
 			userScreenName = "usersn");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Roles");
@@ -412,7 +407,7 @@ definition {
 			userLoginFullName = "test test",
 			userScreenName = "usersn");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Roles");
@@ -437,7 +432,7 @@ definition {
 			userLoginFullName = "test test",
 			userScreenName = "usersn");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Roles");
@@ -462,7 +457,7 @@ definition {
 			userLoginFullName = "test test",
 			userScreenName = "usersn");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Roles");
@@ -499,7 +494,7 @@ definition {
 			userLoginFullName = "test test",
 			userScreenName = "usersn");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");

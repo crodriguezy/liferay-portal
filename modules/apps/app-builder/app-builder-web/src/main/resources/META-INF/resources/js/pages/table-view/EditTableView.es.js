@@ -36,6 +36,8 @@ const EditTableView = withRouter(({history}) => {
 		EditTableViewContext
 	);
 
+	const languageId = Liferay.ThemeDisplay.getLanguageId();
+
 	let title = Liferay.Language.get('new-table-view');
 
 	if (dataListView.id) {
@@ -61,12 +63,12 @@ const EditTableView = withRouter(({history}) => {
 	};
 
 	const validate = () => {
-		const name = dataListView.name.en_US.trim();
+		const {[languageId]: name = ''} = dataListView.name;
 
 		return {
 			...dataListView,
 			name: {
-				en_US: name,
+				en_US: name.trim(),
 			},
 		};
 	};
@@ -115,6 +117,27 @@ const EditTableView = withRouter(({history}) => {
 	const onRemoveFieldName = (fieldName) => {
 		dispatch({payload: {fieldName}, type: REMOVE_DATA_LIST_VIEW_FIELD});
 	};
+
+	const fields = [];
+
+	fieldNames.forEach((fieldName) => {
+		dataDefinitionFields.forEach((dataDefinitionField) => {
+			const {name, nestedDataDefinitionFields} = dataDefinitionField;
+
+			if (nestedDataDefinitionFields.length) {
+				const nested = nestedDataDefinitionFields.find(
+					({name: nestedName}) => nestedName === fieldName
+				);
+
+				if (nested) {
+					fields.push(nested);
+				}
+			}
+			else if (name === fieldName) {
+				fields.push(dataDefinitionField);
+			}
+		});
+	});
 
 	return (
 		<div className="app-builder-table-view">
@@ -171,11 +194,7 @@ const EditTableView = withRouter(({history}) => {
 				>
 					<div className="container table-view-container">
 						<DropZone
-							fields={fieldNames.map((fieldName) => ({
-								...dataDefinitionFields.find(
-									({name}) => name === fieldName
-								),
-							}))}
+							fields={fields}
 							onAddFieldName={onAddFieldName}
 							onRemoveFieldName={onRemoveFieldName}
 						/>

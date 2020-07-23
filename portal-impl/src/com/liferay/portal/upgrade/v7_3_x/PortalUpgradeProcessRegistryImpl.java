@@ -93,6 +93,37 @@ public class PortalUpgradeProcessRegistryImpl
 
 		upgradeProcesses.put(
 			new Version(8, 9, 0), new UpgradeRatingsMVCCVersion());
+
+		upgradeProcesses.put(
+			new Version(8, 10, 0), new UpgradeResourceAction());
+
+		upgradeProcesses.put(
+			new Version(8, 11, 0),
+			new UpgradeCTModel(
+				"ExpandoColumn", "ExpandoRow", "ExpandoTable", "ExpandoValue"));
+
+		upgradeProcesses.put(
+			new Version(8, 12, 0),
+			new UpgradeCTModel("RatingsEntry", "RatingsStats"));
+
+		upgradeProcesses.put(
+			new Version(8, 13, 0),
+			new UpgradeCTModel(
+				"WorkflowDefinitionLink", "WorkflowInstanceLink"));
+
+		upgradeProcesses.put(
+			new Version(8, 14, 0),
+			new UpgradeCTModel(
+				"SocialActivity", "SocialActivityAchievement",
+				"SocialActivityCounter", "SocialActivityLimit",
+				"SocialActivitySet", "SocialActivitySetting", "SocialRelation",
+				"SocialRequest"));
+
+		upgradeProcesses.put(
+			new Version(8, 15, 0), new UpgradeCTModel("SystemEvent"));
+
+		upgradeProcesses.put(
+			new Version(8, 16, 0), new UpgradeDLFileEntryType());
 	}
 
 }

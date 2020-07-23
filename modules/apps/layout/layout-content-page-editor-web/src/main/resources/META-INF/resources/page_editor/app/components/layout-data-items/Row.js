@@ -12,6 +12,7 @@
  * details.
  */
 
+import ClayLayout from '@clayui/layout';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {useMemo} from 'react';
@@ -23,25 +24,26 @@ import {
 import {LAYOUT_DATA_ITEM_TYPES} from '../../config/constants/layoutDataItemTypes';
 import {useSelector} from '../../store/index';
 import {getResponsiveConfig} from '../../utils/getResponsiveConfig';
+import {useCustomRowContext} from '../ResizeContext';
 
 const Row = React.forwardRef(({children, className, item, layoutData}, ref) => {
+	const customRow = useCustomRowContext();
 	const selectedViewportSize = useSelector(
 		(state) => state.selectedViewportSize
 	);
 
 	const itemConfig = getResponsiveConfig(item.config, selectedViewportSize);
-
 	const {modulesPerRow, reverseOrder} = itemConfig;
 
 	const rowContent = (
-		<div
-			className={classNames(className, 'row', {
+		<ClayLayout.Row
+			className={classNames(className, {
 				empty:
 					item.config.numberOfColumns === modulesPerRow &&
 					!item.children.some(
 						(childId) => layoutData.items[childId].children.length
 					),
-				'flex-column': modulesPerRow === 1,
+				'flex-column': customRow && modulesPerRow === 1,
 				'flex-column-reverse':
 					item.config.numberOfColumns === 2 &&
 					modulesPerRow === 1 &&
@@ -52,7 +54,7 @@ const Row = React.forwardRef(({children, className, item, layoutData}, ref) => {
 			ref={ref}
 		>
 			{children}
-		</div>
+		</ClayLayout.Row>
 	);
 
 	const masterLayoutData = useSelector((state) => state.masterLayoutData);
@@ -70,7 +72,9 @@ const Row = React.forwardRef(({children, className, item, layoutData}, ref) => {
 	);
 
 	return shouldAddContainer ? (
-		<div className="container-fluid p-0">{rowContent}</div>
+		<ClayLayout.ContainerFluid className="p-0" size={false}>
+			{rowContent}
+		</ClayLayout.ContainerFluid>
 	) : (
 		rowContent
 	);

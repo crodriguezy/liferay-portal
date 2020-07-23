@@ -37,11 +37,12 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 
 import java.util.Collections;
 import java.util.Locale;
@@ -63,10 +64,14 @@ public class FragmentEntryLinkStagingTest {
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new LiferayIntegrationTestRule();
+		new AggregateTestRule(
+			new LiferayIntegrationTestRule(),
+			PermissionCheckerMethodTestRule.INSTANCE);
 
 	@Before
 	public void setUp() throws Exception {
+		UserTestUtil.setUser(TestPropsValues.getUser());
+
 		_liveGroup = GroupTestUtil.addGroup();
 
 		ServiceContext serviceContext =
@@ -103,7 +108,7 @@ public class FragmentEntryLinkStagingTest {
 		FragmentEntryLink liveFragmentEntryLink =
 			FragmentTestUtil.addFragmentEntryLink(
 				_liveGroup.getGroupId(), fragmentEntry.getFragmentEntryId(),
-				PortalUtil.getClassNameId(Layout.class), _layout.getPlid());
+				_layout.getPlid());
 
 		_stagingGroup = FragmentStagingTestUtil.enableLocalStaging(_liveGroup);
 
@@ -132,7 +137,6 @@ public class FragmentEntryLinkStagingTest {
 		FragmentEntryLink stagingFragmentEntryLink =
 			FragmentTestUtil.addFragmentEntryLink(
 				_stagingGroup.getGroupId(), fragmentEntry.getFragmentEntryId(),
-				PortalUtil.getClassNameId(Layout.class),
 				stagingLayout.getPlid());
 
 		FragmentStagingTestUtil.publishLayouts(_stagingGroup, _liveGroup);
@@ -154,7 +158,7 @@ public class FragmentEntryLinkStagingTest {
 		FragmentEntryLink liveFragmentEntryLink =
 			FragmentTestUtil.addFragmentEntryLink(
 				_liveGroup.getGroupId(), fragmentEntry.getFragmentEntryId(),
-				PortalUtil.getClassNameId(Layout.class), _layout.getPlid());
+				_layout.getPlid());
 
 		_stagingGroup = FragmentStagingTestUtil.enableLocalStaging(_liveGroup);
 

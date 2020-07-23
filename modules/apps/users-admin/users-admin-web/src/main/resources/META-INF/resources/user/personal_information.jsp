@@ -92,13 +92,12 @@ String organizationIdsString = ParamUtil.getString(request, "organizationsSearch
 		<c:if test="<%= lockedOut %>">
 			<aui:button-row>
 				<clay:alert
-					message='<%= LanguageUtil.get(request, "this-user-account-has-been-locked-due-to-excessive-failed-login-attempts") %>'
-					style="warning"
-					title='<%= LanguageUtil.get(request, "warning") + ":" %>'
+					displayType="warning"
+					message="this-user-account-has-been-locked-due-to-excessive-failed-login-attempts"
 				/>
 
 				<%
-				String taglibOnClick = renderResponse.getNamespace() + "saveUser('unlock');";
+				String taglibOnClick = liferayPortletResponse.getNamespace() + "saveUser('unlock');";
 				%>
 
 				<aui:button onClick="<%= taglibOnClick %>" value="unlock" />

@@ -21,6 +21,8 @@ import com.liferay.asset.kernel.model.AssetLink;
 import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.asset.kernel.service.AssetLinkLocalService;
+import com.liferay.calendar.constants.CalendarBookingConstants;
+import com.liferay.calendar.constants.CalendarNotificationTemplateConstants;
 import com.liferay.calendar.constants.CalendarPortletKeys;
 import com.liferay.calendar.exception.CalendarBookingDurationException;
 import com.liferay.calendar.exception.CalendarBookingRecurrenceException;
@@ -34,9 +36,7 @@ import com.liferay.calendar.exporter.CalendarDataHandler;
 import com.liferay.calendar.exporter.CalendarDataHandlerFactory;
 import com.liferay.calendar.model.Calendar;
 import com.liferay.calendar.model.CalendarBooking;
-import com.liferay.calendar.model.CalendarBookingConstants;
 import com.liferay.calendar.model.CalendarNotificationTemplate;
-import com.liferay.calendar.model.CalendarNotificationTemplateConstants;
 import com.liferay.calendar.model.CalendarResource;
 import com.liferay.calendar.notification.NotificationTemplateType;
 import com.liferay.calendar.notification.NotificationType;
@@ -60,7 +60,7 @@ import com.liferay.calendar.web.internal.display.context.CalendarDisplayContext;
 import com.liferay.calendar.web.internal.upgrade.CalendarWebUpgrade;
 import com.liferay.calendar.web.internal.util.CalendarResourceUtil;
 import com.liferay.calendar.web.internal.util.CalendarUtil;
-import com.liferay.calendar.workflow.CalendarBookingWorkflowConstants;
+import com.liferay.calendar.workflow.constants.CalendarBookingWorkflowConstants;
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
@@ -125,7 +125,6 @@ import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.rss.util.RSSUtil;
 
-import java.io.File;
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -134,7 +133,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -222,9 +220,7 @@ public class CalendarPortlet extends MVCPortlet {
 
 		long calendarId = ParamUtil.getLong(uploadPortletRequest, "calendarId");
 
-		File file = uploadPortletRequest.getFile("file");
-
-		String data = FileUtil.read(file);
+		String data = FileUtil.read(uploadPortletRequest.getFile("file"));
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
@@ -1511,14 +1507,12 @@ public class CalendarPortlet extends MVCPortlet {
 		String name = StringUtil.merge(
 			_customSQL.keywords(keywords), StringPool.BLANK);
 
-		LinkedHashMap<String, Object> params =
+		List<Group> groups = _groupLocalService.search(
+			themeDisplay.getCompanyId(), name, null,
 			LinkedHashMapBuilder.<String, Object>put(
 				"usersGroups", themeDisplay.getUserId()
-			).build();
-
-		List<Group> groups = _groupLocalService.search(
-			themeDisplay.getCompanyId(), name, null, params, true, 0,
-			SearchContainer.DEFAULT_DELTA);
+			).build(),
+			true, 0, SearchContainer.DEFAULT_DELTA);
 
 		for (Group group : groups) {
 			long groupClassNameId = _portal.getClassNameId(Group.class);

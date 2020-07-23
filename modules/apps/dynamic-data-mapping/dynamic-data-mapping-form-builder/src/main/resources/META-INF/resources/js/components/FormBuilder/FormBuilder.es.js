@@ -12,8 +12,12 @@
  * details.
  */
 
-import {PagesVisitor, compose} from 'dynamic-data-mapping-form-renderer';
-import FormRenderer from 'dynamic-data-mapping-form-renderer/js/components/FormRenderer/FormRenderer.es';
+import {
+	FormNoop,
+	PagesVisitor,
+	compose,
+	getConnectedReactComponentAdapter,
+} from 'dynamic-data-mapping-form-renderer';
 import Component from 'metal-jsx';
 import {Config} from 'metal-state';
 
@@ -24,6 +28,8 @@ import withEditablePageHeader from './withEditablePageHeader.es';
 import withMoveableFields from './withMoveableFields.es';
 import withMultiplePages from './withMultiplePages.es';
 import withResizeableColumns from './withResizeableColumns.es';
+
+const FormNoopAdapter = getConnectedReactComponentAdapter(FormNoop);
 
 /**
  * Builder.
@@ -76,6 +82,8 @@ class FormBuilderBase extends Component {
 		const {props} = this;
 		const {
 			activePage,
+			allowNestedFields,
+			dnd,
 			editingLanguageId,
 			pages,
 			paginationMode,
@@ -88,8 +96,10 @@ class FormBuilderBase extends Component {
 		return (
 			<div class="ddm-form-builder-wrapper">
 				<div class="container ddm-form-builder">
-					<FormRenderer
+					<FormNoopAdapter
 						activePage={activePage}
+						allowNestedFields={allowNestedFields}
+						dnd={dnd}
 						editable={true}
 						editingLanguageId={editingLanguageId}
 						pages={this.preparePagesForRender(pages)}

@@ -62,6 +62,10 @@ public interface CTCollectionService extends BaseService {
 	public CTCollection deleteCTCollection(CTCollection ctCollection)
 		throws PortalException;
 
+	public void discardCTEntry(
+			long ctCollectionId, long modelClassNameId, long modelClassPK)
+		throws PortalException;
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<CTCollection> getCTCollections(
 		long companyId, int status, int start, int end,
@@ -70,7 +74,7 @@ public interface CTCollectionService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<CTCollection> getCTCollections(
 		long companyId, int status, String keywords, int start, int end,
-		OrderByComparator<CTCollection> obc);
+		OrderByComparator<CTCollection> orderByComparator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getCTCollectionsCount(

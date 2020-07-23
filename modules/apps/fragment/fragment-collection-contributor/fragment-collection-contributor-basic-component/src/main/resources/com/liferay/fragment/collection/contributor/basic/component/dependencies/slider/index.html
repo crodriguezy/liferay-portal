@@ -1,12 +1,30 @@
-<div class="component-slider bd-example pb-4">
-	<div class="slide" id="">
-		<ol class="carousel-indicators">
-			<li data-target="#" data-slide-to="0" class="active"></li>
-			<li data-target="#" data-slide-to="1"></li>
-			<li data-target="#" data-slide-to="2"></li>
+<div class="component-slider pb-4">
+	<div class="carousel">
+		<ol class="carousel-navigation">
+			<li>
+				<button aria-controls="${fragmentEntryLinkNamespace}-carouselInner" class="active" type="button">
+					<span class="sr-only">
+						Focus first slide
+					</span>
+				</button>
+			</li>
+			<li>
+				<button aria-controls="${fragmentEntryLinkNamespace}-carouselInner" type="button">
+					<span class="sr-only">
+						Focus second slide
+					</span>
+				</button>
+			</li>
+			<li>
+				<button aria-controls="${fragmentEntryLinkNamespace}-carouselInner" type="button">
+					<span class="sr-only">
+						Focus third slide
+					</span>
+				</button>
+			</li>
 		</ol>
 
-		<div class="carousel-inner text-break">
+		<div class="carousel-inner text-break" id="${fragmentEntryLinkNamespace}-carouselInner" role="group">
 			<div class="carousel-item active">
 				<img
 					alt="First Responsive Image"
@@ -86,24 +104,24 @@
 			</div>
 		</div>
 
-		<a
+		<button
+			aria-controls="${fragmentEntryLinkNamespace}-carouselInner"
+			aria-label="Previous Slide"
 			class="carousel-control-prev"
-			data-slide="prev"
-			href="#"
-			role="button"
+			type="button"
 		>
 			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 			<span class="sr-only">Previous</span>
-		</a>
+		</button>
 
-		<a
+		<button
+			aria-controls="${fragmentEntryLinkNamespace}-carouselInner"
+			aria-label="Next Slide"
 			class="carousel-control-next"
-			data-slide="next"
-			href="#"
-			role="button"
+			type="button"
 		>
 			<span class="carousel-control-next-icon" aria-hidden="true"></span>
 			<span class="sr-only">Next</span>
-		</a>
+		</button>
 	</div>
 </div>

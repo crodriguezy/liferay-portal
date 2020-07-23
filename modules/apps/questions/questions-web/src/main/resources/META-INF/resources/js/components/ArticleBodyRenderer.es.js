@@ -15,22 +15,39 @@
 import parser from 'bbcode-to-react';
 import React from 'react';
 
-export default ({articleBody, encodingFormat, id, signature}) => (
-	<>
-		{encodingFormat === 'bbcode' && <p>{parser.toReact(articleBody)}</p>}
-		{encodingFormat !== 'bbcode' && (
-			<div
-				className={`questions-article-body-${id}`}
-				dangerouslySetInnerHTML={{__html: articleBody}}
-			/>
-		)}
+import Highlight from './Highlight.es';
 
-		{signature && (
-			<style
-				dangerouslySetInnerHTML={{
-					__html: `.questions-article-body-${id} p:last-child:after {content: " - ${signature}"; font-weight: bold;}`,
-				}}
-			/>
-		)}
-	</>
-);
+export default ({
+	articleBody,
+	compactMode = false,
+	encodingFormat,
+	id,
+	signature,
+}) => {
+	return (
+		<>
+			{encodingFormat === 'bbcode' && (
+				<p>{parser.toReact(articleBody)}</p>
+			)}
+			{encodingFormat !== 'bbcode' && compactMode && (
+				<div
+					className={`questions-article-body-${id}`}
+					dangerouslySetInnerHTML={{__html: articleBody}}
+				/>
+			)}
+			{encodingFormat !== 'bbcode' && !compactMode && (
+				<div className={`cke_readonly questions-article-body-${id}`}>
+					<Highlight innerHTML={true}>{articleBody}</Highlight>
+				</div>
+			)}
+
+			{signature && (
+				<style
+					dangerouslySetInnerHTML={{
+						__html: `.questions-article-body-${id} p:last-child:after {content: " - ${signature}"; font-weight: bold;}`,
+					}}
+				/>
+			)}
+		</>
+	);
+};

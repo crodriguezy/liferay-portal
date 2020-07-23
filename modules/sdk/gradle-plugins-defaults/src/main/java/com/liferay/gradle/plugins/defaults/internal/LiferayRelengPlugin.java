@@ -819,12 +819,8 @@ public class LiferayRelengPlugin implements Plugin<Project> {
 		WriteArtifactPublishCommandsTask writeArtifactPublishCommandsTask,
 		final WritePropertiesTask recordArtifactTask) {
 
-		String force = GradleUtil.getTaskPrefixedProperty(
+		final String force = GradleUtil.getTaskPrefixedProperty(
 			writeArtifactPublishCommandsTask, "force");
-
-		if (Boolean.parseBoolean(force)) {
-			return;
-		}
 
 		final boolean liferayThemeProject = GradleUtil.hasPlugin(
 			project, LiferayThemeDefaultsPlugin.class);
@@ -885,6 +881,10 @@ public class LiferayRelengPlugin implements Plugin<Project> {
 
 				if (Validator.isNull(result)) {
 					return false;
+				}
+
+				if (Boolean.parseBoolean(force)) {
+					return true;
 				}
 
 				if (liferayThemeProject &&

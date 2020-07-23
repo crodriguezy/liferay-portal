@@ -621,7 +621,7 @@ public class ModulesStructureTest {
 		}
 
 		StringBundler sb = new StringBundler(
-			gitIgnoreLines.size() * 2 + pluginDirNames.size() * 14);
+			(gitIgnoreLines.size() * 2) + (pluginDirNames.size() * 14));
 
 		if (SetUtil.isNotEmpty(gitIgnoreLines)) {
 			for (String line : gitIgnoreLines) {
@@ -702,7 +702,7 @@ public class ModulesStructureTest {
 
 		if (!sortedBuildExtGradleFileNames.isEmpty()) {
 			StringBundler sb = new StringBundler(
-				4 * sortedBuildExtGradleFileNames.size() + 2);
+				(4 * sortedBuildExtGradleFileNames.size()) + 2);
 
 			sb.append(buildGradleTemplate);
 			sb.append(StringPool.NEW_LINE);
@@ -748,7 +748,7 @@ public class ModulesStructureTest {
 
 			});
 
-		StringBundler sb = new StringBundler(pluginNames.size() * 4 - 1);
+		StringBundler sb = new StringBundler((pluginNames.size() * 4) - 1);
 
 		int i = 0;
 
@@ -1049,6 +1049,94 @@ public class ModulesStructureTest {
 				buildGradle);
 		}
 
+		if (Files.exists(gradlePropertiesPath)) {
+			_testGradleBuildProperties(
+				dirPath, gradlePropertiesPath, dxpRepo, privateRepo);
+		}
+
+		if (Files.notExists(dirPath.resolve("settings-ext.gradle"))) {
+			settingsGradleTemplate = StringUtil.removeSubstring(
+				settingsGradleTemplate,
+				StringPool.NEW_LINE + StringPool.NEW_LINE +
+					"apply from: \"settings-ext.gradle\"");
+		}
+
+		if (!dxpRepo && !privateRepo && !readOnlyRepo) {
+			String settingsGradle = ModulesStructureTestUtil.read(
+				settingsGradlePath);
+
+			Assert.assertEquals(
+				"Incorrect " + settingsGradlePath, settingsGradleTemplate,
+				settingsGradle);
+		}
+	}
+
+	private void _testGitRepoIgnoreFiles(
+			Path dirPath, Set<String> gitIgnoreTemplateLines)
+		throws IOException {
+
+		if (_isEmptyGitRepo(dirPath)) {
+			return;
+		}
+
+		Path gitIgnorePath = dirPath.resolve(".gitignore");
+
+		String gitIgnore = ModulesStructureTestUtil.read(gitIgnorePath);
+
+		String[] gitIgnoreLines = StringUtil.splitLines(gitIgnore);
+
+		SortedSet<String> validGitIgnoreLines = new TreeSet<>(
+			gitIgnoreTemplateLines);
+
+		for (String line : gitIgnoreLines) {
+			for (String prefix : _GIT_IGNORE_LINE_PREFIXES) {
+				if (line.startsWith(prefix)) {
+					validGitIgnoreLines.add(line);
+				}
+			}
+		}
+
+		for (String line : _GIT_IGNORE_OPTIONAL_LINES) {
+			if (!ArrayUtil.contains(gitIgnoreLines, line)) {
+				validGitIgnoreLines.remove(line);
+			}
+		}
+
+		Assert.assertEquals(
+			"Incorrect " + gitIgnorePath,
+			_getAntPluginsGitIgnore(dirPath, validGitIgnoreLines), gitIgnore);
+	}
+
+	private void _testGitRepoProjectGroup(
+		String messagePrefix, String projectGroup) {
+
+		if (Validator.isNull(projectGroup)) {
+			return;
+		}
+
+		for (String prefix : _GIT_REPO_GRADLE_PROJECT_GROUP_RESERVED_PREFIXES) {
+			Assert.assertFalse(
+				StringBundler.concat(
+					messagePrefix, " cannot start with the reserved prefix \"",
+					prefix, "\""),
+				StringUtil.startsWith(projectGroup, prefix));
+		}
+
+		Matcher matcher = _gitRepoGradleProjectGroupPattern.matcher(
+			projectGroup);
+
+		Assert.assertTrue(
+			StringBundler.concat(
+				messagePrefix, " must match pattern \"",
+				_gitRepoGradleProjectGroupPattern.pattern(), "\""),
+			matcher.matches());
+	}
+
+	private void _testGradleBuildProperties(
+			Path dirPath, Path gradlePropertiesPath, boolean dxpRepo,
+			boolean privateRepo)
+		throws IOException {
+
 		String gradleProperties = ModulesStructureTestUtil.read(
 			gradlePropertiesPath);
 
@@ -1129,7 +1217,7 @@ public class ModulesStructureTest {
 				Matcher matcher = gradlePropertiesPattern.matcher(key);
 
 				StringBundler sb = new StringBundler(
-					(_gitRepoGradlePropertiesKeys.size() + 5) * 3 + 8);
+					((_gitRepoGradlePropertiesKeys.size() + 5) * 3) + 8);
 
 				sb.append("Incorrect key \"");
 				sb.append(key);
@@ -1207,83 +1295,6 @@ public class ModulesStructureTest {
 				_GIT_REPO_GRADLE_REPOSITORY_PRIVATE_USERNAME,
 				repositoryPrivateUserName, "build.repository.private.username");
 		}
-
-		if (Files.notExists(dirPath.resolve("settings-ext.gradle"))) {
-			settingsGradleTemplate = StringUtil.removeSubstring(
-				settingsGradleTemplate,
-				StringPool.NEW_LINE + StringPool.NEW_LINE +
-					"apply from: \"settings-ext.gradle\"");
-		}
-
-		if (!dxpRepo && !privateRepo && !readOnlyRepo) {
-			String settingsGradle = ModulesStructureTestUtil.read(
-				settingsGradlePath);
-
-			Assert.assertEquals(
-				"Incorrect " + settingsGradlePath, settingsGradleTemplate,
-				settingsGradle);
-		}
-	}
-
-	private void _testGitRepoIgnoreFiles(
-			Path dirPath, Set<String> gitIgnoreTemplateLines)
-		throws IOException {
-
-		if (_isEmptyGitRepo(dirPath)) {
-			return;
-		}
-
-		Path gitIgnorePath = dirPath.resolve(".gitignore");
-
-		String gitIgnore = ModulesStructureTestUtil.read(gitIgnorePath);
-
-		String[] gitIgnoreLines = StringUtil.splitLines(gitIgnore);
-
-		SortedSet<String> validGitIgnoreLines = new TreeSet<>(
-			gitIgnoreTemplateLines);
-
-		for (String line : gitIgnoreLines) {
-			for (String prefix : _GIT_IGNORE_LINE_PREFIXES) {
-				if (line.startsWith(prefix)) {
-					validGitIgnoreLines.add(line);
-				}
-			}
-		}
-
-		for (String line : _GIT_IGNORE_OPTIONAL_LINES) {
-			if (!ArrayUtil.contains(gitIgnoreLines, line)) {
-				validGitIgnoreLines.remove(line);
-			}
-		}
-
-		Assert.assertEquals(
-			"Incorrect " + gitIgnorePath,
-			_getAntPluginsGitIgnore(dirPath, validGitIgnoreLines), gitIgnore);
-	}
-
-	private void _testGitRepoProjectGroup(
-		String messagePrefix, String projectGroup) {
-
-		if (Validator.isNull(projectGroup)) {
-			return;
-		}
-
-		for (String prefix : _GIT_REPO_GRADLE_PROJECT_GROUP_RESERVED_PREFIXES) {
-			Assert.assertFalse(
-				StringBundler.concat(
-					messagePrefix, " cannot start with the reserved prefix \"",
-					prefix, "\""),
-				StringUtil.startsWith(projectGroup, prefix));
-		}
-
-		Matcher matcher = _gitRepoGradleProjectGroupPattern.matcher(
-			projectGroup);
-
-		Assert.assertTrue(
-			StringBundler.concat(
-				messagePrefix, " must match pattern \"",
-				_gitRepoGradleProjectGroupPattern.pattern(), "\""),
-			matcher.matches());
 	}
 
 	private void _testGradleBuildProperty(
@@ -1400,7 +1411,7 @@ public class ModulesStructureTest {
 				}
 				else {
 					sb = new StringBundler(
-						allowedConfigurationsMap.size() * 4 + 4);
+						(allowedConfigurationsMap.size() * 4) + 4);
 
 					sb.append("Incorrect configuration of dependency {");
 					sb.append(gradleDependency);

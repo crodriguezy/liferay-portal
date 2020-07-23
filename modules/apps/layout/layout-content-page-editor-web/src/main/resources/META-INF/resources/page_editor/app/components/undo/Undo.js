@@ -13,58 +13,15 @@
  */
 
 import ClayButton, {ClayButtonWithIcon} from '@clayui/button';
-import {useEventListener} from 'frontend-js-react-web';
-import {closest} from 'metal-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {Z_KEYCODE} from '../../config/constants/keycodes';
 import {useSelector} from '../../store/index';
 import UndoHistory from './UndoHistory';
 
-const isTextElement = (element) => {
-	return (
-		(element.tagName === 'INPUT' && element.type === 'text') ||
-		element.tagName === 'TEXTAREA'
-	);
-};
-
-const isCommentsAlloyEditor = (element) => {
-	return (
-		element.classList.contains('alloy-editor') &&
-		element.parentElement.classList.contains('alloy-editor-container') &&
-		closest(element, '.page-editor__sidebar')
-	);
-};
-
-const isWithinIframe = () => {
-	return window.top !== window.self;
-};
-
-const isUndoCombination = (event) => {
-	return event.keyCode === Z_KEYCODE && (event.ctrlKey || event.metaKey);
-};
-
 export default function Undo({onRedo = () => {}, onUndo = () => {}}) {
-	useEventListener(
-		'keydown',
-		(event) => {
-			if (
-				isUndoCombination(event) &&
-				!isTextElement(event.target) &&
-				!isCommentsAlloyEditor(event.target) &&
-				!isWithinIframe()
-			) {
-				event.preventDefault();
-
-				onUndo();
-			}
-		},
-		true,
-		window
-	);
-
 	const undoHistory = useSelector((state) => state.undoHistory);
+	const redoHistory = useSelector((state) => state.redoHistory);
 
 	return (
 		<>
@@ -82,7 +39,7 @@ export default function Undo({onRedo = () => {}, onUndo = () => {}}) {
 				<ClayButtonWithIcon
 					aria-label={Liferay.Language.get('redo')}
 					className="btn-monospaced"
-					disabled
+					disabled={!redoHistory || !redoHistory.length}
 					displayType="secondary"
 					onClick={onRedo}
 					small

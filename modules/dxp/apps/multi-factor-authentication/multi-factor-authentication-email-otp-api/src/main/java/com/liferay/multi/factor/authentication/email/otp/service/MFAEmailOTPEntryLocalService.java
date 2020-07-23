@@ -67,6 +67,10 @@ public interface MFAEmailOTPEntryLocalService
 	/**
 	 * Adds the mfa email otp entry to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MFAEmailOTPEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param mfaEmailOTPEntry the mfa email otp entry
 	 * @return the mfa email otp entry that was added
 	 */
@@ -92,6 +96,10 @@ public interface MFAEmailOTPEntryLocalService
 	/**
 	 * Deletes the mfa email otp entry with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MFAEmailOTPEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param mfaEmailOTPEntryId the primary key of the mfa email otp entry
 	 * @return the mfa email otp entry that was removed
 	 * @throws PortalException if a mfa email otp entry with the primary key could not be found
@@ -102,6 +110,10 @@ public interface MFAEmailOTPEntryLocalService
 
 	/**
 	 * Deletes the mfa email otp entry from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MFAEmailOTPEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param mfaEmailOTPEntry the mfa email otp entry
 	 * @return the mfa email otp entry that was removed
@@ -255,6 +267,10 @@ public interface MFAEmailOTPEntryLocalService
 
 	/**
 	 * Updates the mfa email otp entry in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MFAEmailOTPEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param mfaEmailOTPEntry the mfa email otp entry
 	 * @return the mfa email otp entry that was updated

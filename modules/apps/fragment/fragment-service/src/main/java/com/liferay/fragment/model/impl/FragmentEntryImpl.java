@@ -17,10 +17,13 @@ package com.liferay.fragment.model.impl;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.constants.FragmentExportImportConstants;
+import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
+import com.liferay.fragment.service.FragmentEntryLocalServiceUtil;
 import com.liferay.fragment.util.FragmentEntryRenderUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -29,12 +32,21 @@ import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.zip.ZipWriter;
 
 /**
  * @author Eudaldo Alonso
  */
 public class FragmentEntryImpl extends FragmentEntryBaseImpl {
+
+	public FragmentEntry fetchDraftFragmentEntry() {
+		if (isDraft()) {
+			return null;
+		}
+
+		return FragmentEntryLocalServiceUtil.fetchDraft(getFragmentEntryId());
+	}
 
 	@Override
 	public String getContent() {
@@ -45,6 +57,11 @@ public class FragmentEntryImpl extends FragmentEntryBaseImpl {
 	public int getGlobalUsageCount() {
 		return FragmentEntryLinkLocalServiceUtil.
 			getFragmentEntryLinksCountByFragmentEntryId(getFragmentEntryId());
+	}
+
+	@Override
+	public String getIcon() {
+		return _icon;
 	}
 
 	@Override
@@ -69,6 +86,16 @@ public class FragmentEntryImpl extends FragmentEntryBaseImpl {
 		return StringPool.BLANK;
 	}
 
+	@JSON
+	@Override
+	public int getStatus() {
+		if (isHead()) {
+			return WorkflowConstants.STATUS_APPROVED;
+		}
+
+		return WorkflowConstants.STATUS_DRAFT;
+	}
+
 	@Override
 	public String getTypeLabel() {
 		return FragmentConstants.getTypeLabel(getType());
@@ -78,6 +105,24 @@ public class FragmentEntryImpl extends FragmentEntryBaseImpl {
 	public int getUsageCount() {
 		return FragmentEntryLinkLocalServiceUtil.getFragmentEntryLinksCount(
 			getGroupId(), getFragmentEntryId());
+	}
+
+	@Override
+	public boolean isApproved() {
+		if (isHead()) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean isDraft() {
+		if (isHead()) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
@@ -130,6 +175,11 @@ public class FragmentEntryImpl extends FragmentEntryBaseImpl {
 	}
 
 	@Override
+	public void setIcon(String icon) {
+		_icon = icon;
+	}
+
+	@Override
 	public void setImagePreviewURL(String imagePreviewURL) {
 		_imagePreviewURL = imagePreviewURL;
 	}
@@ -156,6 +206,7 @@ public class FragmentEntryImpl extends FragmentEntryBaseImpl {
 	private static final Log _log = LogFactoryUtil.getLog(
 		FragmentEntryImpl.class);
 
+	private String _icon = "code";
 	private String _imagePreviewURL;
 
 }

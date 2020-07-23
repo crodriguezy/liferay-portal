@@ -82,7 +82,6 @@ describe('PermissionsModal', () => {
 				actions={ACTIONS}
 				endpoint={'/permissions'}
 				isOpen={true}
-				onClose={() => {}}
 				rolesFilter={() => true}
 				title={'title'}
 			/>
@@ -108,7 +107,6 @@ describe('PermissionsModal', () => {
 				endpoint={'/permissions'}
 				isDisabled={() => false}
 				isOpen={false}
-				onClose={() => {}}
 				onSave={() => Promise.resolve()}
 				rolesFilter={() => true}
 				title={'title'}
@@ -166,6 +164,10 @@ describe('PermissionsModal', () => {
 
 		fireEvent.click(cancelButton);
 
+		await act(async () => {
+			jest.runAllTimers();
+		});
+
 		expect(onCloseCallback.mock.calls.length).toBe(1);
 	});
 
@@ -182,7 +184,6 @@ describe('PermissionsModal', () => {
 				endpoint={'/permissions'}
 				isDisabled={() => false}
 				isOpen={true}
-				onClose={() => {}}
 				onSave={onSaveCallback}
 				rolesFilter={() => true}
 				title={'title'}
@@ -205,7 +206,9 @@ describe('PermissionsModal', () => {
 
 		const saveButton = getAllByRole('button')[3];
 
-		fireEvent.click(saveButton);
+		await act(async () => {
+			fireEvent.click(saveButton);
+		});
 
 		const powerUserPermissions = onSaveCallback.mock.calls[0][0][1];
 
@@ -226,7 +229,6 @@ describe('PermissionsModal', () => {
 				endpoint={'/permissions'}
 				isDisabled={() => false}
 				isOpen={true}
-				onClose={() => {}}
 				onSave={onSaveCallback}
 				rolesFilter={() => true}
 				title={'title'}
@@ -249,7 +251,9 @@ describe('PermissionsModal', () => {
 
 		const saveButton = getAllByRole('button')[3];
 
-		fireEvent.click(saveButton);
+		await act(async () => {
+			fireEvent.click(saveButton);
+		});
 
 		const powerUserPermissions = onSaveCallback.mock.calls[0][0][1];
 

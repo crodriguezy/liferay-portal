@@ -14,6 +14,10 @@
 
 package com.liferay.layout.seo.web.internal.display.context;
 
+import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
+import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.asset.kernel.model.ClassType;
+import com.liferay.asset.kernel.model.ClassTypeReader;
 import com.liferay.document.library.kernel.service.DLAppService;
 import com.liferay.document.library.util.DLURLHelper;
 import com.liferay.dynamic.data.mapping.exception.StorageException;
@@ -21,11 +25,19 @@ import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureServiceUtil;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.storage.StorageEngine;
+import com.liferay.info.display.contributor.InfoDisplayContributor;
+import com.liferay.info.display.contributor.InfoDisplayContributorTracker;
+import com.liferay.info.exception.NoSuchFormVariationException;
+import com.liferay.info.form.InfoForm;
+import com.liferay.info.item.InfoItemServiceTracker;
+import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.ItemSelectorCriterion;
 import com.liferay.item.selector.criteria.FileEntryItemSelectorReturnType;
 import com.liferay.item.selector.criteria.URLItemSelectorReturnType;
 import com.liferay.item.selector.criteria.image.criterion.ImageItemSelectorCriterion;
+import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
+import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
 import com.liferay.layout.seo.canonical.url.LayoutSEOCanonicalURLProvider;
 import com.liferay.layout.seo.kernel.LayoutSEOLinkManager;
 import com.liferay.layout.seo.model.LayoutSEOEntry;
@@ -34,6 +46,7 @@ import com.liferay.layout.seo.service.LayoutSEOEntryLocalServiceUtil;
 import com.liferay.layout.seo.service.LayoutSEOSiteLocalService;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
@@ -54,8 +67,10 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.layoutsadmin.display.context.GroupDisplayContextHelper;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.MimeResponse;
@@ -71,7 +86,10 @@ public class LayoutsSEODisplayContext {
 
 	public LayoutsSEODisplayContext(
 		DLAppService dlAppService, DLURLHelper dlurlHelper,
+		InfoDisplayContributorTracker infoDisplayContributorTracker,
+		InfoItemServiceTracker infoItemServiceTracker,
 		ItemSelector itemSelector,
+		LayoutPageTemplateEntryLocalService layoutPageTemplateEntryLocalService,
 		LayoutSEOCanonicalURLProvider layoutSEOCanonicalURLProvider,
 		LayoutSEOLinkManager layoutSEOLinkManager,
 		LayoutSEOSiteLocalService layoutSEOSiteLocalService,
@@ -81,7 +99,11 @@ public class LayoutsSEODisplayContext {
 
 		_dlAppService = dlAppService;
 		_dlurlHelper = dlurlHelper;
+		_infoDisplayContributorTracker = infoDisplayContributorTracker;
+		_infoItemServiceTracker = infoItemServiceTracker;
 		_itemSelector = itemSelector;
+		_layoutPageTemplateEntryLocalService =
+			layoutPageTemplateEntryLocalService;
 		_layoutSEOCanonicalURLProvider = layoutSEOCanonicalURLProvider;
 		_layoutSEOLinkManager = layoutSEOLinkManager;
 		_layoutSEOSiteLocalService = layoutSEOSiteLocalService;
@@ -307,6 +329,29 @@ public class LayoutsSEODisplayContext {
 		}
 	}
 
+	public HashMap<String, Object> getOpenGraphMappingData()
+		throws PortalException {
+
+		return HashMapBuilder.<String, Object>putAll(
+			_getBaseSEOMappingData(
+				_getInfoForm(_getLayoutPageTemplateEntry()),
+				_getLayoutPageTemplateEntry())
+		).put(
+			"openGraphDescription",
+			_selLayout.getTypeSettingsProperty(
+				"mapped-openGraphDescription", "description")
+		).put(
+			"openGraphImage",
+			_selLayout.getTypeSettingsProperty("mapped-openGraphImage", null)
+		).put(
+			"openGraphImageAlt",
+			_selLayout.getTypeSettingsProperty("mapped-openGraphImageAlt", null)
+		).put(
+			"openGraphTitle",
+			_selLayout.getTypeSettingsProperty("mapped-openGraphTitle", "title")
+		).build();
+	}
+
 	public String getPageTitleSuffix() throws PortalException {
 		Company company = _themeDisplay.getCompany();
 
@@ -372,6 +417,20 @@ public class LayoutsSEODisplayContext {
 			layout.getLayoutId());
 	}
 
+	public HashMap<String, Object> getSEOMappingData() throws PortalException {
+		return HashMapBuilder.<String, Object>putAll(
+			_getBaseSEOMappingData(
+				_getInfoForm(_getLayoutPageTemplateEntry()),
+				_getLayoutPageTemplateEntry())
+		).put(
+			"description",
+			_selLayout.getTypeSettingsProperty(
+				"mapped-description", "description")
+		).put(
+			"title", _selLayout.getTypeSettingsProperty("mapped-title", "title")
+		).build();
+	}
+
 	public boolean isPrivateLayout() {
 		if (_privateLayout != null) {
 			return _privateLayout;
@@ -407,6 +466,65 @@ public class LayoutsSEODisplayContext {
 		return _privateLayout;
 	}
 
+	private HashMap<String, Object> _getBaseSEOMappingData(
+			InfoForm infoForm, LayoutPageTemplateEntry layoutPageTemplateEntry)
+		throws PortalException {
+
+		return HashMapBuilder.<String, Object>put(
+			"defaultLanguageId", _selLayout.getDefaultLanguageId()
+		).put(
+			"fields",
+			infoForm.getAllInfoFields(
+			).stream(
+			).map(
+				infoField -> JSONUtil.put(
+					"key", infoField.getName()
+				).put(
+					"label", infoField.getLabel(_themeDisplay.getLocale())
+				).put(
+					"type",
+					infoField.getInfoFieldType(
+					).getName()
+				)
+			).collect(
+				Collectors.toList()
+			)
+		).put(
+			"selectedSource",
+			JSONUtil.put(
+				"className", layoutPageTemplateEntry.getClassName()
+			).put(
+				"classNameLabel",
+				_getTypeLabel(layoutPageTemplateEntry.getClassName())
+			).put(
+				"classTypeId", layoutPageTemplateEntry.getClassTypeId()
+			).put(
+				"classTypeLabel",
+				_getSubtypeLabel(
+					layoutPageTemplateEntry.getClassName(),
+					layoutPageTemplateEntry.getClassTypeId())
+			)
+		).build();
+	}
+
+	private InfoForm _getInfoForm(
+			LayoutPageTemplateEntry layoutPageTemplateEntry)
+		throws NoSuchFormVariationException {
+
+		InfoItemFormProvider<?> infoItemFormProvider =
+			_infoItemServiceTracker.getFirstInfoItemService(
+				InfoItemFormProvider.class,
+				layoutPageTemplateEntry.getClassName());
+
+		return infoItemFormProvider.getInfoForm(
+			String.valueOf(layoutPageTemplateEntry.getClassTypeId()));
+	}
+
+	private LayoutPageTemplateEntry _getLayoutPageTemplateEntry() {
+		return _layoutPageTemplateEntryLocalService.
+			fetchLayoutPageTemplateEntryByPlid(_selPlid);
+	}
+
 	private Long _getSelPlid() {
 		if (_selPlid != null) {
 			return _selPlid;
@@ -418,6 +536,37 @@ public class LayoutsSEODisplayContext {
 		return _selPlid;
 	}
 
+	private String _getSubtypeLabel(String className, long classTypeId)
+		throws PortalException {
+
+		AssetRendererFactory<?> assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
+				className);
+
+		if ((assetRendererFactory == null) || (classTypeId <= 0)) {
+			return StringPool.BLANK;
+		}
+
+		ClassTypeReader classTypeReader =
+			assetRendererFactory.getClassTypeReader();
+
+		ClassType classType = classTypeReader.getClassType(
+			classTypeId, _themeDisplay.getLocale());
+
+		return classType.getName();
+	}
+
+	private String _getTypeLabel(String className) {
+		InfoDisplayContributor<?> infoDisplayContributor =
+			_infoDisplayContributorTracker.getInfoDisplayContributor(className);
+
+		if (infoDisplayContributor == null) {
+			return StringPool.BLANK;
+		}
+
+		return infoDisplayContributor.getLabel(_themeDisplay.getLocale());
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		LayoutsSEODisplayContext.class);
 
@@ -426,8 +575,12 @@ public class LayoutsSEODisplayContext {
 	private final DLURLHelper _dlurlHelper;
 	private final GroupDisplayContextHelper _groupDisplayContextHelper;
 	private final HttpServletRequest _httpServletRequest;
+	private final InfoDisplayContributorTracker _infoDisplayContributorTracker;
+	private final InfoItemServiceTracker _infoItemServiceTracker;
 	private final ItemSelector _itemSelector;
 	private Long _layoutId;
+	private final LayoutPageTemplateEntryLocalService
+		_layoutPageTemplateEntryLocalService;
 	private final LayoutSEOCanonicalURLProvider _layoutSEOCanonicalURLProvider;
 	private final LayoutSEOLinkManager _layoutSEOLinkManager;
 	private final LayoutSEOSiteLocalService _layoutSEOSiteLocalService;

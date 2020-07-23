@@ -194,6 +194,7 @@ public abstract class BaseDocumentResourceTestCase {
 		Document document = randomDocument();
 
 		document.setContentUrl(regex);
+		document.setContentValue(regex);
 		document.setDescription(regex);
 		document.setEncodingFormat(regex);
 		document.setFileExtension(regex);
@@ -206,6 +207,7 @@ public abstract class BaseDocumentResourceTestCase {
 		document = DocumentSerDes.toDTO(json);
 
 		Assert.assertEquals(regex, document.getContentUrl());
+		Assert.assertEquals(regex, document.getContentValue());
 		Assert.assertEquals(regex, document.getDescription());
 		Assert.assertEquals(regex, document.getEncodingFormat());
 		Assert.assertEquals(regex, document.getFileExtension());
@@ -1332,6 +1334,14 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
+			if (Objects.equals("contentValue", additionalAssertFieldName)) {
+				if (document.getContentValue() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
 			if (Objects.equals("creator", additionalAssertFieldName)) {
 				if (document.getCreator() == null) {
 					valid = false;
@@ -1358,6 +1368,14 @@ public abstract class BaseDocumentResourceTestCase {
 
 			if (Objects.equals("documentFolderId", additionalAssertFieldName)) {
 				if (document.getDocumentFolderId() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("documentType", additionalAssertFieldName)) {
+				if (document.getDocumentType() == null) {
 					valid = false;
 				}
 
@@ -1658,6 +1676,17 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
+			if (Objects.equals("contentValue", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						document1.getContentValue(),
+						document2.getContentValue())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
 			if (Objects.equals("creator", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
 						document1.getCreator(), document2.getCreator())) {
@@ -1716,6 +1745,17 @@ public abstract class BaseDocumentResourceTestCase {
 				if (!Objects.deepEquals(
 						document1.getDocumentFolderId(),
 						document2.getDocumentFolderId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("documentType", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						document1.getDocumentType(),
+						document2.getDocumentType())) {
 
 					return false;
 				}
@@ -2041,6 +2081,14 @@ public abstract class BaseDocumentResourceTestCase {
 			return sb.toString();
 		}
 
+		if (entityFieldName.equals("contentValue")) {
+			sb.append("'");
+			sb.append(String.valueOf(document.getContentValue()));
+			sb.append("'");
+
+			return sb.toString();
+		}
+
 		if (entityFieldName.equals("creator")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
@@ -2122,6 +2170,11 @@ public abstract class BaseDocumentResourceTestCase {
 		}
 
 		if (entityFieldName.equals("documentFolderId")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
+		if (entityFieldName.equals("documentType")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
 		}
@@ -2240,6 +2293,8 @@ public abstract class BaseDocumentResourceTestCase {
 		return new Document() {
 			{
 				contentUrl = StringUtil.toLowerCase(
+					RandomTestUtil.randomString());
+				contentValue = StringUtil.toLowerCase(
 					RandomTestUtil.randomString());
 				dateCreated = RandomTestUtil.nextDate();
 				dateModified = RandomTestUtil.nextDate();

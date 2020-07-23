@@ -56,14 +56,14 @@ definition {
 
 		// LRQA-46018
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "Search");
 
 		SearchAdministration.executeSearchActions(actionsDescription = "Reindex all search indexes.");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -105,14 +105,14 @@ definition {
 
 		// LRQA-46018
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "Search");
 
 		SearchAdministration.executeSearchActions(actionsDescription = "Reindex all search indexes.");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -173,7 +173,7 @@ definition {
 	test ViewHiddenSecurityCredential {
 		property test.name.skip.portal.instance = "LDAP#ViewHiddenSecurityCredential";
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "System Settings");
@@ -194,7 +194,7 @@ definition {
 	test ViewLDAPInstanceSettingsDoNotAffectSystemSettings {
 		property test.name.skip.portal.instance = "LDAP#ViewInstanceSettingsEnableLDAPAuthNotAffectSystemSetting";
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "System Settings");
@@ -203,16 +203,12 @@ definition {
 			configurationCategory = "LDAP",
 			configurationName = "Authentication",
 			configurationScope = "Virtual Instance Scope");
-
-		AssertClick(
-			locator1 = "Button#ADD",
-			value1 = "Add");
 
 		FormFields.viewCheckboxNotChecked(fieldName = "Enabled");
 
 		PortalSettings.configureLDAPSetting(enableSettingList = "enabled");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "System Settings");
@@ -221,10 +217,6 @@ definition {
 			configurationCategory = "LDAP",
 			configurationName = "Authentication",
 			configurationScope = "Virtual Instance Scope");
-
-		AssertClick(
-			locator1 = "Button#ADD",
-			value1 = "Add");
 
 		FormFields.viewCheckboxNotChecked(fieldName = "Enabled");
 	}

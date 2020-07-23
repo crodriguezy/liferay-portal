@@ -104,20 +104,23 @@ public class OAuthConsumerModelImpl
 
 	public static final String TX_MANAGER = "liferayTransactionManager";
 
-	public static final boolean ENTITY_CACHE_ENABLED = GetterUtil.getBoolean(
-		com.liferay.util.service.ServiceProps.get(
-			"value.object.entity.cache.enabled.com.liferay.opensocial.model.OAuthConsumer"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean ENTITY_CACHE_ENABLED = true;
 
-	public static final boolean FINDER_CACHE_ENABLED = GetterUtil.getBoolean(
-		com.liferay.util.service.ServiceProps.get(
-			"value.object.finder.cache.enabled.com.liferay.opensocial.model.OAuthConsumer"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean FINDER_CACHE_ENABLED = true;
 
-	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(
-		com.liferay.util.service.ServiceProps.get(
-			"value.object.column.bitmask.enabled.com.liferay.opensocial.model.OAuthConsumer"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean COLUMN_BITMASK_ENABLED = true;
 
 	public static final long GADGETKEY_COLUMN_BITMASK = 1L;
 
@@ -178,9 +181,6 @@ public class OAuthConsumerModelImpl
 				attributeName,
 				attributeGetterFunction.apply((OAuthConsumer)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -510,16 +510,16 @@ public class OAuthConsumerModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof OAuthConsumer)) {
+		if (!(object instanceof OAuthConsumer)) {
 			return false;
 		}
 
-		OAuthConsumer oAuthConsumer = (OAuthConsumer)obj;
+		OAuthConsumer oAuthConsumer = (OAuthConsumer)object;
 
 		long primaryKey = oAuthConsumer.getPrimaryKey();
 
@@ -536,11 +536,19 @@ public class OAuthConsumerModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
 		return ENTITY_CACHE_ENABLED;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
 		return FINDER_CACHE_ENABLED;

@@ -15,18 +15,13 @@
 import ClayButton from '@clayui/button';
 import ClayForm, {ClayInput} from '@clayui/form';
 import ClayModal, {useModal} from '@clayui/modal';
-import {ItemSelectorDialog, cancelDebounce, debounce} from 'frontend-js-web';
-import React, {useEffect, useRef, useState} from 'react';
+import {ItemSelectorDialog} from 'frontend-js-web';
+import React, {useState} from 'react';
 
-import {FieldBaseProxy} from '../FieldBase/ReactFieldBase.es';
-import getConnectedReactComponentAdapter from '../util/ReactComponentAdapter.es';
-import {connectStore} from '../util/connectStore.es';
+import {FieldBase} from '../FieldBase/ReactFieldBase.es';
+import {useSyncValue} from '../hooks/useSyncValue.es';
 
-const useDebounceCallback = (callback, milliseconds) => {
-	const callbackRef = useRef(debounce(callback, milliseconds));
-
-	return [callbackRef.current, () => cancelDebounce(callbackRef.current)];
-};
+const defaultValue = {description: '', title: '', url: ''};
 
 const ImagePicker = ({
 	id,
@@ -39,21 +34,14 @@ const ImagePicker = ({
 	portletNamespace,
 	readOnly,
 }) => {
-	const [imageValues, setImageValues] = useState(inputValue);
+	const [imageValues, setImageValues] = useSyncValue(inputValue);
 	const [modalVisible, setModalVisible] = useState(false);
-
-	useEffect(() => {
-		setImageValues({
-			...{description: '', title: '', url: ''},
-			...inputValue,
-		});
-	}, [inputValue]);
 
 	const {observer, onClose} = useModal({
 		onClose: () => setModalVisible(false),
 	});
 
-	const dispatchValue = ({clear, value}, callback = () => {}) => {
+	const dispatchValue = ({clear, value}, callback = () => {}) =>
 		setImageValues((oldValues) => {
 			let mergedValues = {...oldValues, ...value};
 
@@ -63,25 +51,6 @@ const ImagePicker = ({
 
 			return mergedValues;
 		});
-	};
-
-	const handleClearClick = (event) => {
-		dispatchValue(
-			{clear: true, value: {description: '', event, title: '', url: ''}},
-			(mergedValues) => {
-				onClearClick(mergedValues);
-			}
-		);
-	};
-
-	const [debounce] = useDebounceCallback(({event, value}) => {
-		dispatchValue({value: {description: value, event}}, (mergedValues) => {
-			onDescriptionChange(mergedValues);
-		});
-	}, 500);
-
-	const handleDescriptionChange = ({event, target: {value}}) =>
-		debounce({event, value});
 
 	const handleFieldChanged = (event) => {
 		const selectedItem = event.selectedItem;
@@ -106,9 +75,9 @@ const ImagePicker = ({
 					...item,
 				};
 
-				dispatchValue({value: imageData}, (mergedValues) => {
-					onFieldChanged(mergedValues);
-				});
+				dispatchValue({value: imageData}, (mergedValues) =>
+					onFieldChanged(mergedValues)
+				);
 			});
 			img.src = item.url;
 		}
@@ -169,7 +138,21 @@ const ImagePicker = ({
 							<ClayButton
 								disabled={readOnly}
 								displayType="secondary"
-								onClick={handleClearClick}
+								onClick={(event) =>
+									dispatchValue(
+										{
+											clear: true,
+											value: {
+												description: '',
+												event,
+												title: '',
+												url: '',
+											},
+										},
+										(mergedValues) =>
+											onClearClick(mergedValues)
+									)
+								}
 								type="button"
 							>
 								{Liferay.Language.get('clear')}
@@ -219,12 +202,18 @@ const ImagePicker = ({
 
 						<ClayForm.Group>
 							<ClayInput
-								defaultValue={imageValues.description}
 								disabled={readOnly}
 								name={`${name}-description`}
-								onChange={handleDescriptionChange}
+								onChange={({event, target: {value}}) =>
+									dispatchValue(
+										{value: {description: value, event}},
+										(mergedValues) =>
+											onDescriptionChange(mergedValues)
+									)
+								}
 								placeholder={placeholder}
 								type="text"
+								value={imageValues.description}
 							/>
 						</ClayForm.Group>
 					</>
@@ -234,74 +223,53 @@ const ImagePicker = ({
 	);
 };
 
-const ImagePickerProxy = connectStore(
-	({
-		emit,
-		id,
-		inputValue,
-		itemSelectorURL,
-		name,
-		portletNamespace,
-		readOnly,
-		value,
-		...otherProps
-	}) => {
-		const formatValue = (sourceValue) => {
-			if (sourceValue) {
-				if (typeof sourceValue === 'string') {
-					return JSON.parse(sourceValue);
-				}
-				else if (typeof sourceValue === 'object') {
-					return sourceValue;
-				}
+const Main = ({
+	id,
+	inputValue,
+	itemSelectorURL,
+	name,
+	onChange,
+	portletNamespace,
+	readOnly,
+	value,
+	...otherProps
+}) => {
+	const transformValue = (sourceValue) => {
+		if (sourceValue) {
+			if (typeof sourceValue === 'string') {
+				return JSON.parse(sourceValue);
 			}
+			else if (typeof sourceValue === 'object') {
+				return sourceValue;
+			}
+		}
 
-			return null;
-		};
+		return null;
+	};
 
-		return (
-			<FieldBaseProxy
-				{...otherProps}
+	return (
+		<FieldBase {...otherProps} id={id} name={name} readOnly={readOnly}>
+			<ImagePicker
 				id={id}
+				inputValue={
+					transformValue(inputValue) ??
+					transformValue(value) ??
+					defaultValue
+				}
+				itemSelectorURL={itemSelectorURL}
 				name={name}
+				onClearClick={({event, ...data}) => onChange(event, data)}
+				onDescriptionChange={({event, ...data}) =>
+					onChange(event, data)
+				}
+				onFieldChanged={({event, ...data}) => onChange(event, data)}
+				portletNamespace={portletNamespace}
 				readOnly={readOnly}
-			>
-				<ImagePicker
-					id={id}
-					inputValue={{
-						...(formatValue(inputValue) ||
-							formatValue(value) ||
-							{}),
-					}}
-					itemSelectorURL={itemSelectorURL}
-					name={name}
-					onClearClick={(data) => {
-						const {event} = data;
+			/>
+		</FieldBase>
+	);
+};
 
-						emit('fieldEdited', event, data);
-					}}
-					onDescriptionChange={(data) => {
-						const {event} = data;
+Main.displayName = 'ImagePicker';
 
-						emit('fieldEdited', event, data);
-					}}
-					onFieldChanged={(data) => {
-						const {event} = data;
-
-						emit('fieldEdited', event, data);
-					}}
-					portletNamespace={portletNamespace}
-					readOnly={readOnly}
-				/>
-			</FieldBaseProxy>
-		);
-	}
-);
-
-const ReactImagePickerAdapter = getConnectedReactComponentAdapter(
-	ImagePickerProxy,
-	'image'
-);
-
-export {ReactImagePickerAdapter};
-export default ReactImagePickerAdapter;
+export default Main;

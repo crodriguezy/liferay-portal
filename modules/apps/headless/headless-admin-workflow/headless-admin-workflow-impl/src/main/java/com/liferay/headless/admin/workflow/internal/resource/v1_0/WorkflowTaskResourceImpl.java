@@ -41,6 +41,7 @@ import com.liferay.portal.kernel.workflow.WorkflowInstanceManager;
 import com.liferay.portal.kernel.workflow.WorkflowTaskAssignee;
 import com.liferay.portal.kernel.workflow.WorkflowTaskManager;
 import com.liferay.portal.kernel.workflow.comparator.WorkflowComparatorFactory;
+import com.liferay.portal.kernel.workflow.search.WorkflowModelSearchResult;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 
@@ -129,12 +130,11 @@ public class WorkflowTaskResourceImpl extends BaseWorkflowTaskResourceImpl {
 	}
 
 	@Override
-	public String getWorkflowTaskHasAssignableUsers(Long workflowTaskId)
+	public Boolean getWorkflowTaskHasAssignableUsers(Long workflowTaskId)
 		throws Exception {
 
-		return Boolean.toString(
-			_workflowTaskManager.hasAssignableUsers(
-				contextCompany.getCompanyId(), workflowTaskId));
+		return _workflowTaskManager.hasAssignableUsers(
+			contextCompany.getCompanyId(), workflowTaskId);
 	}
 
 	@Override
@@ -361,9 +361,9 @@ public class WorkflowTaskResourceImpl extends BaseWorkflowTaskResourceImpl {
 				com.liferay.portal.kernel.model.Role.class.getName();
 		}
 
-		return Page.of(
-			transform(
-				_workflowTaskManager.search(
+		WorkflowModelSearchResult
+			<com.liferay.portal.kernel.workflow.WorkflowTask> workflowTasks =
+				_workflowTaskManager.searchWorkflowTasks(
 					contextCompany.getCompanyId(), contextUser.getUserId(),
 					workflowTasksBulkSelection.getAssetTitle(),
 					workflowTasksBulkSelection.getWorkflowTaskNames(),
@@ -380,24 +380,11 @@ public class WorkflowTaskResourceImpl extends BaseWorkflowTaskResourceImpl {
 					GetterUtil.getBoolean(
 						workflowTasksBulkSelection.getAndOperator(), true),
 					pagination.getStartPosition(), pagination.getEndPosition(),
-					_toOrderByComparator((Sort)ArrayUtil.getValue(sorts, 0))),
-				this::_toWorkflowTask),
-			pagination,
-			_workflowTaskManager.searchCount(
-				contextCompany.getCompanyId(), contextUser.getUserId(),
-				workflowTasksBulkSelection.getAssetTitle(),
-				workflowTasksBulkSelection.getWorkflowTaskNames(),
-				workflowTasksBulkSelection.getAssetTypes(),
-				workflowTasksBulkSelection.getAssetPrimaryKeys(),
-				assigneeClassName, workflowTasksBulkSelection.getAssigneeIds(),
-				workflowTasksBulkSelection.getDateDueStart(),
-				workflowTasksBulkSelection.getDateDueEnd(),
-				workflowTasksBulkSelection.getCompleted(),
-				workflowTasksBulkSelection.getSearchByUserRoles(),
-				workflowTasksBulkSelection.getWorkflowDefinitionId(),
-				workflowTasksBulkSelection.getWorkflowInstanceIds(),
-				GetterUtil.getBoolean(
-					workflowTasksBulkSelection.getAndOperator(), true)));
+					_toOrderByComparator((Sort)ArrayUtil.getValue(sorts, 0)));
+
+		return Page.of(
+			transform(workflowTasks.getWorkflowModels(), this::_toWorkflowTask),
+			pagination, workflowTasks.getLength());
 	}
 
 	@Override

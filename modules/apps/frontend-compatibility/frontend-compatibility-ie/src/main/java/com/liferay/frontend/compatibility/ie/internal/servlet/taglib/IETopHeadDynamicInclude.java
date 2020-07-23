@@ -82,8 +82,7 @@ public class IETopHeadDynamicInclude extends BaseDynamicInclude {
 
 	@Override
 	public void register(DynamicIncludeRegistry dynamicIncludeRegistry) {
-		dynamicIncludeRegistry.register(
-			"/html/common/themes/top_head.jsp#post");
+		dynamicIncludeRegistry.register("/html/common/themes/top_head.jsp#pre");
 	}
 
 	@Activate
@@ -92,11 +91,11 @@ public class IETopHeadDynamicInclude extends BaseDynamicInclude {
 		_bundleContext = bundleContext;
 	}
 
-	private static final String[] _CSS_FILE_NAMES = {"/css/main.css"};
+	private static final String[] _CSS_FILE_NAMES = {"css/main.css"};
 
 	private static final String[] _JS_FILE_NAMES = {
-		"closest.js", "control.menu.js", "/core-js-bundle.min.js", "/fetch.js",
-		"/svg.contains.js", "/uint16array.slice.js"
+		"closest.js", "control.menu.js", "core-js-bundle.min.js", "fetch.js",
+		"remove.js", "svg.contains.js", "uint16array.slice.js"
 	};
 
 	@Reference

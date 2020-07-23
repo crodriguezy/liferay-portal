@@ -284,6 +284,8 @@ public abstract class BaseFragmentCollectionContributor
 		String html = _read(
 			path, jsonObject.getString("htmlPath"), "index.html");
 		String js = _read(path, jsonObject.getString("jsPath"), "index.js");
+
+		boolean cacheable = jsonObject.getBoolean("cacheable");
 		String configuration = _read(
 			path, jsonObject.getString("configurationPath"), "index.json");
 
@@ -300,8 +302,10 @@ public abstract class BaseFragmentCollectionContributor
 		fragmentEntry.setCss(css);
 		fragmentEntry.setHtml(html);
 		fragmentEntry.setJs(js);
+		fragmentEntry.setCacheable(cacheable);
 		fragmentEntry.setConfiguration(configuration);
 		fragmentEntry.setType(type);
+		fragmentEntry.setIcon(jsonObject.getString("icon", "code"));
 		fragmentEntry.setImagePreviewURL(thumbnailURL);
 
 		return fragmentEntry;
@@ -355,10 +359,10 @@ public abstract class BaseFragmentCollectionContributor
 			sb.append(defaultFileName);
 		}
 
-		InputStream is = clazz.getResourceAsStream(sb.toString());
+		InputStream inputStream = clazz.getResourceAsStream(sb.toString());
 
-		if (is != null) {
-			return StringUtil.read(is);
+		if (inputStream != null) {
+			return StringUtil.read(inputStream);
 		}
 
 		return StringPool.BLANK;

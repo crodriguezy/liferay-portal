@@ -16,11 +16,13 @@ package com.liferay.account.internal.search.spi.model.query.contributor;
 
 import com.liferay.account.constants.AccountConstants;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
+import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.filter.TermsFilter;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.search.spi.model.query.contributor.ModelPreFilterContributor;
 import com.liferay.portal.search.spi.model.registrar.ModelSearchSettings;
@@ -43,6 +45,17 @@ public class AccountEntryModelPreFilterContributor
 		BooleanFilter booleanFilter, ModelSearchSettings modelSearchSettings,
 		SearchContext searchContext) {
 
+		_filterByAccountUserIds(booleanFilter, searchContext);
+		_filterByDomains(booleanFilter, searchContext);
+		_filterByOrganizationIds(booleanFilter, searchContext);
+		_filterByParentAccountEntryId(booleanFilter, searchContext);
+		_filterByStatus(booleanFilter, searchContext);
+		_filterByType(booleanFilter, searchContext);
+	}
+
+	private void _filterByAccountUserIds(
+		BooleanFilter booleanFilter, SearchContext searchContext) {
+
 		long[] accountUserIds = (long[])searchContext.getAttribute(
 			"accountUserIds");
 
@@ -55,6 +68,10 @@ public class AccountEntryModelPreFilterContributor
 
 			booleanFilter.add(accountEntryTermsFilter, BooleanClauseOccur.MUST);
 		}
+	}
+
+	private void _filterByDomains(
+		BooleanFilter booleanFilter, SearchContext searchContext) {
 
 		String[] domains = (String[])searchContext.getAttribute("domains");
 
@@ -65,6 +82,10 @@ public class AccountEntryModelPreFilterContributor
 
 			booleanFilter.add(domainTermsFilter, BooleanClauseOccur.MUST);
 		}
+	}
+
+	private void _filterByOrganizationIds(
+		BooleanFilter booleanFilter, SearchContext searchContext) {
 
 		long[] organizationIds = (long[])searchContext.getAttribute(
 			"organizationIds");
@@ -78,6 +99,10 @@ public class AccountEntryModelPreFilterContributor
 
 			booleanFilter.add(accountEntryTermsFilter, BooleanClauseOccur.MUST);
 		}
+	}
+
+	private void _filterByParentAccountEntryId(
+		BooleanFilter booleanFilter, SearchContext searchContext) {
 
 		long parentAccountEntryId = GetterUtil.getLong(
 			searchContext.getAttribute("parentAccountEntryId"),
@@ -87,13 +112,28 @@ public class AccountEntryModelPreFilterContributor
 			booleanFilter.addRequiredTerm(
 				"parentAccountEntryId", String.valueOf(parentAccountEntryId));
 		}
+	}
+
+	private void _filterByStatus(
+		BooleanFilter booleanFilter, SearchContext searchContext) {
 
 		int status = GetterUtil.getInteger(
-			searchContext.getAttribute("status"),
+			searchContext.getAttribute(Field.STATUS),
 			WorkflowConstants.STATUS_APPROVED);
 
 		if (status != WorkflowConstants.STATUS_ANY) {
-			booleanFilter.addRequiredTerm("status", String.valueOf(status));
+			booleanFilter.addRequiredTerm(Field.STATUS, String.valueOf(status));
+		}
+	}
+
+	private void _filterByType(
+		BooleanFilter booleanFilter, SearchContext searchContext) {
+
+		String type = GetterUtil.getString(
+			searchContext.getAttribute(Field.TYPE));
+
+		if (Validator.isNotNull(type)) {
+			booleanFilter.addRequiredTerm(Field.TYPE, type);
 		}
 	}
 

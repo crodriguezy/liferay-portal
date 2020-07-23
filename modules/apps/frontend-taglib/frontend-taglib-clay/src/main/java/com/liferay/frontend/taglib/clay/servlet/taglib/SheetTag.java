@@ -49,31 +49,17 @@ public class SheetTag extends BaseContainerTag {
 	}
 
 	@Override
-	protected String getEndPage() {
-		return _END_PAGE;
-	}
-
-	@Override
-	protected String getStartPage() {
-		return _START_PAGE;
-	}
-
-	@Override
-	protected String processClassName(Set<String> className) {
-		className.add("sheet");
+	protected String processCssClasses(Set<String> cssClasses) {
+		cssClasses.add("sheet");
 
 		if (Validator.isNotNull(_size)) {
-			className.add("sheet-" + _size);
+			cssClasses.add("sheet-" + _size);
 		}
 
-		return super.processClassName(className);
+		return super.processCssClasses(cssClasses);
 	}
 
 	private static final String _ATTRIBUTE_NAMESPACE = "clay:sheet:";
-
-	private static final String _END_PAGE = "/sheet/end.jsp";
-
-	private static final String _START_PAGE = "/sheet/start.jsp";
 
 	private String _size = "lg";
 

@@ -13,33 +13,41 @@
  */
 
 import {ClayModalProvider} from '@clayui/modal';
-import React from 'react';
+import React, {useContext} from 'react';
 import {DndProvider} from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
+import {HTML5Backend} from 'react-dnd-html5-backend';
 import {HashRouter as Router, Route, Switch} from 'react-router-dom';
 
-import {AppContextProvider} from './AppContext.es';
+import {AppContext, AppContextProvider} from './AppContext.es';
 import NavigationBar from './components/navigation-bar/NavigationBar.es';
 import ListCustomObjects from './pages/custom-object/ListCustomObjects.es';
-import ViewCustomObject from './pages/custom-object/ViewCustomObject.es';
 import ListNativeObjects from './pages/native-object/ListNativeObjects.es';
+import ViewObject from './pages/object/ViewObject.es';
 
-export const AppNavigationBar = () => (
-	<NavigationBar
-		tabs={[
-			{
-				active: true,
-				exact: true,
-				label: Liferay.Language.get('custom'),
-				path: () => '/',
-			},
-			{
-				label: Liferay.Language.get('native'),
-				path: () => '/native-objects',
-			},
-		]}
-	/>
-);
+export const AppNavigationBar = () => {
+	const {showNativeObjectsTab} = useContext(AppContext);
+
+	if (!showNativeObjectsTab) {
+		return null;
+	}
+
+	return (
+		<NavigationBar
+			tabs={[
+				{
+					active: true,
+					exact: true,
+					label: Liferay.Language.get('custom'),
+					path: () => '/',
+				},
+				{
+					label: Liferay.Language.get('native'),
+					path: () => '/native-objects',
+				},
+			]}
+		/>
+	);
+};
 
 export default (props) => (
 	<DndProvider backend={HTML5Backend}>
@@ -60,8 +68,8 @@ export default (props) => (
 							/>
 
 							<Route
-								component={ViewCustomObject}
-								path="/custom-object/:dataDefinitionId(\d+)"
+								component={ViewObject}
+								path="/:objectType/:dataDefinitionId(\d+)"
 							/>
 						</Switch>
 					</div>

@@ -54,13 +54,13 @@ public class ProjectTemplatesSpringPortletMVCTest
 				{"springportletmvc", "embedded", "jsp", "7.0.6"},
 				{"springportletmvc", "embedded", "jsp", "7.1.3"},
 				{"springportletmvc", "embedded", "jsp", "7.2.1"},
-				{"springportletmvc", "embedded", "jsp", "7.3.1"},
+				{"springportletmvc", "embedded", "jsp", "7.3.2"},
 				{"portletmvc4spring", "embedded", "jsp", "7.1.3"},
 				{"portletmvc4spring", "embedded", "jsp", "7.2.1"},
-				{"portletmvc4spring", "embedded", "jsp", "7.3.1"},
+				{"portletmvc4spring", "embedded", "jsp", "7.3.2"},
 				{"portletmvc4spring", "embedded", "thymeleaf", "7.1.3"},
 				{"portletmvc4spring", "embedded", "thymeleaf", "7.2.1"},
-				{"portletmvc4spring", "embedded", "thymeleaf", "7.3.1"}
+				{"portletmvc4spring", "embedded", "thymeleaf", "7.3.2"}
 			});
 	}
 
@@ -96,10 +96,11 @@ public class ProjectTemplatesSpringPortletMVCTest
 			temporaryFolder, "gradle", "gradleWS", _liferayVersion,
 			mavenExecutor);
 
-		File gradleWorkspaceWarsDir = new File(gradleWorkspaceDir, "wars");
+		File gradleWorkspaceModulesDir = new File(
+			gradleWorkspaceDir, "modules");
 
 		File gradleProjectDir = _buildSpringMVCTemplate(
-			gradleWorkspaceWarsDir, "gradle", _framework,
+			gradleWorkspaceModulesDir, "gradle", _framework,
 			_frameworkDependencies, _viewType, _liferayVersion);
 
 		testNotContains(
@@ -208,10 +209,10 @@ public class ProjectTemplatesSpringPortletMVCTest
 			temporaryFolder, "maven", "mavenWS", _liferayVersion,
 			mavenExecutor);
 
-		File mavenWarsDir = new File(mavenWorkspaceDir, "wars");
+		File mavenModulesDir = new File(mavenWorkspaceDir, "modules");
 
 		File mavenProjectDir = _buildSpringMVCTemplate(
-			mavenWarsDir, "maven", _framework, _frameworkDependencies,
+			mavenModulesDir, "maven", _framework, _frameworkDependencies,
 			_viewType, _liferayVersion);
 
 		if (isBuildProjects()) {
@@ -221,7 +222,7 @@ public class ProjectTemplatesSpringPortletMVCTest
 			buildProjects(
 				_gradleDistribution, mavenExecutor, gradleWorkspaceDir,
 				mavenProjectDir, gradleOutputDir, mavenOutputDir,
-				":wars:sampleSpringMVCPortlet" + GRADLE_TASK_PATH_BUILD);
+				":modules:sampleSpringMVCPortlet" + GRADLE_TASK_PATH_BUILD);
 		}
 	}
 

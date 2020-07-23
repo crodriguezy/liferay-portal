@@ -18,9 +18,9 @@ definition {
 
 		Navigator.openURL();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "App Builder",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Objects");
 	}
 
@@ -149,9 +149,7 @@ definition {
 			formViewName = "${myFormViewName}",
 			tableViewName = "${myTableViewName}");
 
-		AppBuilderAdmin.gotoCustomAppCP(
-			panel = "Control Panel",
-			portlet = "${myAppName}");
+		AppBuilderAdmin.gotoCustomAppApplicationsMenuApplications(portlet = "${myAppName}");
 
 		AppBuilderAdmin.addEntry();
 
@@ -741,6 +739,9 @@ definition {
 
 		AppBuilderAdmin.save();
 
+		AppBuilderAdmin.validateItemNameOnTableNotPresent(itemName = "Alex");
+		AppBuilderAdmin.validateItemNameOnTableNotPresent(itemName = "Mister");
+
 		AppBuilderAdmin.validateItemNameOnTable(itemName = "Pepe");
 		AppBuilderAdmin.validateItemNameOnTable(itemName = "Guardi");
 		AppBuilderAdmin.validateItemNameOnTable(itemName = "1");
@@ -852,9 +853,7 @@ definition {
 		App.toggleDeploy(deployOption = "Product Menu");
 		App.clickDeploy();
 
-		AppBuilderAdmin.gotoCustomAppCP(
-			panel = "Control Panel",
-			portlet = "App Filtered");
+		AppBuilderAdmin.gotoCustomAppApplicationsMenuApplications(portlet = "App Filtered");
 
 		AppBuilderAdmin.addEntry();
 		FormViewBuilder.editText(
@@ -908,9 +907,7 @@ definition {
 		AppBuilderAdmin.validateItemNameOnTableNotPresent(itemName = "3");
 		AppBuilderAdmin.validateItemNameOnTableNotPresent(itemName = "4");
 
-		AppBuilderAdmin.gotoCustomAppCP(
-			panel = "Control Panel",
-			portlet = "App Full");
+		AppBuilderAdmin.gotoCustomAppApplicationsMenuApplications(portlet = "App Full");
 
 		AppBuilderAdmin.viewItem(itemName = "1");
 		DetailsView.editEntry();
@@ -934,18 +931,16 @@ definition {
 			radioOption = "Dog");
 		AppBuilderAdmin.save();
 
-		AppBuilderAdmin.gotoCustomAppCP(
-			panel = "Control Panel",
-			portlet = "App Filtered");
+		AppBuilderAdmin.gotoCustomAppApplicationsMenuApplications(portlet = "App Filtered");
 
 		AppBuilderAdmin.validateItemNameOnTable(itemName = "2");
 		AppBuilderAdmin.validateItemNameOnTableNotPresent(itemName = "1");
 		AppBuilderAdmin.validateItemNameOnTableNotPresent(itemName = "3");
 		AppBuilderAdmin.validateItemNameOnTableNotPresent(itemName = "4");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "App Builder",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Objects");
 
 		LexiconEntry.gotoVerticalEllipsisMenuItemNoError(menuItem = "Table Views");
@@ -968,18 +963,16 @@ definition {
 
 		TableViewBuilder.save();
 
-		AppBuilderAdmin.gotoCustomAppCP(
-			panel = "Control Panel",
-			portlet = "App Filtered");
+		AppBuilderAdmin.gotoCustomAppApplicationsMenuApplications(portlet = "App Filtered");
 
 		AppBuilderAdmin.validateItemNameOnTable(itemName = "1");
 		AppBuilderAdmin.validateItemNameOnTable(itemName = "2");
 		AppBuilderAdmin.validateItemNameOnTable(itemName = "3");
 		AppBuilderAdmin.validateItemNameOnTable(itemName = "4");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "App Builder",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Objects");
 
 		LexiconEntry.gotoVerticalEllipsisMenuItemNoError(menuItem = "Table Views");
@@ -996,9 +989,7 @@ definition {
 
 		TableViewBuilder.save();
 
-		AppBuilderAdmin.gotoCustomAppCP(
-			panel = "Control Panel",
-			portlet = "App Filtered");
+		AppBuilderAdmin.gotoCustomAppApplicationsMenuApplications(portlet = "App Filtered");
 
 		AppBuilderAdmin.addEntry();
 		FormViewBuilder.editText(
@@ -1018,9 +1009,9 @@ definition {
 		AppBuilderAdmin.validateItemNameOnTableNotPresent(itemName = "2");
 		AppBuilderAdmin.validateItemNameOnTableNotPresent(itemName = "3");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "App Builder",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Objects");
 
 		LexiconEntry.gotoVerticalEllipsisMenuItemNoError(menuItem = "Table Views");
@@ -1043,9 +1034,7 @@ definition {
 
 		TableViewBuilder.save();
 
-		AppBuilderAdmin.gotoCustomAppCP(
-			panel = "Control Panel",
-			portlet = "App Filtered");
+		AppBuilderAdmin.gotoCustomAppApplicationsMenuApplications(portlet = "App Filtered");
 
 		AppBuilderAdmin.validateItemNameOnTable(itemName = "1");
 		AppBuilderAdmin.validateItemNameOnTable(itemName = "2");

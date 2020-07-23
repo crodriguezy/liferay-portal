@@ -14,6 +14,7 @@
 
 package com.liferay.app.builder.rest.resource.v1_0.test;
 
+import com.liferay.app.builder.constants.AppBuilderAppConstants;
 import com.liferay.app.builder.rest.client.dto.v1_0.App;
 import com.liferay.app.builder.rest.client.dto.v1_0.AppDeployment;
 import com.liferay.app.builder.rest.client.pagination.Page;
@@ -22,6 +23,9 @@ import com.liferay.app.builder.service.AppBuilderAppLocalService;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.data.engine.model.DEDataListView;
 import com.liferay.data.engine.service.DEDataListViewLocalService;
+import com.liferay.dynamic.data.lists.constants.DDLRecordSetConstants;
+import com.liferay.dynamic.data.lists.model.DDLRecordSet;
+import com.liferay.dynamic.data.lists.service.DDLRecordSetLocalService;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMStructureLayout;
@@ -30,6 +34,7 @@ import com.liferay.dynamic.data.mapping.test.util.DDMStructureLayoutTestHelper;
 import com.liferay.dynamic.data.mapping.test.util.DDMStructureTestHelper;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.DataGuard;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
@@ -47,6 +52,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
@@ -57,23 +63,26 @@ import org.junit.runner.RunWith;
 public class AppResourceTest extends BaseAppResourceTestCase {
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 
 		_ddmStructure = _addDDMStructure(testGroup);
-		_irrelevantDDMStructure = _addDDMStructure(irrelevantGroup);
 
+		_ddlRecordSet = _addDDLRecordSet(_ddmStructure);
 		_ddmStructureLayout = _addDDMStructureLayout(
 			_ddmStructure.getStructureId());
-
 		_deDataListView = _deDataListViewLocalService.addDEDataListView(
 			testGroup.getGroupId(), testCompany.getCompanyId(),
 			testGroup.getCreatorUserId(), StringPool.BLANK,
 			_ddmStructure.getStructureId(), StringPool.BLANK, null,
 			StringPool.BLANK);
+
+		_irrelevantDDMStructure = _addDDMStructure(irrelevantGroup);
 	}
 
 	@Override
+	@Test
 	public void testGetAppsPage() throws Exception {
 		super.testGetAppsPage();
 
@@ -85,7 +94,8 @@ public class AppResourceTest extends BaseAppResourceTestCase {
 				new AppDeployment() {
 					{
 						settings = HashMapBuilder.<String, Object>put(
-							"scope", new String[] {"control_panel"}
+							"scope",
+							new String[] {"applications_menu.applications"}
 						).build();
 						type = "productMenu";
 					}
@@ -129,6 +139,7 @@ public class AppResourceTest extends BaseAppResourceTestCase {
 
 		Page<App> page = appResource.getAppsPage(
 			true, new String[] {"productMenu"}, StringPool.BLANK,
+			AppBuilderAppConstants.SCOPE_STANDARD,
 			new Long[] {testGroup.getCreatorUserId()}, Pagination.of(1, 10),
 			null);
 
@@ -139,6 +150,7 @@ public class AppResourceTest extends BaseAppResourceTestCase {
 
 		page = appResource.getAppsPage(
 			false, new String[] {"productMenu"}, StringPool.BLANK,
+			AppBuilderAppConstants.SCOPE_STANDARD,
 			new Long[] {testGroup.getCreatorUserId()}, Pagination.of(1, 10),
 			null);
 
@@ -146,7 +158,8 @@ public class AppResourceTest extends BaseAppResourceTestCase {
 
 		page = appResource.getAppsPage(
 			null, new String[] {"productMenu", "standalone"}, StringPool.BLANK,
-			null, Pagination.of(1, 10), null);
+			AppBuilderAppConstants.SCOPE_STANDARD, null, Pagination.of(1, 10),
+			null);
 
 		Assert.assertEquals(3, page.getTotalCount());
 
@@ -154,7 +167,7 @@ public class AppResourceTest extends BaseAppResourceTestCase {
 			Arrays.asList(app1, app2, app3), (List<App>)page.getItems());
 
 		page = appResource.getAppsPage(
-			null, null, StringPool.BLANK,
+			null, null, StringPool.BLANK, AppBuilderAppConstants.SCOPE_STANDARD,
 			new Long[] {TestPropsValues.getUserId()}, Pagination.of(1, 10),
 			null);
 
@@ -164,13 +177,14 @@ public class AppResourceTest extends BaseAppResourceTestCase {
 			Arrays.asList(app1, app2, app3), (List<App>)page.getItems());
 
 		page = appResource.getAppsPage(
-			null, null, StringPool.BLANK, new Long[] {1L}, Pagination.of(1, 10),
-			null);
+			null, null, StringPool.BLANK, AppBuilderAppConstants.SCOPE_STANDARD,
+			new Long[] {1L}, Pagination.of(1, 10), null);
 
 		Assert.assertEquals(0, page.getTotalCount());
 	}
 
 	@Override
+	@Test
 	public void testPutAppDeploy() throws Exception {
 		App postApp = testPutApp_addApp();
 
@@ -182,6 +196,7 @@ public class AppResourceTest extends BaseAppResourceTestCase {
 	}
 
 	@Override
+	@Test
 	public void testPutAppUndeploy() throws Exception {
 		App postApp = testPutApp_addApp();
 
@@ -209,7 +224,8 @@ public class AppResourceTest extends BaseAppResourceTestCase {
 					new AppDeployment() {
 						{
 							settings = HashMapBuilder.<String, Object>put(
-								"scope", new String[] {"control_panel"}
+								"scope",
+								new String[] {"applications_menu.applications"}
 							).build();
 							type = "productMenu";
 						}
@@ -231,6 +247,8 @@ public class AppResourceTest extends BaseAppResourceTestCase {
 				dataDefinitionName = _ddmStructure.getName(LocaleUtil.US);
 				dataLayoutId = _ddmStructureLayout.getStructureLayoutId();
 				dataListViewId = _deDataListView.getDeDataListViewId();
+				dataRecordCollectionId = _ddlRecordSet.getRecordSetId();
+				scope = AppBuilderAppConstants.SCOPE_STANDARD;
 				siteId = _ddmStructure.getGroupId();
 				userId = testGroup.getCreatorUserId();
 			}
@@ -243,6 +261,7 @@ public class AppResourceTest extends BaseAppResourceTestCase {
 
 		randomIrrelevantApp.setDataDefinitionId(
 			_irrelevantDDMStructure.getStructureId());
+		randomIrrelevantApp.setScope(AppBuilderAppConstants.SCOPE_STANDARD);
 
 		return randomIrrelevantApp;
 	}
@@ -299,6 +318,16 @@ public class AppResourceTest extends BaseAppResourceTestCase {
 		return testGetApp_addApp();
 	}
 
+	private DDLRecordSet _addDDLRecordSet(DDMStructure ddmStructure)
+		throws Exception {
+
+		return _ddlRecordSetLocalService.addRecordSet(
+			testGroup.getCreatorUserId(), testGroup.getGroupId(),
+			ddmStructure.getStructureId(), ddmStructure.getStructureKey(),
+			ddmStructure.getNameMap(), ddmStructure.getDescriptionMap(), 0,
+			DDLRecordSetConstants.SCOPE_DATA_ENGINE, new ServiceContext());
+	}
+
 	private DDMStructure _addDDMStructure(Group group) throws Exception {
 		DDMStructureTestHelper ddmStructureTestHelper =
 			new DDMStructureTestHelper(
@@ -339,6 +368,11 @@ public class AppResourceTest extends BaseAppResourceTestCase {
 
 	@Inject
 	private AppBuilderAppLocalService _appBuilderAppLocalService;
+
+	private DDLRecordSet _ddlRecordSet;
+
+	@Inject
+	private DDLRecordSetLocalService _ddlRecordSetLocalService;
 
 	private DDMStructure _ddmStructure;
 	private DDMStructureLayout _ddmStructureLayout;

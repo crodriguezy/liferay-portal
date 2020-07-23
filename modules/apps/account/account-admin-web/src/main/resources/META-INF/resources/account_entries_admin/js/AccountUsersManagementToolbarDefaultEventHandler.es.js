@@ -13,8 +13,21 @@
  */
 
 import {DefaultEventHandler, ItemSelectorDialog} from 'frontend-js-web';
+import {Config} from 'metal-state';
+
+import {MODAL_STATE_ACCOUNT_USERS} from './SessionStorageKeys.es';
 
 class AccountUsersManagementToolbarDefaultEventHandler extends DefaultEventHandler {
+	attached() {
+		if (
+			window.sessionStorage.getItem(MODAL_STATE_ACCOUNT_USERS) === 'open'
+		) {
+			window.sessionStorage.removeItem(MODAL_STATE_ACCOUNT_USERS);
+
+			this.selectAccountUsers();
+		}
+	}
+
 	removeUsers(itemData) {
 		if (
 			confirm(
@@ -37,15 +50,15 @@ class AccountUsersManagementToolbarDefaultEventHandler extends DefaultEventHandl
 		}
 	}
 
-	selectAccountUsers(itemData) {
+	selectAccountUsers() {
 		const itemSelectorDialog = new ItemSelectorDialog({
 			buttonAddLabel: Liferay.Language.get('assign'),
 			eventName: this.ns('assignAccountUsers'),
 			title: Liferay.Util.sub(
 				Liferay.Language.get('assign-users-to-x'),
-				itemData.accountEntryName
+				this.accountEntryName
 			),
-			url: itemData.selectAccountUsersURL,
+			url: this.selectAccountUsersURL,
 		});
 
 		itemSelectorDialog.open();
@@ -60,11 +73,17 @@ class AccountUsersManagementToolbarDefaultEventHandler extends DefaultEventHandl
 					data: {
 						accountUserIds: selectedItem.value,
 					},
-					url: itemData.assignAccountUsersURL,
+					url: this.assignAccountUsersURL,
 				});
 			}
 		});
 	}
 }
+
+AccountUsersManagementToolbarDefaultEventHandler.STATE = {
+	accountEntryName: Config.string().required(),
+	assignAccountUsersURL: Config.string().required(),
+	selectAccountUsersURL: Config.string().required(),
+};
 
 export default AccountUsersManagementToolbarDefaultEventHandler;

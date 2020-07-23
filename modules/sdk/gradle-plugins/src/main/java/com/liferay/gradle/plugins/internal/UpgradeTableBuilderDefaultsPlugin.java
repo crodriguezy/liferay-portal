@@ -40,11 +40,28 @@ public class UpgradeTableBuilderDefaultsPlugin
 	protected void applyPluginDefaults(
 		Project project, UpgradeTableBuilderPlugin upgradeTableBuilderPlugin) {
 
+		// Dependencies
+
 		PortalTools.addPortalToolDependencies(
 			project, UpgradeTableBuilderPlugin.CONFIGURATION_NAME,
 			PortalTools.GROUP, _PORTAL_TOOL_NAME);
 
-		_configureTasksBuildUpgradeTable(project);
+		// Other
+
+		TaskContainer taskContainer = project.getTasks();
+
+		taskContainer.withType(
+			BuildUpgradeTableTask.class,
+			new Action<BuildUpgradeTableTask>() {
+
+				@Override
+				public void execute(
+					BuildUpgradeTableTask buildUpgradeTableTask) {
+
+					_configureTaskBuildUpgradeTable(buildUpgradeTableTask);
+				}
+
+			});
 	}
 
 	@Override
@@ -63,23 +80,6 @@ public class UpgradeTableBuilderDefaultsPlugin
 			(File)null);
 
 		buildUpgradeTableTask.setUpgradeTableDir(file);
-	}
-
-	private void _configureTasksBuildUpgradeTable(Project project) {
-		TaskContainer taskContainer = project.getTasks();
-
-		taskContainer.withType(
-			BuildUpgradeTableTask.class,
-			new Action<BuildUpgradeTableTask>() {
-
-				@Override
-				public void execute(
-					BuildUpgradeTableTask buildUpgradeTableTask) {
-
-					_configureTaskBuildUpgradeTable(buildUpgradeTableTask);
-				}
-
-			});
 	}
 
 	private static final String _PORTAL_TOOL_NAME =

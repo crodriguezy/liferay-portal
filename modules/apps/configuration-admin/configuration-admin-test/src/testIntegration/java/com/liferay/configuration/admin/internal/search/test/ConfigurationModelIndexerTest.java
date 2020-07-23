@@ -156,15 +156,14 @@ public class ConfigurationModelIndexerTest {
 			configurationAdmin -> configurationAdmin.createFactoryConfiguration(
 				_PID, StringPool.QUESTION));
 
-		Map<String, String> extensionAttributes = HashMapBuilder.put(
-			"factoryInstanceLabelAttribute", "companyId"
-		).put(
-			"scope", Scope.COMPANY.toString()
-		).build();
-
 		ExtendedObjectClassDefinition extendedObjectClassDefinition =
 			new SimpleExtendedObjectClassDefinition(
-				configuration, extensionAttributes);
+				configuration,
+				HashMapBuilder.put(
+					"factoryInstanceLabelAttribute", "companyId"
+				).put(
+					"scope", Scope.COMPANY.toString()
+				).build());
 
 		Object configurationModel = _configurationModelConstructor.newInstance(
 			StringPool.QUESTION, _bundle.getSymbolicName(), configuration,
@@ -210,11 +209,11 @@ public class ConfigurationModelIndexerTest {
 
 	private Bundle _bundle;
 	private BundleContext _bundleContext;
-	private Constructor _configurationModelConstructor;
+	private Constructor<?> _configurationModelConstructor;
 	private final List<Document> _documents = new ArrayList<>();
 
 	@Inject(filter = "component.name=*.ConfigurationModelIndexer")
-	private Indexer _indexer;
+	private Indexer<Object> _indexer;
 
 	@Inject
 	private IndexWriterHelper _indexWriterHelper;

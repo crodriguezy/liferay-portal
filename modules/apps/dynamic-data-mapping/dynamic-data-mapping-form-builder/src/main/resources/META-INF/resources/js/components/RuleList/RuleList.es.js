@@ -155,7 +155,7 @@ class RuleList extends Component {
 	_getFieldLabel(fieldName) {
 		const pages = this.pages;
 
-		return getFieldProperty(pages, fieldName, 'label');
+		return getFieldProperty(pages, fieldName, 'label') || fieldName;
 	}
 
 	_getFieldType(fieldName) {

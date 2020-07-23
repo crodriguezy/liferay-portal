@@ -41,6 +41,10 @@ public class DepotAppCustomizationLocalServiceUtil {
 	/**
 	 * Adds the depot app customization to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DepotAppCustomizationLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param depotAppCustomization the depot app customization
 	 * @return the depot app customization that was added
 	 */
@@ -78,6 +82,10 @@ public class DepotAppCustomizationLocalServiceUtil {
 	/**
 	 * Deletes the depot app customization from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DepotAppCustomizationLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param depotAppCustomization the depot app customization
 	 * @return the depot app customization that was removed
 	 */
@@ -91,6 +99,10 @@ public class DepotAppCustomizationLocalServiceUtil {
 
 	/**
 	 * Deletes the depot app customization with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DepotAppCustomizationLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param depotAppCustomizationId the primary key of the depot app customization
 	 * @return the depot app customization that was removed
@@ -299,6 +311,10 @@ public class DepotAppCustomizationLocalServiceUtil {
 
 	/**
 	 * Updates the depot app customization in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DepotAppCustomizationLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param depotAppCustomization the depot app customization
 	 * @return the depot app customization that was updated

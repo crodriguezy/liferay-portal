@@ -54,7 +54,7 @@ String ppid = ParamUtil.getString(request, "p_p_id");
 		<%
 		AssetRendererFactory<?> assetRendererFactory = displayPageLayoutTypeControllerDisplayContext.getAssetRendererFactory();
 
-		InfoDisplayObjectProvider infoDisplayObjectProvider = displayPageLayoutTypeControllerDisplayContext.getInfoDisplayObjectProvider();
+		InfoDisplayObjectProvider<?> infoDisplayObjectProvider = displayPageLayoutTypeControllerDisplayContext.getInfoDisplayObjectProvider();
 		%>
 
 		<c:if test="<%= assetRendererFactory != null %>">
@@ -65,7 +65,7 @@ String ppid = ParamUtil.getString(request, "p_p_id");
 			<c:when test="<%= (assetRendererFactory != null) && !assetRendererFactory.hasPermission(permissionChecker, infoDisplayObjectProvider.getClassPK(), ActionKeys.VIEW) %>">
 				<div class="layout-content" id="main-content" role="main">
 					<clay:container-fluid
-						className="pt-3"
+						cssClass="pt-3"
 					>
 						<div class="alert alert-danger">
 							<liferay-ui:message key="you-do-not-have-permission-to-view-this-page" />
@@ -74,17 +74,10 @@ String ppid = ParamUtil.getString(request, "p_p_id");
 				</div>
 			</c:when>
 			<c:when test="<%= infoDisplayObjectProvider != null %>">
-
-				<%
-				LayoutPageTemplateEntry layoutPageTemplateEntry = LayoutPageTemplateEntryLocalServiceUtil.getLayoutPageTemplateEntry(displayPageLayoutTypeControllerDisplayContext.getLayoutPageTemplateEntryId());
-				%>
-
 				<div class="layout-content portlet-layout" id="main-content" role="main">
 					<liferay-layout:render-fragment-layout
 						fieldValues="<%= displayPageLayoutTypeControllerDisplayContext.getInfoDisplayFieldsValues() %>"
-						groupId="<%= infoDisplayObjectProvider.getGroupId() %>"
 						mode="<%= FragmentEntryLinkConstants.ASSET_DISPLAY_PAGE %>"
-						plid="<%= layoutPageTemplateEntry.getPlid() %>"
 					/>
 				<div
 			</c:when>

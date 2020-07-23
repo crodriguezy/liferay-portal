@@ -88,6 +88,7 @@ public class KaleoDefinitionVersionLocalServiceImpl
 		kaleoDefinitionVersion.setUserName(user.getFullName());
 		kaleoDefinitionVersion.setCreateDate(createDate);
 		kaleoDefinitionVersion.setModifiedDate(modifiedDate);
+		kaleoDefinitionVersion.setKaleoDefinitionId(kaleoDefinitionId);
 		kaleoDefinitionVersion.setName(name);
 		kaleoDefinitionVersion.setTitle(title);
 		kaleoDefinitionVersion.setDescription(description);
@@ -158,10 +159,8 @@ public class KaleoDefinitionVersionLocalServiceImpl
 			long companyId, String name, String version)
 		throws PortalException {
 
-		KaleoDefinitionVersion kaleoDefinitionVersion =
-			getKaleoDefinitionVersion(companyId, name, version);
-
-		deleteKaleoDefinitionVersion(kaleoDefinitionVersion);
+		deleteKaleoDefinitionVersion(
+			getKaleoDefinitionVersion(companyId, name, version));
 	}
 
 	@Override
@@ -180,10 +179,8 @@ public class KaleoDefinitionVersionLocalServiceImpl
 	public void deleteKaleoDefinitionVersions(long companyId, String name)
 		throws PortalException {
 
-		List<KaleoDefinitionVersion> kaleoDefinitionVersions =
-			getKaleoDefinitionVersions(companyId, name);
-
-		deleteKaleoDefinitionVersions(kaleoDefinitionVersions);
+		deleteKaleoDefinitionVersions(
+			getKaleoDefinitionVersions(companyId, name));
 	}
 
 	@Override

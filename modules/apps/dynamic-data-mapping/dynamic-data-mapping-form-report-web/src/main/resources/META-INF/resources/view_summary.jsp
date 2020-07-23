@@ -33,7 +33,12 @@ if (ddmFormInstanceReport != null) {
 				"data", ddmFormInstanceReportData
 			).put(
 				"fields", ddmFormReportDisplayContext.getFieldsJSONArray()
-			).build() %>'
+			).put(
+				"formReportRecordsFieldValuesURL", ddmFormReportDisplayContext.getFormReportRecordsFieldValuesURL()
+			).put(
+				"portletNamespace", PortalUtil.getPortletNamespace(DDMPortletKeys.DYNAMIC_DATA_MAPPING_FORM_REPORT)
+			).build()
+		%>'
 		module="js/index.es"
 	/>
 </div>

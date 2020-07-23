@@ -153,10 +153,7 @@
 				return;
 			}
 
-			const drag = new Liferay.DragEventCKEditor(
-				this.window,
-				this.document
-			);
+			const drag = new Liferay.DragEventCKEditor(this.document);
 
 			drag.onStart = () => {
 				this.showPreview();
@@ -191,8 +188,6 @@
 				this.hide();
 
 				this.editor.getSelection().unlock();
-
-				this.editor.fire('saveSnapshot');
 			};
 
 			drag.onComplete = () => {
@@ -258,8 +253,8 @@
 			const box = getBoundingBox(this.window, this.preview);
 
 			this.result = {
-				height: box.height,
-				width: box.width,
+				height: Math.round(box.height),
+				width: Math.round(box.width),
 			};
 
 			this.preview.style.display = 'none';

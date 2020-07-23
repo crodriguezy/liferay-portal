@@ -14,10 +14,15 @@
 
 package com.liferay.app.builder.service.impl;
 
+import com.liferay.app.builder.constants.AppBuilderAppConstants;
 import com.liferay.app.builder.model.AppBuilderApp;
 import com.liferay.app.builder.model.AppBuilderAppDeployment;
 import com.liferay.app.builder.service.AppBuilderAppDeploymentLocalService;
 import com.liferay.app.builder.service.base.AppBuilderAppLocalServiceBaseImpl;
+import com.liferay.dynamic.data.lists.model.DDLRecordSet;
+import com.liferay.dynamic.data.lists.service.DDLRecordSetLocalService;
+import com.liferay.dynamic.data.mapping.model.DDMStructure;
+import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
@@ -47,8 +52,8 @@ public class AppBuilderAppLocalServiceImpl
 	@Override
 	public AppBuilderApp addAppBuilderApp(
 			long groupId, long companyId, long userId, boolean active,
-			long ddmStructureId, long ddmStructureLayoutId,
-			long deDataListViewId, Map<Locale, String> nameMap)
+			long ddlRecordSetId, long ddmStructureId, long ddmStructureLayoutId,
+			long deDataListViewId, Map<Locale, String> nameMap, String scope)
 		throws PortalException {
 
 		User user = userLocalService.getUser(userId);
@@ -63,14 +68,55 @@ public class AppBuilderAppLocalServiceImpl
 		appBuilderApp.setCreateDate(new Date());
 		appBuilderApp.setModifiedDate(new Date());
 		appBuilderApp.setActive(active);
+		appBuilderApp.setDdlRecordSetId(ddlRecordSetId);
 		appBuilderApp.setDdmStructureId(ddmStructureId);
 		appBuilderApp.setDdmStructureLayoutId(ddmStructureLayoutId);
 		appBuilderApp.setDeDataListViewId(deDataListViewId);
 		appBuilderApp.setNameMap(nameMap);
+		appBuilderApp.setScope(scope);
 
 		return appBuilderAppPersistence.update(appBuilderApp);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #addAppBuilderApp(long, long, long, boolean, long, long,
+	 *             long, Map, String)}
+	 */
+	@Deprecated
+	@Override
+	public AppBuilderApp addAppBuilderApp(
+			long groupId, long companyId, long userId, boolean active,
+			long ddmStructureId, long ddmStructureLayoutId,
+			long deDataListViewId, Map<Locale, String> nameMap)
+		throws PortalException {
+
+		return addAppBuilderApp(
+			groupId, companyId, userId, active, ddmStructureId,
+			ddmStructureLayoutId, deDataListViewId, nameMap,
+			AppBuilderAppConstants.SCOPE_STANDARD);
+	}
+
+	@Override
+	public AppBuilderApp addAppBuilderApp(
+			long groupId, long companyId, long userId, boolean active,
+			long ddmStructureId, long ddmStructureLayoutId,
+			long deDataListViewId, Map<Locale, String> nameMap, String scope)
+		throws PortalException {
+
+		DDMStructure ddmStructure = _ddmStructureLocalService.getStructure(
+			ddmStructureId);
+
+		DDLRecordSet ddlRecordSet = _ddlRecordSetLocalService.getRecordSet(
+			groupId, ddmStructure.getStructureKey());
+
+		return addAppBuilderApp(
+			groupId, companyId, userId, active, ddlRecordSet.getRecordSetId(),
+			ddmStructureId, ddmStructureLayoutId, deDataListViewId, nameMap,
+			scope);
+	}
+
+	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public AppBuilderApp deleteAppBuilderApp(long appBuilderAppId)
 		throws PortalException {
@@ -86,7 +132,7 @@ public class AppBuilderAppLocalServiceImpl
 				appBuilderAppDeployment.getAppBuilderAppDeploymentId());
 		}
 
-		return super.deleteAppBuilderApp(appBuilderAppId);
+		return appBuilderAppPersistence.remove(appBuilderAppId);
 	}
 
 	@Override
@@ -96,7 +142,8 @@ public class AppBuilderAppLocalServiceImpl
 		List<AppBuilderApp> appBuilderApps = getAppBuilderApps(ddmStructureId);
 
 		for (AppBuilderApp appBuilderApp : appBuilderApps) {
-			deleteAppBuilderApp(appBuilderApp.getAppBuilderAppId());
+			appBuilderAppLocalService.deleteAppBuilderApp(
+				appBuilderApp.getAppBuilderAppId());
 		}
 	}
 
@@ -119,6 +166,13 @@ public class AppBuilderAppLocalServiceImpl
 
 	@Override
 	public List<AppBuilderApp> getAppBuilderApps(
+		long companyId, boolean active, String scope) {
+
+		return appBuilderAppPersistence.findByC_A_S(companyId, active, scope);
+	}
+
+	@Override
+	public List<AppBuilderApp> getAppBuilderApps(
 		long groupId, int start, int end,
 		OrderByComparator<AppBuilderApp> orderByComparator) {
 
@@ -136,6 +190,15 @@ public class AppBuilderAppLocalServiceImpl
 	}
 
 	@Override
+	public List<AppBuilderApp> getAppBuilderApps(
+		long groupId, String scope, int start, int end,
+		OrderByComparator<AppBuilderApp> orderByComparator) {
+
+		return appBuilderAppPersistence.findByG_S(
+			groupId, scope, start, end, orderByComparator);
+	}
+
+	@Override
 	public int getAppBuilderAppsCount(long groupId) {
 		return appBuilderAppPersistence.countByGroupId(groupId);
 	}
@@ -149,6 +212,11 @@ public class AppBuilderAppLocalServiceImpl
 	}
 
 	@Override
+	public int getAppBuilderAppsCount(long groupId, String scope) {
+		return appBuilderAppPersistence.countByG_S(groupId, scope);
+	}
+
+	@Override
 	public List<AppBuilderApp> getCompanyAppBuilderApps(
 		long companyId, int start, int end,
 		OrderByComparator<AppBuilderApp> orderByComparator) {
@@ -158,8 +226,22 @@ public class AppBuilderAppLocalServiceImpl
 	}
 
 	@Override
+	public List<AppBuilderApp> getCompanyAppBuilderApps(
+		long companyId, String scope, int start, int end,
+		OrderByComparator<AppBuilderApp> orderByComparator) {
+
+		return appBuilderAppPersistence.findByC_S(
+			companyId, scope, start, end, orderByComparator);
+	}
+
+	@Override
 	public int getCompanyAppBuilderAppsCount(long companyId) {
 		return appBuilderAppPersistence.countByCompanyId(companyId);
+	}
+
+	@Override
+	public int getCompanyAppBuilderAppsCount(long companyId, String scope) {
+		return appBuilderAppPersistence.countByC_S(companyId, scope);
 	}
 
 	@Indexable(type = IndexableType.REINDEX)
@@ -190,5 +272,11 @@ public class AppBuilderAppLocalServiceImpl
 	@Reference
 	private AppBuilderAppDeploymentLocalService
 		_appBuilderAppDeploymentLocalService;
+
+	@Reference
+	private DDLRecordSetLocalService _ddlRecordSetLocalService;
+
+	@Reference
+	private DDMStructureLocalService _ddmStructureLocalService;
 
 }

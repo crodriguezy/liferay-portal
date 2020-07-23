@@ -1,7 +1,8 @@
 Bundle-Name: Liferay Layout API
 Bundle-SymbolicName: com.liferay.layout.api
-Bundle-Version: 6.4.0
+Bundle-Version: 6.7.0
 Export-Package:\
+	com.liferay.layout.configuration,\
 	com.liferay.layout.exception,\
 	com.liferay.layout.friendly.url,\
 	com.liferay.layout.list.retriever,\

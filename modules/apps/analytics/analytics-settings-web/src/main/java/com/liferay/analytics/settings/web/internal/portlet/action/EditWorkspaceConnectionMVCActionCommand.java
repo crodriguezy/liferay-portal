@@ -59,7 +59,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	property = {
 		"javax.portlet.name=" + ConfigurationAdminPortletKeys.INSTANCE_SETTINGS,
-		"mvc.command.name=/analytics/edit_workspace_connection"
+		"mvc.command.name=/analytics_settings/edit_workspace_connection"
 	},
 	service = MVCActionCommand.class
 )
@@ -222,10 +222,10 @@ public class EditWorkspaceConnectionMVCActionCommand
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
 			dataSourceConnectionJSON);
 
-		Iterator<String> keys = jsonObject.keys();
+		Iterator<String> iterator = jsonObject.keys();
 
-		while (keys.hasNext()) {
-			String key = keys.next();
+		while (iterator.hasNext()) {
+			String key = iterator.next();
 
 			unicodeProperties.setProperty(key, jsonObject.getString(key));
 		}
@@ -254,10 +254,10 @@ public class EditWorkspaceConnectionMVCActionCommand
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
 			dataSourceConnectionJSON);
 
-		Iterator<String> keys = jsonObject.keys();
+		Iterator<String> iterator = jsonObject.keys();
 
-		while (keys.hasNext()) {
-			String key = keys.next();
+		while (iterator.hasNext()) {
+			String key = iterator.next();
 
 			configurationProperties.put(key, jsonObject.getString(key));
 		}

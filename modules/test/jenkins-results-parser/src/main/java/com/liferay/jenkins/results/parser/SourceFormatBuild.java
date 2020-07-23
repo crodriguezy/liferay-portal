@@ -24,7 +24,9 @@ import org.dom4j.Element;
 /**
  * @author Cesar Polanco
  */
-public class SourceFormatBuild extends DefaultTopLevelBuild {
+public class SourceFormatBuild
+	extends DefaultTopLevelBuild
+	implements PortalBranchInformationBuild, PullRequestBuild {
 
 	@Override
 	public String getBaseGitRepositoryName() {
@@ -46,6 +48,17 @@ public class SourceFormatBuild extends DefaultTopLevelBuild {
 		return new Element[] {getFailureMessageElement()};
 	}
 
+	@Override
+	public BranchInformation getPortalBaseBranchInformation() {
+		return null;
+	}
+
+	@Override
+	public BranchInformation getPortalBranchInformation() {
+		return new PullRequestBranchInformation(this, _pullRequest);
+	}
+
+	@Override
 	public PullRequest getPullRequest() {
 		return _pullRequest;
 	}
@@ -107,6 +120,74 @@ public class SourceFormatBuild extends DefaultTopLevelBuild {
 
 		return Dom4JUtil.getNewElement(
 			"html", null, getResultElement(), detailsElement);
+	}
+
+	public static class PullRequestBranchInformation
+		extends DefaultBranchInformation {
+
+		@Override
+		public String getOriginName() {
+			return _pullRequest.getSenderUsername();
+		}
+
+		@Override
+		public Integer getPullRequestNumber() {
+			String pullRequestNumber = _pullRequest.getNumber();
+
+			if ((pullRequestNumber == null) ||
+				!pullRequestNumber.matches("\\d+")) {
+
+				pullRequestNumber = "0";
+			}
+
+			return Integer.valueOf(pullRequestNumber);
+		}
+
+		@Override
+		public String getReceiverUsername() {
+			return _pullRequest.getReceiverUsername();
+		}
+
+		@Override
+		public String getRepositoryName() {
+			return _pullRequest.getGitRepositoryName();
+		}
+
+		@Override
+		public String getSenderBranchName() {
+			return _pullRequest.getSenderBranchName();
+		}
+
+		@Override
+		public String getSenderBranchSHA() {
+			return _pullRequest.getSenderSHA();
+		}
+
+		@Override
+		public String getSenderUsername() {
+			return _pullRequest.getSenderUsername();
+		}
+
+		@Override
+		public String getUpstreamBranchName() {
+			return _pullRequest.getUpstreamBranchName();
+		}
+
+		@Override
+		public String getUpstreamBranchSHA() {
+			return _pullRequest.getUpstreamBranchSHA();
+		}
+
+		protected PullRequestBranchInformation(
+			Build build, PullRequest pullRequest) {
+
+			super(build, "portal");
+
+			_pullRequest = pullRequest;
+		}
+
+		private final PullRequest _pullRequest;
+
 	}
 
 	protected SourceFormatBuild(String url) {

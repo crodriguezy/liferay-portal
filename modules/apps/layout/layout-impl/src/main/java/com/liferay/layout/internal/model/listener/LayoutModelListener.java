@@ -38,6 +38,14 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 			_layoutFriendlyURLEntryHelper.getClassNameId(
 				layout.isPrivateLayout()),
 			layout.getPlid());
+
+		if (layout.isTypeAssetDisplay()) {
+			_friendlyURLEntryLocalService.deleteFriendlyURLEntry(
+				layout.getGroupId(),
+				_layoutFriendlyURLEntryHelper.getClassNameId(
+					!layout.isPrivateLayout()),
+				layout.getPlid());
+		}
 	}
 
 	@Override

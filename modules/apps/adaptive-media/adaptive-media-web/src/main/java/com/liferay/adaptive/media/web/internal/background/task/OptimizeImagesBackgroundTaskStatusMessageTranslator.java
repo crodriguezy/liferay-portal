@@ -67,7 +67,7 @@ public class OptimizeImagesBackgroundTaskStatusMessageTranslator
 		int percentage = 100;
 
 		if (((count + errors) != 0) && (total != 0)) {
-			percentage = (int)(count + errors / total);
+			percentage = (int)(count + (errors / total));
 		}
 
 		backgroundTaskStatus.setAttribute("percentage", percentage);

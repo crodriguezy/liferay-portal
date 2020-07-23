@@ -1,6 +1,6 @@
 {
 	"dependencies": {
-		"@clayui/card": "3.2.0",
+		"@clayui/card": "3.2.4",
 		"@clayui/icon": "3.0.5",
 		"@clayui/sticker": "3.1.1",
 		"classnames": "2.2.6",
@@ -16,5 +16,5 @@
 		"format": "liferay-npm-scripts fix",
 		"test": "liferay-npm-scripts test"
 	},
-	"version": "1.0.11"
+	"version": "1.0.13"
 }

@@ -558,7 +558,7 @@ components:
 info:
     description:
         "A Java client JAR is available for use with the group ID 'com.liferay', artifact ID
-        'com.liferay.portal.workflow.metrics.rest.client', and version '1.0.1'."
+        'com.liferay.portal.workflow.metrics.rest.client', and version '1.0.7'."
     license:
         name: "Apache 2.0"
         url: "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -895,6 +895,13 @@ paths:
                       type: integer
                 - in: query
                   name: assigneeIds
+                  schema:
+                      items:
+                          format: int64
+                          type: integer
+                      type: array
+                - in: query
+                  name: classPKs
                   schema:
                       items:
                           format: int64

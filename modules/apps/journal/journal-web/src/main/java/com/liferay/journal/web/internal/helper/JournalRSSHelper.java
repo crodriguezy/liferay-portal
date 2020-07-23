@@ -18,12 +18,12 @@ import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.document.library.kernel.util.ImageProcessorUtil;
 import com.liferay.document.library.util.DLURLHelper;
+import com.liferay.journal.constants.JournalArticleConstants;
+import com.liferay.journal.constants.JournalFeedConstants;
 import com.liferay.journal.exception.NoSuchFeedException;
 import com.liferay.journal.model.JournalArticle;
-import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.model.JournalArticleDisplay;
 import com.liferay.journal.model.JournalFeed;
-import com.liferay.journal.model.JournalFeedConstants;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.service.JournalContentSearchLocalService;
 import com.liferay.journal.service.JournalFeedLocalService;
@@ -130,11 +130,11 @@ public class JournalRSSHelper {
 
 		boolean orderByAsc = orderByType.equals("asc");
 
-		OrderByComparator<JournalArticle> obc =
+		OrderByComparator<JournalArticle> orderByComparator =
 			new ArticleModifiedDateComparator(orderByAsc);
 
 		if (orderByCol.equals("display-date")) {
-			obc = new ArticleDisplayDateComparator(orderByAsc);
+			orderByComparator = new ArticleDisplayDateComparator(orderByAsc);
 		}
 
 		return _journalArticleLocalService.search(
@@ -142,7 +142,7 @@ public class JournalRSSHelper {
 			JournalArticleConstants.CLASS_NAME_ID_DEFAULT, articleId, version,
 			title, description, content, ddmStructureKey, ddmTemplateKey,
 			displayDateGT, displayDateLT, status, reviewDate, andOperator,
-			start, end, obc);
+			start, end, orderByComparator);
 	}
 
 	public List<SyndEnclosure> getDLEnclosures(String portalURL, String url) {

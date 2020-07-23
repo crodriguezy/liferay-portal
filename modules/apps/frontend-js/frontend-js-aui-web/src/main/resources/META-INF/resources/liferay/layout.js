@@ -533,7 +533,7 @@ AUI.add(
 			});
 
 			if (layoutContainer) {
-				if (!A.UA.touch) {
+				if (!A.UA.touchEnabled) {
 					layoutContainer.once('mousemove', () => {
 						Liferay.fire('initLayout');
 					});

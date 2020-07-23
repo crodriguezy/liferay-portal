@@ -81,7 +81,8 @@ public class KaleoDefinitionModelImpl
 		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
 		{"name", Types.VARCHAR}, {"title", Types.VARCHAR},
 		{"description", Types.VARCHAR}, {"content", Types.CLOB},
-		{"version", Types.INTEGER}, {"active_", Types.BOOLEAN}
+		{"scope", Types.VARCHAR}, {"version", Types.INTEGER},
+		{"active_", Types.BOOLEAN}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -100,12 +101,13 @@ public class KaleoDefinitionModelImpl
 		TABLE_COLUMNS_MAP.put("title", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("description", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("content", Types.CLOB);
+		TABLE_COLUMNS_MAP.put("scope", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("version", Types.INTEGER);
 		TABLE_COLUMNS_MAP.put("active_", Types.BOOLEAN);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table KaleoDefinition (mvccVersion LONG default 0 not null,kaleoDefinitionId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(200) null,createDate DATE null,modifiedDate DATE null,name VARCHAR(200) null,title STRING null,description STRING null,content TEXT null,version INTEGER,active_ BOOLEAN)";
+		"create table KaleoDefinition (mvccVersion LONG default 0 not null,kaleoDefinitionId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(200) null,createDate DATE null,modifiedDate DATE null,name VARCHAR(200) null,title STRING null,description STRING null,content TEXT null,scope VARCHAR(75) null,version INTEGER,active_ BOOLEAN)";
 
 	public static final String TABLE_SQL_DROP = "drop table KaleoDefinition";
 
@@ -129,12 +131,18 @@ public class KaleoDefinitionModelImpl
 
 	public static final long VERSION_COLUMN_BITMASK = 8L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-		_entityCacheEnabled = entityCacheEnabled;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-		_finderCacheEnabled = finderCacheEnabled;
 	}
 
 	public KaleoDefinitionModelImpl() {
@@ -188,9 +196,6 @@ public class KaleoDefinitionModelImpl
 				attributeName,
 				attributeGetterFunction.apply((KaleoDefinition)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -322,6 +327,10 @@ public class KaleoDefinitionModelImpl
 		attributeSetterBiConsumers.put(
 			"content",
 			(BiConsumer<KaleoDefinition, String>)KaleoDefinition::setContent);
+		attributeGetterFunctions.put("scope", KaleoDefinition::getScope);
+		attributeSetterBiConsumers.put(
+			"scope",
+			(BiConsumer<KaleoDefinition, String>)KaleoDefinition::setScope);
 		attributeGetterFunctions.put("version", KaleoDefinition::getVersion);
 		attributeSetterBiConsumers.put(
 			"version",
@@ -616,6 +625,21 @@ public class KaleoDefinitionModelImpl
 	}
 
 	@Override
+	public String getScope() {
+		if (_scope == null) {
+			return "";
+		}
+		else {
+			return _scope;
+		}
+	}
+
+	@Override
+	public void setScope(String scope) {
+		_scope = scope;
+	}
+
+	@Override
 	public int getVersion() {
 		return _version;
 	}
@@ -778,6 +802,7 @@ public class KaleoDefinitionModelImpl
 		kaleoDefinitionImpl.setTitle(getTitle());
 		kaleoDefinitionImpl.setDescription(getDescription());
 		kaleoDefinitionImpl.setContent(getContent());
+		kaleoDefinitionImpl.setScope(getScope());
 		kaleoDefinitionImpl.setVersion(getVersion());
 		kaleoDefinitionImpl.setActive(isActive());
 
@@ -810,16 +835,16 @@ public class KaleoDefinitionModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof KaleoDefinition)) {
+		if (!(object instanceof KaleoDefinition)) {
 			return false;
 		}
 
-		KaleoDefinition kaleoDefinition = (KaleoDefinition)obj;
+		KaleoDefinition kaleoDefinition = (KaleoDefinition)object;
 
 		long primaryKey = kaleoDefinition.getPrimaryKey();
 
@@ -836,14 +861,22 @@ public class KaleoDefinitionModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	@Override
@@ -945,6 +978,14 @@ public class KaleoDefinitionModelImpl
 			kaleoDefinitionCacheModel.content = null;
 		}
 
+		kaleoDefinitionCacheModel.scope = getScope();
+
+		String scope = kaleoDefinitionCacheModel.scope;
+
+		if ((scope != null) && (scope.length() == 0)) {
+			kaleoDefinitionCacheModel.scope = null;
+		}
+
 		kaleoDefinitionCacheModel.version = getVersion();
 
 		kaleoDefinitionCacheModel.active = isActive();
@@ -1022,9 +1063,6 @@ public class KaleoDefinitionModelImpl
 
 	}
 
-	private static boolean _entityCacheEnabled;
-	private static boolean _finderCacheEnabled;
-
 	private long _mvccVersion;
 	private long _kaleoDefinitionId;
 	private long _groupId;
@@ -1042,6 +1080,7 @@ public class KaleoDefinitionModelImpl
 	private String _titleCurrentLanguageId;
 	private String _description;
 	private String _content;
+	private String _scope;
 	private int _version;
 	private int _originalVersion;
 	private boolean _setOriginalVersion;

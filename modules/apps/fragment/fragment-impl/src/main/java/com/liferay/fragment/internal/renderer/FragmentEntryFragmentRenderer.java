@@ -32,6 +32,7 @@ import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.kernel.cache.MultiVMPool;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.servlet.taglib.util.OutputData;
 import com.liferay.portal.kernel.util.Validator;
@@ -139,6 +140,22 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		return fragmentEntryLink;
 	}
 
+	private boolean _isCacheable(FragmentEntryLink fragmentEntryLink) {
+		if (Validator.isNull(fragmentEntryLink.getRendererKey())) {
+			return fragmentEntryLink.isCacheable();
+		}
+
+		FragmentEntry fragmentEntry =
+			_fragmentCollectionContributorTracker.getFragmentEntry(
+				fragmentEntryLink.getRendererKey());
+
+		if (fragmentEntry == null) {
+			return false;
+		}
+
+		return fragmentEntry.isCacheable();
+	}
+
 	private String _renderFragmentEntry(
 		long fragmentEntryId, String css, String html, String js,
 		String configuration, String namespace,
@@ -236,10 +253,11 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 		String content = StringPool.BLANK;
 
-		if (Objects.equals(
+		if (fragmentRendererContext.isUseCachedContent() &&
+			Objects.equals(
 				fragmentRendererContext.getMode(),
 				FragmentEntryLinkConstants.VIEW) &&
-			fragmentEntryLink.isCacheable()) {
+			_isCacheable(fragmentEntryLink)) {
 
 			content = _portalCache.get(cacheKeySB.toString());
 
@@ -301,27 +319,24 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 				httpServletResponse);
 		}
 
-		String configuration =
-			StringPool.OPEN_CURLY_BRACE + StringPool.CLOSE_CURLY_BRACE;
+		JSONObject configurationJSONObject = JSONFactoryUtil.createJSONObject();
 
 		if (Validator.isNotNull(fragmentEntryLink.getConfiguration())) {
-			JSONObject configurationJSONObject =
+			configurationJSONObject =
 				_fragmentEntryConfigurationParser.getConfigurationJSONObject(
 					fragmentEntryLink.getConfiguration(),
 					fragmentEntryLink.getEditableValues());
-
-			configuration = configurationJSONObject.toString();
 		}
 
 		content = _renderFragmentEntry(
 			fragmentEntryLink.getFragmentEntryId(), css, html,
-			fragmentEntryLink.getJs(), configuration,
+			fragmentEntryLink.getJs(), configurationJSONObject.toString(),
 			fragmentEntryLink.getNamespace(), httpServletRequest);
 
 		if (Objects.equals(
 				fragmentRendererContext.getMode(),
 				FragmentEntryLinkConstants.VIEW) &&
-			fragmentEntryLink.isCacheable()) {
+			_isCacheable(fragmentEntryLink)) {
 
 			_portalCache.put(cacheKeySB.toString(), content);
 		}

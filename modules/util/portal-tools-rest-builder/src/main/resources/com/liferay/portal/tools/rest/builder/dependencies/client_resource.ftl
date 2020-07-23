@@ -18,7 +18,10 @@ import ${configYAML.apiPackagePath}.client.pagination.Page;
 import ${configYAML.apiPackagePath}.client.pagination.Pagination;
 import ${configYAML.apiPackagePath}.client.permission.Permission;
 import ${configYAML.apiPackagePath}.client.problem.Problem;
-import ${configYAML.apiPackagePath}.client.serdes.${escapedVersion}.${schemaName}SerDes;
+
+<#list allSchemas?keys as schemaName>
+	import ${configYAML.apiPackagePath}.client.serdes.${escapedVersion}.${schemaName}SerDes;
+</#list>
 
 import java.io.File;
 
@@ -132,9 +135,22 @@ public interface ${schemaName}Resource {
 						<#if javaMethodSignature.returnType?contains("Page<com.liferay.portal.vulcan.permission.Permission>")>
 							return Page.of(content, Permission::toDTO);
 						<#elseif javaMethodSignature.returnType?contains("Page<")>
-							return Page.of(content, ${schemaName}SerDes::toDTO);
+							return Page.of(content, ${javaMethodSignature.returnType?keep_after_last('.', '')?replace('>', '')}SerDes::toDTO);
 						<#elseif javaMethodSignature.returnType?ends_with("String")>
 							return content;
+						<#elseif stringUtil.equals(javaMethodSignature.returnType, "java.lang.Boolean") ||
+								 stringUtil.equals(javaMethodSignature.returnType, "java.lang.Float") ||
+								 stringUtil.equals(javaMethodSignature.returnType, "java.lang.Double") ||
+								 stringUtil.equals(javaMethodSignature.returnType, "java.lang.Integer") ||
+								 stringUtil.equals(javaMethodSignature.returnType, "java.lang.Long")>
+
+							return ${javaMethodSignature.returnType}.valueOf(content);
+						<#elseif stringUtil.equals(javaMethodSignature.returnType, "java.lang.Number")>
+							return Double.valueOf(content);
+						<#elseif stringUtil.equals(javaMethodSignature.returnType, "java.math.BigDecimal")>
+							return new java.math.BigDecimal(content);
+						<#elseif stringUtil.equals(javaMethodSignature.returnType, "java.util.Date")>
+							return java.text.DateFormat.getInstance().parse(content);
 						<#elseif !stringUtil.equals(javaMethodSignature.returnType, "void")>
 							return ${javaMethodSignature.returnType?replace(".dto.", ".client.serdes.")}SerDes.toDTO(content);
 						<#else>

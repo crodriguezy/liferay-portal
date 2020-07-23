@@ -61,7 +61,7 @@ List<Group> selectedGroups = GroupLocalServiceUtil.getGroups(assetPublisherDispl
 		<liferay-ui:search-container-column-text>
 			<liferay-portlet:actionURL portletConfiguration="<%= true %>" var="deleteURL">
 				<portlet:param name="<%= Constants.CMD %>" value="remove-scope" />
-				<portlet:param name="redirect" value="<%= currentURL %>" />
+				<portlet:param name="redirect" value="<%= configurationRenderURL.toString() %>" />
 				<portlet:param name="scopeId" value="<%= assetPublisherHelper.getScopeId(group, scopeGroupId) %>" />
 			</liferay-portlet:actionURL>
 
@@ -96,7 +96,7 @@ List<Group> selectedGroups = GroupLocalServiceUtil.getGroups(assetPublisherDispl
 
 		<liferay-portlet:actionURL portletConfiguration="<%= true %>" var="addScopeURL">
 			<portlet:param name="<%= Constants.CMD %>" value="add-scope" />
-			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="redirect" value="<%= configurationRenderURL.toString() %>" />
 			<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
 		</liferay-portlet:actionURL>
 
@@ -158,28 +158,23 @@ itemSelectorURL.setParameter("portletResource", assetPublisherDisplayContext.get
 				searchContainerData = searchContainerData.split(',');
 			}
 
-			Liferay.Util.selectEntity(
-				{
-					dialog: {
-						constrain: true,
-						destroyOnHide: true,
-						modal: true,
-					},
-					eventName: '<%= eventName %>',
-					id: '<%= eventName %>' + event.currentTarget.id,
-					selectedData: searchContainerData,
-					title: '<liferay-ui:message key="scopes" />',
-					uri: '<%= itemSelectorURL.toString() %>',
-				},
-				function (event) {
+			var opener = Liferay.Util.getOpener();
+
+			opener.Liferay.Util.openModal({
+				id: '<%= eventName %>' + event.currentTarget.id,
+				onSelect: function (event) {
 					Liferay.Util.postForm(form, {
 						data: {
 							cmd: 'add-scope',
 							groupId: event.groupid,
 						},
 					});
-				}
-			);
+				},
+				selectEventName: '<%= eventName %>',
+				selectedData: searchContainerData,
+				title: '<liferay-ui:message key="scopes" />',
+				url: '<%= itemSelectorURL.toString() %>',
+			});
 		});
 	}
 </aui:script>

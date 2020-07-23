@@ -115,3 +115,26 @@ export function normalizeRule(dataRule) {
 
 	return dataRule;
 }
+
+export function isDataLayoutEmpty(dataLayoutPages) {
+	return dataLayoutPages.every(({dataLayoutRows}) => {
+		return dataLayoutRows.every(({dataLayoutColumns}) => {
+			return dataLayoutColumns.every(({fieldNames = []}) => {
+				return !fieldNames.length;
+			});
+		});
+	});
+}
+
+export function normalizeDataLayoutRows(dataLayoutPages) {
+	return dataLayoutPages[0].dataLayoutRows.map(({dataLayoutColumns}) => {
+		return {
+			columns: dataLayoutColumns.map(
+				({columnSize: size, fieldNames: fields}) => ({
+					fields,
+					size,
+				})
+			),
+		};
+	});
+}

@@ -66,6 +66,10 @@ public interface BlogsStatsUserLocalService
 	/**
 	 * Adds the blogs stats user to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect BlogsStatsUserLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param blogsStatsUser the blogs stats user
 	 * @return the blogs stats user that was added
 	 */
@@ -90,6 +94,10 @@ public interface BlogsStatsUserLocalService
 	/**
 	 * Deletes the blogs stats user from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect BlogsStatsUserLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param blogsStatsUser the blogs stats user
 	 * @return the blogs stats user that was removed
 	 */
@@ -98,6 +106,10 @@ public interface BlogsStatsUserLocalService
 
 	/**
 	 * Deletes the blogs stats user with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect BlogsStatsUserLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param statsUserId the primary key of the blogs stats user
 	 * @return the blogs stats user that was removed
@@ -240,7 +252,7 @@ public interface BlogsStatsUserLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<BlogsStatsUser> getCompanyStatsUsers(
 		long companyId, int start, int end,
-		OrderByComparator<BlogsStatsUser> obc);
+		OrderByComparator<BlogsStatsUser> orderByComparator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getCompanyStatsUsersCount(long companyId);
@@ -256,7 +268,7 @@ public interface BlogsStatsUserLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<BlogsStatsUser> getGroupStatsUsers(
 		long groupId, int start, int end,
-		OrderByComparator<BlogsStatsUser> obc);
+		OrderByComparator<BlogsStatsUser> orderByComparator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getGroupStatsUsersCount(long groupId);
@@ -271,7 +283,7 @@ public interface BlogsStatsUserLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<BlogsStatsUser> getOrganizationStatsUsers(
 		long organizationId, int start, int end,
-		OrderByComparator<BlogsStatsUser> obc);
+		OrderByComparator<BlogsStatsUser> orderByComparator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getOrganizationStatsUsersCount(long organizationId);
@@ -297,6 +309,10 @@ public interface BlogsStatsUserLocalService
 
 	/**
 	 * Updates the blogs stats user in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect BlogsStatsUserLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param blogsStatsUser the blogs stats user
 	 * @return the blogs stats user that was updated

@@ -20,19 +20,25 @@ import {useActiveItemId} from '../../../app/components/Controls';
 import hasDropZoneChild from '../../../app/components/layout-data-items/hasDropZoneChild';
 import {EDITABLE_FRAGMENT_ENTRY_PROCESSOR} from '../../../app/config/constants/editableFragmentEntryProcessor';
 import {ITEM_TYPES} from '../../../app/config/constants/itemTypes';
-import {LAYOUT_DATA_ITEM_TYPE_LABELS} from '../../../app/config/constants/layoutDataItemTypeLabels';
 import {LAYOUT_DATA_ITEM_TYPES} from '../../../app/config/constants/layoutDataItemTypes';
 import {PAGE_TYPES} from '../../../app/config/constants/pageTypes';
 import {config} from '../../../app/config/index';
+import selectCanUpdateEditables from '../../../app/selectors/selectCanUpdateEditables';
+import selectCanUpdateItemConfiguration from '../../../app/selectors/selectCanUpdateItemConfiguration';
 import {useSelector} from '../../../app/store/index';
+import getLayoutDataItemLabel from '../../../app/utils/getLayoutDataItemLabel';
 import SidebarPanelHeader from '../../../common/components/SidebarPanelHeader';
 import StructureTreeNode from './StructureTreeNode';
 
 export default function PageStructureSidebar() {
 	const activeItemId = useActiveItemId();
+	const canUpdateEditables = useSelector(selectCanUpdateEditables);
+	const canUpdateItemConfiguration = useSelector(
+		selectCanUpdateItemConfiguration
+	);
+	const fragmentEntryLinks = useSelector((state) => state.fragmentEntryLinks);
 	const layoutData = useSelector((state) => state.layoutData);
 	const masterLayoutData = useSelector((state) => state.masterLayoutData);
-	const state = useSelector((state) => state);
 
 	const isMasterPage = config.pageType === PAGE_TYPES.master;
 
@@ -42,10 +48,24 @@ export default function PageStructureSidebar() {
 		() =>
 			visit(data.items[data.rootItems.main], data.items, {
 				activeItemId,
+				canUpdateEditables,
+				canUpdateItemConfiguration,
+				fragmentEntryLinks,
 				isMasterPage,
-				state,
+				layoutData,
+				masterLayoutData,
 			}).children,
-		[data, activeItemId, isMasterPage, state]
+		[
+			activeItemId,
+			canUpdateEditables,
+			canUpdateItemConfiguration,
+			data.items,
+			data.rootItems.main,
+			fragmentEntryLinks,
+			isMasterPage,
+			layoutData,
+			masterLayoutData,
+		]
 	);
 
 	return (
@@ -87,37 +107,20 @@ function isRemovable(item, layoutData) {
 	return !hasDropZoneChild(item, layoutData);
 }
 
-function getName(item, fragmentEntryLinks) {
-	let name;
-
-	if (item.type === LAYOUT_DATA_ITEM_TYPES.fragment) {
-		name = fragmentEntryLinks[item.config.fragmentEntryLinkId].name;
+function visit(
+	item,
+	items,
+	{
+		activeItemId,
+		canUpdateEditables,
+		canUpdateItemConfiguration,
+		fragmentEntryLinks,
+		isMasterPage,
+		layoutData,
+		masterLayoutData,
 	}
-	else if (item.type === LAYOUT_DATA_ITEM_TYPES.collection) {
-		name = LAYOUT_DATA_ITEM_TYPE_LABELS.collection;
-	}
-	else if (item.type === LAYOUT_DATA_ITEM_TYPES.collectionItem) {
-		name = LAYOUT_DATA_ITEM_TYPE_LABELS.collectionItem;
-	}
-	else if (item.type === LAYOUT_DATA_ITEM_TYPES.container) {
-		name = LAYOUT_DATA_ITEM_TYPE_LABELS.container;
-	}
-	else if (item.type === LAYOUT_DATA_ITEM_TYPES.column) {
-		name = LAYOUT_DATA_ITEM_TYPE_LABELS.column;
-	}
-	else if (item.type === LAYOUT_DATA_ITEM_TYPES.dropZone) {
-		name = LAYOUT_DATA_ITEM_TYPE_LABELS.dropZone;
-	}
-	else if (item.type === LAYOUT_DATA_ITEM_TYPES.row) {
-		name = LAYOUT_DATA_ITEM_TYPE_LABELS.row;
-	}
-
-	return name;
-}
-
-function visit(item, items, {activeItemId, isMasterPage, state}) {
+) {
 	const children = [];
-	const {fragmentEntryLinks, layoutData, masterLayoutData} = state;
 
 	const itemInMasterLayout =
 		masterLayoutData &&
@@ -136,7 +139,7 @@ function visit(item, items, {activeItemId, isMasterPage, state}) {
 			const childId = `${item.config.fragmentEntryLinkId}-${editableId}`;
 
 			children.push({
-				activable: true,
+				activable: canUpdateEditables,
 				children: [],
 				disabled: !isMasterPage && itemInMasterLayout,
 				expanded: childId === activeItemId,
@@ -151,8 +154,12 @@ function visit(item, items, {activeItemId, isMasterPage, state}) {
 			...item.children.map((childItemId) => ({
 				...visit(items[childItemId], items, {
 					activeItemId,
+					canUpdateEditables,
+					canUpdateItemConfiguration,
+					fragmentEntryLinks,
 					isMasterPage,
-					state,
+					layoutData,
+					masterLayoutData,
 				}),
 
 				name: Liferay.Language.get('drop-zone'),
@@ -173,8 +180,12 @@ function visit(item, items, {activeItemId, isMasterPage, state}) {
 					layoutData.items,
 					{
 						activeItemId,
+						canUpdateEditables,
+						canUpdateItemConfiguration,
+						fragmentEntryLinks,
 						isMasterPage,
-						state,
+						layoutData,
+						masterLayoutData,
 					}
 				).children;
 
@@ -183,8 +194,12 @@ function visit(item, items, {activeItemId, isMasterPage, state}) {
 			else {
 				const child = visit(childItem, items, {
 					activeItemId,
+					canUpdateEditables,
+					canUpdateItemConfiguration,
+					fragmentEntryLinks,
 					isMasterPage,
-					state,
+					layoutData,
+					masterLayoutData,
 				});
 
 				children.push(child);
@@ -192,21 +207,17 @@ function visit(item, items, {activeItemId, isMasterPage, state}) {
 		});
 	}
 
-	const node = {
+	return {
 		activable:
-			layoutData.items[item.itemId] &&
-			layoutData.items[item.itemId].type !==
-				LAYOUT_DATA_ITEM_TYPES.column &&
-			layoutData.items[item.itemId].type !==
-				LAYOUT_DATA_ITEM_TYPES.collectionItem,
+			item.type !== LAYOUT_DATA_ITEM_TYPES.column &&
+			item.type !== LAYOUT_DATA_ITEM_TYPES.collectionItem &&
+			canUpdateItemConfiguration,
 		children,
 		disabled: !isMasterPage && itemInMasterLayout,
 		expanded: item.itemId === activeItemId,
 		id: item.itemId,
-		name: getName(item, fragmentEntryLinks),
+		name: getLayoutDataItemLabel(item, fragmentEntryLinks),
 		removable: !itemInMasterLayout && isRemovable(item, layoutData),
 		type: ITEM_TYPES.layoutDataItem,
 	};
-
-	return node;
 }

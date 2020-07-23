@@ -57,35 +57,21 @@ public class ContentColTag extends BaseContainerTag {
 	}
 
 	@Override
-	protected String getEndPage() {
-		return _END_PAGE;
-	}
-
-	@Override
-	protected String getStartPage() {
-		return _START_PAGE;
-	}
-
-	@Override
-	protected String processClassName(Set<String> className) {
-		className.add("autofit-col");
+	protected String processCssClasses(Set<String> cssClasses) {
+		cssClasses.add("autofit-col");
 
 		if (_expand) {
-			className.add("autofit-col-expand");
+			cssClasses.add("autofit-col-expand");
 		}
 
 		if (_gutters) {
-			className.add("autofit-col-gutters");
+			cssClasses.add("autofit-col-gutters");
 		}
 
-		return super.processClassName(className);
+		return super.processCssClasses(cssClasses);
 	}
 
 	private static final String _ATTRIBUTE_NAMESPACE = "clay:content-col:";
-
-	private static final String _END_PAGE = "/content_col/end.jsp";
-
-	private static final String _START_PAGE = "/content_col/start.jsp";
 
 	private boolean _expand;
 	private boolean _gutters;

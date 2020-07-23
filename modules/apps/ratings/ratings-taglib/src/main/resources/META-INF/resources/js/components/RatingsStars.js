@@ -12,14 +12,14 @@
  * details.
  */
 
-import ClayButton from '@clayui/button';
-import ClayDropDown from '@clayui/drop-down';
-import ClayIcon from '@clayui/icon';
 import {useIsMounted} from 'frontend-js-react-web';
 import PropTypes from 'prop-types';
-import React, {useCallback, useState} from 'react';
+import {useCallback, useState} from 'react';
 
+import TYPES from '../RATINGS_TYPES';
 import Lang from '../utils/lang';
+import RatingsSelectStars from './RatingsSelectStars';
+import RatingsStackedStars from './RatingsStackedStars';
 
 const SCORE_UNVOTE = -1;
 
@@ -29,7 +29,9 @@ const RatingsStars = ({
 	initialTotalEntries = 0,
 	inititalTitle,
 	numberOfStars,
+	randomNamespace,
 	sendVoteRequest,
+	type,
 	userScore,
 }) => {
 	const starScores = Array.from(Array(numberOfStars)).map((_, index) => {
@@ -37,7 +39,7 @@ const RatingsStars = ({
 
 		return {
 			label: number,
-			value: (1 / numberOfStars) * number,
+			value: number / numberOfStars,
 		};
 	});
 
@@ -51,11 +53,10 @@ const RatingsStars = ({
 	);
 
 	const formatAverageScore = useCallback(
-		(averageScore) => (averageScore * numberOfStars).toFixed(1),
+		(averageScore) => Number((averageScore * numberOfStars).toFixed(1)),
 		[numberOfStars]
 	);
 
-	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const [score, setScore] = useState(getLabelScore(userScore));
 	const [averageScore, setAverageScore] = useState(
 		formatAverageScore(initialAverageScore)
@@ -63,7 +64,7 @@ const RatingsStars = ({
 	const [totalEntries, setTotalEntries] = useState(initialTotalEntries);
 	const isMounted = useIsMounted();
 
-	const handleOnClick = (index) => {
+	const handleVote = (index) => {
 		let value, label;
 		const starScore = starScores[index];
 
@@ -78,7 +79,6 @@ const RatingsStars = ({
 
 		setScore(label);
 		handleSendVoteRequest(value);
-		setIsDropdownOpen(false);
 	};
 
 	const handleSendVoteRequest = useCallback(
@@ -126,7 +126,7 @@ const RatingsStars = ({
 
 	const getSrAverageMessage = () => {
 		const srAverageMessage =
-			averageScore === 1.0
+			averageScore === 1
 				? Liferay.Language.get('the-average-rating-is-x-star-out-of-x')
 				: Liferay.Language.get(
 						'the-average-rating-is-x-stars-out-of-x'
@@ -135,98 +135,25 @@ const RatingsStars = ({
 		return Lang.sub(srAverageMessage, [averageScore, numberOfStars]);
 	};
 
-	return (
-		<div className="autofit-padded-no-gutters autofit-row autofit-row-center ratings ratings-stars">
-			<div className="autofit-col">
-				<ClayDropDown
-					active={isDropdownOpen}
-					menuElementAttrs={{
-						className: 'ratings-stars-dropdown',
-					}}
-					onActiveChange={(isActive) => setIsDropdownOpen(isActive)}
-					trigger={
-						<ClayButton
-							aria-pressed={!!score}
-							borderless
-							className="ratings-stars-dropdown-toggle"
-							disabled={disabled}
-							displayType="secondary"
-							small
-							title={getTitle()}
-							value={score}
-						>
-							<span className="inline-item inline-item-before">
-								<ClayIcon symbol={score ? 'star' : 'star-o'} />
-							</span>
-							<span className="inline-item ratings-stars-button-text">
-								{score || '-'}
-							</span>
-						</ClayButton>
-					}
-				>
-					<ClayDropDown.ItemList>
-						{starScores.map(({label}, index) => {
-							const srMessage =
-								index === 0
-									? Liferay.Language.get(
-											'rate-this-x-star-out-of-x'
-									  )
-									: Liferay.Language.get(
-											'rate-this-x-stars-out-of-x'
-									  );
+	const RatingsStarsTypes = {
+		[TYPES.STACKED_STARS]: RatingsStackedStars,
+		[TYPES.STARS]: RatingsSelectStars,
+	};
 
-							return (
-								<ClayDropDown.Item
-									active={label === score}
-									key={index}
-									onClick={() => {
-										handleOnClick(index);
-									}}
-								>
-									{label}
-									<span className="sr-only">
-										{Lang.sub(srMessage, [
-											index + 1,
-											numberOfStars,
-										])}
-									</span>
-								</ClayDropDown.Item>
-							);
-						})}
+	const RatingsStarsUI = RatingsStarsTypes[type];
 
-						<ClayDropDown.Item
-							disabled={score === 0}
-							onClick={() => {
-								handleOnClick();
-							}}
-						>
-							{Liferay.Language.get('delete')}
-						</ClayDropDown.Item>
-					</ClayDropDown.ItemList>
-				</ClayDropDown>
-			</div>
-			<div className="autofit-col">
-				<span className="ratings-stars-average">
-					<span className="inline-item inline-item-before">
-						<ClayIcon
-							className="ratings-stars-average-icon"
-							symbol="star"
-						/>
-					</span>
-					<span className="inline-item ratings-stars-average-text">
-						{averageScore}
-						{!!totalEntries &&
-							` (${totalEntries} ${
-								totalEntries === 1
-									? Liferay.Language.get('vote')
-									: Liferay.Language.get('votes')
-							})`}
-					</span>
-					<span className="sr-only">{getSrAverageMessage()}</span>
-				</span>
-			</div>
-		</div>
-	);
+	return RatingsStarsUI({
+		averageScore,
+		disabled,
+		getSrAverageMessage,
+		getTitle,
+		numberOfStars,
+		onVote: handleVote,
+		randomNamespace,
+		score,
+		starScores,
+		totalEntries,
+	});
 };
 
 RatingsStars.propTypes = {
@@ -236,6 +163,7 @@ RatingsStars.propTypes = {
 	inititalTitle: PropTypes.string,
 	numberOfStars: PropTypes.number.isRequired,
 	positiveVotes: PropTypes.number,
+	randomNamespace: PropTypes.string.isRequired,
 	sendVoteRequest: PropTypes.func.isRequired,
 	userScore: PropTypes.number,
 };

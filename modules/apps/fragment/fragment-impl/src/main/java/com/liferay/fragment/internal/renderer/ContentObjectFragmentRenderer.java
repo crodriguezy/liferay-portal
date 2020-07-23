@@ -27,11 +27,13 @@ import com.liferay.info.item.renderer.InfoItemTemplatedRenderer;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.Tuple;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -61,7 +63,7 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 					"fields",
 					JSONUtil.putAll(
 						JSONUtil.put(
-							"label", "content"
+							"label", "content-display"
 						).put(
 							"name", "itemSelector"
 						).put(
@@ -74,8 +76,16 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 	}
 
 	@Override
+	public String getIcon() {
+		return "web-content";
+	}
+
+	@Override
 	public String getLabel(Locale locale) {
-		return LanguageUtil.get(locale, "content");
+		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
+			"content.Language", getClass());
+
+		return LanguageUtil.get(resourceBundle, "content-display");
 	}
 
 	@Override
@@ -125,8 +135,8 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 		Tuple tuple = _getTuple(
 			displayObject.getClass(), fragmentRendererContext);
 
-		InfoItemRenderer infoItemRenderer = (InfoItemRenderer)tuple.getObject(
-			0);
+		InfoItemRenderer<Object> infoItemRenderer =
+			(InfoItemRenderer<Object>)tuple.getObject(0);
 
 		if (infoItemRenderer == null) {
 			if (FragmentRendererUtil.isEditMode(httpServletRequest)) {
@@ -140,12 +150,18 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 		}
 
 		if (infoItemRenderer instanceof InfoItemTemplatedRenderer) {
-			InfoItemTemplatedRenderer infoItemTemplatedRenderer =
-				(InfoItemTemplatedRenderer)infoItemRenderer;
+			InfoItemTemplatedRenderer<Object> infoItemTemplatedRenderer =
+				(InfoItemTemplatedRenderer<Object>)infoItemRenderer;
 
-			infoItemTemplatedRenderer.render(
-				displayObject, (String)tuple.getObject(1), httpServletRequest,
-				httpServletResponse);
+			if (tuple.getSize() > 1) {
+				infoItemTemplatedRenderer.render(
+					displayObject, (String)tuple.getObject(1),
+					httpServletRequest, httpServletResponse);
+			}
+			else {
+				infoItemTemplatedRenderer.render(
+					displayObject, httpServletRequest, httpServletResponse);
+			}
 		}
 		else {
 			infoItemRenderer.render(
@@ -157,11 +173,15 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 		String className, long classPK,
 		Optional<Object> displayObjectOptional) {
 
-		InfoDisplayContributor infoDisplayContributor =
+		InfoDisplayContributor<?> infoDisplayContributor =
 			_infoDisplayContributorTracker.getInfoDisplayContributor(className);
 
+		if (infoDisplayContributor == null) {
+			return displayObjectOptional.orElse(null);
+		}
+
 		try {
-			InfoDisplayObjectProvider infoDisplayObjectProvider =
+			InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
 				infoDisplayContributor.getInfoDisplayObjectProvider(classPK);
 
 			if (infoDisplayObjectProvider == null) {
@@ -191,7 +211,7 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 		Class<?> displayObjectClass,
 		FragmentRendererContext fragmentRendererContext) {
 
-		List<InfoItemRenderer> infoItemRenderers =
+		List<InfoItemRenderer<?>> infoItemRenderers =
 			FragmentRendererUtil.getInfoItemRenderers(
 				displayObjectClass, _infoItemRendererTracker);
 
@@ -199,7 +219,8 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 			return null;
 		}
 
-		InfoItemRenderer defaultInfoItemRenderer = infoItemRenderers.get(0);
+		InfoItemRenderer<Object> defaultInfoItemRenderer =
+			(InfoItemRenderer<Object>)infoItemRenderers.get(0);
 
 		JSONObject jsonObject = _getFieldValueJSONObject(
 			fragmentRendererContext);
@@ -219,8 +240,10 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 		String infoItemRendererKey = templateJSONObject.getString(
 			"infoItemRendererKey");
 
-		InfoItemRenderer infoItemRenderer =
-			_infoItemRendererTracker.getInfoItemRenderer(infoItemRendererKey);
+		InfoItemRenderer<Object> infoItemRenderer =
+			(InfoItemRenderer<Object>)
+				_infoItemRendererTracker.getInfoItemRenderer(
+					infoItemRendererKey);
 
 		if (infoItemRenderer != null) {
 			return new Tuple(infoItemRenderer, templateKey);

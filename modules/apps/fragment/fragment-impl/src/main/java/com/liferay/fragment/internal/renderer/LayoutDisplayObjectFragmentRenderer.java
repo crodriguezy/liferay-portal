@@ -47,6 +47,11 @@ public class LayoutDisplayObjectFragmentRenderer implements FragmentRenderer {
 	}
 
 	@Override
+	public String getIcon() {
+		return "web-content";
+	}
+
+	@Override
 	public String getLabel(Locale locale) {
 		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
 			"content.Language", locale, getClass());
@@ -83,7 +88,7 @@ public class LayoutDisplayObjectFragmentRenderer implements FragmentRenderer {
 			return;
 		}
 
-		InfoItemRenderer infoItemRenderer = _getInfoItemRenderer(
+		InfoItemRenderer<Object> infoItemRenderer = _getInfoItemRenderer(
 			displayObject.getClass());
 
 		if (infoItemRenderer == null) {
@@ -102,8 +107,8 @@ public class LayoutDisplayObjectFragmentRenderer implements FragmentRenderer {
 	}
 
 	private Object _getDisplayObject(HttpServletRequest httpServletRequest) {
-		InfoDisplayObjectProvider infoDisplayObjectProvider =
-			(InfoDisplayObjectProvider)httpServletRequest.getAttribute(
+		InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
+			(InfoDisplayObjectProvider<?>)httpServletRequest.getAttribute(
 				AssetDisplayPageWebKeys.INFO_DISPLAY_OBJECT_PROVIDER);
 
 		if (infoDisplayObjectProvider == null) {
@@ -113,8 +118,10 @@ public class LayoutDisplayObjectFragmentRenderer implements FragmentRenderer {
 		return infoDisplayObjectProvider.getDisplayObject();
 	}
 
-	private InfoItemRenderer _getInfoItemRenderer(Class<?> displayObjectClass) {
-		List<InfoItemRenderer> infoItemRenderers =
+	private InfoItemRenderer<Object> _getInfoItemRenderer(
+		Class<?> displayObjectClass) {
+
+		List<InfoItemRenderer<?>> infoItemRenderers =
 			FragmentRendererUtil.getInfoItemRenderers(
 				displayObjectClass, _infoItemRendererTracker);
 
@@ -122,7 +129,7 @@ public class LayoutDisplayObjectFragmentRenderer implements FragmentRenderer {
 			return null;
 		}
 
-		return infoItemRenderers.get(0);
+		return (InfoItemRenderer<Object>)infoItemRenderers.get(0);
 	}
 
 	@Reference

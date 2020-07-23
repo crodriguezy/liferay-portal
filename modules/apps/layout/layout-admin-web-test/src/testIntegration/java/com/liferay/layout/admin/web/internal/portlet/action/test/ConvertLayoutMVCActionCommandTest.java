@@ -56,8 +56,6 @@ import com.liferay.segments.constants.SegmentsExperienceConstants;
 
 import java.util.List;
 
-import javax.portlet.ActionRequest;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.junit.After;
@@ -112,11 +110,9 @@ public class ConvertLayoutMVCActionCommandTest {
 		Layout originalLayout = LayoutTestUtil.addLayout(
 			_group.getGroupId(), typeSettingsUnicodeProperties.toString());
 
-		ActionRequest actionRequest = _getMockActionRequest(
-			originalLayout.getPlid());
-
 		_mvcActionCommand.processAction(
-			actionRequest, new MockLiferayPortletActionResponse());
+			_getMockLiferayPortletActionRequest(originalLayout.getPlid()),
+			new MockLiferayPortletActionResponse());
 
 		_validateLayoutConversion(originalLayout);
 	}
@@ -136,29 +132,29 @@ public class ConvertLayoutMVCActionCommandTest {
 
 		_layoutPageTemplateStructureLocalService.addLayoutPageTemplateStructure(
 			TestPropsValues.getUserId(), _group.getGroupId(),
-			_portal.getClassNameId(Layout.class.getName()),
 			originalLayout.getPlid(), StringPool.BLANK, _serviceContext);
 
-		ActionRequest actionRequest = _getMockActionRequest(
-			originalLayout.getPlid());
-
 		_mvcActionCommand.processAction(
-			actionRequest, new MockLiferayPortletActionResponse());
+			_getMockLiferayPortletActionRequest(originalLayout.getPlid()),
+			new MockLiferayPortletActionResponse());
 
 		_validateLayoutConversion(originalLayout);
 	}
 
-	private MockActionRequest _getMockActionRequest(long plid)
+	private MockLiferayPortletActionRequest _getMockLiferayPortletActionRequest(
+			long plid)
 		throws Exception {
 
-		MockActionRequest mockActionRequest = new MockActionRequest();
+		MockLiferayPortletActionRequest mockLiferayPortletActionRequest =
+			new MockLiferayPortletActionRequest();
 
-		mockActionRequest.setAttribute(
+		mockLiferayPortletActionRequest.setAttribute(
 			WebKeys.THEME_DISPLAY, _getThemeDisplay());
 
-		mockActionRequest.addParameter("selPlid", String.valueOf(plid));
+		mockLiferayPortletActionRequest.addParameter(
+			"selPlid", String.valueOf(plid));
 
-		return mockActionRequest;
+		return mockLiferayPortletActionRequest;
 	}
 
 	private ServiceContext _getServiceContext(Group group, long userId) {
@@ -191,18 +187,14 @@ public class ConvertLayoutMVCActionCommandTest {
 	private void _validateLayoutConversion(Layout originalLayout)
 		throws Exception {
 
-		Layout persistedDraftLayout = _layoutLocalService.fetchLayout(
-			_portal.getClassNameId(Layout.class.getName()),
-			originalLayout.getPlid());
+		Layout persistedDraftLayout = originalLayout.fetchDraftLayout();
 
 		Assert.assertNotNull(persistedDraftLayout);
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			_layoutPageTemplateStructureLocalService.
 				fetchLayoutPageTemplateStructure(
-					originalLayout.getGroupId(),
-					_portal.getClassNameId(Layout.class.getName()),
-					originalLayout.getPlid());
+					originalLayout.getGroupId(), originalLayout.getPlid());
 
 		Assert.assertNotNull(layoutPageTemplateStructure);
 
@@ -350,18 +342,5 @@ public class ConvertLayoutMVCActionCommandTest {
 	private Portal _portal;
 
 	private ServiceContext _serviceContext;
-
-	private static class MockActionRequest
-		extends MockLiferayPortletActionRequest {
-
-		public MockActionRequest() {
-		}
-
-		@Override
-		public HttpServletRequest getHttpServletRequest() {
-			return new MockHttpServletRequest();
-		}
-
-	}
 
 }

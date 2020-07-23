@@ -21,6 +21,7 @@ import com.liferay.poshi.runner.selenium.SeleniumUtil;
 import com.liferay.poshi.runner.util.FileUtil;
 import com.liferay.poshi.runner.util.PropsValues;
 
+import java.io.File;
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -160,6 +161,8 @@ public class PoshiRunner {
 			_testNamespacedClassCommandName);
 
 		PoshiRunnerVariablesUtil.clear();
+
+		FileUtil.delete(new File(PropsValues.OUTPUT_DIR_NAME));
 
 		try {
 			SummaryLogger.startRunning();

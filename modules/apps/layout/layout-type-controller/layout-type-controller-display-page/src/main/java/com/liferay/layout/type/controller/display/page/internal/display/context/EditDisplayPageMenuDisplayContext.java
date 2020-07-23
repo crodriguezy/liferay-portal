@@ -48,10 +48,10 @@ public class EditDisplayPageMenuDisplayContext {
 		_httpServletRequest = httpServletRequest;
 
 		_infoDisplayObjectProvider =
-			(InfoDisplayObjectProvider)httpServletRequest.getAttribute(
+			(InfoDisplayObjectProvider<?>)httpServletRequest.getAttribute(
 				AssetDisplayPageWebKeys.INFO_DISPLAY_OBJECT_PROVIDER);
 		_infoEditURLProvider =
-			(InfoEditURLProvider)httpServletRequest.getAttribute(
+			(InfoEditURLProvider<Object>)httpServletRequest.getAttribute(
 				AssetDisplayPageWebKeys.INFO_EDIT_URL_PROVIDER);
 		_themeDisplay = (ThemeDisplay)_httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -77,8 +77,7 @@ public class EditDisplayPageMenuDisplayContext {
 				_themeDisplay.getPermissionChecker(), _themeDisplay.getLayout(),
 				ActionKeys.UPDATE),
 			dropdownItem -> {
-				Layout draftLayout = LayoutLocalServiceUtil.fetchLayout(
-					PortalUtil.getClassNameId(Layout.class),
+				Layout draftLayout = LayoutLocalServiceUtil.fetchDraftLayout(
 					_themeDisplay.getPlid());
 
 				String editLayoutURL = PortalUtil.getLayoutFullURL(
@@ -104,8 +103,8 @@ public class EditDisplayPageMenuDisplayContext {
 	}
 
 	private final HttpServletRequest _httpServletRequest;
-	private final InfoDisplayObjectProvider _infoDisplayObjectProvider;
-	private final InfoEditURLProvider _infoEditURLProvider;
+	private final InfoDisplayObjectProvider<?> _infoDisplayObjectProvider;
+	private final InfoEditURLProvider<Object> _infoEditURLProvider;
 	private final ThemeDisplay _themeDisplay;
 
 }

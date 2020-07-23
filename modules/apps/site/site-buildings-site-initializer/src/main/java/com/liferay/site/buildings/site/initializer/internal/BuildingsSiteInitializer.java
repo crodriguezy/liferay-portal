@@ -24,9 +24,9 @@ import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererTracker;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.fragment.service.FragmentEntryLocalService;
+import com.liferay.journal.constants.JournalArticleConstants;
+import com.liferay.journal.constants.JournalFolderConstants;
 import com.liferay.journal.model.JournalArticle;
-import com.liferay.journal.model.JournalArticleConstants;
-import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
@@ -252,8 +252,7 @@ public class BuildingsSiteInitializer implements SiteInitializer {
 				return _fragmentEntryLinkLocalService.addFragmentEntryLink(
 					_serviceContext.getUserId(),
 					_serviceContext.getScopeGroupId(), 0,
-					fragmentEntry.getFragmentEntryId(), 0,
-					_portal.getClassNameId(Layout.class), plid,
+					fragmentEntry.getFragmentEntryId(), 0, plid,
 					fragmentEntry.getCss(), fragmentEntry.getHtml(),
 					fragmentEntry.getJs(), fragmentEntry.getConfiguration(),
 					editableValues, StringPool.BLANK, 0, contributedRendererKey,
@@ -262,10 +261,9 @@ public class BuildingsSiteInitializer implements SiteInitializer {
 
 			return _fragmentEntryLinkLocalService.addFragmentEntryLink(
 				_serviceContext.getUserId(), _serviceContext.getScopeGroupId(),
-				0, 0, 0, _portal.getClassNameId(Layout.class), plid,
-				StringPool.BLANK, StringPool.BLANK, StringPool.BLANK,
-				StringPool.BLANK, editableValues, StringPool.BLANK, 0,
-				fragmentEntryKey, _serviceContext);
+				0, 0, 0, plid, StringPool.BLANK, StringPool.BLANK,
+				StringPool.BLANK, StringPool.BLANK, editableValues,
+				StringPool.BLANK, 0, fragmentEntryKey, _serviceContext);
 		}
 		catch (Exception exception) {
 		}
@@ -302,11 +300,11 @@ public class BuildingsSiteInitializer implements SiteInitializer {
 	}
 
 	private void _addJournalArticleDDMStructures() throws Exception {
-		Enumeration<URL> urls = _bundle.findEntries(
+		Enumeration<URL> enumeration = _bundle.findEntries(
 			_PATH + "/ddm", StringPool.STAR, false);
 
-		while (urls.hasMoreElements()) {
-			URL url = urls.nextElement();
+		while (enumeration.hasMoreElements()) {
+			URL url = enumeration.nextElement();
 
 			Class<?> clazz = getClass();
 
@@ -364,25 +362,22 @@ public class BuildingsSiteInitializer implements SiteInitializer {
 			long parentLayoutId, String name, String type, String dataPath)
 		throws Exception {
 
-		Map<Locale, String> nameMap = HashMapBuilder.put(
-			LocaleUtil.getSiteDefault(), name
-		).build();
-
 		Layout layout = _layoutLocalService.addLayout(
 			_serviceContext.getUserId(), _serviceContext.getScopeGroupId(),
-			false, parentLayoutId, nameMap, new HashMap<>(), new HashMap<>(),
-			new HashMap<>(), new HashMap<>(), type, null, false, false,
-			new HashMap<>(), _serviceContext);
+			false, parentLayoutId,
+			HashMapBuilder.put(
+				LocaleUtil.getSiteDefault(), name
+			).build(),
+			new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(),
+			type, null, false, false, new HashMap<>(), _serviceContext);
 
 		if (Validator.isNotNull(dataPath)) {
-			Layout draftLayout = _layoutLocalService.fetchLayout(
-				_portal.getClassNameId(Layout.class), layout.getPlid());
+			Layout draftLayout = layout.fetchDraftLayout();
 
 			_layoutPageTemplateStructureLocalService.
 				addLayoutPageTemplateStructure(
 					_serviceContext.getUserId(),
-					_serviceContext.getScopeGroupId(),
-					_portal.getClassNameId(Layout.class), draftLayout.getPlid(),
+					_serviceContext.getScopeGroupId(), draftLayout.getPlid(),
 					_parseLayoutContent(
 						draftLayout.getPlid(),
 						_readFile("/layout-content/" + dataPath)),
@@ -510,8 +505,7 @@ public class BuildingsSiteInitializer implements SiteInitializer {
 	}
 
 	private void _copyLayout(Layout layout) throws Exception {
-		Layout draftLayout = _layoutLocalService.fetchLayout(
-			_portal.getClassNameId(Layout.class), layout.getPlid());
+		Layout draftLayout = layout.fetchDraftLayout();
 
 		if (draftLayout != null) {
 			_layoutCopyHelper.copyLayout(draftLayout, layout);

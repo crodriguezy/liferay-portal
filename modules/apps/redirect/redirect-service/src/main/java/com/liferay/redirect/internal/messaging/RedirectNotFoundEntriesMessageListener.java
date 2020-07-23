@@ -28,7 +28,7 @@ import com.liferay.portal.kernel.scheduler.TimeUnit;
 import com.liferay.portal.kernel.scheduler.Trigger;
 import com.liferay.portal.kernel.scheduler.TriggerFactory;
 import com.liferay.portal.kernel.util.Time;
-import com.liferay.redirect.internal.configuration.FFRedirectConfiguration;
+import com.liferay.redirect.internal.configuration.RedirectConfiguration;
 import com.liferay.redirect.model.RedirectNotFoundEntry;
 import com.liferay.redirect.service.RedirectNotFoundEntryLocalService;
 
@@ -45,7 +45,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Alicia García
  */
 @Component(
-	configurationPid = "com.liferay.redirect.internal.configuration.FFRedirectConfiguration",
+	configurationPid = "com.liferay.redirect.internal.configuration.RedirectConfiguration",
 	immediate = true, service = MessageListener.class
 )
 public class RedirectNotFoundEntriesMessageListener
@@ -54,8 +54,8 @@ public class RedirectNotFoundEntriesMessageListener
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
-		_ffRedirectConfiguration = ConfigurableUtil.createConfigurable(
-			FFRedirectConfiguration.class, properties);
+		_redirectConfiguration = ConfigurableUtil.createConfigurable(
+			RedirectConfiguration.class, properties);
 
 		Class<?> clazz = getClass();
 
@@ -78,31 +78,29 @@ public class RedirectNotFoundEntriesMessageListener
 
 	@Override
 	protected void doReceive(Message message) throws Exception {
-		if (_ffRedirectConfiguration.enabled()) {
-			ActionableDynamicQuery actionableDynamicQuery =
-				_redirectNotFoundEntryLocalService.getActionableDynamicQuery();
+		ActionableDynamicQuery actionableDynamicQuery =
+			_redirectNotFoundEntryLocalService.getActionableDynamicQuery();
 
-			int redirectNotFoundEntryMaxAge =
-				_ffRedirectConfiguration.redirectNotFoundEntryMaxAge();
+		int redirectNotFoundEntryMaxAge =
+			_redirectConfiguration.redirectNotFoundEntryMaxAge();
 
-			Date thresholdDate = new Date(
-				System.currentTimeMillis() -
-					(redirectNotFoundEntryMaxAge * Time.DAY));
+		Date thresholdDate = new Date(
+			System.currentTimeMillis() -
+				(redirectNotFoundEntryMaxAge * Time.DAY));
 
-			actionableDynamicQuery.setAddCriteriaMethod(
-				dynamicQuery -> dynamicQuery.add(
-					RestrictionsFactoryUtil.lt("modifiedDate", thresholdDate)));
+		actionableDynamicQuery.setAddCriteriaMethod(
+			dynamicQuery -> dynamicQuery.add(
+				RestrictionsFactoryUtil.lt("modifiedDate", thresholdDate)));
 
-			actionableDynamicQuery.setPerformActionMethod(
-				(RedirectNotFoundEntry redirectNotFoundEntry) ->
-					_redirectNotFoundEntryLocalService.
-						deleteRedirectNotFoundEntry(redirectNotFoundEntry));
+		actionableDynamicQuery.setPerformActionMethod(
+			(RedirectNotFoundEntry redirectNotFoundEntry) ->
+				_redirectNotFoundEntryLocalService.deleteRedirectNotFoundEntry(
+					redirectNotFoundEntry));
 
-			actionableDynamicQuery.performActions();
-		}
+		actionableDynamicQuery.performActions();
 	}
 
-	private volatile FFRedirectConfiguration _ffRedirectConfiguration;
+	private volatile RedirectConfiguration _redirectConfiguration;
 
 	@Reference
 	private RedirectNotFoundEntryLocalService

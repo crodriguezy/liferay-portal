@@ -156,6 +156,18 @@ public class LayoutsAdminManagementToolbarDisplayContext
 			}
 		).addPrimaryDropdownItem(
 			() ->
+				_layoutsAdminDisplayContext.isShowPublicPages() &&
+				(!_layoutsAdminDisplayContext.isPrivateLayout() ||
+				 _layoutsAdminDisplayContext.isFirstColumn() ||
+				 !_layoutsAdminDisplayContext.hasLayouts()),
+			dropdownItem -> {
+				dropdownItem.setHref(
+					_layoutsAdminDisplayContext.getSelectLayoutCollectionURL(
+						selPlid, null, false));
+				dropdownItem.setLabel(_getCollectionLayoutLabel(false));
+			}
+		).addPrimaryDropdownItem(
+			() ->
 				_layoutsAdminDisplayContext.isPrivateLayout() ||
 				_layoutsAdminDisplayContext.isFirstColumn() ||
 				!_layoutsAdminDisplayContext.hasLayouts(),
@@ -166,6 +178,17 @@ public class LayoutsAdminManagementToolbarDisplayContext
 							firstLayoutPageTemplateCollectionId, selPlid,
 							true));
 				dropdownItem.setLabel(_getLabel(true));
+			}
+		).addPrimaryDropdownItem(
+			() ->
+				_layoutsAdminDisplayContext.isPrivateLayout() ||
+				_layoutsAdminDisplayContext.isFirstColumn() ||
+				!_layoutsAdminDisplayContext.hasLayouts(),
+			dropdownItem -> {
+				dropdownItem.setHref(
+					_layoutsAdminDisplayContext.getSelectLayoutCollectionURL(
+						selPlid, null, true));
+				dropdownItem.setLabel(_getCollectionLayoutLabel(true));
 			}
 		).build();
 	}
@@ -255,6 +278,27 @@ public class LayoutsAdminManagementToolbarDisplayContext
 		}
 
 		return null;
+	}
+
+	private String _getCollectionLayoutLabel(boolean privateLayout) {
+		Layout layout = _layoutsAdminDisplayContext.getSelLayout();
+
+		if (layout != null) {
+			return LanguageUtil.format(
+				request, "add-child-collection-page-of-x",
+				layout.getName(_themeDisplay.getLocale()));
+		}
+
+		if (_isSiteTemplate()) {
+			return LanguageUtil.get(
+				request, "add-site-template-collection-page");
+		}
+
+		if (privateLayout) {
+			return LanguageUtil.get(request, "private-collection-page");
+		}
+
+		return LanguageUtil.get(request, "public-collection-page");
 	}
 
 	private String _getLabel(boolean privateLayout) {

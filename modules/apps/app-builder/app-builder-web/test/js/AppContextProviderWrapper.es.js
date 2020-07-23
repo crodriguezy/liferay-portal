@@ -24,7 +24,7 @@ export default ({
 	history = createMemoryHistory(),
 }) => {
 	return (
-		<AppContextProvider value={appContext}>
+		<AppContextProvider {...appContext}>
 			<div className="tools-control-group">
 				<div className="control-menu-level-1-heading" />
 			</div>

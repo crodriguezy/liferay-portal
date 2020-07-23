@@ -7,13 +7,8 @@ definition {
 	macro _add {
 		if (IsTextNotEqual(locator1 = "Portlet#HEADER", value1 = "Data Definitions")) {
 			AssertTextEquals(
-				locator1 = "Portlet#H3_MODAL_TITLE",
+				locator1 = "Portlet#MODAL_TITLE",
 				value1 = "Data Definitions");
-
-			LiferayEvent.waitForLiferayEvent(
-				attributeName = "src",
-				attributeValue = "dialog-iframe-popup",
-				eventName = "modalIframeLoaded");
 
 			SelectFrame(locator1 = "IFrame#MODAL_BODY");
 		}
@@ -32,11 +27,6 @@ definition {
 	}
 
 	macro _select {
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		var key_ddlDataDefinitionName = "${ddlDataDefinitionName}";
@@ -105,7 +95,7 @@ definition {
 			locator1 = "Button#COPY",
 			value1 = "Copy");
 
-		AssertElementPresent(locator1 = "Message#SUCCESS");
+		VerifyElementPresent(locator1 = "Message#SUCCESS");
 
 		DDLDataDefinition.viewName(ddlDataDefinitionName = "${ddlDataDefinitionCopyName}");
 	}
@@ -127,7 +117,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Dynamic Data Lists");
 
 		DDLNavigator.gotoManageDataDefinitions();
@@ -180,11 +169,6 @@ definition {
 	}
 
 	macro editPermissionsCP {
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		PermissionsInline.addOrRemoveViewPermissionFromAllRoles(
@@ -193,12 +177,7 @@ definition {
 	}
 
 	macro save {
-		if ("${changeListEnabled}" == "true") {
-			Button.clickPublishToChangeList();
-		}
-		else {
-			Click.mouseDownMouseUp(locator1 = "//span[contains(@class,'btn')][normalize-space(text())='Save']/..");
-		}
+		Click.mouseDownMouseUp(locator1 = "//span[contains(@class,'btn')][normalize-space(text())='Save']/..");
 
 		Alert.viewSuccessMessage();
 	}
@@ -230,11 +209,6 @@ definition {
 			Pause(locator1 = "1000");
 		}
 
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		AssertTextEquals.assertValue(
@@ -255,7 +229,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Dynamic Data Lists");
 
 		DDLNavigator.gotoManageDataDefinitions();
@@ -344,11 +317,6 @@ definition {
 		AssertClick(
 			locator1 = "Button#SELECT",
 			value1 = "Select");
-
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
 
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 

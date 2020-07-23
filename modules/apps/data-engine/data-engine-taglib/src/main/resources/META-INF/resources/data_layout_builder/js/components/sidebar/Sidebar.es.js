@@ -12,6 +12,7 @@
  * details.
  */
 
+import ClayLayout from '@clayui/layout';
 import classNames from 'classnames';
 import React, {useState} from 'react';
 
@@ -46,25 +47,35 @@ const SidebarHeader = ({children, className}) => {
 	);
 };
 
-const SidebarSearchInput = ({children, onSearch}) => (
-	<div className="autofit-row sidebar-section">
-		<div className="autofit-col autofit-col-expand">
+const SidebarSearchInput = ({children, onSearch, searchText}) => (
+	<ClayLayout.ContentRow className="sidebar-section">
+		<ClayLayout.ContentCol expand>
 			{onSearch && (
-				<SearchInput onChange={(searchText) => onSearch(searchText)} />
+				<SearchInput
+					onChange={(searchText) => onSearch(searchText)}
+					searchText={searchText}
+				/>
 			)}
-		</div>
+		</ClayLayout.ContentCol>
 
 		{children}
-	</div>
+	</ClayLayout.ContentRow>
 );
 
-const SidebarTabs = ({initialSelectedTab = 0, tabs}) => {
+const SidebarTabs = ({
+	initialSelectedTab = 0,
+	setKeywords = () => {},
+	tabs,
+}) => {
 	const [selectedTab, setSelectedTab] = useState(initialSelectedTab);
 
 	return (
 		<>
 			<SidebarTab
-				onTabClick={setSelectedTab}
+				onTabClick={(value) => {
+					setSelectedTab(value);
+					setKeywords('');
+				}}
 				selectedTab={selectedTab}
 				tabs={tabs}
 			/>
@@ -77,7 +88,7 @@ const SidebarTabs = ({initialSelectedTab = 0, tabs}) => {
 const SidebarTab = ({onTabClick, selectedTab, tabs}) => {
 	return (
 		<nav className="component-tbar tbar">
-			<div className="container-fluid">
+			<ClayLayout.ContainerFluid>
 				<ul className="nav nav-underline" role="tablist">
 					{tabs.map(({label}, index) => (
 						<li className="nav-item" key={index}>
@@ -100,7 +111,7 @@ const SidebarTab = ({onTabClick, selectedTab, tabs}) => {
 						</li>
 					))}
 				</ul>
-			</div>
+			</ClayLayout.ContainerFluid>
 		</nav>
 	);
 };
@@ -116,13 +127,13 @@ const SidebarTabContent = ({children}) => {
 };
 
 const SidebarTitle = ({title}) => (
-	<div className="autofit-row mb-3 sidebar-section">
-		<div className="autofit-col autofit-col-expand">
+	<ClayLayout.ContentRow className="mb-3 sidebar-section">
+		<ClayLayout.ContentCol expand>
 			<div className="component-title">
 				<span className="text-truncate-inline">{title}</span>
 			</div>
-		</div>
-	</div>
+		</ClayLayout.ContentCol>
+	</ClayLayout.ContentRow>
 );
 
 Sidebar.Body = SidebarBody;

@@ -48,8 +48,8 @@ definition {
 			fail("FAIL! Cannot find the warning message.");
 		}
 
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
+		ApplicationsMenu.gotoPortlet(
+			category = "Security",
 			panel = "Control Panel",
 			portlet = "Service Access Policy");
 
@@ -87,8 +87,8 @@ definition {
 			fail("FAIL! Cannot find the currrent user.");
 		}
 
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
+		ApplicationsMenu.gotoPortlet(
+			category = "Security",
 			panel = "Control Panel",
 			portlet = "Service Access Policy");
 

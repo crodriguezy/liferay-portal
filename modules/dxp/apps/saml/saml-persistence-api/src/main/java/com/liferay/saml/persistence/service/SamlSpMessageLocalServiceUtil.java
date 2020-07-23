@@ -41,6 +41,10 @@ public class SamlSpMessageLocalServiceUtil {
 	/**
 	 * Adds the saml sp message to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect SamlSpMessageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param samlSpMessage the saml sp message
 	 * @return the saml sp message that was added
 	 */
@@ -102,6 +106,10 @@ public class SamlSpMessageLocalServiceUtil {
 	/**
 	 * Deletes the saml sp message with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect SamlSpMessageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param samlSpMessageId the primary key of the saml sp message
 	 * @return the saml sp message that was removed
 	 * @throws PortalException if a saml sp message with the primary key could not be found
@@ -115,6 +123,10 @@ public class SamlSpMessageLocalServiceUtil {
 
 	/**
 	 * Deletes the saml sp message from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect SamlSpMessageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param samlSpMessage the saml sp message
 	 * @return the saml sp message that was removed
@@ -313,6 +325,10 @@ public class SamlSpMessageLocalServiceUtil {
 
 	/**
 	 * Updates the saml sp message in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect SamlSpMessageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param samlSpMessage the saml sp message
 	 * @return the saml sp message that was updated

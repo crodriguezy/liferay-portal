@@ -115,7 +115,7 @@ public class XMLWebFileCheck extends BaseFileCheck {
 
 		y = newContent.lastIndexOf("</url-pattern>", y) + 15;
 
-		sb = new StringBundler(3 * urlPatterns.size() + 1);
+		sb = new StringBundler((3 * urlPatterns.size()) + 1);
 
 		sb.append("\t\t\t<url-pattern>/c/portal/protected</url-pattern>\n");
 

@@ -27,7 +27,7 @@ DDMStructure ddmStructure = journalEditArticleDisplayContext.getDDMStructure();
 <aui:input name="ddmStructureKey" type="hidden" value="<%= ddmStructure.getStructureKey() %>" />
 
 <c:if test="<%= journalWebConfiguration.changeableDefaultLanguage() %>">
-	<div id="<%= renderResponse.getNamespace() + "-change-default-language" %>">
+	<div id="<%= liferayPortletResponse.getNamespace() + "-change-default-language" %>">
 		<react:component
 			data="<%= journalEditArticleDisplayContext.getChangeDefaultLanguageData() %>"
 			module="js/ChangeDefaultLanguage.es"
@@ -44,9 +44,11 @@ DDMStructure ddmStructure = journalEditArticleDisplayContext.getDDMStructure();
 	<p class="article-version-status">
 		<b><liferay-ui:message key="version" /></b>: <%= article.getVersion() %>
 
-		<span class="label label-<%= WorkflowConstants.getStatusStyle(article.getStatus()) %> ml-2 text-uppercase">
-			<liferay-ui:message key="<%= WorkflowConstants.getStatusLabel(article.getStatus()) %>" />
-		</span>
+		<clay:label
+			cssClass="ml-2 text-uppercase"
+			displayType="<%= WorkflowConstants.getStatusStyle(article.getStatus()) %>"
+			label="<%= WorkflowConstants.getStatusLabel(article.getStatus()) %>"
+		/>
 	</p>
 </c:if>
 
@@ -58,7 +60,7 @@ DDMStructure ddmStructure = journalEditArticleDisplayContext.getDDMStructure();
 			<aui:input label="" name="newArticleId" type="text" value="<%= (article != null) ? article.getArticleId() : StringPool.BLANK %>" wrapperCssClass="mb-1" />
 
 			<%
-			String taglibOnChange = "Liferay.Util.toggleDisabled('#" + renderResponse.getNamespace() + "newArticleId', event.target.checked);";
+			String taglibOnChange = "Liferay.Util.toggleDisabled('#" + liferayPortletResponse.getNamespace() + "newArticleId', event.target.checked);";
 			%>
 
 			<aui:input checked="<%= false %>" label="autogenerate-id" name="autoArticleId" onChange="<%= taglibOnChange %>" type="checkbox" value="<%= false %>" wrapperCssClass="mb-3" />

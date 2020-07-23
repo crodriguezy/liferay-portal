@@ -70,12 +70,12 @@ public class SystemEventModelImpl
 	public static final String TABLE_NAME = "SystemEvent";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"mvccVersion", Types.BIGINT}, {"systemEventId", Types.BIGINT},
-		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
-		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
-		{"createDate", Types.TIMESTAMP}, {"classNameId", Types.BIGINT},
-		{"classPK", Types.BIGINT}, {"classUuid", Types.VARCHAR},
-		{"referrerClassNameId", Types.BIGINT},
+		{"mvccVersion", Types.BIGINT}, {"ctCollectionId", Types.BIGINT},
+		{"systemEventId", Types.BIGINT}, {"groupId", Types.BIGINT},
+		{"companyId", Types.BIGINT}, {"userId", Types.BIGINT},
+		{"userName", Types.VARCHAR}, {"createDate", Types.TIMESTAMP},
+		{"classNameId", Types.BIGINT}, {"classPK", Types.BIGINT},
+		{"classUuid", Types.VARCHAR}, {"referrerClassNameId", Types.BIGINT},
 		{"parentSystemEventId", Types.BIGINT},
 		{"systemEventSetKey", Types.BIGINT}, {"type_", Types.INTEGER},
 		{"extraData", Types.CLOB}
@@ -86,6 +86,7 @@ public class SystemEventModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("ctCollectionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("systemEventId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
@@ -103,7 +104,7 @@ public class SystemEventModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table SystemEvent (mvccVersion LONG default 0 not null,systemEventId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,classNameId LONG,classPK LONG,classUuid VARCHAR(75) null,referrerClassNameId LONG,parentSystemEventId LONG,systemEventSetKey LONG,type_ INTEGER,extraData TEXT null)";
+		"create table SystemEvent (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,systemEventId LONG not null,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,classNameId LONG,classPK LONG,classUuid VARCHAR(75) null,referrerClassNameId LONG,parentSystemEventId LONG,systemEventSetKey LONG,type_ INTEGER,extraData TEXT null,primary key (systemEventId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP = "drop table SystemEvent";
 
@@ -119,20 +120,23 @@ public class SystemEventModelImpl
 
 	public static final String TX_MANAGER = "liferayTransactionManager";
 
-	public static final boolean ENTITY_CACHE_ENABLED = GetterUtil.getBoolean(
-		com.liferay.portal.util.PropsUtil.get(
-			"value.object.entity.cache.enabled.com.liferay.portal.kernel.model.SystemEvent"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean ENTITY_CACHE_ENABLED = true;
 
-	public static final boolean FINDER_CACHE_ENABLED = GetterUtil.getBoolean(
-		com.liferay.portal.util.PropsUtil.get(
-			"value.object.finder.cache.enabled.com.liferay.portal.kernel.model.SystemEvent"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean FINDER_CACHE_ENABLED = true;
 
-	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(
-		com.liferay.portal.util.PropsUtil.get(
-			"value.object.column.bitmask.enabled.com.liferay.portal.kernel.model.SystemEvent"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean COLUMN_BITMASK_ENABLED = true;
 
 	public static final long CLASSNAMEID_COLUMN_BITMASK = 1L;
 
@@ -201,9 +205,6 @@ public class SystemEventModelImpl
 				attributeName,
 				attributeGetterFunction.apply((SystemEvent)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -283,6 +284,11 @@ public class SystemEventModelImpl
 			"mvccVersion",
 			(BiConsumer<SystemEvent, Long>)SystemEvent::setMvccVersion);
 		attributeGetterFunctions.put(
+			"ctCollectionId", SystemEvent::getCtCollectionId);
+		attributeSetterBiConsumers.put(
+			"ctCollectionId",
+			(BiConsumer<SystemEvent, Long>)SystemEvent::setCtCollectionId);
+		attributeGetterFunctions.put(
 			"systemEventId", SystemEvent::getSystemEventId);
 		attributeSetterBiConsumers.put(
 			"systemEventId",
@@ -354,6 +360,16 @@ public class SystemEventModelImpl
 	@Override
 	public void setMvccVersion(long mvccVersion) {
 		_mvccVersion = mvccVersion;
+	}
+
+	@Override
+	public long getCtCollectionId() {
+		return _ctCollectionId;
+	}
+
+	@Override
+	public void setCtCollectionId(long ctCollectionId) {
+		_ctCollectionId = ctCollectionId;
 	}
 
 	@Override
@@ -646,6 +662,7 @@ public class SystemEventModelImpl
 		SystemEventImpl systemEventImpl = new SystemEventImpl();
 
 		systemEventImpl.setMvccVersion(getMvccVersion());
+		systemEventImpl.setCtCollectionId(getCtCollectionId());
 		systemEventImpl.setSystemEventId(getSystemEventId());
 		systemEventImpl.setGroupId(getGroupId());
 		systemEventImpl.setCompanyId(getCompanyId());
@@ -683,16 +700,16 @@ public class SystemEventModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof SystemEvent)) {
+		if (!(object instanceof SystemEvent)) {
 			return false;
 		}
 
-		SystemEvent systemEvent = (SystemEvent)obj;
+		SystemEvent systemEvent = (SystemEvent)object;
 
 		long primaryKey = systemEvent.getPrimaryKey();
 
@@ -709,11 +726,19 @@ public class SystemEventModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
 		return ENTITY_CACHE_ENABLED;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
 		return FINDER_CACHE_ENABLED;
@@ -754,6 +779,8 @@ public class SystemEventModelImpl
 			new SystemEventCacheModel();
 
 		systemEventCacheModel.mvccVersion = getMvccVersion();
+
+		systemEventCacheModel.ctCollectionId = getCtCollectionId();
 
 		systemEventCacheModel.systemEventId = getSystemEventId();
 
@@ -882,6 +909,7 @@ public class SystemEventModelImpl
 	}
 
 	private long _mvccVersion;
+	private long _ctCollectionId;
 	private long _systemEventId;
 	private long _groupId;
 	private long _originalGroupId;

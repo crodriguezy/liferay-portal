@@ -13,6 +13,7 @@
  */
 
 import ClayForm from '@clayui/form';
+import classNames from 'classnames';
 import React, {useContext, useState} from 'react';
 
 import AppContext from '../../../AppContext.es';
@@ -32,7 +33,9 @@ export default function ({title}) {
 	const displaySettings = hasFocusedCustomObjectField || hasFocusedField;
 
 	return (
-		<Sidebar>
+		<Sidebar
+			className={classNames({['display-settings']: displaySettings})}
+		>
 			<Sidebar.Header>
 				<Sidebar.Title title={title} />
 
@@ -42,6 +45,7 @@ export default function ({title}) {
 					<ClayForm onSubmit={(event) => event.preventDefault()}>
 						<Sidebar.SearchInput
 							onSearch={(keywords) => setKeywords(keywords)}
+							searchText={keywords}
 						/>
 					</ClayForm>
 				)}
@@ -51,7 +55,10 @@ export default function ({title}) {
 				{displaySettings ? (
 					<FieldsSidebarSettingsBody />
 				) : (
-					<FieldsSidebarBody keywords={keywords} />
+					<FieldsSidebarBody
+						keywords={keywords}
+						setKeywords={setKeywords}
+					/>
 				)}
 			</Sidebar.Body>
 		</Sidebar>

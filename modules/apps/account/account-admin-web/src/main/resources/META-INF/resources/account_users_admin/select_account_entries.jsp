@@ -18,12 +18,10 @@
 
 <%
 SearchContainer<AccountEntryDisplay> accountEntryDisplaySearchContainer = AccountEntryDisplaySearchContainerFactory.create(liferayPortletRequest, liferayPortletResponse);
-
-SelectAccountEntriesManagementToolbarDisplayContext selectAccountEntriesManagementToolbarDisplayContext = new SelectAccountEntriesManagementToolbarDisplayContext(request, liferayPortletRequest, liferayPortletResponse, accountEntryDisplaySearchContainer);
 %>
 
 <clay:management-toolbar
-	displayContext="<%= selectAccountEntriesManagementToolbarDisplayContext %>"
+	displayContext="<%= new SelectAccountEntriesManagementToolbarDisplayContext(request, liferayPortletRequest, liferayPortletResponse, accountEntryDisplaySearchContainer) %>"
 />
 
 <clay:container-fluid>
@@ -43,17 +41,11 @@ SelectAccountEntriesManagementToolbarDisplayContext selectAccountEntriesManageme
 
 			<liferay-ui:search-container-column-text
 				cssClass="table-cell-expand"
-				name="parent-account"
-				property="parentAccountEntryName"
-			/>
-
-			<liferay-ui:search-container-column-text
-				cssClass="table-cell-expand"
 				name="status"
 			>
 				<clay:label
-					label="<%= StringUtil.toUpperCase(LanguageUtil.get(request, accountEntryDisplay.getStatusLabel()), locale) %>"
-					style="<%= accountEntryDisplay.getStatusLabelStyle() %>"
+					displayType="<%= accountEntryDisplay.getStatusLabelStyle() %>"
+					label="<%= accountEntryDisplay.getStatusLabel() %>"
 				/>
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
@@ -83,7 +75,7 @@ SelectAccountEntriesManagementToolbarDisplayContext selectAccountEntriesManageme
 		}
 
 		Liferay.Util.getOpener().Liferay.fire(
-			'<%= HtmlUtil.escapeJS(renderResponse.getNamespace() + "selectAccountEntries") %>',
+			'<%= HtmlUtil.escapeJS(liferayPortletResponse.getNamespace() + "selectAccountEntries") %>',
 			result
 		);
 	});

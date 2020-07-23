@@ -36,6 +36,10 @@ public class DEDataListViewLocalServiceWrapper
 	/**
 	 * Adds the de data list view to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DEDataListViewLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param deDataListView the de data list view
 	 * @return the de data list view that was added
 	 */
@@ -86,6 +90,10 @@ public class DEDataListViewLocalServiceWrapper
 	/**
 	 * Deletes the de data list view from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DEDataListViewLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param deDataListView the de data list view
 	 * @return the de data list view that was removed
 	 */
@@ -98,6 +106,10 @@ public class DEDataListViewLocalServiceWrapper
 
 	/**
 	 * Deletes the de data list view with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DEDataListViewLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param deDataListViewId the primary key of the de data list view
 	 * @return the de data list view that was removed
@@ -419,6 +431,10 @@ public class DEDataListViewLocalServiceWrapper
 
 	/**
 	 * Updates the de data list view in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DEDataListViewLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param deDataListView the de data list view
 	 * @return the de data list view that was updated

@@ -33,6 +33,9 @@ import com.liferay.jenkins.results.parser.failure.message.generator.RebaseFailur
 import java.io.IOException;
 import java.io.StringWriter;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -114,13 +117,29 @@ public abstract class TopLevelBuild extends BaseBuild {
 		}
 	}
 
+	public String getAcceptanceUpstreamJobName() {
+		String jobName = getJobName();
+
+		if (jobName.contains("pullrequest")) {
+			String branchName = getBranchName();
+
+			if (branchName.startsWith("ee-")) {
+				return jobName.replace("pullrequest", "upstream");
+			}
+
+			return jobName.replace("pullrequest", "upstream-dxp");
+		}
+
+		return "";
+	}
+
 	public String getAcceptanceUpstreamJobURL() {
 		String jobName = getJobName();
 
 		if (jobName.contains("pullrequest")) {
 			String acceptanceUpstreamJobURL = JenkinsResultsParserUtil.combine(
 				"https://test-1-1.liferay.com/job/",
-				jobName.replace("pullrequest", "upstream-dxp"));
+				getAcceptanceUpstreamJobName());
 
 			try {
 				JenkinsResultsParserUtil.toString(
@@ -133,6 +152,43 @@ public abstract class TopLevelBuild extends BaseBuild {
 			}
 
 			return acceptanceUpstreamJobURL;
+		}
+
+		return null;
+	}
+
+	@Override
+	public URL getArtifactsBaseURL() {
+		StringBuilder sb = new StringBuilder();
+
+		try {
+			URL buildBaseArtifactURL = new URL(
+				JenkinsResultsParserUtil.getBuildProperty(
+					"build.base.artifact.url"));
+
+			sb.append(buildBaseArtifactURL);
+		}
+		catch (IOException ioException) {
+			return null;
+		}
+
+		TopLevelBuild topLevelBuild = getTopLevelBuild();
+
+		JenkinsMaster jenkinsMaster = topLevelBuild.getJenkinsMaster();
+
+		sb.append("/");
+		sb.append(jenkinsMaster.getName());
+		sb.append("/");
+		sb.append(topLevelBuild.getStartTime());
+		sb.append("/");
+		sb.append(topLevelBuild.getJobName());
+		sb.append("/");
+		sb.append(topLevelBuild.getBuildNumber());
+
+		try {
+			return new URL(sb.toString());
+		}
+		catch (MalformedURLException malformedURLException) {
 		}
 
 		return null;
@@ -188,6 +244,24 @@ public abstract class TopLevelBuild extends BaseBuild {
 		return gitRepositoryGitDetailsTempMap.get("github.sender.username");
 	}
 
+	public Build getControllerBuild() {
+		if (_controllerBuild != null) {
+			return _controllerBuild;
+		}
+
+		String controllerBuildURL = getParameterValue("CONTROLLER_BUILD_URL");
+
+		if ((controllerBuildURL == null) ||
+			!controllerBuildURL.matches("https?://.*")) {
+
+			return null;
+		}
+
+		_controllerBuild = BuildFactory.newBuild(controllerBuildURL, null);
+
+		return _controllerBuild;
+	}
+
 	@Override
 	public String getDisplayName() {
 		String displayName = super.getDisplayName();
@@ -197,6 +271,39 @@ public abstract class TopLevelBuild extends BaseBuild {
 		}
 
 		return displayName;
+	}
+
+	public List<AxisBuild> getDownstreamAxisBuilds() {
+		List<AxisBuild> downstreamAxisBuilds = new ArrayList<>();
+
+		for (BatchBuild downstreamBatchBuild : getDownstreamBatchBuilds()) {
+			downstreamAxisBuilds.addAll(
+				downstreamBatchBuild.getDownstreamAxisBuilds());
+		}
+
+		Collections.sort(
+			downstreamAxisBuilds, new BaseBuild.BuildDisplayNameComparator());
+
+		return downstreamAxisBuilds;
+	}
+
+	public List<BatchBuild> getDownstreamBatchBuilds() {
+		List<BatchBuild> downstreamBatchBuilds = new ArrayList<>();
+
+		List<Build> downstreamBuilds = getDownstreamBuilds(null);
+
+		for (Build downstreamBuild : downstreamBuilds) {
+			if (!(downstreamBuild instanceof BatchBuild)) {
+				continue;
+			}
+
+			downstreamBatchBuilds.add((BatchBuild)downstreamBuild);
+		}
+
+		Collections.sort(
+			downstreamBatchBuilds, new BaseBuild.BuildDisplayNameComparator());
+
+		return downstreamBatchBuilds;
 	}
 
 	@Override
@@ -303,7 +410,7 @@ public abstract class TopLevelBuild extends BaseBuild {
 	}
 
 	@Override
-	public JSONObject getTestReportJSONObject() {
+	public JSONObject getTestReportJSONObject(boolean cache) {
 		return null;
 	}
 
@@ -336,6 +443,11 @@ public abstract class TopLevelBuild extends BaseBuild {
 		}
 
 		return validationBuild.getGitHubMessageElement();
+	}
+
+	@Override
+	public boolean isUniqueFailure() {
+		return true;
 	}
 
 	@Override
@@ -586,7 +698,7 @@ public abstract class TopLevelBuild extends BaseBuild {
 
 	protected Element[] getBuildFailureElements() {
 		Map<Build, Element> downstreamBuildFailureMessages =
-			getDownstreamBuildMessages("ABORTED", "FAILURE", "UNSTABLE");
+			getDownstreamBuildMessages(getFailedDownstreamBuilds());
 
 		List<Element> allCurrentBuildFailureElements = new ArrayList<>();
 		List<Element> upstreamBuildFailureElements = new ArrayList<>();
@@ -601,9 +713,7 @@ public abstract class TopLevelBuild extends BaseBuild {
 			Element failureElement = entry.getValue();
 
 			if (failureElement != null) {
-				if (UpstreamFailureUtil.isBuildFailingInUpstreamJob(
-						failedDownstreamBuild)) {
-
+				if (!failedDownstreamBuild.isUniqueFailure()) {
 					upstreamBuildFailureElements.add(failureElement);
 
 					continue;
@@ -1274,7 +1384,7 @@ public abstract class TopLevelBuild extends BaseBuild {
 
 		int successCount = getDownstreamBuildCountByResult("SUCCESS");
 
-		if ((result != null) && result.equals("SUCCESS")) {
+		if ((result != null) && result.matches("(APPROVED|SUCCESS)")) {
 			successCount++;
 
 			sb.append(":heavy_check_mark: ");
@@ -1564,6 +1674,7 @@ public abstract class TopLevelBuild extends BaseBuild {
 		JenkinsResultsParserUtil.getNewThreadPoolExecutor(10, true);
 
 	private boolean _compareToUpstream = true;
+	private Build _controllerBuild;
 	private long _lastDownstreamBuildsListingTimestamp = -1L;
 	private String _metricsHostName;
 	private int _metricsHostPort;

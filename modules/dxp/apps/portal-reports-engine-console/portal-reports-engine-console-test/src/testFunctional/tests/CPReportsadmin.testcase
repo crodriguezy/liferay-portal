@@ -35,7 +35,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.gotoDefinitions();
@@ -97,7 +96,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.gotoDefinitions();
@@ -128,7 +126,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.viewReportEntry(reportsDefinitionName = "Reports Definition Name");
@@ -150,7 +147,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.gotoDefinitions();
@@ -188,7 +184,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.gotoDefinitions();
@@ -220,7 +215,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.viewReportEntry(reportsDefinitionName = "Reports Definition Name");
@@ -230,9 +224,6 @@ definition {
 
 	@priority = "4"
 	test DeliverReportToEmail {
-		property portal.acceptance = "true";
-		property portal.upstream = "quarantine";
-
 		property test.assert.javascript.errors = "false";
 		property test.smtp.server.enabled = "true";
 		var portalURL = PropsUtil.get("portal.url");
@@ -241,7 +232,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.gotoDefinitions();
@@ -287,7 +277,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.gotoDefinitions();
@@ -322,7 +311,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.gotoDefinitions();
@@ -359,7 +347,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.gotoDefinitions();
@@ -396,7 +383,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.gotoDefinitions();
@@ -431,7 +417,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.gotoDefinitions();
@@ -466,7 +451,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.gotoDefinitions();
@@ -501,7 +485,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.gotoDefinitions();
@@ -543,7 +526,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.gotoSources();
@@ -570,8 +552,8 @@ definition {
 
 		var siteName = TestCase.getSiteName(siteName = "${siteName}");
 
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
+		ApplicationsMenu.gotoPortlet(
+			category = "System",
 			panel = "Control Panel",
 			portlet = "Server Administration");
 
@@ -583,7 +565,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.gotoDefinitions();
@@ -648,8 +629,8 @@ definition {
 		var portalURL = PropsUtil.get("portal.url");
 		property test.assert.javascript.errors = "false";
 
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
+		ApplicationsMenu.gotoPortlet(
+			category = "System",
 			panel = "Control Panel",
 			portlet = "Server Administration");
 
@@ -661,7 +642,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.gotoDefinitions();
@@ -713,7 +693,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Reports Admin");
 
 		ReportsAdmin.gotoDefinitions();

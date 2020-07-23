@@ -26,7 +26,6 @@ import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanReference;
-import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.cache.PortalCacheMapSynchronizeUtil;
 import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -43,6 +42,7 @@ import com.liferay.portal.kernel.exception.NoSuchTicketException;
 import com.liferay.portal.kernel.exception.NoSuchUserException;
 import com.liferay.portal.kernel.exception.PasswordExpiredException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.PwdEncryptorException;
 import com.liferay.portal.kernel.exception.RequiredRoleException;
 import com.liferay.portal.kernel.exception.RequiredUserException;
 import com.liferay.portal.kernel.exception.SendPasswordException;
@@ -101,7 +101,6 @@ import com.liferay.portal.kernel.security.auth.FullNameGeneratorFactory;
 import com.liferay.portal.kernel.security.auth.FullNameValidator;
 import com.liferay.portal.kernel.security.auth.PasswordModificationThreadLocal;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
-import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.security.auth.ScreenNameGenerator;
 import com.liferay.portal.kernel.security.auth.ScreenNameValidator;
 import com.liferay.portal.kernel.security.ldap.LDAPSettingsUtil;
@@ -1184,10 +1183,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			workflowServiceContext = (ServiceContext)serviceContext.clone();
 		}
 
-		workflowServiceContext.setAttribute("autoPassword", autoPassword);
-		workflowServiceContext.setAttribute("passwordUnencrypted", password1);
-		workflowServiceContext.setAttribute("sendEmail", sendEmail);
-
 		Map<String, Serializable> workflowContext =
 			(Map<String, Serializable>)workflowServiceContext.removeAttribute(
 				"workflowContext");
@@ -1195,6 +1190,12 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		if (workflowContext == null) {
 			workflowContext = Collections.emptyMap();
 		}
+
+		workflowServiceContext.setAttributes(
+			new HashMap<String, Serializable>());
+
+		workflowServiceContext.setAttribute("autoPassword", autoPassword);
+		workflowServiceContext.setAttribute("sendEmail", sendEmail);
 
 		user = WorkflowHandlerRegistryUtil.startWorkflowInstance(
 			companyId, WorkflowConstants.DEFAULT_GROUP_ID, workflowUserId,
@@ -1685,8 +1686,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		boolean autoPassword = ParamUtil.getBoolean(
 			serviceContext, "autoPassword");
 
-		String password = (String)serviceContext.getAttribute(
-			"passwordUnencrypted");
+		String password = StringPool.BLANK;
 
 		if (autoPassword) {
 			if (LDAPSettingsUtil.isPasswordPolicyEnabled(user.getCompanyId())) {
@@ -2201,25 +2201,24 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * @param  status the workflow status
 	 * @param  start the lower bound of the range of users
 	 * @param  end the upper bound of the range of users (not inclusive)
-	 * @param  obc the comparator to order the users by (optionally
+	 * @param  orderByComparator the comparator to order the users by (optionally
 	 *         <code>null</code>)
 	 * @return the matching users
 	 */
 	@Override
 	public List<User> getGroupUsers(
 			long groupId, int status, int start, int end,
-			OrderByComparator<User> obc)
+			OrderByComparator<User> orderByComparator)
 		throws PortalException {
 
 		Group group = groupPersistence.findByPrimaryKey(groupId);
 
-		LinkedHashMap<String, Object> params =
+		return search(
+			group.getCompanyId(), null, status,
 			LinkedHashMapBuilder.<String, Object>put(
 				"usersGroups", Long.valueOf(groupId)
-			).build();
-
-		return search(
-			group.getCompanyId(), null, status, params, start, end, obc);
+			).build(),
+			start, end, orderByComparator);
 	}
 
 	/**
@@ -2227,17 +2226,18 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 *
 	 * @param  groupId the primary key of the group
 	 * @param  status the workflow status
-	 * @param  obc the comparator to order the users by (optionally
+	 * @param  orderByComparator the comparator to order the users by (optionally
 	 *         <code>null</code>)
 	 * @return the matching users
 	 */
 	@Override
 	public List<User> getGroupUsers(
-			long groupId, int status, OrderByComparator<User> obc)
+			long groupId, int status, OrderByComparator<User> orderByComparator)
 		throws PortalException {
 
 		return getGroupUsers(
-			groupId, status, QueryUtil.ALL_POS, QueryUtil.ALL_POS, obc);
+			groupId, status, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			orderByComparator);
 	}
 
 	/**
@@ -2253,31 +2253,29 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		Group group = groupPersistence.findByPrimaryKey(groupId);
 
-		LinkedHashMap<String, Object> params =
+		return searchCount(
+			group.getCompanyId(), null, status,
 			LinkedHashMapBuilder.<String, Object>put(
 				"usersGroups", Long.valueOf(groupId)
-			).build();
-
-		return searchCount(group.getCompanyId(), null, status, params);
+			).build());
 	}
 
 	@Override
 	public List<User> getInheritedRoleUsers(
-			long roleId, int start, int end, OrderByComparator<User> obc)
+			long roleId, int start, int end,
+			OrderByComparator<User> orderByComparator)
 		throws PortalException {
 
 		Role role = rolePersistence.findByPrimaryKey(roleId);
 
-		LinkedHashMap<String, Object> params =
+		return search(
+			role.getCompanyId(), null, WorkflowConstants.STATUS_APPROVED,
 			LinkedHashMapBuilder.<String, Object>put(
 				"inherit", Boolean.TRUE
 			).put(
 				"usersRoles", roleId
-			).build();
-
-		return search(
-			role.getCompanyId(), null, WorkflowConstants.STATUS_APPROVED,
-			params, start, end, obc);
+			).build(),
+			start, end, orderByComparator);
 	}
 
 	/**
@@ -2329,26 +2327,25 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * @param  status the workflow status
 	 * @param  start the lower bound of the range of users
 	 * @param  end the upper bound of the range of users (not inclusive)
-	 * @param  obc the comparator to order the users by (optionally
+	 * @param  orderByComparator the comparator to order the users by (optionally
 	 *         <code>null</code>)
 	 * @return the matching users
 	 */
 	@Override
 	public List<User> getOrganizationUsers(
 			long organizationId, int status, int start, int end,
-			OrderByComparator<User> obc)
+			OrderByComparator<User> orderByComparator)
 		throws PortalException {
 
 		Organization organization = organizationPersistence.findByPrimaryKey(
 			organizationId);
 
-		LinkedHashMap<String, Object> params =
+		return search(
+			organization.getCompanyId(), null, status,
 			LinkedHashMapBuilder.<String, Object>put(
 				"usersOrgs", Long.valueOf(organizationId)
-			).build();
-
-		return search(
-			organization.getCompanyId(), null, status, params, start, end, obc);
+			).build(),
+			start, end, orderByComparator);
 	}
 
 	/**
@@ -2356,17 +2353,19 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 *
 	 * @param  organizationId the primary key of the organization
 	 * @param  status the workflow status
-	 * @param  obc the comparator to order the users by (optionally
+	 * @param  orderByComparator the comparator to order the users by (optionally
 	 *         <code>null</code>)
 	 * @return the matching users
 	 */
 	@Override
 	public List<User> getOrganizationUsers(
-			long organizationId, int status, OrderByComparator<User> obc)
+			long organizationId, int status,
+			OrderByComparator<User> orderByComparator)
 		throws PortalException {
 
 		return getOrganizationUsers(
-			organizationId, status, QueryUtil.ALL_POS, QueryUtil.ALL_POS, obc);
+			organizationId, status, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			orderByComparator);
 	}
 
 	/**
@@ -2384,12 +2383,11 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		Organization organization = organizationPersistence.findByPrimaryKey(
 			organizationId);
 
-		LinkedHashMap<String, Object> params =
+		return searchCount(
+			organization.getCompanyId(), null, status,
 			LinkedHashMapBuilder.<String, Object>put(
 				"usersOrgs", Long.valueOf(organizationId)
-			).build();
-
-		return searchCount(organization.getCompanyId(), null, status, params);
+			).build());
 	}
 
 	/**
@@ -2416,19 +2414,18 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		Role role = rolePersistence.findByPrimaryKey(roleId);
 
-		LinkedHashMap<String, Object> params =
+		return searchCount(
+			role.getCompanyId(), null, status,
 			LinkedHashMapBuilder.<String, Object>put(
 				"usersRoles", Long.valueOf(roleId)
-			).build();
-
-		return searchCount(role.getCompanyId(), null, status, params);
+			).build());
 	}
 
 	@Override
 	public List<User> getSocialUsers(
 			long userId, int socialRelationType,
 			String socialRelationTypeComparator, int start, int end,
-			OrderByComparator<User> obc)
+			OrderByComparator<User> orderByComparator)
 		throws PortalException {
 
 		if (!socialRelationTypeComparator.equals(StringPool.EQUAL) &&
@@ -2467,8 +2464,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 				}
 			}
 
-			if (obc != null) {
-				users = ListUtil.sort(users, obc);
+			if (orderByComparator != null) {
+				users = ListUtil.sort(users, orderByComparator);
 			}
 
 			return users;
@@ -2479,7 +2476,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		return userFinder.findBySocialUsers(
 			user.getCompanyId(), userId, socialRelationType,
 			socialRelationTypeComparator, WorkflowConstants.STATUS_APPROVED,
-			start, end, obc);
+			start, end, orderByComparator);
 	}
 
 	/**
@@ -2501,7 +2498,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 *         types can be found in {@link SocialRelationConstants}.
 	 * @param  start the lower bound of the range of users
 	 * @param  end the upper bound of the range of users (not inclusive)
-	 * @param  obc the comparator to order the users by (optionally
+	 * @param  orderByComparator the comparator to order the users by (optionally
 	 *         <code>null</code>)
 	 * @return the ordered range of users with a mutual social relation of the
 	 *         type with the user
@@ -2509,23 +2506,21 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	@Override
 	public List<User> getSocialUsers(
 			long userId1, long userId2, int socialRelationType, int start,
-			int end, OrderByComparator<User> obc)
+			int end, OrderByComparator<User> orderByComparator)
 		throws PortalException {
 
 		User user1 = userPersistence.findByPrimaryKey(userId1);
 
-		LinkedHashMap<String, Object> params =
+		return search(
+			user1.getCompanyId(), null, WorkflowConstants.STATUS_APPROVED,
 			LinkedHashMapBuilder.<String, Object>put(
 				"socialMutualRelationType",
 				new Long[] {
 					userId1, Long.valueOf(socialRelationType), userId2,
 					Long.valueOf(socialRelationType)
 				}
-			).build();
-
-		return search(
-			user1.getCompanyId(), null, WorkflowConstants.STATUS_APPROVED,
-			params, start, end, obc);
+			).build(),
+			start, end, orderByComparator);
 	}
 
 	/**
@@ -2545,7 +2540,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 * @param  userId2 the primary key of the second user
 	 * @param  start the lower bound of the range of users
 	 * @param  end the upper bound of the range of users (not inclusive)
-	 * @param  obc the comparator to order the users by (optionally
+	 * @param  orderByComparator the comparator to order the users by (optionally
 	 *         <code>null</code>)
 	 * @return the ordered range of users with a mutual social relation with the
 	 *         user
@@ -2553,19 +2548,17 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	@Override
 	public List<User> getSocialUsers(
 			long userId1, long userId2, int start, int end,
-			OrderByComparator<User> obc)
+			OrderByComparator<User> orderByComparator)
 		throws PortalException {
 
 		User user1 = userPersistence.findByPrimaryKey(userId1);
 
-		LinkedHashMap<String, Object> params =
-			LinkedHashMapBuilder.<String, Object>put(
-				"socialMutualRelation", new Long[] {userId1, userId2}
-			).build();
-
 		return search(
 			user1.getCompanyId(), null, WorkflowConstants.STATUS_APPROVED,
-			params, start, end, obc);
+			LinkedHashMapBuilder.<String, Object>put(
+				"socialMutualRelation", new Long[] {userId1, userId2}
+			).build(),
+			start, end, orderByComparator);
 	}
 
 	/**
@@ -2611,14 +2604,11 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		User user1 = userPersistence.findByPrimaryKey(userId1);
 
-		LinkedHashMap<String, Object> params =
-			LinkedHashMapBuilder.<String, Object>put(
-				"socialMutualRelation", new Long[] {userId1, userId2}
-			).build();
-
 		return searchCount(
 			user1.getCompanyId(), null, WorkflowConstants.STATUS_APPROVED,
-			params);
+			LinkedHashMapBuilder.<String, Object>put(
+				"socialMutualRelation", new Long[] {userId1, userId2}
+			).build());
 	}
 
 	/**
@@ -2639,18 +2629,15 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		User user1 = userPersistence.findByPrimaryKey(userId1);
 
-		LinkedHashMap<String, Object> params =
+		return searchCount(
+			user1.getCompanyId(), null, WorkflowConstants.STATUS_APPROVED,
 			LinkedHashMapBuilder.<String, Object>put(
 				"socialMutualRelationType",
 				new Long[] {
 					userId1, Long.valueOf(socialRelationType), userId2,
 					Long.valueOf(socialRelationType)
 				}
-			).build();
-
-		return searchCount(
-			user1.getCompanyId(), null, WorkflowConstants.STATUS_APPROVED,
-			params);
+			).build());
 	}
 
 	/**
@@ -2816,12 +2803,11 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		UserGroup userGroup = userGroupPersistence.findByPrimaryKey(
 			userGroupId);
 
-		LinkedHashMap<String, Object> params =
+		return searchCount(
+			userGroup.getCompanyId(), null, status,
 			LinkedHashMapBuilder.<String, Object>put(
 				"usersUserGroups", Long.valueOf(userGroupId)
-			).build();
-
-		return searchCount(userGroup.getCompanyId(), null, status, params);
+			).build());
 	}
 
 	/**
@@ -2863,10 +2849,10 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	@Override
 	public List<User> getUsers(
 		long companyId, boolean defaultUser, int status, int start, int end,
-		OrderByComparator<User> obc) {
+		OrderByComparator<User> orderByComparator) {
 
 		return userPersistence.findByC_DU_S(
-			companyId, defaultUser, status, start, end, obc);
+			companyId, defaultUser, status, start, end, orderByComparator);
 	}
 
 	@Override
@@ -2983,7 +2969,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 *         com.liferay.portal.kernel.service.persistence.UserFinder}.
 	 * @param  start the lower bound of the range of users
 	 * @param  end the upper bound of the range of users (not inclusive)
-	 * @param  obc the comparator to order the users by (optionally
+	 * @param  orderByComparator the comparator to order the users by (optionally
 	 *         <code>null</code>)
 	 * @return the matching users
 	 * @see    com.liferay.portal.kernel.service.persistence.UserFinder
@@ -2992,7 +2978,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	public List<User> search(
 		long companyId, String keywords, int status,
 		LinkedHashMap<String, Object> params, int start, int end,
-		OrderByComparator<User> obc) {
+		OrderByComparator<User> orderByComparator) {
 
 		Indexer<?> indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
 
@@ -3000,14 +2986,15 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			!PropsValues.USERS_SEARCH_WITH_INDEX || isUseCustomSQL(params)) {
 
 			return userFinder.findByKeywords(
-				companyId, keywords, status, params, start, end, obc);
+				companyId, keywords, status, params, start, end,
+				orderByComparator);
 		}
 
 		try {
 			return UsersAdminUtil.getUsers(
 				search(
 					companyId, keywords, status, params, start, end,
-					getSorts(obc)));
+					getSorts(orderByComparator)));
 		}
 		catch (Exception exception) {
 			throw new SystemException(exception);
@@ -3138,7 +3125,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	 *         or the last name 'smith'&quot;.
 	 * @param  start the lower bound of the range of users
 	 * @param  end the upper bound of the range of users (not inclusive)
-	 * @param  obc the comparator to order the users by (optionally
+	 * @param  orderByComparator the comparator to order the users by (optionally
 	 *         <code>null</code>)
 	 * @return the matching users
 	 * @see    com.liferay.portal.kernel.service.persistence.UserFinder
@@ -3148,7 +3135,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		long companyId, String firstName, String middleName, String lastName,
 		String screenName, String emailAddress, int status,
 		LinkedHashMap<String, Object> params, boolean andSearch, int start,
-		int end, OrderByComparator<User> obc) {
+		int end, OrderByComparator<User> orderByComparator) {
 
 		Indexer<?> indexer = IndexerRegistryUtil.nullSafeGetIndexer(User.class);
 
@@ -3157,7 +3144,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 			return userFinder.findByC_FN_MN_LN_SN_EA_S(
 				companyId, firstName, middleName, lastName, screenName,
-				emailAddress, status, params, andSearch, start, end, obc);
+				emailAddress, status, params, andSearch, start, end,
+				orderByComparator);
 		}
 
 		try {
@@ -3165,7 +3153,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 				search(
 					companyId, firstName, middleName, lastName, screenName,
 					emailAddress, status, params, andSearch, start, end,
-					getSorts(obc)));
+					getSorts(orderByComparator)));
 		}
 		catch (Exception exception) {
 			throw new SystemException(exception);
@@ -3388,7 +3376,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		User user = userPersistence.findByPrimaryKey(userId);
 
-		LinkedHashMap<String, Object> params =
+		return userFinder.findByKeywords(
+			user.getCompanyId(), keywords, WorkflowConstants.STATUS_APPROVED,
 			LinkedHashMapBuilder.<String, Object>put(
 				"socialRelationType",
 				new Long[][] {
@@ -3396,11 +3385,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 				}
 			).put(
 				"wildcardMode", WildcardMode.TRAILING
-			).build();
-
-		return userFinder.findByKeywords(
-			user.getCompanyId(), keywords, WorkflowConstants.STATUS_APPROVED,
-			params, start, end, null);
+			).build(),
+			start, end, null);
 	}
 
 	@Override
@@ -3413,18 +3399,16 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	@Override
 	public List<User> searchSocial(
 		long companyId, long[] groupIds, String keywords, int start, int end,
-		OrderByComparator<User> obc) {
+		OrderByComparator<User> orderByComparator) {
 
-		LinkedHashMap<String, Object> params =
+		return userFinder.findByKeywords(
+			companyId, keywords, WorkflowConstants.STATUS_APPROVED,
 			LinkedHashMapBuilder.<String, Object>put(
 				"usersGroups", ArrayUtil.toLongArray(groupIds)
 			).put(
 				"wildcardMode", WildcardMode.TRAILING
-			).build();
-
-		return userFinder.findByKeywords(
-			companyId, keywords, WorkflowConstants.STATUS_APPROVED, params,
-			start, end, obc);
+			).build(),
+			start, end, orderByComparator);
 	}
 
 	@Override
@@ -3435,7 +3419,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		User user = userPersistence.findByPrimaryKey(userId);
 
-		LinkedHashMap<String, Object> params =
+		return userFinder.findByKeywords(
+			user.getCompanyId(), keywords, WorkflowConstants.STATUS_APPROVED,
 			LinkedHashMapBuilder.<String, Object>put(
 				"socialRelationType",
 				new Long[][] {
@@ -3447,11 +3432,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 				"usersGroups", ArrayUtil.toLongArray(groupIds)
 			).put(
 				"wildcardMode", WildcardMode.TRAILING
-			).build();
-
-		return userFinder.findByKeywords(
-			user.getCompanyId(), keywords, WorkflowConstants.STATUS_APPROVED,
-			params, start, end, null);
+			).build(),
+			start, end, null);
 	}
 
 	@Override
@@ -3641,12 +3623,9 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		mailTemplateContextBuilder.put(
 			"[$USER_SCREENNAME$]", HtmlUtil.escape(user.getScreenName()));
 
-		MailTemplateContext mailTemplateContext =
-			mailTemplateContextBuilder.build();
-
 		_sendNotificationEmail(
 			fromAddress, fromName, emailAddress, user, subject, body,
-			mailTemplateContext);
+			mailTemplateContextBuilder.build());
 	}
 
 	/**
@@ -3887,6 +3866,8 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			long groupId, long[] userIds, ServiceContext serviceContext)
 		throws PortalException {
 
+		userGroupRoleLocalService.deleteUserGroupRoles(
+			userIds, groupId, RoleConstants.TYPE_DEPOT);
 		userGroupRoleLocalService.deleteUserGroupRoles(
 			userIds, groupId, RoleConstants.TYPE_SITE);
 
@@ -4755,8 +4736,20 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		user.setPasswordEncrypted(true);
 		user.setPasswordReset(passwordReset);
 
-		if (!silentUpdate || (user.getPasswordModifiedDate() == null)) {
-			user.setPasswordModifiedDate(new Date());
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		if (!silentUpdate || (user.getPasswordModifiedDate() == null) ||
+			!_isPasswordUnchanged(user, password1, newEncPwd)) {
+
+			Date modifiedDate = serviceContext.getModifiedDate();
+
+			if (modifiedDate != null) {
+				user.setPasswordModifiedDate(modifiedDate);
+			}
+			else {
+				user.setPasswordModifiedDate(new Date());
+			}
 		}
 
 		user.setDigest(user.getDigest(password1));
@@ -4802,10 +4795,10 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			user.setPasswordModified(false);
 		}
 
-		if (!silentUpdate && (PrincipalThreadLocal.getUserId() != userId)) {
+		if (!silentUpdate) {
 			sendPasswordNotification(
 				user, user.getCompanyId(), password1, null, null, null, null,
-				null, ServiceContextThreadLocal.getServiceContext());
+				null, serviceContext);
 		}
 
 		_invalidateTicket(user);
@@ -5817,14 +5810,15 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		return StringUtil.lowerCase(StringUtil.trim(login));
 	}
 
-	protected Sort[] getSorts(OrderByComparator<User> obc) {
-		if (obc == null) {
+	protected Sort[] getSorts(OrderByComparator<User> orderByComparator) {
+		if (orderByComparator == null) {
 			return new Sort[0];
 		}
 
-		String[] orderByClauses = StringUtil.split(obc.getOrderBy());
+		String[] orderByClauses = StringUtil.split(
+			orderByComparator.getOrderBy());
 
-		String[] orderByFields = obc.getOrderByFields();
+		String[] orderByFields = orderByComparator.getOrderByFields();
 
 		Sort[] sorts = new Sort[orderByFields.length];
 
@@ -6837,6 +6831,17 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	@BeanReference(type = MailService.class)
 	protected MailService mailService;
 
+	private static boolean _isPasswordUnchanged(
+			User user, String newPlaintextPwd, String newEncPwd)
+		throws PwdEncryptorException {
+
+		if (!user.isPasswordEncrypted()) {
+			return newPlaintextPwd.equals(user.getPassword());
+		}
+
+		return newEncPwd.equals(user.getPassword());
+	}
+
 	private User _checkPasswordPolicy(User user) throws PortalException {
 
 		// Check password policy to see if the is account locked out or if the
@@ -6966,11 +6971,9 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 				registry.callService(
 					EntityCache.class,
 					entityCache -> {
-						PortalCache<Serializable, Serializable> portalCache =
-							entityCache.getPortalCache(UserImpl.class);
-
 						PortalCacheMapSynchronizeUtil.synchronize(
-							portalCache, _defaultUsers, _synchronizer);
+							entityCache.getPortalCache(UserImpl.class),
+							_defaultUsers, _synchronizer);
 
 						return null;
 					});

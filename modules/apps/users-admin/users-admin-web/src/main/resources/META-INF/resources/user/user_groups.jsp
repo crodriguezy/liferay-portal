@@ -20,7 +20,7 @@
 User selUser = userDisplayContext.getSelectedUser();
 List<UserGroup> userGroups = userDisplayContext.getUserGroups();
 
-currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "userGroups");
+currentURLObj.setParameter("historyKey", liferayPortletResponse.getNamespace() + "userGroups");
 %>
 
 <liferay-ui:error-marker
@@ -30,13 +30,18 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "userGr
 
 <liferay-ui:membership-policy-error />
 
-<h3 class="autofit-row sheet-subtitle">
-	<span class="autofit-col autofit-col-expand">
+<clay:content-row
+	containerElement="h3"
+	cssClass="sheet-subtitle"
+>
+	<clay:content-col
+		expand="<%= true %>"
+	>
 		<span class="heading-text"><liferay-ui:message key="user-groups" /></span>
-	</span>
+	</clay:content-col>
 
 	<c:if test="<%= !portletName.equals(myAccountPortletId) %>">
-		<span class="autofit-col">
+		<clay:content-col>
 			<span class="heading-end">
 				<liferay-ui:icon
 					cssClass="modify-link"
@@ -47,9 +52,9 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "userGr
 					url="javascript:;"
 				/>
 			</span>
-		</span>
+		</clay:content-col>
 	</c:if>
-</h3>
+</clay:content-row>
 
 <liferay-util:buffer
 	var="removeUserGroupIcon"
@@ -151,26 +156,7 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "userGr
 			'.modify-link'
 		);
 
-		Liferay.on('<portlet:namespace />enableRemovedUserGroups', function (event) {
-			event.selectors.each(function (item, index, collection) {
-				var userGroupId = item.attr('data-usergroupid');
-
-				if (deleteUserGroupIds.indexOf(userGroupId) != -1) {
-					Util.toggleDisabled(item, false);
-				}
-			});
-		});
-
 		A.one('#<portlet:namespace />openUserGroupsLink').on('click', function (event) {
-			var searchContainerData = searchContainer.getData();
-
-			if (!searchContainerData.length) {
-				searchContainerData = [];
-			}
-			else {
-				searchContainerData = searchContainerData.split(',');
-			}
-
 			Util.selectEntity(
 				{
 					dialog: {
@@ -184,7 +170,7 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "userGr
 
 					id: '<%= eventName %>',
 
-					selectedData: searchContainerData,
+					selectedData: searchContainer.getData(true),
 					title:
 						'<liferay-ui:message arguments="user-group" key="select-x" />',
 

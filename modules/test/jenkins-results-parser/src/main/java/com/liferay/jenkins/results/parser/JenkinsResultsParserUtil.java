@@ -74,6 +74,7 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -192,6 +193,22 @@ public class JenkinsResultsParserUtil {
 		}
 
 		return sb.toString();
+	}
+
+	public static <T> List<T> concatenate(
+		List<List<T>> lists, boolean allowDuplicates) {
+
+		Collection<T> concatenatedCollection = new ArrayList<>();
+
+		if (!allowDuplicates) {
+			concatenatedCollection = new HashSet<>();
+		}
+
+		for (List<T> list : lists) {
+			concatenatedCollection.addAll(list);
+		}
+
+		return new ArrayList<>(concatenatedCollection);
 	}
 
 	public static void copy(File sourceFile, File targetFile)
@@ -747,6 +764,10 @@ public class JenkinsResultsParserUtil {
 	public static Map<String, String> getBuildParameters(String buildURL) {
 		Map<String, String> buildParameters = new HashMap<>();
 
+		if (!buildURL.endsWith("/")) {
+			buildURL += "/";
+		}
+
 		String buildParametersURL = getLocalURL(
 			combine(buildURL, "api/json?tree=actions[parameters[name,value]]"));
 
@@ -756,6 +777,12 @@ public class JenkinsResultsParserUtil {
 			JSONArray actionsJSONArray = jsonObject.getJSONArray("actions");
 
 			for (int i = 0; i < actionsJSONArray.length(); i++) {
+				Object actions = actionsJSONArray.get(i);
+
+				if (actions == JSONObject.NULL) {
+					continue;
+				}
+
 				JSONObject actionJSONObject = actionsJSONArray.getJSONObject(i);
 
 				if (!actionJSONObject.has("parameters")) {
@@ -791,26 +818,26 @@ public class JenkinsResultsParserUtil {
 
 		Properties properties = new Properties();
 
-		if (checkCache && (_buildProperties != null) &&
-			!_buildProperties.isEmpty()) {
+		synchronized (_buildProperties) {
+			if (checkCache && !_buildProperties.isEmpty()) {
+				properties.putAll(_buildProperties);
 
-			properties.putAll(_buildProperties);
+				return properties;
+			}
 
-			return properties;
+			if (_buildPropertiesURLs == null) {
+				_buildPropertiesURLs = URLS_BUILD_PROPERTIES_DEFAULT;
+			}
+
+			for (String url : _buildPropertiesURLs) {
+				properties.load(
+					new StringReader(toString(getLocalURL(url), false)));
+			}
+
+			_buildProperties.clear();
+
+			_buildProperties.putAll(properties);
 		}
-
-		if (_buildPropertiesURLs == null) {
-			_buildPropertiesURLs = URLS_BUILD_PROPERTIES_DEFAULT;
-		}
-
-		for (String url : _buildPropertiesURLs) {
-			properties.load(
-				new StringReader(toString(getLocalURL(url), false)));
-		}
-
-		_buildProperties = new Hashtable<>();
-
-		_buildProperties.putAll(properties);
 
 		return properties;
 	}
@@ -1160,15 +1187,52 @@ public class JenkinsResultsParserUtil {
 			return new ArrayList<>();
 		}
 
-		List<PathMatcher> excludePathMatchers = null;
+		final List<PathMatcher> excludesPathMatchers = new ArrayList<>();
 
 		if ((excludes != null) && (excludes.length > 0)) {
-			excludePathMatchers = toPathMatchers(null, excludes);
+			excludesPathMatchers.addAll(toPathMatchers(null, excludes));
 		}
 
-		return getIncludedFiles(
-			excludePathMatchers, toPathMatchers(null, includes),
-			findFiles(basedir, ".*"));
+		final List<PathMatcher> includesPathMatchers = toPathMatchers(
+			null, includes);
+
+		final List<File> includedFiles = new ArrayList<>();
+
+		try {
+			Files.walkFileTree(
+				basedir.toPath(),
+				new SimpleFileVisitor<Path>() {
+
+					@Override
+					public FileVisitResult visitFile(
+							Path filePath,
+							BasicFileAttributes basicFileAttributes)
+						throws IOException {
+
+						for (PathMatcher pathMatcher : excludesPathMatchers) {
+							if (pathMatcher.matches(filePath)) {
+								return FileVisitResult.CONTINUE;
+							}
+						}
+
+						for (PathMatcher pathMatcher : includesPathMatchers) {
+							if (pathMatcher.matches(filePath)) {
+								includedFiles.add(filePath.toFile());
+
+								break;
+							}
+						}
+
+						return FileVisitResult.CONTINUE;
+					}
+
+				});
+		}
+		catch (IOException ioException) {
+			throw new RuntimeException(ioException);
+		}
+
+		return includedFiles;
 	}
 
 	public static List<File> getIncludedFiles(
@@ -1245,6 +1309,40 @@ public class JenkinsResultsParserUtil {
 		}
 
 		return Float.parseFloat(matcher.group(1));
+	}
+
+	public static String getJenkinsMasterName(String jenkinSlaveName) {
+		jenkinSlaveName = jenkinSlaveName.replaceAll("([^\\.]+).*", "$1");
+
+		Properties buildProperties = null;
+
+		try {
+			buildProperties = getBuildProperties();
+		}
+		catch (IOException ioException) {
+			throw new RuntimeException(
+				"Unable to get build properties", ioException);
+		}
+
+		for (Object propertyName : buildProperties.keySet()) {
+			Matcher jenkinsSlavesPropertyNameMatcher =
+				_jenkinsSlavesPropertyNamePattern.matcher(
+					propertyName.toString());
+
+			if (jenkinsSlavesPropertyNameMatcher.matches()) {
+				String jenkinsMasterName =
+					jenkinsSlavesPropertyNameMatcher.group(1);
+
+				List<String> jenkinsSlaveNames = getSlaves(
+					buildProperties, jenkinsMasterName, null, false);
+
+				if (jenkinsSlaveNames.contains(jenkinSlaveName)) {
+					return jenkinsMasterName;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	public static List<JenkinsMaster> getJenkinsMasters(
@@ -1392,8 +1490,9 @@ public class JenkinsResultsParserUtil {
 
 		if (remoteURLAuthorityMatcher1.find()) {
 			String localURLAuthority = combine(
-				"http://test-", remoteURLAuthorityMatcher1.group(1), "/",
-				remoteURLAuthorityMatcher1.group(1), "/");
+				"http://", remoteURLAuthorityMatcher1.group(1), "-",
+				remoteURLAuthorityMatcher1.group(2), "/",
+				remoteURLAuthorityMatcher1.group(2), "/");
 			String remoteURLAuthority = remoteURLAuthorityMatcher1.group(0);
 
 			localURL = localURL.replaceAll(
@@ -1661,6 +1760,10 @@ public class JenkinsResultsParserUtil {
 		return randomList;
 	}
 
+	public static <T> T getRandomListItem(List<T> list) {
+		return list.get(getRandomValue(0, list.size() - 1));
+	}
+
 	public static String getRandomString(Collection<String> collection) {
 		if ((collection == null) || collection.isEmpty()) {
 			throw new IllegalArgumentException("Collection is null or empty");
@@ -1683,6 +1786,67 @@ public class JenkinsResultsParserUtil {
 		double randomDouble = Math.random();
 
 		return Math.min(start, end) + (int)Math.floor(size * randomDouble);
+	}
+
+	public static List<JenkinsSlave> getReachableJenkinsSlaves(
+		List<JenkinsMaster> jenkinsMasters, Integer targetSlaveCount) {
+
+		List<Callable<List<JenkinsSlave>>> callables = new ArrayList<>(
+			jenkinsMasters.size());
+
+		for (final JenkinsMaster jenkinsMaster : jenkinsMasters) {
+			Callable<List<JenkinsSlave>> callable =
+				new Callable<List<JenkinsSlave>>() {
+
+					@Override
+					public List<JenkinsSlave> call() throws Exception {
+						jenkinsMaster.update();
+
+						return jenkinsMaster.getOnlineJenkinsSlaves();
+					}
+
+				};
+
+			callables.add(callable);
+		}
+
+		ThreadPoolExecutor threadPoolExecutor = getNewThreadPoolExecutor(
+			jenkinsMasters.size(), true);
+
+		ParallelExecutor<List<JenkinsSlave>> parallelExecutor =
+			new ParallelExecutor<>(callables, threadPoolExecutor);
+
+		List<JenkinsSlave> onlineJenkinsSlaves = concatenate(
+			parallelExecutor.execute(), false);
+
+		Collections.sort(onlineJenkinsSlaves);
+
+		if (targetSlaveCount == null) {
+			targetSlaveCount = onlineJenkinsSlaves.size();
+		}
+
+		List<JenkinsSlave> reachableJenkinsSlaves = new ArrayList<>(
+			targetSlaveCount);
+
+		while (reachableJenkinsSlaves.size() < targetSlaveCount) {
+			JenkinsSlave randomJenkinsSlave = getRandomListItem(
+				onlineJenkinsSlaves);
+
+			onlineJenkinsSlaves.remove(randomJenkinsSlave);
+
+			if (randomJenkinsSlave.isReachable()) {
+				reachableJenkinsSlaves.add(randomJenkinsSlave);
+			}
+
+			if (onlineJenkinsSlaves.isEmpty() &&
+				(reachableJenkinsSlaves.size() < targetSlaveCount)) {
+
+				throw new RuntimeException(
+					"Unable to find enough reachable Jenkins slaves");
+			}
+		}
+
+		return reachableJenkinsSlaves;
 	}
 
 	public static String getRegexLiteral(String string) {
@@ -1728,8 +1892,8 @@ public class JenkinsResultsParserUtil {
 		if (localURLAuthorityMatcher1.find()) {
 			String localURLAuthority = localURLAuthorityMatcher1.group(0);
 			String remoteURLAuthority = combine(
-				"https://test.liferay.com/", localURLAuthorityMatcher1.group(2),
-				"/");
+				"https://", localURLAuthorityMatcher1.group(2), ".liferay.com/",
+				localURLAuthorityMatcher1.group(3), "/");
 
 			remoteURL = remoteURL.replaceAll(
 				localURLAuthority, remoteURLAuthority);
@@ -2248,11 +2412,19 @@ public class JenkinsResultsParserUtil {
 
 		_buildPropertiesURLs = null;
 
-		_buildProperties = buildProperties;
+		synchronized (_buildProperties) {
+			_buildProperties.clear();
+
+			if (buildProperties != null) {
+				_buildProperties.putAll(buildProperties);
+			}
+		}
 	}
 
 	public static void setBuildProperties(String... urls) {
-		_buildProperties = null;
+		synchronized (_buildProperties) {
+			_buildProperties.clear();
+		}
 
 		_buildPropertiesURLs = urls;
 	}
@@ -3503,7 +3675,8 @@ public class JenkinsResultsParserUtil {
 	private static final String _URL_LOAD_BALANCER =
 		"http://cloud-10-0-0-31.lax.liferay.com/osb-jenkins-web/load_balancer";
 
-	private static Hashtable<Object, Object> _buildProperties;
+	private static final Hashtable<Object, Object> _buildProperties =
+		new Hashtable<>();
 	private static String[] _buildPropertiesURLs;
 	private static final Pattern _curlyBraceExpansionPattern = Pattern.compile(
 		"\\{.*?\\}");
@@ -3512,8 +3685,10 @@ public class JenkinsResultsParserUtil {
 	private static final Pattern _jenkinsMasterPattern = Pattern.compile(
 		"(?<cohortName>test-\\d+)-\\d+");
 	private static Hashtable<?, ?> _jenkinsProperties;
+	private static final Pattern _jenkinsSlavesPropertyNamePattern =
+		Pattern.compile("master.slaves\\((.+)\\)");
 	private static final Pattern _localURLAuthorityPattern1 = Pattern.compile(
-		"http://(test-[0-9]+)/([0-9]+)/");
+		"http://((release|test)-[0-9]+)/([0-9]+)/");
 	private static final Pattern _localURLAuthorityPattern2 = Pattern.compile(
 		"http://(test-[0-9]+-[0-9]+)/");
 	private static final Pattern _nestedPropertyPattern = Pattern.compile(
@@ -3522,7 +3697,7 @@ public class JenkinsResultsParserUtil {
 		"\\[(?<opt>[^\\]]+)\\]");
 	private static final Set<String> _redactTokens = new HashSet<>();
 	private static final Pattern _remoteURLAuthorityPattern1 = Pattern.compile(
-		"https://test.liferay.com/([0-9]+)/");
+		"https://(release|test).liferay.com/([0-9]+)/");
 	private static final Pattern _remoteURLAuthorityPattern2 = Pattern.compile(
 		"https://(test-[0-9]+-[0-9]+).liferay.com/");
 	private static final File _sshDir = new File(getUserHomeDir(), ".ssh") {

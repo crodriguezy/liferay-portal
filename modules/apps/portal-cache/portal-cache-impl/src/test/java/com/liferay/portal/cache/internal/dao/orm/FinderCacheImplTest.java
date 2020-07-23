@@ -52,8 +52,6 @@ public class FinderCacheImplTest {
 	@BeforeClass
 	public static void setUpClass() {
 		_properties = HashMapBuilder.<String, Object>put(
-			PropsKeys.VALUE_OBJECT_ENTITY_BLOCKING_CACHE, "true"
-		).put(
 			PropsKeys.VALUE_OBJECT_ENTITY_CACHE_ENABLED, "true"
 		).put(
 			PropsKeys.VALUE_OBJECT_FINDER_CACHE_ENABLED, "true"
@@ -81,9 +79,8 @@ public class FinderCacheImplTest {
 	@Before
 	public void setUp() {
 		_finderPath = new FinderPath(
-			true, true, FinderCacheImplTest.class,
-			FinderCacheImplTest.class.getName(), "test",
-			new String[] {String.class.getName()});
+			FinderCacheImplTest.class, FinderCacheImplTest.class.getName(),
+			"test", new String[] {String.class.getName()});
 	}
 
 	@Test
@@ -189,9 +186,7 @@ public class FinderCacheImplTest {
 		finderCache.putResult(
 			_finderPath, _KEY1, Collections.emptyList(), true);
 
-		Object result = finderCache.getResult(_finderPath, _KEY2, null);
-
-		Assert.assertNull(result);
+		Assert.assertNull(finderCache.getResult(_finderPath, _KEY2, null));
 	}
 
 	private void _assertPutEmptyListValid(MultiVMPool multiVMPool) {
@@ -200,9 +195,9 @@ public class FinderCacheImplTest {
 		finderCache.putResult(
 			_finderPath, _KEY1, Collections.emptyList(), true);
 
-		Object result = finderCache.getResult(_finderPath, _KEY1, null);
-
-		Assert.assertSame(Collections.emptyList(), result);
+		Assert.assertSame(
+			Collections.emptyList(),
+			finderCache.getResult(_finderPath, _KEY1, null));
 	}
 
 	private static final String[] _KEY1 = {"home"};

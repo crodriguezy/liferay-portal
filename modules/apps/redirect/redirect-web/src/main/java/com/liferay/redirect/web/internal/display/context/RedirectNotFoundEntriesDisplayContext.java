@@ -33,7 +33,6 @@ import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -44,8 +43,6 @@ import com.liferay.redirect.service.RedirectNotFoundEntryLocalService;
 import com.liferay.redirect.web.internal.search.RedirectNotFoundEntrySearch;
 import com.liferay.redirect.web.internal.security.permission.resource.RedirectPermission;
 import com.liferay.redirect.web.internal.util.RedirectUtil;
-import com.liferay.redirect.web.internal.util.comparator.RedirectComparator;
-import com.liferay.redirect.web.internal.util.comparator.RedirectDateComparator;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -58,7 +55,6 @@ import java.util.stream.Stream;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionURL;
-import javax.portlet.PortletException;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderURL;
 
@@ -160,12 +156,7 @@ public class RedirectNotFoundEntriesDisplayContext {
 			_liferayPortletRequest, _liferayPortletResponse, _getPortletURL(),
 			getSearchContainerId());
 
-		if (_redirectNotFoundEntrySearch.isSearch()) {
-			_populateWithSearchIndex(_redirectNotFoundEntrySearch);
-		}
-		else {
-			_populateWithDatabase(_redirectNotFoundEntrySearch);
-		}
+		_populateWithSearchIndex(_redirectNotFoundEntrySearch);
 
 		return _redirectNotFoundEntrySearch;
 	}
@@ -194,25 +185,7 @@ public class RedirectNotFoundEntriesDisplayContext {
 		return Date.from(instant.minus(Duration.ofDays(days)));
 	}
 
-	private OrderByComparator _getOrderByComparator() {
-		boolean orderByAsc = StringUtil.equals(
-			_redirectNotFoundEntrySearch.getOrderByType(), "asc");
-
-		if (Objects.equals(
-				_redirectNotFoundEntrySearch.getOrderByCol(),
-				"modified-date")) {
-
-			return new RedirectDateComparator<>(
-				"RedirectNotFoundEntry", "modifiedDate",
-				RedirectNotFoundEntry::getModifiedDate, !orderByAsc);
-		}
-
-		return new RedirectComparator<>(
-			"RedirectNotFoundEntry", "hits", RedirectNotFoundEntry::getHits,
-			!orderByAsc);
-	}
-
-	private PortletURL _getPortletURL() throws PortletException {
+	private PortletURL _getPortletURL() throws Exception {
 		return PortletURLUtil.clone(
 			PortletURLUtil.getCurrent(
 				_liferayPortletRequest, _liferayPortletResponse),
@@ -232,34 +205,14 @@ public class RedirectNotFoundEntriesDisplayContext {
 				orderByAsc);
 		}
 
-		return new Sort("hits", Sort.LONG_TYPE, orderByAsc);
-	}
-
-	private void _populateWithDatabase(
-		RedirectNotFoundEntrySearch redirectNotFoundEntrySearch) {
-
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)_httpServletRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
-		redirectNotFoundEntrySearch.setTotal(
-			_redirectNotFoundEntryLocalService.getRedirectNotFoundEntriesCount(
-				themeDisplay.getScopeGroupId(), _getIgnored(),
-				_getMinModifiedDate()));
-
-		redirectNotFoundEntrySearch.setResults(
-			_redirectNotFoundEntryLocalService.getRedirectNotFoundEntries(
-				themeDisplay.getScopeGroupId(), _getIgnored(),
-				_getMinModifiedDate(), _redirectNotFoundEntrySearch.getStart(),
-				_redirectNotFoundEntrySearch.getEnd(),
-				_getOrderByComparator()));
+		return new Sort("requestCount", Sort.LONG_TYPE, orderByAsc);
 	}
 
 	private void _populateWithSearchIndex(
 			RedirectNotFoundEntrySearch redirectNotFoundEntrySearch)
 		throws Exception {
 
-		Indexer indexer = IndexerRegistryUtil.getIndexer(
+		Indexer<RedirectNotFoundEntry> indexer = IndexerRegistryUtil.getIndexer(
 			RedirectNotFoundEntry.class);
 
 		SearchContext searchContext = SearchContextFactory.getInstance(

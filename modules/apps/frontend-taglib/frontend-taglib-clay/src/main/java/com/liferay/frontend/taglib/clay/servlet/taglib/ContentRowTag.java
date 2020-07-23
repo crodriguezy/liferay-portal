@@ -77,53 +77,39 @@ public class ContentRowTag extends BaseContainerTag {
 	}
 
 	@Override
-	protected String getEndPage() {
-		return _END_PAGE;
-	}
-
-	@Override
-	protected String getStartPage() {
-		return _START_PAGE;
-	}
-
-	@Override
-	protected String processClassName(Set<String> className) {
-		className.add("autofit-row");
+	protected String processCssClasses(Set<String> cssClasses) {
+		cssClasses.add("autofit-row");
 
 		if (_floatElements != null) {
 			if (_floatElements.equals(StringPool.BLANK)) {
-				className.add("autofit-float");
+				cssClasses.add("autofit-float");
 			}
 			else {
-				className.add("autofit-float-" + _floatElements);
+				cssClasses.add("autofit-float-" + _floatElements);
 			}
 		}
 
 		if (_padded) {
-			className.add("autofit-padded");
+			cssClasses.add("autofit-padded");
 		}
 
 		if (_noGutters != null) {
 			if (_noGutters.equals("x") || _noGutters.equals("y")) {
-				className.add("autofit-padded-no-gutters-" + _noGutters);
+				cssClasses.add("autofit-padded-no-gutters-" + _noGutters);
 			}
 			else {
-				className.add("autofit-padded-no-gutters");
+				cssClasses.add("autofit-padded-no-gutters");
 			}
 		}
 
 		if (Validator.isNotNull(_verticalAlign)) {
-			className.add("autofit-row-" + _verticalAlign);
+			cssClasses.add("autofit-row-" + _verticalAlign);
 		}
 
-		return super.processClassName(className);
+		return super.processCssClasses(cssClasses);
 	}
 
 	private static final String _ATTRIBUTE_NAMESPACE = "clay:content-row:";
-
-	private static final String _END_PAGE = "/content_row/end.jsp";
-
-	private static final String _START_PAGE = "/content_row/start.jsp";
 
 	private String _floatElements;
 	private String _noGutters;

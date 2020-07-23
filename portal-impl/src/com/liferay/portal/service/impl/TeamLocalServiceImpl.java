@@ -175,24 +175,22 @@ public class TeamLocalServiceImpl extends TeamLocalServiceBaseImpl {
 
 	@Override
 	public List<Team> getUserTeams(long userId, long groupId) {
-		LinkedHashMap<String, Object> params =
+		return search(
+			groupId, null, null,
 			LinkedHashMapBuilder.<String, Object>put(
 				"usersTeams", userId
-			).build();
-
-		return search(
-			groupId, null, null, params, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-			null);
+			).build(),
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
 
 	@Override
 	public List<Team> search(
 		long groupId, String name, String description,
 		LinkedHashMap<String, Object> params, int start, int end,
-		OrderByComparator<Team> obc) {
+		OrderByComparator<Team> orderByComparator) {
 
 		return teamFinder.findByG_N_D(
-			groupId, name, description, params, start, end, obc);
+			groupId, name, description, params, start, end, orderByComparator);
 	}
 
 	@Override

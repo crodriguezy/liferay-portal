@@ -39,6 +39,10 @@ public class DLFileEntryLocalServiceWrapper
 	/**
 	 * Adds the document library file entry to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DLFileEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dlFileEntry the document library file entry
 	 * @return the document library file entry that was added
 	 */
@@ -55,14 +59,14 @@ public class DLFileEntryLocalServiceWrapper
 			java.util.Map
 				<String, com.liferay.dynamic.data.mapping.kernel.DDMFormValues>
 					ddmFormValuesMap,
-			java.io.File file, java.io.InputStream is, long size,
+			java.io.File file, java.io.InputStream inputStream, long size,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _dlFileEntryLocalService.addFileEntry(
 			userId, groupId, repositoryId, folderId, sourceFileName, mimeType,
 			title, description, changeLog, fileEntryTypeId, ddmFormValuesMap,
-			file, is, size, serviceContext);
+			file, inputStream, size, serviceContext);
 	}
 
 	@Override
@@ -195,6 +199,10 @@ public class DLFileEntryLocalServiceWrapper
 	/**
 	 * Deletes the document library file entry from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DLFileEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dlFileEntry the document library file entry
 	 * @return the document library file entry that was removed
 	 */
@@ -205,6 +213,10 @@ public class DLFileEntryLocalServiceWrapper
 
 	/**
 	 * Deletes the document library file entry with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DLFileEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param fileEntryId the primary key of the document library file entry
 	 * @return the document library file entry that was removed
@@ -624,19 +636,21 @@ public class DLFileEntryLocalServiceWrapper
 	@Override
 	public java.util.List<DLFileEntry> getFileEntries(
 		long groupId, long folderId, int status, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator<DLFileEntry> obc) {
+		com.liferay.portal.kernel.util.OrderByComparator<DLFileEntry>
+			orderByComparator) {
 
 		return _dlFileEntryLocalService.getFileEntries(
-			groupId, folderId, status, start, end, obc);
+			groupId, folderId, status, start, end, orderByComparator);
 	}
 
 	@Override
 	public java.util.List<DLFileEntry> getFileEntries(
 		long groupId, long folderId, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator<DLFileEntry> obc) {
+		com.liferay.portal.kernel.util.OrderByComparator<DLFileEntry>
+			orderByComparator) {
 
 		return _dlFileEntryLocalService.getFileEntries(
-			groupId, folderId, start, end, obc);
+			groupId, folderId, start, end, orderByComparator);
 	}
 
 	@Override
@@ -750,10 +764,11 @@ public class DLFileEntryLocalServiceWrapper
 	@Override
 	public java.util.List<DLFileEntry> getGroupFileEntries(
 		long groupId, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator<DLFileEntry> obc) {
+		com.liferay.portal.kernel.util.OrderByComparator<DLFileEntry>
+			orderByComparator) {
 
 		return _dlFileEntryLocalService.getGroupFileEntries(
-			groupId, start, end, obc);
+			groupId, start, end, orderByComparator);
 	}
 
 	@Override
@@ -767,29 +782,33 @@ public class DLFileEntryLocalServiceWrapper
 	@Override
 	public java.util.List<DLFileEntry> getGroupFileEntries(
 		long groupId, long userId, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator<DLFileEntry> obc) {
+		com.liferay.portal.kernel.util.OrderByComparator<DLFileEntry>
+			orderByComparator) {
 
 		return _dlFileEntryLocalService.getGroupFileEntries(
-			groupId, userId, start, end, obc);
+			groupId, userId, start, end, orderByComparator);
 	}
 
 	@Override
 	public java.util.List<DLFileEntry> getGroupFileEntries(
 		long groupId, long userId, long rootFolderId, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator<DLFileEntry> obc) {
+		com.liferay.portal.kernel.util.OrderByComparator<DLFileEntry>
+			orderByComparator) {
 
 		return _dlFileEntryLocalService.getGroupFileEntries(
-			groupId, userId, rootFolderId, start, end, obc);
+			groupId, userId, rootFolderId, start, end, orderByComparator);
 	}
 
 	@Override
 	public java.util.List<DLFileEntry> getGroupFileEntries(
 		long groupId, long userId, long repositoryId, long rootFolderId,
 		int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator<DLFileEntry> obc) {
+		com.liferay.portal.kernel.util.OrderByComparator<DLFileEntry>
+			orderByComparator) {
 
 		return _dlFileEntryLocalService.getGroupFileEntries(
-			groupId, userId, repositoryId, rootFolderId, start, end, obc);
+			groupId, userId, repositoryId, rootFolderId, start, end,
+			orderByComparator);
 	}
 
 	@Override
@@ -961,6 +980,10 @@ public class DLFileEntryLocalServiceWrapper
 	/**
 	 * Updates the document library file entry in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DLFileEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dlFileEntry the document library file entry
 	 * @return the document library file entry that was updated
 	 */
@@ -979,14 +1002,14 @@ public class DLFileEntryLocalServiceWrapper
 			java.util.Map
 				<String, com.liferay.dynamic.data.mapping.kernel.DDMFormValues>
 					ddmFormValuesMap,
-			java.io.File file, java.io.InputStream is, long size,
+			java.io.File file, java.io.InputStream inputStream, long size,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _dlFileEntryLocalService.updateFileEntry(
 			userId, fileEntryId, sourceFileName, mimeType, title, description,
 			changeLog, dlVersionNumberIncrease, fileEntryTypeId,
-			ddmFormValuesMap, file, is, size, serviceContext);
+			ddmFormValuesMap, file, inputStream, size, serviceContext);
 	}
 
 	@Override

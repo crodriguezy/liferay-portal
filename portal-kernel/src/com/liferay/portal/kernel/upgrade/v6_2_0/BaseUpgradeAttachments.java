@@ -98,11 +98,10 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 
 			ps.executeUpdate();
 
-			Map<String, Long> bitwiseValues = getBitwiseValues(
-				"com.liferay.portlet.documentlibrary.model.DLFileEntry");
-
 			long bitwiseValue = getBitwiseValue(
-				bitwiseValues, ListUtil.fromArray(ActionKeys.VIEW));
+				getBitwiseValues(
+					"com.liferay.portlet.documentlibrary.model.DLFileEntry"),
+				ListUtil.fromArray(ActionKeys.VIEW));
 
 			addResourcePermission(
 				companyId,
@@ -365,10 +364,9 @@ public abstract class BaseUpgradeAttachments extends UpgradeProcess {
 			long companyId, long containerModelId, long resourcePrimKey)
 		throws Exception {
 
-		String dirName = getDirName(containerModelId, resourcePrimKey);
-
 		return DLStoreUtil.getFileNames(
-			companyId, CompanyConstants.SYSTEM, dirName);
+			companyId, CompanyConstants.SYSTEM,
+			getDirName(containerModelId, resourcePrimKey));
 	}
 
 	protected long getBitwiseValue(

@@ -19,17 +19,20 @@ import com.liferay.adaptive.media.image.html.AMImageHTMLTagFactory;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
-import com.liferay.dynamic.data.mapping.kernel.DDMForm;
-import com.liferay.dynamic.data.mapping.kernel.DDMStructure;
-import com.liferay.dynamic.data.mapping.kernel.DDMTemplate;
+import com.liferay.dynamic.data.mapping.model.DDMForm;
+import com.liferay.dynamic.data.mapping.model.DDMStructure;
+import com.liferay.dynamic.data.mapping.model.DDMTemplate;
+import com.liferay.dynamic.data.mapping.test.util.DDMStructureTestUtil;
+import com.liferay.dynamic.data.mapping.test.util.DDMTemplateTestUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.test.util.lar.BaseWorkflowedStagedModelDataHandlerTestCase;
+import com.liferay.journal.constants.JournalArticleConstants;
+import com.liferay.journal.constants.JournalFolderConstants;
 import com.liferay.journal.model.JournalArticle;
-import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.model.JournalFolder;
-import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.service.JournalFolderLocalService;
+import com.liferay.journal.util.JournalContent;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -43,6 +46,7 @@ import com.liferay.portal.kernel.test.util.DateTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
@@ -54,10 +58,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portlet.dynamicdatamapping.util.test.DDMStructureTestUtil;
-import com.liferay.portlet.dynamicdatamapping.util.test.DDMTemplateTestUtil;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -88,15 +89,14 @@ public class AMJournalArticleStagedModelDataHandlerTest
 	public void setUp() throws Exception {
 		super.setUp();
 
-		Map<String, String> properties = HashMapBuilder.put(
-			"max-height", "600"
-		).put(
-			"max-width", "800"
-		).build();
-
 		_amImageConfigurationHelper.addAMImageConfigurationEntry(
 			stagingGroup.getCompanyId(), StringUtil.randomString(),
-			StringUtil.randomString(), _AM_JOURNAL_CONFIG_UUID, properties);
+			StringUtil.randomString(), _AM_JOURNAL_CONFIG_UUID,
+			HashMapBuilder.put(
+				"max-height", "600"
+			).put(
+				"max-width", "800"
+			).build());
 	}
 
 	@After
@@ -127,9 +127,7 @@ public class AMJournalArticleStagedModelDataHandlerTest
 		JournalArticle importedJournalArticle = (JournalArticle)getStagedModel(
 			journalArticle.getUuid(), liveGroup);
 
-		_assertXMLEquals(
-			_getExpectedDynamicContent(fileEntry1, fileEntry2),
-			importedJournalArticle.getContent());
+		_assertContentEquals(journalArticle, importedJournalArticle);
 	}
 
 	@Test
@@ -151,9 +149,7 @@ public class AMJournalArticleStagedModelDataHandlerTest
 		JournalArticle importedJournalArticle = (JournalArticle)getStagedModel(
 			journalArticle.getUuid(), liveGroup);
 
-		_assertXMLEquals(
-			_getExpectedStaticContent(fileEntry1, fileEntry2),
-			importedJournalArticle.getContent());
+		_assertContentEquals(journalArticle, importedJournalArticle);
 	}
 
 	@Test
@@ -255,14 +251,13 @@ public class AMJournalArticleStagedModelDataHandlerTest
 			LocaleUtil.getSiteDefault());
 
 		DDMStructure ddmStructure = DDMStructureTestUtil.addStructure(
-			stagingGroup.getGroupId(), JournalArticle.class.getName(), "0",
+			stagingGroup.getGroupId(), JournalArticle.class.getName(), 0,
 			ddmForm, LocaleUtil.getSiteDefault(),
 			ServiceContextTestUtil.getServiceContext());
 
 		DDMTemplate ddmTemplate = DDMTemplateTestUtil.addTemplate(
 			stagingGroup.getGroupId(),
-			PortalUtil.getClassNameId(
-				com.liferay.dynamic.data.mapping.model.DDMStructure.class),
+			PortalUtil.getClassNameId(DDMStructure.class),
 			ddmStructure.getStructureId(),
 			PortalUtil.getClassNameId(JournalArticle.class));
 
@@ -272,29 +267,34 @@ public class AMJournalArticleStagedModelDataHandlerTest
 			RandomTestUtil.randomString(), "This is a test folder.",
 			serviceContext);
 
-		Map<Locale, String> titleMap = HashMapBuilder.put(
-			LocaleUtil.getSiteDefault(), "Test Article"
-		).build();
-
 		return _journalArticleLocalService.addArticle(
 			serviceContext.getUserId(), serviceContext.getScopeGroupId(),
 			journalFolder.getFolderId(),
 			JournalArticleConstants.CLASS_NAME_ID_DEFAULT, 0, StringPool.BLANK,
-			true, 0, titleMap, null, content, ddmStructure.getStructureKey(),
+			true, 0,
+			HashMapBuilder.put(
+				LocaleUtil.getSiteDefault(), "Test Article"
+			).build(),
+			null, content, ddmStructure.getStructureKey(),
 			ddmTemplate.getTemplateKey(), null, 1, 1, 1965, 0, 0, 0, 0, 0, 0, 0,
 			true, 0, 0, 0, 0, 0, true, true, false, null, null, null, null,
 			serviceContext);
 	}
 
-	private void _assertXMLEquals(String expectedXML, String actualXML)
-		throws Exception {
+	private void _assertContentEquals(
+		JournalArticle expectedJournalArticle,
+		JournalArticle actualJournalArticle) {
 
-		Document actualDocument = SAXReaderUtil.read(actualXML);
-		Document expectedDocument = SAXReaderUtil.read(expectedXML);
+		String expectedContent = _journalContent.getContent(
+			expectedJournalArticle.getGroupId(),
+			expectedJournalArticle.getArticleId(), Constants.VIEW,
+			expectedJournalArticle.getDefaultLanguageId());
+		String actualContent = _journalContent.getContent(
+			actualJournalArticle.getGroupId(),
+			actualJournalArticle.getArticleId(), Constants.VIEW,
+			actualJournalArticle.getDefaultLanguageId());
 
-		AssertUtils.assertEqualsIgnoreCase(
-			expectedDocument.formattedString(),
-			actualDocument.formattedString());
+		AssertUtils.assertEqualsIgnoreCase(expectedContent, actualContent);
 	}
 
 	private String _getContent(String html) throws Exception {
@@ -322,41 +322,6 @@ public class AMJournalArticleStagedModelDataHandlerTest
 
 		for (FileEntry fileEntry : fileEntries) {
 			sb.append(_getImgTag(fileEntry));
-			sb.append(StringPool.NEW_LINE);
-		}
-
-		return _getContent(sb.toString());
-	}
-
-	private String _getExpectedDynamicContent(FileEntry... fileEntries)
-		throws Exception {
-
-		List<FileEntry> importedFileEntries = new ArrayList<>();
-
-		for (FileEntry fileEntry : fileEntries) {
-			importedFileEntries.add(
-				_dlAppLocalService.getFileEntryByUuidAndGroupId(
-					fileEntry.getUuid(), liveGroup.getGroupId()));
-		}
-
-		return _getDynamicContent(
-			importedFileEntries.toArray(new FileEntry[0]));
-	}
-
-	private String _getExpectedStaticContent(FileEntry... fileEntries)
-		throws Exception {
-
-		StringBundler sb = new StringBundler(fileEntries.length * 2);
-
-		for (FileEntry fileEntry : fileEntries) {
-			FileEntry importedFileEntry =
-				_dlAppLocalService.getFileEntryByUuidAndGroupId(
-					fileEntry.getUuid(), liveGroup.getGroupId());
-
-			sb.append(
-				_amImageHTMLTagFactory.create(
-					_getImgTag(importedFileEntry), importedFileEntry));
-
 			sb.append(StringPool.NEW_LINE);
 		}
 
@@ -418,6 +383,9 @@ public class AMJournalArticleStagedModelDataHandlerTest
 
 	@Inject
 	private JournalArticleLocalService _journalArticleLocalService;
+
+	@Inject
+	private JournalContent _journalContent;
 
 	@Inject
 	private JournalFolderLocalService _journalFolderLocalService;

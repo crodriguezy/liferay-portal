@@ -15,6 +15,7 @@
 import {
 	DefaultEventHandler,
 	ItemSelectorDialog,
+	openModal,
 	openSimpleInputModal,
 } from 'frontend-js-web';
 import {Config} from 'metal-state';
@@ -34,6 +35,18 @@ class DisplayPageDropdownDefaultEventHandler extends DefaultEventHandler {
 		this._send(itemData.deleteLayoutPageTemplateEntryPreviewURL);
 	}
 
+	discardDraft(itemData) {
+		if (
+			confirm(
+				Liferay.Language.get(
+					'are-you-sure-you-want-to-discard-current-draft-and-apply-latest-published-changes'
+				)
+			)
+		) {
+			this._send(itemData.discardDraftURL);
+		}
+	}
+
 	markAsDefaultDisplayPage(itemData) {
 		if (itemData.message !== '') {
 			if (confirm(Liferay.Language.get(itemData.message))) {
@@ -46,16 +59,9 @@ class DisplayPageDropdownDefaultEventHandler extends DefaultEventHandler {
 	}
 
 	permissionsDisplayPage(itemData) {
-		Liferay.Util.openWindow({
-			dialog: {
-				destroyOnHide: true,
-				modal: true,
-			},
-			dialogIframe: {
-				bodyCssClass: 'dialog-with-footer',
-			},
+		openModal({
 			title: Liferay.Language.get('permissions'),
-			uri: itemData.permissionsDisplayPageURL,
+			url: itemData.permissionsDisplayPageURL,
 		});
 	}
 

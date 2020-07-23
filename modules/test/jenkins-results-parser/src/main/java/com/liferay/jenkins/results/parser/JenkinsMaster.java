@@ -115,7 +115,7 @@ public class JenkinsMaster implements Comparable<JenkinsMaster> {
 
 	public float getAverageQueueLength() {
 		return ((float)_queueCount + _getRecentBatchSizesTotal()) /
-			getOnlineSlavesCount();
+			getOnlineJenkinsSlavesCount();
 	}
 
 	public int getIdleSlavesCount() {
@@ -146,16 +146,28 @@ public class JenkinsMaster implements Comparable<JenkinsMaster> {
 		return _masterName;
 	}
 
-	public int getOnlineSlavesCount() {
-		int onlineSlavesCount = 0;
+	public List<JenkinsSlave> getOnlineJenkinsSlaves() {
+		List<JenkinsSlave> onlineJenkinsSlaves = new ArrayList<>();
 
 		for (JenkinsSlave jenkinsSlave : _jenkinsSlavesMap.values()) {
 			if (!jenkinsSlave.isOffline()) {
-				onlineSlavesCount++;
+				onlineJenkinsSlaves.add(jenkinsSlave);
 			}
 		}
 
-		return onlineSlavesCount;
+		return onlineJenkinsSlaves;
+	}
+
+	public int getOnlineJenkinsSlavesCount() {
+		int onlineJenkinsSlavesCount = 0;
+
+		for (JenkinsSlave jenkinsSlave : _jenkinsSlavesMap.values()) {
+			if (!jenkinsSlave.isOffline()) {
+				onlineJenkinsSlavesCount++;
+			}
+		}
+
+		return onlineJenkinsSlavesCount;
 	}
 
 	public Integer getSlaveRAM() {

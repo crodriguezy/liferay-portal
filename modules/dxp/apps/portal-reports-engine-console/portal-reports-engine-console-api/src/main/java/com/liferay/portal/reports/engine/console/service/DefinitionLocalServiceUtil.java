@@ -41,6 +41,10 @@ public class DefinitionLocalServiceUtil {
 	/**
 	 * Adds the definition to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DefinitionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param definition the definition
 	 * @return the definition that was added
 	 */
@@ -92,6 +96,10 @@ public class DefinitionLocalServiceUtil {
 	/**
 	 * Deletes the definition from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DefinitionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param definition the definition
 	 * @return the definition that was removed
 	 * @throws PortalException
@@ -107,6 +115,10 @@ public class DefinitionLocalServiceUtil {
 
 	/**
 	 * Deletes the definition with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DefinitionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param definitionId the primary key of the definition
 	 * @return the definition that was removed
@@ -313,7 +325,8 @@ public class DefinitionLocalServiceUtil {
 				String sourceId, String reportName, boolean andSearch,
 				int start, int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					orderByComparator) {
+					<com.liferay.portal.reports.engine.console.model.Definition>
+						orderByComparator) {
 
 		return getService().getDefinitions(
 			groupId, definitionName, description, sourceId, reportName,
@@ -410,6 +423,10 @@ public class DefinitionLocalServiceUtil {
 
 	/**
 	 * Updates the definition in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DefinitionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param definition the definition
 	 * @return the definition that was updated

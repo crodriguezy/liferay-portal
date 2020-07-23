@@ -41,6 +41,10 @@ public class DDMTemplateLinkLocalServiceUtil {
 	/**
 	 * Adds the ddm template link to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DDMTemplateLinkLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param ddmTemplateLink the ddm template link
 	 * @return the ddm template link that was added
 	 */
@@ -83,6 +87,10 @@ public class DDMTemplateLinkLocalServiceUtil {
 	/**
 	 * Deletes the ddm template link from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DDMTemplateLinkLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param ddmTemplateLink the ddm template link
 	 * @return the ddm template link that was removed
 	 */
@@ -96,6 +104,10 @@ public class DDMTemplateLinkLocalServiceUtil {
 
 	/**
 	 * Deletes the ddm template link with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DDMTemplateLinkLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param templateLinkId the primary key of the ddm template link
 	 * @return the ddm template link that was removed
@@ -344,6 +356,10 @@ public class DDMTemplateLinkLocalServiceUtil {
 
 	/**
 	 * Updates the ddm template link in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DDMTemplateLinkLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param ddmTemplateLink the ddm template link
 	 * @return the ddm template link that was updated

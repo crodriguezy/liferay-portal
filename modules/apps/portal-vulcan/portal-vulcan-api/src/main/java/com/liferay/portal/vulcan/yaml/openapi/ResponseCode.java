@@ -18,8 +18,10 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
 /**
- * @author Javier de Arcos
+ * @author     Javier de Arcos
+ * @deprecated As of Athanasius (7.3.x)
  */
+@Deprecated
 public class ResponseCode {
 
 	public ResponseCode(String code) {
@@ -29,7 +31,7 @@ public class ResponseCode {
 		}
 		else {
 			_defaultResponse = false;
-			_httpCode = GetterUtil.getInteger(code);
+			_httpCode = GetterUtil.getIntegerStrict(code);
 		}
 	}
 
@@ -39,6 +41,15 @@ public class ResponseCode {
 
 	public boolean isDefaultResponse() {
 		return _defaultResponse;
+	}
+
+	@Override
+	public String toString() {
+		if (_defaultResponse) {
+			return "default";
+		}
+
+		return _httpCode.toString();
 	}
 
 	private final boolean _defaultResponse;

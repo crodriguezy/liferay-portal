@@ -52,7 +52,7 @@ import com.liferay.document.library.repository.external.ExtRepositorySearchResul
 import com.liferay.document.library.repository.external.cache.ConnectionBuilder;
 import com.liferay.document.library.repository.external.cache.ConnectionCache;
 import com.liferay.document.library.repository.external.search.ExtRepositoryQueryMapper;
-import com.liferay.documentum.repository.model.Constants;
+import com.liferay.documentum.repository.constants.Constants;
 import com.liferay.documentum.repository.model.DocumentumFileEntry;
 import com.liferay.documentum.repository.model.DocumentumFileVersion;
 import com.liferay.documentum.repository.model.DocumentumFolder;
@@ -1275,9 +1275,8 @@ public class DocumentumRepository
 			String extRepositoryObjectKey)
 		throws DfException {
 
-		IDfId idfId = getIDfId(idfSession, extRepositoryObjectKey);
-
-		return (T)idfSession.getObject(idfId);
+		return (T)idfSession.getObject(
+			getIDfId(idfSession, extRepositoryObjectKey));
 	}
 
 	protected IDfDocument getLatestIDfDocument(

@@ -17,9 +17,7 @@ import {cleanup, render} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import switchViewportSize from '../../../../src/main/resources/META-INF/resources/page_editor/app/actions/switchViewportSize';
 import ViewportSizeSelector from '../../../../src/main/resources/META-INF/resources/page_editor/app/components/ViewportSizeSelector';
-import {StoreAPIContextProvider} from '../../../../src/main/resources/META-INF/resources/page_editor/app/store';
 
 jest.mock(
 	'../../../../src/main/resources/META-INF/resources/page_editor/app/config',
@@ -34,20 +32,16 @@ jest.mock(
 	})
 );
 
-jest.mock(
-	'../../../../src/main/resources/META-INF/resources/page_editor/app/actions/switchViewportSize',
-	() => jest.fn(() => () => {})
-);
-
 const defaultState = {
 	selectedViewportSize: 'desktop',
 };
 
-const renderTranslation = ({state}) => {
+const renderComponent = ({onSelect = () => {}, state}) => {
 	return render(
-		<StoreAPIContextProvider getState={() => state}>
-			<ViewportSizeSelector selectedSize={state.selectedViewportSize} />
-		</StoreAPIContextProvider>
+		<ViewportSizeSelector
+			onSizeSelected={onSelect}
+			selectedSize={state.selectedViewportSize}
+		/>
 	);
 };
 
@@ -55,21 +49,20 @@ describe('ViewportSizeSelector', () => {
 	afterEach(cleanup);
 
 	it('renders ViewportSizeSelector component', () => {
-		const {getByTitle} = renderTranslation({state: defaultState});
+		const {getByTitle} = renderComponent({state: defaultState});
 
 		expect(getByTitle('Desktop')).toBeInTheDocument();
 		expect(getByTitle('Mobile')).toBeInTheDocument();
 		expect(getByTitle('Tablet')).toBeInTheDocument();
 	});
 
-	it('dispatches sizeId when a size is selected', () => {
-		const {getByTitle} = renderTranslation({state: defaultState});
+	it('calls onSizeSelected with sizeId when a size is selected', () => {
+		const onSelect = jest.fn();
+		const {getByTitle} = renderComponent({onSelect, state: defaultState});
 		const button = getByTitle('Mobile');
 
 		userEvent.click(button);
 
-		expect(switchViewportSize).toHaveBeenLastCalledWith({
-			size: 'mobile',
-		});
+		expect(onSelect).toHaveBeenLastCalledWith('mobile');
 	});
 });

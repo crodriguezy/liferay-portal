@@ -27,6 +27,7 @@ import {
 } from '../../../app/components/Controls';
 import {fromControlsId} from '../../../app/components/layout-data-items/Collection';
 import {ITEM_ACTIVATION_ORIGINS} from '../../../app/config/constants/itemActivationOrigins';
+import selectCanUpdatePageStructure from '../../../app/selectors/selectCanUpdatePageStructure';
 import {useDispatch, useSelector} from '../../../app/store/index';
 import deleteItem from '../../../app/thunks/deleteItem';
 
@@ -41,6 +42,7 @@ export default function StructureTreeNode({node}) {
 	const hoveredItemId = useHoveredItemId();
 	const selectItem = useSelectItem();
 	const toControlsId = useToControlsId();
+	const canUpdatePageStructure = useSelector(selectCanUpdatePageStructure);
 
 	return (
 		<div
@@ -72,16 +74,18 @@ export default function StructureTreeNode({node}) {
 					node.name,
 				])}
 				className="page-editor__page-structure__tree-node__mask"
-				disabled={node.disabled}
+				disabled={!node.activable || node.disabled}
 				displayType="unstyled"
 				onClick={(event) => {
 					event.stopPropagation();
 					event.target.focus();
 
-					selectItem(toControlsId(node.id), {
-						itemType: node.type,
-						origin: ITEM_ACTIVATION_ORIGINS.structureTree,
-					});
+					if (node.activable) {
+						selectItem(toControlsId(node.id), {
+							itemType: node.type,
+							origin: ITEM_ACTIVATION_ORIGINS.structureTree,
+						});
+					}
 				}}
 				onDoubleClick={(event) => event.stopPropagation()}
 			/>
@@ -93,7 +97,7 @@ export default function StructureTreeNode({node}) {
 				name={node.name}
 			/>
 
-			{node.removable && (
+			{node.removable && canUpdatePageStructure && (
 				<RemoveButton
 					node={node}
 					visible={
@@ -135,6 +139,7 @@ const NameLabel = ({activable, disabled, id, name}) => {
 
 const RemoveButton = ({node, visible}) => {
 	const dispatch = useDispatch();
+	const selectItem = useSelectItem();
 	const store = useSelector((state) => state);
 
 	return (
@@ -152,7 +157,7 @@ const RemoveButton = ({node, visible}) => {
 			onClick={(event) => {
 				event.stopPropagation();
 
-				dispatch(deleteItem({itemId: node.id, store}));
+				dispatch(deleteItem({itemId: node.id, selectItem, store}));
 			}}
 		>
 			<ClayIcon symbol="times-circle" />

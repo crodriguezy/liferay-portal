@@ -35,7 +35,7 @@
 </tr>
 <tr>
 	<td>ASSET_LIST_DIALOG</td>
-	<td>//iframe[contains(@id,'selectAssetList_iframe')]</td>
+	<td>//iframe[contains(@class,'dialog-iframe-node') and contains(@id,'selectAssetList_iframe')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -61,6 +61,11 @@
 <tr>
 	<td>EMBEDDED_IFRAME</td>
 	<td>//iframe[@id='embeddedIframe']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>EMBEDDED_VIDEO_IFRAME</td>
+	<td>//iframe[contains(@src,'embed')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -190,7 +195,7 @@
 </tr>
 <tr>
 	<td>SELECT_STRUCTURE_FIELD</td>
-	<td>//div[contains(@class,'dialog-iframe-bd')]/iframe[contains(@src,'select_structure_field')]</td>
+	<td>//iframe[contains(@title,'Select Structure Field')]</td>
 	<td></td>
 </tr>
 <tr>

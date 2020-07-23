@@ -38,11 +38,26 @@ public class LangBuilderDefaultsPlugin
 	protected void applyPluginDefaults(
 		Project project, LangBuilderPlugin langBuilderPlugin) {
 
+		// Dependencies
+
 		PortalTools.addPortalToolDependencies(
 			project, LangBuilderPlugin.CONFIGURATION_NAME, PortalTools.GROUP,
 			_PORTAL_TOOL_NAME);
 
-		_configureTasksBuildLang(project);
+		// Other
+
+		TaskContainer taskContainer = project.getTasks();
+
+		taskContainer.withType(
+			BuildLangTask.class,
+			new Action<BuildLangTask>() {
+
+				@Override
+				public void execute(BuildLangTask buildLangTask) {
+					_configureTaskBuildLang(buildLangTask);
+				}
+
+			});
 	}
 
 	@Override
@@ -59,21 +74,6 @@ public class LangBuilderDefaultsPlugin
 			(String)null);
 
 		buildLangTask.setTranslateSubscriptionKey(translateSubscriptionKey);
-	}
-
-	private void _configureTasksBuildLang(Project project) {
-		TaskContainer taskContainer = project.getTasks();
-
-		taskContainer.withType(
-			BuildLangTask.class,
-			new Action<BuildLangTask>() {
-
-				@Override
-				public void execute(BuildLangTask buildLangTask) {
-					_configureTaskBuildLang(buildLangTask);
-				}
-
-			});
 	}
 
 	private static final String _PORTAL_TOOL_NAME = "com.liferay.lang.builder";

@@ -287,7 +287,8 @@ definition {
 		ProductMenu.gotoPortlet(
 			category = "Publishing",
 			panel = "Site Administration",
-			portlet = "Staging");
+			portlet = "Staging",
+			site = "Test Site Name");
 
 		Staging.deactivateStagingCP(siteName = "Test Site Name");
 
@@ -333,9 +334,16 @@ definition {
 
 		PageEditor.addFragment(
 			collectionName = "Collection Name",
-			fragmentName = "Title");
+			fragmentName = "Title",
+			targetFragmentName = "Rich Text");
 
-		PageEditor.clickDiscardDraft();
+		SitePages.openPagesAdmin(siteURLKey = "test-site-name");
+
+		PageEditor.clickDiscardDraft(pageName = "Test Content Page Name");
+
+		Navigator.openWithAppendToBaseURL(urlAppend = "web/test-site-name/test-content-page-name");
+
+		ContentPages.clickPencil();
 
 		PageEditor.gotoTab(tabName = "Comments");
 
@@ -359,7 +367,7 @@ definition {
 			userLastName = "userln",
 			userScreenName = "user1");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -369,7 +377,7 @@ definition {
 			userEmailAddress = "user1@liferay.com",
 			userScreenName = "user1");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -455,7 +463,8 @@ definition {
 
 		PageEditor.addFragment(
 			collectionName = "Collection Name",
-			fragmentName = "Content");
+			fragmentName = "Content",
+			targetFragmentName = "Title");
 
 		PageEditor.addComment(
 			content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean tempus eleifend lacus nec porttitor. Vestibulum pharetra ullamcorper felis volutpat commodo. Nam id ipsum placerat, hendrerit orci eu, congue nisi. Proin.",
@@ -510,16 +519,6 @@ definition {
 			commentCount = "1 Comment",
 			fragmentName = "Title",
 			openComment = "true");
-
-		Pause(locator1 = "5000");
-
-		var key_fragmentComment = "Title fragment comment";
-
-		if (!(IsElementPresent(locator1 = "PageEditor#FRAGMENT_SIDEBAR_COMMENT_ENTRY"))) {
-			Click(
-				key_fragmentName = "Title",
-				locator1 = "PageEditor#FRAGMENT_SIDEBAR_COMMENT_LIST_HEADING");
-		}
 
 		PageEditor.viewComment(fragmentComment = "Title fragment comment");
 	}

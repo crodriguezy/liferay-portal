@@ -303,6 +303,10 @@ public class UserLocalServiceUtil {
 	/**
 	 * Adds the user to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect UserLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param user the user
 	 * @return the user that was added
 	 */
@@ -857,6 +861,10 @@ public class UserLocalServiceUtil {
 	/**
 	 * Deletes the user with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect UserLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param userId the primary key of the user
 	 * @return the user that was removed
 	 * @throws PortalException if a user with the primary key could not be found
@@ -869,6 +877,10 @@ public class UserLocalServiceUtil {
 
 	/**
 	 * Deletes the user from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect UserLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param user the user
 	 * @return the user that was removed
@@ -1270,7 +1282,7 @@ public class UserLocalServiceUtil {
 	 * @param status the workflow status
 	 * @param start the lower bound of the range of users
 	 * @param end the upper bound of the range of users (not inclusive)
-	 * @param obc the comparator to order the users by (optionally
+	 * @param orderByComparator the comparator to order the users by (optionally
 	 <code>null</code>)
 	 * @return the matching users
 	 */
@@ -1278,10 +1290,11 @@ public class UserLocalServiceUtil {
 			getGroupUsers(
 				long groupId, int status, int start, int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.portal.kernel.model.User> obc)
+					<com.liferay.portal.kernel.model.User> orderByComparator)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return getService().getGroupUsers(groupId, status, start, end, obc);
+		return getService().getGroupUsers(
+			groupId, status, start, end, orderByComparator);
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.User>
@@ -1299,7 +1312,7 @@ public class UserLocalServiceUtil {
 	 *
 	 * @param groupId the primary key of the group
 	 * @param status the workflow status
-	 * @param obc the comparator to order the users by (optionally
+	 * @param orderByComparator the comparator to order the users by (optionally
 	 <code>null</code>)
 	 * @return the matching users
 	 */
@@ -1307,10 +1320,10 @@ public class UserLocalServiceUtil {
 			getGroupUsers(
 				long groupId, int status,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.portal.kernel.model.User> obc)
+					<com.liferay.portal.kernel.model.User> orderByComparator)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return getService().getGroupUsers(groupId, status, obc);
+		return getService().getGroupUsers(groupId, status, orderByComparator);
 	}
 
 	public static int getGroupUsersCount(long groupId) {
@@ -1341,10 +1354,11 @@ public class UserLocalServiceUtil {
 			getInheritedRoleUsers(
 				long roleId, int start, int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.portal.kernel.model.User> obc)
+					<com.liferay.portal.kernel.model.User> orderByComparator)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return getService().getInheritedRoleUsers(roleId, start, end, obc);
+		return getService().getInheritedRoleUsers(
+			roleId, start, end, orderByComparator);
 	}
 
 	/**
@@ -1422,7 +1436,7 @@ public class UserLocalServiceUtil {
 	 * @param status the workflow status
 	 * @param start the lower bound of the range of users
 	 * @param end the upper bound of the range of users (not inclusive)
-	 * @param obc the comparator to order the users by (optionally
+	 * @param orderByComparator the comparator to order the users by (optionally
 	 <code>null</code>)
 	 * @return the matching users
 	 */
@@ -1430,11 +1444,11 @@ public class UserLocalServiceUtil {
 			getOrganizationUsers(
 				long organizationId, int status, int start, int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.portal.kernel.model.User> obc)
+					<com.liferay.portal.kernel.model.User> orderByComparator)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().getOrganizationUsers(
-			organizationId, status, start, end, obc);
+			organizationId, status, start, end, orderByComparator);
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.User>
@@ -1452,7 +1466,7 @@ public class UserLocalServiceUtil {
 	 *
 	 * @param organizationId the primary key of the organization
 	 * @param status the workflow status
-	 * @param obc the comparator to order the users by (optionally
+	 * @param orderByComparator the comparator to order the users by (optionally
 	 <code>null</code>)
 	 * @return the matching users
 	 */
@@ -1460,10 +1474,11 @@ public class UserLocalServiceUtil {
 			getOrganizationUsers(
 				long organizationId, int status,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.portal.kernel.model.User> obc)
+					<com.liferay.portal.kernel.model.User> orderByComparator)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return getService().getOrganizationUsers(organizationId, status, obc);
+		return getService().getOrganizationUsers(
+			organizationId, status, orderByComparator);
 	}
 
 	public static int getOrganizationUsersCount(long organizationId) {
@@ -1566,12 +1581,12 @@ public class UserLocalServiceUtil {
 				long userId, int socialRelationType,
 				String socialRelationTypeComparator, int start, int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.portal.kernel.model.User> obc)
+					<com.liferay.portal.kernel.model.User> orderByComparator)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().getSocialUsers(
 			userId, socialRelationType, socialRelationTypeComparator, start,
-			end, obc);
+			end, orderByComparator);
 	}
 
 	/**
@@ -1593,7 +1608,7 @@ public class UserLocalServiceUtil {
 	 types can be found in {@link SocialRelationConstants}.
 	 * @param start the lower bound of the range of users
 	 * @param end the upper bound of the range of users (not inclusive)
-	 * @param obc the comparator to order the users by (optionally
+	 * @param orderByComparator the comparator to order the users by (optionally
 	 <code>null</code>)
 	 * @return the ordered range of users with a mutual social relation of the
 	 type with the user
@@ -1603,11 +1618,12 @@ public class UserLocalServiceUtil {
 				long userId1, long userId2, int socialRelationType, int start,
 				int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.portal.kernel.model.User> obc)
+					<com.liferay.portal.kernel.model.User> orderByComparator)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().getSocialUsers(
-			userId1, userId2, socialRelationType, start, end, obc);
+			userId1, userId2, socialRelationType, start, end,
+			orderByComparator);
 	}
 
 	/**
@@ -1627,7 +1643,7 @@ public class UserLocalServiceUtil {
 	 * @param userId2 the primary key of the second user
 	 * @param start the lower bound of the range of users
 	 * @param end the upper bound of the range of users (not inclusive)
-	 * @param obc the comparator to order the users by (optionally
+	 * @param orderByComparator the comparator to order the users by (optionally
 	 <code>null</code>)
 	 * @return the ordered range of users with a mutual social relation with the
 	 user
@@ -1636,10 +1652,11 @@ public class UserLocalServiceUtil {
 			getSocialUsers(
 				long userId1, long userId2, int start, int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.portal.kernel.model.User> obc)
+					<com.liferay.portal.kernel.model.User> orderByComparator)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return getService().getSocialUsers(userId1, userId2, start, end, obc);
+		return getService().getSocialUsers(
+			userId1, userId2, start, end, orderByComparator);
 	}
 
 	/**
@@ -1973,10 +1990,10 @@ public class UserLocalServiceUtil {
 	public static java.util.List<com.liferay.portal.kernel.model.User> getUsers(
 		long companyId, boolean defaultUser, int status, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator
-			<com.liferay.portal.kernel.model.User> obc) {
+			<com.liferay.portal.kernel.model.User> orderByComparator) {
 
 		return getService().getUsers(
-			companyId, defaultUser, status, start, end, obc);
+			companyId, defaultUser, status, start, end, orderByComparator);
 	}
 
 	/**
@@ -2123,7 +2140,7 @@ public class UserLocalServiceUtil {
 	 com.liferay.portal.kernel.service.persistence.UserFinder}.
 	 * @param start the lower bound of the range of users
 	 * @param end the upper bound of the range of users (not inclusive)
-	 * @param obc the comparator to order the users by (optionally
+	 * @param orderByComparator the comparator to order the users by (optionally
 	 <code>null</code>)
 	 * @return the matching users
 	 * @see com.liferay.portal.kernel.service.persistence.UserFinder
@@ -2132,10 +2149,10 @@ public class UserLocalServiceUtil {
 		long companyId, String keywords, int status,
 		java.util.LinkedHashMap<String, Object> params, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator
-			<com.liferay.portal.kernel.model.User> obc) {
+			<com.liferay.portal.kernel.model.User> orderByComparator) {
 
 		return getService().search(
-			companyId, keywords, status, params, start, end, obc);
+			companyId, keywords, status, params, start, end, orderByComparator);
 	}
 
 	/**
@@ -2215,7 +2232,7 @@ public class UserLocalServiceUtil {
 	 or the last name 'smith'&quot;.
 	 * @param start the lower bound of the range of users
 	 * @param end the upper bound of the range of users (not inclusive)
-	 * @param obc the comparator to order the users by (optionally
+	 * @param orderByComparator the comparator to order the users by (optionally
 	 <code>null</code>)
 	 * @return the matching users
 	 * @see com.liferay.portal.kernel.service.persistence.UserFinder
@@ -2226,11 +2243,12 @@ public class UserLocalServiceUtil {
 		java.util.LinkedHashMap<String, Object> params, boolean andSearch,
 		int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator
-			<com.liferay.portal.kernel.model.User> obc) {
+			<com.liferay.portal.kernel.model.User> orderByComparator) {
 
 		return getService().search(
 			companyId, firstName, middleName, lastName, screenName,
-			emailAddress, status, params, andSearch, start, end, obc);
+			emailAddress, status, params, andSearch, start, end,
+			orderByComparator);
 	}
 
 	/**
@@ -2370,10 +2388,10 @@ public class UserLocalServiceUtil {
 			long companyId, long[] groupIds, String keywords, int start,
 			int end,
 			com.liferay.portal.kernel.util.OrderByComparator
-				<com.liferay.portal.kernel.model.User> obc) {
+				<com.liferay.portal.kernel.model.User> orderByComparator) {
 
 		return getService().searchSocial(
-			companyId, groupIds, keywords, start, end, obc);
+			companyId, groupIds, keywords, start, end, orderByComparator);
 	}
 
 	public static java.util.List<com.liferay.portal.kernel.model.User>
@@ -3249,6 +3267,10 @@ public class UserLocalServiceUtil {
 
 	/**
 	 * Updates the user in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect UserLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param user the user
 	 * @return the user that was updated

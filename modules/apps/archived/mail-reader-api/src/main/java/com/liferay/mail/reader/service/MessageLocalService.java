@@ -71,6 +71,10 @@ public interface MessageLocalService
 	/**
 	 * Adds the message to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MessageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param message the message
 	 * @return the message that was added
 	 */
@@ -95,6 +99,10 @@ public interface MessageLocalService
 	/**
 	 * Deletes the message with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MessageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param messageId the primary key of the message
 	 * @return the message that was removed
 	 * @throws PortalException if a message with the primary key could not be found
@@ -104,6 +112,10 @@ public interface MessageLocalService
 
 	/**
 	 * Deletes the message from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MessageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param message the message
 	 * @return the message that was removed
@@ -290,6 +302,10 @@ public interface MessageLocalService
 
 	/**
 	 * Updates the message in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MessageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param message the message
 	 * @return the message that was updated

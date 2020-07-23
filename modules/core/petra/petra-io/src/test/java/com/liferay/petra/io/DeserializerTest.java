@@ -14,6 +14,7 @@
 
 package com.liferay.petra.io;
 
+import com.liferay.petra.io.constants.SerializationConstants;
 import com.liferay.petra.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.petra.lang.ClassLoaderPool;
 import com.liferay.petra.string.StringPool;
@@ -582,7 +583,7 @@ public class DeserializerTest {
 
 		String nonasciiString = "非ASCII Code中文测试";
 
-		buffer = new byte[nonasciiString.length() * 2 + 6];
+		buffer = new byte[(nonasciiString.length() * 2) + 6];
 
 		buffer[0] = SerializationConstants.TC_STRING;
 		buffer[1] = 0;
@@ -590,7 +591,8 @@ public class DeserializerTest {
 		BigEndianCodec.putInt(buffer, 2, nonasciiString.length());
 
 		for (int i = 0; i < nonasciiString.length(); i++) {
-			BigEndianCodec.putChar(buffer, 6 + i * 2, nonasciiString.charAt(i));
+			BigEndianCodec.putChar(
+				buffer, 6 + (i * 2), nonasciiString.charAt(i));
 		}
 
 		byteBuffer = ByteBuffer.wrap(buffer);
@@ -667,14 +669,15 @@ public class DeserializerTest {
 
 		String nonasciiString = "非ASCII Code中文测试";
 
-		buffer = new byte[nonasciiString.length() * 2 + 5];
+		buffer = new byte[(nonasciiString.length() * 2) + 5];
 
 		buffer[0] = 0;
 
 		BigEndianCodec.putInt(buffer, 1, nonasciiString.length());
 
 		for (int i = 0; i < nonasciiString.length(); i++) {
-			BigEndianCodec.putChar(buffer, 5 + i * 2, nonasciiString.charAt(i));
+			BigEndianCodec.putChar(
+				buffer, 5 + (i * 2), nonasciiString.charAt(i));
 		}
 
 		byteBuffer = ByteBuffer.wrap(buffer);

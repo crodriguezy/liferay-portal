@@ -100,8 +100,16 @@ public class EagerBlobEntityModelImpl
 
 	public static final String TX_MANAGER = "liferayTransactionManager";
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static final boolean ENTITY_CACHE_ENABLED = false;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static final boolean FINDER_CACHE_ENABLED = false;
 
 	/**
@@ -204,9 +212,6 @@ public class EagerBlobEntityModelImpl
 				attributeName,
 				attributeGetterFunction.apply((EagerBlobEntity)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -430,16 +435,16 @@ public class EagerBlobEntityModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof EagerBlobEntity)) {
+		if (!(object instanceof EagerBlobEntity)) {
 			return false;
 		}
 
-		EagerBlobEntity eagerBlobEntity = (EagerBlobEntity)obj;
+		EagerBlobEntity eagerBlobEntity = (EagerBlobEntity)object;
 
 		long primaryKey = eagerBlobEntity.getPrimaryKey();
 
@@ -456,11 +461,19 @@ public class EagerBlobEntityModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
 		return ENTITY_CACHE_ENABLED;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
 		return FINDER_CACHE_ENABLED;

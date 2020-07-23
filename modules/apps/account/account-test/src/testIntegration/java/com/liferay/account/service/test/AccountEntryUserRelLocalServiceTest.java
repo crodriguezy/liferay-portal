@@ -15,6 +15,7 @@
 package com.liferay.account.service.test;
 
 import com.liferay.account.constants.AccountConstants;
+import com.liferay.account.exception.AccountEntryTypeException;
 import com.liferay.account.exception.DuplicateAccountEntryIdException;
 import com.liferay.account.exception.DuplicateAccountEntryUserRelException;
 import com.liferay.account.exception.NoSuchEntryException;
@@ -25,18 +26,24 @@ import com.liferay.account.model.AccountEntryUserRelModel;
 import com.liferay.account.retriever.AccountUserRetriever;
 import com.liferay.account.service.AccountEntryLocalService;
 import com.liferay.account.service.AccountEntryUserRelLocalService;
+import com.liferay.account.service.test.util.AccountEntryTestUtil;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.portal.configuration.test.util.ConfigurationTestUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.NoSuchUserException;
 import com.liferay.portal.kernel.exception.UserEmailAddressException;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.UserConstants;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
+import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.portal.kernel.test.rule.DataGuard;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -60,6 +67,7 @@ import org.junit.runner.RunWith;
 /**
  * @author Drew Brokke
  */
+@DataGuard(scope = DataGuard.Scope.METHOD)
 @RunWith(Arquillian.class)
 public class AccountEntryUserRelLocalServiceTest {
 
@@ -124,6 +132,59 @@ public class AccountEntryUserRelLocalServiceTest {
 	}
 
 	@Test
+	public void testAddAccountEntryUserRel2WithBlockedEmailDomainAs2BUser()
+		throws Exception {
+
+		String originalName = PrincipalThreadLocal.getName();
+
+		String pid =
+			"com.liferay.account.configuration." +
+				"AccountEntryEmailDomainsConfiguration";
+
+		ConfigurationTestUtil.saveConfiguration(
+			pid,
+			new HashMapDictionary() {
+				{
+					put("enableEmailDomainValidation", true);
+					put("blockedEmailDomains", "test.com");
+				}
+			});
+
+		try {
+			AccountEntry accountEntry = AccountEntryTestUtil.addAccountEntry(
+				_accountEntryLocalService);
+
+			_accountEntryUserRelLocalService.addAccountEntryUserRel(
+				accountEntry.getAccountEntryId(), _user.getUserId());
+
+			PrincipalThreadLocal.setName(_user.getUserId());
+
+			_userInfo.emailAddress = _userInfo.screenName + "@test.com";
+
+			_addAccountEntryUserRel(_accountEntry.getAccountEntryId());
+
+			Assert.fail();
+		}
+		catch (UserEmailAddressException.MustNotUseBlockedDomain
+					userEmailAddressException) {
+
+			Assert.assertEquals(
+				_userInfo.emailAddress, userEmailAddressException.emailAddress);
+			Assert.assertEquals(
+				String.format(
+					"Email address %s must not use one of the blocked " +
+						"domains: %s",
+					_userInfo.emailAddress, "test.com"),
+				userEmailAddressException.getMessage());
+		}
+		finally {
+			PrincipalThreadLocal.setName(originalName);
+
+			ConfigurationTestUtil.deleteConfiguration(pid);
+		}
+	}
+
+	@Test
 	public void testAddAccountEntryUserRel2WithDefaultAccountEntryId()
 		throws Exception {
 
@@ -158,6 +219,74 @@ public class AccountEntryUserRelLocalServiceTest {
 	}
 
 	@Test
+	public void testAddAccountEntryUserRel2WithInvalidUserEmailAddressDomain()
+		throws Exception {
+
+		AccountEntry accountEntry = AccountEntryTestUtil.addAccountEntry(
+			_accountEntryLocalService, new String[] {"test1.com", "test2.com"});
+
+		_userInfo.emailAddress = _userInfo.screenName + "@invalid-domain.com";
+
+		_addAccountEntryUserRel(accountEntry.getAccountEntryId());
+	}
+
+	@Test
+	public void testAddAccountEntryUserRel2WithInvalidUserEmailAddressDomainAs2BUser()
+		throws Exception {
+
+		String originalName = PrincipalThreadLocal.getName();
+
+		String pid =
+			"com.liferay.account.configuration." +
+				"AccountEntryEmailDomainsConfiguration";
+
+		ConfigurationTestUtil.saveConfiguration(
+			pid,
+			new HashMapDictionary() {
+				{
+					put("enableEmailDomainValidation", true);
+				}
+			});
+
+		try {
+			AccountEntry accountEntry = AccountEntryTestUtil.addAccountEntry(
+				_accountEntryLocalService,
+				new String[] {"test1.com", "test2.com"});
+
+			_accountEntryUserRelLocalService.addAccountEntryUserRel(
+				accountEntry.getAccountEntryId(), _user.getUserId());
+
+			PrincipalThreadLocal.setName(_user.getUserId());
+
+			_userInfo.emailAddress =
+				_userInfo.screenName + "@invalid-domain.com";
+
+			_addAccountEntryUserRel(_accountEntry.getAccountEntryId());
+
+			Assert.fail();
+		}
+		catch (UserEmailAddressException.MustHaveValidDomain
+					userEmailAddressException) {
+
+			Assert.assertEquals(
+				_userInfo.emailAddress, userEmailAddressException.emailAddress);
+			Assert.assertEquals(
+				_accountEntry.getDomains(),
+				userEmailAddressException.validDomains);
+			Assert.assertEquals(
+				String.format(
+					"Email address %s must have one of the valid domains: %s",
+					_userInfo.emailAddress, _accountEntry.getDomains()),
+				userEmailAddressException.getMessage());
+		}
+		finally {
+			PrincipalThreadLocal.setName(originalName);
+
+			ConfigurationTestUtil.deleteConfiguration(pid);
+		}
+	}
+
+	@Test
 	public void testAddAccountEntryUserRel2WithInvalidUserInfo()
 		throws Exception {
 
@@ -188,12 +317,14 @@ public class AccountEntryUserRelLocalServiceTest {
 
 	@Test
 	public void testAddAccountEntryUserRels() throws Exception {
-		_users.add(UserTestUtil.addUser());
-		_users.add(UserTestUtil.addUser());
+		List<User> users = new ArrayList<>();
+
+		users.add(UserTestUtil.addUser());
+		users.add(UserTestUtil.addUser());
 
 		_accountEntryUserRelLocalService.addAccountEntryUserRels(
 			_accountEntry.getAccountEntryId(),
-			ListUtil.toLongArray(_users, User.USER_ID_ACCESSOR));
+			ListUtil.toLongArray(users, User.USER_ID_ACCESSOR));
 
 		Assert.assertEquals(
 			2,
@@ -203,8 +334,35 @@ public class AccountEntryUserRelLocalServiceTest {
 		List<User> accountUsers = _accountUserRetriever.getAccountUsers(
 			_accountEntry.getAccountEntryId());
 
-		Assert.assertTrue(accountUsers.containsAll(_users));
-		Assert.assertTrue(_users.containsAll(accountUsers));
+		Assert.assertTrue(accountUsers.containsAll(users));
+		Assert.assertTrue(users.containsAll(accountUsers));
+	}
+
+	@Test
+	public void testAddPersonTypeAccountEntryUserRel() throws Exception {
+		AccountEntry personTypeAccountEntry =
+			AccountEntryTestUtil.addPersonAccountEntry(
+				_accountEntryLocalService);
+
+		AccountEntryUserRel accountEntryUserRel1 =
+			_addPersonTypeAccountEntryUserRel(
+				personTypeAccountEntry.getAccountEntryId());
+
+		Assert.assertNotNull(
+			_userLocalService.fetchUser(
+				accountEntryUserRel1.getAccountUserId()));
+
+		_assertPersonTypeAccountEntryUser(
+			new long[] {accountEntryUserRel1.getAccountUserId()},
+			personTypeAccountEntry.getAccountEntryId());
+
+		AccountEntryUserRel accountEntryUserRel2 =
+			_addPersonTypeAccountEntryUserRel(
+				personTypeAccountEntry.getAccountEntryId());
+
+		_assertPersonTypeAccountEntryUser(
+			new long[] {accountEntryUserRel2.getAccountUserId()},
+			personTypeAccountEntry.getAccountEntryId());
 	}
 
 	@Test
@@ -233,6 +391,30 @@ public class AccountEntryUserRelLocalServiceTest {
 			accountEntryUserRels.toString(), 0, accountEntryUserRels.size());
 	}
 
+	@Test
+	public void testDeleteAccountEntryUserRelsByAccountEntryId()
+		throws Exception {
+
+		_testDeleteAccountEntryUserRelsByAccountEntryId(0);
+
+		List<User> users = ListUtil.fromArray(
+			UserTestUtil.addUser(), UserTestUtil.addUser(),
+			UserTestUtil.addUser());
+
+		for (User user : users) {
+			_accountEntryUserRelLocalService.addAccountEntryUserRel(
+				_accountEntry.getAccountEntryId(), user.getUserId());
+		}
+
+		_testDeleteAccountEntryUserRelsByAccountEntryId(users.size());
+
+		_accountEntryUserRelLocalService.
+			deleteAccountEntryUserRelsByAccountEntryId(
+				_accountEntry.getAccountEntryId());
+
+		_testDeleteAccountEntryUserRelsByAccountEntryId(0);
+	}
+
 	@Test(expected = NoSuchEntryUserRelException.class)
 	public void testDeleteAccountEntryUserRelsThrowsNoSuchEntryUserRelException()
 		throws Exception {
@@ -243,11 +425,13 @@ public class AccountEntryUserRelLocalServiceTest {
 
 	@Test
 	public void testGetAccountEntryUserRelsByAccountEntryId() throws Exception {
-		_users.add(UserTestUtil.addUser());
-		_users.add(UserTestUtil.addUser());
-		_users.add(UserTestUtil.addUser());
+		List<User> users = new ArrayList<>();
 
-		for (User user : _users) {
+		users.add(UserTestUtil.addUser());
+		users.add(UserTestUtil.addUser());
+		users.add(UserTestUtil.addUser());
+
+		for (User user : users) {
 			_accountEntryUserRelLocalService.addAccountEntryUserRel(
 				_accountEntry.getAccountEntryId(), user.getUserId());
 		}
@@ -258,7 +442,7 @@ public class AccountEntryUserRelLocalServiceTest {
 					_accountEntry.getAccountEntryId());
 
 		long[] expectedUserIds = ListUtil.toLongArray(
-			_users, User.USER_ID_ACCESSOR);
+			users, User.USER_ID_ACCESSOR);
 
 		Arrays.sort(expectedUserIds);
 
@@ -268,6 +452,36 @@ public class AccountEntryUserRelLocalServiceTest {
 		Arrays.sort(actualUserIds);
 
 		Assert.assertArrayEquals(expectedUserIds, actualUserIds);
+	}
+
+	@Test
+	public void testSetPersonTypeAccountEntryUser() throws Exception {
+		AccountEntry personTypeAccountEntry =
+			AccountEntryTestUtil.addPersonAccountEntry(
+				_accountEntryLocalService);
+		User user1 = UserTestUtil.addUser();
+
+		_testSetPersonTypeAccountEntryUser(
+			new long[] {user1.getUserId()},
+			personTypeAccountEntry.getAccountEntryId(), user1.getUserId());
+
+		User user2 = UserTestUtil.addUser();
+
+		_testSetPersonTypeAccountEntryUser(
+			new long[] {user2.getUserId()},
+			personTypeAccountEntry.getAccountEntryId(), user2.getUserId());
+
+		_testSetPersonTypeAccountEntryUser(
+			new long[0], personTypeAccountEntry.getAccountEntryId(),
+			UserConstants.USER_ID_DEFAULT);
+	}
+
+	@Test(expected = AccountEntryTypeException.class)
+	public void testSetPersonTypeAccountEntryUserThrowsAccountEntryTypeException()
+		throws Exception {
+
+		_accountEntryUserRelLocalService.setPersonTypeAccountEntryUser(
+			_accountEntry.getAccountEntryId(), _user.getUserId());
 	}
 
 	@Test
@@ -354,8 +568,6 @@ public class AccountEntryUserRelLocalServiceTest {
 			AccountEntry accountEntry = AccountEntryTestUtil.addAccountEntry(
 				_accountEntryLocalService);
 
-			_accountEntries.add(accountEntry);
-
 			accountEntryIds[i] = accountEntry.getAccountEntryId();
 		}
 
@@ -365,17 +577,43 @@ public class AccountEntryUserRelLocalServiceTest {
 	private AccountEntryUserRel _addAccountEntryUserRel(long accountEntryId)
 		throws Exception {
 
-		AccountEntryUserRel accountEntryUserRel =
-			_accountEntryUserRelLocalService.addAccountEntryUserRel(
+		return _accountEntryUserRelLocalService.addAccountEntryUserRel(
+			accountEntryId, TestPropsValues.getUserId(), _userInfo.screenName,
+			_userInfo.emailAddress, _userInfo.locale, _userInfo.firstName,
+			_userInfo.middleName, _userInfo.lastName, _userInfo.prefixId,
+			_userInfo.suffixId);
+	}
+
+	private AccountEntryUserRel _addPersonTypeAccountEntryUserRel(
+			long accountEntryId)
+		throws Exception {
+
+		UserInfo userInfo = new UserInfo();
+
+		return _accountEntryUserRelLocalService.
+			addPersonTypeAccountEntryUserRel(
 				accountEntryId, TestPropsValues.getUserId(),
-				_userInfo.screenName, _userInfo.emailAddress, _userInfo.locale,
-				_userInfo.firstName, _userInfo.middleName, _userInfo.lastName,
-				_userInfo.prefixId, _userInfo.suffixId);
+				userInfo.screenName, userInfo.emailAddress, userInfo.locale,
+				userInfo.firstName, userInfo.middleName, userInfo.lastName,
+				userInfo.prefixId, userInfo.suffixId);
+	}
 
-		_users.add(
-			_userLocalService.getUser(accountEntryUserRel.getAccountUserId()));
+	private void _assertPersonTypeAccountEntryUser(
+			long[] expectedUserIds, long accountEntryId)
+		throws Exception {
 
-		return accountEntryUserRel;
+		long[] actualUserIds = ListUtil.toLongArray(
+			_accountEntryUserRelLocalService.
+				getAccountEntryUserRelsByAccountEntryId(accountEntryId),
+			AccountEntryUserRelModel::getAccountUserId);
+
+		Assert.assertEquals(
+			Arrays.toString(actualUserIds), expectedUserIds.length,
+			actualUserIds.length);
+
+		for (int i = 0; i < expectedUserIds.length; i++) {
+			Assert.assertEquals(expectedUserIds[i], actualUserIds[i]);
+		}
 	}
 
 	private void _testAddAccountEntryUserRel2(
@@ -405,8 +643,29 @@ public class AccountEntryUserRelLocalServiceTest {
 		Assert.assertEquals(users.get(0), user);
 	}
 
-	@DeleteAfterTestRun
-	private final List<AccountEntry> _accountEntries = new ArrayList<>();
+	private void _testDeleteAccountEntryUserRelsByAccountEntryId(
+			int expectedCount)
+		throws Exception {
+
+		List<AccountEntryUserRel> accountEntryUserRels =
+			_accountEntryUserRelLocalService.
+				getAccountEntryUserRelsByAccountEntryId(
+					_accountEntry.getAccountEntryId());
+
+		Assert.assertEquals(
+			accountEntryUserRels.toString(), expectedCount,
+			accountEntryUserRels.size());
+	}
+
+	private void _testSetPersonTypeAccountEntryUser(
+			long[] expectedUserIds, long accountEntryId, long userId)
+		throws Exception {
+
+		_accountEntryUserRelLocalService.setPersonTypeAccountEntryUser(
+			accountEntryId, userId);
+
+		_assertPersonTypeAccountEntryUser(expectedUserIds, accountEntryId);
+	}
 
 	@DeleteAfterTestRun
 	private AccountEntry _accountEntry;
@@ -427,9 +686,6 @@ public class AccountEntryUserRelLocalServiceTest {
 
 	@Inject
 	private UserLocalService _userLocalService;
-
-	@DeleteAfterTestRun
-	private final List<User> _users = new ArrayList<>();
 
 	private class UserInfo {
 

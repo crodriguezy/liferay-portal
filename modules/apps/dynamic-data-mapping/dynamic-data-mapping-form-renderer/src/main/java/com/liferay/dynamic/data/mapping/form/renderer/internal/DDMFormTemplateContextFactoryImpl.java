@@ -220,7 +220,8 @@ public class DDMFormTemplateContextFactoryImpl
 		DDMFormPagesTemplateContextFactory ddmFormPagesTemplateContextFactory =
 			new DDMFormPagesTemplateContextFactory(
 				ddmForm, ddmFormLayout, ddmFormRenderingContext,
-				_ddmStructureLayoutLocalService, _ddmStructureLocalService);
+				_ddmStructureLayoutLocalService, _ddmStructureLocalService,
+				_jsonFactory);
 
 		ddmFormPagesTemplateContextFactory.setDDMFormEvaluator(
 			_ddmFormEvaluator);

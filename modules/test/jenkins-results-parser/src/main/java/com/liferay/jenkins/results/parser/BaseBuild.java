@@ -29,7 +29,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -155,16 +154,16 @@ public abstract class BaseBuild implements Build {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof BaseBuild)) {
+		if (!(object instanceof BaseBuild)) {
 			return false;
 		}
 
-		BaseBuild baseBuild = (BaseBuild)obj;
+		BaseBuild baseBuild = (BaseBuild)object;
 
 		if (Objects.equals(getBuildURL(), baseBuild.getBuildURL())) {
 			return true;
@@ -892,6 +891,7 @@ public abstract class BaseBuild implements Build {
 		return longestRunningTest;
 	}
 
+	@Override
 	public Map<String, String> getMetricLabels() {
 		if (_parentBuild != null) {
 			return _parentBuild.getMetricLabels();
@@ -1105,12 +1105,12 @@ public abstract class BaseBuild implements Build {
 	}
 
 	@Override
-	public JSONObject getTestReportJSONObject() {
+	public JSONObject getTestReportJSONObject(boolean checkCache) {
 		try {
 			return JenkinsResultsParserUtil.toJSONObject(
 				JenkinsResultsParserUtil.getLocalURL(
 					getBuildURL() + "testReport/api/json"),
-				false);
+				checkCache);
 		}
 		catch (IOException ioException) {
 			throw new RuntimeException(
@@ -1236,6 +1236,30 @@ public abstract class BaseBuild implements Build {
 	}
 
 	@Override
+	public List<TestResult> getUniqueFailureTestResults() {
+		List<TestResult> uniqueFailureTestResults = new ArrayList<>();
+
+		for (Build downstreamBuild : getFailedDownstreamBuilds()) {
+			uniqueFailureTestResults.addAll(
+				downstreamBuild.getUniqueFailureTestResults());
+		}
+
+		return uniqueFailureTestResults;
+	}
+
+	@Override
+	public List<TestResult> getUpstreamJobFailureTestResults() {
+		List<TestResult> upstreamFailureTestResults = new ArrayList<>();
+
+		for (Build downstreamBuild : getFailedDownstreamBuilds()) {
+			upstreamFailureTestResults.addAll(
+				downstreamBuild.getUpstreamJobFailureTestResults());
+		}
+
+		return upstreamFailureTestResults;
+	}
+
+	@Override
 	public boolean hasBuildURL(String buildURL) {
 		try {
 			buildURL = JenkinsResultsParserUtil.decode(buildURL);
@@ -1330,6 +1354,11 @@ public abstract class BaseBuild implements Build {
 	@Override
 	public boolean isFromCompletedBuild() {
 		return fromCompletedBuild;
+	}
+
+	@Override
+	public boolean isUniqueFailure() {
+		return !UpstreamFailureUtil.isBuildFailingInUpstreamJob(this);
 	}
 
 	@Override
@@ -1435,10 +1464,16 @@ public abstract class BaseBuild implements Build {
 			return;
 		}
 
+		String pinnedMessage = "";
+
+		if (!slaveOfflineRule.shutdown) {
+			pinnedMessage = "PINNED\n";
+		}
+
 		JenkinsSlave jenkinsSlave = getJenkinsSlave();
 
 		String message = JenkinsResultsParserUtil.combine(
-			"PINNED\n", slaveOfflineRule.getName(), " failure detected at ",
+			pinnedMessage, slaveOfflineRule.getName(), " failure detected at ",
 			getBuildURL(), ". ", jenkinsSlave.getName(),
 			" will be taken offline.\n\n", slaveOfflineRule.toString(),
 			"\n\n\nOffline Slave URL: https://", _jenkinsMaster.getName(),
@@ -1597,6 +1632,210 @@ public abstract class BaseBuild implements Build {
 
 			return displayName1.compareTo(displayName2);
 		}
+
+	}
+
+	public static class DefaultBranchInformation implements BranchInformation {
+
+		@Override
+		public String getCachedRemoteGitRefName() {
+			return JenkinsResultsParserUtil.combine(
+				"cache-", getReceiverUsername(), "-", getUpstreamBranchSHA(),
+				"-", getOriginName(), "-", getSenderBranchSHA());
+		}
+
+		@Override
+		public String getOriginName() {
+			String branchInformationString = _getBranchInformationString();
+
+			String regex = "[\\S\\s]*github.origin.name=(.+)\\n[\\S\\s]*";
+
+			if (branchInformationString.matches(regex)) {
+				return branchInformationString.replaceAll(regex, "$1");
+			}
+
+			return null;
+		}
+
+		@Override
+		public Integer getPullRequestNumber() {
+			String branchInformationString = _getBranchInformationString();
+
+			String regex =
+				"[\\S\\s]*github.pull.request.number=(\\d+)\\n[\\S\\s]*";
+
+			if (branchInformationString.matches(regex)) {
+				return Integer.valueOf(
+					branchInformationString.replaceAll(regex, "$1"));
+			}
+
+			return 0;
+		}
+
+		@Override
+		public String getReceiverUsername() {
+			String branchInformationString = _getBranchInformationString();
+
+			String regex = "[\\S\\s]*github.receiver.username=(.+)\\n[\\S\\s]*";
+
+			if (branchInformationString.matches(regex)) {
+				return branchInformationString.replaceAll(regex, "$1");
+			}
+
+			return null;
+		}
+
+		@Override
+		public String getRepositoryName() {
+			Properties buildProperties;
+
+			try {
+				buildProperties = JenkinsResultsParserUtil.getBuildProperties();
+			}
+			catch (IOException ioException) {
+				throw new RuntimeException(ioException);
+			}
+
+			String repositoryType = _repositoryType;
+
+			if (repositoryType.equals("portal.base") ||
+				repositoryType.equals("portal.ee")) {
+
+				repositoryType = "portal";
+			}
+
+			return JenkinsResultsParserUtil.getProperty(
+				buildProperties, repositoryType + ".repository",
+				getUpstreamBranchName());
+		}
+
+		@Override
+		public String getSenderBranchName() {
+			String branchInformationString = _getBranchInformationString();
+
+			String regex =
+				"[\\S\\s]*github.sender.branch.name=(.+)\\n[\\S\\s]*";
+
+			if (branchInformationString.matches(regex)) {
+				return branchInformationString.replaceAll(regex, "$1");
+			}
+
+			return null;
+		}
+
+		@Override
+		public String getSenderBranchSHA() {
+			String branchInformationString = _getBranchInformationString();
+
+			String regex = "[\\S\\s]*github.sender.branch.sha=(.+)\\n[\\S\\s]*";
+
+			if (branchInformationString.matches(regex)) {
+				return branchInformationString.replaceAll(regex, "$1");
+			}
+
+			return null;
+		}
+
+		@Override
+		public RemoteGitRef getSenderRemoteGitRef() {
+			String remoteURL = JenkinsResultsParserUtil.combine(
+				"git@github.com:", getSenderUsername(), "/",
+				getRepositoryName(), ".git");
+
+			return GitUtil.getRemoteGitRef(
+				getSenderBranchName(), new File("."), remoteURL);
+		}
+
+		@Override
+		public String getSenderUsername() {
+			String branchInformationString = _getBranchInformationString();
+
+			String regex = "[\\S\\s]*github.sender.username=(.+)\\n[\\S\\s]*";
+
+			if (branchInformationString.matches(regex)) {
+				return branchInformationString.replaceAll(regex, "$1");
+			}
+
+			return null;
+		}
+
+		@Override
+		public String getUpstreamBranchName() {
+			String branchInformationString = _getBranchInformationString();
+
+			String regex =
+				"[\\S\\s]*github.upstream.branch.name=(.+)\\n[\\S\\s]*";
+
+			if (branchInformationString.matches(regex)) {
+				return branchInformationString.replaceAll(regex, "$1");
+			}
+
+			return null;
+		}
+
+		@Override
+		public String getUpstreamBranchSHA() {
+			String branchInformationString = _getBranchInformationString();
+
+			String regex =
+				"[\\S\\s]*github.upstream.branch.sha=(.+)\\n[\\S\\s]*";
+
+			if (branchInformationString.matches(regex)) {
+				return branchInformationString.replaceAll(regex, "$1");
+			}
+
+			return null;
+		}
+
+		protected DefaultBranchInformation(Build build, String repositoryType) {
+			_build = build;
+			_repositoryType = repositoryType;
+		}
+
+		private String _getBranchInformationString() {
+			if (_branchInformationString != null) {
+				return _branchInformationString;
+			}
+
+			String consoleText = _build.getConsoleText();
+
+			int x = -1;
+
+			Pattern pattern = Pattern.compile(
+				JenkinsResultsParserUtil.combine(
+					"## (http://cloud-.*/)?git.", _repositoryType,
+					".properties"));
+
+			Matcher matcher = pattern.matcher(consoleText);
+
+			if (matcher.find()) {
+				x = matcher.start();
+			}
+
+			if (x == -1) {
+				return "";
+			}
+
+			int y = consoleText.indexOf("prepare.repositories.", x);
+
+			if (y == -1) {
+				y = consoleText.indexOf("Deleting:", x);
+			}
+
+			y = consoleText.indexOf("\n", y);
+
+			if (y == -1) {
+				return "";
+			}
+
+			_branchInformationString = consoleText.substring(x, y);
+
+			return _branchInformationString;
+		}
+
+		private String _branchInformationString;
+		private final Build _build;
+		private final String _repositoryType;
 
 	}
 
@@ -2151,6 +2390,26 @@ public abstract class BaseBuild implements Build {
 		return "jenkins";
 	}
 
+	protected BranchInformation getBranchInformation(String repositoryType) {
+		BranchInformation branchInformation = _branchInformationMap.get(
+			repositoryType);
+
+		if (branchInformation == null) {
+			branchInformation = new DefaultBranchInformation(
+				this, repositoryType);
+
+			String repositoryName = branchInformation.getRepositoryName();
+
+			if (repositoryName == null) {
+				return null;
+			}
+
+			_branchInformationMap.put(repositoryType, branchInformation);
+		}
+
+		return _branchInformationMap.get(repositoryType);
+	}
+
 	protected JSONObject getBuildJSONObject(String tree) {
 		if (getBuildURL() == null) {
 			return null;
@@ -2278,7 +2537,7 @@ public abstract class BaseBuild implements Build {
 		for (Build downstreamBuild : downstreamBuilds) {
 			String downstreamBuildResult = downstreamBuild.getResult();
 
-			if (downstreamBuildResult.equals(result)) {
+			if (Objects.equals(downstreamBuildResult, result)) {
 				count++;
 			}
 		}
@@ -2287,28 +2546,20 @@ public abstract class BaseBuild implements Build {
 	}
 
 	protected Map<Build, Element> getDownstreamBuildMessages(
-		String... results) {
+		List<Build> downstreamBuilds) {
 
-		List<String> resultList = Arrays.asList(results);
-		List<Build> matchingBuilds = new ArrayList<>();
 		List<Callable<Element>> callables = new ArrayList<>();
 
-		for (final Build downstreamBuild : getDownstreamBuilds(null)) {
-			String downstreamBuildResult = downstreamBuild.getResult();
+		for (final Build downstreamBuild : downstreamBuilds) {
+			Callable<Element> callable = new Callable<Element>() {
 
-			if (resultList.contains(downstreamBuildResult)) {
-				matchingBuilds.add(downstreamBuild);
+				public Element call() {
+					return downstreamBuild.getGitHubMessageElement();
+				}
 
-				Callable<Element> callable = new Callable<Element>() {
+			};
 
-					public Element call() {
-						return downstreamBuild.getGitHubMessageElement();
-					}
-
-				};
-
-				callables.add(callable);
-			}
+			callables.add(callable);
 		}
 
 		ParallelExecutor<Element> parallelExecutor = new ParallelExecutor<>(
@@ -2319,7 +2570,7 @@ public abstract class BaseBuild implements Build {
 		Map<Build, Element> elementsMap = new LinkedHashMap<>();
 
 		for (int i = 0; i < elements.size(); i++) {
-			elementsMap.put(matchingBuilds.get(i), elements.get(i));
+			elementsMap.put(downstreamBuilds.get(i), elements.get(i));
 		}
 
 		return elementsMap;
@@ -2327,6 +2578,16 @@ public abstract class BaseBuild implements Build {
 
 	protected ExecutorService getExecutorService() {
 		return null;
+	}
+
+	protected List<Build> getFailedDownstreamBuilds() {
+		List<Build> failedDownstreamBuilds = new ArrayList<>();
+
+		failedDownstreamBuilds.addAll(getDownstreamBuilds("ABORTED", null));
+		failedDownstreamBuilds.addAll(getDownstreamBuilds("FAILURE", null));
+		failedDownstreamBuilds.addAll(getDownstreamBuilds("UNSTABLE", null));
+
+		return failedDownstreamBuilds;
 	}
 
 	protected Element getFailureMessageElement() {
@@ -2895,7 +3156,7 @@ public abstract class BaseBuild implements Build {
 	}
 
 	protected int getTestCountByStatus(String status) {
-		JSONObject testReportJSONObject = getTestReportJSONObject();
+		JSONObject testReportJSONObject = getTestReportJSONObject(false);
 
 		if (testReportJSONObject == null) {
 			return 0;
@@ -3489,6 +3750,8 @@ public abstract class BaseBuild implements Build {
 			"jenkins.report.time.zone");
 	}
 
+	private final Map<String, BranchInformation> _branchInformationMap =
+		new HashMap<>();
 	private String _buildDescription;
 	private int _buildNumber = -1;
 	private JenkinsConsoleTextLoader _jenkinsConsoleTextLoader;

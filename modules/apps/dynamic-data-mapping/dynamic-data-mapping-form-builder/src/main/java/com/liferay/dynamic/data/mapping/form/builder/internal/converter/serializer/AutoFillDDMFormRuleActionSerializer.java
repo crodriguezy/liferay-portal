@@ -59,7 +59,7 @@ public class AutoFillDDMFormRuleActionSerializer
 		}
 
 		StringBundler sb = new StringBundler(
-			inputParametersMapper.size() * 4 - 1);
+			(inputParametersMapper.size() * 4) - 1);
 
 		for (Map.Entry<String, String> inputParameterMapper :
 				inputParametersMapper.entrySet()) {
@@ -83,7 +83,7 @@ public class AutoFillDDMFormRuleActionSerializer
 		}
 
 		StringBundler sb = new StringBundler(
-			outputParametersMapper.size() * 4 - 1);
+			(outputParametersMapper.size() * 4) - 1);
 
 		for (Map.Entry<String, String> outputParameterMapper :
 				outputParametersMapper.entrySet()) {

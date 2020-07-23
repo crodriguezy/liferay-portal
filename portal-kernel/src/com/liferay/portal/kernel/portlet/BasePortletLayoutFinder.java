@@ -229,7 +229,7 @@ public abstract class BasePortletLayoutFinder implements PortletLayoutFinder {
 	private String _getErrorMessage(
 		long groupId, ThemeDisplay themeDisplay, String[] portletIds) {
 
-		StringBundler sb = new StringBundler(portletIds.length * 2 + 5);
+		StringBundler sb = new StringBundler((portletIds.length * 2) + 5);
 
 		sb.append("{groupId=");
 		sb.append(groupId);

@@ -129,12 +129,18 @@ public class ReadingTimeEntryModelImpl
 
 	public static final long CREATEDATE_COLUMN_BITMASK = 32L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-		_entityCacheEnabled = entityCacheEnabled;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-		_finderCacheEnabled = finderCacheEnabled;
 	}
 
 	/**
@@ -237,9 +243,6 @@ public class ReadingTimeEntryModelImpl
 				attributeName,
 				attributeGetterFunction.apply((ReadingTimeEntry)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -784,16 +787,16 @@ public class ReadingTimeEntryModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof ReadingTimeEntry)) {
+		if (!(object instanceof ReadingTimeEntry)) {
 			return false;
 		}
 
-		ReadingTimeEntry readingTimeEntry = (ReadingTimeEntry)obj;
+		ReadingTimeEntry readingTimeEntry = (ReadingTimeEntry)object;
 
 		long primaryKey = readingTimeEntry.getPrimaryKey();
 
@@ -810,14 +813,22 @@ public class ReadingTimeEntryModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	@Override
@@ -967,9 +978,6 @@ public class ReadingTimeEntryModelImpl
 			_escapedModelProxyProviderFunction = _getProxyProviderFunction();
 
 	}
-
-	private static boolean _entityCacheEnabled;
-	private static boolean _finderCacheEnabled;
 
 	private String _uuid;
 	private String _originalUuid;

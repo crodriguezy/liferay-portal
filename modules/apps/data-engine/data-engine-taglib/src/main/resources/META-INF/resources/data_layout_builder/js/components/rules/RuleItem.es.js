@@ -19,7 +19,26 @@ import React, {useContext} from 'react';
 
 import AppContext from '../../AppContext.es';
 import {DELETE_DATA_LAYOUT_RULE} from '../../actions.es';
+import {getFieldLabel} from '../../utils/dataDefinition.es';
 import CollapsablePanel from '../collapsable-panel/CollapsablePanel.es';
+
+const ACTION_LABELS = {
+	autofill: Liferay.Language.get('autofill'),
+	calculate: Liferay.Language.get('calculate'),
+	enable: Liferay.Language.get('enable'),
+	require: Liferay.Language.get('require'),
+	show: Liferay.Language.get('show'),
+};
+
+const OPERATOR_LABELS = {
+	'belongs-to': Liferay.Language.get('belongs-to'),
+	contains: Liferay.Language.get('contains'),
+	'equals-to': Liferay.Language.get('equals-to'),
+	'is-empty': Liferay.Language.get('is-empty'),
+	'not-contains': Liferay.Language.get('not-contains'),
+	'not-equals-to': Liferay.Language.get('not-equals-to'),
+	'not-is-empty': Liferay.Language.get('not-is-empty'),
+};
 
 const Text = ({capitalize = false, children = '', lowercase = false}) => (
 	<span
@@ -32,24 +51,14 @@ const Text = ({capitalize = false, children = '', lowercase = false}) => (
 	</span>
 );
 
-const OPERATOR_LABELS = {
-	'belongs-to': Liferay.Language.get('belongs-to'),
-	contains: Liferay.Language.get('contains'),
-	'equals-to': Liferay.Language.get('equals-to'),
-	'is-empty': Liferay.Language.get('is-empty'),
-	'not-contains': Liferay.Language.get('not-contains'),
-	'not-equals-to': Liferay.Language.get('not-equals-to'),
-	'not-is-empty': Liferay.Language.get('not-is-empty'),
-};
-
 export default function RuleItem({rule, toggleRulesEditorVisibility}) {
 	const {
 		actions,
 		conditions,
 		logicalOperator,
-		name: {en_US: name},
+		name: {[Liferay.ThemeDisplay.getDefaultLanguageId()]: name},
 	} = rule;
-	const [, dispatch] = useContext(AppContext);
+	const [{dataDefinition}, dispatch] = useContext(AppContext);
 
 	const dropDownActions = [
 		{
@@ -73,6 +82,17 @@ export default function RuleItem({rule, toggleRulesEditorVisibility}) {
 		},
 	];
 
+	const replaceExpressionLabels = (expression) => {
+		dataDefinition.dataDefinitionFields.forEach(({name}) => {
+			expression = expression.replace(
+				new RegExp(`\\[${name}\\]`, 'g'),
+				getFieldLabel(dataDefinition, name)
+			);
+		});
+
+		return expression;
+	};
+
 	return (
 		<CollapsablePanel actions={dropDownActions} title={name}>
 			<ClayButton
@@ -80,6 +100,7 @@ export default function RuleItem({rule, toggleRulesEditorVisibility}) {
 				onClick={() => toggleRulesEditorVisibility(rule)}
 			>
 				<Text capitalize>{Liferay.Language.get('if')}</Text>
+
 				{conditions.map(({operands, operator}, index) => {
 					const [first, last] = operands;
 
@@ -88,16 +109,18 @@ export default function RuleItem({rule, toggleRulesEditorVisibility}) {
 							<Text lowercase>
 								{Liferay.Language.get('field')}
 							</Text>
+
 							<ClayLabel displayType="success">
-								{first.value}
+								{getFieldLabel(dataDefinition, first.value)}
 							</ClayLabel>
+
 							<ClayLabel displayType="secondary">
 								{OPERATOR_LABELS[operator] || operator}
 							</ClayLabel>
 
 							{last && last.value && (
 								<ClayLabel displayType="info">
-									{last.value}
+									{getFieldLabel(dataDefinition, last.value)}
 								</ClayLabel>
 							)}
 
@@ -110,12 +133,25 @@ export default function RuleItem({rule, toggleRulesEditorVisibility}) {
 					);
 				})}
 
-				<Text>{Liferay.Language.get('then')}</Text>
-
-				{actions.map(({action, target}, index) => (
+				{actions.map(({action, expression, target}, index) => (
 					<>
-						<Text lowercase>{action}</Text>
-						<ClayLabel displayType="success">{target}</ClayLabel>
+						<Text lowercase>{ACTION_LABELS[action] || action}</Text>
+
+						{expression && (
+							<>
+								<ClayLabel displayType="secondary">
+									{replaceExpressionLabels(expression)}
+								</ClayLabel>
+
+								<Text lowercase>
+									{Liferay.Language.get('into')}
+								</Text>
+							</>
+						)}
+
+						<ClayLabel displayType="success">
+							{getFieldLabel(dataDefinition, target)}
+						</ClayLabel>
 
 						{index + 1 !== actions.length && (
 							<ClayLabel displayType="warning">

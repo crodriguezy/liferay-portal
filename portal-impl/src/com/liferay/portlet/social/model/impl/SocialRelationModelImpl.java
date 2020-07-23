@@ -63,10 +63,11 @@ public class SocialRelationModelImpl
 	public static final String TABLE_NAME = "SocialRelation";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"mvccVersion", Types.BIGINT}, {"uuid_", Types.VARCHAR},
-		{"relationId", Types.BIGINT}, {"companyId", Types.BIGINT},
-		{"createDate", Types.BIGINT}, {"userId1", Types.BIGINT},
-		{"userId2", Types.BIGINT}, {"type_", Types.INTEGER}
+		{"mvccVersion", Types.BIGINT}, {"ctCollectionId", Types.BIGINT},
+		{"uuid_", Types.VARCHAR}, {"relationId", Types.BIGINT},
+		{"companyId", Types.BIGINT}, {"createDate", Types.BIGINT},
+		{"userId1", Types.BIGINT}, {"userId2", Types.BIGINT},
+		{"type_", Types.INTEGER}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -74,6 +75,7 @@ public class SocialRelationModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("ctCollectionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("uuid_", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("relationId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
@@ -84,7 +86,7 @@ public class SocialRelationModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table SocialRelation (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,relationId LONG not null primary key,companyId LONG,createDate LONG,userId1 LONG,userId2 LONG,type_ INTEGER)";
+		"create table SocialRelation (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,uuid_ VARCHAR(75) null,relationId LONG not null,companyId LONG,createDate LONG,userId1 LONG,userId2 LONG,type_ INTEGER,primary key (relationId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP = "drop table SocialRelation";
 
@@ -100,20 +102,23 @@ public class SocialRelationModelImpl
 
 	public static final String TX_MANAGER = "liferayTransactionManager";
 
-	public static final boolean ENTITY_CACHE_ENABLED = GetterUtil.getBoolean(
-		com.liferay.portal.util.PropsUtil.get(
-			"value.object.entity.cache.enabled.com.liferay.social.kernel.model.SocialRelation"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean ENTITY_CACHE_ENABLED = true;
 
-	public static final boolean FINDER_CACHE_ENABLED = GetterUtil.getBoolean(
-		com.liferay.portal.util.PropsUtil.get(
-			"value.object.finder.cache.enabled.com.liferay.social.kernel.model.SocialRelation"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean FINDER_CACHE_ENABLED = true;
 
-	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(
-		com.liferay.portal.util.PropsUtil.get(
-			"value.object.column.bitmask.enabled.com.liferay.social.kernel.model.SocialRelation"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean COLUMN_BITMASK_ENABLED = true;
 
 	public static final long COMPANYID_COLUMN_BITMASK = 1L;
 
@@ -182,9 +187,6 @@ public class SocialRelationModelImpl
 				attributeName,
 				attributeGetterFunction.apply((SocialRelation)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -263,6 +265,12 @@ public class SocialRelationModelImpl
 		attributeSetterBiConsumers.put(
 			"mvccVersion",
 			(BiConsumer<SocialRelation, Long>)SocialRelation::setMvccVersion);
+		attributeGetterFunctions.put(
+			"ctCollectionId", SocialRelation::getCtCollectionId);
+		attributeSetterBiConsumers.put(
+			"ctCollectionId",
+			(BiConsumer<SocialRelation, Long>)
+				SocialRelation::setCtCollectionId);
 		attributeGetterFunctions.put("uuid", SocialRelation::getUuid);
 		attributeSetterBiConsumers.put(
 			"uuid",
@@ -308,6 +316,16 @@ public class SocialRelationModelImpl
 	@Override
 	public void setMvccVersion(long mvccVersion) {
 		_mvccVersion = mvccVersion;
+	}
+
+	@Override
+	public long getCtCollectionId() {
+		return _ctCollectionId;
+	}
+
+	@Override
+	public void setCtCollectionId(long ctCollectionId) {
+		_ctCollectionId = ctCollectionId;
 	}
 
 	@Override
@@ -480,6 +498,7 @@ public class SocialRelationModelImpl
 		SocialRelationImpl socialRelationImpl = new SocialRelationImpl();
 
 		socialRelationImpl.setMvccVersion(getMvccVersion());
+		socialRelationImpl.setCtCollectionId(getCtCollectionId());
 		socialRelationImpl.setUuid(getUuid());
 		socialRelationImpl.setRelationId(getRelationId());
 		socialRelationImpl.setCompanyId(getCompanyId());
@@ -509,16 +528,16 @@ public class SocialRelationModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof SocialRelation)) {
+		if (!(object instanceof SocialRelation)) {
 			return false;
 		}
 
-		SocialRelation socialRelation = (SocialRelation)obj;
+		SocialRelation socialRelation = (SocialRelation)object;
 
 		long primaryKey = socialRelation.getPrimaryKey();
 
@@ -535,11 +554,19 @@ public class SocialRelationModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
 		return ENTITY_CACHE_ENABLED;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
 		return FINDER_CACHE_ENABLED;
@@ -579,6 +606,8 @@ public class SocialRelationModelImpl
 			new SocialRelationCacheModel();
 
 		socialRelationCacheModel.mvccVersion = getMvccVersion();
+
+		socialRelationCacheModel.ctCollectionId = getCtCollectionId();
 
 		socialRelationCacheModel.uuid = getUuid();
 
@@ -674,6 +703,7 @@ public class SocialRelationModelImpl
 	}
 
 	private long _mvccVersion;
+	private long _ctCollectionId;
 	private String _uuid;
 	private String _originalUuid;
 	private long _relationId;

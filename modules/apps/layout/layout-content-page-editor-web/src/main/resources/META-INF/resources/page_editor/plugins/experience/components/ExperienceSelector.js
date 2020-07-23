@@ -15,11 +15,15 @@
 import ClayAlert from '@clayui/alert';
 import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
+import ClayLayout from '@clayui/layout';
 import {useModal} from '@clayui/modal';
 import {useIsMounted} from 'frontend-js-react-web';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
+import {createPortal} from 'react-dom';
 
 import {config} from '../../../app/config/index';
+import selectCanUpdateExperiences from '../../../app/selectors/selectCanUpdateExperiences';
+import selectCanUpdateSegments from '../../../app/selectors/selectCanUpdateSegments';
 import {useDispatch, useSelector} from '../../../app/store/index';
 import createExperience from '../thunks/createExperience';
 import removeExperience from '../thunks/removeExperience';
@@ -78,13 +82,14 @@ const ExperienceSelector = ({
 }) => {
 	const dispatch = useDispatch();
 
-	const hasEditSegmentsEntryPermission = useSelector(
-		({permissions}) => permissions.EDIT_SEGMENTS_ENTRY
-	);
+	const canUpdateExperiences = useSelector(selectCanUpdateExperiences);
+	const canUpdateSegments = useSelector(selectCanUpdateSegments);
 
-	const hasUpdatePermissions = useSelector(
-		({permissions}) => permissions.UPDATE
-	);
+	const buttonRef = useRef();
+	const [buttonBoundingClientRect, setButtonBoundingClientRect] = useState({
+		bottom: 0,
+		left: 0,
+	});
 
 	const isMounted = useIsMounted();
 	const [open, setOpen] = useState(false);
@@ -98,7 +103,11 @@ const ExperienceSelector = ({
 	});
 
 	const [debouncedSetOpen] = useDebounceCallback((value) => {
-		if (isMounted()) {
+		if (isMounted() && buttonRef.current) {
+			setButtonBoundingClientRect(
+				buttonRef.current.getBoundingClientRect()
+			);
+
 			setOpen(value);
 		}
 	}, 100);
@@ -276,6 +285,7 @@ const ExperienceSelector = ({
 				id={selectId}
 				onBlur={handleDropdownButtonBlur}
 				onClick={handleDropdownButtonClick}
+				ref={buttonRef}
 				small
 				type="button"
 			>
@@ -286,44 +296,49 @@ const ExperienceSelector = ({
 				)}
 			</ClayButton>
 
-			{/** render this via createPortal **/}
-			{open && (
-				<div
-					className="dropdown-menu p-4 rounded toggled"
-					onBlur={handleDropdownBlur}
-					onFocus={handleDropdownFocus}
-					tabIndex="-1"
-				>
-					<ExperiencesSelectorHeader
-						canCreateExperiences={true}
-						onNewExperience={handleOnNewExperiecneClick}
-						showEmptyStateMessage={experiences.length <= 1}
-					/>
-
-					{experiences.length > 1 && (
-						<ExperiencesList
-							activeExperienceId={
-								selectedExperience.segmentsExperienceId
-							}
-							defaultExperienceId={
-								config.defaultSegmentsExperienceId
-							}
-							experiences={experiences}
-							hasUpdatePermissions={hasUpdatePermissions}
-							onDeleteExperience={deleteExperience}
-							onEditExperience={handleEditExperienceClick}
-							onPriorityDecrease={decreasePriority}
-							onPriorityIncrease={increasePriority}
+			{open &&
+				createPortal(
+					<div
+						className="dropdown-menu p-4 page-editor__toolbar-experience__dropdown-menu toggled"
+						onBlur={handleDropdownBlur}
+						onFocus={handleDropdownFocus}
+						style={{
+							left: buttonBoundingClientRect.left,
+							top: buttonBoundingClientRect.bottom,
+						}}
+						tabIndex="-1"
+					>
+						<ExperiencesSelectorHeader
+							canCreateExperiences={canUpdateExperiences}
+							onNewExperience={handleOnNewExperiecneClick}
+							showEmptyStateMessage={experiences.length <= 1}
 						/>
-					)}
-				</div>
-			)}
+
+						{experiences.length > 1 && (
+							<ExperiencesList
+								activeExperienceId={
+									selectedExperience.segmentsExperienceId
+								}
+								canUpdateExperiences={canUpdateExperiences}
+								defaultExperienceId={
+									config.defaultSegmentsExperienceId
+								}
+								experiences={experiences}
+								onDeleteExperience={deleteExperience}
+								onEditExperience={handleEditExperienceClick}
+								onPriorityDecrease={decreasePriority}
+								onPriorityIncrease={increasePriority}
+							/>
+						)}
+					</div>,
+					document.body
+				)}
 
 			{openModal && (
 				<ExperienceModal
+					canUpdateSegments={canUpdateSegments}
 					errorMessage={editingExperience.error}
 					experienceId={editingExperience.segmentsExperienceId}
-					hasSegmentsPermission={hasEditSegmentsEntryPermission}
 					initialName={editingExperience.name}
 					observer={modalObserver}
 					onClose={onModalClose}
@@ -345,25 +360,28 @@ const ExperiencesSelectorHeader = ({
 }) => {
 	return (
 		<>
-			<div className="align-items-end d-flex justify-content-between mb-4">
-				<h3 className="mb-0">
-					{Liferay.Language.get('select-experience')}
-				</h3>
-
-				{canCreateExperiences === true && (
-					<ClayButton
-						aria-label={Liferay.Language.get('new-experience')}
-						displayType="secondary"
-						onClick={onNewExperience}
-						small
-					>
-						{Liferay.Language.get('new-experience')}
-					</ClayButton>
-				)}
-			</div>
+			<ClayLayout.ContentRow className="mb-3" verticalAlign="center">
+				<ClayLayout.ContentCol expand>
+					<h3 className="mb-0">
+						{Liferay.Language.get('select-experience')}
+					</h3>
+				</ClayLayout.ContentCol>
+				<ClayLayout.ContentCol>
+					{canCreateExperiences === true && (
+						<ClayButton
+							aria-label={Liferay.Language.get('new-experience')}
+							displayType="secondary"
+							onClick={onNewExperience}
+							small
+						>
+							{Liferay.Language.get('new-experience')}
+						</ClayButton>
+					)}
+				</ClayLayout.ContentCol>
+			</ClayLayout.ContentRow>
 
 			{canCreateExperiences && (
-				<p className="mb-4 text-secondary">
+				<p className="text-secondary">
 					{showEmptyStateMessage
 						? Liferay.Language.get(
 								'experience-help-message-empty-state'
@@ -375,7 +393,7 @@ const ExperiencesSelectorHeader = ({
 			)}
 
 			<ClayAlert
-				className="mt-4 mx-0"
+				className="mx-0"
 				displayType="warning"
 				title={Liferay.Language.get('warning')}
 			>

@@ -184,10 +184,10 @@ public class DDMFormValuesJSONDeserializer
 	protected LocalizedValue getLocalizedValue(JSONObject jsonObject) {
 		LocalizedValue localizedValue = new LocalizedValue();
 
-		Iterator<String> itr = jsonObject.keys();
+		Iterator<String> iterator = jsonObject.keys();
 
-		while (itr.hasNext()) {
-			String languageId = itr.next();
+		while (iterator.hasNext()) {
+			String languageId = iterator.next();
 
 			if (LanguageUtil.isAvailableLocale(languageId)) {
 				localizedValue.addString(
@@ -286,9 +286,7 @@ public class DDMFormValuesJSONDeserializer
 			return;
 		}
 
-		Value value = getValue(ddmFormField, jsonObject);
-
-		ddmFormFieldValue.setValue(value);
+		ddmFormFieldValue.setValue(getValue(ddmFormField, jsonObject));
 	}
 
 	protected void setDDMFormLocalizedValuesDefaultLocale(

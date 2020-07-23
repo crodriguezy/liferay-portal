@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.elasticsearch7.internal;
 
-import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -32,7 +31,8 @@ import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.kernel.search.generic.MatchAllQuery;
 import com.liferay.portal.kernel.search.suggest.SpellCheckIndexWriter;
 import com.liferay.portal.kernel.util.PortalRunMode;
-import com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration;
+import com.liferay.portal.search.elasticsearch7.internal.configuration.ElasticsearchConfigurationWrapper;
+import com.liferay.portal.search.elasticsearch7.internal.logging.ElasticsearchExceptionHandler;
 import com.liferay.portal.search.elasticsearch7.internal.util.DocumentTypes;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.document.BulkDocumentRequest;
@@ -45,13 +45,8 @@ import com.liferay.portal.search.engine.adapter.index.RefreshIndexRequest;
 import com.liferay.portal.search.index.IndexNameBuilder;
 
 import java.util.Collection;
-import java.util.Map;
 
-import org.elasticsearch.ElasticsearchStatusException;
-
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -59,7 +54,6 @@ import org.osgi.service.component.annotations.Reference;
  * @author Milen Dyankov
  */
 @Component(
-	configurationPid = "com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration",
 	immediate = true, property = "search.engine.impl=Elasticsearch",
 	service = IndexWriter.class
 )
@@ -83,7 +77,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			_searchEngineAdapter.execute(indexDocumentRequest);
 		}
 		catch (RuntimeException runtimeException) {
-			if (_logExceptionsOnly) {
+			if (_elasticsearchConfigurationWrapper.logExceptionsOnly()) {
 				_log.error(runtimeException, runtimeException);
 			}
 			else {
@@ -120,7 +114,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			_searchEngineAdapter.execute(bulkDocumentRequest);
 
 		if (bulkDocumentResponse.hasErrors()) {
-			if (_logExceptionsOnly) {
+			if (_elasticsearchConfigurationWrapper.logExceptionsOnly()) {
 				_log.error("Bulk add failed");
 			}
 			else {
@@ -141,7 +135,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			_searchEngineAdapter.execute(refreshIndexRequest);
 		}
 		catch (RuntimeException runtimeException) {
-			if (_logExceptionsOnly) {
+			if (_elasticsearchConfigurationWrapper.logExceptionsOnly()) {
 				_log.error(runtimeException, runtimeException);
 			}
 			else {
@@ -168,19 +162,13 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			_searchEngineAdapter.execute(deleteDocumentRequest);
 		}
 		catch (RuntimeException runtimeException) {
-			if (_logExceptionsOnly) {
-				if (isIndexNotFound(runtimeException)) {
-					if (_log.isInfoEnabled()) {
-						_log.info(runtimeException, runtimeException);
-					}
-				}
-				else {
-					_log.error(runtimeException, runtimeException);
-				}
-			}
-			else {
-				throw runtimeException;
-			}
+			ElasticsearchExceptionHandler elasticsearchExceptionHandler =
+				new ElasticsearchExceptionHandler(
+					_log,
+					_elasticsearchConfigurationWrapper.logExceptionsOnly());
+
+			elasticsearchExceptionHandler.handleDeleteDocumentException(
+				runtimeException);
 		}
 	}
 
@@ -212,7 +200,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			_searchEngineAdapter.execute(bulkDocumentRequest);
 
 		if (bulkDocumentResponse.hasErrors()) {
-			if (_logExceptionsOnly) {
+			if (_elasticsearchConfigurationWrapper.logExceptionsOnly()) {
 				_log.error("Bulk delete failed");
 			}
 			else {
@@ -256,7 +244,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			throw new SystemException(parseException);
 		}
 		catch (RuntimeException runtimeException) {
-			if (_logExceptionsOnly) {
+			if (_elasticsearchConfigurationWrapper.logExceptionsOnly()) {
 				_log.error(runtimeException, runtimeException);
 			}
 			else {
@@ -285,7 +273,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			_searchEngineAdapter.execute(updateDocumentRequest);
 		}
 		catch (RuntimeException runtimeException) {
-			if (_logExceptionsOnly) {
+			if (_elasticsearchConfigurationWrapper.logExceptionsOnly()) {
 				_log.error(runtimeException, runtimeException);
 			}
 			else {
@@ -323,7 +311,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			_searchEngineAdapter.execute(bulkDocumentRequest);
 
 		if (bulkDocumentResponse.hasErrors()) {
-			if (_logExceptionsOnly) {
+			if (_elasticsearchConfigurationWrapper.logExceptionsOnly()) {
 				_log.error("Bulk partial update failed");
 			}
 			else {
@@ -369,7 +357,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			_searchEngineAdapter.execute(bulkDocumentRequest);
 
 		if (bulkDocumentResponse.hasErrors()) {
-			if (_logExceptionsOnly) {
+			if (_elasticsearchConfigurationWrapper.logExceptionsOnly()) {
 				_log.error("Update failed");
 			}
 			else {
@@ -414,7 +402,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			_searchEngineAdapter.execute(bulkDocumentRequest);
 
 		if (bulkDocumentResponse.hasErrors()) {
-			if (_logExceptionsOnly) {
+			if (_elasticsearchConfigurationWrapper.logExceptionsOnly()) {
 				_log.error("Bulk update failed");
 			}
 			else {
@@ -423,25 +411,11 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		}
 	}
 
-	@Activate
-	@Modified
-	protected void activate(Map<String, Object> properties) {
-		_elasticsearchConfiguration = ConfigurableUtil.createConfigurable(
-			ElasticsearchConfiguration.class, properties);
+	@Reference(unbind = "-")
+	protected void setElasticsearchConfigurationWrapper(
+		ElasticsearchConfigurationWrapper elasticsearchConfigurationWrapper) {
 
-		_logExceptionsOnly = _elasticsearchConfiguration.logExceptionsOnly();
-	}
-
-	protected boolean isIndexNotFound(RuntimeException runtimeException) {
-		if (runtimeException instanceof ElasticsearchStatusException) {
-			String message = runtimeException.getMessage();
-
-			if (message.contains("type=index_not_found_exception")) {
-				return true;
-			}
-		}
-
-		return false;
+		_elasticsearchConfigurationWrapper = elasticsearchConfigurationWrapper;
 	}
 
 	@Reference(unbind = "-")
@@ -459,9 +433,9 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 	private static final Log _log = LogFactoryUtil.getLog(
 		ElasticsearchIndexWriter.class);
 
-	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
+	private volatile ElasticsearchConfigurationWrapper
+		_elasticsearchConfigurationWrapper;
 	private IndexNameBuilder _indexNameBuilder;
-	private boolean _logExceptionsOnly;
 	private SearchEngineAdapter _searchEngineAdapter;
 
 }

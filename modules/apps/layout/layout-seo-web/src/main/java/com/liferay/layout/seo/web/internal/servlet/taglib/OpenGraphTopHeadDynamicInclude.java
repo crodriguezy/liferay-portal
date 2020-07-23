@@ -14,6 +14,7 @@
 
 package com.liferay.layout.seo.web.internal.servlet.taglib;
 
+import com.liferay.asset.display.page.constants.AssetDisplayPageWebKeys;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.document.library.kernel.service.DLFileEntryMetadataLocalService;
 import com.liferay.document.library.util.DLURLHelper;
@@ -23,14 +24,18 @@ import com.liferay.dynamic.data.mapping.kernel.StorageEngineManagerUtil;
 import com.liferay.dynamic.data.mapping.kernel.Value;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.dynamic.data.mapping.storage.StorageEngine;
+import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
+import com.liferay.info.field.InfoFieldValue;
+import com.liferay.info.item.InfoItemFieldValues;
+import com.liferay.info.item.InfoItemServiceTracker;
+import com.liferay.info.item.provider.InfoItemFieldValuesProvider;
 import com.liferay.layout.seo.kernel.LayoutSEOLink;
 import com.liferay.layout.seo.kernel.LayoutSEOLinkManager;
 import com.liferay.layout.seo.model.LayoutSEOEntry;
-import com.liferay.layout.seo.model.LayoutSEOSite;
 import com.liferay.layout.seo.open.graph.OpenGraphConfiguration;
 import com.liferay.layout.seo.service.LayoutSEOEntryLocalService;
 import com.liferay.layout.seo.service.LayoutSEOSiteLocalService;
-import com.liferay.layout.seo.web.internal.util.FileEntryMetadataOpenGraphTagsProvider;
+import com.liferay.layout.seo.web.internal.util.OpenGraphImageProvider;
 import com.liferay.layout.seo.web.internal.util.TitleProvider;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -38,10 +43,10 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -55,6 +60,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -159,10 +165,17 @@ public class OpenGraphTopHeadDynamicInclude extends BaseDynamicInclude {
 				return;
 			}
 
+			InfoItemFieldValues infoItemFieldValues = _getInfoItemFieldValues(
+				httpServletRequest, layout);
+
 			printWriter.println(
 				_getOpenGraphTag(
 					"og:description",
-					_getDescriptionTagValue(layoutSEOEntry, themeDisplay)));
+					HtmlUtil.unescape(
+						HtmlUtil.stripHtml(
+							_getDescriptionTagValue(
+								infoItemFieldValues, layout, layoutSEOEntry,
+								themeDisplay)))));
 
 			printWriter.println(
 				_getOpenGraphTag("og:locale", themeDisplay.getLanguageId()));
@@ -181,7 +194,10 @@ public class OpenGraphTopHeadDynamicInclude extends BaseDynamicInclude {
 			printWriter.println(
 				_getOpenGraphTag(
 					"og:title",
-					_getTitleTagValue(httpServletRequest, layoutSEOEntry)));
+					_getTitleTagValue(
+						httpServletRequest, infoItemFieldValues, layout,
+						layoutSEOEntry)));
+
 			printWriter.println(_getOpenGraphTag("og:type", "website"));
 
 			LayoutSEOLink layoutSEOLink =
@@ -192,51 +208,49 @@ public class OpenGraphTopHeadDynamicInclude extends BaseDynamicInclude {
 			printWriter.println(
 				_getOpenGraphTag("og:url", layoutSEOLink.getHref()));
 
-			long openGraphImageFileEntryId = _getOpenGraphImageFileEntryId(
-				layoutSEOEntry, group);
+			Optional<OpenGraphImageProvider.OpenGraphImage>
+				openGraphImageOptional =
+					_openGraphImageProvider.getOpenGraphImageOptional(
+						infoItemFieldValues, layout, layoutSEOEntry,
+						themeDisplay);
 
-			if (openGraphImageFileEntryId == 0) {
-				return;
-			}
+			openGraphImageOptional.ifPresent(
+				openGraphImage -> {
+					printWriter.println(
+						_getOpenGraphTag("og:image", openGraphImage.getUrl()));
 
-			FileEntry fileEntry = _dlAppLocalService.getFileEntry(
-				openGraphImageFileEntryId);
+					openGraphImage.getAltOptional(
+					).ifPresent(
+						alt -> printWriter.println(
+							_getOpenGraphTag("og:image:alt", alt))
+					);
 
-			printWriter.println(
-				_getOpenGraphTag(
-					"og:image",
-					_dlurlHelper.getImagePreviewURL(fileEntry, themeDisplay)));
+					if (themeDisplay.isSecure()) {
+						printWriter.println(
+							_getOpenGraphTag(
+								"og:image:secure_url",
+								openGraphImage.getUrl()));
+					}
 
-			printWriter.println(
-				_getOpenGraphTag(
-					"og:image:alt",
-					_getImageAltTagValue(
-						layoutSEOEntry, group, themeDisplay.getLocale())));
+					openGraphImage.getMimeTypeOptional(
+					).ifPresent(
+						type -> printWriter.println(
+							_getOpenGraphTag("og:image:type", type))
+					);
 
-			if (themeDisplay.isSecure()) {
-				printWriter.println(
-					_getOpenGraphTag(
-						"og:image:secure_url",
-						_dlurlHelper.getImagePreviewURL(
-							fileEntry, themeDisplay)));
-			}
+					printWriter.println(
+						_getOpenGraphTag(
+							"og:image:url", openGraphImage.getUrl()));
 
-			printWriter.println(
-				_getOpenGraphTag("og:image:type", fileEntry.getMimeType()));
-			printWriter.println(
-				_getOpenGraphTag(
-					"og:image:url",
-					_dlurlHelper.getImagePreviewURL(fileEntry, themeDisplay)));
+					for (KeyValuePair keyValuePair :
+							openGraphImage.getMetadataTagKeyValuePairs()) {
 
-			for (KeyValuePair keyValuePair :
-					_fileEntryMetadataOpenGraphTagsProvider.
-						getFileEntryMetadataOpenGraphTagKeyValuePairs(
-							fileEntry)) {
-
-				printWriter.println(
-					_getOpenGraphTag(
-						keyValuePair.getKey(), keyValuePair.getValue()));
-			}
+						printWriter.println(
+							_getOpenGraphTag(
+								keyValuePair.getKey(),
+								keyValuePair.getValue()));
+					}
+				});
 		}
 		catch (RuntimeException runtimeException) {
 			throw runtimeException;
@@ -253,10 +267,10 @@ public class OpenGraphTopHeadDynamicInclude extends BaseDynamicInclude {
 
 	@Activate
 	protected void activate() {
-		_fileEntryMetadataOpenGraphTagsProvider =
-			new FileEntryMetadataOpenGraphTagsProvider(
-				_ddmStructureLocalService, _dlFileEntryMetadataLocalService,
-				_portal, _storageEngine);
+		_openGraphImageProvider = new OpenGraphImageProvider(
+			_ddmStructureLocalService, _dlAppLocalService,
+			_dlFileEntryMetadataLocalService, _dlurlHelper,
+			_layoutSEOSiteLocalService, _portal, _storageEngine);
 
 		_titleProvider = new TitleProvider(_layoutSEOLinkManager);
 	}
@@ -283,7 +297,16 @@ public class OpenGraphTopHeadDynamicInclude extends BaseDynamicInclude {
 	}
 
 	private String _getDescriptionTagValue(
+		InfoItemFieldValues infoItemFieldValues, Layout layout,
 		LayoutSEOEntry layoutSEOEntry, ThemeDisplay themeDisplay) {
+
+		String mappedDescription = _getMappedStringValue(
+			"description", "openGraphDescription", infoItemFieldValues, layout,
+			themeDisplay.getLocale());
+
+		if (Validator.isNotNull(mappedDescription)) {
+			return mappedDescription;
+		}
 
 		if ((layoutSEOEntry != null) &&
 			layoutSEOEntry.isOpenGraphDescriptionEnabled()) {
@@ -292,58 +315,67 @@ public class OpenGraphTopHeadDynamicInclude extends BaseDynamicInclude {
 				themeDisplay.getLocale());
 		}
 
-		Layout layout = themeDisplay.getLayout();
-
 		return layout.getDescription(themeDisplay.getLanguageId());
 	}
 
-	private String _getImageAltTagValue(
-		LayoutSEOEntry layoutSEOEntry, Group group, Locale locale) {
+	private InfoItemFieldValues _getInfoItemFieldValues(
+		HttpServletRequest httpServletRequest, Layout layout) {
 
-		if ((layoutSEOEntry != null) &&
-			(layoutSEOEntry.getOpenGraphImageFileEntryId() > 0)) {
+		if (layout.isTypeAssetDisplay()) {
+			InfoDisplayObjectProvider<Object> infoDisplayObjectProvider =
+				(InfoDisplayObjectProvider<Object>)
+					httpServletRequest.getAttribute(
+						AssetDisplayPageWebKeys.INFO_DISPLAY_OBJECT_PROVIDER);
 
-			return layoutSEOEntry.getOpenGraphImageAlt(locale);
-		}
+			if (infoDisplayObjectProvider != null) {
+				InfoItemFieldValuesProvider infoItemFormProvider =
+					_infoItemServiceTracker.getFirstInfoItemService(
+						InfoItemFieldValuesProvider.class,
+						_portal.getClassName(
+							infoDisplayObjectProvider.getClassNameId()));
 
-		LayoutSEOSite layoutSEOSite =
-			_layoutSEOSiteLocalService.fetchLayoutSEOSiteByGroupId(
-				group.getGroupId());
-
-		if ((layoutSEOSite != null) &&
-			(layoutSEOSite.getOpenGraphImageFileEntryId() > 0)) {
-
-			return layoutSEOSite.getOpenGraphImageAlt(locale);
+				if (infoItemFormProvider != null) {
+					return infoItemFormProvider.getInfoItemFieldValues(
+						infoDisplayObjectProvider.getDisplayObject());
+				}
+			}
 		}
 
 		return null;
 	}
 
-	private long _getOpenGraphImageFileEntryId(
-			LayoutSEOEntry layoutSEOEntry, Group group)
-		throws PortalException {
+	private String _getMappedStringValue(
+		String defaultFieldName, String fieldName,
+		InfoItemFieldValues infoItemFieldValues, Layout layout, Locale locale) {
 
-		if (!_openGraphConfiguration.isOpenGraphEnabled(group)) {
-			return 0;
+		Object mappedValueObject = _getMappedValue(
+			defaultFieldName, fieldName, infoItemFieldValues, layout, locale);
+
+		if (mappedValueObject != null) {
+			return String.valueOf(mappedValueObject);
 		}
 
-		if ((layoutSEOEntry != null) &&
-			(layoutSEOEntry.getOpenGraphImageFileEntryId() > 0)) {
+		return null;
+	}
 
-			return layoutSEOEntry.getOpenGraphImageFileEntryId();
+	private Object _getMappedValue(
+		String defaultFieldName, String fieldName,
+		InfoItemFieldValues infoItemFieldValues, Layout layout, Locale locale) {
+
+		if (infoItemFieldValues == null) {
+			return null;
 		}
 
-		LayoutSEOSite layoutSEOSite =
-			_layoutSEOSiteLocalService.fetchLayoutSEOSiteByGroupId(
-				group.getGroupId());
+		InfoFieldValue<Object> infoFieldValue =
+			infoItemFieldValues.getInfoFieldValue(
+				layout.getTypeSettingsProperty(
+					"mapped-" + fieldName, defaultFieldName));
 
-		if ((layoutSEOSite == null) ||
-			(layoutSEOSite.getOpenGraphImageFileEntryId() == 0)) {
-
-			return 0;
+		if (infoFieldValue != null) {
+			return infoFieldValue.getValue(locale);
 		}
 
-		return layoutSEOSite.getOpenGraphImageFileEntryId();
+		return null;
 	}
 
 	private String _getOpenGraphTag(String property, String content) {
@@ -357,12 +389,21 @@ public class OpenGraphTopHeadDynamicInclude extends BaseDynamicInclude {
 
 	private String _getTitleTagValue(
 			HttpServletRequest httpServletRequest,
+			InfoItemFieldValues infoItemFieldValues, Layout layout,
 			LayoutSEOEntry layoutSEOEntry)
 		throws PortalException {
 
 		ThemeDisplay themeDisplay =
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
+
+		String mappedTitle = _getMappedStringValue(
+			"title", "openGraphTitle", infoItemFieldValues, layout,
+			themeDisplay.getLocale());
+
+		if (Validator.isNotNull(mappedTitle)) {
+			return mappedTitle;
+		}
 
 		if ((layoutSEOEntry != null) &&
 			layoutSEOEntry.isOpenGraphTitleEnabled()) {
@@ -385,8 +426,8 @@ public class OpenGraphTopHeadDynamicInclude extends BaseDynamicInclude {
 	@Reference
 	private DLURLHelper _dlurlHelper;
 
-	private FileEntryMetadataOpenGraphTagsProvider
-		_fileEntryMetadataOpenGraphTagsProvider;
+	@Reference
+	private InfoItemServiceTracker _infoItemServiceTracker;
 
 	@Reference
 	private Language _language;
@@ -402,6 +443,8 @@ public class OpenGraphTopHeadDynamicInclude extends BaseDynamicInclude {
 
 	@Reference
 	private OpenGraphConfiguration _openGraphConfiguration;
+
+	private OpenGraphImageProvider _openGraphImageProvider;
 
 	@Reference
 	private Portal _portal;

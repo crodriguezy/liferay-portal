@@ -12,191 +12,120 @@
  * details.
  */
 
-import {SELECT_SEGMENTS_EXPERIENCE} from '../../plugins/experience/actions';
+import {updateNetwork} from '../actions/index';
 import {
-	ADD_FRAGMENT_ENTRY_LINKS,
-	ADD_ITEM,
-	DELETE_ITEM,
-	DUPLICATE_ITEM,
-	MOVE_ITEM,
-	UPDATE_COL_SIZE_START,
-	UPDATE_EDITABLE_VALUES,
-	UPDATE_FRAGMENT_ENTRY_LINK_CONFIGURATION,
-	UPDATE_ITEM_CONFIG,
-	UPDATE_LANGUAGE_ID,
-	UPDATE_MULTIPLE_UNDO_STATE,
+	ADD_REDO_ACTION,
+	ADD_UNDO_ACTION,
+	UPDATE_REDO_ACTIONS,
 	UPDATE_UNDO_ACTIONS,
 } from '../actions/types';
-import updatePageContents from '../actions/updatePageContents';
-import ExperienceService from '../services/ExperienceService';
-import FragmentService from '../services/FragmentService';
-import InfoItemService from '../services/InfoItemService';
-import LayoutService from '../services/LayoutService';
+import {undoAction} from '../components/undo/undoActions';
+import {SERVICE_NETWORK_STATUS_TYPES} from '../config/constants/serviceNetworkStatusTypes';
+import {UNDO_TYPES} from '../config/constants/undoTypes';
+import {reducer} from '../reducers/index';
+import {canUndoAction} from './../components/undo/undoActions';
 
-const UNDO_SERVICES = {
-	[ADD_FRAGMENT_ENTRY_LINKS]: LayoutService.deleteItem,
-	[ADD_ITEM]: LayoutService.updateLayoutData,
-	[DELETE_ITEM]: LayoutService.updateLayoutData,
-	[DUPLICATE_ITEM]: LayoutService.deleteItem,
-	[MOVE_ITEM]: LayoutService.updateLayoutData,
-	[SELECT_SEGMENTS_EXPERIENCE]: ExperienceService.selectExperience,
-	[UPDATE_COL_SIZE_START]: LayoutService.updateLayoutData,
-	[UPDATE_EDITABLE_VALUES]: FragmentService.updateEditableValues,
-	[UPDATE_FRAGMENT_ENTRY_LINK_CONFIGURATION]:
-		FragmentService.updateConfigurationValues,
-	[UPDATE_ITEM_CONFIG]: LayoutService.updateLayoutData,
-	[UPDATE_LANGUAGE_ID]: () => Promise.resolve(),
-};
-
-const getServiceBody = (dispatch, undo, undoState) => {
-	switch (undo.type) {
-		case ADD_ITEM:
-		case DELETE_ITEM:
-		case MOVE_ITEM:
-		case UPDATE_COL_SIZE_START:
-		case UPDATE_ITEM_CONFIG: {
-			return {
-				layoutData: undo.layoutData,
-				onNetworkStatus: dispatch,
-				segmentsExperienceId: undoState.segmentsExperienceId,
-			};
-		}
-		case SELECT_SEGMENTS_EXPERIENCE: {
-			return {
-				body: {
-					segmentsExperienceId: undo.segmentsExperienceId,
-				},
-				dispatch,
-			};
-		}
-		case UPDATE_FRAGMENT_ENTRY_LINK_CONFIGURATION: {
-			return {
-				configurationValues: undo.editableValues,
-				fragmentEntryLinkId: undo.fragmentEntryLinkId,
-				onNetworkStatus: dispatch,
-			};
-		}
-		default:
-			return {
-				onNetworkStatus: dispatch,
-				segmentsExperienceId: undoState.segmentsExperienceId,
-				...undo,
-			};
-	}
-};
-
-const updateUndoState = (serviceResponse, undo, undoState) => {
-	switch (undo.type) {
-		case ADD_FRAGMENT_ENTRY_LINKS:
-		case DUPLICATE_ITEM: {
-			return {
-				...undoState,
-				deletedFragmentEntryLinkIds: undoState.deletedFragmentEntryLinkIds.concat(
-					serviceResponse.deletedFragmentEntryLinkIds
-				),
-				layoutData: serviceResponse.layoutData,
-			};
-		}
-		case ADD_ITEM:
-		case DELETE_ITEM:
-		case MOVE_ITEM:
-		case UPDATE_COL_SIZE_START:
-		case UPDATE_ITEM_CONFIG: {
-			return {...undoState, layoutData: undo.layoutData};
-		}
-		case SELECT_SEGMENTS_EXPERIENCE: {
-			return {
-				...undoState,
-				portletIds: serviceResponse,
-				segmentsExperienceId: undo.segmentsExperienceId,
-			};
-		}
-		case UPDATE_EDITABLE_VALUES: {
-			return {
-				...undoState,
-				fragmentEntryLinks: {
-					...undoState.fragmentEntryLinks,
-					[undo.fragmentEntryLinkId]: {
-						...undoState.fragmentEntryLinks[
-							undo.fragmentEntryLinkId
-						],
-						editableValues: undo.editableValues,
-					},
-				},
-			};
-		}
-		case UPDATE_FRAGMENT_ENTRY_LINK_CONFIGURATION: {
-			return {
-				...undoState,
-				fragmentEntryLinks: {
-					...undoState.fragmentEntryLinks,
-					[undo.fragmentEntryLinkId]:
-						serviceResponse.fragmentEntryLink,
-				},
-				layoutData: serviceResponse.layoutData,
-			};
-		}
-		case UPDATE_LANGUAGE_ID: {
-			return {...undoState, languageId: undo.languageId};
-		}
-
-		default:
-			return undoState;
-	}
-};
-
-export default function multipleUndo({numberOfActions, store}) {
+export default function multipleUndo({numberOfActions, store, type}) {
 	return (dispatch) => {
-		if (!store.undoHistory || store.undoHistory.length === 0) {
+		if (!store.undoHistory && !store.redoHistory) {
 			return;
 		}
 
-		const undosToUndo = store.undoHistory.slice(0, numberOfActions);
+		let updatedStore = store;
 
-		const remainingUndos = store.undoHistory.slice(
-			numberOfActions,
-			store.undoHistory.length
-		);
+		const multipleUndoDispatch = (originalType) => (action) => {
+			if (canUndoAction(action)) {
+				updatedStore = reducer(updatedStore, {
+					...action,
+					actionType: action.type,
+					originalType,
+					type:
+						type === UNDO_TYPES.undo
+							? ADD_REDO_ACTION
+							: ADD_UNDO_ACTION,
+				});
 
-		dispatch({type: UPDATE_UNDO_ACTIONS, undoHistory: remainingUndos});
-
-		let undoState = {
-			deletedFragmentEntryLinkIds: [],
-			fragmentEntryLinks: store.fragmentEntryLinks,
-			languageId: store.languageId,
-			layoutData: store.layoutData,
-			layoutDataList: store.layoutDataList,
-			segmentsExperienceId: store.segmentsExperienceId,
+				updatedStore = reducer(updatedStore, {
+					...action,
+					...isUndoAction,
+					originalType,
+				});
+			}
 		};
 
-		undosToUndo
+		let isUndoAction, remainingUndos, undosToUndo, updateHistoryAction;
+
+		if (type === UNDO_TYPES.undo) {
+			isUndoAction = {isUndo: true};
+
+			undosToUndo = store.undoHistory.slice(0, numberOfActions);
+
+			remainingUndos = store.undoHistory.slice(
+				numberOfActions,
+				store.undoHistory.length
+			);
+
+			updateHistoryAction = {
+				type: UPDATE_UNDO_ACTIONS,
+				undoHistory: remainingUndos,
+			};
+		}
+		else {
+			isUndoAction = {isRedo: true};
+
+			undosToUndo = store.redoHistory.slice(0, numberOfActions);
+
+			remainingUndos = store.redoHistory.slice(
+				numberOfActions,
+				store.redoHistory.length
+			);
+
+			updateHistoryAction = {
+				redoHistory: remainingUndos,
+				type: UPDATE_REDO_ACTIONS,
+			};
+		}
+
+		dispatch(
+			updateNetwork({
+				status: SERVICE_NETWORK_STATUS_TYPES.savingDraft,
+			})
+		);
+
+		return undosToUndo
 			.reduce((promise, undo) => {
 				return promise.then(() => {
-					const service = UNDO_SERVICES[undo.type];
-
-					return service(
-						getServiceBody(dispatch, undo, undoState)
-					).then((response) => {
-						undoState = updateUndoState(response, undo, undoState);
-					});
+					return undoAction({
+						action: undo,
+						store: updatedStore,
+					})(multipleUndoDispatch(undo.originalType || undo.type));
 				});
 			}, Promise.resolve())
 			.then(() => {
-				InfoItemService.getPageContents({
-					onNetworkStatus: dispatch,
-				}).then((pageContents) => {
-					dispatch(
-						updatePageContents({
-							pageContents,
-						})
-					);
-				});
+				dispatch(
+					updateNetwork({
+						requestGenerateDraft: false,
+						status: SERVICE_NETWORK_STATUS_TYPES.draftSaved,
+					})
+				);
+
+				updatedStore = reducer(updatedStore, updateHistoryAction);
+
+				dispatch({store: updatedStore, type: 'UPDATE_STORE'});
 			})
-			.then(() => {
-				dispatch({
-					...undoState,
-					type: UPDATE_MULTIPLE_UNDO_STATE,
-				});
+			.catch((error) => {
+				if (process.env.NODE_ENV === 'development') {
+					console.error(error);
+				}
+
+				dispatch(
+					updateNetwork({
+						error: Liferay.Language.get(
+							'an-unexpected-error-occurred'
+						),
+						status: SERVICE_NETWORK_STATUS_TYPES.error,
+					})
+				);
 			});
 	};
 }

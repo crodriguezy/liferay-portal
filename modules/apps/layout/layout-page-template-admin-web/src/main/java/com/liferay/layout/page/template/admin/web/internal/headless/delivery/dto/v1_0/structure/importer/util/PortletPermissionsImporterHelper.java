@@ -14,13 +14,13 @@
 
 package com.liferay.layout.page.template.admin.web.internal.headless.delivery.dto.v1_0.structure.importer.util;
 
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.ResourceAction;
 import com.liferay.portal.kernel.model.Role;
+import com.liferay.portal.kernel.model.Team;
 import com.liferay.portal.kernel.model.role.RoleConstants;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.service.GroupLocalService;
@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.service.ResourcePermissionService;
 import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
+import com.liferay.portal.kernel.service.TeamLocalService;
 import com.liferay.portal.kernel.service.permission.PortletPermission;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -42,6 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -91,10 +93,14 @@ public class PortletPermissionsImporterHelper {
 				layout.getCompanyId(), roleKey);
 
 			if (role == null) {
-				warningMessages.add(
-					_getWarningMessage(layout.getGroupId(), roleKey));
+				role = _getTeamRole(layout, roleKey);
 
-				continue;
+				if (role == null) {
+					warningMessages.add(
+						_getWarningMessage(layout.getGroupId(), roleKey));
+
+					continue;
+				}
 			}
 
 			Group group = _groupLocalService.getGroup(layout.getGroupId());
@@ -149,8 +155,23 @@ public class PortletPermissionsImporterHelper {
 		}
 	}
 
+	private Role _getTeamRole(Layout layout, String roleKey) throws Exception {
+		Map<Team, Role> teamRoleMap = _roleLocalService.getTeamRoleMap(
+			layout.getGroupId());
+
+		for (Map.Entry<Team, Role> entry : teamRoleMap.entrySet()) {
+			Team team = entry.getKey();
+
+			if (Objects.equals(team.getName(), roleKey)) {
+				return entry.getValue();
+			}
+		}
+
+		return null;
+	}
+
 	private String _getWarningMessage(long groupId, String roleKey)
-		throws PortalException {
+		throws Exception {
 
 		Locale locale = null;
 
@@ -199,5 +220,8 @@ public class PortletPermissionsImporterHelper {
 
 	@Reference
 	private RoleLocalService _roleLocalService;
+
+	@Reference
+	private TeamLocalService _teamLocalService;
 
 }

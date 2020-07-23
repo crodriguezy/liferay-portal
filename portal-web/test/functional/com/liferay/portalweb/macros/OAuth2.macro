@@ -18,7 +18,7 @@ definition {
 	}
 
 	macro addPrefixHandlerInSystemSettings {
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "System Settings");
@@ -333,11 +333,6 @@ definition {
 				locator1 = "Button#SELECT",
 				value1 = "Select");
 
-			LiferayEvent.waitForLiferayEvent(
-				attributeName = "src",
-				attributeValue = "dialog-iframe-popup",
-				eventName = "modalIframeLoaded");
-
 			SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 			Pause(locator1 = "3000");
@@ -372,7 +367,11 @@ definition {
 			locator1 = "OAuth2#ADMIN_AUTHORIZATIONS_REVOKE_BUTTON",
 			value1 = "Revoke");
 
-		AssertConfirm.waitForConfirmation(value1 = "Are you sure you want to revoke the authorization?");
+		var browserType = PropsUtil.get("browser.type");
+
+		if ("${browserType}" != "safari") {
+			AssertConfirm.waitForConfirmation(value1 = "Are you sure you want to revoke the authorization?");
+		}
 
 		Alert.viewSuccessMessage();
 

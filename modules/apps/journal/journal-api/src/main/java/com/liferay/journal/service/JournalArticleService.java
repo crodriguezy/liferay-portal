@@ -15,6 +15,7 @@
 package com.liferay.journal.service;
 
 import com.liferay.journal.model.JournalArticle;
+import com.liferay.portal.kernel.change.tracking.CTAware;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
@@ -48,6 +49,7 @@ import org.osgi.annotation.versioning.ProviderType;
  * @generated
  */
 @AccessControlled
+@CTAware
 @JSONWebService
 @ProviderType
 @Transactional(
@@ -612,7 +614,7 @@ public interface JournalArticleService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<JournalArticle> getArticles(
 		long groupId, long folderId, Locale locale, int start, int end,
-		OrderByComparator<JournalArticle> obc);
+		OrderByComparator<JournalArticle> orderByComparator);
 
 	/**
 	 * Returns an ordered range of all the web content articles matching the
@@ -634,14 +636,14 @@ public interface JournalArticleService extends BaseService {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<JournalArticle> getArticlesByArticleId(
 		long groupId, String articleId, int start, int end,
-		OrderByComparator<JournalArticle> obc);
+		OrderByComparator<JournalArticle> orderByComparator);
 
 	/**
 	 * Returns all the web content articles matching the group and layout UUID.
@@ -656,6 +658,45 @@ public interface JournalArticleService extends BaseService {
 		long groupId, String layoutUuid);
 
 	/**
+	 * Returns all the web content articles that the user has permission to view
+	 * matching the group and layout UUID.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end -
+	 * start</code> instances. <code>start</code> and <code>end</code> are not
+	 * primary keys, they are indexes in the result set. Thus, <code>0</code>
+	 * refers to the first result in the set. Setting both <code>start</code>
+	 * and <code>end</code> to {@link
+	 * com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full
+	 * result set.
+	 * </p>
+	 *
+	 * @param groupId the primary key of the web content article's group
+	 * @param layoutUuid the unique string identifying the web content
+	 article's display page
+	 * @param start the lower bound of the range of web content articles to
+	 return
+	 * @param end the upper bound of the range of web content articles to
+	 return (not inclusive)
+	 * @return the range of matching web content articles
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<JournalArticle> getArticlesByLayoutUuid(
+		long groupId, String layoutUuid, int start, int end);
+
+	/**
+	 * Returns the number of web content articles that the user has permission
+	 * to view matching the group and layout UUID.
+	 *
+	 * @param groupId the primary key of the web content article's group
+	 * @param layoutUuid the unique string identifying the web content
+	 article's display page
+	 * @return the matching web content articles
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getArticlesByLayoutUuidCount(long groupId, String layoutUuid);
+
+	/**
 	 * Returns an ordered range of all the web content articles matching the
 	 * group, class name ID, DDM structure key, and workflow status.
 	 *
@@ -684,14 +725,15 @@ public interface JournalArticleService extends BaseService {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<JournalArticle> getArticlesByStructureId(
 		long groupId, long classNameId, String ddmStructureKey, int status,
-		int start, int end, OrderByComparator<JournalArticle> obc);
+		int start, int end,
+		OrderByComparator<JournalArticle> orderByComparator);
 
 	/**
 	 * Returns an ordered range of all the web content articles matching the
@@ -722,14 +764,15 @@ public interface JournalArticleService extends BaseService {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<JournalArticle> getArticlesByStructureId(
 		long groupId, long classNameId, String ddmStructureKey, Locale locale,
-		int status, int start, int end, OrderByComparator<JournalArticle> obc);
+		int status, int start, int end,
+		OrderByComparator<JournalArticle> orderByComparator);
 
 	/**
 	 * Returns an ordered range of all the web content articles matching the
@@ -755,14 +798,14 @@ public interface JournalArticleService extends BaseService {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<JournalArticle> getArticlesByStructureId(
 		long groupId, String ddmStructureKey, int status, int start, int end,
-		OrderByComparator<JournalArticle> obc);
+		OrderByComparator<JournalArticle> orderByComparator);
 
 	/**
 	 * Returns an ordered range of all the web content articles matching the
@@ -785,14 +828,14 @@ public interface JournalArticleService extends BaseService {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<JournalArticle> getArticlesByStructureId(
 		long groupId, String ddmStructureKey, int start, int end,
-		OrderByComparator<JournalArticle> obc);
+		OrderByComparator<JournalArticle> orderByComparator);
 
 	/**
 	 * Returns an ordered range of all the web content articles matching the
@@ -819,14 +862,15 @@ public interface JournalArticleService extends BaseService {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<JournalArticle> getArticlesByStructureId(
 		long groupId, String ddmStructureKey, Locale locale, int status,
-		int start, int end, OrderByComparator<JournalArticle> obc);
+		int start, int end,
+		OrderByComparator<JournalArticle> orderByComparator);
 
 	/**
 	 * Returns the number of web content articles matching the group and folder.
@@ -1182,13 +1226,55 @@ public interface JournalArticleService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<JournalArticle> getLatestArticles(
 		long groupId, int status, int start, int end,
-		OrderByComparator<JournalArticle> obc);
+		OrderByComparator<JournalArticle> orderByComparator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getLatestArticlesCount(long groupId, int status);
 
+	/**
+	 * Returns all the web content articles that the user has permission to view
+	 * matching the group.
+	 *
+	 * @param groupId the primary key of the web content article's group
+	 * @return The matching web content articles
+	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<JournalArticle> getLayoutArticles(long groupId);
+
+	/**
+	 * Returns all the web content articles that the user has permission to view
+	 * matching the group.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end -
+	 * start</code> instances. <code>start</code> and <code>end</code> are not
+	 * primary keys, they are indexes in the result set. Thus, <code>0</code>
+	 * refers to the first result in the set. Setting both <code>start</code>
+	 * and <code>end</code> to {@link
+	 * com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full
+	 * result set.
+	 * </p>
+	 *
+	 * @param groupId the primary key of the web content article's group
+	 * @param start the lower bound of the range of web content articles to
+	 return
+	 * @param end the upper bound of the range of web content articles to
+	 return (not inclusive)
+	 * @return the range of matching web content articles
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<JournalArticle> getLayoutArticles(
+		long groupId, int start, int end);
+
+	/**
+	 * Returns the number of web content articles that the user has permission
+	 * to view matching the group.
+	 *
+	 * @param groupId the primary key of the web content article's group
+	 * @return the number of matching web content articles
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getLayoutArticlesCount(long groupId);
 
 	/**
 	 * Returns the OSGi service identifier.
@@ -1413,7 +1499,7 @@ public interface JournalArticleService extends BaseService {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
@@ -1423,7 +1509,7 @@ public interface JournalArticleService extends BaseService {
 		String keywords, Double version, String ddmStructureKey,
 		String ddmTemplateKey, Date displayDateGT, Date displayDateLT,
 		int status, Date reviewDate, int start, int end,
-		OrderByComparator<JournalArticle> obc);
+		OrderByComparator<JournalArticle> orderByComparator);
 
 	/**
 	 * Returns an ordered range of all the web content articles matching the
@@ -1483,7 +1569,7 @@ public interface JournalArticleService extends BaseService {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
@@ -1494,7 +1580,7 @@ public interface JournalArticleService extends BaseService {
 		String content, String ddmStructureKey, String ddmTemplateKey,
 		Date displayDateGT, Date displayDateLT, int status, Date reviewDate,
 		boolean andOperator, int start, int end,
-		OrderByComparator<JournalArticle> obc);
+		OrderByComparator<JournalArticle> orderByComparator);
 
 	/**
 	 * Returns an ordered range of all the web content articles matching the
@@ -1556,7 +1642,7 @@ public interface JournalArticleService extends BaseService {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
@@ -1567,7 +1653,7 @@ public interface JournalArticleService extends BaseService {
 		String content, String[] ddmStructureKeys, String[] ddmTemplateKeys,
 		Date displayDateGT, Date displayDateLT, int status, Date reviewDate,
 		boolean andOperator, int start, int end,
-		OrderByComparator<JournalArticle> obc);
+		OrderByComparator<JournalArticle> orderByComparator);
 
 	/**
 	 * Returns the number of web content articles matching the parameters,

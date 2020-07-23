@@ -17,13 +17,9 @@
 <%@ include file="/init.jsp" %>
 
 <%
-Portlet portlet = PortletLocalServiceUtil.getPortletById(portletDisplay.getId());
-
-String refererWebDAVToken = WebDAVUtil.getStorageToken(portlet);
-
 String redirect = ParamUtil.getString(request, "redirect");
 
-DLEditDDMStructureDisplayContext dlEditDDMStructureDisplayContext = new DLEditDDMStructureDisplayContext(request);
+DLEditDDMStructureDisplayContext dlEditDDMStructureDisplayContext = new DLEditDDMStructureDisplayContext(request, liferayPortletResponse);
 
 com.liferay.dynamic.data.mapping.model.DDMStructure ddmStructure = dlEditDDMStructureDisplayContext.getDDMStructure();
 
@@ -43,95 +39,70 @@ portletDisplay.setURLBack(redirect);
 renderResponse.setTitle(title);
 %>
 
-<portlet:actionURL name="/document_library/ddm/add_data_definition" var="addDataDefinitionURL" />
+<portlet:actionURL name="/document_library/ddm/add_data_definition" var="addDataDefinitionURL">
+	<portlet:param name="mvcRenderCommandName" value="/document_library/ddm/edit_ddm_structure" />
+</portlet:actionURL>
 
-<portlet:actionURL name="/document_library/ddm/update_data_definition" var="updateDataDefinitionURL" />
+<portlet:actionURL name="/document_library/ddm/update_data_definition" var="updateDataDefinitionURL">
+	<portlet:param name="mvcRenderCommandName" value="/document_library/ddm/edit_ddm_structure" />
+</portlet:actionURL>
 
-<clay:container-fluid>
-	<aui:form action="<%= (ddmStructure == null) ? addDataDefinitionURL : updateDataDefinitionURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveDDMStructure();" %>'>
-		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
-		<aui:input name="dataDefinitionId" type="hidden" value="<%= ddmStructureId %>" />
-		<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
-		<aui:input name="dataDefinition" type="hidden" />
-		<aui:input name="dataLayout" type="hidden" />
-		<aui:input name="status" type="hidden" />
+<aui:form action="<%= (ddmStructure == null) ? addDataDefinitionURL : updateDataDefinitionURL %>" cssClass="edit-metadata-type-form" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + liferayPortletResponse.getNamespace() + "saveDDMStructure();" %>'>
+	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
+	<aui:input name="dataDefinitionId" type="hidden" value="<%= ddmStructureId %>" />
+	<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
+	<aui:input name="dataDefinition" type="hidden" />
+	<aui:input name="dataLayout" type="hidden" />
+	<aui:input name="status" type="hidden" />
 
-		<aui:model-context bean="<%= ddmStructure %>" model="<%= com.liferay.dynamic.data.mapping.model.DDMStructure.class %>" />
+	<aui:model-context bean="<%= ddmStructure %>" model="<%= com.liferay.dynamic.data.mapping.model.DDMStructure.class %>" />
 
-		<aui:fieldset-group markupView="lexicon">
-			<aui:fieldset>
-				<aui:field-wrapper>
-					<c:if test="<%= (ddmStructure != null) && (DDMStorageLinkLocalServiceUtil.getStructureStorageLinksCount(ddmStructure.getPrimaryKey()) > 0) %>">
-						<div class="alert alert-warning">
-							<liferay-ui:message key="there-are-content-references-to-this-structure.-you-may-lose-data-if-a-field-name-is-renamed-or-removed" />
-						</div>
-					</c:if>
+	<nav class="component-tbar subnav-tbar-light tbar tbar-metadata-type">
+		<clay:container-fluid>
+			<ul class="tbar-nav">
+				<li class="tbar-item tbar-item-expand">
+					<aui:input autoFocus="<%= windowState.equals(LiferayWindowState.POP_UP) %>" cssClass="form-control-inline" label="" name="name" placeholder='<%= LanguageUtil.format(request, "untitled", "metadata-set") %>' wrapperCssClass="mb-0" />
+				</li>
+				<li class="tbar-item">
+					<div class="metadata-type-button-row tbar-section text-right">
+						<aui:button cssClass="btn-sm mr-3" href="<%= redirect %>" type="cancel" />
 
-					<c:if test="<%= (ddmStructure != null) && (groupId != scopeGroupId) %>">
-						<div class="alert alert-warning">
-							<liferay-ui:message key="this-structure-does-not-belong-to-this-site.-you-may-affect-other-sites-if-you-edit-this-structure" />
-						</div>
-					</c:if>
-				</aui:field-wrapper>
+						<aui:button cssClass="btn-sm mr-3" primary="<%= true %>" type="submit" value='<%= LanguageUtil.get(request, "save") %>' />
+					</div>
+				</li>
+			</ul>
+		</clay:container-fluid>
+	</nav>
 
-				<aui:input autoFocus="<%= windowState.equals(LiferayWindowState.POP_UP) %>" name="name" />
+	<div class="contextual-sidebar-content">
+		<clay:container-fluid
+			cssClass="container-view"
+		>
+			<c:if test="<%= (ddmStructure != null) && (DDMStorageLinkLocalServiceUtil.getStructureStorageLinksCount(ddmStructure.getPrimaryKey()) > 0) %>">
+				<div class="alert alert-warning">
+					<liferay-ui:message key="there-are-content-references-to-this-structure.-you-may-lose-data-if-a-field-name-is-renamed-or-removed" />
+				</div>
+			</c:if>
 
-				<liferay-ui:panel-container
-					cssClass="lfr-structure-entry-details-container"
-					extended="<%= false %>"
-					id="structureDetailsPanelContainer"
-					persistState="<%= true %>"
-				>
-					<liferay-ui:panel
-						collapsible="<%= true %>"
-						defaultState="closed"
-						extended="<%= false %>"
-						id="structureDetailsSectionPanel"
-						markupView="lexicon"
-						persistState="<%= true %>"
-						title='<%= LanguageUtil.get(request, "details") %>'
-					>
-						<clay:row
-							className="lfr-ddm-types-form-column"
-						>
-							<aui:input name="storageType" type="hidden" value="<%= StorageType.JSON.getValue() %>" />
-						</clay:row>
+			<c:if test="<%= (ddmStructure != null) && (groupId != scopeGroupId) %>">
+				<div class="alert alert-warning">
+					<liferay-ui:message key="this-structure-does-not-belong-to-this-site.-you-may-affect-other-sites-if-you-edit-this-structure" />
+				</div>
+			</c:if>
 
-						<aui:input name="description" />
-
-						<c:if test="<%= ddmStructure != null %>">
-							<portlet:resourceURL id="getStructure" var="getStructureURL">
-								<portlet:param name="structureId" value="<%= String.valueOf(ddmStructure.getStructureId()) %>" />
-							</portlet:resourceURL>
-
-							<aui:input name="url" type="resource" value="<%= getStructureURL.toString() %>" />
-
-							<c:if test="<%= Validator.isNotNull(refererWebDAVToken) %>">
-								<aui:input name="webDavURL" type="resource" value="<%= ddmStructure.getWebDavURL(themeDisplay, refererWebDAVToken) %>" />
-							</c:if>
-						</c:if>
-					</liferay-ui:panel>
-				</liferay-ui:panel-container>
-
-				<liferay-data-engine:data-layout-builder
-					componentId='<%= renderResponse.getNamespace() + "dataLayoutBuilder" %>'
-					contentType="document-library"
-					dataDefinitionId="<%= ddmStructureId %>"
-					dataLayoutInputId="dataLayout"
-					groupId="<%= groupId %>"
-					localizable="<%= true %>"
-					namespace="<%= renderResponse.getNamespace() %>"
-				/>
-			</aui:fieldset>
-		</aui:fieldset-group>
-	</aui:form>
-
-	<aui:button-row>
-		<aui:button onClick='<%= renderResponse.getNamespace() + "saveDDMStructure();" %>' primary="<%= true %>" value='<%= LanguageUtil.get(request, "save") %>' />
-
-		<aui:button href="<%= redirect %>" type="cancel" />
-	</aui:button-row>
-</clay:container-fluid>
+			<liferay-data-engine:data-layout-builder
+				additionalPanels="<%= dlEditDDMStructureDisplayContext.getAdditionalPanels(npmResolvedPackageName) %>"
+				componentId='<%= liferayPortletResponse.getNamespace() + "dataLayoutBuilder" %>'
+				contentType="document-library"
+				dataDefinitionId="<%= ddmStructureId %>"
+				dataLayoutInputId="dataLayout"
+				groupId="<%= groupId %>"
+				localizable="<%= true %>"
+				namespace="<%= liferayPortletResponse.getNamespace() %>"
+			/>
+		</clay:container-fluid>
+	</div>
+</aui:form>
 
 <aui:script>
 	function <portlet:namespace />getInputLocalizedValues(field) {

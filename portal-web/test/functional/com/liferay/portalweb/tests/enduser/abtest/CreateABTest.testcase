@@ -6,15 +6,34 @@ definition {
 	property portal.release = "true";
 	property portal.upstream = "quarantine";
 	property testray.main.component.name = "A/B Test";
-
-	// User has to be connected to Analytics Cloud
+	property analytics.cloud.enabled = "true";
 
 	setUp {
+
+		// Open Analytics Cloud, login and take the token to connect to DXP
+
+		var analyticsCloudURL = PropsUtil.get("analytics.cloud.url");
+		Navigator.openURL(baseURL = "${analyticsCloudURL}");
+
+		// Take token from Analytics Cloud
+
+		AnalyticsCloud.loginAnalyticsCloud(
+			emailAddress = "test@liferay.com",
+			password = "test");
+
+		AnalyticsCloud.takeTokenFromAnalyticsCloud();
+
+		// Go to DXP portal
+
 		TestCase.setUpPortalInstance();
 
 		User.firstLoginPG();
 
 		Navigator.openURL();
+
+		// Connect and synchronyze with Analytics Cloud
+
+		AnalyticsCloud.syncAnalyticsCloud();
 
 		// Create content page
 
@@ -24,8 +43,6 @@ definition {
 
 		PageEditor.clickPublish();
 
-		AnalyticsCloud.syncAnalyticsCloud();
-
 		Navigator.openWithAppendToBaseURL(urlAppend = "web/guest/content-page");
 	}
 
@@ -33,6 +50,8 @@ definition {
 		var testPortalInstance = PropsUtil.get("test.portal.instance");
 
 		Click(locator1 = "ABTest#AB_TEST_BUTTON");
+
+		AnalyticsCloud.teardownAnalyticsCloud();
 
 		SitePages.openPagesAdmin(siteURLKey = "guest");
 
@@ -44,6 +63,7 @@ definition {
 	}
 
 	@description = "Validate if the user can create an A/B Test"
+	@ignore = "true"
 	@priority = "5"
 	test CreateABTestByBounceRate {
 		ABTest.createABTestByBounceRate(testTitle = "Create A/B Test Title");
@@ -54,10 +74,11 @@ definition {
 
 		ABTest.checkAnalyticsCloudInfo();
 
-		AnalyticsCloud.loginAnalyticsCloud(
-			emailAddress = "test@liferay.com",
-			password = "test");
-
+		if (IsElementNotPresent(locator1 = "ABTest#AB_TEST_TITLE_AC_SIDE")) {
+			AnalyticsCloud.loginAnalyticsCloud(
+				emailAddress = "test@liferay.com",
+				password = "test");
+		}
 		AssertTextEquals(
 			locator1 = "ABTest#AB_TEST_TITLE_AC_SIDE",
 			value1 = "Create A/B Test Title");
@@ -68,6 +89,7 @@ definition {
 	}
 
 	@description = "Validate if, in the AB Test, the sidebar informs the user that minimum one variant is mandatory to test against Control if the user add variants and remove all variants"
+	@ignore = "true"
 	@priority = "5"
 	test CreateABTestRunWithDeletedVariants {
 		ABTest.createABTestByBounceRate(testTitle = "AB test title");

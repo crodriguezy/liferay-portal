@@ -34,15 +34,9 @@ const withResizeableColumns = (ChildComponent) => {
 			}
 		}
 
-		isResizeEnabled() {
-			const {defaultLanguageId, editingLanguageId} = this.props;
-
-			return defaultLanguageId === editingLanguageId;
-		}
-
 		render() {
 			return (
-				<div class={this.isResizeEnabled() ? 'resizeable' : ''}>
+				<div class="resizeable">
 					<ChildComponent {...this.props} />
 				</div>
 			);
@@ -51,6 +45,7 @@ const withResizeableColumns = (ChildComponent) => {
 		_createResizeDrag() {
 			this._resizeDrag = new Drag({
 				axis: 'x',
+				container: this.element,
 				sources: '.resizeable .ddm-resize-handle',
 				useShim: true,
 			});

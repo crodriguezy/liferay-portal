@@ -17,12 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String className = GetterUtil.getString((String)request.getAttribute("liferay-ratings:ratings:className"));
-long classPK = GetterUtil.getLong((String)request.getAttribute("liferay-ratings:ratings:classPK"));
 Map<String, Object> data = (Map<String, Object>)request.getAttribute("liferay-ratings:ratings:data");
-boolean inTrash = GetterUtil.getBoolean(request.getAttribute("liferay-ratings:ratings:inTrash"));
-RatingsEntry ratingsEntry = (RatingsEntry)request.getAttribute("liferay-ratings:ratings:ratingsEntry");
-RatingsStats ratingsStats = (RatingsStats)request.getAttribute("liferay-ratings:ratings:ratingsStats");
 String type = GetterUtil.getString((String)request.getAttribute("liferay-ratings:ratings:type"));
 %>
 
@@ -32,77 +27,145 @@ String type = GetterUtil.getString((String)request.getAttribute("liferay-ratings
 	<link href="<%= PortalUtil.getStaticResourceURL(request, application.getContextPath() + "/css/main.css") %>" rel="stylesheet" type="text/css" />
 </liferay-util:html-top>
 
-<c:choose>
-	<c:when test="<%= type.equals(RatingsType.LIKE.getValue()) %>">
-		<div>
-			<button class="btn btn-outline-borderless btn-outline-secondary btn-sm" disabled type="button">
-				<svg class="lexicon-icon lexicon-icon-heart">
-					<use xlink:href="<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg#heart" />
-				</svg>
-			</button>
+<div class="ratings">
+	<c:choose>
+		<c:when test="<%= type.equals(RatingsType.LIKE.getValue()) %>">
+			<div class="ratings-like">
+				<clay:button
+					borderless="<%= true %>"
+					disabled="<%= true %>"
+					displayType="secondary"
+					small="<%= true %>"
+				>
+					<clay:icon
+						symbol="heart"
+					/>
+				</clay:button>
+			</div>
+		</c:when>
+		<c:when test="<%= type.equals(RatingsType.THUMBS.getValue()) %>">
+			<div class="ratings-thumbs">
+				<clay:button
+					borderless="<%= true %>"
+					disabled="<%= true %>"
+					displayType="secondary"
+					small="<%= true %>"
+				>
+					<clay:icon
+						symbol="thumbs-up"
+					/>
+				</clay:button>
 
-			<react:component
-				data="<%= data %>"
-				module="js/components/Ratings"
-			/>
-		</div>
-	</c:when>
-	<c:when test="<%= type.equals(RatingsType.THUMBS.getValue()) %>">
-		<div>
-			<button class="btn btn-outline-borderless btn-outline-secondary btn-sm" disabled type="button">
-				<svg class="lexicon-icon lexicon-icon-thumbs-up">
-					<use xlink:href="<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg#thumbs-up" />
-				</svg>
-			</button>
-
-			<button class="btn btn-outline-borderless btn-outline-secondary btn-sm" disabled type="button">
-				<svg class="lexicon-icon lexicon-icon-thumbs-down">
-					<use xlink:href="<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg#thumbs-down" />
-				</svg>
-			</button>
-
-			<react:component
-				data="<%= data %>"
-				module="js/components/Ratings"
-			/>
-		</div>
-	</c:when>
-	<c:when test="<%= type.equals(RatingsType.STARS.getValue()) %>">
-		<div>
-			<div class="autofit-row autofit-row-center ratings ratings-stars">
-				<div class="autofit-col">
+				<clay:button
+					borderless="<%= true %>"
+					disabled="<%= true %>"
+					displayType="secondary"
+					icon="thumbs-down"
+					small="<%= true %>"
+				>
+					<clay:icon
+						symbol="thumbs-down"
+					/>
+				</clay:button>
+			</div>
+		</c:when>
+		<c:when test="<%= type.equals(RatingsType.STARS.getValue()) %>">
+			<clay:content-row
+				cssClass="ratings-stars"
+				verticalAlign="center"
+			>
+				<clay:content-col>
 					<div class="dropdown">
-						<button class="btn btn-outline-borderless btn-outline-secondary dropdown-toggle btn-sm" disabled type="button">
-							<svg class="lexicon-icon lexicon-icon-star-o">
-								<use xlink:href="<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg#star-o" />
-							</svg>
-
-							<span>-</span>
-						</button>
+						<clay:button
+							borderless="<%= true %>"
+							cssClass="dropdown-toggle"
+							disabled="<%= true %>"
+							displayType="secondary"
+							small="<%= true %>"
+						>
+							<span class="inline-item inline-item-before">
+								<clay:icon
+									symbol="star-o"
+								/>
+							</span>
+							<span class="inline-item ratings-stars-button-text">-</span>
+						</clay:button>
 					</div>
+				</clay:content-col>
+
+				<clay:content-col>
+					<clay:icon
+						cssClass="ratings-stars-average-icon"
+						symbol="star"
+					/>
+				</clay:content-col>
+			</clay:content-row>
+		</c:when>
+		<c:when test="<%= type.equals(RatingsType.STACKED_STARS.getValue()) %>">
+			<div class="ratings-stacked-stars ratings-stars">
+				<div class="disabled ratings-stars-average">
+					<span class="inline-item inline-item-before">
+						<clay:icon
+							cssClass="ratings-stars-average-icon"
+							symbol="star"
+						/>
+
+						<clay:icon
+							cssClass="ratings-stars-average-icon"
+							symbol="star"
+						/>
+
+						<clay:icon
+							cssClass="ratings-stars-average-icon"
+							symbol="star"
+						/>
+
+						<clay:icon
+							cssClass="ratings-stars-average-icon"
+							symbol="star"
+						/>
+
+						<clay:icon
+							cssClass="ratings-stars-average-icon"
+							symbol="star"
+						/>
+					</span>
 				</div>
 
-				<div class="autofit-col">
-					<svg class="lexicon-icon lexicon-icon-star ratings-stars-average-icon">
-						<use xlink:href="<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg#star" />
-					</svg>
+				<div class="disabled ratings-stars-average">
+					<span class="inline-item inline-item-before">
+						<clay:icon
+							cssClass="ratings-stars-average-icon"
+							symbol="star"
+						/>
+
+						<clay:icon
+							cssClass="ratings-stars-average-icon"
+							symbol="star"
+						/>
+
+						<clay:icon
+							cssClass="ratings-stars-average-icon"
+							symbol="star"
+						/>
+
+						<clay:icon
+							cssClass="ratings-stars-average-icon"
+							symbol="star"
+						/>
+
+						<clay:icon
+							cssClass="ratings-stars-average-icon"
+							symbol="star"
+						/>
+					</span>
 				</div>
 			</div>
+		</c:when>
+	</c:choose>
 
-			<react:component
-				data="<%= data %>"
-				module="js/components/Ratings"
-			/>
-		</div>
-	</c:when>
-	<c:otherwise>
-		<liferay-ui:ratings
-			className="<%= className %>"
-			classPK="<%= classPK %>"
-			inTrash="<%= inTrash %>"
-			ratingsEntry="<%= ratingsEntry %>"
-			ratingsStats="<%= ratingsStats %>"
-			type="<%= type %>"
-		/>
-	</c:otherwise>
-</c:choose>
+	<react:component
+		data="<%= data %>"
+		module="js/Ratings"
+	/>
+</div>

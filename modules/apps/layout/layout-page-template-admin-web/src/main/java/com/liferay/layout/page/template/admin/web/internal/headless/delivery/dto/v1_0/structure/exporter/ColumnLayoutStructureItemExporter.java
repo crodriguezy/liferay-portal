@@ -14,10 +14,17 @@
 
 package com.liferay.layout.page.template.admin.web.internal.headless.delivery.dto.v1_0.structure.exporter;
 
+import com.liferay.headless.delivery.dto.v1_0.ColumnViewport;
+import com.liferay.headless.delivery.dto.v1_0.ColumnViewportDefinition;
 import com.liferay.headless.delivery.dto.v1_0.PageColumnDefinition;
 import com.liferay.headless.delivery.dto.v1_0.PageElement;
+import com.liferay.layout.responsive.ViewportSize;
 import com.liferay.layout.util.structure.ColumnLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructureItem;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.util.MapUtil;
+
+import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -46,9 +53,79 @@ public class ColumnLayoutStructureItemExporter
 				definition = new PageColumnDefinition() {
 					{
 						size = columnLayoutStructureItem.getSize();
+
+						setColumnViewports(
+							() -> {
+								Map<String, JSONObject>
+									columnViewportConfigurations =
+										columnLayoutStructureItem.
+											getViewportConfigurations();
+
+								if (MapUtil.isEmpty(
+										columnViewportConfigurations)) {
+
+									return null;
+								}
+
+								ColumnViewport[] columnViewports =
+									new ColumnViewport[3];
+
+								columnViewports[0] = _toColumnViewport(
+									columnViewportConfigurations,
+									ViewportSize.MOBILE_LANDSCAPE);
+								columnViewports[1] = _toColumnViewport(
+									columnViewportConfigurations,
+									ViewportSize.PORTRAIT_MOBILE);
+								columnViewports[2] = _toColumnViewport(
+									columnViewportConfigurations,
+									ViewportSize.TABLET);
+
+								return columnViewports;
+							});
 					}
 				};
 				type = PageElement.Type.COLUMN;
+			}
+		};
+	}
+
+	private ColumnViewport _toColumnViewport(
+		Map<String, JSONObject> columnViewportConfigurationsMap,
+		ViewportSize viewportSize) {
+
+		return new ColumnViewport() {
+			{
+				columnViewportDefinition =
+					_toColumnViewportColumnViewportDefinition(
+						columnViewportConfigurationsMap, viewportSize);
+				id = viewportSize.getViewportSizeId();
+			}
+		};
+	}
+
+	private ColumnViewportDefinition _toColumnViewportColumnViewportDefinition(
+		Map<String, JSONObject> columnViewportConfigurationsMap,
+		ViewportSize viewportSize) {
+
+		if (!columnViewportConfigurationsMap.containsKey(
+				viewportSize.getViewportSizeId())) {
+
+			return null;
+		}
+
+		JSONObject jsonObject = columnViewportConfigurationsMap.get(
+			viewportSize.getViewportSizeId());
+
+		return new ColumnViewportDefinition() {
+			{
+				setSize(
+					() -> {
+						if (!jsonObject.has("size")) {
+							return null;
+						}
+
+						return jsonObject.getInt("size");
+					});
 			}
 		};
 	}

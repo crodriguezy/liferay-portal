@@ -75,14 +75,13 @@ public class DataRecordValuesUtilTest extends PowerMockito {
 
 		Assert.assertEquals("field1", ddmFormFieldValue.getName());
 
-		Value value = ddmFormFieldValue.getValue();
-
-		Assert.assertEquals(ddmFormField.getPredefinedValue(), value);
+		Assert.assertNull(ddmFormFieldValue.getValue());
 	}
 
 	@Test
 	public void testCreateDDMFormFieldValueNestedField() {
-		DDMFormField ddmFormField = _createDDMFormField("parent", "text", true);
+		DDMFormField ddmFormField = _createDDMFormField(
+			"parent", "fieldset", true);
 
 		ddmFormField.addNestedDDMFormField(
 			_createDDMFormField("child", "text", true));
@@ -90,18 +89,17 @@ public class DataRecordValuesUtilTest extends PowerMockito {
 		List<DDMFormFieldValue> ddmFormFieldValues =
 			DataRecordValuesUtil.createDDMFormFieldValues(
 				HashMapBuilder.<String, Object>put(
-					"child",
-					HashMapBuilder.put(
-						"en_US", "Child Value 1"
-					).put(
-						"pt_BR", "Filho Valor 1"
-					).build()
-				).put(
 					"parent",
-					HashMapBuilder.put(
-						"en_US", "Parent Value 1"
-					).put(
-						"pt_BR", "Pai Valor 1"
+					HashMapBuilder.<String, Object>put(
+						"instanceId",
+						HashMapBuilder.<String, Object>put(
+							"child",
+							HashMapBuilder.<String, Object>put(
+								"en_US", "Child Value 1"
+							).put(
+								"pt_BR", "Filho Valor 1"
+							).build()
+						).build()
 					).build()
 				).build(),
 				ddmFormField, null);
@@ -109,17 +107,6 @@ public class DataRecordValuesUtilTest extends PowerMockito {
 		DDMFormFieldValue ddmFormFieldValue = ddmFormFieldValues.get(0);
 
 		Assert.assertEquals("parent", ddmFormFieldValue.getName());
-
-		Value value = ddmFormFieldValue.getValue();
-
-		Assert.assertTrue(value instanceof LocalizedValue);
-
-		LocalizedValue localizedValue = (LocalizedValue)value;
-
-		Assert.assertEquals(
-			"Parent Value 1", localizedValue.getString(LocaleUtil.ENGLISH));
-		Assert.assertEquals(
-			"Pai Valor 1", localizedValue.getString(LocaleUtil.BRAZIL));
 
 		Map<String, List<DDMFormFieldValue>> nestedDDMFormFieldValuesMap =
 			ddmFormFieldValue.getNestedDDMFormFieldValuesMap();
@@ -132,11 +119,11 @@ public class DataRecordValuesUtilTest extends PowerMockito {
 		DDMFormFieldValue nestedDDMFormFieldValue =
 			nestedDDMFormFieldValues.get(0);
 
-		value = nestedDDMFormFieldValue.getValue();
+		Value value = nestedDDMFormFieldValue.getValue();
 
 		Assert.assertTrue(value instanceof LocalizedValue);
 
-		localizedValue = (LocalizedValue)value;
+		LocalizedValue localizedValue = (LocalizedValue)value;
 
 		Assert.assertEquals(
 			"Child Value 1", localizedValue.getString(LocaleUtil.ENGLISH));

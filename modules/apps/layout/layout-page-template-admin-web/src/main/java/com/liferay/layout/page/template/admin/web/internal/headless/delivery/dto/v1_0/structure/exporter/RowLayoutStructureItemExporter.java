@@ -16,8 +16,17 @@ package com.liferay.layout.page.template.admin.web.internal.headless.delivery.dt
 
 import com.liferay.headless.delivery.dto.v1_0.PageElement;
 import com.liferay.headless.delivery.dto.v1_0.PageRowDefinition;
+import com.liferay.headless.delivery.dto.v1_0.RowViewport;
+import com.liferay.headless.delivery.dto.v1_0.RowViewportDefinition;
+import com.liferay.layout.responsive.ViewportSize;
 import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.layout.util.structure.RowLayoutStructureItem;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.util.MapUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -52,9 +61,101 @@ public class RowLayoutStructureItemExporter
 							rowLayoutStructureItem.getNumberOfColumns();
 						reverseOrder = getReverseOrder();
 						verticalAlignment = getVerticalAlignment();
+
+						setRowViewports(
+							() -> {
+								Map<String, JSONObject>
+									rowViewportConfigurations =
+										rowLayoutStructureItem.
+											getViewportConfigurations();
+
+								if (MapUtil.isEmpty(
+										rowViewportConfigurations)) {
+
+									return null;
+								}
+
+								List<RowViewport> rowViewports =
+									new ArrayList<RowViewport>() {
+										{
+											add(
+												_toRowViewport(
+													rowViewportConfigurations,
+													ViewportSize.
+														MOBILE_LANDSCAPE));
+											add(
+												_toRowViewport(
+													rowViewportConfigurations,
+													ViewportSize.
+														PORTRAIT_MOBILE));
+											add(
+												_toRowViewport(
+													rowViewportConfigurations,
+													ViewportSize.TABLET));
+										}
+									};
+
+								return rowViewports.toArray(new RowViewport[0]);
+							});
 					}
 				};
 				type = PageElement.Type.ROW;
+			}
+		};
+	}
+
+	private RowViewport _toRowViewport(
+		Map<String, JSONObject> rowViewportConfigurationsMap,
+		ViewportSize viewportSize) {
+
+		return new RowViewport() {
+			{
+				id = viewportSize.getViewportSizeId();
+				rowViewportDefinition = _toRowViewportDefinition(
+					rowViewportConfigurationsMap, viewportSize);
+			}
+		};
+	}
+
+	private RowViewportDefinition _toRowViewportDefinition(
+		Map<String, JSONObject> rowViewportConfigurations,
+		ViewportSize viewportSize) {
+
+		if (!rowViewportConfigurations.containsKey(
+				viewportSize.getViewportSizeId())) {
+
+			return null;
+		}
+
+		JSONObject jsonObject = rowViewportConfigurations.get(
+			viewportSize.getViewportSizeId());
+
+		return new RowViewportDefinition() {
+			{
+				setModulesPerRow(
+					() -> {
+						if (!jsonObject.has("modulesPerRow")) {
+							return null;
+						}
+
+						return jsonObject.getInt("modulesPerRow");
+					});
+				setReverseOrder(
+					() -> {
+						if (!jsonObject.has("reverseOrder")) {
+							return null;
+						}
+
+						return jsonObject.getBoolean("reverseOrder");
+					});
+				setVerticalAlignment(
+					() -> {
+						if (!jsonObject.has("verticalAlignment")) {
+							return null;
+						}
+
+						return jsonObject.getString("verticalAlignment");
+					});
 			}
 		};
 	}

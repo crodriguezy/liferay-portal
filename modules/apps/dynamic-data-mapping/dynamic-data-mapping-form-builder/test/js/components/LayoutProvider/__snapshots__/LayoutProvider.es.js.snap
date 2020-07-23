@@ -19,6 +19,7 @@ Object {
   ],
   "readOnly": true,
   "settingsContext": Object {
+    "currentPage": 0,
     "pages": Array [
       Object {
         "rows": Array [
@@ -130,7 +131,6 @@ Array [
                   },
                 ],
                 "readOnly": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [
                     Object {
@@ -204,7 +204,6 @@ Array [
                 "options": Array [],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },
@@ -234,7 +233,6 @@ Array [
                 ],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },
@@ -263,7 +261,6 @@ Array [
                 "options": Array [],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },
@@ -288,7 +285,6 @@ Array [
                 "options": Array [],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },
@@ -646,7 +642,6 @@ Array [
                   },
                 ],
                 "readOnly": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [
                     Object {
@@ -744,7 +739,6 @@ Array [
                 "options": Array [],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },
@@ -760,7 +754,6 @@ Array [
                 "options": Array [],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },
@@ -793,7 +786,6 @@ Array [
                 "options": Array [],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },
@@ -818,7 +810,6 @@ Array [
                 "options": Array [],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },
@@ -1055,7 +1046,6 @@ Array [
                   },
                 ],
                 "readOnly": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [
                     Object {
@@ -1144,7 +1134,6 @@ Array [
                 "options": Array [],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },
@@ -1160,7 +1149,6 @@ Array [
                 "options": Array [],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },
@@ -1190,7 +1178,6 @@ Array [
                 ],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },
@@ -1219,7 +1206,6 @@ Array [
                 "options": Array [],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },
@@ -1319,7 +1305,11 @@ Array [
                 "visible": true,
               },
             ],
-            "size": 12,
+            "size": 3,
+          },
+          Object {
+            "fields": Array [],
+            "size": 9,
           },
         ],
       },
@@ -1335,7 +1325,6 @@ Array [
                 "options": Array [],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },
@@ -1351,7 +1340,6 @@ Array [
                 "options": Array [],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },
@@ -1381,7 +1369,6 @@ Array [
                 ],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },
@@ -1410,7 +1397,6 @@ Array [
                 "options": Array [],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },
@@ -1435,7 +1421,6 @@ Array [
                 "options": Array [],
                 "readOnly": true,
                 "required": true,
-                "rows": Array [],
                 "settingsContext": Object {
                   "pages": Array [],
                 },

@@ -22,9 +22,10 @@ import com.liferay.message.boards.model.MBMessage;
 import com.liferay.message.boards.model.MBThread;
 import com.liferay.message.boards.model.impl.MBCategoryImpl;
 import com.liferay.message.boards.service.MBMailingListLocalService;
-import com.liferay.message.boards.service.MBMessageLocalService;
 import com.liferay.message.boards.service.MBThreadLocalService;
 import com.liferay.message.boards.service.base.MBCategoryLocalServiceBaseImpl;
+import com.liferay.message.boards.service.persistence.MBMessagePersistence;
+import com.liferay.message.boards.service.persistence.MBThreadPersistence;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -840,48 +841,6 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 	}
 
 	@Override
-	public MBCategory updateMessageCount(long categoryId) {
-		MBCategory mbCategory = mbCategoryPersistence.fetchByPrimaryKey(
-			categoryId);
-
-		if (mbCategory == null) {
-			return null;
-		}
-
-		int messageCount = _mbMessageLocalService.getCategoryMessagesCount(
-			mbCategory.getGroupId(), mbCategory.getCategoryId(),
-			WorkflowConstants.STATUS_APPROVED);
-
-		mbCategory.setMessageCount(messageCount);
-
-		return mbCategoryPersistence.update(mbCategory);
-	}
-
-	@Override
-	public MBCategory updateStatistics(long categoryId) {
-		MBCategory mbCategory = mbCategoryPersistence.fetchByPrimaryKey(
-			categoryId);
-
-		if (mbCategory == null) {
-			return null;
-		}
-
-		int messageCount = _mbMessageLocalService.getCategoryMessagesCount(
-			mbCategory.getGroupId(), mbCategory.getCategoryId(),
-			WorkflowConstants.STATUS_APPROVED);
-
-		mbCategory.setMessageCount(messageCount);
-
-		int threadCount = _mbThreadLocalService.getCategoryThreadsCount(
-			mbCategory.getGroupId(), mbCategory.getCategoryId(),
-			WorkflowConstants.STATUS_APPROVED);
-
-		mbCategory.setThreadCount(threadCount);
-
-		return mbCategoryPersistence.update(mbCategory);
-	}
-
-	@Override
 	public MBCategory updateStatus(long userId, long categoryId, int status)
 		throws PortalException {
 
@@ -898,24 +857,6 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 		category.setStatusDate(new Date());
 
 		return mbCategoryPersistence.update(category);
-	}
-
-	@Override
-	public MBCategory updateThreadCount(long categoryId) {
-		MBCategory mbCategory = mbCategoryPersistence.fetchByPrimaryKey(
-			categoryId);
-
-		if (mbCategory == null) {
-			return null;
-		}
-
-		int threadCount = _mbThreadLocalService.getCategoryThreadsCount(
-			mbCategory.getGroupId(), mbCategory.getCategoryId(),
-			WorkflowConstants.STATUS_APPROVED);
-
-		mbCategory.setThreadCount(threadCount);
-
-		return mbCategoryPersistence.update(mbCategory);
 	}
 
 	protected long getParentCategoryId(long groupId, long parentCategoryId) {
@@ -988,9 +929,8 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 			mergeCategories(category, toCategoryId);
 		}
 
-		List<MBThread> threads = _mbThreadLocalService.getThreads(
-			fromCategory.getGroupId(), fromCategory.getCategoryId(),
-			WorkflowConstants.STATUS_ANY, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+		List<MBThread> threads = _mbThreadPersistence.findByG_C(
+			fromCategory.getGroupId(), fromCategory.getCategoryId());
 
 		for (MBThread thread : threads) {
 
@@ -998,10 +938,10 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 
 			thread.setCategoryId(toCategoryId);
 
-			_mbThreadLocalService.updateMBThread(thread);
+			thread = _mbThreadPersistence.update(thread);
 
-			List<MBMessage> messages = _mbMessageLocalService.getThreadMessages(
-				thread.getThreadId(), WorkflowConstants.STATUS_ANY, null);
+			List<MBMessage> messages = _mbMessagePersistence.findByThreadId(
+				thread.getThreadId());
 
 			for (MBMessage message : messages) {
 
@@ -1009,21 +949,11 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 
 				message.setCategoryId(toCategoryId);
 
-				_mbMessageLocalService.updateMBMessage(message);
+				message = _mbMessagePersistence.update(message);
 
 				_reindex(MBMessage.class, message);
 			}
 		}
-
-		MBCategory toCategory = mbCategoryPersistence.findByPrimaryKey(
-			toCategoryId);
-
-		toCategory.setThreadCount(
-			fromCategory.getThreadCount() + toCategory.getThreadCount());
-		toCategory.setMessageCount(
-			fromCategory.getMessageCount() + toCategory.getMessageCount());
-
-		mbCategoryPersistence.update(toCategory);
 
 		mbCategoryLocalService.deleteCategory(fromCategory);
 	}
@@ -1047,7 +977,7 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 
 				thread.setStatus(WorkflowConstants.STATUS_IN_TRASH);
 
-				_mbThreadLocalService.updateMBThread(thread);
+				thread = _mbThreadPersistence.update(thread);
 
 				// Trash
 
@@ -1126,7 +1056,7 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 
 				thread.setStatus(oldStatus);
 
-				_mbThreadLocalService.updateMBThread(thread);
+				thread = _mbThreadPersistence.update(thread);
 
 				// Threads
 
@@ -1215,10 +1145,13 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 	private MBMailingListLocalService _mbMailingListLocalService;
 
 	@Reference
-	private MBMessageLocalService _mbMessageLocalService;
+	private MBMessagePersistence _mbMessagePersistence;
 
 	@Reference
 	private MBThreadLocalService _mbThreadLocalService;
+
+	@Reference
+	private MBThreadPersistence _mbThreadPersistence;
 
 	@Reference
 	private SubscriptionLocalService _subscriptionLocalService;

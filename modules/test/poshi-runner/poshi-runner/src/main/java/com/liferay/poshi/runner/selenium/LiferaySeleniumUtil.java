@@ -733,7 +733,18 @@ public class LiferaySeleniumUtil {
 		if (!_javaScriptExceptions.isEmpty()) {
 			for (Exception exception : _javaScriptExceptions) {
 				sb.append("<value><![CDATA[");
-				sb.append(exception.getMessage());
+
+				String message = exception.getMessage();
+
+				if (Validator.isNotNull(message) &&
+					(message.length() > _CHARS_EXCEPTION_MESSAGE_SIZE_MAX)) {
+
+					message = message.substring(
+						0, _CHARS_EXCEPTION_MESSAGE_SIZE_MAX);
+				}
+
+				sb.append(message);
+
 				sb.append("]]></value>\n");
 			}
 		}
@@ -741,7 +752,18 @@ public class LiferaySeleniumUtil {
 		if (!_liferayExceptions.isEmpty()) {
 			for (Exception exception : _liferayExceptions) {
 				sb.append("<value><![CDATA[");
-				sb.append(exception.getMessage());
+
+				String message = exception.getMessage();
+
+				if (Validator.isNotNull(message) &&
+					(message.length() > _CHARS_EXCEPTION_MESSAGE_SIZE_MAX)) {
+
+					message = message.substring(
+						0, _CHARS_EXCEPTION_MESSAGE_SIZE_MAX);
+				}
+
+				sb.append(message);
+
 				sb.append("]]></value>\n");
 			}
 		}
@@ -771,6 +793,8 @@ public class LiferaySeleniumUtil {
 	}
 
 	private static final long _BYTES_MAX_SIZE_CONSOLE_LOG = 20 * 1024 * 1024;
+
+	private static final int _CHARS_EXCEPTION_MESSAGE_SIZE_MAX = 2500;
 
 	private static final List<String> _errorTimestamps = new ArrayList<>();
 	private static final List<Exception> _javaScriptExceptions =

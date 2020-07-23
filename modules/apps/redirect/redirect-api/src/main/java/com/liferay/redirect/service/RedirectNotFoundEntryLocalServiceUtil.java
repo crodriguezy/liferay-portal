@@ -47,6 +47,10 @@ public class RedirectNotFoundEntryLocalServiceUtil {
 	/**
 	 * Adds the redirect not found entry to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect RedirectNotFoundEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param redirectNotFoundEntry the redirect not found entry
 	 * @return the redirect not found entry that was added
 	 */
@@ -95,6 +99,10 @@ public class RedirectNotFoundEntryLocalServiceUtil {
 	/**
 	 * Deletes the redirect not found entry with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect RedirectNotFoundEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param redirectNotFoundEntryId the primary key of the redirect not found entry
 	 * @return the redirect not found entry that was removed
 	 * @throws PortalException if a redirect not found entry with the primary key could not be found
@@ -109,6 +117,10 @@ public class RedirectNotFoundEntryLocalServiceUtil {
 
 	/**
 	 * Deletes the redirect not found entry from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect RedirectNotFoundEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param redirectNotFoundEntry the redirect not found entry
 	 * @return the redirect not found entry that was removed
@@ -280,10 +292,11 @@ public class RedirectNotFoundEntryLocalServiceUtil {
 				long groupId, Boolean ignored, java.util.Date minModifiedDate,
 				int start, int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.redirect.model.RedirectNotFoundEntry> obc) {
+					<com.liferay.redirect.model.RedirectNotFoundEntry>
+						orderByComparator) {
 
 		return getService().getRedirectNotFoundEntries(
-			groupId, ignored, minModifiedDate, start, end, obc);
+			groupId, ignored, minModifiedDate, start, end, orderByComparator);
 	}
 
 	public static java.util.List
@@ -292,10 +305,11 @@ public class RedirectNotFoundEntryLocalServiceUtil {
 				long groupId, java.util.Date minModifiedDate, int start,
 				int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.redirect.model.RedirectNotFoundEntry> obc) {
+					<com.liferay.redirect.model.RedirectNotFoundEntry>
+						orderByComparator) {
 
 		return getService().getRedirectNotFoundEntries(
-			groupId, minModifiedDate, start, end, obc);
+			groupId, minModifiedDate, start, end, orderByComparator);
 	}
 
 	public static java.util.List
@@ -303,10 +317,11 @@ public class RedirectNotFoundEntryLocalServiceUtil {
 			getRedirectNotFoundEntries(
 				long groupId, int start, int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.redirect.model.RedirectNotFoundEntry> obc) {
+					<com.liferay.redirect.model.RedirectNotFoundEntry>
+						orderByComparator) {
 
 		return getService().getRedirectNotFoundEntries(
-			groupId, start, end, obc);
+			groupId, start, end, orderByComparator);
 	}
 
 	/**
@@ -361,6 +376,10 @@ public class RedirectNotFoundEntryLocalServiceUtil {
 
 	/**
 	 * Updates the redirect not found entry in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect RedirectNotFoundEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param redirectNotFoundEntry the redirect not found entry
 	 * @return the redirect not found entry that was updated

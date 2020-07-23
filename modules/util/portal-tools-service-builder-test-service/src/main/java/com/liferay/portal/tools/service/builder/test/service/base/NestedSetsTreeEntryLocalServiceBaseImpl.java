@@ -73,6 +73,10 @@ public abstract class NestedSetsTreeEntryLocalServiceBaseImpl
 	/**
 	 * Adds the nested sets tree entry to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect NestedSetsTreeEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param nestedSetsTreeEntry the nested sets tree entry
 	 * @return the nested sets tree entry that was added
 	 */
@@ -103,6 +107,10 @@ public abstract class NestedSetsTreeEntryLocalServiceBaseImpl
 	/**
 	 * Deletes the nested sets tree entry with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect NestedSetsTreeEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param nestedSetsTreeEntryId the primary key of the nested sets tree entry
 	 * @return the nested sets tree entry that was removed
 	 * @throws PortalException if a nested sets tree entry with the primary key could not be found
@@ -118,6 +126,10 @@ public abstract class NestedSetsTreeEntryLocalServiceBaseImpl
 
 	/**
 	 * Deletes the nested sets tree entry from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect NestedSetsTreeEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param nestedSetsTreeEntry the nested sets tree entry
 	 * @return the nested sets tree entry that was removed
@@ -360,6 +372,10 @@ public abstract class NestedSetsTreeEntryLocalServiceBaseImpl
 
 	/**
 	 * Updates the nested sets tree entry in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect NestedSetsTreeEntryLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param nestedSetsTreeEntry the nested sets tree entry
 	 * @return the nested sets tree entry that was updated

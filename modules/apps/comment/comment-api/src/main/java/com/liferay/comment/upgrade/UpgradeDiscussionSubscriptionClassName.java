@@ -14,10 +14,12 @@
 
 package com.liferay.comment.upgrade;
 
+import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.kernel.service.AssetEntryLocalService;
+import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
 import com.liferay.message.boards.model.MBDiscussion;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
@@ -26,22 +28,18 @@ import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.subscription.model.Subscription;
 import com.liferay.subscription.service.SubscriptionLocalService;
 
-import java.io.IOException;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 /**
  * @author Roberto Díaz
  */
 public class UpgradeDiscussionSubscriptionClassName extends UpgradeProcess {
 
 	public UpgradeDiscussionSubscriptionClassName(
+		AssetEntryLocalService assetEntryLocalService,
 		ClassNameLocalService classNameLocalService,
 		SubscriptionLocalService subscriptionLocalService,
 		String oldSubscriptionClassName, DeletionMode deletionMode) {
 
+		_assetEntryLocalService = assetEntryLocalService;
 		_classNameLocalService = classNameLocalService;
 		_subscriptionLocalService = subscriptionLocalService;
 		_oldSubscriptionClassName = oldSubscriptionClassName;
@@ -53,10 +51,25 @@ public class UpgradeDiscussionSubscriptionClassName extends UpgradeProcess {
 	 */
 	@Deprecated
 	public UpgradeDiscussionSubscriptionClassName(
+		ClassNameLocalService classNameLocalService,
 		SubscriptionLocalService subscriptionLocalService,
 		String oldSubscriptionClassName, DeletionMode deletionMode) {
 
 		this(
+			AssetEntryLocalServiceUtil.getService(), classNameLocalService,
+			subscriptionLocalService, oldSubscriptionClassName, deletionMode);
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x)
+	 */
+	@Deprecated
+	public UpgradeDiscussionSubscriptionClassName(
+		SubscriptionLocalService subscriptionLocalService,
+		String oldSubscriptionClassName, DeletionMode deletionMode) {
+
+		this(
+			AssetEntryLocalServiceUtil.getService(),
 			ClassNameLocalServiceUtil.getService(), subscriptionLocalService,
 			oldSubscriptionClassName, deletionMode);
 	}
@@ -100,61 +113,50 @@ public class UpgradeDiscussionSubscriptionClassName extends UpgradeProcess {
 		actionableDynamicQuery.performActions();
 	}
 
-	private void _updateSubscriptions() throws IOException, SQLException {
+	private void _updateSubscriptions() throws Exception {
 		String newSubscriptionClassName =
 			MBDiscussion.class.getName() + StringPool.UNDERLINE +
 				_oldSubscriptionClassName;
 
-		long newClassNameId = ClassNameLocalServiceUtil.getClassNameId(
-			newSubscriptionClassName);
+		ActionableDynamicQuery actionableDynamicQuery =
+			_subscriptionLocalService.getActionableDynamicQuery();
 
-		long oldClassNameId = ClassNameLocalServiceUtil.getClassNameId(
-			_oldSubscriptionClassName);
+		actionableDynamicQuery.setAddCriteriaMethod(
+			dynamicQuery -> dynamicQuery.add(
+				RestrictionsFactoryUtil.eq(
+					"classNameId",
+					_classNameLocalService.getClassNameId(
+						_oldSubscriptionClassName))));
+		actionableDynamicQuery.setPerformActionMethod(
+			(Subscription subscription) -> {
+				AssetEntry assetEntry = _assetEntryLocalService.fetchEntry(
+					newSubscriptionClassName, subscription.getClassPK());
 
-		Long classPK = null;
+				if (assetEntry == null) {
+					_assetEntryLocalService.updateEntry(
+						subscription.getUserId(), subscription.getGroupId(),
+						subscription.getCreateDate(),
+						subscription.getModifiedDate(),
+						newSubscriptionClassName, subscription.getClassPK(),
+						null, 0, null, null, true, false, null, null, null,
+						null, null, String.valueOf(subscription.getGroupId()),
+						null, null, null, null, 0, 0, null);
+				}
+			});
 
-		try (PreparedStatement ps = connection.prepareStatement(
-				"select classPK from Subscription where classNameId = " +
-					oldClassNameId);
-			PreparedStatement ps2 = AutoBatchPreparedStatementUtil.autoBatch(
-				connection.prepareStatement(
-					"update AssetEntry set classNameId = ? where classNameId " +
-						"= ? and classPK = ?"));
-			PreparedStatement ps3 = AutoBatchPreparedStatementUtil.autoBatch(
-				connection.prepareStatement(
-					"update SocialActivity set classNameId = ? where " +
-						"classNameId = ? and classPK = ?"));
-			ResultSet rs = ps.executeQuery()) {
+		actionableDynamicQuery.performActions();
 
-			while (rs.next()) {
-				classPK = rs.getLong("classPK");
-
-				ps2.setLong(1, newClassNameId);
-				ps2.setLong(2, oldClassNameId);
-				ps2.setLong(3, classPK);
-
-				ps2.addBatch();
-
-				ps3.setLong(1, newClassNameId);
-				ps3.setLong(2, oldClassNameId);
-				ps3.setLong(3, classPK);
-
-				ps3.addBatch();
-			}
-
-			ps2.executeBatch();
-
-			ps3.executeBatch();
-		}
-
-		if (classPK != null) {
-			runSQL(
-				StringBundler.concat(
-					"update Subscription set classNameId = ", newClassNameId,
-					" where classNameId = ", oldClassNameId));
-		}
+		runSQL(
+			StringBundler.concat(
+				"update Subscription set classNameId = ",
+				ClassNameLocalServiceUtil.getClassNameId(
+					newSubscriptionClassName),
+				" where classNameId = ",
+				ClassNameLocalServiceUtil.getClassNameId(
+					_oldSubscriptionClassName)));
 	}
 
+	private final AssetEntryLocalService _assetEntryLocalService;
 	private final ClassNameLocalService _classNameLocalService;
 	private final DeletionMode _deletionMode;
 	private final String _oldSubscriptionClassName;

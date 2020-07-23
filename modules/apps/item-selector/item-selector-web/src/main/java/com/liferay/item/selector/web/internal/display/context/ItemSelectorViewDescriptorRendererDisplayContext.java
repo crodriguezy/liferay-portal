@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.servlet.taglib.ui.BreadcrumbEntry;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Arrays;
@@ -43,7 +42,7 @@ public class ItemSelectorViewDescriptorRendererDisplayContext {
 
 	public ItemSelectorViewDescriptorRendererDisplayContext(
 		HttpServletRequest httpServletRequest, String itemSelectedEventName,
-		ItemSelectorViewDescriptor itemSelectorViewDescriptor,
+		ItemSelectorViewDescriptor<Object> itemSelectorViewDescriptor,
 		LiferayPortletResponse liferayPortletResponse) {
 
 		_httpServletRequest = httpServletRequest;
@@ -66,11 +65,8 @@ public class ItemSelectorViewDescriptorRendererDisplayContext {
 		}
 
 		_displayStyle = ParamUtil.getString(
-			_httpServletRequest, "displayStyle");
-
-		if (Validator.isNull(_displayStyle)) {
-			_displayStyle = "icon";
-		}
+			_httpServletRequest, "displayStyle",
+			_itemSelectorViewDescriptor.getDefaultDisplayStyle());
 
 		return _displayStyle;
 	}
@@ -79,7 +75,7 @@ public class ItemSelectorViewDescriptorRendererDisplayContext {
 		return _itemSelectedEventName;
 	}
 
-	public ItemSelectorViewDescriptor getItemSelectorViewDescriptor() {
+	public ItemSelectorViewDescriptor<Object> getItemSelectorViewDescriptor() {
 		return _itemSelectorViewDescriptor;
 	}
 
@@ -143,7 +139,8 @@ public class ItemSelectorViewDescriptorRendererDisplayContext {
 	private String _displayStyle;
 	private final HttpServletRequest _httpServletRequest;
 	private final String _itemSelectedEventName;
-	private final ItemSelectorViewDescriptor _itemSelectorViewDescriptor;
+	private final ItemSelectorViewDescriptor<Object>
+		_itemSelectorViewDescriptor;
 	private final LiferayPortletResponse _liferayPortletResponse;
 
 }

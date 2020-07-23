@@ -48,7 +48,7 @@ renderResponse.setTitle((structure == null) ? LanguageUtil.get(request, "new-ele
 
 	<nav class="management-bar management-bar-light navbar navbar-expand-md toolbar-group-field">
 		<clay:container-fluid
-			className="toolbar"
+			cssClass="toolbar"
 		>
 			<ul class="navbar-nav toolbar-group-field"></ul>
 			<ul class="navbar-nav toolbar-group-field">
@@ -64,7 +64,7 @@ renderResponse.setTitle((structure == null) ? LanguageUtil.get(request, "new-ele
 	</nav>
 
 	<clay:container-fluid
-		className="ddm-translation-manager"
+		cssClass="ddm-translation-manager"
 	>
 		<liferay-frontend:translation-manager
 			availableLocales="<%= ddmFormAdminDisplayContext.getAvailableLocales() %>"
@@ -173,7 +173,7 @@ renderResponse.setTitle((structure == null) ? LanguageUtil.get(request, "new-ele
 							fieldTypes: <%= ddmFormAdminDisplayContext.getDDMFormFieldTypesJSONArray() %>,
 							groupId: <%= groupId %>,
 							localizedDescription: <%= ddmFormAdminDisplayContext.getFormLocalizedDescription() %>,
-							localizedName: <%= ddmFormAdminDisplayContext.getFormLocalizedName() %>,
+							localizedName: <%= ddmFormAdminDisplayContext.getFormLocalizedName(structure) %>,
 							namespace: '<portlet:namespace />',
 							redirectURL: '<%= HtmlUtil.escape(redirect) %>',
 							spritemap: Liferay.DDM.FormSettings.spritemap,
@@ -214,12 +214,5 @@ renderResponse.setTitle((structure == null) ? LanguageUtil.get(request, "new-ele
 
 	Liferay.on('destroyPortlet', clearPortletHandlers);
 
-	if (Liferay.DMMFieldTypesReady) {
-		Liferay.Forms.App.start();
-	}
-	else {
-		Liferay.onceAfter('DMMFieldTypesReady', function () {
-			Liferay.Forms.App.start();
-		});
-	}
+	Liferay.Forms.App.start();
 </aui:script>

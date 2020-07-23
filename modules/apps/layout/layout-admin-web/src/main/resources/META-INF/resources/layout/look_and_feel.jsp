@@ -65,7 +65,7 @@ if ((layoutPageTemplateEntry == null) || !Objects.equals(layoutPageTemplateEntry
 	}
 	%>
 
-	<div class="sheet-section">
+	<clay:sheet-section>
 		<h3 class="sheet-subtitle"><liferay-ui:message key="master" /></h3>
 
 		<p>
@@ -74,22 +74,21 @@ if ((layoutPageTemplateEntry == null) || !Objects.equals(layoutPageTemplateEntry
 
 		<div class="button-holder">
 			<clay:button
-				elementClasses='<%= (masterLayoutPageTemplateEntry == null) ? "btn-secondary hide" : "btn-secondary" %>'
-				id='<%= renderResponse.getNamespace() + "editMasterLayoutButton" %>'
-				label='<%= LanguageUtil.get(request, "edit-master") %>'
-				size="sm"
-				style="<%= false %>"
+				cssClass='<%= (masterLayoutPageTemplateEntry == null) ? "hide" : StringPool.BLANK %>'
+				displayType="secondary"
+				id='<%= liferayPortletResponse.getNamespace() + "editMasterLayoutButton" %>'
+				label="edit-master"
+				small="<%= true %>"
 			/>
 
 			<clay:button
-				elementClasses="btn-secondary"
-				id='<%= renderResponse.getNamespace() + "changeMasterLayoutButton" %>'
-				label='<%= LanguageUtil.get(request, "change-master") %>'
-				size="sm"
-				style="<%= false %>"
+				displaytype="secondary"
+				id='<%= liferayPortletResponse.getNamespace() + "changeMasterLayoutButton" %>'
+				label="change-master"
+				small="<%= true %>"
 			/>
 		</div>
-	</div>
+	</clay:sheet-section>
 </c:if>
 
 <liferay-util:buffer
@@ -116,7 +115,10 @@ else {
 }
 %>
 
-<div class="sheet-section <%= (selLayout.getMasterLayoutPlid() <= 0) ? StringPool.BLANK : "hide" %>" id="<portlet:namespace />themeContainer">
+<clay:sheet-section
+	className='<%= (selLayout.getMasterLayoutPlid() <= 0) ? StringPool.BLANK : "hide" %>'
+	id='<%= liferayPortletResponse.getNamespace() + "themeContainer" %>'
+>
 	<h3 class="sheet-subtitle"><liferay-ui:message key="theme" /></h3>
 
 	<aui:input checked="<%= selLayout.isInheritLookAndFeel() %>" id="regularInheritLookAndFeel" label="<%= taglibLabel %>" name="regularInheritLookAndFeel" type="radio" value="<%= true %>" />
@@ -136,7 +138,7 @@ else {
 	<div class="lfr-theme-options" id="<portlet:namespace />themeOptions">
 		<liferay-util:include page="/look_and_feel_themes.jsp" servletContext="<%= application %>" />
 	</div>
-</div>
+</clay:sheet-section>
 
 <aui:script>
 	Liferay.Util.toggleRadio(
@@ -223,11 +225,9 @@ else {
 		if (selLayout.getMasterLayoutPlid() > 0) {
 			Layout masterLayout = LayoutLocalServiceUtil.getLayout(selLayout.getMasterLayoutPlid());
 
-			Layout masterDraftLayout = LayoutLocalServiceUtil.fetchLayout(PortalUtil.getClassNameId(Layout.class), masterLayout.getPlid());
-
 			String editLayoutURL = HttpUtil.addParameter(HttpUtil.addParameter(PortalUtil.getLayoutFullURL(selLayout, themeDisplay), "p_l_mode", Constants.EDIT), "p_l_back_url", ParamUtil.getString(request, "redirect"));
 
-			editMasterLayoutURL = HttpUtil.addParameter(HttpUtil.addParameter(PortalUtil.getLayoutFullURL(masterDraftLayout, themeDisplay), "p_l_mode", Constants.EDIT), "p_l_back_url", editLayoutURL);
+			editMasterLayoutURL = HttpUtil.addParameter(HttpUtil.addParameter(PortalUtil.getLayoutFullURL(masterLayout.fetchDraftLayout(), themeDisplay), "p_l_mode", Constants.EDIT), "p_l_back_url", editLayoutURL);
 		}
 		%>
 

@@ -32,9 +32,8 @@ long formInstanceId = ddmFormDisplayContext.getFormInstanceId();
 		<div class="ddm-form-basic-info">
 			<clay:container-fluid>
 				<clay:alert
-					message='<%= LanguageUtil.get(resourceBundle, "you-do-not-have-the-permission-to-view-this-form") %>'
-					style="warning"
-					title='<%= LanguageUtil.get(resourceBundle, "warning") %>'
+					displayType="warning"
+					message="you-do-not-have-the-permission-to-view-this-form"
 				/>
 			</clay:container-fluid>
 		</div>
@@ -43,9 +42,8 @@ long formInstanceId = ddmFormDisplayContext.getFormInstanceId();
 		<div class="ddm-form-basic-info">
 			<clay:container-fluid>
 				<clay:alert
-					message='<%= LanguageUtil.get(resourceBundle, "you-need-to-be-signed-in-to-view-this-form") %>'
-					style="warning"
-					title='<%= LanguageUtil.get(resourceBundle, "warning") %>'
+					displayType="warning"
+					message="you-need-to-be-signed-in-to-view-this-form"
 				/>
 			</clay:container-fluid>
 		</div>
@@ -73,7 +71,7 @@ long formInstanceId = ddmFormDisplayContext.getFormInstanceId();
 						<clay:container-fluid>
 							<h1 class="ddm-form-name"><%= HtmlUtil.escape(GetterUtil.getString(title.getString(displayLocale), title.getString(title.getDefaultLocale()))) %></h1>
 
-							<h5 class="ddm-form-description"><%= HtmlUtil.escape(GetterUtil.getString(body.getString(displayLocale), body.getString(body.getDefaultLocale()))) %></h5>
+							<p class="ddm-form-description"><%= HtmlUtil.escape(GetterUtil.getString(body.getString(displayLocale), body.getString(body.getDefaultLocale()))) %></p>
 						</clay:container-fluid>
 					</div>
 				</div>
@@ -148,9 +146,8 @@ long formInstanceId = ddmFormDisplayContext.getFormInstanceId();
 							<div class="ddm-form-basic-info">
 								<clay:container-fluid>
 									<clay:alert
-										message='<%= LanguageUtil.get(resourceBundle, "you-do-not-have-the-permission-to-submit-this-form") %>'
-										style="warning"
-										title='<%= LanguageUtil.get(resourceBundle, "warning") %>'
+										displayType="warning"
+										message="you-do-not-have-the-permission-to-submit-this-form"
 									/>
 								</clay:container-fluid>
 							</div>
@@ -165,13 +162,13 @@ long formInstanceId = ddmFormDisplayContext.getFormInstanceId();
 								%>
 
 								<c:if test="<%= Validator.isNotNull(description) %>">
-									<h5 class="ddm-form-description"><%= description %></h5>
+									<p class="ddm-form-description"><%= description %></p>
 								</c:if>
 							</clay:container-fluid>
 						</div>
 
 						<clay:container-fluid
-							className="ddm-form-builder-app ddm-form-builder-app-not-ready"
+							cssClass="ddm-form-builder-app ddm-form-builder-app-not-ready"
 							id='<%= ddmFormDisplayContext.getContainerId() + "container" %>'
 						>
 							<%= ddmFormDisplayContext.getDDMFormHTML() %>
@@ -182,12 +179,16 @@ long formInstanceId = ddmFormDisplayContext.getFormInstanceId();
 				</div>
 
 				<aui:script use="aui-base">
+					function <portlet:namespace />clearInterval(intervalId) {
+						if (intervalId) {
+							clearInterval(intervalId);
+						}
+					}
+
 					var <portlet:namespace />intervalId;
 
 					function <portlet:namespace />clearPortletHandlers(event) {
-						if (<portlet:namespace />intervalId) {
-							clearInterval(<portlet:namespace />intervalId);
-						}
+						<portlet:namespace />clearInterval(<portlet:namespace />intervalId);
 
 						Liferay.detach('destroyPortlet', <portlet:namespace />clearPortletHandlers);
 					}
@@ -216,11 +217,17 @@ long formInstanceId = ddmFormDisplayContext.getFormInstanceId();
 								<portlet:param name="preview" value="<%= String.valueOf(ddmFormDisplayContext.isPreview()) %>" />
 							</liferay-portlet:resourceURL>
 
+							Liferay.on('sessionExpired', function (event) {
+								<portlet:namespace />clearInterval(<portlet:namespace />intervalId);
+							});
+
 							function <portlet:namespace />autoSave() {
+								var form = <portlet:namespace />form;
+								var isRendered = form.reactComponentRef && form.reactComponentRef.current;
 								var data = new URLSearchParams({
 									<portlet:namespace />formInstanceId: <%= formInstanceId %>,
 									<portlet:namespace />serializedDDMFormValues: JSON.stringify(
-										<portlet:namespace />form.toJSON()
+										isRendered ? form.reactComponentRef.current.toJSON() : {}
 									),
 								});
 
@@ -231,9 +238,7 @@ long formInstanceId = ddmFormDisplayContext.getFormInstanceId();
 							}
 
 							function <portlet:namespace />startAutoSave() {
-								if (<portlet:namespace />intervalId) {
-									clearInterval(<portlet:namespace />intervalId);
-								}
+								<portlet:namespace />clearInterval(<portlet:namespace />intervalId);
 
 								<portlet:namespace />intervalId = setInterval(
 									<portlet:namespace />autoSave,
@@ -243,9 +248,7 @@ long formInstanceId = ddmFormDisplayContext.getFormInstanceId();
 						</c:when>
 						<c:otherwise>
 							function <portlet:namespace />startAutoExtendSession() {
-								if (<portlet:namespace />intervalId) {
-									clearInterval(<portlet:namespace />intervalId);
-								}
+								<portlet:namespace />clearInterval(<portlet:namespace />intervalId);
 
 								var tenSeconds = 10000;
 

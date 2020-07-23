@@ -19,9 +19,10 @@ import classNames from 'classnames';
 import {render} from 'frontend-js-react-web';
 import dom from 'metal-dom';
 import PropTypes from 'prop-types';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import './Modal.scss';
+import navigate from '../util/navigate.es';
 
 const openModal = (props) => {
 	if (
@@ -102,12 +103,17 @@ const openPortletWindow = ({bodyCssClass, portlet, uri, ...otherProps}) => {
 const Modal = ({
 	bodyHTML,
 	buttons,
+	customEvents,
 	headerHTML,
+	height,
 	id,
 	iframeBodyCssClass,
+	iframeProps = {},
 	onClose,
+	onOpen,
 	onSelect,
 	selectEventName,
+	selectedData,
 	size,
 	title,
 	url,
@@ -115,11 +121,32 @@ const Modal = ({
 	const [loading, setLoading] = useState(true);
 	const [visible, setVisible] = useState(true);
 
+	const eventHandlersRef = useRef([]);
+
 	const {observer} = useModal({
 		onClose: () => processClose(),
 	});
 
-	const onButtonClick = ({formId, type}) => {
+	const disableSelectedItems = ({container}) => {
+		if (!selectedData) {
+			return;
+		}
+
+		const selectedDataSet = new Set(selectedData);
+
+		const itemElements = container.querySelectorAll('.selector-button');
+
+		itemElements.forEach((itemElement) => {
+			const itemId =
+				itemElement.dataset.entityid || itemElement.dataset.entityname;
+
+			if (selectedDataSet.has(itemId)) {
+				itemElement.disabled = true;
+			}
+		});
+	};
+
+	const onButtonClick = ({formId, onClick, type}) => {
 		if (type === 'cancel') {
 			processClose();
 		}
@@ -150,15 +177,29 @@ const Modal = ({
 				}
 			}
 		}
+
+		if (onClick) {
+			onClick();
+		}
 	};
 
-	const processClose = () => {
+	const processClose = useCallback(() => {
 		setVisible(false);
+
+		document.body.classList.remove('modal-open');
+
+		const eventHandlers = eventHandlersRef.current;
+
+		eventHandlers.forEach((eventHandler) => {
+			eventHandler.detach();
+		});
+
+		eventHandlers.splice(0, eventHandlers.length);
 
 		if (onClose) {
 			onClose();
 		}
-	};
+	}, [eventHandlersRef, onClose]);
 
 	const Body = ({html}) => {
 		const bodyRef = useRef();
@@ -168,27 +209,82 @@ const Modal = ({
 				.createRange()
 				.createContextualFragment(html);
 
+			disableSelectedItems({container: fragment});
+
 			bodyRef.current.innerHTML = '';
 
 			bodyRef.current.appendChild(fragment);
+
+			if (onOpen) {
+				onOpen();
+			}
 		}, [html]);
 
-		return <div ref={bodyRef}></div>;
+		return <div className="liferay-modal-body" ref={bodyRef}></div>;
 	};
 
 	useEffect(() => {
-		let eventHandler;
+		const eventHandlers = eventHandlersRef.current;
 
 		if (onSelect && selectEventName) {
-			eventHandler = Liferay.on(selectEventName, onSelect);
+			const selectEventHandler = Liferay.on(
+				selectEventName,
+				(selectedItem) => {
+					processClose();
+
+					onSelect(selectedItem);
+				}
+			);
+
+			eventHandlers.push(selectEventHandler);
 		}
 
-		return () => {
-			if (eventHandler) {
-				eventHandler.detach();
+		if (customEvents) {
+			customEvents.forEach((customEvent) => {
+				if (customEvent.name && customEvent.onEvent) {
+					const eventHandler = Liferay.on(
+						customEvent.name,
+						(event) => {
+							customEvent.onEvent(event);
+						}
+					);
+
+					eventHandlers.push(eventHandler);
+				}
+			});
+		}
+
+		const closeEventHandler = Liferay.on('closeModal', (event) => {
+			if (event.id && id && event.id !== id) {
+				return;
 			}
+
+			processClose();
+
+			if (event.redirect) {
+				navigate(event.redirect);
+			}
+		});
+
+		eventHandlers.push(closeEventHandler);
+
+		return () => {
+			eventHandlers.forEach((eventHandler) => {
+				eventHandler.detach();
+			});
+
+			eventHandlers.splice(0, eventHandlers.length);
 		};
-	}, [onSelect, selectEventName]);
+	}, [
+		customEvents,
+		eventHandlersRef,
+		id,
+		onClose,
+		onOpen,
+		onSelect,
+		processClose,
+		selectEventName,
+	]);
 
 	return (
 		<>
@@ -214,13 +310,23 @@ const Modal = ({
 						className={classNames('modal-body', {
 							'modal-body-iframe': url,
 						})}
+						style={{
+							height,
+						}}
 					>
 						{url ? (
 							<>
 								{loading && <ClayLoadingIndicator />}
 								<Iframe
+									disableSelectedItems={disableSelectedItems}
 									iframeBodyCssClass={iframeBodyCssClass}
+									iframeProps={{
+										id: id && `${id}_iframe_`,
+										...iframeProps,
+									}}
+									onOpen={onOpen}
 									processClose={processClose}
+									title={title}
 									updateLoading={(loading) => {
 										setLoading(loading);
 									}}
@@ -235,37 +341,23 @@ const Modal = ({
 						<ClayModal.Footer
 							last={
 								<ClayButton.Group spaced>
-									{buttons.map(
-										(
-											{
-												displayType,
-												formId,
-												id,
-												label,
-												type,
-											},
-											index
-										) => (
-											<ClayButton
-												displayType={displayType}
-												id={id}
-												key={index}
-												onClick={() => {
-													onButtonClick({
-														formId,
-														type,
-													});
-												}}
-												type={
-													type === 'cancel'
-														? 'button'
-														: type
-												}
-											>
-												{label}
-											</ClayButton>
-										)
-									)}
+									{buttons.map((button, index) => (
+										<ClayButton
+											displayType={button.displayType}
+											id={button.id}
+											key={index}
+											onClick={() => {
+												onButtonClick(button);
+											}}
+											type={
+												button.type === 'cancel'
+													? 'button'
+													: button.type
+											}
+										>
+											{button.label}
+										</ClayButton>
+									))}
 								</ClayButton.Group>
 							}
 						/>
@@ -275,6 +367,8 @@ const Modal = ({
 		</>
 	);
 };
+
+const CSS_CLASS_IFRAME_BODY = 'dialog-iframe-popup';
 
 class Iframe extends React.Component {
 	constructor(props) {
@@ -286,7 +380,7 @@ class Iframe extends React.Component {
 
 		const namespace = iframeURL.searchParams.get('p_p_id');
 
-		let bodyCssClass = 'dialog-iframe-popup';
+		let bodyCssClass = CSS_CLASS_IFRAME_BODY;
 
 		if (props.iframeBodyCssClass) {
 			bodyCssClass = `${bodyCssClass} ${props.iframeBodyCssClass}`;
@@ -297,47 +391,75 @@ class Iframe extends React.Component {
 		this.state = {loading: true, src: iframeURL.toString()};
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+		if (!this.state.loading && prevState.loading) {
+			Liferay.fire('modalIframeLoaded', {src: this.state.src});
+
+			if (this.props.onOpen) {
+				this.props.onOpen();
+			}
+		}
+	}
+
 	componentWillUnmount() {
+		if (this.beforeScreenFlipHandler) {
+			Liferay.detach(this.beforeScreenFlipHandler);
+		}
+
 		if (this.delegateHandler) {
 			this.delegateHandler.removeListener();
 		}
 	}
 
 	onLoadHandler = () => {
-		const iframe = this.iframeRef.current;
+		const iframeWindow = this.iframeRef.current.contentWindow;
 
 		this.delegateHandler = dom.delegate(
-			iframe.contentWindow.document,
+			iframeWindow.document,
 			'click',
-			'.btn-cancel',
+			'.btn-cancel,.lfr-hide-dialog',
 			() => this.props.processClose()
 		);
 
-		iframe.contentWindow.document.body.classList.add('dialog-iframe-popup');
+		iframeWindow.document.body.classList.add(CSS_CLASS_IFRAME_BODY);
+
+		if (iframeWindow.Liferay.SPA) {
+			this.beforeScreenFlipHandler = iframeWindow.Liferay.on(
+				'beforeScreenFlip',
+				() => {
+					iframeWindow.document.body.classList.add(
+						CSS_CLASS_IFRAME_BODY
+					);
+				}
+			);
+		}
+
+		this.props.disableSelectedItems({
+			container: iframeWindow.document.body,
+		});
 
 		this.props.updateLoading(false);
 
 		this.setState({loading: false});
 
-		iframe.contentWindow.onunload = () => {
+		iframeWindow.onunload = () => {
 			this.props.updateLoading(true);
 
 			this.setState({loading: true});
 		};
-
-		Liferay.fire('modalIframeLoaded', {src: this.state.src});
 	};
 
 	render() {
 		return (
 			<iframe
+				{...this.props.iframeProps}
 				className={classNames({
 					hide: this.state.loading,
 				})}
 				onLoad={this.onLoadHandler}
 				ref={this.iframeRef}
 				src={this.state.src}
-				title={this.state.src}
+				title={this.props.title}
 			/>
 		);
 	}
@@ -356,14 +478,25 @@ Modal.propTypes = {
 			formId: PropTypes.string,
 			id: PropTypes.string,
 			label: PropTypes.string,
+			onClick: PropTypes.func,
 			type: PropTypes.oneOf(['cancel', 'submit']),
 		})
 	),
+	customEvents: PropTypes.arrayOf(
+		PropTypes.shape({
+			name: PropTypes.string,
+			onEvent: PropTypes.func,
+		})
+	),
 	headerHTML: PropTypes.string,
+	height: PropTypes.string,
 	id: PropTypes.string,
+	iframeProps: PropTypes.object,
 	onClose: PropTypes.func,
+	onOpen: PropTypes.func,
 	onSelect: PropTypes.func,
 	selectEventName: PropTypes.string,
+	selectedData: PropTypes.array,
 	size: PropTypes.oneOf(['full-screen', 'lg', 'sm']),
 	title: PropTypes.string,
 	url: PropTypes.string,

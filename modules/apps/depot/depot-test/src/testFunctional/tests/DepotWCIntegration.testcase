@@ -129,11 +129,20 @@ definition {
 
 		NavItem.gotoTemplates();
 
-		WebContentTemplates.addCP(
+		LexiconEntry.gotoAdd();
+
+		WebContentTemplates.inputTemplateAddScreenFields(
 			structureName = "WC Structure Name",
 			templateDescription = "WC Template Description",
 			templateFieldNames = "Web Content",
 			templateName = "WC Template Name");
+
+		var templateWebConetntScript = selenium.getAttribute("//span[contains(@class,'palette-item') and contains(.,'Web Content')]@data-content");
+		var templateScript = '''${templateWebConetntScript} <a>${webContentData.title}</a>''';
+
+		WebContentTemplates.inputScript(templateScript = "${templateScript}");
+
+		DDLDataDefinition.save();
 
 		WebContentNavigator.openWebContentAdmin(siteURLKey = "site-name");
 
@@ -185,11 +194,13 @@ definition {
 
 		ContentPages.addPage(pageName = "Test Content Page Name");
 
-		PageEditor.addContentDisplay(fragmentName = "Content");
+		PageEditor.addFragment(
+			collectionName = "Content Display",
+			fragmentName = "Content Display");
 
 		PageEditor.editContentDisplay(
 			depotName = "Test Depot Name",
-			fragmentName = "Content",
+			fragmentName = "Content Display",
 			webcontent = "true",
 			webContentContent = "WC WebContent Depot",
 			webContentTitle = "WC WebContent Title");
@@ -224,11 +235,13 @@ definition {
 
 		DisplayPageTemplatesAdmin.addDisplayPage(displayPageName = "Display Page Name");
 
-		PageEditor.addContentDisplay(fragmentName = "Content");
+		PageEditor.addFragment(
+			collectionName = "Content Display",
+			fragmentName = "Content Display");
 
 		PageEditor.editContentDisplay(
 			depotName = "Test Depot Name",
-			fragmentName = "Content",
+			fragmentName = "Content Display",
 			webcontent = "true",
 			webContentContent = "WC WebContent Depot",
 			webContentTitle = "WC WebContent Title");
@@ -384,7 +397,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Publishing",
-			panel = "Site Administration",
 			portlet = "Staging");
 
 		Staging.activateStagingCP(siteName = "Site Name");

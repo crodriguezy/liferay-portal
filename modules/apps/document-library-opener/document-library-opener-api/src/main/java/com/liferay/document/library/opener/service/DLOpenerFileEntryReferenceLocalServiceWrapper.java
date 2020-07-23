@@ -38,6 +38,10 @@ public class DLOpenerFileEntryReferenceLocalServiceWrapper
 	/**
 	 * Adds the dl opener file entry reference to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DLOpenerFileEntryReferenceLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dlOpenerFileEntryReference the dl opener file entry reference
 	 * @return the dl opener file entry reference that was added
 	 */
@@ -143,6 +147,10 @@ public class DLOpenerFileEntryReferenceLocalServiceWrapper
 	/**
 	 * Deletes the dl opener file entry reference from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DLOpenerFileEntryReferenceLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dlOpenerFileEntryReference the dl opener file entry reference
 	 * @return the dl opener file entry reference that was removed
 	 */
@@ -172,6 +180,10 @@ public class DLOpenerFileEntryReferenceLocalServiceWrapper
 
 	/**
 	 * Deletes the dl opener file entry reference with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DLOpenerFileEntryReferenceLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param dlOpenerFileEntryReferenceId the primary key of the dl opener file entry reference
 	 * @return the dl opener file entry reference that was removed
@@ -452,6 +464,10 @@ public class DLOpenerFileEntryReferenceLocalServiceWrapper
 
 	/**
 	 * Updates the dl opener file entry reference in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DLOpenerFileEntryReferenceLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param dlOpenerFileEntryReference the dl opener file entry reference
 	 * @return the dl opener file entry reference that was updated

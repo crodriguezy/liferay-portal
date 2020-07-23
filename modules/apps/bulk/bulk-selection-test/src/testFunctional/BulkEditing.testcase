@@ -72,13 +72,9 @@ definition {
 		DMDocument.addMultiplePG(dmDocumentFileList = "Document_1.doc,Document_2.jpg");
 
 		for (var categoryName : list "Books,Plants,Pets") {
-			ProductMenu.gotoPortlet(
-				category = "Categorization",
-				panel = "Site Administration",
-				portlet = "Categories");
-
-			Category.addCP(
-				categoryName = "${categoryName}",
+			JSONCategory.addCategory(
+				groupName = "Guest",
+				title = "${categoryName}",
 				vocabularyName = "Topic");
 		}
 
@@ -128,7 +124,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Categorization",
-			panel = "Site Administration",
 			portlet = "Categories");
 
 		Category.addCP(
@@ -339,13 +334,9 @@ definition {
 		DMDocument.addMultiplePG(dmDocumentFileList = "Document_1.doc,Document_2.jpg");
 
 		for (var categoryName : list "Books,Plants,Pets,Furniture") {
-			ProductMenu.gotoPortlet(
-				category = "Categorization",
-				panel = "Site Administration",
-				portlet = "Categories");
-
-			Category.addCP(
-				categoryName = "${categoryName}",
+			JSONCategory.addCategory(
+				groupName = "Guest",
+				title = "${categoryName}",
 				vocabularyName = "Topic");
 		}
 

@@ -107,12 +107,16 @@ definition {
 
 		ContentPages.addPage(pageName = "Test Content Page Name");
 
-		PageEditor.addLayoutSection(dropTarget = "//div[contains(@class,'page-editor__root page-editor__topper')]");
+		PageEditor.addFragment(
+			collectionName = "Layout Elements",
+			fragmentName = "Container");
 
-		PageEditor.editLayoutSection(
+		PageEditor.editLayoutContainer(
 			backgroundImage = "Manual Selection",
 			depotName = "Test Depot Name",
-			imageFileName = "Document_1.jpeg");
+			imageFileName = "Document_1.jpeg",
+			paddingTop = "2",
+			panel = "Styles");
 
 		PageEditor.clickPublish();
 
@@ -134,7 +138,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Publishing",
-			panel = "Site Administration",
 			portlet = "Staging");
 
 		Staging.activateStagingCP(siteName = "Site Name");
@@ -160,8 +163,8 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
-			portlet = "Blogs");
+			portlet = "Blogs",
+			site = "Site Name");
 
 		BlogsNavigator.gotoAddEntry();
 

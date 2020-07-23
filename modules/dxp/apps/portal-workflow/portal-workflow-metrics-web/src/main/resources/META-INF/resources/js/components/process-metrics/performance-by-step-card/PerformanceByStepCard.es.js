@@ -9,6 +9,7 @@
  * distribution rights of the Software.
  */
 
+import ClayLayout from '@clayui/layout';
 import React, {useMemo} from 'react';
 
 import Panel from '../../../shared/components/Panel.es';
@@ -25,7 +26,7 @@ const Header = ({disableFilters, prefixKey, totalCount}) => (
 		elementClasses="dashboard-panel-header"
 		title={Liferay.Language.get('performance-by-step')}
 	>
-		<div className="autofit-col m-0 management-bar management-bar-light navbar">
+		<ClayLayout.ContentCol className="m-0 management-bar management-bar-light navbar">
 			<ul className="navbar-nav">
 				<TimeRangeFilter
 					disabled={!totalCount || disableFilters}
@@ -33,7 +34,7 @@ const Header = ({disableFilters, prefixKey, totalCount}) => (
 					prefixKey={prefixKey}
 				/>
 			</ul>
-		</div>
+		</ClayLayout.ContentCol>
 	</Panel.HeaderWithOptions>
 );
 
@@ -67,7 +68,13 @@ const PerformanceByStepCard = ({routeParams}) => {
 		url: `/processes/${processId}/nodes/metrics`,
 	});
 
-	const promises = useMemo(() => [fetchData()], [fetchData]);
+	const promises = useMemo(() => {
+		if (timeRange.dateEnd && timeRange.dateStart) {
+			return [fetchData()];
+		}
+
+		return [new Promise((_, reject) => reject(filtersError))];
+	}, [fetchData, filtersError, timeRange.dateEnd, timeRange.dateStart]);
 
 	return (
 		<Panel elementClasses="dashboard-card">

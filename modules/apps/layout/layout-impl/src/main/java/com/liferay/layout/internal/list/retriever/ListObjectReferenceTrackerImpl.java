@@ -14,9 +14,9 @@
 
 package com.liferay.layout.internal.list.retriever;
 
-import com.liferay.layout.internal.list.retriever.util.GenericsUtil;
 import com.liferay.layout.list.retriever.ListObjectReferenceFactory;
 import com.liferay.layout.list.retriever.ListObjectReferenceFactoryTracker;
+import com.liferay.petra.reflect.GenericUtil;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,7 +33,8 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 public class ListObjectReferenceTrackerImpl
 	implements ListObjectReferenceFactoryTracker {
 
-	public ListObjectReferenceFactory getListObjectReference(String type) {
+	@Override
+	public ListObjectReferenceFactory<?> getListObjectReference(String type) {
 		return _listObjectReferenceFactories.get(type);
 	}
 
@@ -42,21 +43,21 @@ public class ListObjectReferenceTrackerImpl
 		policy = ReferencePolicy.DYNAMIC
 	)
 	protected void setListObjectReferenceFactories(
-		ListObjectReferenceFactory listObjectReferenceFactory) {
+		ListObjectReferenceFactory<?> listObjectReferenceFactory) {
 
 		_listObjectReferenceFactories.put(
-			GenericsUtil.getItemClassName(listObjectReferenceFactory),
+			GenericUtil.getGenericClassName(listObjectReferenceFactory),
 			listObjectReferenceFactory);
 	}
 
 	protected void unsetListObjectReferenceFactories(
-		ListObjectReferenceFactory listObjectReferenceFactory) {
+		ListObjectReferenceFactory<?> listObjectReferenceFactory) {
 
 		_listObjectReferenceFactories.remove(
-			GenericsUtil.getItemClassName(listObjectReferenceFactory));
+			GenericUtil.getGenericClassName(listObjectReferenceFactory));
 	}
 
-	private final Map<String, ListObjectReferenceFactory>
+	private final Map<String, ListObjectReferenceFactory<?>>
 		_listObjectReferenceFactories = new ConcurrentHashMap<>();
 
 }

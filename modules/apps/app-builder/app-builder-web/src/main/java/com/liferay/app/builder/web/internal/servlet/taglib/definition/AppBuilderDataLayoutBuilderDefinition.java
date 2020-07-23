@@ -30,11 +30,16 @@ public class AppBuilderDataLayoutBuilderDefinition
 
 	@Override
 	public boolean allowFieldSets() {
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean allowMultiplePages() {
+		return false;
+	}
+
+	@Override
+	public boolean allowNestedFields() {
 		return false;
 	}
 

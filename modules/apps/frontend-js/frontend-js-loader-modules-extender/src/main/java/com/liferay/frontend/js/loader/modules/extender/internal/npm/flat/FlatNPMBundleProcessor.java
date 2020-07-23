@@ -232,7 +232,7 @@ public class FlatNPMBundleProcessor implements JSBundleProcessor {
 
 		Collections.reverse(processedParts);
 
-		StringBundler sb = new StringBundler(2 * processedParts.size() - 1);
+		StringBundler sb = new StringBundler((2 * processedParts.size()) - 1);
 
 		for (String processedPart : processedParts) {
 			if (sb.length() != 0) {
@@ -357,10 +357,10 @@ public class FlatNPMBundleProcessor implements JSBundleProcessor {
 			key);
 
 		if (dependenciesJSONObject != null) {
-			Iterator<String> dependencyNames = dependenciesJSONObject.keys();
+			Iterator<String> iterator = dependenciesJSONObject.keys();
 
-			while (dependencyNames.hasNext()) {
-				String dependencyName = dependencyNames.next();
+			while (iterator.hasNext()) {
+				String dependencyName = iterator.next();
 
 				String versionConstraints = dependenciesJSONObject.getString(
 					dependencyName);

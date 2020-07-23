@@ -6,40 +6,6 @@ definition {
 		Button.viewNotPresent(button = "Select");
 	}
 
-	macro createNewContent {
-		Click(
-			key_text = "Create New Content",
-			locator1 = "Button#ANY");
-
-		Type(
-			key_fieldName = "Content Name",
-			locator1 = "PageEditor#CONTENT_NAME_FIELD",
-			value1 = "${contentName}");
-
-		Select(
-			key_fieldLabel = "Structure Type",
-			locator1 = "Select#GENERIC_SELECT_FIELD",
-			value1 = "${structureType}");
-
-		Select(
-			key_fieldLabel = "Structure Name",
-			locator1 = "Select#GENERIC_SELECT_FIELD",
-			value1 = "${structureName}");
-
-		Click(locator1 = "Button#NEXT");
-
-		AssertValue(
-			locator1 = "PageEditor#CONTENT_VALUE_FIELD",
-			value1 = "${contentValue}");
-
-		Select(
-			key_fieldLabel = "Structure Field",
-			locator1 = "PageEditor#STRUCTURE_FIELD_SELECT",
-			value1 = "${structureField}");
-
-		Button.clickSave();
-	}
-
 	macro gotoEditableFieldMapping {
 		PageEditor.clickEditableField(
 			contributed = "${contributed}",
@@ -52,10 +18,21 @@ definition {
 	macro mapEditableFieldToAsset {
 		Click(locator1 = "PageEditor#EDITABLE_FIELD_TOOLBAR_MAP_ASSET_SELECT_POPUP_BUTTON");
 
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
+		if (IsElementPresent(key_option = "Select Content",locator1 = "Dropdown#RESULT")) {
+
+			if (isSet(contentItem)) {
+				AssertClick(
+					key_option = "${contentItem}",
+					locator1 = "Dropdown#RESULT",
+					value1 = "${contentItem}");
+			}
+			else {
+				AssertClick(
+					key_option = "Select Content",
+					locator1 = "Dropdown#RESULT",
+					value1 = "Select Content...");
+			}
+		}
 
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
@@ -66,6 +43,42 @@ definition {
 		Click(
 			key_card = "${entryTitle}",
 			locator1 = "LexiconCard#CARD_TITLE");
+	}
+
+	macro mapEditableFieldToCollectionItems {
+		var lowerCase = StringUtil.lowerCase("${fragmentName}");
+
+		Click(locator1 = "PageEditor#CONTENT_PAGE_DISABLED_HEADER");
+
+		Click.clickNoWaitForVisible(
+			key_colPosition = "1",
+			key_element = "//div[contains(@class,'page-editor')]//li[contains(.,'${fragmentName}')]",
+			key_fragmentName = "Collection Display",
+			key_rowPosition = "1",
+			locator1 = "PageEditor#COLLECTION_CELL_NESTED_ELEMENT");
+
+		Click(
+			key_colPosition = "1",
+			key_element = "//*[contains(@class,'${lowerCase}') and contains(@data-lfr-editable-id,'${id}')]",
+			key_fragmentName = "Collection Display",
+			key_rowPosition = "1",
+			locator1 = "PageEditor#COLLECTION_CELL_NESTED_ELEMENT");
+
+		Click(locator1 = "PageEditor#EDITABLE_FIELD_TOOLBAR_MAP_BUTTON");
+
+		Pause(locator1 = "3000");
+
+		Select(
+			key_fieldLabel = "Field",
+			locator1 = "Select#GENERIC_SELECT_FIELD",
+			value1 = "${field}");
+
+		PageEditor.waitForAutoSave();
+
+		AssertSelectedLabel(
+			key_fieldLabel = "Field",
+			locator1 = "Select#GENERIC_SELECT_FIELD",
+			value1 = "${field}");
 	}
 
 	macro mapEditableTextToField {

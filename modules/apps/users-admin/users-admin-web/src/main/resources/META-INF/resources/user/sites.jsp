@@ -21,7 +21,7 @@ User selUser = userDisplayContext.getSelectedUser();
 List<Group> siteGroups = userDisplayContext.getSiteGroups();
 List<Group> inheritedSiteGroups = userDisplayContext.getInheritedSiteGroups();
 
-currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites");
+currentURLObj.setParameter("historyKey", liferayPortletResponse.getNamespace() + "sites");
 %>
 
 <liferay-ui:error-marker
@@ -31,13 +31,18 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 
 <liferay-ui:membership-policy-error />
 
-<h3 class="autofit-row sheet-subtitle">
-	<span class="autofit-col autofit-col-expand">
+<clay:content-row
+	containerElement="h3"
+	cssClass="sheet-subtitle"
+>
+	<clay:content-col
+		expand="<%= true %>"
+	>
 		<span class="heading-text"><liferay-ui:message key="sites" /></span>
-	</span>
+	</clay:content-col>
 
 	<c:if test="<%= !portletName.equals(myAccountPortletId) %>">
-		<span class="autofit-col">
+		<clay:content-col>
 			<span class="heading-end">
 				<liferay-ui:icon
 					cssClass="modify-link"
@@ -48,9 +53,9 @@ currentURLObj.setParameter("historyKey", renderResponse.getNamespace() + "sites"
 					url="javascript:;"
 				/>
 			</span>
-		</span>
+		</clay:content-col>
 	</c:if>
-</h3>
+</clay:content-row>
 
 <liferay-util:buffer
 	var="removeGroupIcon"

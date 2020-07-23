@@ -29,11 +29,22 @@ public class BuildFactory {
 		url = JenkinsResultsParserUtil.getLocalURL(url);
 
 		if (url.contains("AXIS_VARIABLE=")) {
+			String jobVariant = JenkinsResultsParserUtil.getBuildParameter(
+				url, "JOB_VARIANT");
+
+			if ((jobVariant != null) && jobVariant.contains("cucumber")) {
+				return new CucumberAxisBuild(url, (BatchBuild)parentBuild);
+			}
+
 			return new AxisBuild(url, (BatchBuild)parentBuild);
 		}
 
 		if (url.contains("subrepository-source-format")) {
 			return new BatchBuild(url, (TopLevelBuild)parentBuild);
+		}
+
+		if (url.contains("-controller")) {
+			return new DefaultTopLevelBuild(url, (TopLevelBuild)parentBuild);
 		}
 
 		if (url.contains("-source-format")) {
@@ -52,12 +63,13 @@ public class BuildFactory {
 			return new FreestyleBatchBuild(url, (TopLevelBuild)parentBuild);
 		}
 
-		if (url.contains("test-portal-environment-controller")) {
-			return new DefaultTopLevelBuild(url, (TopLevelBuild)parentBuild);
-		}
-
 		for (String batchToken : _TOKENS_BATCH) {
 			if (url.contains(batchToken)) {
+				if (url.contains("qa-websites")) {
+					return new QAWebsitesBatchBuild(
+						url, (TopLevelBuild)parentBuild);
+				}
+
 				return new BatchBuild(url, (TopLevelBuild)parentBuild);
 			}
 		}
@@ -80,8 +92,30 @@ public class BuildFactory {
 					url, (TopLevelBuild)parentBuild);
 			}
 
-			return new PortalPullRequestTesterTopLevelBuild(
+			return new PullRequestPortalTopLevelBuild(
 				url, (TopLevelBuild)parentBuild);
+		}
+
+		if (jobName.equals("test-portal-fixpack-release")) {
+			return new PortalFixpackReleasePortalTopLevelBuild(
+				url, (TopLevelBuild)parentBuild);
+		}
+
+		if (jobName.equals("test-portal-release")) {
+			return new PortalReleasePortalTopLevelBuild(
+				url, (TopLevelBuild)parentBuild);
+		}
+
+		if (jobName.contains("plugins")) {
+			return new PluginsTopLevelBuild(url, (TopLevelBuild)parentBuild);
+		}
+
+		if (jobName.contains("portal")) {
+			return new PortalTopLevelBuild(url, (TopLevelBuild)parentBuild);
+		}
+
+		if (jobName.contains("qa-websites")) {
+			return new QAWebsitesTopLevelBuild(url, (TopLevelBuild)parentBuild);
 		}
 
 		return topLevelBuild;

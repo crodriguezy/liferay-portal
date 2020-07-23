@@ -67,6 +67,10 @@ public class MDRActionLocalServiceUtil {
 	/**
 	 * Adds the mdr action to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MDRActionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param mdrAction the mdr action
 	 * @return the mdr action that was added
 	 */
@@ -115,6 +119,10 @@ public class MDRActionLocalServiceUtil {
 	/**
 	 * Deletes the mdr action with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MDRActionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param actionId the primary key of the mdr action
 	 * @return the mdr action that was removed
 	 * @throws PortalException if a mdr action with the primary key could not be found
@@ -128,6 +136,10 @@ public class MDRActionLocalServiceUtil {
 
 	/**
 	 * Deletes the mdr action from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MDRActionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param mdrAction the mdr action
 	 * @return the mdr action that was removed
@@ -297,9 +309,11 @@ public class MDRActionLocalServiceUtil {
 		<com.liferay.mobile.device.rules.model.MDRAction> getActions(
 			long ruleGroupInstanceId, int start, int end,
 			com.liferay.portal.kernel.util.OrderByComparator
-				<com.liferay.mobile.device.rules.model.MDRAction> obc) {
+				<com.liferay.mobile.device.rules.model.MDRAction>
+					orderByComparator) {
 
-		return getService().getActions(ruleGroupInstanceId, start, end, obc);
+		return getService().getActions(
+			ruleGroupInstanceId, start, end, orderByComparator);
 	}
 
 	public static int getActionsCount(long ruleGroupInstanceId) {
@@ -459,6 +473,10 @@ public class MDRActionLocalServiceUtil {
 
 	/**
 	 * Updates the mdr action in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect MDRActionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param mdrAction the mdr action
 	 * @return the mdr action that was updated

@@ -14,6 +14,7 @@
 
 package com.liferay.segments.asah.connector.internal.messaging;
 
+import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -22,7 +23,6 @@ import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserModel;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
-import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
@@ -30,11 +30,13 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.segments.asah.connector.internal.cache.AsahSegmentsEntryCache;
 import com.liferay.segments.asah.connector.internal.client.AsahFaroBackendClient;
-import com.liferay.segments.asah.connector.internal.client.AsahFaroBackendClientFactory;
+import com.liferay.segments.asah.connector.internal.client.AsahFaroBackendClientImpl;
+import com.liferay.segments.asah.connector.internal.client.JSONWebServiceClient;
 import com.liferay.segments.asah.connector.internal.client.model.Individual;
 import com.liferay.segments.asah.connector.internal.client.model.IndividualSegment;
 import com.liferay.segments.asah.connector.internal.client.model.Results;
 import com.liferay.segments.asah.connector.internal.client.util.OrderByField;
+import com.liferay.segments.asah.connector.internal.util.AsahUtil;
 import com.liferay.segments.constants.SegmentsEntryConstants;
 import com.liferay.segments.model.SegmentsEntry;
 import com.liferay.segments.model.SegmentsEntryModel;
@@ -49,7 +51,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -59,39 +63,23 @@ import org.osgi.service.component.annotations.Reference;
 public class IndividualSegmentsChecker {
 
 	public void checkIndividualSegments() {
-		Optional<AsahFaroBackendClient> asahFaroBackendClientOptional =
-			_asahFaroBackendClientFactory.createAsahFaroBackendClient();
-
-		if (!asahFaroBackendClientOptional.isPresent()) {
-			return;
-		}
-
-		_asahFaroBackendClient = asahFaroBackendClientOptional.get();
-
 		_checkIndividualSegments();
 		_checkIndividualSegmentsMemberships();
 	}
 
-	public void checkIndividualSegments(String individualPK)
+	public void checkIndividualSegments(long companyId, String individualPK)
 		throws PortalException {
 
 		if (_asahSegmentsEntryCache.getSegmentsEntryIds(individualPK) != null) {
 			return;
 		}
 
-		if (_asahFaroBackendClient == null) {
-			Optional<AsahFaroBackendClient> asahFaroBackendClientOptional =
-				_asahFaroBackendClientFactory.createAsahFaroBackendClient();
-
-			if (!asahFaroBackendClientOptional.isPresent()) {
-				return;
-			}
-
-			_asahFaroBackendClient = asahFaroBackendClientOptional.get();
+		if (!AsahUtil.isAnalyticsEnabled(companyId)) {
+			return;
 		}
 
 		Individual individual = _asahFaroBackendClient.getIndividual(
-			individualPK);
+			companyId, individualPK);
 
 		if (individual == null) {
 			if (_log.isDebugEnabled()) {
@@ -108,7 +96,7 @@ public class IndividualSegmentsChecker {
 			return;
 		}
 
-		ServiceContext serviceContext = _getServiceContext();
+		ServiceContext serviceContext = _getServiceContext(companyId);
 
 		Stream<String> stream = individualSegmentIds.stream();
 
@@ -125,9 +113,22 @@ public class IndividualSegmentsChecker {
 			individualPK, segmentsEntryIds);
 	}
 
-	private void _addSegmentsEntry(IndividualSegment individualSegment) {
+	@Activate
+	protected void activate() {
+		_asahFaroBackendClient = new AsahFaroBackendClientImpl(
+			_jsonWebServiceClient);
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		_asahFaroBackendClient = null;
+	}
+
+	private void _addSegmentsEntry(
+		long companyId, IndividualSegment individualSegment) {
+
 		try {
-			ServiceContext serviceContext = _getServiceContext();
+			ServiceContext serviceContext = _getServiceContext(companyId);
 
 			SegmentsEntry segmentsEntry =
 				_segmentsEntryLocalService.fetchSegmentsEntry(
@@ -162,7 +163,8 @@ public class IndividualSegmentsChecker {
 	private void _addSegmentsEntryRel(
 		SegmentsEntry segmentsEntry, Individual individual) {
 
-		Optional<Long> userIdOptional = _getUserIdOptional(individual);
+		Optional<Long> userIdOptional = _getUserIdOptional(
+			segmentsEntry.getCompanyId(), individual);
 
 		if (!userIdOptional.isPresent()) {
 			if (_log.isWarnEnabled()) {
@@ -177,7 +179,8 @@ public class IndividualSegmentsChecker {
 		try {
 			_segmentsEntryLocalService.addSegmentsEntryClassPKs(
 				segmentsEntry.getSegmentsEntryId(),
-				new long[] {userIdOptional.get()}, _getServiceContext());
+				new long[] {userIdOptional.get()},
+				_getServiceContext(segmentsEntry.getCompanyId()));
 		}
 		catch (PortalException portalException) {
 			_log.error(
@@ -196,6 +199,7 @@ public class IndividualSegmentsChecker {
 
 		try {
 			individualResults = _asahFaroBackendClient.getIndividualResults(
+				segmentsEntry.getCompanyId(),
 				segmentsEntry.getSegmentsEntryKey(), 1, _DELTA,
 				Collections.singletonList(OrderByField.desc("dateModified")));
 
@@ -230,6 +234,7 @@ public class IndividualSegmentsChecker {
 				}
 
 				individualResults = _asahFaroBackendClient.getIndividualResults(
+					segmentsEntry.getCompanyId(),
 					segmentsEntry.getSegmentsEntryKey(), curPage, _DELTA,
 					Collections.singletonList(
 						OrderByField.desc("dateModified")));
@@ -244,12 +249,31 @@ public class IndividualSegmentsChecker {
 	}
 
 	private void _checkIndividualSegments() {
+		ActionableDynamicQuery actionableDynamicQuery =
+			_companyLocalService.getActionableDynamicQuery();
+
+		actionableDynamicQuery.setPerformActionMethod(
+			(Company company) -> {
+				if (AsahUtil.isAnalyticsEnabled(company.getCompanyId())) {
+					_checkIndividualSegments(company.getCompanyId());
+				}
+			});
+
+		try {
+			actionableDynamicQuery.performActions();
+		}
+		catch (PortalException portalException) {
+			_log.error("Unable to check individual segments", portalException);
+		}
+	}
+
+	private void _checkIndividualSegments(long companyId) {
 		Results<IndividualSegment> individualSegmentResults = new Results<>();
 
 		try {
 			individualSegmentResults =
 				_asahFaroBackendClient.getIndividualSegmentResults(
-					1, _DELTA,
+					companyId, 1, _DELTA,
 					Collections.singletonList(
 						OrderByField.desc("dateModified")));
 		}
@@ -274,7 +298,8 @@ public class IndividualSegmentsChecker {
 			individualSegmentResults.getItems();
 
 		individualSegments.forEach(
-			individualSegment -> _addSegmentsEntry(individualSegment));
+			individualSegment -> _addSegmentsEntry(
+				companyId, individualSegment));
 	}
 
 	private void _checkIndividualSegmentsMemberships() {
@@ -288,15 +313,12 @@ public class IndividualSegmentsChecker {
 		}
 	}
 
-	private ServiceContext _getServiceContext() throws PortalException {
-		if (_serviceContext != null) {
-			return _serviceContext;
-		}
+	private ServiceContext _getServiceContext(long companyId)
+		throws PortalException {
 
 		ServiceContext serviceContext = new ServiceContext();
 
-		Company company = _companyLocalService.getCompany(
-			_portal.getDefaultCompanyId());
+		Company company = _companyLocalService.getCompany(companyId);
 
 		serviceContext.setScopeGroupId(company.getGroupId());
 
@@ -304,12 +326,12 @@ public class IndividualSegmentsChecker {
 
 		serviceContext.setUserId(user.getUserId());
 
-		_serviceContext = serviceContext;
-
-		return _serviceContext;
+		return serviceContext;
 	}
 
-	private Optional<Long> _getUserIdOptional(Individual individual) {
+	private Optional<Long> _getUserIdOptional(
+		long companyId, Individual individual) {
+
 		List<Individual.DataSourceIndividualPK> dataSourceIndividualPKs =
 			individual.getDataSourceIndividualPKs();
 
@@ -318,7 +340,7 @@ public class IndividualSegmentsChecker {
 
 		List<String> individualUuids = dataSourceIndividualPKStream.filter(
 			dataSourceIndividualPK -> Objects.equals(
-				_asahFaroBackendClient.getDataSourceId(),
+				_asahFaroBackendClient.getDataSourceId(companyId),
 				dataSourceIndividualPK.getDataSourceId())
 		).findFirst(
 		).map(
@@ -335,7 +357,7 @@ public class IndividualSegmentsChecker {
 
 		return individualUuidStream.map(
 			individualUuid -> _userLocalService.fetchUserByUuidAndCompanyId(
-				individualUuid, _portal.getDefaultCompanyId())
+				individualUuid, companyId)
 		).filter(
 			Objects::nonNull
 		).findFirst(
@@ -352,16 +374,13 @@ public class IndividualSegmentsChecker {
 	private volatile AsahFaroBackendClient _asahFaroBackendClient;
 
 	@Reference
-	private AsahFaroBackendClientFactory _asahFaroBackendClientFactory;
-
-	@Reference
 	private AsahSegmentsEntryCache _asahSegmentsEntryCache;
 
 	@Reference
-	private ClassNameLocalService _classNameLocalService;
+	private CompanyLocalService _companyLocalService;
 
 	@Reference
-	private CompanyLocalService _companyLocalService;
+	private JSONWebServiceClient _jsonWebServiceClient;
 
 	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED)
 	private ModuleServiceLifecycle _moduleServiceLifecycle;
@@ -374,8 +393,6 @@ public class IndividualSegmentsChecker {
 
 	@Reference
 	private SegmentsEntryRelLocalService _segmentsEntryRelLocalService;
-
-	private ServiceContext _serviceContext;
 
 	@Reference
 	private UserLocalService _userLocalService;

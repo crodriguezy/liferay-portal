@@ -135,14 +135,18 @@ function AssetVocabulariesCategoriesSelector({
 		const sub = (str, obj) => str.replace(/\{([^}]+)\}/g, (_, m) => obj[m]);
 
 		const url = sub(decodeURIComponent(portletURL), {
-			selectedCategoryIds: selectedItems.map((item) => item.value).join(),
+			selectedCategories: selectedItems.map((item) => item.value).join(),
 			singleSelect,
 			vocabularyIds: sourceItemsVocabularyIds.concat(),
 		});
 
 		const itemSelectorDialog = new ItemSelectorDialog({
+			buttonAddLabel: Liferay.Language.get('done'),
+			dialogClasses: 'modal-lg',
 			eventName,
-			title: Liferay.Language.get('select-categories'),
+			title: label
+				? Liferay.Util.sub(Liferay.Language.get('select-x'), label)
+				: Liferay.Language.get('select-categories'),
 			url,
 		});
 

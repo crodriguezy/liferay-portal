@@ -95,6 +95,21 @@ Layout curLayout = (Layout)row.getObject();
 			url="<%= layoutsAdminDisplayContext.getDeleteLayoutURL(curLayout) %>"
 		/>
 	</c:if>
+
+	<c:if test="<%= layoutsAdminDisplayContext.isShowDiscardDraftAction(curLayout) %>">
+		<liferay-ui:icon
+			message="discard-draft"
+			url="<%= layoutsAdminDisplayContext.getDiscardDraftURL(curLayout) %>"
+		/>
+	</c:if>
+
+	<c:if test="<%= layoutsAdminDisplayContext.isShowViewCollectionItemsAction(curLayout) %>">
+		<liferay-ui:icon
+			cssClass="view-collection-items-action-option"
+			message="view-collection-items"
+			url="javascript:;"
+		/>
+	</c:if>
 </liferay-ui:icon-menu>
 
 <aui:script require="metal-dom/src/all/dom as dom">
@@ -103,26 +118,32 @@ Layout curLayout = (Layout)row.getObject();
 		'click',
 		'.<portlet:namespace />copy-layout-action-option',
 		function (event) {
-			Liferay.Util.openWindow({
-				dialog: {
-					destroyOnHide: true,
-					height: 480,
-					resizable: false,
-					width: 640,
-				},
-				dialogIframe: {
-					bodyCssClass: 'dialog-with-footer',
-				},
+			Liferay.Util.openModal({
 				id: '<portlet:namespace />copyLayoutDialog',
 				title: '<liferay-ui:message key="copy-page" />',
-				uri:
+				url:
 					'<%= layoutsAdminDisplayContext.getCopyLayoutRenderURL(layout) %>',
+			});
+		}
+	);
+
+	var viewCollectionItemsActionOptionQueryClickHandler = dom.delegate(
+		document.body,
+		'click',
+		'.<portlet:namespace />view-collection-items-action-option',
+		function (event) {
+			Liferay.Util.openModal({
+				id: '<portlet:namespace />viewCollectionItemsDialog',
+				title: '<liferay-ui:message key="collection-items" />',
+				url:
+					'<%= layoutsAdminDisplayContext.getViewCollectionItemsURL(layout) %>',
 			});
 		}
 	);
 
 	function handleDestroyPortlet() {
 		addLayoutPrototypeActionOptionQueryClickHandler.removeListener();
+		viewCollectionItemsActionOptionQueryClickHandler.removeListener();
 
 		Liferay.detach('destroyPortlet', handleDestroyPortlet);
 	}

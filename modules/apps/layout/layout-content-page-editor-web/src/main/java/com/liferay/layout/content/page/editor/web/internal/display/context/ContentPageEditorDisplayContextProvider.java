@@ -19,10 +19,12 @@ import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.fragment.renderer.FragmentRendererTracker;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.info.display.contributor.InfoDisplayContributorTracker;
+import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorWebKeys;
 import com.liferay.layout.content.page.editor.sidebar.panel.ContentPageEditorSidebarPanel;
 import com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration;
+import com.liferay.layout.content.page.editor.web.internal.configuration.PageEditorConfiguration;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
@@ -55,7 +57,10 @@ import org.osgi.service.component.annotations.Reference;
  * @author Pavel Savinov
  */
 @Component(
-	configurationPid = "com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration",
+	configurationPid = {
+		"com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration",
+		"com.liferay.layout.content.page.editor.web.internal.configuration.PageEditorConfiguration"
+	},
 	immediate = true, service = ContentPageEditorDisplayContextProvider.class
 )
 public class ContentPageEditorDisplayContextProvider {
@@ -74,7 +79,8 @@ public class ContentPageEditorDisplayContextProvider {
 				_fragmentCollectionContributorTracker,
 				_fragmentEntryConfigurationParser, _fragmentRendererController,
 				_fragmentRendererTracker, httpServletRequest,
-				_infoDisplayContributorTracker, _itemSelector, portletRequest,
+				_infoDisplayContributorTracker, _infoItemServiceTracker,
+				_itemSelector, _pageEditorConfiguration, portletRequest,
 				renderResponse, _stagingGroupHelper);
 		}
 
@@ -100,7 +106,8 @@ public class ContentPageEditorDisplayContextProvider {
 			_fragmentCollectionContributorTracker,
 			_fragmentEntryConfigurationParser, _fragmentRendererController,
 			_fragmentRendererTracker, httpServletRequest,
-			_infoDisplayContributorTracker, _itemSelector, pageIsDisplayPage,
+			_infoDisplayContributorTracker, _infoItemServiceTracker,
+			_itemSelector, _pageEditorConfiguration, pageIsDisplayPage,
 			portletRequest, renderResponse);
 	}
 
@@ -112,6 +119,8 @@ public class ContentPageEditorDisplayContextProvider {
 		_ffLayoutContentPageEditorConfiguration =
 			ConfigurableUtil.createConfigurable(
 				FFLayoutContentPageEditorConfiguration.class, properties);
+		_pageEditorConfiguration = ConfigurableUtil.createConfigurable(
+			PageEditorConfiguration.class, properties);
 		_serviceTrackerList = ServiceTrackerListFactory.open(
 			bundleContext, ContentPageEditorSidebarPanel.class);
 	}
@@ -159,12 +168,16 @@ public class ContentPageEditorDisplayContextProvider {
 	private InfoDisplayContributorTracker _infoDisplayContributorTracker;
 
 	@Reference
+	private InfoItemServiceTracker _infoItemServiceTracker;
+
+	@Reference
 	private ItemSelector _itemSelector;
 
 	@Reference
 	private LayoutPageTemplateEntryLocalService
 		_layoutPageTemplateEntryLocalService;
 
+	private volatile PageEditorConfiguration _pageEditorConfiguration;
 	private ServiceTrackerList
 		<ContentPageEditorSidebarPanel, ContentPageEditorSidebarPanel>
 			_serviceTrackerList;

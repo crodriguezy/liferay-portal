@@ -27,6 +27,8 @@ definition {
 	@description = "This is a use case for LPS-110191. The related assets should be in AP when select Related Assets as Collection Provider."
 	@priority = "5"
 	test DisplayRelatedAssetsInAssetPublisher {
+		property portal.acceptance = "true";
+
 		task ("Add a Web Content Article, a Blogs Entry and a Document") {
 			JSONWebcontent.addWebContent(
 				content = "Web Content Content",
@@ -116,11 +118,6 @@ definition {
 				locator1 = "Home#PAGE_COLUMN_PORTLET_HEADER_ELLIPSIS");
 
 			MenuItem.click(menuItem = "Configuration");
-
-			LiferayEvent.waitForLiferayEvent(
-				attributeName = "src",
-				attributeValue = "dialog-iframe-popup",
-				eventName = "modalIframeLoaded");
 
 			SelectFrame(locator1 = "IFrame#MODAL_BODY");
 

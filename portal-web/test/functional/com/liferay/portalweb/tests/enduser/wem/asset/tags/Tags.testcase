@@ -13,7 +13,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Categorization",
-			panel = "Site Administration",
 			portlet = "Tags");
 	}
 
@@ -32,10 +31,7 @@ definition {
 	test CannotAddEmptyTag {
 		Tag.addWithNullTitleCP(tagName = " ");
 
-		ProductMenu.gotoPortlet(
-			category = "Categorization",
-			panel = "Site Administration",
-			portlet = "Tags");
+		Tag.openTagsAdmin(siteURLKey = "Guest");
 
 		Portlet.viewEmptyMessage(message = "There are no tags.");
 	}
@@ -46,10 +42,7 @@ definition {
 			groupName = "Guest",
 			tagName = "tagname1");
 
-		ProductMenu.gotoPortlet(
-			category = "Categorization",
-			panel = "Site Administration",
-			portlet = "Tags");
+		Tag.openTagsAdmin(siteURLKey = "Guest");
 
 		Tag.gotoMerge(
 			mergeMethod = "menuItem",
@@ -66,10 +59,7 @@ definition {
 				tagName = "tagname${i}");
 		}
 
-		ProductMenu.gotoPortlet(
-			category = "Categorization",
-			panel = "Site Administration",
-			portlet = "Tags");
+		Tag.openTagsAdmin(siteURLKey = "Guest");
 
 		for (var i : list "1,2,3") {
 			Tag.viewCP(tagName = "tagname${i}");
@@ -84,14 +74,13 @@ definition {
 
 	@priority = "5"
 	test DeleteTagFromMenu {
+		property portal.acceptance = "true";
+
 		JSONAssettag.addTag(
 			groupName = "Guest",
 			tagName = "tagname1");
 
-		ProductMenu.gotoPortlet(
-			category = "Categorization",
-			panel = "Site Administration",
-			portlet = "Tags");
+		Tag.openTagsAdmin(siteURLKey = "Guest");
 
 		Tag.viewCP(tagName = "tagname1");
 
@@ -108,10 +97,7 @@ definition {
 			groupName = "Guest",
 			tagName = "tagname1");
 
-		ProductMenu.gotoPortlet(
-			category = "Categorization",
-			panel = "Site Administration",
-			portlet = "Tags");
+		Tag.openTagsAdmin(siteURLKey = "Guest");
 
 		Tag.viewCP(tagName = "tagname1");
 
@@ -128,10 +114,7 @@ definition {
 			groupName = "Guest",
 			tagName = "tagname1");
 
-		ProductMenu.gotoPortlet(
-			category = "Categorization",
-			panel = "Site Administration",
-			portlet = "Tags");
+		Tag.openTagsAdmin(siteURLKey = "Guest");
 
 		Tag.viewCP(tagName = "tagname1");
 
@@ -156,10 +139,7 @@ definition {
 			groupName = "Guest",
 			tagName = "tagname1");
 
-		ProductMenu.gotoPortlet(
-			category = "Categorization",
-			panel = "Site Administration",
-			portlet = "Tags");
+		Tag.openTagsAdmin(siteURLKey = "Guest");
 
 		Tag.viewCP(tagName = "tagname1");
 
@@ -184,10 +164,7 @@ definition {
 				tagName = "tagname${i}");
 		}
 
-		ProductMenu.gotoPortlet(
-			category = "Categorization",
-			panel = "Site Administration",
-			portlet = "Tags");
+		Tag.openTagsAdmin(siteURLKey = "Guest");
 
 		for (var i : list "1,2,3") {
 			Tag.viewCP(tagName = "tagname${i}");
@@ -218,10 +195,7 @@ definition {
 				tagName = "tagname${i}");
 		}
 
-		ProductMenu.gotoPortlet(
-			category = "Categorization",
-			panel = "Site Administration",
-			portlet = "Tags");
+		Tag.openTagsAdmin(siteURLKey = "Guest");
 
 		for (var i : list "1,2,3,4,5,6,7") {
 			Tag.viewCP(tagName = "tagname${i}");
@@ -260,7 +234,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Categorization",
-			panel = "Site Administration",
 			portlet = "Tags");
 
 		LexiconEntry.changeDisplayStyle(displayStyle = "list");
@@ -297,7 +270,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Categorization",
-			panel = "Site Administration",
 			portlet = "Tags");
 
 		AssertTextEquals.assertPartialText(

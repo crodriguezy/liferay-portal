@@ -14,10 +14,13 @@
 
 package com.liferay.change.tracking.service.impl;
 
+import com.liferay.change.tracking.closure.CTClosure;
+import com.liferay.change.tracking.closure.CTClosureFactory;
 import com.liferay.change.tracking.conflict.ConflictInfo;
 import com.liferay.change.tracking.constants.CTConstants;
 import com.liferay.change.tracking.exception.CTCollectionDescriptionException;
 import com.liferay.change.tracking.exception.CTCollectionNameException;
+import com.liferay.change.tracking.internal.CTEnclosureUtil;
 import com.liferay.change.tracking.internal.CTServiceCopier;
 import com.liferay.change.tracking.internal.CTServiceRegistry;
 import com.liferay.change.tracking.internal.CTTableMapperHelper;
@@ -30,12 +33,12 @@ import com.liferay.change.tracking.model.CTCollection;
 import com.liferay.change.tracking.model.CTEntry;
 import com.liferay.change.tracking.model.CTPreferences;
 import com.liferay.change.tracking.model.CTProcess;
-import com.liferay.change.tracking.resolver.ConstraintResolver;
 import com.liferay.change.tracking.service.CTEntryLocalService;
 import com.liferay.change.tracking.service.CTPreferencesLocalService;
 import com.liferay.change.tracking.service.CTProcessLocalService;
 import com.liferay.change.tracking.service.base.CTCollectionLocalServiceBaseImpl;
 import com.liferay.change.tracking.service.persistence.CTAutoResolutionInfoPersistence;
+import com.liferay.change.tracking.spi.resolver.ConstraintResolver;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.petra.lang.SafeClosable;
@@ -432,6 +435,30 @@ public class CTCollectionLocalServiceImpl
 	}
 
 	@Override
+	public boolean isCTEntryEnclosed(
+		long ctCollectionId, long modelClassNameId, long modelClassPK) {
+
+		CTClosure ctClosure = _ctClosureFactory.create(ctCollectionId);
+
+		Map<Long, Set<Long>> enclosureMap = CTEnclosureUtil.getEnclosureMap(
+			ctClosure, modelClassNameId, modelClassPK);
+
+		for (Map.Entry<Long, Long> parentEntry :
+				CTEnclosureUtil.getEnclosureParentEntries(
+					ctClosure, enclosureMap)) {
+
+			int count = ctEntryPersistence.countByC_MCNI_MCPK(
+				ctCollectionId, parentEntry.getKey(), parentEntry.getValue());
+
+			if (count > 0) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	@Override
 	public CTCollection undoCTCollection(
 			long ctCollectionId, long userId, String name, String description)
 		throws PortalException {
@@ -559,7 +586,9 @@ public class CTCollectionLocalServiceImpl
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		_serviceTrackerMap = ServiceTrackerMapFactory.openSingleValueMap(
-			bundleContext, ConstraintResolver.class, null,
+			bundleContext,
+			(Class<ConstraintResolver<?>>)(Class<?>)ConstraintResolver.class,
+			null,
 			(serviceReference, emitter) -> {
 				ConstraintResolver<?> constraintResolver =
 					bundleContext.getService(serviceReference);
@@ -611,6 +640,9 @@ public class CTCollectionLocalServiceImpl
 	private CTAutoResolutionInfoPersistence _ctAutoResolutionInfoPersistence;
 
 	@Reference
+	private CTClosureFactory _ctClosureFactory;
+
+	@Reference
 	private CTEntryLocalService _ctEntryLocalService;
 
 	@Reference
@@ -625,7 +657,7 @@ public class CTCollectionLocalServiceImpl
 	@Reference
 	private ResourceLocalService _resourceLocalService;
 
-	private ServiceTrackerMap<ConstraintResolverKey, ConstraintResolver>
+	private ServiceTrackerMap<ConstraintResolverKey, ConstraintResolver<?>>
 		_serviceTrackerMap;
 
 }

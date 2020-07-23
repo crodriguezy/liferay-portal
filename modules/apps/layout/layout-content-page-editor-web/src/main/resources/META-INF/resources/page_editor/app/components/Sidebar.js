@@ -52,7 +52,6 @@ export default function Sidebar() {
 	const sidebarId = useId();
 	const store = useSelector((state) => state);
 
-	const languageId = useSelector((state) => state.languageId);
 	const panels = useSelector(selectAvailablePanels(config.panels));
 	const sidebarPanels = useSelector(
 		selectAvailableSidebarPanels(config.sidebarPanels)
@@ -186,7 +185,9 @@ export default function Sidebar() {
 		<ClayTooltipProvider>
 			<div className="page-editor__sidebar" ref={dropClearRef}>
 				<div
-					className="page-editor__sidebar__buttons"
+					className={classNames('page-editor__sidebar__buttons', {
+						light: true,
+					})}
 					onClick={deselectItem}
 				>
 					{panels.reduce((elements, group, groupIndex) => {
@@ -234,6 +235,7 @@ export default function Sidebar() {
 									onClick={() => handleClick(panel)}
 									onFocus={prefetch}
 									onMouseEnter={prefetch}
+									small={true}
 									symbol={icon}
 									title={label}
 								/>
@@ -257,7 +259,10 @@ export default function Sidebar() {
 					className={classNames({
 						'page-editor__sidebar__content': true,
 						'page-editor__sidebar__content--open': sidebarOpen,
-						rtl: config.languageDirection[languageId] === 'rtl',
+						rtl:
+							config.languageDirection[
+								themeDisplay?.getLanguageId()
+							] === 'rtl',
 					})}
 					onClick={deselectItem}
 				>

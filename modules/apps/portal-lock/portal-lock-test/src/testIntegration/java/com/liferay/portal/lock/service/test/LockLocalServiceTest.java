@@ -186,7 +186,7 @@ public class LockLocalServiceTest {
 
 		// Set lock to be expired
 
-		expirationDate = new Date(System.currentTimeMillis() - 10 * Time.DAY);
+		expirationDate = new Date(System.currentTimeMillis() - (10 * Time.DAY));
 
 		lock.setExpirationDate(expirationDate);
 
@@ -217,9 +217,9 @@ public class LockLocalServiceTest {
 		final CountDownLatch createdCountDownLatch = new CountDownLatch(1);
 		final CountDownLatch continueCountDownLatch = new CountDownLatch(1);
 
-		ServiceRegistration<ModelListener> serviceRegistration =
+		ServiceRegistration<ModelListener<Lock>> serviceRegistration =
 			bundleContext.registerService(
-				ModelListener.class,
+				(Class<ModelListener<Lock>>)(Class<?>)ModelListener.class,
 				new BaseModelListener<Lock>() {
 
 					@Override

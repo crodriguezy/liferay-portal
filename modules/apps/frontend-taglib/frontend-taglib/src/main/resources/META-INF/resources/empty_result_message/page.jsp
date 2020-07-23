@@ -43,10 +43,10 @@
 					<clay:dropdown-menu
 						componentId="<%= componentId %>"
 						defaultEventHandler="<%= defaultEventHandler %>"
+						displayType="<%= buttonCssClass %>"
 						dropdownItems="<%= actionDropdownItems %>"
-						label='<%= LanguageUtil.get(request, "new") %>'
-						style="<%= buttonCssClass %>"
-						triggerCssClasses="btn-sm"
+						label="new"
+						small="<%= true %>"
 					/>
 				</c:when>
 				<c:otherwise>
@@ -71,8 +71,8 @@
 								componentId="<%= componentId %>"
 								data='<%= (HashMap)actionDropdownItem.get("data") %>'
 								defaultEventHandler="<%= defaultEventHandler %>"
+								displayType="<%= buttonCssClass %>"
 								label='<%= String.valueOf(actionDropdownItem.get("label")) %>'
-								style="<%= buttonCssClass %>"
 							/>
 						</c:otherwise>
 					</c:choose>

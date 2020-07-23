@@ -70,6 +70,7 @@ public class MBDiscussionModelImpl
 	public static final String TABLE_NAME = "MBDiscussion";
 
 	public static final Object[][] TABLE_COLUMNS = {
+		{"mvccVersion", Types.BIGINT}, {"ctCollectionId", Types.BIGINT},
 		{"uuid_", Types.VARCHAR}, {"discussionId", Types.BIGINT},
 		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
 		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
@@ -82,6 +83,8 @@ public class MBDiscussionModelImpl
 		new HashMap<String, Integer>();
 
 	static {
+		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("ctCollectionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("uuid_", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("discussionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
@@ -97,7 +100,7 @@ public class MBDiscussionModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table MBDiscussion (uuid_ VARCHAR(75) null,discussionId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,threadId LONG,lastPublishDate DATE null)";
+		"create table MBDiscussion (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,uuid_ VARCHAR(75) null,discussionId LONG not null,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,threadId LONG,lastPublishDate DATE null,primary key (discussionId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP = "drop table MBDiscussion";
 
@@ -127,12 +130,18 @@ public class MBDiscussionModelImpl
 
 	public static final long DISCUSSIONID_COLUMN_BITMASK = 64L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-		_entityCacheEnabled = entityCacheEnabled;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-		_finderCacheEnabled = finderCacheEnabled;
 	}
 
 	public MBDiscussionModelImpl() {
@@ -186,9 +195,6 @@ public class MBDiscussionModelImpl
 				attributeName,
 				attributeGetterFunction.apply((MBDiscussion)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -262,6 +268,16 @@ public class MBDiscussionModelImpl
 		Map<String, BiConsumer<MBDiscussion, ?>> attributeSetterBiConsumers =
 			new LinkedHashMap<String, BiConsumer<MBDiscussion, ?>>();
 
+		attributeGetterFunctions.put(
+			"mvccVersion", MBDiscussion::getMvccVersion);
+		attributeSetterBiConsumers.put(
+			"mvccVersion",
+			(BiConsumer<MBDiscussion, Long>)MBDiscussion::setMvccVersion);
+		attributeGetterFunctions.put(
+			"ctCollectionId", MBDiscussion::getCtCollectionId);
+		attributeSetterBiConsumers.put(
+			"ctCollectionId",
+			(BiConsumer<MBDiscussion, Long>)MBDiscussion::setCtCollectionId);
 		attributeGetterFunctions.put("uuid", MBDiscussion::getUuid);
 		attributeSetterBiConsumers.put(
 			"uuid", (BiConsumer<MBDiscussion, String>)MBDiscussion::setUuid);
@@ -317,6 +333,26 @@ public class MBDiscussionModelImpl
 			attributeGetterFunctions);
 		_attributeSetterBiConsumers = Collections.unmodifiableMap(
 			(Map)attributeSetterBiConsumers);
+	}
+
+	@Override
+	public long getMvccVersion() {
+		return _mvccVersion;
+	}
+
+	@Override
+	public void setMvccVersion(long mvccVersion) {
+		_mvccVersion = mvccVersion;
+	}
+
+	@Override
+	public long getCtCollectionId() {
+		return _ctCollectionId;
+	}
+
+	@Override
+	public void setCtCollectionId(long ctCollectionId) {
+		_ctCollectionId = ctCollectionId;
 	}
 
 	@Override
@@ -604,6 +640,8 @@ public class MBDiscussionModelImpl
 	public Object clone() {
 		MBDiscussionImpl mbDiscussionImpl = new MBDiscussionImpl();
 
+		mbDiscussionImpl.setMvccVersion(getMvccVersion());
+		mbDiscussionImpl.setCtCollectionId(getCtCollectionId());
 		mbDiscussionImpl.setUuid(getUuid());
 		mbDiscussionImpl.setDiscussionId(getDiscussionId());
 		mbDiscussionImpl.setGroupId(getGroupId());
@@ -638,16 +676,16 @@ public class MBDiscussionModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof MBDiscussion)) {
+		if (!(object instanceof MBDiscussion)) {
 			return false;
 		}
 
-		MBDiscussion mbDiscussion = (MBDiscussion)obj;
+		MBDiscussion mbDiscussion = (MBDiscussion)object;
 
 		long primaryKey = mbDiscussion.getPrimaryKey();
 
@@ -664,14 +702,22 @@ public class MBDiscussionModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	@Override
@@ -712,6 +758,10 @@ public class MBDiscussionModelImpl
 	public CacheModel<MBDiscussion> toCacheModel() {
 		MBDiscussionCacheModel mbDiscussionCacheModel =
 			new MBDiscussionCacheModel();
+
+		mbDiscussionCacheModel.mvccVersion = getMvccVersion();
+
+		mbDiscussionCacheModel.ctCollectionId = getCtCollectionId();
 
 		mbDiscussionCacheModel.uuid = getUuid();
 
@@ -843,9 +893,8 @@ public class MBDiscussionModelImpl
 
 	}
 
-	private static boolean _entityCacheEnabled;
-	private static boolean _finderCacheEnabled;
-
+	private long _mvccVersion;
+	private long _ctCollectionId;
 	private String _uuid;
 	private String _originalUuid;
 	private long _discussionId;

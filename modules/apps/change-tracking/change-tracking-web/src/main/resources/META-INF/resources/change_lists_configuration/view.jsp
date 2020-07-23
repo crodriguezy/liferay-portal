@@ -16,20 +16,15 @@
 
 <%@ include file="/change_lists_configuration/init.jsp" %>
 
-<clay:navigation-bar
-	inverted="<%= true %>"
-	navigationItems="<%= changeListsConfigurationDisplayContext.getViewNavigationItems() %>"
-/>
-
 <clay:container-fluid
-	className="container-form-lg"
+	cssClass="container-form-lg"
 >
 	<aui:form action="<%= changeListsConfigurationDisplayContext.getActionURL() %>" method="post" name="fm">
 		<aui:input name="navigation" type="hidden" value="<%= changeListsConfigurationDisplayContext.getNavigation() %>" />
 		<aui:input name="redirectToOverview" type="hidden" value="<%= false %>" />
 
-		<div class="sheet sheet-lg">
+		<clay:sheet>
 			<%@ include file="/change_lists_configuration/global_settings.jspf" %>
-		</div>
+		</clay:sheet>
 	</aui:form>
 </clay:container-fluid>

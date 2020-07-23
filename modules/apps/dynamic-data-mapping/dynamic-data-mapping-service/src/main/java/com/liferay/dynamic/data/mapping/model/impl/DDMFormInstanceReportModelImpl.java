@@ -64,10 +64,11 @@ public class DDMFormInstanceReportModelImpl
 	public static final String TABLE_NAME = "DDMFormInstanceReport";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"mvccVersion", Types.BIGINT}, {"formInstanceReportId", Types.BIGINT},
-		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
-		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
-		{"formInstanceId", Types.BIGINT}, {"data_", Types.CLOB}
+		{"mvccVersion", Types.BIGINT}, {"ctCollectionId", Types.BIGINT},
+		{"formInstanceReportId", Types.BIGINT}, {"groupId", Types.BIGINT},
+		{"companyId", Types.BIGINT}, {"createDate", Types.TIMESTAMP},
+		{"modifiedDate", Types.TIMESTAMP}, {"formInstanceId", Types.BIGINT},
+		{"data_", Types.CLOB}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -75,6 +76,7 @@ public class DDMFormInstanceReportModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("ctCollectionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("formInstanceReportId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
@@ -85,7 +87,7 @@ public class DDMFormInstanceReportModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table DDMFormInstanceReport (mvccVersion LONG default 0 not null,formInstanceReportId LONG not null primary key,groupId LONG,companyId LONG,createDate DATE null,modifiedDate DATE null,formInstanceId LONG,data_ TEXT null)";
+		"create table DDMFormInstanceReport (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,formInstanceReportId LONG not null,groupId LONG,companyId LONG,createDate DATE null,modifiedDate DATE null,formInstanceId LONG,data_ TEXT null,primary key (formInstanceReportId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table DDMFormInstanceReport";
@@ -106,12 +108,18 @@ public class DDMFormInstanceReportModelImpl
 
 	public static final long FORMINSTANCEREPORTID_COLUMN_BITMASK = 2L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-		_entityCacheEnabled = entityCacheEnabled;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-		_finderCacheEnabled = finderCacheEnabled;
 	}
 
 	public DDMFormInstanceReportModelImpl() {
@@ -165,9 +173,6 @@ public class DDMFormInstanceReportModelImpl
 				attributeName,
 				attributeGetterFunction.apply((DDMFormInstanceReport)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -253,6 +258,12 @@ public class DDMFormInstanceReportModelImpl
 			(BiConsumer<DDMFormInstanceReport, Long>)
 				DDMFormInstanceReport::setMvccVersion);
 		attributeGetterFunctions.put(
+			"ctCollectionId", DDMFormInstanceReport::getCtCollectionId);
+		attributeSetterBiConsumers.put(
+			"ctCollectionId",
+			(BiConsumer<DDMFormInstanceReport, Long>)
+				DDMFormInstanceReport::setCtCollectionId);
+		attributeGetterFunctions.put(
 			"formInstanceReportId",
 			DDMFormInstanceReport::getFormInstanceReportId);
 		attributeSetterBiConsumers.put(
@@ -309,6 +320,16 @@ public class DDMFormInstanceReportModelImpl
 	@Override
 	public void setMvccVersion(long mvccVersion) {
 		_mvccVersion = mvccVersion;
+	}
+
+	@Override
+	public long getCtCollectionId() {
+		return _ctCollectionId;
+	}
+
+	@Override
+	public void setCtCollectionId(long ctCollectionId) {
+		_ctCollectionId = ctCollectionId;
 	}
 
 	@Override
@@ -443,6 +464,7 @@ public class DDMFormInstanceReportModelImpl
 			new DDMFormInstanceReportImpl();
 
 		ddmFormInstanceReportImpl.setMvccVersion(getMvccVersion());
+		ddmFormInstanceReportImpl.setCtCollectionId(getCtCollectionId());
 		ddmFormInstanceReportImpl.setFormInstanceReportId(
 			getFormInstanceReportId());
 		ddmFormInstanceReportImpl.setGroupId(getGroupId());
@@ -473,17 +495,17 @@ public class DDMFormInstanceReportModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof DDMFormInstanceReport)) {
+		if (!(object instanceof DDMFormInstanceReport)) {
 			return false;
 		}
 
 		DDMFormInstanceReport ddmFormInstanceReport =
-			(DDMFormInstanceReport)obj;
+			(DDMFormInstanceReport)object;
 
 		long primaryKey = ddmFormInstanceReport.getPrimaryKey();
 
@@ -500,14 +522,22 @@ public class DDMFormInstanceReportModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	@Override
@@ -530,6 +560,8 @@ public class DDMFormInstanceReportModelImpl
 			new DDMFormInstanceReportCacheModel();
 
 		ddmFormInstanceReportCacheModel.mvccVersion = getMvccVersion();
+
+		ddmFormInstanceReportCacheModel.ctCollectionId = getCtCollectionId();
 
 		ddmFormInstanceReportCacheModel.formInstanceReportId =
 			getFormInstanceReportId();
@@ -642,10 +674,8 @@ public class DDMFormInstanceReportModelImpl
 
 	}
 
-	private static boolean _entityCacheEnabled;
-	private static boolean _finderCacheEnabled;
-
 	private long _mvccVersion;
+	private long _ctCollectionId;
 	private long _formInstanceReportId;
 	private long _groupId;
 	private long _companyId;

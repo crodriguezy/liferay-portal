@@ -17,13 +17,13 @@ package com.liferay.asset.categories.admin.web.internal.portlet;
 import com.liferay.asset.categories.admin.web.constants.AssetCategoriesAdminPortletKeys;
 import com.liferay.asset.categories.admin.web.internal.configuration.AssetCategoriesAdminWebConfiguration;
 import com.liferay.asset.categories.admin.web.internal.constants.AssetCategoriesAdminWebKeys;
+import com.liferay.asset.category.property.exception.CategoryPropertyKeyException;
+import com.liferay.asset.category.property.exception.CategoryPropertyValueException;
 import com.liferay.asset.category.property.model.AssetCategoryProperty;
 import com.liferay.asset.category.property.service.AssetCategoryPropertyLocalService;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.NoSuchClassTypeException;
 import com.liferay.asset.kernel.exception.AssetCategoryNameException;
-import com.liferay.asset.kernel.exception.CategoryPropertyKeyException;
-import com.liferay.asset.kernel.exception.CategoryPropertyValueException;
 import com.liferay.asset.kernel.exception.DuplicateCategoryException;
 import com.liferay.asset.kernel.exception.DuplicateCategoryPropertyException;
 import com.liferay.asset.kernel.exception.DuplicateVocabularyException;
@@ -44,14 +44,18 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.NoSuchModelException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
+import com.liferay.portal.kernel.servlet.MultiSessionMessages;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -67,6 +71,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -159,13 +164,30 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			AssetCategory.class.getName(), actionRequest);
 
+		hideDefaultSuccessMessage(actionRequest);
+
+		MultiSessionMessages.add(
+			actionRequest, actionResponse.getNamespace() + "requestProcessed");
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		if (categoryId <= 0) {
 
 			// Add category
 
+			long groupId = ParamUtil.getLong(actionRequest, "groupId");
+
 			_assetCategoryService.addCategory(
-				serviceContext.getScopeGroupId(), parentCategoryId, titleMap,
-				descriptionMap, vocabularyId, null, serviceContext);
+				groupId, parentCategoryId, titleMap, descriptionMap,
+				vocabularyId, null, serviceContext);
+
+			MultiSessionMessages.add(
+				actionRequest, "categoryAdded",
+				LanguageUtil.format(
+					_portal.getHttpServletRequest(actionRequest),
+					"x-was-created-successfully",
+					new Object[] {titleMap.get(themeDisplay.getLocale())}));
 		}
 		else {
 
@@ -181,7 +203,16 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 			_assetCategoryService.updateCategory(
 				categoryId, parentCategoryId, titleMap, descriptionMap,
 				vocabularyId, categoryPropertiesArray, serviceContext);
+
+			MultiSessionMessages.add(
+				actionRequest, "categoryUpdated",
+				LanguageUtil.format(
+					_portal.getHttpServletRequest(actionRequest),
+					"x-was-updated-successfully",
+					new Object[] {titleMap.get(themeDisplay.getLocale())}));
 		}
+
+		sendRedirect(actionRequest, actionResponse);
 	}
 
 	public void editProperties(
@@ -218,11 +249,13 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			AssetVocabulary.class.getName(), actionRequest);
 
+		AssetVocabulary vocabulary = null;
+
 		if (vocabularyId <= 0) {
 
 			// Add vocabulary
 
-			_assetVocabularyService.addVocabulary(
+			vocabulary = _assetVocabularyService.addVocabulary(
 				serviceContext.getScopeGroupId(), StringPool.BLANK, titleMap,
 				descriptionMap, getSettings(actionRequest), serviceContext);
 		}
@@ -230,10 +263,13 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 
 			// Update vocabulary
 
-			_assetVocabularyService.updateVocabulary(
-				vocabularyId, StringPool.BLANK, titleMap, descriptionMap,
-				getSettings(actionRequest), serviceContext);
+			vocabulary = _assetVocabularyService.updateVocabulary(
+				vocabularyId, titleMap, descriptionMap,
+				getSettings(actionRequest));
 		}
+
+		actionRequest.setAttribute(
+			WebKeys.REDIRECT, _getRedirectURL(actionResponse, vocabulary));
 	}
 
 	public void moveCategory(
@@ -424,6 +460,21 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 		return false;
 	}
 
+	private String _getRedirectURL(
+		ActionResponse actionResponse, AssetVocabulary vocabulary) {
+
+		LiferayPortletResponse liferayPortletResponse =
+			_portal.getLiferayPortletResponse(actionResponse);
+
+		PortletURL portletURL = liferayPortletResponse.createRenderURL();
+
+		portletURL.setParameter("mvcPath", "/view.jsp");
+		portletURL.setParameter(
+			"vocabularyId", String.valueOf(vocabulary.getVocabularyId()));
+
+		return portletURL.toString();
+	}
+
 	private AssetCategoriesAdminWebConfiguration
 		_assetCategoriesAdminWebConfiguration;
 
@@ -436,5 +487,8 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 
 	@Reference
 	private AssetVocabularyService _assetVocabularyService;
+
+	@Reference
+	private Portal _portal;
 
 }

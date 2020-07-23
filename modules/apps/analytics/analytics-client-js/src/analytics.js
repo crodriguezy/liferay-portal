@@ -68,7 +68,7 @@ class Analytics {
 
 		// Register initial middlewares
 
-		middlewares.map((middleware) =>
+		middlewares.forEach((middleware) =>
 			instance.registerMiddleware(middleware)
 		);
 

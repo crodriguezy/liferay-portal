@@ -12,26 +12,49 @@
  * details.
  */
 
+import PropTypes from 'prop-types';
 import React, {useEffect} from 'react';
-import {createPortal} from 'react-dom';
 
+import useAutoExtendSession from '../../core/hooks/useAutoExtendSession';
+import {INIT} from '../actions/types';
 import {config} from '../config/index';
-import {useSelector} from '../store/index';
+import {reducer} from '../reducers/index';
+import {StoreContextProvider, useSelector} from '../store/index';
 import {DragAndDropContextProvider} from '../utils/useDragAndDrop';
-import useParseURL from '../utils/useParseURL';
-import DisabledArea from './DisabledArea';
+import {ControlsProvider} from './Controls';
 import DragPreview from './DragPreview';
 import LayoutViewport from './LayoutViewport';
 import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
+import URLParser from './URLParser';
 
-export default function App() {
-	useParseURL();
+export default function App({state}) {
+	const initialState = reducer(state, {type: INIT});
 
-	const mainItemId = useSelector((state) => state.layoutData.rootItems.main);
-	const masterLayoutData = useSelector((state) => state.masterLayoutData);
+	useAutoExtendSession();
+
+	return (
+		<StoreContextProvider initialState={initialState} reducer={reducer}>
+			<LanguageDirection />
+			<URLParser />
+			<ControlsProvider>
+				<DragAndDropContextProvider>
+					<DragPreview />
+					<Toolbar />
+					<LayoutViewport />
+					<Sidebar />
+				</DragAndDropContextProvider>
+			</ControlsProvider>
+		</StoreContextProvider>
+	);
+}
+
+App.propTypes = {
+	state: PropTypes.object.isRequired,
+};
+
+const LanguageDirection = () => {
 	const languageId = useSelector((state) => state.languageId);
-	const layoutData = useSelector((state) => state.layoutData);
 
 	useEffect(() => {
 		const currentLanguageDirection = config.languageDirection[languageId];
@@ -43,16 +66,5 @@ export default function App() {
 		}
 	}, [languageId]);
 
-	return (
-		<DragAndDropContextProvider layoutData={layoutData}>
-			<DisabledArea />
-			<DragPreview />
-			<Toolbar />
-			<LayoutViewport
-				mainItemId={mainItemId}
-				useMasterLayout={masterLayoutData.items}
-			/>
-			{createPortal(<Sidebar />, document.body)}
-		</DragAndDropContextProvider>
-	);
-}
+	return null;
+};

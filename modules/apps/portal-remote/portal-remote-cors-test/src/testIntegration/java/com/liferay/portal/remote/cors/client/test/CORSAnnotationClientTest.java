@@ -21,6 +21,8 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import java.util.Dictionary;
 
+import javax.ws.rs.HttpMethod;
+
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -48,8 +50,15 @@ public class CORSAnnotationClientTest extends BaseCORSClientTestCase {
 	}
 
 	@Test
-	public void testCORSApplication() throws Exception {
-		assertURL("/test/cors-app", true);
+	public void testApplicationAnnotationCORSForGuestUser() throws Exception {
+		assertJaxRSUrl("/test/cors-app", HttpMethod.OPTIONS, true, true);
+		assertJaxRSUrl("/test/cors-app", HttpMethod.GET, true, false);
+	}
+
+	@Test
+	public void testApplicationAnnotationCORSWithoutOAuth2() throws Exception {
+		assertJaxRSUrl("/test/cors-app", HttpMethod.OPTIONS, true, true);
+		assertJaxRSUrl("/test/cors-app", HttpMethod.GET, true, false);
 	}
 
 }

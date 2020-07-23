@@ -20,16 +20,14 @@
 SearchContainer<AccountEntryDisplay> accountEntryDisplaySearchContainer = AccountEntryDisplaySearchContainerFactory.create(liferayPortletRequest, liferayPortletResponse);
 
 accountEntryDisplaySearchContainer.setRowChecker(null);
-
-SelectAccountEntryManagementToolbarDisplayContext selectAccountEntryManagementToolbarDisplayContext = new SelectAccountEntryManagementToolbarDisplayContext(request, liferayPortletRequest, liferayPortletResponse, accountEntryDisplaySearchContainer);
 %>
 
 <clay:management-toolbar
-	displayContext="<%= selectAccountEntryManagementToolbarDisplayContext %>"
+	displayContext="<%= new SelectAccountEntryManagementToolbarDisplayContext(request, liferayPortletRequest, liferayPortletResponse, accountEntryDisplaySearchContainer) %>"
 />
 
 <clay:container-fluid
-	id='<%= renderResponse.getNamespace() + "selectAccountEntry" %>'
+	id='<%= liferayPortletResponse.getNamespace() + "selectAccountEntry" %>'
 >
 	<liferay-ui:search-container
 		searchContainer="<%= accountEntryDisplaySearchContainer %>"
@@ -39,16 +37,30 @@ SelectAccountEntryManagementToolbarDisplayContext selectAccountEntryManagementTo
 			keyProperty="accountEntryId"
 			modelVar="accountEntryDisplay"
 		>
+
+			<%
+			String cssClass = "table-cell-expand";
+
+			Optional<User> userOptional = accountEntryDisplay.getPersonAccountEntryUserOptional();
+
+			boolean disabled = userOptional.isPresent();
+
+			if (disabled) {
+				cssClass += " text-muted";
+			}
+			%>
+
 			<liferay-ui:search-container-column-text
-				cssClass="table-cell-expand table-title"
+				cssClass='<%= cssClass + " table-title" %>'
 				name="name"
 				property="name"
 			/>
 
 			<liferay-ui:search-container-column-text
-				cssClass="table-cell-expand"
-				name="parent-account"
-				property="parentAccountEntryName"
+				cssClass="<%= cssClass %>"
+				name="type"
+				property="type"
+				translate="<%= true %>"
 			/>
 
 			<liferay-ui:search-container-column-text>
@@ -63,7 +75,7 @@ SelectAccountEntryManagementToolbarDisplayContext selectAccountEntryManagementTo
 				).build();
 				%>
 
-				<aui:button cssClass="choose-account selector-button" data="<%= data %>" value="choose" />
+				<aui:button cssClass="choose-account selector-button" data="<%= data %>" disabled="<%= disabled %>" value="choose" />
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 

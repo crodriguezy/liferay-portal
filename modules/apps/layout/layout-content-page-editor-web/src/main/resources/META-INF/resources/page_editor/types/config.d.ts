@@ -32,6 +32,8 @@ export interface Config {
 		};
 	};
 
+	containerItemFlexEnabled: boolean;
+
 	defaultEditorConfigurations: {
 		[key: 'comment' | 'rich-text' | 'text']: {
 			editorConfig: object;
@@ -55,10 +57,13 @@ export interface Config {
 	getAssetFieldValueURL: string;
 	getAssetMappingFieldsURL: string;
 	getAvailableListRenderersURL: string;
+	getAvailableListItemRenderersURL: string;
 	getAvailableTemplatesURL: string;
 	getCollectionFieldURL: string;
 	getCollectionMappingFieldsURL: string;
 	getExperienceUsedPortletsURL: string;
+	getIframeContentCssURL: string;
+	getIframeContentURL: string;
 	getPageContentsURL: string;
 	imageSelectorURL: string;
 	infoItemSelectorURL: string;
@@ -76,6 +81,7 @@ export interface Config {
 	plid: string;
 	pluginsRootPath: string;
 	portletNamespace: string;
+	previewPageURL: string;
 	publishURL: string;
 	redirectURL: string;
 	renderFragmentEntryURL: string;

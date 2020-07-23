@@ -162,7 +162,7 @@
 	);
 }
 
-.btn-link {
+.btn-link:not(.dropdown-item) {
 	@include button-cp(
 		var(--transparent),
 		var(--transparent),
@@ -891,11 +891,4 @@ h6,
 		inset 0 var(--list-group-border-width) var(--list-group-border-color),
 		inset 0 calc(var(--list-group-border-width) * -1)
 			var(--list-group-border-color);
-}
-
-.list-group-title,
-.list-group-subtitle,
-.list-group-text,
-.list-group-subtext {
-	color: inherit;
 }

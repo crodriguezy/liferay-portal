@@ -23,7 +23,7 @@ String refererWebDAVToken = WebDAVUtil.getStorageToken(portlet);
 
 String redirect = ParamUtil.getString(request, "redirect");
 
-DLEditDDMStructureDisplayContext dlEditDDMStructureDisplayContext = new DLEditDDMStructureDisplayContext(request);
+DLEditDDMStructureDisplayContext dlEditDDMStructureDisplayContext = new DLEditDDMStructureDisplayContext(request, liferayPortletResponse);
 
 com.liferay.dynamic.data.mapping.model.DDMStructure ddmStructure = dlEditDDMStructureDisplayContext.getDDMStructure();
 
@@ -50,7 +50,7 @@ renderResponse.setTitle(title);
 <portlet:actionURL name="/document_library/ddm/update_ddm_structure" var="updateDDMStructureURL" />
 
 <clay:container-fluid>
-	<aui:form action="<%= (ddmStructure == null) ? addDDMStructureURL : updateDDMStructureURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveDDMStructure();" %>'>
+	<aui:form action="<%= (ddmStructure == null) ? addDDMStructureURL : updateDDMStructureURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + liferayPortletResponse.getNamespace() + "saveDDMStructure();" %>'>
 		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 		<aui:input name="ddmStructureId" type="hidden" value="<%= ddmStructureId %>" />
 		<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
@@ -150,7 +150,7 @@ renderResponse.setTitle(title);
 						title='<%= LanguageUtil.get(request, "details") %>'
 					>
 						<clay:row
-							className="lfr-ddm-types-form-column"
+							cssClass="lfr-ddm-types-form-column"
 						>
 							<aui:input name="storageType" type="hidden" value="<%= StorageType.JSON.getValue() %>" />
 						</clay:row>
@@ -162,9 +162,9 @@ renderResponse.setTitle(title);
 
 							<aui:input cssClass="lfr-input-text" disabled="<%= true %>" label="" name="parentDDMStructureName" type="text" value="<%= dlEditDDMStructureDisplayContext.getParentDDMStructureName() %>" />
 
-							<aui:button onClick='<%= renderResponse.getNamespace() + "openParentDDMStructureSelector();" %>' value="select" />
+							<aui:button onClick='<%= liferayPortletResponse.getNamespace() + "openParentDDMStructureSelector();" %>' value="select" />
 
-							<aui:button disabled="<%= Validator.isNull(dlEditDDMStructureDisplayContext.getParentDDMStructureName()) %>" name="removeParentDDMStructureButton" onClick='<%= renderResponse.getNamespace() + "removeParentDDMStructure();" %>' value="remove" />
+							<aui:button disabled="<%= Validator.isNull(dlEditDDMStructureDisplayContext.getParentDDMStructureName()) %>" name="removeParentDDMStructureButton" onClick='<%= liferayPortletResponse.getNamespace() + "removeParentDDMStructure();" %>' value="remove" />
 						</aui:field-wrapper>
 
 						<c:if test="<%= ddmStructure != null %>">
@@ -187,7 +187,7 @@ renderResponse.setTitle(title);
 	</aui:form>
 
 	<aui:button-row>
-		<aui:button onClick='<%= renderResponse.getNamespace() + "saveDDMStructure();" %>' primary="<%= true %>" value='<%= LanguageUtil.get(request, "save") %>' />
+		<aui:button onClick='<%= liferayPortletResponse.getNamespace() + "saveDDMStructure();" %>' primary="<%= true %>" value='<%= LanguageUtil.get(request, "save") %>' />
 
 		<aui:button href="<%= redirect %>" type="cancel" />
 	</aui:button-row>
@@ -195,25 +195,16 @@ renderResponse.setTitle(title);
 
 <aui:script>
 	function <portlet:namespace />openParentDDMStructureSelector() {
-		Liferay.Util.selectEntity(
-			{
-				dialog: {
-					constrain: true,
-					modal: true,
-				},
-				eventName: '<portlet:namespace />selectDDMStructure',
-				id: '<portlet:namespace />selectDDMStructure',
-				title:
-					'<%= UnicodeLanguageUtil.get(request, "select-structure") %>',
-				uri:
-					'<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/document_library/ddm/select_ddm_structure.jsp" /><portlet:param name="ddmStructureId" value="<%= String.valueOf(dlEditDDMStructureDisplayContext.getDDMStructureId()) %>" /></portlet:renderURL>',
-			},
-			function (event) {
+		Liferay.Util.openModal({
+			id: '<portlet:namespace />selectDDMStructure',
+			onSelect: function (selectedItem) {
 				var form = document.<portlet:namespace />fm;
 
 				Liferay.Util.setFormValues(form, {
-					parentDDMStructureId: event.ddmstructureid,
-					parentDDMStructureName: Liferay.Util.unescape(event.name),
+					parentDDMStructureId: selectedItem.ddmstructureid,
+					parentDDMStructureName: Liferay.Util.unescape(
+						selectedItem.name
+					),
 				});
 
 				var removeParentDDMStructureButton = Liferay.Util.getFormElement(
@@ -227,8 +218,12 @@ renderResponse.setTitle(title);
 						false
 					);
 				}
-			}
-		);
+			},
+			selectEventName: '<portlet:namespace />selectDDMStructure',
+			title: '<%= UnicodeLanguageUtil.get(request, "select-structure") %>',
+			url:
+				'<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/document_library/ddm/select_ddm_structure.jsp" /><portlet:param name="ddmStructureId" value="<%= String.valueOf(dlEditDDMStructureDisplayContext.getDDMStructureId()) %>" /></portlet:renderURL>',
+		});
 	}
 
 	function <portlet:namespace />removeParentDDMStructure() {

@@ -37,11 +37,12 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.file.CopySpec;
-import org.gradle.api.file.FileCollection;
 import org.gradle.api.plugins.BasePlugin;
 import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.plugins.PluginContainer;
 import org.gradle.api.tasks.Copy;
 import org.gradle.api.tasks.TaskContainer;
+import org.gradle.api.tasks.TaskProvider;
 
 /**
  * @author Andrea Di Giorgi
@@ -58,44 +59,102 @@ public class ServiceBuilderDefaultsPlugin
 	protected void applyPluginDefaults(
 		final Project project, ServiceBuilderPlugin serviceBuilderPlugin) {
 
+		// Plugins
+
+		GradleUtil.applyPlugin(project, DBSupportPlugin.class);
+
+		// Dependencies
+
 		PortalTools.addPortalToolDependencies(
 			project, ServiceBuilderPlugin.CONFIGURATION_NAME, PortalTools.GROUP,
 			_PORTAL_TOOL_NAME);
 
-		BuildServiceTask buildServiceTask =
-			(BuildServiceTask)GradleUtil.getTask(
-				project, ServiceBuilderPlugin.BUILD_SERVICE_TASK_NAME);
+		// Tasks
 
-		GradleUtil.applyPlugin(project, DBSupportPlugin.class);
+		TaskProvider<BuildDBTask> buildDBTaskProvider =
+			GradleUtil.addTaskProvider(
+				project, BUILD_DB_TASK_NAME, BuildDBTask.class);
 
-		_addTaskBuildDB(project);
-		_configureTaskCleanServiceBuilder(buildServiceTask);
-		_configureTaskProcessResources(buildServiceTask);
-		_configureTasksBuildService(project);
+		TaskProvider<BuildServiceTask> buildServiceTaskProvider =
+			GradleUtil.getTaskProvider(
+				project, ServiceBuilderPlugin.BUILD_SERVICE_TASK_NAME,
+				BuildServiceTask.class);
+		TaskProvider<CleanServiceBuilderTask> cleanServiceBuilderTaskProvider =
+			GradleUtil.getTaskProvider(
+				project, DBSupportPlugin.CLEAN_SERVICE_BUILDER_TASK_NAME,
+				CleanServiceBuilderTask.class);
+		TaskProvider<Copy> processResourcesTaskProvider =
+			GradleUtil.getTaskProvider(
+				project, JavaPlugin.PROCESS_RESOURCES_TASK_NAME, Copy.class);
 
-		GradleUtil.withPlugin(
-			project, LiferayBasePlugin.class,
-			new Action<LiferayBasePlugin>() {
+		_configureTaskBuildDBProvider(
+			buildDBTaskProvider, buildServiceTaskProvider);
+		_configureTaskCleanServiceBuilderProvider(
+			buildServiceTaskProvider, cleanServiceBuilderTaskProvider);
+		_configureTaskProcessResourcesProvider(
+			buildServiceTaskProvider, processResourcesTaskProvider);
+
+		// Other
+
+		TaskContainer taskContainer = project.getTasks();
+
+		taskContainer.withType(
+			BuildServiceTask.class,
+			new Action<BuildServiceTask>() {
 
 				@Override
-				public void execute(LiferayBasePlugin liferayBasePlugin) {
-					Configuration portalConfiguration =
-						GradleUtil.getConfiguration(
-							project,
-							LiferayBasePlugin.PORTAL_CONFIGURATION_NAME);
-
-					_configureTasksBuildDB(project, portalConfiguration);
+				public void execute(BuildServiceTask buildServiceTask) {
+					_configureTaskBuildService(buildServiceTask);
 				}
 
 			});
 
-		GradleUtil.withPlugin(
-			project, LiferayOSGiPlugin.class,
+		PluginContainer pluginContainer = project.getPlugins();
+
+		pluginContainer.withType(
+			LiferayBasePlugin.class,
+			new Action<LiferayBasePlugin>() {
+
+				@Override
+				public void execute(LiferayBasePlugin liferayBasePlugin) {
+					TaskContainer taskContainer = project.getTasks();
+
+					taskContainer.withType(
+						BuildDBTask.class,
+						new Action<BuildDBTask>() {
+
+							@Override
+							public void execute(BuildDBTask buildDBTask) {
+								_configureTaskBuildDBForLiferayBasePlugin(
+									buildDBTask);
+							}
+
+						});
+				}
+
+			});
+
+		pluginContainer.withType(
+			LiferayOSGiPlugin.class,
 			new Action<LiferayOSGiPlugin>() {
 
 				@Override
 				public void execute(LiferayOSGiPlugin liferayOSGiPlugin) {
-					_configureTasksBuildServiceForLiferayOSGiPlugin(project);
+					TaskContainer taskContainer = project.getTasks();
+
+					taskContainer.withType(
+						BuildServiceTask.class,
+						new Action<BuildServiceTask>() {
+
+							@Override
+							public void execute(
+								BuildServiceTask buildServiceTask) {
+
+								_configureTaskBuildServiceForLiferayOSGiPlugin(
+									buildServiceTask);
+							}
+
+						});
 				}
 
 			});
@@ -109,38 +168,48 @@ public class ServiceBuilderDefaultsPlugin
 	private ServiceBuilderDefaultsPlugin() {
 	}
 
-	private BuildDBTask _addTaskBuildDB(final Project project) {
-		BuildDBTask buildDBTask = GradleUtil.addTask(
-			project, BUILD_DB_TASK_NAME, BuildDBTask.class);
+	private void _configureTaskBuildDBForLiferayBasePlugin(
+		BuildDBTask buildDBTask) {
 
-		buildDBTask.setDatabaseName("lportal");
-		buildDBTask.setDatabaseTypes("hypersonic", "mysql", "postgresql");
-		buildDBTask.setDescription(
-			"Builds database SQL scripts from the generic SQL scripts.");
-		buildDBTask.setGroup(BasePlugin.BUILD_GROUP);
+		Configuration portalConfiguration = GradleUtil.getConfiguration(
+			buildDBTask.getProject(),
+			LiferayBasePlugin.PORTAL_CONFIGURATION_NAME);
 
-		buildDBTask.setSqlDir(
-			new Callable<File>() {
+		buildDBTask.setClasspath(portalConfiguration);
+	}
+
+	private void _configureTaskBuildDBProvider(
+		TaskProvider<BuildDBTask> buildDBTaskProvider,
+		final TaskProvider<BuildServiceTask> buildServiceTaskProvider) {
+
+		buildDBTaskProvider.configure(
+			new Action<BuildDBTask>() {
 
 				@Override
-				public File call() throws Exception {
-					BuildServiceTask buildServiceTask =
-						(BuildServiceTask)GradleUtil.getTask(
-							project,
-							ServiceBuilderPlugin.BUILD_SERVICE_TASK_NAME);
+				public void execute(BuildDBTask buildDBTask) {
+					buildDBTask.setDatabaseName("lportal");
+					buildDBTask.setDatabaseTypes(
+						"hypersonic", "mysql", "postgresql");
+					buildDBTask.setDescription(
+						"Builds database SQL scripts from the generic SQL " +
+							"scripts.");
+					buildDBTask.setGroup(BasePlugin.BUILD_GROUP);
 
-					return buildServiceTask.getSqlDir();
+					buildDBTask.setSqlDir(
+						new Callable<File>() {
+
+							@Override
+							public File call() throws Exception {
+								BuildServiceTask buildServiceTask =
+									buildServiceTaskProvider.get();
+
+								return buildServiceTask.getSqlDir();
+							}
+
+						});
 				}
 
 			});
-
-		return buildDBTask;
-	}
-
-	private void _configureTaskBuildDBClasspath(
-		BuildDBTask buildDBTask, FileCollection fileCollection) {
-
-		buildDBTask.setClasspath(fileCollection);
 	}
 
 	private void _configureTaskBuildService(BuildServiceTask buildServiceTask) {
@@ -160,98 +229,66 @@ public class ServiceBuilderDefaultsPlugin
 		buildServiceTask.setOsgiModule(true);
 	}
 
-	private void _configureTaskCleanServiceBuilder(
-		final BuildServiceTask buildServiceTask) {
+	private void _configureTaskCleanServiceBuilderProvider(
+		final TaskProvider<BuildServiceTask> buildServiceTaskProvider,
+		TaskProvider<CleanServiceBuilderTask> cleanServiceBuilderTaskProvider) {
 
-		CleanServiceBuilderTask cleanServiceBuilderTask =
-			(CleanServiceBuilderTask)GradleUtil.getTask(
-				buildServiceTask.getProject(),
-				DBSupportPlugin.CLEAN_SERVICE_BUILDER_TASK_NAME);
-
-		cleanServiceBuilderTask.setServiceXmlFile(
-			new Callable<File>() {
+		cleanServiceBuilderTaskProvider.configure(
+			new Action<CleanServiceBuilderTask>() {
 
 				@Override
-				public File call() throws Exception {
-					return buildServiceTask.getInputFile();
+				public void execute(
+					CleanServiceBuilderTask cleanServiceBuilderTask) {
+
+					cleanServiceBuilderTask.setServiceXmlFile(
+						new Callable<File>() {
+
+							@Override
+							public File call() throws Exception {
+								BuildServiceTask buildServiceTask =
+									buildServiceTaskProvider.get();
+
+								return buildServiceTask.getInputFile();
+							}
+
+						});
 				}
 
 			});
 	}
 
 	@SuppressWarnings("serial")
-	private void _configureTaskProcessResources(
-		final BuildServiceTask buildServiceTask) {
+	private void _configureTaskProcessResourcesProvider(
+		final TaskProvider<BuildServiceTask> buildServiceTaskProvider,
+		TaskProvider<Copy> processResourcesTaskProvider) {
 
-		Copy copy = (Copy)GradleUtil.getTask(
-			buildServiceTask.getProject(),
-			JavaPlugin.PROCESS_RESOURCES_TASK_NAME);
-
-		copy.into(
-			"META-INF",
-			new Closure<Void>(copy) {
-
-				@SuppressWarnings("unused")
-				public void doCall(CopySpec copySpec) {
-					File inputFile = buildServiceTask.getInputFile();
-
-					File dir = inputFile.getParentFile();
-
-					String dirName = dir.getName();
-
-					if (!dirName.equals("META-INF")) {
-						copySpec.from(inputFile);
-					}
-				}
-
-			});
-	}
-
-	private void _configureTasksBuildDB(
-		Project project, final FileCollection classpath) {
-
-		TaskContainer taskContainer = project.getTasks();
-
-		taskContainer.withType(
-			BuildDBTask.class,
-			new Action<BuildDBTask>() {
+		processResourcesTaskProvider.configure(
+			new Action<Copy>() {
 
 				@Override
-				public void execute(BuildDBTask buildDBTask) {
-					_configureTaskBuildDBClasspath(buildDBTask, classpath);
-				}
+				public void execute(Copy processResourcesCopy) {
+					processResourcesCopy.into(
+						"META-INF",
+						new Closure<Void>(processResourcesCopy) {
 
-			});
-	}
+							@SuppressWarnings("unused")
+							public void doCall(CopySpec copySpec) {
+								BuildServiceTask buildServiceTask =
+									buildServiceTaskProvider.get();
 
-	private void _configureTasksBuildService(Project project) {
-		TaskContainer taskContainer = project.getTasks();
+								File inputFile =
+									buildServiceTask.getInputFile();
 
-		taskContainer.withType(
-			BuildServiceTask.class,
-			new Action<BuildServiceTask>() {
+								File dir = inputFile.getParentFile();
 
-				@Override
-				public void execute(BuildServiceTask buildServiceTask) {
-					_configureTaskBuildService(buildServiceTask);
-				}
+								String dirName = dir.getName();
 
-			});
-	}
+								if (!dirName.equals("META-INF")) {
+									copySpec.from(inputFile);
+								}
+							}
 
-	private void _configureTasksBuildServiceForLiferayOSGiPlugin(
-		Project project) {
-
-		TaskContainer taskContainer = project.getTasks();
-
-		taskContainer.withType(
-			BuildServiceTask.class,
-			new Action<BuildServiceTask>() {
-
-				@Override
-				public void execute(BuildServiceTask buildServiceTask) {
-					_configureTaskBuildServiceForLiferayOSGiPlugin(
-						buildServiceTask);
+						});
 				}
 
 			});

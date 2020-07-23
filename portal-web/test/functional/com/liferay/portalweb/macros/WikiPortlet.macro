@@ -1,11 +1,6 @@
 definition {
 
 	macro configureDisplaySettings {
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		for (var SettingName : list "${uncheckSetting}") {
@@ -18,11 +13,6 @@ definition {
 	}
 
 	macro configureSharingAllowUsersToAddWikiToAnyWebsite {
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "IFrame#CONFIGURATION");
 
 		Navigator.gotoNavItem(navItem = "Sharing");
@@ -56,7 +46,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Wiki");
 
 		LexiconEntry.openEntryMenu(rowEntry = "Main");
@@ -71,11 +60,6 @@ definition {
 	}
 
 	macro viewConfigurationTabs {
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		for (var isPresent : list "${isPresent}") {
@@ -88,11 +72,6 @@ definition {
 	}
 
 	macro viewConfigureSharingAllowUsersToAddWikiToAnyWebsite {
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "IFrame#CONFIGURATION");
 
 		Navigator.gotoNavItem(navItem = "Sharing");
@@ -108,11 +87,6 @@ definition {
 	}
 
 	macro viewDisplaySettings {
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		for (var SettingName : list "${uncheckedSetting}") {

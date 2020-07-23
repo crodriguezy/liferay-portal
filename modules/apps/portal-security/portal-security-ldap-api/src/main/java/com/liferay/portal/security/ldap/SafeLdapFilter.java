@@ -61,7 +61,7 @@ public class SafeLdapFilter {
 		}
 
 		StringBundler sb = new StringBundler(
-			_filterSB.length() + _arguments.size() * 2);
+			_filterSB.length() + (_arguments.size() * 2));
 
 		int placeholderPos = 0;
 

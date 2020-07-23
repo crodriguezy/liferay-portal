@@ -104,7 +104,9 @@ public class SearchResultSummaryDisplayBuilder {
 			return build(className, classPK);
 		}
 		catch (Exception exception) {
-			_log.error(exception, exception);
+			if (_log.isDebugEnabled()) {
+				_log.debug(exception, exception);
+			}
 
 			return buildTemporarilyUnavailable();
 		}
@@ -843,8 +845,14 @@ public class SearchResultSummaryDisplayBuilder {
 				summaryBuilder.setLocale(summary.getLocale());
 				summaryBuilder.setMaxContentLength(
 					summary.getMaxContentLength());
-				summaryBuilder.setTitle(
-					appendStagingLabel(summary.getTitle(), assetRenderer));
+
+				if (assetRenderer != null) {
+					summaryBuilder.setTitle(
+						appendStagingLabel(summary.getTitle(), assetRenderer));
+				}
+				else {
+					summaryBuilder.setTitle(summary.getTitle());
+				}
 
 				return summaryBuilder.build();
 			}

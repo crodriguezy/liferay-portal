@@ -205,9 +205,7 @@ public class DDMStructureImpl extends DDMStructureBaseImpl {
 
 	@Override
 	public Set<String> getFieldNames() {
-		List<DDMFormField> ddmFormFields = getDDMFormFields(false);
-
-		return SetUtil.fromList(getDDMFormFieldNames(ddmFormFields));
+		return SetUtil.fromList(getDDMFormFieldNames(getDDMFormFields(false)));
 	}
 
 	@Override
@@ -524,7 +522,9 @@ public class DDMStructureImpl extends DDMStructureBaseImpl {
 			_ddmForm = ddmFormDeserializerDeserializeResponse.getDDMForm();
 
 			for (DDMFormField ddmFormField : _ddmForm.getDDMFormFields()) {
-				if (_isFieldSet(ddmFormField)) {
+				if (_isFieldSet(ddmFormField) &&
+					ListUtil.isEmpty(ddmFormField.getNestedDDMFormFields())) {
+
 					_setNestedDDMFormFields(ddmFormField);
 				}
 			}

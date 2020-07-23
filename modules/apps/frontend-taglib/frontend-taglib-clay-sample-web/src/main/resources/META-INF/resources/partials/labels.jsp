@@ -21,62 +21,74 @@
 </blockquote>
 
 <clay:row
-	className="mb-3"
+	cssClass="mb-3"
 >
 	<clay:col
 		size="2"
 	>
-		<div><clay:label label="Label text" style="info" /></div>
-		<div><clay:label label="Label text" size="lg" style="info" /></div>
+		<div>
+			<clay:label
+				displayType="info"
+				label="Label text"
+			/>
+		</div>
+
+		<div>
+			<clay:label
+				displayType="info"
+				label="Label text"
+				large="<%= true %>"
+			/>
+		</div>
 	</clay:col>
 
 	<clay:col
 		size="2"
 	>
 		<div><clay:label label="Status" /></div>
-		<div><clay:label label="Status" size="lg" /></div>
+		<div><clay:label label="Status" large="<%= true %>" /></div>
 	</clay:col>
 
 	<clay:col
 		size="2"
 	>
-		<div><clay:label label="Pending" style="warning" /></div>
-		<div><clay:label label="Pending" size="lg" style="warning" /></div>
+		<div><clay:label displayType="warning" label="Pending" /></div>
+		<div><clay:label displayType="warning" label="Pending" large="<%= true %>" /></div>
 	</clay:col>
 
 	<clay:col
 		size="2"
 	>
-		<div><clay:label label="Rejected" style="danger" /></div>
-		<div><clay:label label="Rejected" size="lg" style="danger" /></div>
+		<div><clay:label displayType="danger" label="Rejected" /></div>
+		<div><clay:label displayType="danger" label="Rejected" large="<%= true %>" /></div>
 	</clay:col>
 
 	<clay:col
 		size="2"
 	>
-		<div><clay:label label="Approved" style="success" /></div>
-		<div><clay:label label="Approved" size="lg" style="success" /></div>
+		<div><clay:label displayType="success" label="Approved" /></div>
+		<div><clay:label displayType="success" label="Approved" large="<%= true %>" /></div>
 	</clay:col>
 </clay:row>
 
 <h3>LABEL REMOVABLE</h3>
 
 <clay:row
-	className="row"
+	cssClass="row"
 >
 	<clay:col
 		size="12"
 	>
 		<clay:label
-			closeable="<%= true %>"
+			dismissible="<%= true %>"
 			label="Normal Label"
 		/>
 
 		<clay:label
-			closeable="<%= true %>"
+			dismissible="<%= true %>"
+			displayType="success"
 			label="Large Label"
-			size="lg"
-			style="success"
+			large="<%= true %>"
 		/>
 	</clay:col>
 </clay:row>

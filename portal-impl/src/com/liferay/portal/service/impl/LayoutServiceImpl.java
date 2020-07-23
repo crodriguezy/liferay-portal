@@ -14,8 +14,8 @@
 
 package com.liferay.portal.service.impl;
 
-import com.liferay.exportimport.kernel.configuration.ExportImportConfigurationConstants;
 import com.liferay.exportimport.kernel.configuration.ExportImportConfigurationSettingsMapFactoryUtil;
+import com.liferay.exportimport.kernel.configuration.constants.ExportImportConfigurationConstants;
 import com.liferay.exportimport.kernel.model.ExportImportConfiguration;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
@@ -960,18 +960,29 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 
 	@Override
 	public List<Layout> getLayouts(
+			long groupId, boolean privateLayout, String type, int start,
+			int end)
+		throws PortalException {
+
+		return layoutPersistence.filterFindByG_P_T(
+			groupId, privateLayout, type, start, end);
+	}
+
+	@Override
+	public List<Layout> getLayouts(
 			long groupId, boolean privateLayout, String keywords,
-			String[] types, int start, int end, OrderByComparator<Layout> obc)
+			String[] types, int start, int end,
+			OrderByComparator<Layout> orderByComparator)
 		throws PortalException {
 
 		if (Validator.isNull(keywords)) {
 			return layoutPersistence.filterFindByG_P(
-				groupId, privateLayout, start, end, obc);
+				groupId, privateLayout, start, end, orderByComparator);
 		}
 
 		return layoutLocalService.getLayouts(
 			groupId, getUserId(), privateLayout, keywords, types, start, end,
-			obc);
+			orderByComparator);
 	}
 
 	@Override
@@ -1006,6 +1017,14 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 
 		return layoutPersistence.filterCountByG_P_P_LtP(
 			groupId, privateLayout, parentLayoutId, priority);
+	}
+
+	@Override
+	public int getLayoutsCount(
+		long groupId, boolean privateLayout, String type) {
+
+		return layoutPersistence.filterCountByG_P_T(
+			groupId, privateLayout, type);
 	}
 
 	@Override

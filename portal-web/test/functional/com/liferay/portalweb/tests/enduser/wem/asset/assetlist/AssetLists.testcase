@@ -27,6 +27,8 @@ definition {
 	@description = "Assert that the UI works correctly for adding Asset Lists."
 	@priority = "5"
 	test AddAssetList {
+		property portal.acceptance = "true";
+
 		task ("Create a manual asset list") {
 			AssetListsAdmin.openAssetListsAdmin(siteURLKey = "test-site-name");
 
@@ -83,6 +85,8 @@ definition {
 	@description = "Assert that the UI works correctly for deleting Asset Lists."
 	@priority = "5"
 	test DeleteAssetList {
+		property portal.acceptance = "true";
+
 		task ("Create a manual asset list") {
 			JSONAssetlist.addManualAssetListEntry(
 				groupName = "Test Site Name",
@@ -90,8 +94,9 @@ definition {
 		}
 
 		task ("Create a dynamic asset list") {
-			JSONAssetlist.addDynamicAssetListEntry(
+			JSONAssetlist.addDynamicAssetListEntryWithItemType(
 				groupName = "Test Site Name",
+				itemType = "All Types",
 				title = "Dynamic Asset List Test");
 		}
 
@@ -111,6 +116,8 @@ definition {
 	@description = "Assert that the UI works correctly for renaming Asset Lists."
 	@priority = "5"
 	test RenameAssetList {
+		property portal.acceptance = "true";
+
 		task ("Create a manual asset list") {
 			JSONAssetlist.addManualAssetListEntry(
 				groupName = "Test Site Name",
@@ -238,8 +245,9 @@ definition {
 				var queryContains = "Contains";
 
 				task ("Create a dynamic asset list") {
-					JSONAssetlist.addDynamicAssetListEntry(
+					JSONAssetlist.addDynamicAssetListEntryWithItemType(
 						groupName = "Test Site Name",
+						itemType = "All Types",
 						title = "Dynamic Asset List ${queryContains} ${queryAndOperator}");
 				}
 
@@ -296,8 +304,9 @@ definition {
 				var queryContains = "Contains";
 
 				task ("Create a dynamic asset list") {
-					JSONAssetlist.addDynamicAssetListEntry(
+					JSONAssetlist.addDynamicAssetListEntryWithItemType(
 						groupName = "Test Site Name",
+						itemType = "All Types",
 						title = "Dynamic Asset List ${queryContains} ${queryAndOperator}");
 				}
 
@@ -354,8 +363,9 @@ definition {
 				var queryContains = "Does Not Contain";
 
 				task ("Create a dynamic asset list") {
-					JSONAssetlist.addDynamicAssetListEntry(
+					JSONAssetlist.addDynamicAssetListEntryWithItemType(
 						groupName = "Test Site Name",
+						itemType = "All Types",
 						title = "Dynamic Asset List ${queryContains} ${queryAndOperator}");
 				}
 
@@ -412,8 +422,9 @@ definition {
 				var queryContains = "Does Not Contain";
 
 				task ("Create a dynamic asset list") {
-					JSONAssetlist.addDynamicAssetListEntry(
+					JSONAssetlist.addDynamicAssetListEntryWithItemType(
 						groupName = "Test Site Name",
+						itemType = "All Types",
 						title = "Dynamic Asset List ${queryContains} ${queryAndOperator}");
 				}
 
@@ -470,6 +481,8 @@ definition {
 	@description = "This is for LPS-101228. Validate if web content articles matching with content sets based on keywords displayed correctly in Asset Publisher."
 	@priority = "5"
 	test ViewWebContentViaAssetPublisherWithAssetListBasedOnKeywords {
+		property portal.acceptance = "true";
+
 		task ("Create public page") {
 			JSONLayout.addPublicLayout(
 				groupName = "Test Site Name",
@@ -498,8 +511,9 @@ definition {
 				var queryContains = "Contains";
 
 				task ("Create a dynamic asset list") {
-					JSONAssetlist.addDynamicAssetListEntry(
+					JSONAssetlist.addDynamicAssetListEntryWithItemType(
 						groupName = "Test Site Name",
+						itemType = "All Types",
 						title = "Dynamic Asset List ${queryContains} ${queryAndOperator}");
 				}
 
@@ -556,8 +570,9 @@ definition {
 				var queryContains = "Contains";
 
 				task ("Create a dynamic asset list") {
-					JSONAssetlist.addDynamicAssetListEntry(
+					JSONAssetlist.addDynamicAssetListEntryWithItemType(
 						groupName = "Test Site Name",
+						itemType = "All Types",
 						title = "Dynamic Asset List ${queryContains} ${queryAndOperator}");
 				}
 
@@ -614,8 +629,9 @@ definition {
 				var queryContains = "Does Not Contain";
 
 				task ("Create a dynamic asset list") {
-					JSONAssetlist.addDynamicAssetListEntry(
+					JSONAssetlist.addDynamicAssetListEntryWithItemType(
 						groupName = "Test Site Name",
+						itemType = "All Types",
 						title = "Dynamic Asset List ${queryContains} ${queryAndOperator}");
 				}
 
@@ -672,8 +688,9 @@ definition {
 				var queryContains = "Does Not Contain";
 
 				task ("Create a dynamic asset list") {
-					JSONAssetlist.addDynamicAssetListEntry(
+					JSONAssetlist.addDynamicAssetListEntryWithItemType(
 						groupName = "Test Site Name",
+						itemType = "All Types",
 						title = "Dynamic Asset List ${queryContains} ${queryAndOperator}");
 				}
 

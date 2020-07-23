@@ -19,12 +19,12 @@ import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.test.util.DDMStructureTestUtil;
 import com.liferay.dynamic.data.mapping.test.util.DDMTemplateTestUtil;
+import com.liferay.journal.constants.JournalArticleConstants;
+import com.liferay.journal.constants.JournalFeedConstants;
+import com.liferay.journal.constants.JournalFolderConstants;
 import com.liferay.journal.model.JournalArticle;
-import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.model.JournalFeed;
-import com.liferay.journal.model.JournalFeedConstants;
 import com.liferay.journal.model.JournalFolder;
-import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.journal.service.JournalFeedLocalServiceUtil;
 import com.liferay.journal.service.JournalFolderLocalServiceUtil;
@@ -518,13 +518,12 @@ public class JournalTestUtil {
 			Map<String, byte[]> images, ServiceContext serviceContext)
 		throws Exception {
 
-		Map<Locale, String> titleMap = HashMapBuilder.put(
-			defaultLocale, "Test Article"
-		).build();
-
 		return JournalArticleLocalServiceUtil.addArticle(
 			serviceContext.getUserId(), serviceContext.getScopeGroupId(),
-			folderId, classNameId, classPK, StringPool.BLANK, true, 0, titleMap,
+			folderId, classNameId, classPK, StringPool.BLANK, true, 0,
+			HashMapBuilder.put(
+				defaultLocale, "Test Article"
+			).build(),
 			null, xml, ddmStructureKey, ddmTemplateKey, null, 1, 1, 1965, 0, 0,
 			0, 0, 0, 0, 0, true, 0, 0, 0, 0, 0, true, true, false, null, null,
 			images, null, serviceContext);

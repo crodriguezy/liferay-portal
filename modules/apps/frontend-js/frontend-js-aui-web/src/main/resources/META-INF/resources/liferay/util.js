@@ -623,9 +623,7 @@
 		},
 
 		listSelect(select, delimeter) {
-			select = Util.getElement(
-				select instanceof RadioNodeList ? select.item(0) : select
-			);
+			select = Util.getElement(select);
 
 			return Array.from(select.querySelectorAll('option'))
 				.reduce((prev, item) => {
@@ -1506,35 +1504,38 @@
 				}
 			};
 
-			var disableSelectedAssets = function (event) {
-				if (selectedData && selectedData.length) {
-					var currentWindow = event.currentTarget.node.get(
-						'contentWindow.document'
-					);
+			var syncAssets = function (event) {
+				var currentWindow = event.currentTarget.node.get(
+					'contentWindow.document'
+				);
 
-					var selectorButtons = currentWindow.all(
-						'.lfr-search-container-wrapper .selector-button'
-					);
+				var selectorButtons = currentWindow.all(
+					'.lfr-search-container-wrapper .selector-button'
+				);
 
-					A.some(selectorButtons, (item) => {
-						var assetEntryId =
-							item.attr('data-entityid') ||
-							item.attr('data-entityname');
+				A.each(selectorButtons, (item) => {
+					var assetEntryId =
+						item.attr('data-entityid') ||
+						item.attr('data-entityname');
 
-						var assetEntryIndex = selectedData.indexOf(
-							assetEntryId
-						);
+					var assetGroupId = item.attr('data-groupid');
 
-						if (assetEntryIndex > -1) {
-							item.attr('data-prevent-selection', true);
-							item.attr('disabled', true);
+					if (assetGroupId) {
+						assetEntryId = assetGroupId + '-' + assetEntryId;
+					}
 
-							selectedData.splice(assetEntryIndex, 1);
-						}
+					var disabled =
+						selectedData && selectedData.includes(assetEntryId);
 
-						return !selectedData.length;
-					});
-				}
+					if (disabled) {
+						item.attr('data-prevent-selection', true);
+					}
+					else {
+						item.removeAttribute('data-prevent-selection');
+					}
+
+					Util.toggleDisabled(item, disabled);
+				});
 			};
 
 			if (dialog) {
@@ -1569,10 +1570,7 @@
 							['destroy', 'visibleChange'],
 							detachSelectionOnHideFn
 						),
-						dialogWindow.iframe.after(
-							['load'],
-							disableSelectedAssets
-						)
+						dialogWindow.iframe.after(['load'], syncAssets)
 					);
 
 					Liferay.on('destroyPortlet', destroyDialog);

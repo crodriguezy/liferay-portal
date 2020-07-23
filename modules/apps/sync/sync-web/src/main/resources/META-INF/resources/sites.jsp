@@ -67,19 +67,19 @@ portletURL.setParameter("delta", String.valueOf(delta));
 
 	<liferay-frontend:management-bar-action-buttons>
 		<liferay-frontend:management-bar-button
-			href='<%= "javascript:" + renderResponse.getNamespace() + "enableSites();" %>'
+			href='<%= "javascript:" + liferayPortletResponse.getNamespace() + "enableSites();" %>'
 			icon="check"
 			label="enable-sync-sites"
 		/>
 
 		<liferay-frontend:management-bar-button
-			href='<%= "javascript:" + renderResponse.getNamespace() + "disableSites();" %>'
+			href='<%= "javascript:" + liferayPortletResponse.getNamespace() + "disableSites();" %>'
 			icon="times"
 			label="disable-sync-sites"
 		/>
 
 		<liferay-frontend:management-bar-button
-			href='<%= "javascript:" + renderResponse.getNamespace() + "editSitesDefaultFilePermissions();" %>'
+			href='<%= "javascript:" + liferayPortletResponse.getNamespace() + "editSitesDefaultFilePermissions();" %>'
 			icon="lock"
 			label="default-file-permissions"
 		/>
@@ -236,8 +236,6 @@ portletURL.setParameter("delta", String.valueOf(delta));
 	}
 
 	function <portlet:namespace />editSitesDefaultFilePermissions() {
-		var A = AUI();
-
 		var form = document.querySelector('#<portlet:namespace />fm');
 
 		if (form) {
@@ -247,33 +245,49 @@ portletURL.setParameter("delta", String.valueOf(delta));
 			);
 
 			if (groupIds) {
-				Liferay.Util.openWindow({
-					dialog: {
-						destroyOnHide: true,
-						on: {
-							destroy: function () {
+
+				<%
+				String selectEventName = liferayPortletResponse.getNamespace() + "itemSelected";
+				%>
+
+				<portlet:renderURL var="editSitesDefaultFilePermissionsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+					<portlet:param name="mvcPath" value="/edit_default_file_permissions.jsp" />
+					<portlet:param name="groupIds" value="{groupIds}" />
+					<portlet:param name="selectEventName" value="<%= selectEventName %>" />
+				</portlet:renderURL>
+
+				var url = Liferay.Util.sub(
+					decodeURIComponent('<%= editSitesDefaultFilePermissionsURL %>'),
+					{
+						groupIds: groupIds,
+					}
+				);
+
+				Liferay.Util.openModal({
+					id: '<portlet:namespace />editDefaultFilePermissionsDialog',
+					onSelect: function (selectedItem) {
+						Liferay.Util.fetch(selectedItem.uri, {method: 'POST'})
+							.then(function (response) {
+								return response.text();
+							})
+							.then(function () {
 								Liferay.Portlet.refresh(
 									'#p_p_id<portlet:namespace />'
 								);
-							},
-						},
+							})
+							.catch(function (error) {
+								Liferay.Util.openToast({
+									message: Liferay.Language.get(
+										'an-unexpected-system-error-occurred'
+									),
+									title: Liferay.Language.get('error'),
+									type: 'danger',
+								});
+							});
 					},
-					id: '<portlet:namespace />editDefaultFilePermissionsDialog',
+					selectEventName: '<%= selectEventName %>',
 					title: '<liferay-ui:message key="default-file-permissions" />',
-
-					<portlet:renderURL var="editSitesDefaultFilePermissionsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-						<portlet:param name="groupIds" value="{groupIds}" />
-						<portlet:param name="mvcPath" value="/edit_default_file_permissions.jsp" />
-					</portlet:renderURL>
-
-					uri: A.Lang.sub(
-						decodeURIComponent(
-							'<%= editSitesDefaultFilePermissionsURL %>'
-						),
-						{
-							groupIds: groupIds,
-						}
-					),
+					url: url,
 				});
 			}
 		}

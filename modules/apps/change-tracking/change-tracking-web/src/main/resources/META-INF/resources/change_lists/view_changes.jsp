@@ -21,10 +21,6 @@ ViewChangesDisplayContext viewChangesDisplayContext = (ViewChangesDisplayContext
 
 CTCollection ctCollection = viewChangesDisplayContext.getCtCollection();
 
-SearchContainer<CTEntry> searchContainer = viewChangesDisplayContext.getSearchContainer();
-
-ViewChangesManagementToolbarDisplayContext viewChangesManagementToolbarDisplayContext = new ViewChangesManagementToolbarDisplayContext(request, liferayPortletRequest, liferayPortletResponse, searchContainer);
-
 Format format = FastDateFormatFactoryUtil.getDateTime(locale, timeZone);
 
 renderResponse.setTitle(LanguageUtil.get(request, "changes"));
@@ -43,8 +39,8 @@ portletDisplay.setShowBackIcon(true);
 							<span><%= HtmlUtil.escape(ctCollection.getName()) %></span>
 
 							<clay:label
-								label="<%= LanguageUtil.get(resourceBundle, viewChangesDisplayContext.getStatusLabel(ctCollection.getStatus())) %>"
-								style="<%= WorkflowConstants.getStatusStyle(ctCollection.getStatus()) %>"
+								displayType="<%= WorkflowConstants.getStatusStyle(ctCollection.getStatus()) %>"
+								label="<%= viewChangesDisplayContext.getStatusLabel(ctCollection.getStatus()) %>"
 							/>
 						</div>
 
@@ -77,8 +73,8 @@ portletDisplay.setShowBackIcon(true);
 							<span><%= HtmlUtil.escape(ctCollection.getName()) %></span>
 
 							<clay:label
-								label="<%= LanguageUtil.get(resourceBundle, viewChangesDisplayContext.getStatusLabel(ctCollection.getStatus())) %>"
-								style="<%= WorkflowConstants.getStatusStyle(ctCollection.getStatus()) %>"
+								displayType="<%= WorkflowConstants.getStatusStyle(ctCollection.getStatus()) %>"
+								label="<%= viewChangesDisplayContext.getStatusLabel(ctCollection.getStatus()) %>"
 							/>
 						</div>
 
@@ -91,7 +87,7 @@ portletDisplay.setShowBackIcon(true);
 							<portlet:param name="ctCollectionId" value="<%= String.valueOf(ctCollection.getCtCollectionId()) %>" />
 						</liferay-portlet:renderURL>
 
-						<a class="btn btn-primary btn-sm <%= changeListsDisplayContext.isPublishEnabled(ctCollection.getCtCollectionId()) ? StringPool.BLANK : "disabled" %>" href="<%= conflictsURL %>" type="button">
+						<a class="btn btn-primary btn-sm <%= viewChangesDisplayContext.hasChanges() ? StringPool.BLANK : "disabled" %>" href="<%= conflictsURL %>" type="button">
 							<liferay-ui:message key="prepare-to-publish" />
 						</a>
 					</li>
@@ -144,64 +140,33 @@ portletDisplay.setShowBackIcon(true);
 	</clay:container-fluid>
 </nav>
 
-<clay:management-toolbar
-	displayContext="<%= viewChangesManagementToolbarDisplayContext %>"
-	id="viewChangesManagementToolbar"
-/>
-
-<clay:container-fluid>
-	<liferay-ui:search-container
-		cssClass="change-lists-changes-table change-lists-table"
-		searchContainer="<%= searchContainer %>"
-		var="reviewChangesSearchContainer"
-	>
-		<liferay-ui:search-container-row
-			className="com.liferay.change.tracking.model.CTEntry"
-			escapedModel="<%= true %>"
-			keyProperty="ctEntryId"
-			modelVar="ctEntry"
-		>
-			<liferay-ui:search-container-column-text>
-				<span class="lfr-portal-tooltip" title="<%= HtmlUtil.escape(ctEntry.getUserName()) %>">
-					<liferay-ui:user-portrait
-						userId="<%= ctEntry.getUserId() %>"
-					/>
-				</span>
-			</liferay-ui:search-container-column-text>
-
-			<liferay-ui:search-container-column-text
-				cssClass="table-cell-expand"
-				name="change"
-			>
-				<div class="change-list-name">
-					<%= ctDisplayRendererRegistry.getTypeName(locale, ctEntry) %>
-				</div>
-
-				<div class="change-list-description">
-					<%= ctDisplayRendererRegistry.getEntryTitle(ctEntry, request) %>
-				</div>
-			</liferay-ui:search-container-column-text>
-
-			<liferay-ui:search-container-column-text
-				cssClass="table-cell-expand-smaller"
-				name="last-modified"
-			>
-
-				<%
-				Date modifiedDate = ctEntry.getModifiedDate();
-				%>
-
-				<liferay-ui:message arguments="<%= LanguageUtil.getTimeDescription(request, System.currentTimeMillis() - modifiedDate.getTime(), true) %>" key="x-ago" translateArguments="<%= false %>" />
-			</liferay-ui:search-container-column-text>
-
-			<liferay-ui:search-container-column-jsp
-				path="/change_lists/ct_entry_action.jsp"
+<div class="change-lists-view-changes-wrapper">
+	<c:choose>
+		<c:when test="<%= viewChangesDisplayContext.hasChanges() %>">
+			<react:component
+				data="<%= viewChangesDisplayContext.getReactData() %>"
+				module="change_lists/js/ChangeTrackingChangesView"
 			/>
-		</liferay-ui:search-container-row>
+		</c:when>
+		<c:otherwise>
 
-		<liferay-ui:search-iterator
-			markupView="lexicon"
-			searchContainer="<%= searchContainer %>"
-		/>
-	</liferay-ui:search-container>
-</clay:container-fluid>
+			<%
+			NavigationItemList navigationItems = NavigationItemListBuilder.add(
+				navigationItem -> {
+					navigationItem.setActive(true);
+					navigationItem.setLabel(LanguageUtil.get(request, "changes"));
+				}).build();
+			%>
+
+			<clay:navigation-bar
+				navigationItems="<%= navigationItems %>"
+			/>
+
+			<clay:container-fluid>
+				<liferay-ui:empty-result-message
+					message="no-changes-were-found"
+				/>
+			</clay:container-fluid>
+		</c:otherwise>
+	</c:choose>
+</div>

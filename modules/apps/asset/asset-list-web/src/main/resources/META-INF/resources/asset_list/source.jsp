@@ -26,7 +26,6 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 	>
 
 		<%
-		Set<Long> availableClassNameIdsSet = SetUtil.fromArray(editAssetListDisplayContext.getAvailableClassNameIds());
 
 		// Left list
 
@@ -47,14 +46,13 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 		Arrays.sort(classNameIds);
 		%>
 
-		<aui:select label="asset-entry-type" name="TypeSettingsProperties--anyAssetType--" title="asset-type">
-			<aui:option label="any" selected="<%= editAssetListDisplayContext.isAnyAssetType() %>" value="<%= true %>" />
-			<aui:option label='<%= LanguageUtil.get(request, "select-more-than-one") + StringPool.TRIPLE_PERIOD %>' selected="<%= !editAssetListDisplayContext.isAnyAssetType() && (classNameIds.length > 1) %>" value="<%= false %>" />
+		<aui:select label="item-type" name="TypeSettingsProperties--anyAssetType--" title="item-type">
+			<aui:option label='<%= StringPool.DASH + LanguageUtil.get(request, "not-selected") + StringPool.DASH %>' selected="<%= editAssetListDisplayContext.isNoAssetTypeSelected() %>" value="" />
 
-			<optgroup label="<liferay-ui:message key="asset-type" />">
+			<optgroup label="<liferay-ui:message key="single-item-type" />">
 
 				<%
-				for (long classNameId : availableClassNameIdsSet) {
+				for (long classNameId : editAssetListDisplayContext.getAvailableClassNameIds()) {
 					ClassName className = ClassNameLocalServiceUtil.getClassName(classNameId);
 
 					if (Arrays.binarySearch(classNameIds, classNameId) < 0) {
@@ -68,6 +66,11 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 				}
 				%>
 
+			</optgroup>
+
+			<optgroup label="<liferay-ui:message key="multiple-item-types" />">
+				<aui:option label='<%= LanguageUtil.get(request, "select-types") + StringPool.TRIPLE_PERIOD %>' selected="<%= !editAssetListDisplayContext.isAnyAssetType() && !editAssetListDisplayContext.isNoAssetTypeSelected() && (classNameIds.length > 1) %>" value="<%= false %>" />
+				<aui:option label="all-types" selected="<%= editAssetListDisplayContext.isAnyAssetType() %>" value="<%= true %>" />
 			</optgroup>
 		</aui:select>
 
@@ -103,6 +106,8 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 				continue;
 			}
 
+			classTypes.sort(new ClassTypeNameComparator(true));
+
 			classTypesAssetRendererFactories.add(assetRendererFactory);
 
 			String className = editAssetListDisplayContext.getClassName(assetRendererFactory);
@@ -129,20 +134,24 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 
 			List<KeyValuePair> subtypesRightList = new ArrayList<KeyValuePair>();
 
+			boolean noAssetSubtypeSelected = false;
+
+			if (Validator.isNull(properties.getProperty("anyClassType" + className))) {
+				noAssetSubtypeSelected = true;
+			}
+
 			boolean anyAssetSubtype = GetterUtil.getBoolean(properties.getProperty("anyClassType" + className, Boolean.TRUE.toString()));
+
+			if (noAssetSubtypeSelected) {
+				anyAssetSubtype = false;
+			}
 		%>
 
 			<div class='asset-subtype <%= (assetSelectedClassTypeIds.length < 1) ? StringPool.BLANK : "hide" %>' id="<portlet:namespace /><%= className %>Options">
+				<aui:select label='<%= LanguageUtil.get(request, "item-subtype") %>' name='<%= "TypeSettingsProperties--anyClassType" + className + "--" %>'>
+					<aui:option label='<%= StringPool.DASH + LanguageUtil.get(request, "not-selected") + StringPool.DASH %>' selected="<%= editAssetListDisplayContext.isNoAssetTypeSelected() %>" value="" />
 
-				<%
-				String label = ResourceActionsUtil.getModelResource(locale, assetRendererFactory.getClassName()) + StringPool.SPACE + assetRendererFactory.getSubtypeTitle(themeDisplay.getLocale());
-				%>
-
-				<aui:select label="<%= label %>" name='<%= "TypeSettingsProperties--anyClassType" + className + "--" %>'>
-					<aui:option label="any" selected="<%= anyAssetSubtype %>" value="<%= true %>" />
-					<aui:option label='<%= LanguageUtil.get(request, "select-more-than-one") + StringPool.TRIPLE_PERIOD %>' selected="<%= !anyAssetSubtype && (assetSelectedClassTypeIds.length > 1) %>" value="<%= false %>" />
-
-					<optgroup label="<%= assetRendererFactory.getSubtypeTitle(themeDisplay.getLocale()) %>">
+					<optgroup label="<%= LanguageUtil.get(request, "single-item-subtype") %>">
 
 						<%
 						for (ClassType classType : classTypes) {
@@ -151,12 +160,17 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 							}
 						%>
 
-							<aui:option label="<%= HtmlUtil.escapeAttribute(classType.getName()) %>" selected="<%= !anyAssetSubtype && (assetSelectedClassTypeIds.length == 1) && (assetSelectedClassTypeIds[0]).equals(classType.getClassTypeId()) %>" value="<%= classType.getClassTypeId() %>" />
+							<aui:option label="<%= HtmlUtil.escapeAttribute(classType.getName()) %>" selected="<%= !anyAssetSubtype && (assetSelectedClassTypeIds.length == 1) && (assetSelectedClassTypeIds[0]).equals(classType.getClassTypeId()) && !noAssetSubtypeSelected %>" value="<%= classType.getClassTypeId() %>" />
 
 						<%
 						}
 						%>
 
+					</optgroup>
+
+					<optgroup label="<%= LanguageUtil.get(request, "multiple-item-subtypes") %>">
+						<aui:option label='<%= LanguageUtil.get(request, "select-more-than-one") + StringPool.TRIPLE_PERIOD %>' selected="<%= !anyAssetSubtype && (assetSelectedClassTypeIds.length > 1) && !noAssetSubtypeSelected %>" value="<%= false %>" />
+						<aui:option label="all-subtypes" selected="<%= anyAssetSubtype %>" value="<%= true %>" />
 					</optgroup>
 				</aui:select>
 
@@ -187,7 +201,7 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 									<portlet:param name="mvcPath" value="/asset_list/select_structure_field.jsp" />
 									<portlet:param name="className" value="<%= assetRendererFactory.getClassName() %>" />
 									<portlet:param name="classTypeId" value="<%= String.valueOf(classType.getClassTypeId()) %>" />
-									<portlet:param name="eventName" value='<%= renderResponse.getNamespace() + "selectDDMStructureField" %>' />
+									<portlet:param name="eventName" value='<%= liferayPortletResponse.getNamespace() + "selectDDMStructureField" %>' />
 								</portlet:renderURL>
 
 								<span class="asset-subtypefields-popup" id="<portlet:namespace /><%= classType.getClassTypeId() %>_<%= className %>PopUpButton">
@@ -241,9 +255,24 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 	var assetMultipleSelector = document.getElementById(
 		'<portlet:namespace />currentClassNameIds'
 	);
+
 	var assetSelector = document.getElementById(
 		'<portlet:namespace />anyAssetType'
 	);
+
+	assetSelector.addEventListener('change', function (event) {
+		var saveButton = document.getElementById('<portlet:namespace />saveButton');
+
+		if (assetSelector.value === '') {
+			saveButton.classList.add('disabled');
+			saveButton.disabled = true;
+		}
+		else {
+			saveButton.classList.remove('disabled');
+			saveButton.disabled = false;
+		}
+	});
+
 	var orderByColumn1 = document.getElementById(
 		'<portlet:namespace />orderByColumn1'
 	);
@@ -439,6 +468,17 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 			<%= className %>SubtypeSelector.addEventListener('change', function (event) {
 				setDDMFields('<%= className %>', '', '', '', '');
 
+				var saveButton = document.getElementById('<portlet:namespace />saveButton');
+
+				if (<%= className %>SubtypeSelector.value === '') {
+					saveButton.classList.add('disabled');
+					saveButton.disabled = true;
+				}
+				else {
+					saveButton.classList.remove('disabled');
+					saveButton.disabled = false;
+				}
+
 				var subtypeFieldsFilterEnabledCheckbox = document.getElementById(
 					'<portlet:namespace />subtypeFieldsFilterEnabled<%= className %>'
 				);
@@ -550,46 +590,40 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 
 		var btn = delegateTarget.querySelector('.btn');
 
-		var uri = btn.dataset.href;
+		var url = btn.dataset.href;
 
-		uri = Util.addParams(
+		url = Util.addParams(
 			'<portlet:namespace />ddmStructureDisplayFieldValue=' +
 				encodeURIComponent(ddmStructureDisplayFieldValueInput.value),
-			uri
+			url
 		);
-		uri = Util.addParams(
+		url = Util.addParams(
 			'<portlet:namespace />ddmStructureFieldName=' +
 				encodeURIComponent(ddmStructureFieldNameInput.value),
-			uri
+			url
 		);
-		uri = Util.addParams(
+		url = Util.addParams(
 			'<portlet:namespace />ddmStructureFieldValue=' +
 				encodeURIComponent(ddmStructureFieldValueInput.value),
-			uri
+			url
 		);
 
-		Util.selectEntity(
-			{
-				dialog: {
-					constrain: true,
-					modal: true,
-				},
-				eventName: '<portlet:namespace />selectDDMStructureField',
-				id: '<portlet:namespace />selectDDMStructure' + delegateTarget.id,
-				title:
-					'<liferay-ui:message arguments="structure-field" key="select-x" />',
-				uri: uri,
-			},
-			function (event) {
+		Util.openModal({
+			id: '<portlet:namespace />selectDDMStructure' + delegateTarget.id,
+			onSelect: function (selectedItem) {
 				setDDMFields(
-					event.className,
-					event.name,
-					event.value,
-					event.displayValue,
-					event.label + ': ' + event.displayValue
+					selectedItem.className,
+					selectedItem.name,
+					selectedItem.value,
+					selectedItem.displayValue,
+					selectedItem.label + ': ' + selectedItem.displayValue
 				);
-			}
-		);
+			},
+			selectEventName: '<portlet:namespace />selectDDMStructureField',
+			title:
+				'<liferay-ui:message arguments="structure-field" key="select-x" />',
+			url: url,
+		});
 	});
 
 	function setDDMFields(className, name, value, displayValue, message) {
@@ -613,4 +647,10 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 		'false',
 		'<portlet:namespace />classNamesBoxes'
 	);
+
+	function removeListener() {
+		assetSelector.removeListener();
+
+		Liferay.detach('destroyPortlet', removeListener);
+	}
 </aui:script>

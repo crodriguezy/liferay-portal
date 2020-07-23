@@ -31,8 +31,8 @@ SearchContainer<Object> searchContainer = itemSelectorViewDescriptor.getSearchCo
 </c:if>
 
 <clay:container-fluid
-	className="item-selector lfr-item-viewer"
-	id='<%= renderResponse.getNamespace() + "entriesContainer" %>'
+	cssClass="item-selector lfr-item-viewer"
+	id='<%= liferayPortletResponse.getNamespace() + "entriesContainer" %>'
 >
 	<c:if test="<%= itemSelectorViewDescriptor.isShowBreadcrumb() %>">
 		<liferay-site-navigation:breadcrumb
@@ -108,14 +108,14 @@ SearchContainer<Object> searchContainer = itemSelectorViewDescriptor.getSearchCo
 							%>
 
 							<c:choose>
-								<c:when test="<%= Validator.isNull(itemDescriptor.getUserName()) %>">
+								<c:when test="<%= Validator.isNotNull(itemDescriptor.getUserName()) %>">
 									<span class="text-default">
 										<liferay-ui:message arguments="<%= new String[] {itemDescriptor.getUserName(), modifiedDateDescription} %>" key="x-modified-x-ago" />
 									</span>
 								</c:when>
 								<c:otherwise>
 									<span class="text-default">
-										<liferay-ui:message arguments="<%= new String[] {modifiedDateDescription} %>" key="modified-x-ago" />
+										<liferay-ui:message arguments="<%= modifiedDateDescription %>" key="modified-x-ago" />
 									</span>
 								</c:otherwise>
 							</c:choose>

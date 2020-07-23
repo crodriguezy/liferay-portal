@@ -35,17 +35,17 @@ public class SocialActivityCacheModel
 	implements CacheModel<SocialActivity>, Externalizable, MVCCModel {
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof SocialActivityCacheModel)) {
+		if (!(object instanceof SocialActivityCacheModel)) {
 			return false;
 		}
 
 		SocialActivityCacheModel socialActivityCacheModel =
-			(SocialActivityCacheModel)obj;
+			(SocialActivityCacheModel)object;
 
 		if ((activityId == socialActivityCacheModel.activityId) &&
 			(mvccVersion == socialActivityCacheModel.mvccVersion)) {
@@ -75,10 +75,12 @@ public class SocialActivityCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(31);
+		StringBundler sb = new StringBundler(33);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
+		sb.append(", ctCollectionId=");
+		sb.append(ctCollectionId);
 		sb.append(", activityId=");
 		sb.append(activityId);
 		sb.append(", groupId=");
@@ -117,6 +119,7 @@ public class SocialActivityCacheModel
 		SocialActivityImpl socialActivityImpl = new SocialActivityImpl();
 
 		socialActivityImpl.setMvccVersion(mvccVersion);
+		socialActivityImpl.setCtCollectionId(ctCollectionId);
 		socialActivityImpl.setActivityId(activityId);
 		socialActivityImpl.setGroupId(groupId);
 		socialActivityImpl.setCompanyId(companyId);
@@ -147,6 +150,8 @@ public class SocialActivityCacheModel
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
 		mvccVersion = objectInput.readLong();
+
+		ctCollectionId = objectInput.readLong();
 
 		activityId = objectInput.readLong();
 
@@ -179,6 +184,8 @@ public class SocialActivityCacheModel
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
 		objectOutput.writeLong(mvccVersion);
+
+		objectOutput.writeLong(ctCollectionId);
 
 		objectOutput.writeLong(activityId);
 
@@ -215,6 +222,7 @@ public class SocialActivityCacheModel
 	}
 
 	public long mvccVersion;
+	public long ctCollectionId;
 	public long activityId;
 	public long groupId;
 	public long companyId;

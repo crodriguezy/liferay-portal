@@ -29,15 +29,16 @@ import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.SQLQuery;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.dao.orm.SessionFactory;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
+import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ProxyUtil;
 
@@ -241,10 +242,6 @@ public class OAuthUserPersistenceImpl
 				}
 			}
 			catch (Exception exception) {
-				if (useFinderCache) {
-					finderCache.removeResult(finderPath, finderArgs);
-				}
-
 				throw processException(exception);
 			}
 			finally {
@@ -515,6 +512,328 @@ public class OAuthUserPersistenceImpl
 	}
 
 	/**
+	 * Returns all the o auth users that the user has permission to view where userId = &#63;.
+	 *
+	 * @param userId the user ID
+	 * @return the matching o auth users that the user has permission to view
+	 */
+	@Override
+	public List<OAuthUser> filterFindByUserId(long userId) {
+		return filterFindByUserId(
+			userId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the o auth users that the user has permission to view where userId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>OAuthUserModelImpl</code>.
+	 * </p>
+	 *
+	 * @param userId the user ID
+	 * @param start the lower bound of the range of o auth users
+	 * @param end the upper bound of the range of o auth users (not inclusive)
+	 * @return the range of matching o auth users that the user has permission to view
+	 */
+	@Override
+	public List<OAuthUser> filterFindByUserId(long userId, int start, int end) {
+		return filterFindByUserId(userId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the o auth users that the user has permissions to view where userId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>OAuthUserModelImpl</code>.
+	 * </p>
+	 *
+	 * @param userId the user ID
+	 * @param start the lower bound of the range of o auth users
+	 * @param end the upper bound of the range of o auth users (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching o auth users that the user has permission to view
+	 */
+	@Override
+	public List<OAuthUser> filterFindByUserId(
+		long userId, int start, int end,
+		OrderByComparator<OAuthUser> orderByComparator) {
+
+		if (!InlineSQLHelperUtil.isEnabled()) {
+			return findByUserId(userId, start, end, orderByComparator);
+		}
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				3 + (orderByComparator.getOrderByFields().length * 2));
+		}
+		else {
+			sb = new StringBundler(4);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sb.append(_FILTER_SQL_SELECT_OAUTHUSER_WHERE);
+		}
+		else {
+			sb.append(_FILTER_SQL_SELECT_OAUTHUSER_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		sb.append(_FINDER_COLUMN_USERID_USERID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			sb.append(_FILTER_SQL_SELECT_OAUTHUSER_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator, true);
+			}
+			else {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_TABLE, orderByComparator, true);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				sb.append(OAuthUserModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				sb.append(OAuthUserModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), OAuthUser.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				sqlQuery.addEntity(_FILTER_ENTITY_ALIAS, OAuthUserImpl.class);
+			}
+			else {
+				sqlQuery.addEntity(_FILTER_ENTITY_TABLE, OAuthUserImpl.class);
+			}
+
+			QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+			queryPos.add(userId);
+
+			return (List<OAuthUser>)QueryUtil.list(
+				sqlQuery, getDialect(), start, end);
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the o auth users before and after the current o auth user in the ordered set of o auth users that the user has permission to view where userId = &#63;.
+	 *
+	 * @param oAuthUserId the primary key of the current o auth user
+	 * @param userId the user ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next o auth user
+	 * @throws NoSuchUserException if a o auth user with the primary key could not be found
+	 */
+	@Override
+	public OAuthUser[] filterFindByUserId_PrevAndNext(
+			long oAuthUserId, long userId,
+			OrderByComparator<OAuthUser> orderByComparator)
+		throws NoSuchUserException {
+
+		if (!InlineSQLHelperUtil.isEnabled()) {
+			return findByUserId_PrevAndNext(
+				oAuthUserId, userId, orderByComparator);
+		}
+
+		OAuthUser oAuthUser = findByPrimaryKey(oAuthUserId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			OAuthUser[] array = new OAuthUserImpl[3];
+
+			array[0] = filterGetByUserId_PrevAndNext(
+				session, oAuthUser, userId, orderByComparator, true);
+
+			array[1] = oAuthUser;
+
+			array[2] = filterGetByUserId_PrevAndNext(
+				session, oAuthUser, userId, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected OAuthUser filterGetByUserId_PrevAndNext(
+		Session session, OAuthUser oAuthUser, long userId,
+		OrderByComparator<OAuthUser> orderByComparator, boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				5 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(4);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sb.append(_FILTER_SQL_SELECT_OAUTHUSER_WHERE);
+		}
+		else {
+			sb.append(_FILTER_SQL_SELECT_OAUTHUSER_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		sb.append(_FINDER_COLUMN_USERID_USERID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			sb.append(_FILTER_SQL_SELECT_OAUTHUSER_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_ALIAS, orderByConditionFields[i],
+							true));
+				}
+				else {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_TABLE, orderByConditionFields[i],
+							true));
+				}
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_ALIAS, orderByFields[i], true));
+				}
+				else {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_TABLE, orderByFields[i], true));
+				}
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				sb.append(OAuthUserModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				sb.append(OAuthUserModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), OAuthUser.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN);
+
+		SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+		sqlQuery.setFirstResult(0);
+		sqlQuery.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sqlQuery.addEntity(_FILTER_ENTITY_ALIAS, OAuthUserImpl.class);
+		}
+		else {
+			sqlQuery.addEntity(_FILTER_ENTITY_TABLE, OAuthUserImpl.class);
+		}
+
+		QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+		queryPos.add(userId);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(oAuthUser)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<OAuthUser> list = sqlQuery.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
 	 * Removes all the o auth users where userId = &#63; from the database.
 	 *
 	 * @param userId the user ID
@@ -568,8 +887,6 @@ public class OAuthUserPersistenceImpl
 				finderCache.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception exception) {
-				finderCache.removeResult(finderPath, finderArgs);
-
 				throw processException(exception);
 			}
 			finally {
@@ -578,6 +895,54 @@ public class OAuthUserPersistenceImpl
 		}
 
 		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of o auth users that the user has permission to view where userId = &#63;.
+	 *
+	 * @param userId the user ID
+	 * @return the number of matching o auth users that the user has permission to view
+	 */
+	@Override
+	public int filterCountByUserId(long userId) {
+		if (!InlineSQLHelperUtil.isEnabled()) {
+			return countByUserId(userId);
+		}
+
+		StringBundler sb = new StringBundler(2);
+
+		sb.append(_FILTER_SQL_COUNT_OAUTHUSER_WHERE);
+
+		sb.append(_FINDER_COLUMN_USERID_USERID_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), OAuthUser.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+			sqlQuery.addScalar(
+				COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+			queryPos.add(userId);
+
+			Long count = (Long)sqlQuery.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
 	}
 
 	private static final String _FINDER_COLUMN_USERID_USERID_2 =
@@ -744,10 +1109,6 @@ public class OAuthUserPersistenceImpl
 				}
 			}
 			catch (Exception exception) {
-				if (useFinderCache) {
-					finderCache.removeResult(finderPath, finderArgs);
-				}
-
 				throw processException(exception);
 			}
 			finally {
@@ -1027,6 +1388,336 @@ public class OAuthUserPersistenceImpl
 	}
 
 	/**
+	 * Returns all the o auth users that the user has permission to view where oAuthApplicationId = &#63;.
+	 *
+	 * @param oAuthApplicationId the o auth application ID
+	 * @return the matching o auth users that the user has permission to view
+	 */
+	@Override
+	public List<OAuthUser> filterFindByOAuthApplicationId(
+		long oAuthApplicationId) {
+
+		return filterFindByOAuthApplicationId(
+			oAuthApplicationId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the o auth users that the user has permission to view where oAuthApplicationId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>OAuthUserModelImpl</code>.
+	 * </p>
+	 *
+	 * @param oAuthApplicationId the o auth application ID
+	 * @param start the lower bound of the range of o auth users
+	 * @param end the upper bound of the range of o auth users (not inclusive)
+	 * @return the range of matching o auth users that the user has permission to view
+	 */
+	@Override
+	public List<OAuthUser> filterFindByOAuthApplicationId(
+		long oAuthApplicationId, int start, int end) {
+
+		return filterFindByOAuthApplicationId(
+			oAuthApplicationId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the o auth users that the user has permissions to view where oAuthApplicationId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>OAuthUserModelImpl</code>.
+	 * </p>
+	 *
+	 * @param oAuthApplicationId the o auth application ID
+	 * @param start the lower bound of the range of o auth users
+	 * @param end the upper bound of the range of o auth users (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching o auth users that the user has permission to view
+	 */
+	@Override
+	public List<OAuthUser> filterFindByOAuthApplicationId(
+		long oAuthApplicationId, int start, int end,
+		OrderByComparator<OAuthUser> orderByComparator) {
+
+		if (!InlineSQLHelperUtil.isEnabled()) {
+			return findByOAuthApplicationId(
+				oAuthApplicationId, start, end, orderByComparator);
+		}
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				3 + (orderByComparator.getOrderByFields().length * 2));
+		}
+		else {
+			sb = new StringBundler(4);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sb.append(_FILTER_SQL_SELECT_OAUTHUSER_WHERE);
+		}
+		else {
+			sb.append(_FILTER_SQL_SELECT_OAUTHUSER_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		sb.append(_FINDER_COLUMN_OAUTHAPPLICATIONID_OAUTHAPPLICATIONID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			sb.append(_FILTER_SQL_SELECT_OAUTHUSER_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator, true);
+			}
+			else {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_TABLE, orderByComparator, true);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				sb.append(OAuthUserModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				sb.append(OAuthUserModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), OAuthUser.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				sqlQuery.addEntity(_FILTER_ENTITY_ALIAS, OAuthUserImpl.class);
+			}
+			else {
+				sqlQuery.addEntity(_FILTER_ENTITY_TABLE, OAuthUserImpl.class);
+			}
+
+			QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+			queryPos.add(oAuthApplicationId);
+
+			return (List<OAuthUser>)QueryUtil.list(
+				sqlQuery, getDialect(), start, end);
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the o auth users before and after the current o auth user in the ordered set of o auth users that the user has permission to view where oAuthApplicationId = &#63;.
+	 *
+	 * @param oAuthUserId the primary key of the current o auth user
+	 * @param oAuthApplicationId the o auth application ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next o auth user
+	 * @throws NoSuchUserException if a o auth user with the primary key could not be found
+	 */
+	@Override
+	public OAuthUser[] filterFindByOAuthApplicationId_PrevAndNext(
+			long oAuthUserId, long oAuthApplicationId,
+			OrderByComparator<OAuthUser> orderByComparator)
+		throws NoSuchUserException {
+
+		if (!InlineSQLHelperUtil.isEnabled()) {
+			return findByOAuthApplicationId_PrevAndNext(
+				oAuthUserId, oAuthApplicationId, orderByComparator);
+		}
+
+		OAuthUser oAuthUser = findByPrimaryKey(oAuthUserId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			OAuthUser[] array = new OAuthUserImpl[3];
+
+			array[0] = filterGetByOAuthApplicationId_PrevAndNext(
+				session, oAuthUser, oAuthApplicationId, orderByComparator,
+				true);
+
+			array[1] = oAuthUser;
+
+			array[2] = filterGetByOAuthApplicationId_PrevAndNext(
+				session, oAuthUser, oAuthApplicationId, orderByComparator,
+				false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected OAuthUser filterGetByOAuthApplicationId_PrevAndNext(
+		Session session, OAuthUser oAuthUser, long oAuthApplicationId,
+		OrderByComparator<OAuthUser> orderByComparator, boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				5 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(4);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sb.append(_FILTER_SQL_SELECT_OAUTHUSER_WHERE);
+		}
+		else {
+			sb.append(_FILTER_SQL_SELECT_OAUTHUSER_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		sb.append(_FINDER_COLUMN_OAUTHAPPLICATIONID_OAUTHAPPLICATIONID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			sb.append(_FILTER_SQL_SELECT_OAUTHUSER_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_ALIAS, orderByConditionFields[i],
+							true));
+				}
+				else {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_TABLE, orderByConditionFields[i],
+							true));
+				}
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_ALIAS, orderByFields[i], true));
+				}
+				else {
+					sb.append(
+						getColumnName(
+							_ORDER_BY_ENTITY_TABLE, orderByFields[i], true));
+				}
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				sb.append(OAuthUserModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				sb.append(OAuthUserModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), OAuthUser.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN);
+
+		SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+		sqlQuery.setFirstResult(0);
+		sqlQuery.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			sqlQuery.addEntity(_FILTER_ENTITY_ALIAS, OAuthUserImpl.class);
+		}
+		else {
+			sqlQuery.addEntity(_FILTER_ENTITY_TABLE, OAuthUserImpl.class);
+		}
+
+		QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+		queryPos.add(oAuthApplicationId);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(oAuthUser)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<OAuthUser> list = sqlQuery.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
 	 * Removes all the o auth users where oAuthApplicationId = &#63; from the database.
 	 *
 	 * @param oAuthApplicationId the o auth application ID
@@ -1081,8 +1772,6 @@ public class OAuthUserPersistenceImpl
 				finderCache.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception exception) {
-				finderCache.removeResult(finderPath, finderArgs);
-
 				throw processException(exception);
 			}
 			finally {
@@ -1091,6 +1780,54 @@ public class OAuthUserPersistenceImpl
 		}
 
 		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of o auth users that the user has permission to view where oAuthApplicationId = &#63;.
+	 *
+	 * @param oAuthApplicationId the o auth application ID
+	 * @return the number of matching o auth users that the user has permission to view
+	 */
+	@Override
+	public int filterCountByOAuthApplicationId(long oAuthApplicationId) {
+		if (!InlineSQLHelperUtil.isEnabled()) {
+			return countByOAuthApplicationId(oAuthApplicationId);
+		}
+
+		StringBundler sb = new StringBundler(2);
+
+		sb.append(_FILTER_SQL_COUNT_OAUTHUSER_WHERE);
+
+		sb.append(_FINDER_COLUMN_OAUTHAPPLICATIONID_OAUTHAPPLICATIONID_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(
+			sb.toString(), OAuthUser.class.getName(),
+			_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
+
+			sqlQuery.addScalar(
+				COUNT_COLUMN_NAME, com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos queryPos = QueryPos.getInstance(sqlQuery);
+
+			queryPos.add(oAuthApplicationId);
+
+			Long count = (Long)sqlQuery.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
 	}
 
 	private static final String
@@ -1226,11 +1963,6 @@ public class OAuthUserPersistenceImpl
 				}
 			}
 			catch (Exception exception) {
-				if (useFinderCache) {
-					finderCache.removeResult(
-						_finderPathFetchByAccessToken, finderArgs);
-				}
-
 				throw processException(exception);
 			}
 			finally {
@@ -1313,8 +2045,6 @@ public class OAuthUserPersistenceImpl
 				finderCache.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception exception) {
-				finderCache.removeResult(finderPath, finderArgs);
-
 				throw processException(exception);
 			}
 			finally {
@@ -1459,11 +2189,6 @@ public class OAuthUserPersistenceImpl
 				}
 			}
 			catch (Exception exception) {
-				if (useFinderCache) {
-					finderCache.removeResult(
-						_finderPathFetchByU_OAI, finderArgs);
-				}
-
 				throw processException(exception);
 			}
 			finally {
@@ -1539,8 +2264,6 @@ public class OAuthUserPersistenceImpl
 				finderCache.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception exception) {
-				finderCache.removeResult(finderPath, finderArgs);
-
 				throw processException(exception);
 			}
 			finally {
@@ -1574,8 +2297,7 @@ public class OAuthUserPersistenceImpl
 	@Override
 	public void cacheResult(OAuthUser oAuthUser) {
 		entityCache.putResult(
-			entityCacheEnabled, OAuthUserImpl.class, oAuthUser.getPrimaryKey(),
-			oAuthUser);
+			OAuthUserImpl.class, oAuthUser.getPrimaryKey(), oAuthUser);
 
 		finderCache.putResult(
 			_finderPathFetchByAccessToken,
@@ -1600,8 +2322,7 @@ public class OAuthUserPersistenceImpl
 	public void cacheResult(List<OAuthUser> oAuthUsers) {
 		for (OAuthUser oAuthUser : oAuthUsers) {
 			if (entityCache.getResult(
-					entityCacheEnabled, OAuthUserImpl.class,
-					oAuthUser.getPrimaryKey()) == null) {
+					OAuthUserImpl.class, oAuthUser.getPrimaryKey()) == null) {
 
 				cacheResult(oAuthUser);
 			}
@@ -1637,7 +2358,7 @@ public class OAuthUserPersistenceImpl
 	@Override
 	public void clearCache(OAuthUser oAuthUser) {
 		entityCache.removeResult(
-			entityCacheEnabled, OAuthUserImpl.class, oAuthUser.getPrimaryKey());
+			OAuthUserImpl.class, oAuthUser.getPrimaryKey());
 
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
@@ -1652,8 +2373,7 @@ public class OAuthUserPersistenceImpl
 
 		for (OAuthUser oAuthUser : oAuthUsers) {
 			entityCache.removeResult(
-				entityCacheEnabled, OAuthUserImpl.class,
-				oAuthUser.getPrimaryKey());
+				OAuthUserImpl.class, oAuthUser.getPrimaryKey());
 
 			clearUniqueFindersCache((OAuthUserModelImpl)oAuthUser, true);
 		}
@@ -1666,8 +2386,7 @@ public class OAuthUserPersistenceImpl
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
 		for (Serializable primaryKey : primaryKeys) {
-			entityCache.removeResult(
-				entityCacheEnabled, OAuthUserImpl.class, primaryKey);
+			entityCache.removeResult(OAuthUserImpl.class, primaryKey);
 		}
 	}
 
@@ -1905,10 +2624,7 @@ public class OAuthUserPersistenceImpl
 
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 
-		if (!_columnBitmaskEnabled) {
-			finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-		}
-		else if (isNew) {
+		if (isNew) {
 			Object[] args = new Object[] {oAuthUserModelImpl.getUserId()};
 
 			finderCache.removeResult(_finderPathCountByUserId, args);
@@ -1971,8 +2687,7 @@ public class OAuthUserPersistenceImpl
 		}
 
 		entityCache.putResult(
-			entityCacheEnabled, OAuthUserImpl.class, oAuthUser.getPrimaryKey(),
-			oAuthUser, false);
+			OAuthUserImpl.class, oAuthUser.getPrimaryKey(), oAuthUser, false);
 
 		clearUniqueFindersCache(oAuthUserModelImpl, false);
 		cacheUniqueFindersCache(oAuthUserModelImpl);
@@ -2156,10 +2871,6 @@ public class OAuthUserPersistenceImpl
 				}
 			}
 			catch (Exception exception) {
-				if (useFinderCache) {
-					finderCache.removeResult(finderPath, finderArgs);
-				}
-
 				throw processException(exception);
 			}
 			finally {
@@ -2205,9 +2916,6 @@ public class OAuthUserPersistenceImpl
 					_finderPathCountAll, FINDER_ARGS_EMPTY, count);
 			}
 			catch (Exception exception) {
-				finderCache.removeResult(
-					_finderPathCountAll, FINDER_ARGS_EMPTY);
-
 				throw processException(exception);
 			}
 			finally {
@@ -2243,82 +2951,70 @@ public class OAuthUserPersistenceImpl
 	 */
 	@Activate
 	public void activate() {
-		OAuthUserModelImpl.setEntityCacheEnabled(entityCacheEnabled);
-		OAuthUserModelImpl.setFinderCacheEnabled(finderCacheEnabled);
-
 		_finderPathWithPaginationFindAll = new FinderPath(
-			entityCacheEnabled, finderCacheEnabled, OAuthUserImpl.class,
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findAll", new String[0]);
+			OAuthUserImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+			"findAll", new String[0]);
 
 		_finderPathWithoutPaginationFindAll = new FinderPath(
-			entityCacheEnabled, finderCacheEnabled, OAuthUserImpl.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findAll",
-			new String[0]);
+			OAuthUserImpl.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"findAll", new String[0]);
 
 		_finderPathCountAll = new FinderPath(
-			entityCacheEnabled, finderCacheEnabled, Long.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countAll",
+			Long.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countAll",
 			new String[0]);
 
 		_finderPathWithPaginationFindByUserId = new FinderPath(
-			entityCacheEnabled, finderCacheEnabled, OAuthUserImpl.class,
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByUserId",
+			OAuthUserImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+			"findByUserId",
 			new String[] {
 				Long.class.getName(), Integer.class.getName(),
 				Integer.class.getName(), OrderByComparator.class.getName()
 			});
 
 		_finderPathWithoutPaginationFindByUserId = new FinderPath(
-			entityCacheEnabled, finderCacheEnabled, OAuthUserImpl.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByUserId",
-			new String[] {Long.class.getName()},
+			OAuthUserImpl.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"findByUserId", new String[] {Long.class.getName()},
 			OAuthUserModelImpl.USERID_COLUMN_BITMASK);
 
 		_finderPathCountByUserId = new FinderPath(
-			entityCacheEnabled, finderCacheEnabled, Long.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByUserId",
-			new String[] {Long.class.getName()});
+			Long.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByUserId", new String[] {Long.class.getName()});
 
 		_finderPathWithPaginationFindByOAuthApplicationId = new FinderPath(
-			entityCacheEnabled, finderCacheEnabled, OAuthUserImpl.class,
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByOAuthApplicationId",
+			OAuthUserImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+			"findByOAuthApplicationId",
 			new String[] {
 				Long.class.getName(), Integer.class.getName(),
 				Integer.class.getName(), OrderByComparator.class.getName()
 			});
 
 		_finderPathWithoutPaginationFindByOAuthApplicationId = new FinderPath(
-			entityCacheEnabled, finderCacheEnabled, OAuthUserImpl.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			OAuthUserImpl.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
 			"findByOAuthApplicationId", new String[] {Long.class.getName()},
 			OAuthUserModelImpl.OAUTHAPPLICATIONID_COLUMN_BITMASK);
 
 		_finderPathCountByOAuthApplicationId = new FinderPath(
-			entityCacheEnabled, finderCacheEnabled, Long.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			Long.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
 			"countByOAuthApplicationId", new String[] {Long.class.getName()});
 
 		_finderPathFetchByAccessToken = new FinderPath(
-			entityCacheEnabled, finderCacheEnabled, OAuthUserImpl.class,
-			FINDER_CLASS_NAME_ENTITY, "fetchByAccessToken",
+			OAuthUserImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByAccessToken",
 			new String[] {String.class.getName()},
 			OAuthUserModelImpl.ACCESSTOKEN_COLUMN_BITMASK);
 
 		_finderPathCountByAccessToken = new FinderPath(
-			entityCacheEnabled, finderCacheEnabled, Long.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByAccessToken",
-			new String[] {String.class.getName()});
+			Long.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByAccessToken", new String[] {String.class.getName()});
 
 		_finderPathFetchByU_OAI = new FinderPath(
-			entityCacheEnabled, finderCacheEnabled, OAuthUserImpl.class,
-			FINDER_CLASS_NAME_ENTITY, "fetchByU_OAI",
+			OAuthUserImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByU_OAI",
 			new String[] {Long.class.getName(), Long.class.getName()},
 			OAuthUserModelImpl.USERID_COLUMN_BITMASK |
 			OAuthUserModelImpl.OAUTHAPPLICATIONID_COLUMN_BITMASK);
 
 		_finderPathCountByU_OAI = new FinderPath(
-			entityCacheEnabled, finderCacheEnabled, Long.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByU_OAI",
+			Long.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByU_OAI",
 			new String[] {Long.class.getName(), Long.class.getName()});
 	}
 
@@ -2336,12 +3032,6 @@ public class OAuthUserPersistenceImpl
 		unbind = "-"
 	)
 	public void setConfiguration(Configuration configuration) {
-		super.setConfiguration(configuration);
-
-		_columnBitmaskEnabled = GetterUtil.getBoolean(
-			configuration.get(
-				"value.object.column.bitmask.enabled.com.liferay.oauth.model.OAuthUser"),
-			true);
 	}
 
 	@Override
@@ -2362,8 +3052,6 @@ public class OAuthUserPersistenceImpl
 		super.setSessionFactory(sessionFactory);
 	}
 
-	private boolean _columnBitmaskEnabled;
-
 	@Reference
 	protected EntityCache entityCache;
 
@@ -2382,7 +3070,30 @@ public class OAuthUserPersistenceImpl
 	private static final String _SQL_COUNT_OAUTHUSER_WHERE =
 		"SELECT COUNT(oAuthUser) FROM OAuthUser oAuthUser WHERE ";
 
+	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN =
+		"oAuthUser.oAuthUserId";
+
+	private static final String _FILTER_SQL_SELECT_OAUTHUSER_WHERE =
+		"SELECT DISTINCT {oAuthUser.*} FROM OAuth_OAuthUser oAuthUser WHERE ";
+
+	private static final String
+		_FILTER_SQL_SELECT_OAUTHUSER_NO_INLINE_DISTINCT_WHERE_1 =
+			"SELECT {OAuth_OAuthUser.*} FROM (SELECT DISTINCT oAuthUser.oAuthUserId FROM OAuth_OAuthUser oAuthUser WHERE ";
+
+	private static final String
+		_FILTER_SQL_SELECT_OAUTHUSER_NO_INLINE_DISTINCT_WHERE_2 =
+			") TEMP_TABLE INNER JOIN OAuth_OAuthUser ON TEMP_TABLE.oAuthUserId = OAuth_OAuthUser.oAuthUserId";
+
+	private static final String _FILTER_SQL_COUNT_OAUTHUSER_WHERE =
+		"SELECT COUNT(DISTINCT oAuthUser.oAuthUserId) AS COUNT_VALUE FROM OAuth_OAuthUser oAuthUser WHERE ";
+
+	private static final String _FILTER_ENTITY_ALIAS = "oAuthUser";
+
+	private static final String _FILTER_ENTITY_TABLE = "OAuth_OAuthUser";
+
 	private static final String _ORDER_BY_ENTITY_ALIAS = "oAuthUser.";
+
+	private static final String _ORDER_BY_ENTITY_TABLE = "OAuth_OAuthUser.";
 
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY =
 		"No OAuthUser exists with the primary key ";

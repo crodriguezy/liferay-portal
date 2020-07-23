@@ -32,6 +32,10 @@ public class MBCategoryTable extends BaseTable<MBCategoryTable> {
 
 	public static final MBCategoryTable INSTANCE = new MBCategoryTable();
 
+	public final Column<MBCategoryTable, Long> mvccVersion = createColumn(
+		"mvccVersion", Long.class, Types.BIGINT, Column.FLAG_NULLITY);
+	public final Column<MBCategoryTable, Long> ctCollectionId = createColumn(
+		"ctCollectionId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
 	public final Column<MBCategoryTable, String> uuid = createColumn(
 		"uuid_", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<MBCategoryTable, Long> categoryId = createColumn(
@@ -56,12 +60,6 @@ public class MBCategoryTable extends BaseTable<MBCategoryTable> {
 		"description", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<MBCategoryTable, String> displayStyle = createColumn(
 		"displayStyle", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-	public final Column<MBCategoryTable, Integer> threadCount = createColumn(
-		"threadCount", Integer.class, Types.INTEGER, Column.FLAG_DEFAULT);
-	public final Column<MBCategoryTable, Integer> messageCount = createColumn(
-		"messageCount", Integer.class, Types.INTEGER, Column.FLAG_DEFAULT);
-	public final Column<MBCategoryTable, Date> lastPostDate = createColumn(
-		"lastPostDate", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
 	public final Column<MBCategoryTable, Date> lastPublishDate = createColumn(
 		"lastPublishDate", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
 	public final Column<MBCategoryTable, Integer> status = createColumn(

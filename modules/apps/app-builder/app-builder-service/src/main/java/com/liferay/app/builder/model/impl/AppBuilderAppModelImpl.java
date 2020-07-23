@@ -81,9 +81,11 @@ public class AppBuilderAppModelImpl
 		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
 		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
 		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
-		{"active_", Types.BOOLEAN}, {"ddmStructureId", Types.BIGINT},
+		{"active_", Types.BOOLEAN}, {"ddlRecordSetId", Types.BIGINT},
+		{"ddmStructureId", Types.BIGINT},
 		{"ddmStructureLayoutId", Types.BIGINT},
-		{"deDataListViewId", Types.BIGINT}, {"name", Types.VARCHAR}
+		{"deDataListViewId", Types.BIGINT}, {"name", Types.VARCHAR},
+		{"scope", Types.VARCHAR}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -99,14 +101,16 @@ public class AppBuilderAppModelImpl
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("active_", Types.BOOLEAN);
+		TABLE_COLUMNS_MAP.put("ddlRecordSetId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("ddmStructureId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("ddmStructureLayoutId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("deDataListViewId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("name", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("scope", Types.VARCHAR);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table AppBuilderApp (uuid_ VARCHAR(75) null,appBuilderAppId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,active_ BOOLEAN,ddmStructureId LONG,ddmStructureLayoutId LONG,deDataListViewId LONG,name STRING null)";
+		"create table AppBuilderApp (uuid_ VARCHAR(75) null,appBuilderAppId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,active_ BOOLEAN,ddlRecordSetId LONG,ddmStructureId LONG,ddmStructureLayoutId LONG,deDataListViewId LONG,name STRING null,scope VARCHAR(75) null)";
 
 	public static final String TABLE_SQL_DROP = "drop table AppBuilderApp";
 
@@ -130,16 +134,24 @@ public class AppBuilderAppModelImpl
 
 	public static final long GROUPID_COLUMN_BITMASK = 8L;
 
-	public static final long UUID_COLUMN_BITMASK = 16L;
+	public static final long SCOPE_COLUMN_BITMASK = 16L;
 
-	public static final long APPBUILDERAPPID_COLUMN_BITMASK = 32L;
+	public static final long UUID_COLUMN_BITMASK = 32L;
 
+	public static final long APPBUILDERAPPID_COLUMN_BITMASK = 64L;
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-		_entityCacheEnabled = entityCacheEnabled;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-		_finderCacheEnabled = finderCacheEnabled;
 	}
 
 	public AppBuilderAppModelImpl() {
@@ -193,9 +205,6 @@ public class AppBuilderAppModelImpl
 				attributeName,
 				attributeGetterFunction.apply((AppBuilderApp)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -308,6 +317,11 @@ public class AppBuilderAppModelImpl
 			"active",
 			(BiConsumer<AppBuilderApp, Boolean>)AppBuilderApp::setActive);
 		attributeGetterFunctions.put(
+			"ddlRecordSetId", AppBuilderApp::getDdlRecordSetId);
+		attributeSetterBiConsumers.put(
+			"ddlRecordSetId",
+			(BiConsumer<AppBuilderApp, Long>)AppBuilderApp::setDdlRecordSetId);
+		attributeGetterFunctions.put(
 			"ddmStructureId", AppBuilderApp::getDdmStructureId);
 		attributeSetterBiConsumers.put(
 			"ddmStructureId",
@@ -327,6 +341,10 @@ public class AppBuilderAppModelImpl
 		attributeGetterFunctions.put("name", AppBuilderApp::getName);
 		attributeSetterBiConsumers.put(
 			"name", (BiConsumer<AppBuilderApp, String>)AppBuilderApp::setName);
+		attributeGetterFunctions.put("scope", AppBuilderApp::getScope);
+		attributeSetterBiConsumers.put(
+			"scope",
+			(BiConsumer<AppBuilderApp, String>)AppBuilderApp::setScope);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -508,6 +526,16 @@ public class AppBuilderAppModelImpl
 	}
 
 	@Override
+	public long getDdlRecordSetId() {
+		return _ddlRecordSetId;
+	}
+
+	@Override
+	public void setDdlRecordSetId(long ddlRecordSetId) {
+		_ddlRecordSetId = ddlRecordSetId;
+	}
+
+	@Override
 	public long getDdmStructureId() {
 		return _ddmStructureId;
 	}
@@ -652,6 +680,31 @@ public class AppBuilderAppModelImpl
 	}
 
 	@Override
+	public String getScope() {
+		if (_scope == null) {
+			return "";
+		}
+		else {
+			return _scope;
+		}
+	}
+
+	@Override
+	public void setScope(String scope) {
+		_columnBitmask |= SCOPE_COLUMN_BITMASK;
+
+		if (_originalScope == null) {
+			_originalScope = _scope;
+		}
+
+		_scope = scope;
+	}
+
+	public String getOriginalScope() {
+		return GetterUtil.getString(_originalScope);
+	}
+
+	@Override
 	public StagedModelType getStagedModelType() {
 		return new StagedModelType(
 			PortalUtil.getClassNameId(AppBuilderApp.class.getName()));
@@ -768,10 +821,12 @@ public class AppBuilderAppModelImpl
 		appBuilderAppImpl.setCreateDate(getCreateDate());
 		appBuilderAppImpl.setModifiedDate(getModifiedDate());
 		appBuilderAppImpl.setActive(isActive());
+		appBuilderAppImpl.setDdlRecordSetId(getDdlRecordSetId());
 		appBuilderAppImpl.setDdmStructureId(getDdmStructureId());
 		appBuilderAppImpl.setDdmStructureLayoutId(getDdmStructureLayoutId());
 		appBuilderAppImpl.setDeDataListViewId(getDeDataListViewId());
 		appBuilderAppImpl.setName(getName());
+		appBuilderAppImpl.setScope(getScope());
 
 		appBuilderAppImpl.resetOriginalValues();
 
@@ -794,16 +849,16 @@ public class AppBuilderAppModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof AppBuilderApp)) {
+		if (!(object instanceof AppBuilderApp)) {
 			return false;
 		}
 
-		AppBuilderApp appBuilderApp = (AppBuilderApp)obj;
+		AppBuilderApp appBuilderApp = (AppBuilderApp)object;
 
 		long primaryKey = appBuilderApp.getPrimaryKey();
 
@@ -820,14 +875,22 @@ public class AppBuilderAppModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	@Override
@@ -856,6 +919,8 @@ public class AppBuilderAppModelImpl
 			appBuilderAppModelImpl._ddmStructureId;
 
 		appBuilderAppModelImpl._setOriginalDdmStructureId = false;
+
+		appBuilderAppModelImpl._originalScope = appBuilderAppModelImpl._scope;
 
 		appBuilderAppModelImpl._columnBitmask = 0;
 	}
@@ -909,6 +974,8 @@ public class AppBuilderAppModelImpl
 
 		appBuilderAppCacheModel.active = isActive();
 
+		appBuilderAppCacheModel.ddlRecordSetId = getDdlRecordSetId();
+
 		appBuilderAppCacheModel.ddmStructureId = getDdmStructureId();
 
 		appBuilderAppCacheModel.ddmStructureLayoutId =
@@ -922,6 +989,14 @@ public class AppBuilderAppModelImpl
 
 		if ((name != null) && (name.length() == 0)) {
 			appBuilderAppCacheModel.name = null;
+		}
+
+		appBuilderAppCacheModel.scope = getScope();
+
+		String scope = appBuilderAppCacheModel.scope;
+
+		if ((scope != null) && (scope.length() == 0)) {
+			appBuilderAppCacheModel.scope = null;
 		}
 
 		return appBuilderAppCacheModel;
@@ -997,9 +1072,6 @@ public class AppBuilderAppModelImpl
 
 	}
 
-	private static boolean _entityCacheEnabled;
-	private static boolean _finderCacheEnabled;
-
 	private String _uuid;
 	private String _originalUuid;
 	private long _appBuilderAppId;
@@ -1017,6 +1089,7 @@ public class AppBuilderAppModelImpl
 	private boolean _active;
 	private boolean _originalActive;
 	private boolean _setOriginalActive;
+	private long _ddlRecordSetId;
 	private long _ddmStructureId;
 	private long _originalDdmStructureId;
 	private boolean _setOriginalDdmStructureId;
@@ -1024,6 +1097,8 @@ public class AppBuilderAppModelImpl
 	private long _deDataListViewId;
 	private String _name;
 	private String _nameCurrentLanguageId;
+	private String _scope;
+	private String _originalScope;
 	private long _columnBitmask;
 	private AppBuilderApp _escapedModel;
 

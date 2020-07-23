@@ -12,71 +12,71 @@
  * details.
  */
 
-import React, {useCallback, useContext, useReducer} from 'react';
+import React, {useCallback, useContext, useRef, useState} from 'react';
 
 import {useFromControlsId, useToControlsId} from '../CollectionItemContext';
 
-const EditableProcessorContext = React.createContext(null);
 const INITIAL_STATE = {editableClickPosition: null, editableUniqueId: null};
-const SET_EDITABLE_UNIQUE_ID = 'SET_EDITABLE_UNIQUE_ID';
 
-function reducer(state = INITIAL_STATE, action) {
-	if (action.type === SET_EDITABLE_UNIQUE_ID) {
-		return {
-			editableClickPosition: action.editableClickPosition,
-			editableUniqueId: action.editableUniqueId,
-		};
-	}
-
-	return state;
-}
+const EditableProcessorDispatchContext = React.createContext(() => {});
+const EditableProcessorRefContext = React.createContext({current: null});
+const EditableProcessorStateContext = React.createContext(INITIAL_STATE);
 
 export function EditableProcessorContextProvider({children}) {
-	const store = useReducer(reducer, INITIAL_STATE);
+	const [state, setState] = useState(INITIAL_STATE);
+	const ref = useRef(null);
+
+	ref.current = state;
 
 	return (
-		<EditableProcessorContext.Provider value={store}>
-			{children}
-		</EditableProcessorContext.Provider>
+		<EditableProcessorDispatchContext.Provider value={setState}>
+			<EditableProcessorRefContext.Provider value={ref}>
+				<EditableProcessorStateContext.Provider value={state}>
+					{children}
+				</EditableProcessorStateContext.Provider>
+			</EditableProcessorRefContext.Provider>
+		</EditableProcessorDispatchContext.Provider>
 	);
 }
 
 export function useEditableProcessorClickPosition() {
-	const [state] = useContext(EditableProcessorContext);
+	const state = useContext(EditableProcessorStateContext);
 
 	return state.editableClickPosition;
 }
 
 export function useEditableProcessorUniqueId() {
-	const [state] = useContext(EditableProcessorContext);
+	const state = useContext(EditableProcessorStateContext);
 	const fromControlsId = useFromControlsId();
 
 	return fromControlsId(state.editableUniqueId);
 }
 
 export function useIsProcessorEnabled() {
-	const [state] = useContext(EditableProcessorContext);
+	const ref = useContext(EditableProcessorRefContext);
 	const toControlsId = useToControlsId();
 
 	return useCallback(
-		(editableUniqueId) =>
-			state.editableUniqueId === toControlsId(editableUniqueId),
-		[state.editableUniqueId, toControlsId]
+		(editableUniqueId = null) =>
+			editableUniqueId
+				? ref.current?.editableUniqueId ===
+				  toControlsId(editableUniqueId)
+				: !!ref.current?.editableUniqueId,
+		[ref, toControlsId]
 	);
 }
 
 export function useSetEditableProcessorUniqueId() {
-	const [, dispatch] = useContext(EditableProcessorContext);
+	const setState = useContext(EditableProcessorDispatchContext);
 	const toControlsId = useToControlsId();
 
 	return useCallback(
 		(editableUniqueIdOrNull, editableClickPosition = null) => {
-			dispatch({
+			setState({
 				editableClickPosition,
 				editableUniqueId: toControlsId(editableUniqueIdOrNull),
-				type: SET_EDITABLE_UNIQUE_ID,
 			});
 		},
-		[dispatch, toControlsId]
+		[setState, toControlsId]
 	);
 }

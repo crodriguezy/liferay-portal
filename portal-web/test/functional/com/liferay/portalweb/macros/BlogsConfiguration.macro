@@ -1,7 +1,7 @@
 definition {
 
 	macro enableReadingTime {
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "System Settings");
@@ -11,7 +11,13 @@ definition {
 			configurationName = "Blogs",
 			configurationScope = "Widget Scope");
 
-		FormFields.enableCheckbox(fieldName = "enableReadingTime");
+		if (IsNotChecked.isNotCheckedNotVisible(locator1 = "FormFields#CHECKBOX", key_fieldName = "enableReadingTime")) {
+			Check.checkNotVisible(
+				key_fieldName = "enableReadingTime",
+				locator1 = "FormFields#CHECKBOX");
+		}
+
+		FormFields.viewCheckboxChecked(fieldName = "enableReadingTime");
 
 		Button.clickSave();
 
@@ -39,11 +45,6 @@ definition {
 	}
 
 	macro selectConfigurationIFrame {
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 	}
 
@@ -182,11 +183,6 @@ definition {
 			if (IsElementPresent(locator1 = "MenuItem#ANY_MENU_ITEM", key_menuItem = "Configuration")) {
 				MenuItem.click(menuItem = "Configuration");
 
-				LiferayEvent.waitForLiferayEvent(
-					attributeName = "src",
-					attributeValue = "dialog-iframe-popup",
-					eventName = "modalIframeLoaded");
-
 				SelectFrame(locator1 = "IFrame#CONFIGURATION");
 
 				MenuItem.viewNotPresent(menuItem = "Permissions");
@@ -204,11 +200,6 @@ definition {
 		if (IsElementPresent(locator1 = "Portlet#OPTIONS_MENULIST_PERMISSIONS")) {
 			Click(locator1 = "Portlet#OPTIONS_MENULIST_PERMISSIONS");
 
-			LiferayEvent.waitForLiferayEvent(
-				attributeName = "src",
-				attributeValue = "dialog-iframe-popup",
-				eventName = "modalIframeLoaded");
-
 			SelectFrame(locator1 = "IFrame#MODAL_BODY");
 		}
 
@@ -220,7 +211,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Blogs");
 
 		AssertElementPresent(locator1 = "ProductMenu#PRODUCT_MENU_PANEL_SCOPE");

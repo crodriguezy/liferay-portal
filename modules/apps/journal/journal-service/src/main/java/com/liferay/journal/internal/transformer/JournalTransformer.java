@@ -568,10 +568,10 @@ public class JournalTransformer {
 				JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(
 					data);
 
-				Iterator<String> itr = dataJSONObject.keys();
+				Iterator<String> iterator = dataJSONObject.keys();
 
-				while (itr.hasNext()) {
-					String key = itr.next();
+				while (iterator.hasNext()) {
+					String key = iterator.next();
 
 					String value = dataJSONObject.getString(key);
 
@@ -626,6 +626,8 @@ public class JournalTransformer {
 					String optionLabel = localizedLabel.getString(locale);
 
 					templateNode.appendOptionMap(optionValue, optionLabel);
+
+					templateNode.appendOption(optionValue);
 				}
 			}
 

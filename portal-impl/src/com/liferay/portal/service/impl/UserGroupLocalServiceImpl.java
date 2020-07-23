@@ -14,8 +14,8 @@
 
 package com.liferay.portal.service.impl;
 
-import com.liferay.exportimport.kernel.configuration.ExportImportConfigurationConstants;
 import com.liferay.exportimport.kernel.configuration.ExportImportConfigurationSettingsMapFactoryUtil;
+import com.liferay.exportimport.kernel.configuration.constants.ExportImportConfigurationConstants;
 import com.liferay.exportimport.kernel.lar.ExportImportHelperUtil;
 import com.liferay.exportimport.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.exportimport.kernel.lar.UserIdStrategy;
@@ -267,14 +267,12 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 		throws PortalException {
 
 		if (!CompanyThreadLocal.isDeleteInProcess()) {
-			LinkedHashMap<String, Object> params =
-				LinkedHashMapBuilder.<String, Object>put(
-					"usersUserGroups", Long.valueOf(userGroup.getUserGroupId())
-				).build();
-
 			int count = userFinder.countByKeywords(
 				userGroup.getCompanyId(), null,
-				WorkflowConstants.STATUS_APPROVED, params);
+				WorkflowConstants.STATUS_APPROVED,
+				LinkedHashMapBuilder.<String, Object>put(
+					"usersUserGroups", Long.valueOf(userGroup.getUserGroupId())
+				).build());
 
 			if (count > 0) {
 				throw new RequiredUserGroupException();
@@ -441,26 +439,26 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 	 * @param  start the lower bound of the range of user groups to return
 	 * @param  end the upper bound of the range of user groups to return (not
 	 *         inclusive)
-	 * @param  obc the comparator to order the user groups (optionally
+	 * @param  orderByComparator the comparator to order the user groups (optionally
 	 *         <code>null</code>)
-	 * @return the matching user groups ordered by comparator <code>obc</code>
+	 * @return the matching user groups ordered by comparator <code>orderByComparator</code>
 	 * @see    com.liferay.portal.kernel.service.persistence.UserGroupFinder
 	 */
 	@Override
 	public List<UserGroup> search(
 		long companyId, String keywords, LinkedHashMap<String, Object> params,
-		int start, int end, OrderByComparator<UserGroup> obc) {
+		int start, int end, OrderByComparator<UserGroup> orderByComparator) {
 
 		if (isUseCustomSQL(params)) {
 			return userGroupFinder.findByKeywords(
-				companyId, keywords, params, start, end, obc);
+				companyId, keywords, params, start, end, orderByComparator);
 		}
 
-		String orderByCol = obc.getOrderByFields()[0];
+		String orderByCol = orderByComparator.getOrderByFields()[0];
 
 		String orderByType = "asc";
 
-		if (!obc.isAscending()) {
+		if (!orderByComparator.isAscending()) {
 			orderByType = "desc";
 		}
 
@@ -555,28 +553,28 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 	 * @param  start the lower bound of the range of user groups to return
 	 * @param  end the upper bound of the range of user groups to return (not
 	 *         inclusive)
-	 * @param  obc the comparator to order the user groups (optionally
+	 * @param  orderByComparator the comparator to order the user groups (optionally
 	 *         <code>null</code>)
-	 * @return the matching user groups ordered by comparator <code>obc</code>
+	 * @return the matching user groups ordered by comparator <code>orderByComparator</code>
 	 * @see    com.liferay.portal.kernel.service.persistence.UserGroupFinder
 	 */
 	@Override
 	public List<UserGroup> search(
 		long companyId, String name, String description,
 		LinkedHashMap<String, Object> params, boolean andOperator, int start,
-		int end, OrderByComparator<UserGroup> obc) {
+		int end, OrderByComparator<UserGroup> orderByComparator) {
 
 		if (isUseCustomSQL(params)) {
 			return userGroupFinder.findByC_N_D(
 				companyId, name, description, params, andOperator, start, end,
-				obc);
+				orderByComparator);
 		}
 
-		String orderByCol = obc.getOrderByFields()[0];
+		String orderByCol = orderByComparator.getOrderByFields()[0];
 
 		String orderByType = "asc";
 
-		if (!obc.isAscending()) {
+		if (!orderByComparator.isAscending()) {
 			orderByType = "desc";
 		}
 

@@ -36,7 +36,7 @@ ConfigurationScopeDisplayContext configurationScopeDisplayContext = Configuratio
 />
 
 <clay:container-fluid
-	className="container-view"
+	cssClass="container-view"
 >
 	<c:if test="<%= configurationCategorySectionDisplays.isEmpty() %>">
 		<liferay-ui:empty-result-message
@@ -72,7 +72,6 @@ ConfigurationScopeDisplayContext configurationScopeDisplayContext = Configuratio
 						<li class="list-group-card-item">
 							<a href="<%= viewCategoryHREF %>">
 								<clay:icon
-									elementClasses="user-icon-sm"
 									symbol="<%= configurationCategoryDisplay.getCategoryIcon() %>"
 								/>
 

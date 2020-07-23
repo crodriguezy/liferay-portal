@@ -12,10 +12,8 @@
  * details.
  */
 
-import {useModal} from '@clayui/modal';
 import classNames from 'classnames';
-import {useIsMounted} from 'frontend-js-react-web';
-import React, {useCallback, useState} from 'react';
+import React from 'react';
 
 import useSetRef from '../../../core/hooks/useSetRef';
 import {
@@ -23,107 +21,72 @@ import {
 	getLayoutDataItemPropTypes,
 } from '../../../prop-types/index';
 import {LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS} from '../../config/constants/layoutDataFloatingToolbarButtons';
-import selectSegmentsExperienceId from '../../selectors/selectSegmentsExperienceId';
-import {useDispatch, useSelector} from '../../store/index';
-import duplicateItem from '../../thunks/duplicateItem';
-import {useSelectItem} from '../Controls';
+import selectCanUpdateItemConfiguration from '../../selectors/selectCanUpdateItemConfiguration';
+import selectCanUpdatePageStructure from '../../selectors/selectCanUpdatePageStructure';
+import selectShowFloatingToolbar from '../../selectors/selectShowFloatingToolbar';
+import {useSelector} from '../../store/index';
+import {useIsActive} from '../Controls';
 import Topper from '../Topper';
 import FloatingToolbar from '../floating-toolbar/FloatingToolbar';
-import SaveFragmentCompositionModal from '../floating-toolbar/SaveFragmentCompositionModal';
 import Container from './Container';
-import hasDropZoneChild from './hasDropZoneChild';
 
 const ContainerWithControls = React.forwardRef(
 	({children, item, layoutData}, ref) => {
-		const dispatch = useDispatch();
-		const isMounted = useIsMounted();
-		const [
-			openSaveFragmentCompositionModal,
-			setOpenSaveFragmentCompositionModal,
-		] = useState(false);
-		const {observer, onClose} = useModal({
-			onClose: () => {
-				if (isMounted()) {
-					setOpenSaveFragmentCompositionModal(false);
-				}
-			},
-		});
-
-		const segmentsExperienceId = useSelector(selectSegmentsExperienceId);
-		const selectItem = useSelectItem();
+		const canUpdateItemConfiguration = useSelector(
+			selectCanUpdateItemConfiguration
+		);
+		const canUpdatePageStructure = useSelector(
+			selectCanUpdatePageStructure
+		);
+		const isActive = useIsActive();
+		const showFloatingToolbar = useSelector(selectShowFloatingToolbar);
 
 		const [setRef, itemElement] = useSetRef(ref);
 
-		const handleButtonClick = useCallback(
-			(id) => {
-				if (
-					id === LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS.duplicateItem.id
-				) {
-					dispatch(
-						duplicateItem({
-							itemId: item.itemId,
-							segmentsExperienceId,
-							selectItem,
-						})
-					);
-				}
-				else if (
-					id ===
-					LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS.saveFragmentComposition
-						.id
-				) {
-					setOpenSaveFragmentCompositionModal(true);
-				}
-			},
-			[dispatch, item.itemId, segmentsExperienceId, selectItem]
-		);
-
 		const buttons = [];
 
-		if (!hasDropZoneChild(item, layoutData)) {
-			buttons.push(LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS.duplicateItem);
-			buttons.push(
-				LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS.saveFragmentComposition
-			);
+		const {marginLeft, marginRight, widthType} = item.config;
+
+		if (canUpdateItemConfiguration) {
+			buttons.push(LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS.containerLink);
+			buttons.push(LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS.containerStyles);
 		}
 
-		buttons.push(
-			LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS.containerConfiguration
-		);
-
 		return (
-			<Topper
-				item={item}
-				itemElement={itemElement}
-				layoutData={layoutData}
-			>
-				<Container
-					className={classNames('page-editor__container', {
-						empty: !item.children.length,
-					})}
-					item={item}
-					ref={setRef}
-				>
+			<>
+				{isActive(item.itemId) && showFloatingToolbar && (
 					<FloatingToolbar
 						buttons={buttons}
 						item={item}
 						itemElement={itemElement}
-						onButtonClick={handleButtonClick}
 					/>
+				)}
 
-					{children}
-
-					{openSaveFragmentCompositionModal && (
-						<SaveFragmentCompositionModal
-							errorMessage={''}
-							itemId={item.itemId}
-							observer={observer}
-							onClose={onClose}
-							onErrorDismiss={() => true}
-						/>
-					)}
-				</Container>
-			</Topper>
+				<Topper
+					className={classNames({
+						[`ml-${marginLeft || 0}`]: widthType !== 'fixed',
+						[`mr-${marginRight || 0}`]: widthType !== 'fixed',
+						container: widthType === 'fixed',
+						'p-0': widthType === 'fixed',
+					})}
+					item={item}
+					itemElement={itemElement}
+					layoutData={layoutData}
+				>
+					<Container
+						className={classNames({
+							empty: !item.children.length,
+							'page-editor__container':
+								canUpdatePageStructure ||
+								canUpdateItemConfiguration,
+						})}
+						item={item}
+						ref={setRef}
+					>
+						{children}
+					</Container>
+				</Topper>
+			</>
 		);
 	}
 );

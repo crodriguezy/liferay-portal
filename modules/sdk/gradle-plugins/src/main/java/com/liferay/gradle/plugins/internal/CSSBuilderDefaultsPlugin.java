@@ -41,6 +41,8 @@ public class CSSBuilderDefaultsPlugin
 	protected void applyPluginDefaults(
 		Project project, CSSBuilderPlugin cssBuilderPlugin) {
 
+		// Dependencies
+
 		PortalTools.addPortalToolDependencies(
 			project, CSSBuilderPlugin.CSS_BUILDER_CONFIGURATION_NAME,
 			PortalTools.GROUP, _PORTAL_TOOL_NAME);
@@ -49,7 +51,20 @@ public class CSSBuilderDefaultsPlugin
 			project, CSSBuilderPlugin.PORTAL_COMMON_CSS_CONFIGURATION_NAME,
 			PortalTools.GROUP, _FRONTEND_COMMON_CSS_NAME);
 
-		_configureTasksBuildCSS(project);
+		// Other
+
+		TaskContainer taskContainer = project.getTasks();
+
+		taskContainer.withType(
+			BuildCSSTask.class,
+			new Action<BuildCSSTask>() {
+
+				@Override
+				public void execute(BuildCSSTask buildCSSTask) {
+					_configureTaskBuildCSS(buildCSSTask);
+				}
+
+			});
 	}
 
 	@Override
@@ -88,21 +103,6 @@ public class CSSBuilderDefaultsPlugin
 			project, "sass.compiler.class.name", (String)null);
 
 		buildCSSTask.setSassCompilerClassName(sassCompilerClassName);
-	}
-
-	private void _configureTasksBuildCSS(Project project) {
-		TaskContainer taskContainer = project.getTasks();
-
-		taskContainer.withType(
-			BuildCSSTask.class,
-			new Action<BuildCSSTask>() {
-
-				@Override
-				public void execute(BuildCSSTask buildCSSTask) {
-					_configureTaskBuildCSS(buildCSSTask);
-				}
-
-			});
 	}
 
 	private static final String _FRONTEND_COMMON_CSS_NAME =

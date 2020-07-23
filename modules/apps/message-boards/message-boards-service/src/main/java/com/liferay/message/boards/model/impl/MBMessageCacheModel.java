@@ -18,6 +18,7 @@ import com.liferay.message.boards.model.MBMessage;
 import com.liferay.petra.lang.HashUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.model.CacheModel;
+import com.liferay.portal.kernel.model.MVCCModel;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -33,21 +34,23 @@ import java.util.Date;
  * @generated
  */
 public class MBMessageCacheModel
-	implements CacheModel<MBMessage>, Externalizable {
+	implements CacheModel<MBMessage>, Externalizable, MVCCModel {
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof MBMessageCacheModel)) {
+		if (!(object instanceof MBMessageCacheModel)) {
 			return false;
 		}
 
-		MBMessageCacheModel mbMessageCacheModel = (MBMessageCacheModel)obj;
+		MBMessageCacheModel mbMessageCacheModel = (MBMessageCacheModel)object;
 
-		if (messageId == mbMessageCacheModel.messageId) {
+		if ((messageId == mbMessageCacheModel.messageId) &&
+			(mvccVersion == mbMessageCacheModel.mvccVersion)) {
+
 			return true;
 		}
 
@@ -56,14 +59,30 @@ public class MBMessageCacheModel
 
 	@Override
 	public int hashCode() {
-		return HashUtil.hash(0, messageId);
+		int hashCode = HashUtil.hash(0, messageId);
+
+		return HashUtil.hash(hashCode, mvccVersion);
+	}
+
+	@Override
+	public long getMvccVersion() {
+		return mvccVersion;
+	}
+
+	@Override
+	public void setMvccVersion(long mvccVersion) {
+		this.mvccVersion = mvccVersion;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(57);
+		StringBundler sb = new StringBundler(61);
 
-		sb.append("{uuid=");
+		sb.append("{mvccVersion=");
+		sb.append(mvccVersion);
+		sb.append(", ctCollectionId=");
+		sb.append(ctCollectionId);
+		sb.append(", uuid=");
 		sb.append(uuid);
 		sb.append(", messageId=");
 		sb.append(messageId);
@@ -127,6 +146,9 @@ public class MBMessageCacheModel
 	@Override
 	public MBMessage toEntityModel() {
 		MBMessageImpl mbMessageImpl = new MBMessageImpl();
+
+		mbMessageImpl.setMvccVersion(mvccVersion);
+		mbMessageImpl.setCtCollectionId(ctCollectionId);
 
 		if (uuid == null) {
 			mbMessageImpl.setUuid("");
@@ -241,6 +263,9 @@ public class MBMessageCacheModel
 	public void readExternal(ObjectInput objectInput)
 		throws ClassNotFoundException, IOException {
 
+		mvccVersion = objectInput.readLong();
+
+		ctCollectionId = objectInput.readLong();
 		uuid = objectInput.readUTF();
 
 		messageId = objectInput.readLong();
@@ -289,6 +314,10 @@ public class MBMessageCacheModel
 
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
+		objectOutput.writeLong(mvccVersion);
+
+		objectOutput.writeLong(ctCollectionId);
+
 		if (uuid == null) {
 			objectOutput.writeUTF("");
 		}
@@ -384,6 +413,8 @@ public class MBMessageCacheModel
 		objectOutput.writeLong(statusDate);
 	}
 
+	public long mvccVersion;
+	public long ctCollectionId;
 	public String uuid;
 	public long messageId;
 	public long groupId;

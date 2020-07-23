@@ -50,10 +50,24 @@ AccountUsersAdminManagementToolbarDisplayContext accountUsersAdminManagementTool
 				keyProperty="userId"
 				modelVar="accountUserDisplay"
 			>
+
+				<%
+				row.setData(
+					HashMapBuilder.<String, Object>put(
+						"actions", StringUtil.merge(accountUsersAdminManagementToolbarDisplayContext.getAvailableActions(accountUserDisplay))
+					).build());
+				%>
+
 				<portlet:renderURL var="rowURL">
 					<portlet:param name="p_u_i_d" value="<%= String.valueOf(accountUserDisplay.getUserId()) %>" />
 					<portlet:param name="mvcPath" value="/account_users_admin/edit_account_user.jsp" />
 				</portlet:renderURL>
+
+				<%
+				if (!UserPermissionUtil.contains(permissionChecker, accountUserDisplay.getUserId(), ActionKeys.UPDATE) && !AccountPermission.contains(permissionChecker, AccountPortletKeys.ACCOUNT_USERS_ADMIN, AccountActionKeys.ASSIGN_ACCOUNTS)) {
+					rowURL = null;
+				}
+				%>
 
 				<liferay-ui:search-container-column-text
 					cssClass="table-cell-expand-small table-cell-minw-150"
@@ -77,10 +91,10 @@ AccountUsersAdminManagementToolbarDisplayContext accountUsersAdminManagementTool
 				/>
 
 				<liferay-ui:search-container-column-text
-					cssClass='<%= "table-cell-expand-small table-cell-minw-150 " + accountUserDisplay.getAccountNamesStyle() %>'
+					cssClass='<%= "table-cell-expand-small table-cell-minw-150 " + accountUserDisplay.getAccountEntryNamesStyle() %>'
 					href="<%= rowURL %>"
 					name="accounts"
-					value="<%= accountUserDisplay.getAccountNames(request) %>"
+					value="<%= accountUserDisplay.getAccountEntryNamesString(request) %>"
 				/>
 
 				<liferay-ui:search-container-column-text
@@ -88,8 +102,8 @@ AccountUsersAdminManagementToolbarDisplayContext accountUsersAdminManagementTool
 					name="status"
 				>
 					<clay:label
-						label="<%= StringUtil.toUpperCase(LanguageUtil.get(request, accountUserDisplay.getStatusLabel()), locale) %>"
-						style="<%= accountUserDisplay.getStatusLabelStyle() %>"
+						displayType="<%= accountUserDisplay.getStatusLabelStyle() %>"
+						label="<%= accountUserDisplay.getStatusLabel() %>"
 					/>
 				</liferay-ui:search-container-column-text>
 

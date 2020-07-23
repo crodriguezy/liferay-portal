@@ -14,6 +14,7 @@
 
 import {PagesVisitor} from 'dynamic-data-mapping-form-renderer/js/util/visitors.es';
 
+import {getField} from '../../../util/fieldSupport.es';
 import {updateRulesReferences} from '../util/rules.es';
 import {
 	updateField,
@@ -48,8 +49,11 @@ export const updatePages = (props, pages, previousFieldName, newField) => {
 		newPages = visitor.mapFields(
 			(field) => {
 				if (parentFieldName === field.fieldName) {
-					const visitor = new PagesVisitor([{rows: field.rows}]);
-
+					const visitor = new PagesVisitor([
+						{
+							rows: field.rows || [],
+						},
+					]);
 					const layout = visitor.mapColumns((column) => {
 						return {
 							...column,
@@ -62,7 +66,6 @@ export const updatePages = (props, pages, previousFieldName, newField) => {
 							}),
 						};
 					});
-
 					const {rows} = layout[0];
 
 					return {
@@ -88,7 +91,7 @@ export const updatePages = (props, pages, previousFieldName, newField) => {
 };
 
 export const updateState = (props, state, propertyName, propertyValue) => {
-	const {focusedField, pages, rules} = state;
+	const {activePage, focusedField, pages, rules} = state;
 	const {fieldName: previousFocusedFieldName} = focusedField;
 	const newFocusedField = updateField(
 		props,
@@ -105,6 +108,7 @@ export const updateState = (props, state, propertyName, propertyValue) => {
 	);
 
 	return {
+		activePage,
 		focusedField: newFocusedField,
 		pages: newPages,
 		rules: updateRulesReferences(
@@ -116,10 +120,15 @@ export const updateState = (props, state, propertyName, propertyValue) => {
 };
 
 export const handleFieldEdited = (props, state, event) => {
-	const {propertyName, propertyValue} = event;
+	const {fieldName, propertyName, propertyValue} = event;
 	let newState = {};
 
 	if (propertyName !== 'name' || propertyValue !== '') {
+		state = {
+			...state,
+			...(fieldName && {focusedField: getField(state.pages, fieldName)}),
+		};
+
 		newState = updateState(props, state, propertyName, propertyValue);
 	}
 

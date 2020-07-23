@@ -96,6 +96,11 @@ public class StagedExpandoColumnImpl implements StagedExpandoColumn {
 	}
 
 	@Override
+	public long getCtCollectionId() {
+		return _expandoColumn.getCtCollectionId();
+	}
+
+	@Override
 	public String getDefaultData() {
 		return _expandoColumn.getDefaultData();
 	}
@@ -192,6 +197,10 @@ public class StagedExpandoColumnImpl implements StagedExpandoColumn {
 		return _expandoColumn.isCachedModel();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
 		return _expandoColumn.isEntityCacheEnabled();
@@ -202,6 +211,10 @@ public class StagedExpandoColumnImpl implements StagedExpandoColumn {
 		return _expandoColumn.isEscapedModel();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
 		return _expandoColumn.isFinderCacheEnabled();
@@ -239,6 +252,11 @@ public class StagedExpandoColumnImpl implements StagedExpandoColumn {
 
 	@Override
 	public void setCreateDate(Date date) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setCtCollectionId(long ctCollectionId) {
 		throw new UnsupportedOperationException();
 	}
 

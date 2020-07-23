@@ -38,6 +38,8 @@ definition {
 	@description = "This is a use case for LPS-108216. Can hide and show existing invisible portlets on widget page via switch toggle controls. Assert Toggle Controls affects all widget pages in virtual instance scoped."
 	@priority = "5"
 	test HideAndShowExistingInvisiblePortlet {
+		property portal.acceptance = "true";
+
 		task ("Can hide and show existing invisible portlets on widget page via switch toggle controls.") {
 			Navigator.gotoSitePage(
 				pageName = "Test Page Name",
@@ -106,6 +108,8 @@ definition {
 	@description = "This is a use case for LPS-108216. Can hide and show portlet header of existing visible portlets on widget page via switch Toggle Controls."
 	@priority = "5"
 	test HideAndShowHeaderOfExistingVisiblePortlet {
+		property portal.acceptance = "true";
+
 		task ("Switch Toggle Controls to hidden") {
 			Navigator.gotoSitePage(
 				pageName = "Test Page Name",
@@ -175,15 +179,11 @@ definition {
 				Click.clickAt(locator1 = "ControlMenu#ADD");
 			}
 
-			AssertElementPresent(locator1 = "ControlMenuAddPanel#APPLICATIONS_ACCORDION_PANEL_TITLE");
+			AssertElementPresent(locator1 = "ControlMenuAddPanel#SIDEBAR_HEADER");
 
-			AssertVisible(
-				locator1 = "ControlMenuAddPanel#APPLICATIONS_ACCORDION_PANEL_TITLE",
-				value1 = "Widgets");
+			Navigator.gotoNavTab(navTab = "Widgets");
 
 			Pause(locator1 = "5000");
-
-			Panel.expandSidebarApplicationsPanel();
 
 			Type.sendKeysApplicationSearch(
 				locator1 = "NavBar#APPLICATION_SEARCH_FIELD",
@@ -227,9 +227,14 @@ definition {
 	@priority = "4"
 	test ToggleControlsNotAffectPortletsOnContentPage {
 		task ("Create a new Content Page") {
-			SitePages.openPagesAdmin(siteURLKey = "Test Site Name");
+			JSONLayout.addPublicLayout(
+				groupName = "Test Site Name",
+				layoutName = "Test Content Page Name",
+				type = "content");
 
-			ContentPages.addPage(pageName = "Test Content Page Name");
+			ContentPagesNavigator.openEditContentPage(
+				pageName = "Test Content Page Name",
+				siteName = "Test Site Name");
 
 			PageEditor.clickPublish();
 		}
@@ -285,8 +290,8 @@ definition {
 		property test.name.skip.portal.instance = "ToggleControls#ToggleControlsOnlyAffectCurrentInstance";
 
 		task ("Add a virtual instance") {
-			ProductMenu.gotoPortlet(
-				category = "Configuration",
+			ApplicationsMenu.gotoPortlet(
+				category = "System",
 				panel = "Control Panel",
 				portlet = "Virtual Instances");
 
@@ -318,7 +323,6 @@ definition {
 
 			ProductMenu.gotoPortlet(
 				category = "Site Builder",
-				panel = "Site Administration",
 				portlet = "Pages");
 
 			SitePages.addPublicPage(pageName = "Test Site Page");

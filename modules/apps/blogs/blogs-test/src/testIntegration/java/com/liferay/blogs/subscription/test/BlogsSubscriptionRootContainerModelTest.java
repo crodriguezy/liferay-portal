@@ -29,6 +29,7 @@ import com.liferay.subscription.test.util.BaseSubscriptionRootContainerModelTest
 
 import org.junit.ClassRule;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
@@ -46,18 +47,22 @@ public class BlogsSubscriptionRootContainerModelTest
 			new LiferayIntegrationTestRule(), SynchronousMailTestRule.INSTANCE);
 
 	@Override
+	@Test
 	public void testSubscriptionRootContainerModelWhenAddingBaseModelInContainerModel() {
 	}
 
 	@Override
+	@Test
 	public void testSubscriptionRootContainerModelWhenAddingBaseModelInSubcontainerModel() {
 	}
 
 	@Override
+	@Test
 	public void testSubscriptionRootContainerModelWhenUpdatingBaseModelInContainerModel() {
 	}
 
 	@Override
+	@Test
 	public void testSubscriptionRootContainerModelWhenUpdatingBaseModelInSubcontainerModel() {
 	}
 

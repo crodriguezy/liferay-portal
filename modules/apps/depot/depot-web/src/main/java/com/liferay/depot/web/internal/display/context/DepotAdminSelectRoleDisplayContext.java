@@ -216,13 +216,13 @@ public class DepotAdminSelectRoleDisplayContext {
 			if (!groupSearchTerms.hasSearchTerms()) {
 				List<Group> groups = ListUtil.copy(_user.getGroups());
 
-				Iterator<Group> itr = groups.iterator();
+				Iterator<Group> iterator = groups.iterator();
 
-				while (itr.hasNext()) {
-					Group group = itr.next();
+				while (iterator.hasNext()) {
+					Group group = iterator.next();
 
 					if (group.getType() != GroupConstants.TYPE_DEPOT) {
-						itr.remove();
+						iterator.remove();
 					}
 				}
 
@@ -292,14 +292,14 @@ public class DepotAdminSelectRoleDisplayContext {
 
 		public Map<String, Object> getData(Role role) throws PortalException {
 			return HashMapBuilder.<String, Object>put(
+				"entityid", role.getRoleId()
+			).put(
 				"groupdescriptivename",
 				_group.getDescriptiveName(_themeDisplay.getLocale())
 			).put(
 				"groupid", _group.getGroupId()
 			).put(
 				"iconcssclass", RolesAdminUtil.getIconCssClass(role)
-			).put(
-				"roleid", role.getRoleId()
 			).put(
 				"rolename", role.getTitle(_themeDisplay.getLocale())
 			).build();

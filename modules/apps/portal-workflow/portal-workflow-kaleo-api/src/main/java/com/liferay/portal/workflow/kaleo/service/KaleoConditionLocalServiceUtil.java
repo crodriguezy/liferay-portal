@@ -41,6 +41,10 @@ public class KaleoConditionLocalServiceUtil {
 	/**
 	 * Adds the kaleo condition to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect KaleoConditionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param kaleoCondition the kaleo condition
 	 * @return the kaleo condition that was added
 	 */
@@ -95,6 +99,10 @@ public class KaleoConditionLocalServiceUtil {
 	/**
 	 * Deletes the kaleo condition from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect KaleoConditionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param kaleoCondition the kaleo condition
 	 * @return the kaleo condition that was removed
 	 */
@@ -108,6 +116,10 @@ public class KaleoConditionLocalServiceUtil {
 
 	/**
 	 * Deletes the kaleo condition with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect KaleoConditionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param kaleoConditionId the primary key of the kaleo condition
 	 * @return the kaleo condition that was removed
@@ -317,6 +329,10 @@ public class KaleoConditionLocalServiceUtil {
 
 	/**
 	 * Updates the kaleo condition in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect KaleoConditionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param kaleoCondition the kaleo condition
 	 * @return the kaleo condition that was updated

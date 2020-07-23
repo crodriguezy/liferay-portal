@@ -228,11 +228,6 @@ definition {
 
 		ItemSelector.searchDMImages(imageFileName = "Document_1");
 
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "ItemSelector#ITEM_SELECTOR_IFRAME");
 
 		var key_imageFileName = "Document_1.jpg";
@@ -347,8 +342,8 @@ definition {
 			entryContent = "Blogs Entry2 Content",
 			entryTitle = "Blogs Entry2 Title");
 
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
+		ApplicationsMenu.gotoPortlet(
+			category = "System",
 			panel = "Control Panel",
 			portlet = "Virtual Instances");
 
@@ -364,7 +359,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(
@@ -849,7 +843,6 @@ definition {
 
 		ProductMenu.gotoScopedPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Blogs",
 			scope = "Blogs Page2");
 
@@ -1188,7 +1181,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
-			panel = "Site Administration",
 			portlet = "Settings");
 
 		Site.addVirtualHostsURLCP(
@@ -1197,7 +1189,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPrivatePage(pageName = "Private Blogs Page");
@@ -1301,7 +1292,7 @@ definition {
 		Portlet.addPG(portletName = "Blogs Aggregator");
 
 		Portlet.gotoPortletOptions(
-			portletName = "${portletName}",
+			portletName = "Blogs Aggregator",
 			portletOption = "Configuration");
 
 		var key_portletName = "Blogs Aggregator";
@@ -1309,11 +1300,6 @@ definition {
 		AssertTextPresent(
 			locator1 = "Portlet#TITLE",
 			value1 = "Blogs Aggregator");
-
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
 
 		SelectFrame(locator1 = "IFrame#CONFIGURATION");
 
@@ -1325,11 +1311,6 @@ definition {
 
 		SelectFrame(value1 = "relative=top");
 
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "UsersAndOrganizationsSelectOrganization#SELECT_ORGANIZATION_IFRAME");
 
 		AssertElementPresent(locator1 = "Message#EMPTY_INFO");
@@ -1338,7 +1319,7 @@ definition {
 
 		Click(locator1 = "Icon#TIMES");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -1348,7 +1329,7 @@ definition {
 				orgName = "${orgName}",
 				orgType = "Organization");
 
-			ProductMenu.gotoPortlet(
+			ApplicationsMenu.gotoPortlet(
 				category = "Users",
 				panel = "Control Panel",
 				portlet = "Users and Organizations");
@@ -1364,7 +1345,7 @@ definition {
 			orgName = "Organization3 Name",
 			parentOrgName = "Organization1 Name");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -1376,7 +1357,7 @@ definition {
 			parentOrgName = "Organization1 Name",
 			subOrgName = "Organization3 Name");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -1389,13 +1370,15 @@ definition {
 
 		BlogsAggregatorPortlet.viewParentOrganizationPG(
 			orgName = "Organization2 Name",
-			parentOrgName = "");
+			parentOrgName = "",
+			portletName = "Blogs Aggregator");
 
 		Navigator.gotoPage(pageName = "Blogs Page");
 
 		BlogsAggregatorPortlet.viewParentOrganizationPG(
 			orgName = "Organization3 Name",
-			parentOrgName = "Organization1 Name");
+			parentOrgName = "Organization1 Name",
+			portletName = "Blogs Aggregator");
 	}
 
 }

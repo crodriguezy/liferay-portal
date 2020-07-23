@@ -54,10 +54,6 @@ public class LocalizedValueUtil {
 		return localizedValues.get(LocaleUtil.toLanguageId(locale));
 	}
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
 	public static <V> JSONObject toJSONObject(Map<String, V> map) {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
@@ -108,6 +104,26 @@ public class LocalizedValueUtil {
 		return localizedValue;
 	}
 
+	public static LocalizedValue toLocalizedValue(
+		Map<String, Object> localizedValues, Locale locale) {
+
+		if (localizedValues == null) {
+			return null;
+		}
+
+		LocalizedValue localizedValue = new LocalizedValue();
+
+		for (Map.Entry<String, Object> entry : localizedValues.entrySet()) {
+			localizedValue.addString(
+				LocaleUtil.fromLanguageId(entry.getKey()),
+				GetterUtil.getString(entry.getValue()));
+
+			localizedValue.setDefaultLocale(locale);
+		}
+
+		return localizedValue;
+	}
+
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
 	 */
@@ -119,10 +135,10 @@ public class LocalizedValueUtil {
 
 		Map<String, V> localizedValues = new HashMap<>();
 
-		Iterator<String> keys = jsonObject.keys();
+		Iterator<String> iterator = jsonObject.keys();
 
-		while (keys.hasNext()) {
-			String key = keys.next();
+		while (iterator.hasNext()) {
+			String key = iterator.next();
 
 			localizedValues.put(key, (V)jsonObject.get(key));
 		}

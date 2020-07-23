@@ -22,7 +22,7 @@ import com.liferay.calendar.service.CalendarLocalService;
 import com.liferay.calendar.service.CalendarService;
 import com.liferay.calendar.service.base.CalendarBookingServiceBaseImpl;
 import com.liferay.calendar.util.JCalendarUtil;
-import com.liferay.calendar.workflow.CalendarBookingWorkflowConstants;
+import com.liferay.calendar.workflow.constants.CalendarBookingWorkflowConstants;
 import com.liferay.petra.content.ContentUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
@@ -897,13 +897,13 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 
 		calendarBookings = ListUtil.copy(calendarBookings);
 
-		Iterator<CalendarBooking> itr = calendarBookings.iterator();
+		Iterator<CalendarBooking> iterator = calendarBookings.iterator();
 
-		while (itr.hasNext()) {
-			CalendarBooking calendarBooking = itr.next();
+		while (iterator.hasNext()) {
+			CalendarBooking calendarBooking = iterator.next();
 
 			if (isPendingInWorkflow(calendarBooking)) {
-				itr.remove();
+				iterator.remove();
 
 				continue;
 			}
@@ -916,7 +916,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 						getPermissionChecker(), calendarBooking.getCalendarId(),
 						actionId)) {
 
-					itr.remove();
+					iterator.remove();
 				}
 				else {
 					filterCalendarBooking(calendarBooking);

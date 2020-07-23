@@ -17,6 +17,8 @@ package com.liferay.fragment.entry.processor.editable.internal.parser;
 import com.liferay.fragment.entry.processor.editable.EditableFragmentEntryProcessor;
 import com.liferay.fragment.entry.processor.editable.parser.EditableElementParser;
 import com.liferay.fragment.exception.FragmentEntryContentException;
+import com.liferay.info.localized.InfoLocalizedValue;
+import com.liferay.info.type.WebImage;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONException;
@@ -35,6 +37,8 @@ import com.liferay.portal.kernel.util.Validator;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.jsoup.nodes.Element;
@@ -71,8 +75,25 @@ public class ImageEditableElementParser implements EditableElementParser {
 
 			alt = fieldValueJSONObject.getString("alt");
 		}
+		else if (fieldValue instanceof WebImage) {
+			WebImage webImage = (WebImage)fieldValue;
 
-		return JSONUtil.put("alt", alt);
+			Optional<InfoLocalizedValue<String>> altInfoLocalizedValueOptional =
+				webImage.getAltInfoLocalizedValueOptional();
+
+			if (altInfoLocalizedValueOptional.isPresent()) {
+				InfoLocalizedValue<String> infoLocalizedValue =
+					altInfoLocalizedValueOptional.get();
+
+				alt = infoLocalizedValue.getValue();
+			}
+		}
+
+		return JSONUtil.put(
+			"alt", alt
+		).put(
+			"altTemplate", _TMPL_IMAGE_FIELD_ALT_TEMPLATE
+		);
 	}
 
 	@Override
@@ -103,13 +124,19 @@ public class ImageEditableElementParser implements EditableElementParser {
 
 	@Override
 	public String parseFieldValue(Object fieldValue) {
-		if (!(fieldValue instanceof JSONObject)) {
+		if (fieldValue instanceof JSONObject) {
+			JSONObject jsonObject = (JSONObject)fieldValue;
+
+			return GetterUtil.getString(jsonObject.getString("url"));
+		}
+		else if (fieldValue instanceof WebImage) {
+			WebImage webImage = (WebImage)fieldValue;
+
+			return GetterUtil.getString(webImage.getUrl());
+		}
+		else {
 			return StringPool.BLANK;
 		}
-
-		JSONObject jsonObject = (JSONObject)fieldValue;
-
-		return GetterUtil.getString(jsonObject.getString("url"));
 	}
 
 	@Override
@@ -129,7 +156,7 @@ public class ImageEditableElementParser implements EditableElementParser {
 
 		Element replaceableElement = elements.get(0);
 
-		if (value.startsWith(StringPool.OPEN_CURLY_BRACE)) {
+		if (JSONUtil.isValid(value)) {
 			try {
 				JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
 
@@ -142,6 +169,8 @@ public class ImageEditableElementParser implements EditableElementParser {
 			}
 		}
 
+		value = value.trim();
+
 		if (Validator.isNotNull(value)) {
 			replaceableElement.attr("src", _html.unescape(value));
 		}
@@ -151,8 +180,11 @@ public class ImageEditableElementParser implements EditableElementParser {
 		}
 
 		String alt = configJSONObject.getString("alt");
+		String altTemplate = configJSONObject.getString("altTemplate");
 
-		if (Validator.isNotNull(alt)) {
+		if (Validator.isNotNull(alt) &&
+			!Objects.equals(altTemplate, _TMPL_IMAGE_FIELD_ALT_TEMPLATE)) {
+
 			replaceableElement.attr(
 				"alt", StringUtil.trim(_html.unescape(alt)));
 		}

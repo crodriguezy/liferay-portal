@@ -25,10 +25,6 @@ AUI.add(
 
 		var EMPTY_FN = A.Lang.emptyFn;
 
-		var FIELDS_DISPLAY_INSTANCE_SEPARATOR = '_INSTANCE_';
-
-		var FIELDS_DISPLAY_NAME = '_fieldsDisplay';
-
 		var STR_EMPTY = '';
 
 		var isArray = Array.isArray;
@@ -49,6 +45,11 @@ AUI.add(
 				structure: {
 					validator: isArray,
 					value: [],
+				},
+
+				updateRecordURL: {
+					validator: Lang.isString,
+					value: STR_EMPTY,
 				},
 			},
 
@@ -496,12 +497,7 @@ AUI.add(
 					}
 				},
 
-				_normalizeFieldData(
-					item,
-					record,
-					fieldsDisplayValues,
-					normalized
-				) {
+				_normalizeFieldData(item, record, normalized) {
 					var instance = this;
 
 					var type = item.type;
@@ -526,20 +522,27 @@ AUI.add(
 						value = JSON.stringify(value);
 					}
 
-					normalized[item.name] = instance._normalizeValue(value);
+					var fieldValue = {
+						instanceId: instance._randomString(8),
+						name: item.name,
+					};
 
-					fieldsDisplayValues.push(
-						item.name +
-							FIELDS_DISPLAY_INSTANCE_SEPARATOR +
-							instance._randomString(8)
-					);
+					if (item.localizable) {
+						fieldValue['value'] = {
+							[themeDisplay.getLanguageId()]: value,
+						};
+					}
+					else {
+						fieldValue['value'] = value;
+					}
+
+					normalized['fieldValues'].push(fieldValue);
 
 					if (isArray(item.fields)) {
 						item.fields.forEach((item) => {
 							instance._normalizeFieldData(
 								item,
 								record,
-								fieldsDisplayValues,
 								normalized
 							);
 						});
@@ -551,30 +554,30 @@ AUI.add(
 
 					var structure = instance.get('structure');
 
-					var fieldsDisplayValues = [];
-					var normalized = {};
+					var normalized = {
+						availableLanguageIds: [themeDisplay.getLanguageId()],
+						defaultLanguageId: themeDisplay.getLanguageId(),
+						fieldValues: [],
+					};
 
 					structure.forEach((item) => {
-						instance._normalizeFieldData(
-							item,
-							record,
-							fieldsDisplayValues,
-							normalized
-						);
-					});
+						instance._normalizeFieldData(item, record, normalized);
 
-					normalized[FIELDS_DISPLAY_NAME] = fieldsDisplayValues.join(
-						','
-					);
+						if (item.fields) {
+							item.fields.forEach((nestedField) =>
+								instance._normalizeFieldData(
+									nestedField,
+									record,
+									normalized
+								)
+							);
+						}
+					});
 
 					delete normalized.displayIndex;
 					delete normalized.recordId;
 
 					return normalized;
-				},
-
-				_normalizeValue(value) {
-					return String(value);
 				},
 
 				_onDataChange(event) {
@@ -642,7 +645,9 @@ AUI.add(
 								recordId,
 								recordIndex,
 								fieldsMap,
-								true
+								false,
+								instance.get('portletNamespace'),
+								instance.get('updateRecordURL')
 							);
 						}
 						else {
@@ -746,26 +751,34 @@ AUI.add(
 				},
 			},
 
-			updateRecord(recordId, displayIndex, fieldsMap, merge, callback) {
+			updateRecord(
+				recordId,
+				displayIndex,
+				ddmFormValues,
+				majorVersion,
+				portletNamespace,
+				updateRecordURL,
+				callback
+			) {
 				var instance = this;
 
 				callback = (callback && A.bind(callback, instance)) || EMPTY_FN;
 
-				Liferay.Service(
-					'/ddl.ddlrecord/update-record',
-					{
+				A.io.request(updateRecordURL, {
+					data: Liferay.Util.ns(portletNamespace, {
+						ddmFormValues: JSON.stringify(ddmFormValues),
 						displayIndex,
-						fieldsMap: JSON.stringify(fieldsMap),
-						mergeFields: merge,
+						majorVersion,
 						recordId,
-						serviceContext: JSON.stringify({
-							scopeGroupId: themeDisplay.getScopeGroupId(),
-							userId: themeDisplay.getUserId(),
-							workflowAction: Liferay.Workflow.ACTION_PUBLISH,
-						}),
+					}),
+					dataType: 'JSON',
+					method: 'POST',
+					on: {
+						success() {
+							callback();
+						},
 					},
-					callback
-				);
+				});
 			},
 		});
 
@@ -804,6 +817,7 @@ AUI.add(
 		requires: [
 			'aui-arraysort',
 			'aui-datatable',
+			'aui-io-deprecated',
 			'datatable-sort',
 			'json',
 			'liferay-portlet-dynamic-data-mapping-custom-fields',

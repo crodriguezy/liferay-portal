@@ -120,7 +120,6 @@ import java.util.regex.Pattern;
 
 import org.dom4j.Attribute;
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.DocumentType;
 import org.dom4j.Element;
@@ -388,10 +387,10 @@ public class ServiceBuilder {
 			if (config.startsWith("classpath*:")) {
 				String name = config.substring("classpath*:".length());
 
-				Enumeration<URL> enu = classLoader.getResources(name);
+				Enumeration<URL> enumeration = classLoader.getResources(name);
 
-				while (enu.hasMoreElements()) {
-					URL url = enu.nextElement();
+				while (enumeration.hasMoreElements()) {
+					URL url = enumeration.nextElement();
 
 					InputStream inputStream = url.openStream();
 
@@ -401,11 +400,11 @@ public class ServiceBuilder {
 				}
 			}
 			else {
-				Enumeration<URL> urls = classLoader.getResources(config);
+				Enumeration<URL> enumeration = classLoader.getResources(config);
 
-				if (urls.hasMoreElements()) {
-					while (urls.hasMoreElements()) {
-						URL url = urls.nextElement();
+				if (enumeration.hasMoreElements()) {
+					while (enumeration.hasMoreElements()) {
+						URL url = enumeration.nextElement();
 
 						try (InputStream inputStream = url.openStream()) {
 							_readResourceActionModels(
@@ -2349,7 +2348,9 @@ public class ServiceBuilder {
 				_outputPath, "/service/impl/", entity.getName(),
 				"CTServiceImpl.java"));
 
-		if (!entity.isChangeTrackingEnabled() || entity.hasLocalService()) {
+		if (!entity.isChangeTrackingEnabled() || !entity.hasEntityColumns() ||
+			entity.hasLocalService()) {
+
 			if (file.exists()) {
 				System.out.println("Removing " + file);
 
@@ -3483,12 +3484,48 @@ public class ServiceBuilder {
 					_outputPath, "/service/base/", entity.getName(),
 					_getSessionTypeName(sessionType), "ServiceBaseImpl.java"));
 
-			JavaSource parentJavaSource = parentJavaClass.getSource();
-
-			imports.addAll(parentJavaSource.getImports());
-
 			methods = _mergeMethods(
 				methods, parentJavaClass.getMethods(), true);
+
+			JavaSource parentJavaSource = parentJavaClass.getSource();
+
+			Map<String, String> importsMap = new HashMap<>();
+
+			for (String childImport : imports) {
+				int x = childImport.lastIndexOf('.');
+
+				importsMap.put(childImport.substring(x + 1), childImport);
+			}
+
+			for (String parentImport : parentJavaSource.getImports()) {
+				int x = parentImport.lastIndexOf('.');
+
+				String simpleName = parentImport.substring(x + 1);
+
+				String conflictingImport = importsMap.get(simpleName);
+
+				if (conflictingImport == null) {
+					imports.add(parentImport);
+				}
+				else if (!conflictingImport.equals(parentImport)) {
+					for (JavaMethod method : methods) {
+						String signature = method.getDeclarationSignature(
+							false);
+
+						if (signature.contains(conflictingImport)) {
+							break;
+						}
+
+						if (signature.contains(parentImport)) {
+							imports.remove(conflictingImport);
+
+							imports.add(parentImport);
+
+							break;
+						}
+					}
+				}
+			}
 		}
 
 		Map<String, Object> context = _getContext();
@@ -4611,9 +4648,7 @@ public class ServiceBuilder {
 		return sb.toString();
 	}
 
-	private String _formatXml(String xml)
-		throws DocumentException, IOException {
-
+	private String _formatXml(String xml) throws Exception {
 		String doctype = null;
 
 		int x = xml.indexOf("<!DOCTYPE");
@@ -6026,11 +6061,7 @@ public class ServiceBuilder {
 			derivedColumnElements.add(columnElement);
 		}
 
-		if (columnElements.isEmpty()) {
-			changeTrackingEnabled = false;
-		}
-
-		if (changeTrackingEnabled) {
+		if (changeTrackingEnabled && !columnElements.isEmpty()) {
 			Element columnElement = DocumentHelper.createElement("column");
 
 			columnElement.addAttribute(
@@ -6592,7 +6623,7 @@ public class ServiceBuilder {
 			unresolvedReferenceEntityNames, txRequiredMethodNames,
 			resourceActionModel);
 
-		if (changeTrackingEnabled) {
+		if (changeTrackingEnabled && !columnElements.isEmpty()) {
 			if (!mvccEnabled) {
 				throw new ServiceBuilderException(
 					"MVCC must be enabled to use change tracking for " +

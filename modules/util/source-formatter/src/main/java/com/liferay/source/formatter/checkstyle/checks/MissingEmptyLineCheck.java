@@ -14,6 +14,8 @@
 
 package com.liferay.source.formatter.checkstyle.checks;
 
+import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -110,6 +112,22 @@ public class MissingEmptyLineCheck extends BaseCheck {
 		}
 
 		if (nextSiblingDetailAST.getType() == TokenTypes.EXPR) {
+			List<String> enforceEmptyLineAfterMethodNames = getAttributeValues(
+				_ENFORCE_EMPTY_LINE_AFTER_METHOD_NAMES);
+
+			String methodName = getMethodName(detailAST);
+
+			if (enforceEmptyLineAfterMethodNames.contains(
+					StringBundler.concat(
+						getVariableTypeName(detailAST, variableName, false),
+						StringPool.PERIOD, methodName))) {
+
+				log(
+					endLineNumber, _MSG_MISSING_EMPTY_LINE_AFTER_METHOD_NAME,
+					StringBundler.concat(
+						variableName, StringPool.PERIOD, methodName));
+			}
+
 			DetailAST firstChildDetailAST =
 				nextSiblingDetailAST.getFirstChild();
 
@@ -508,8 +526,14 @@ public class MissingEmptyLineCheck extends BaseCheck {
 		return false;
 	}
 
+	private static final String _ENFORCE_EMPTY_LINE_AFTER_METHOD_NAMES =
+		"enforceEmptyLineAfterMethodNames";
+
 	private static final String _MSG_MISSING_EMPTY_LINE_AFTER_METHOD_CALL =
 		"empty.line.missing.after.method.call";
+
+	private static final String _MSG_MISSING_EMPTY_LINE_AFTER_METHOD_NAME =
+		"empty.line.missing.after.method.name";
 
 	private static final String
 		_MSG_MISSING_EMPTY_LINE_AFTER_VARIABLE_DEFINITION =

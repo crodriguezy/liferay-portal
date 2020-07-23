@@ -153,6 +153,7 @@ definition {
 
 	@priority = "5"
 	test DeleteWebContent {
+		property portal.acceptance = "true";
 		property testray.component.names = "Web Content Administration";
 
 		JSONWebcontent.addWebContent(
@@ -200,7 +201,7 @@ definition {
 		property test.name.skip.portal.instance = "WebContent#EditBasicWebContentStructureAndTemplate";
 		property testray.component.names = "Web Content Administration";
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "Search");
@@ -267,6 +268,7 @@ definition {
 
 	@priority = "5"
 	test EditWebContent {
+		property portal.acceptance = "true";
 		property testray.component.names = "Web Content Administration,WYSIWYG";
 
 		JSONWebcontent.addWebContent(
@@ -294,7 +296,7 @@ definition {
 
 	@priority = "5"
 	test EditWebContentViaArticleTitle {
-		property portal.acceptance = "quarantine";
+		property portal.acceptance = "true";
 		property testray.component.names = "Web Content Administration";
 
 		JSONWebcontent.addWebContent(
@@ -525,6 +527,7 @@ definition {
 
 	@priority = "5"
 	test MoveWebContentToFolderTraining {
+		property portal.acceptance = "true";
 		property testray.component.names = "Training";
 
 		JSONWebcontent.addFolder(
@@ -557,6 +560,8 @@ definition {
 	@description = "This is a test for LPS-86845. A user can preview a draft or pending status Web Content article through the 'View Usages' screen."
 	@priority = "5"
 	test PreviewDraftWebContentInWCD {
+		property portal.acceptance = "true";
+
 		task ("Add a Web Content article") {
 			JSONWebcontent.addWebContent(
 				content = "WC WebContent Content",
@@ -615,6 +620,8 @@ definition {
 	@description = "This is a test for LPS-86845. A user can preview a draft or pending status Web Content article through the 'View Usages' screen."
 	@priority = "5"
 	test PreviewPendingWebContentInWCD {
+		property portal.acceptance = "true";
+
 		task ("Add a Web Content article") {
 			JSONWebcontent.addWebContent(
 				content = "WC WebContent Content",
@@ -681,6 +688,8 @@ definition {
 	@description = "This is a test for LPS-90066. A user can preview a scheduled Web Content article through the 'View Usages' screen."
 	@priority = "5"
 	test PreviewScheduledWebContentInWCD {
+		property portal.acceptance = "true";
+
 		task ("Add a web content article with a future display date") {
 			WebContentNavigator.openWebContentAdmin(siteURLKey = "test-site-name");
 
@@ -767,6 +776,7 @@ definition {
 
 	@priority = "5"
 	test SearchWebContent {
+		property portal.acceptance = "true";
 		property testray.component.names = "Web Content Administration";
 
 		JSONWebcontent.addWebContent(
@@ -982,6 +992,8 @@ definition {
 	@description = "This is a test for LPS-88500. At any given time, a user can view all the places a web content article is displayed through a Web Content Display widget or an Asset Publisher widget with manual selection."
 	@priority = "5"
 	test ViewWebContentArticleUsages {
+		property portal.acceptance = "true";
+
 		task ("Add a Web Content article") {
 			JSONWebcontent.addWebContent(
 				content = "WC WebContent Content",

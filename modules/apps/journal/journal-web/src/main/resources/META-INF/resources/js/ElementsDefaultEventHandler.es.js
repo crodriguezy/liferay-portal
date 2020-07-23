@@ -16,6 +16,7 @@ import {
 	DefaultEventHandler,
 	ItemSelectorDialog,
 	addParams,
+	openModal,
 } from 'frontend-js-web';
 import {Config} from 'metal-state';
 
@@ -23,33 +24,25 @@ class ElementsDefaultEventHandler extends DefaultEventHandler {
 	compareVersions(itemData) {
 		const namespace = this.namespace;
 
-		Liferay.Util.selectEntity(
-			{
-				dialog: {
-					constrain: true,
-					destroyOnHide: true,
-					modal: true,
-				},
-				eventName: this.ns('selectVersionFm'),
-				id: this.ns('compareVersions'),
-				title: Liferay.Language.get('compare-versions'),
-				uri: itemData.compareVersionsURL,
+		openModal({
+			onSelect: (selectedItem) => {
+				let url = itemData.redirectURL;
+
+				url = addParams(
+					`${namespace}sourceVersion=${selectedItem.sourceversion}`,
+					url
+				);
+				url = addParams(
+					`${namespace}targetVersion=${selectedItem.targetversion}`,
+					url
+				);
+
+				location.href = url;
 			},
-			(event) => {
-				let uri = itemData.redirectURL;
-
-				uri = addParams(
-					namespace + 'sourceVersion=' + event.sourceversion,
-					uri
-				);
-				uri = addParams(
-					namespace + 'targetVersion=' + event.targetversion,
-					uri
-				);
-
-				location.href = uri;
-			}
-		);
+			selectEventName: this.ns('selectVersionFm'),
+			title: Liferay.Language.get('compare-versions'),
+			url: itemData.compareVersionsURL,
+		});
 	}
 
 	copyArticle(itemData) {
@@ -102,35 +95,29 @@ class ElementsDefaultEventHandler extends DefaultEventHandler {
 		this._send(itemData.expireURL);
 	}
 
+	exportTranslation(itemData) {
+		Liferay.componentReady(this.ns('ExportForTranslationComponent')).then(
+			(exportTranslationComponent) => {
+				exportTranslationComponent.open([itemData.articleEntryId]);
+			}
+		);
+	}
+
 	permissions(itemData) {
-		Liferay.Util.openWindow({
-			dialog: {
-				destroyOnHide: true,
-				modal: true,
-			},
-			dialogIframe: {
-				bodyCssClass: 'dialog-with-footer',
-			},
+		openModal({
 			title: Liferay.Language.get('permissions'),
-			uri: itemData.permissionsURL,
+			url: itemData.permissionsURL,
 		});
 	}
 
 	preview(itemData) {
-		Liferay.Util.openWindow({
-			dialog: {
-				destroyOnHide: true,
-				modal: true,
-			},
-			dialogIframe: {
-				bodyCssClass: 'dialog-with-footer',
-			},
+		openModal({
 			title: itemData.title,
-			uri: itemData.previewURL,
+			url: itemData.previewURL,
 		});
 	}
 
-	publishToLive(itemData) {
+	publishArticleToLive(itemData) {
 		if (
 			confirm(
 				Liferay.Language.get(
@@ -139,6 +126,18 @@ class ElementsDefaultEventHandler extends DefaultEventHandler {
 			)
 		) {
 			this._send(itemData.publishArticleURL);
+		}
+	}
+
+	publishFolderToLive(itemData) {
+		if (
+			confirm(
+				Liferay.Language.get(
+					'are-you-sure-you-want-to-publish-the-selected-folder'
+				)
+			)
+		) {
+			this._send(itemData.publishFolderURL);
 		}
 	}
 

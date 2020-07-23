@@ -18,11 +18,12 @@ import com.liferay.change.tracking.constants.CTConstants;
 import com.liferay.change.tracking.model.CTCollection;
 import com.liferay.change.tracking.model.CTEntry;
 import com.liferay.change.tracking.service.CTEntryLocalService;
-import com.liferay.petra.lang.SafeClosable;
 import com.liferay.petra.string.StringBundler;
-import com.liferay.portal.change.tracking.sql.CTSQLModeThreadLocal;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,42 +33,61 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class CTEntryDiffDisplay {
 
-	public CTEntryDiffDisplay(
-		HttpServletRequest httpServletRequest,
-		HttpServletResponse httpServletResponse, CTCollection ctCollection,
-		CTDisplayRendererRegistry ctDisplayRendererRegistry, CTEntry ctEntry,
-		CTEntryLocalService ctEntryLocalService, Language language,
-		String name) {
+	public static final String TYPE_AFTER = "after";
 
-		_httpServletRequest = httpServletRequest;
-		_httpServletResponse = httpServletResponse;
+	public static final String TYPE_BEFORE = "before";
+
+	public CTEntryDiffDisplay(
+		CTCollection ctCollection,
+		CTDisplayRendererRegistry ctDisplayRendererRegistry, CTEntry ctEntry,
+		CTEntryLocalService ctEntryLocalService,
+		HttpServletRequest httpServletRequest,
+		HttpServletResponse httpServletResponse, Language language,
+		Locale locale) {
+
 		_ctCollection = ctCollection;
 		_ctDisplayRendererRegistry = ctDisplayRendererRegistry;
 		_ctEntry = ctEntry;
 		_ctEntryLocalService = ctEntryLocalService;
+		_httpServletRequest = httpServletRequest;
+		_httpServletResponse = httpServletResponse;
 		_language = language;
-		_name = name;
+		_locale = locale;
 	}
 
-	public String getLeftTitle() {
+	public String getLeftTitle() throws PortalException {
+		String title = null;
+
+		if (_ctCollection.getStatus() == WorkflowConstants.STATUS_APPROVED) {
+			title = _ctDisplayRendererRegistry.getTitle(
+				_ctEntry.getCtCollectionId(), _ctEntry, _locale);
+		}
+		else {
+			title = _ctDisplayRendererRegistry.getTitle(
+				CTConstants.CT_COLLECTION_ID_PRODUCTION, _ctEntry, _locale);
+		}
+
 		if (isChangeType(CTConstants.CT_CHANGE_TYPE_DELETION)) {
 			return StringBundler.concat(
-				_language.get(_httpServletRequest, "production"), " : ", _name,
+				_language.get(_httpServletRequest, "production"), " : ", title,
 				" (", _language.get(_httpServletRequest, "deleted"), ")");
 		}
 
 		return StringBundler.concat(
-			_language.get(_httpServletRequest, "production"), " : ", _name);
+			_language.get(_httpServletRequest, "production"), " : ", title);
 	}
 
-	public String getRightTitle() {
+	public String getRightTitle() throws PortalException {
+		String title = _ctDisplayRendererRegistry.getTitle(
+			_ctCollection, _ctEntry, _locale);
+
 		if (isChangeType(CTConstants.CT_CHANGE_TYPE_ADDITION)) {
 			return StringBundler.concat(
-				_ctCollection.getName(), " : ", _name, " (",
+				_ctCollection.getName(), " : ", title, " (",
 				_language.get(_httpServletRequest, "new"), ")");
 		}
 
-		return StringBundler.concat(_ctCollection.getName(), " : ", _name);
+		return StringBundler.concat(_ctCollection.getName(), " : ", title);
 	}
 
 	public boolean isChangeType(int changeType) {
@@ -80,18 +100,14 @@ public class CTEntryDiffDisplay {
 
 	public void renderLeftCTRow() throws Exception {
 		if (_ctCollection.getStatus() == WorkflowConstants.STATUS_APPROVED) {
-			try (SafeClosable safeClosable = CTSQLModeThreadLocal.setCTSQLMode(
-					_getCTSQLMode(_ctEntry.getCtCollectionId()))) {
-
-				_ctDisplayRendererRegistry.renderCTEntry(
-					_httpServletRequest, _httpServletResponse, _ctEntry,
-					_ctEntry.getCtCollectionId());
-			}
+			_ctDisplayRendererRegistry.renderCTEntry(
+				_httpServletRequest, _httpServletResponse,
+				_ctEntry.getCtCollectionId(), _ctEntry, TYPE_BEFORE);
 		}
 		else {
 			_ctDisplayRendererRegistry.renderCTEntry(
-				_httpServletRequest, _httpServletResponse, _ctEntry,
-				CTConstants.CT_COLLECTION_ID_PRODUCTION);
+				_httpServletRequest, _httpServletResponse,
+				CTConstants.CT_COLLECTION_ID_PRODUCTION, _ctEntry, TYPE_BEFORE);
 		}
 	}
 
@@ -100,43 +116,15 @@ public class CTEntryDiffDisplay {
 			long ctCollectionId = _ctEntryLocalService.getCTRowCTCollectionId(
 				_ctEntry);
 
-			try (SafeClosable safeClosable = CTSQLModeThreadLocal.setCTSQLMode(
-					_getCTSQLMode(ctCollectionId))) {
-
-				_ctDisplayRendererRegistry.renderCTEntry(
-					_httpServletRequest, _httpServletResponse, _ctEntry,
-					ctCollectionId);
-			}
+			_ctDisplayRendererRegistry.renderCTEntry(
+				_httpServletRequest, _httpServletResponse, ctCollectionId,
+				_ctEntry, TYPE_AFTER);
 		}
 		else {
 			_ctDisplayRendererRegistry.renderCTEntry(
-				_httpServletRequest, _httpServletResponse, _ctEntry,
-				_ctEntry.getCtCollectionId());
+				_httpServletRequest, _httpServletResponse,
+				_ctCollection.getCtCollectionId(), _ctEntry, TYPE_AFTER);
 		}
-	}
-
-	private CTSQLModeThreadLocal.CTSQLMode _getCTSQLMode(long ctCollectionId) {
-		if (ctCollectionId == CTConstants.CT_COLLECTION_ID_PRODUCTION) {
-			return CTSQLModeThreadLocal.CTSQLMode.DEFAULT;
-		}
-
-		CTEntry ctEntry = _ctEntry;
-
-		if (ctCollectionId != _ctEntry.getCtCollectionId()) {
-			ctEntry = _ctEntryLocalService.fetchCTEntry(
-				ctCollectionId, _ctEntry.getModelClassNameId(),
-				_ctEntry.getModelClassPK());
-
-			if (ctEntry == null) {
-				return CTSQLModeThreadLocal.CTSQLMode.DEFAULT;
-			}
-		}
-
-		if (ctEntry.getChangeType() == CTConstants.CT_CHANGE_TYPE_DELETION) {
-			return CTSQLModeThreadLocal.CTSQLMode.CT_ONLY;
-		}
-
-		return CTSQLModeThreadLocal.CTSQLMode.DEFAULT;
 	}
 
 	private final CTCollection _ctCollection;
@@ -146,6 +134,6 @@ public class CTEntryDiffDisplay {
 	private final HttpServletRequest _httpServletRequest;
 	private final HttpServletResponse _httpServletResponse;
 	private final Language _language;
-	private final String _name;
+	private final Locale _locale;
 
 }

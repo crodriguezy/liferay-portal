@@ -81,6 +81,10 @@ public abstract class AppBuilderAppLocalServiceBaseImpl
 	/**
 	 * Adds the app builder app to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AppBuilderAppLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param appBuilderApp the app builder app
 	 * @return the app builder app that was added
 	 */
@@ -107,6 +111,10 @@ public abstract class AppBuilderAppLocalServiceBaseImpl
 	/**
 	 * Deletes the app builder app with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AppBuilderAppLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param appBuilderAppId the primary key of the app builder app
 	 * @return the app builder app that was removed
 	 * @throws PortalException if a app builder app with the primary key could not be found
@@ -121,6 +129,10 @@ public abstract class AppBuilderAppLocalServiceBaseImpl
 
 	/**
 	 * Deletes the app builder app from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AppBuilderAppLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param appBuilderApp the app builder app
 	 * @return the app builder app that was removed
@@ -476,6 +488,10 @@ public abstract class AppBuilderAppLocalServiceBaseImpl
 
 	/**
 	 * Updates the app builder app in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AppBuilderAppLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param appBuilderApp the app builder app
 	 * @return the app builder app that was updated

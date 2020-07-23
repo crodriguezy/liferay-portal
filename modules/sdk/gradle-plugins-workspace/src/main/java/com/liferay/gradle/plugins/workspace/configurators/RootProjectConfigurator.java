@@ -26,6 +26,9 @@ import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage;
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile;
 
 import com.liferay.gradle.plugins.LiferayBasePlugin;
+import com.liferay.gradle.plugins.node.NodeExtension;
+import com.liferay.gradle.plugins.node.tasks.NpmInstallTask;
+import com.liferay.gradle.plugins.workspace.LiferayWorkspaceYarnPlugin;
 import com.liferay.gradle.plugins.workspace.WorkspaceExtension;
 import com.liferay.gradle.plugins.workspace.WorkspacePlugin;
 import com.liferay.gradle.plugins.workspace.internal.configurators.TargetPlatformRootProjectConfigurator;
@@ -63,7 +66,6 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.http.HttpHeaders;
 
 import org.gradle.api.Action;
 import org.gradle.api.GradleException;
@@ -73,6 +75,7 @@ import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.file.CopySpec;
+import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.DuplicatesStrategy;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.FileCopyDetails;
@@ -80,8 +83,10 @@ import org.gradle.api.file.RelativePath;
 import org.gradle.api.initialization.Settings;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.plugins.ExtensionAware;
+import org.gradle.api.provider.Property;
 import org.gradle.api.specs.Spec;
 import org.gradle.api.tasks.Copy;
+import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.TaskOutputs;
 import org.gradle.api.tasks.bundling.AbstractArchiveTask;
 import org.gradle.api.tasks.bundling.Compression;
@@ -172,6 +177,15 @@ public class RootProjectConfigurator implements Plugin<Project> {
 		GradleUtil.applyPlugin(project, DockerRemoteApiPlugin.class);
 		GradleUtil.applyPlugin(project, LifecycleBasePlugin.class);
 
+		String nodePackageManager = workspaceExtension.getNodePackageManager();
+
+		if (nodePackageManager.equals("yarn")) {
+			GradleUtil.applyPlugin(project, LiferayWorkspaceYarnPlugin.class);
+		}
+		else {
+			_configureNpmProject(project);
+		}
+
 		if (isDefaultRepositoryEnabled()) {
 			GradleUtil.addDefaultRepositories(project);
 		}
@@ -184,11 +198,10 @@ public class RootProjectConfigurator implements Plugin<Project> {
 
 		TargetPlatformRootProjectConfigurator.INSTANCE.apply(project);
 
-		CreateTokenTask createTokenTask = _addTaskCreateToken(
-			project, workspaceExtension);
+		_addTaskCreateToken(project);
 
 		Download downloadBundleTask = _addTaskDownloadBundle(
-			createTokenTask, workspaceExtension);
+			project, workspaceExtension);
 
 		Copy distBundleTask = _addTaskDistBundle(
 			project, downloadBundleTask, workspaceExtension,
@@ -198,8 +211,12 @@ public class RootProjectConfigurator implements Plugin<Project> {
 			project, DIST_BUNDLE_TAR_TASK_NAME, Tar.class, distBundleTask,
 			workspaceExtension);
 
+		Property<String> archiveExtensionProperty =
+			distBundleTarTask.getArchiveExtension();
+
+		archiveExtensionProperty.set("tar.gz");
+
 		distBundleTarTask.setCompression(Compression.GZIP);
-		distBundleTarTask.setExtension("tar.gz");
 
 		_addTaskDistBundle(
 			project, DIST_BUNDLE_ZIP_TASK_NAME, Zip.class, distBundleTask,
@@ -600,55 +617,13 @@ public class RootProjectConfigurator implements Plugin<Project> {
 		return dockerfile;
 	}
 
-	private CreateTokenTask _addTaskCreateToken(
-		Project project, final WorkspaceExtension workspaceExtension) {
-
+	@SuppressWarnings("deprecation")
+	private CreateTokenTask _addTaskCreateToken(Project project) {
 		CreateTokenTask createTokenTask = GradleUtil.addTask(
 			project, CREATE_TOKEN_TASK_NAME, CreateTokenTask.class);
 
-		createTokenTask.setDescription("Creates a liferay.com download token.");
-
-		createTokenTask.setEmailAddress(
-			new Callable<String>() {
-
-				@Override
-				public String call() throws Exception {
-					return workspaceExtension.getBundleTokenEmailAddress();
-				}
-
-			});
-
-		createTokenTask.setForce(
-			new Callable<Boolean>() {
-
-				@Override
-				public Boolean call() throws Exception {
-					return workspaceExtension.isBundleTokenForce();
-				}
-
-			});
-
-		createTokenTask.setGroup(BUNDLE_GROUP);
-
-		createTokenTask.setPassword(
-			new Callable<String>() {
-
-				@Override
-				public String call() throws Exception {
-					return workspaceExtension.getBundleTokenPassword();
-				}
-
-			});
-
-		createTokenTask.setPasswordFile(
-			new Callable<File>() {
-
-				@Override
-				public File call() throws Exception {
-					return workspaceExtension.getBundleTokenPasswordFile();
-				}
-
-			});
+		createTokenTask.setDescription(
+			"This task is deprecated and it will be removed in future.");
 
 		return createTokenTask;
 	}
@@ -714,9 +689,17 @@ public class RootProjectConfigurator implements Plugin<Project> {
 
 			});
 
-		task.setBaseName(project.getName());
+		Property<String> archiveBaseNameProperty = task.getArchiveBaseName();
+
+		archiveBaseNameProperty.set(project.getName());
+
 		task.setDescription("Assembles the Liferay bundle and zips it up.");
-		task.setDestinationDir(project.getBuildDir());
+
+		DirectoryProperty destinationDirectoryProperty =
+			task.getDestinationDirectory();
+
+		destinationDirectoryProperty.set(project.getBuildDir());
+
 		task.setGroup(BUNDLE_GROUP);
 
 		return task;
@@ -828,10 +811,7 @@ public class RootProjectConfigurator implements Plugin<Project> {
 	}
 
 	private Download _addTaskDownloadBundle(
-		final CreateTokenTask createTokenTask,
-		final WorkspaceExtension workspaceExtension) {
-
-		Project project = createTokenTask.getProject();
+		final Project project, final WorkspaceExtension workspaceExtension) {
 
 		final Download download = GradleUtil.addTask(
 			project, DOWNLOAD_BUNDLE_TASK_NAME, Download.class);
@@ -843,16 +823,6 @@ public class RootProjectConfigurator implements Plugin<Project> {
 				public void execute(Task task) {
 					Logger logger = download.getLogger();
 					Project project = download.getProject();
-
-					if (workspaceExtension.isBundleTokenDownload()) {
-						String token = FileUtil.read(
-							createTokenTask.getTokenFile());
-
-						token = token.trim();
-
-						download.header(
-							HttpHeaders.AUTHORIZATION, "Bearer " + token);
-					}
 
 					for (Object src : _getSrcList(download)) {
 						File file = null;
@@ -898,10 +868,6 @@ public class RootProjectConfigurator implements Plugin<Project> {
 
 				@Override
 				public void execute(Project project) {
-					if (workspaceExtension.isBundleTokenDownload()) {
-						download.dependsOn(createTokenTask);
-					}
-
 					File destinationDir =
 						workspaceExtension.getBundleCacheDir();
 
@@ -1144,6 +1110,45 @@ public class RootProjectConfigurator implements Plugin<Project> {
 			});
 
 		return dockerStopContainer;
+	}
+
+	private void _configureNpmProject(Project project) {
+		project.subprojects(
+			new Action<Project>() {
+
+				@Override
+				public void execute(Project project) {
+					project.afterEvaluate(
+						new Action<Project>() {
+
+							@Override
+							public void execute(Project project) {
+								TaskContainer taskContainer =
+									project.getTasks();
+
+								taskContainer.withType(
+									NpmInstallTask.class,
+									new Action<NpmInstallTask>() {
+
+										@Override
+										public void execute(
+											NpmInstallTask npmInstallTask) {
+
+											NodeExtension nodeExtension =
+												GradleUtil.getExtension(
+													npmInstallTask.getProject(),
+													NodeExtension.class);
+
+											nodeExtension.setUseNpm(true);
+										}
+
+									});
+							}
+
+						});
+				}
+
+			});
 	}
 
 	@SuppressWarnings("serial")

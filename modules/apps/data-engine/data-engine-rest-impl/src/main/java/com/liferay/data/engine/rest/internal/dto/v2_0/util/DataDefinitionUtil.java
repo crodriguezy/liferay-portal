@@ -14,9 +14,11 @@
 
 package com.liferay.data.engine.rest.internal.dto.v2_0.util;
 
+import com.liferay.data.engine.content.type.DataDefinitionContentType;
 import com.liferay.data.engine.field.type.util.LocalizedValueUtil;
 import com.liferay.data.engine.rest.dto.v2_0.DataDefinition;
 import com.liferay.data.engine.rest.dto.v2_0.DataDefinitionField;
+import com.liferay.data.engine.rest.internal.content.type.DataDefinitionContentTypeTracker;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldType;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeServicesTracker;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeSettings;
@@ -63,6 +65,7 @@ import java.util.stream.Stream;
 public class DataDefinitionUtil {
 
 	public static DataDefinition toDataDefinition(
+			DataDefinitionContentTypeTracker dataDefinitionContentTypeTracker,
 			DDMFormFieldTypeServicesTracker ddmFormFieldTypeServicesTracker,
 			DDMStructure ddmStructure,
 			SPIDDMFormRuleConverter spiDDMFormRuleConverter)
@@ -70,10 +73,15 @@ public class DataDefinitionUtil {
 
 		DDMForm ddmForm = ddmStructure.getDDMForm();
 
+		DataDefinitionContentType dataDefinitionContentType =
+			dataDefinitionContentTypeTracker.getDataDefinitionContentType(
+				ddmStructure.getClassNameId());
+
 		return new DataDefinition() {
 			{
 				availableLanguageIds = _toLanguageIds(
 					ddmForm.getAvailableLocales());
+				contentType = dataDefinitionContentType.getContentType();
 				dataDefinitionFields = _toDataDefinitionFields(
 					ddmForm.getDDMFormFields(),
 					ddmFormFieldTypeServicesTracker);
@@ -112,7 +120,8 @@ public class DataDefinitionUtil {
 		ddmForm.setDDMFormFields(
 			_toDDMFormFields(
 				dataDefinition.getDataDefinitionFields(),
-				ddmFormFieldTypeServicesTracker));
+				ddmFormFieldTypeServicesTracker,
+				dataDefinition.getDefaultLanguageId()));
 		ddmForm.setDefaultLocale(
 			LocaleUtil.fromLanguageId(dataDefinition.getDefaultLanguageId()));
 
@@ -178,7 +187,7 @@ public class DataDefinitionUtil {
 	}
 
 	private static DDMFormFieldOptions _getDDMFormFieldOptions(
-		Map<String, ?> options) {
+		Locale locale, Map<String, ?> options) {
 
 		DDMFormFieldOptions ddmFormFieldOptions = new DDMFormFieldOptions();
 
@@ -242,6 +251,8 @@ public class DataDefinitionUtil {
 				}
 			}
 		}
+
+		ddmFormFieldOptions.setDefaultLocale(locale);
 
 		return ddmFormFieldOptions;
 	}
@@ -354,21 +365,23 @@ public class DataDefinitionUtil {
 
 	private static DDMFormField _toDDMFormField(
 		DataDefinitionField dataDefinitionField,
-		DDMFormFieldTypeServicesTracker ddmFormFieldTypeServicesTracker) {
+		DDMFormFieldTypeServicesTracker ddmFormFieldTypeServicesTracker,
+		String languageId) {
 
 		DDMFormField ddmFormField = new DDMFormField();
 
 		ddmFormField.setIndexType(dataDefinitionField.getIndexTypeAsString());
 		ddmFormField.setLabel(
 			LocalizedValueUtil.toLocalizedValue(
-				dataDefinitionField.getLabel()));
+				dataDefinitionField.getLabel(),
+				LocaleUtil.fromLanguageId(languageId)));
 		ddmFormField.setLocalizable(
 			GetterUtil.getBoolean(dataDefinitionField.getLocalizable()));
 		ddmFormField.setName(dataDefinitionField.getName());
 		ddmFormField.setNestedDDMFormFields(
 			_toDDMFormFields(
 				dataDefinitionField.getNestedDataDefinitionFields(),
-				ddmFormFieldTypeServicesTracker));
+				ddmFormFieldTypeServicesTracker, languageId));
 
 		Map<String, Object> defaultValue =
 			dataDefinitionField.getDefaultValue();
@@ -388,7 +401,8 @@ public class DataDefinitionUtil {
 		}
 
 		ddmFormField.setPredefinedValue(
-			LocalizedValueUtil.toLocalizedValue(defaultValue));
+			LocalizedValueUtil.toLocalizedValue(
+				defaultValue, LocaleUtil.fromLanguageId(languageId)));
 
 		ddmFormField.setReadOnly(
 			GetterUtil.getBoolean(dataDefinitionField.getReadOnly()));
@@ -399,7 +413,9 @@ public class DataDefinitionUtil {
 		ddmFormField.setShowLabel(
 			GetterUtil.getBoolean(dataDefinitionField.getShowLabel()));
 		ddmFormField.setTip(
-			LocalizedValueUtil.toLocalizedValue(dataDefinitionField.getTip()));
+			LocalizedValueUtil.toLocalizedValue(
+				dataDefinitionField.getTip(),
+				LocaleUtil.fromLanguageId(languageId)));
 		ddmFormField.setType(dataDefinitionField.getFieldType());
 
 		Map<String, Object> customProperties =
@@ -431,7 +447,8 @@ public class DataDefinitionUtil {
 					ddmFormField.setProperty(
 						entry.getKey(),
 						LocalizedValueUtil.toLocalizedValue(
-							(Map<String, Object>)entry.getValue()));
+							(Map<String, Object>)entry.getValue(),
+							LocaleUtil.fromLanguageId(languageId)));
 				}
 				else if (Objects.equals(
 							settingsDDMFormField.getDataType(), "boolean")) {
@@ -447,6 +464,7 @@ public class DataDefinitionUtil {
 					ddmFormField.setProperty(
 						entry.getKey(),
 						_getDDMFormFieldOptions(
+							LocaleUtil.fromLanguageId(languageId),
 							(Map<String, ?>)entry.getValue()));
 				}
 				else if (Objects.equals(
@@ -468,7 +486,8 @@ public class DataDefinitionUtil {
 
 	private static List<DDMFormField> _toDDMFormFields(
 		DataDefinitionField[] dataDefinitionFields,
-		DDMFormFieldTypeServicesTracker ddmFormFieldTypeServicesTracker) {
+		DDMFormFieldTypeServicesTracker ddmFormFieldTypeServicesTracker,
+		String languageId) {
 
 		if (ArrayUtil.isEmpty(dataDefinitionFields)) {
 			return Collections.emptyList();
@@ -478,7 +497,8 @@ public class DataDefinitionUtil {
 			dataDefinitionFields
 		).map(
 			dataDefinitionField -> _toDDMFormField(
-				dataDefinitionField, ddmFormFieldTypeServicesTracker)
+				dataDefinitionField, ddmFormFieldTypeServicesTracker,
+				languageId)
 		).collect(
 			Collectors.toList()
 		);

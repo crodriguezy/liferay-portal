@@ -84,7 +84,7 @@ class ItemSelectorDialog extends Component {
 		if (!this.singleSelect) {
 			const dialogFooter = [
 				{
-					cssClass: 'btn-link close-modal',
+					cssClass: 'btn-secondary close-modal',
 					id: 'cancelButton',
 					label: this.buttonCancelLabel,
 					on: {

@@ -298,6 +298,15 @@ public class LayoutLocalServiceStagingAdvice implements BeanFactoryAware {
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
+		if (serviceContext == null) {
+			serviceContext = new ServiceContext();
+
+			long defaultUserId = UserLocalServiceUtil.getDefaultUserId(
+				layout.getCompanyId());
+
+			serviceContext.setUserId(defaultUserId);
+		}
+
 		boolean hasWorkflowTask = StagingUtil.hasWorkflowTask(
 			serviceContext.getUserId(), layoutRevision);
 
@@ -349,6 +358,15 @@ public class LayoutLocalServiceStagingAdvice implements BeanFactoryAware {
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
+		if (serviceContext == null) {
+			serviceContext = new ServiceContext();
+
+			long defaultUserId = UserLocalServiceUtil.getDefaultUserId(
+				layout.getCompanyId());
+
+			serviceContext.setUserId(defaultUserId);
+		}
+
 		boolean hasWorkflowTask = StagingUtil.hasWorkflowTask(
 			serviceContext.getUserId(), layoutRevision);
 
@@ -392,6 +410,15 @@ public class LayoutLocalServiceStagingAdvice implements BeanFactoryAware {
 
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
+
+		if (serviceContext == null) {
+			serviceContext = new ServiceContext();
+
+			long defaultUserId = UserLocalServiceUtil.getDefaultUserId(
+				layout.getCompanyId());
+
+			serviceContext.setUserId(defaultUserId);
+		}
 
 		boolean hasWorkflowTask = StagingUtil.hasWorkflowTask(
 			serviceContext.getUserId(), layoutRevision);
@@ -501,12 +528,12 @@ public class LayoutLocalServiceStagingAdvice implements BeanFactoryAware {
 			new Class<?>[] {Layout.class, ModelWrapper.class},
 			new LayoutStagingHandler(layout));
 
-		Map<Layout, Object> proxiedLayouts = HashMapBuilder.<Layout, Object>put(
-			layout, proxiedLayout
-		).build();
-
 		ProxiedLayoutsThreadLocal.setProxiedLayouts(
-			new ObjectValuePair<>(currentServiceContext, proxiedLayouts));
+			new ObjectValuePair<>(
+				currentServiceContext,
+				HashMapBuilder.<Layout, Object>put(
+					layout, proxiedLayout
+				).build()));
 
 		return (Layout)proxiedLayout;
 	}

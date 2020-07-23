@@ -55,6 +55,38 @@ public class NavigationMenuItem {
 		return ObjectMapperUtil.readValue(NavigationMenuItem.class, json);
 	}
 
+	@Schema(
+		description = "The list of languages the structure has a translation for."
+	)
+	public String[] getAvailableLanguages() {
+		return availableLanguages;
+	}
+
+	public void setAvailableLanguages(String[] availableLanguages) {
+		this.availableLanguages = availableLanguages;
+	}
+
+	@JsonIgnore
+	public void setAvailableLanguages(
+		UnsafeSupplier<String[], Exception> availableLanguagesUnsafeSupplier) {
+
+		try {
+			availableLanguages = availableLanguagesUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField(
+		description = "The list of languages the structure has a translation for."
+	)
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	protected String[] availableLanguages;
+
 	@Schema
 	@Valid
 	public Creator getCreator() {
@@ -163,10 +195,10 @@ public class NavigationMenuItem {
 	}
 
 	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Long id;
 
-	@Schema
+	@Schema(description = "A link to a page on the server.")
 	public String getLink() {
 		return link;
 	}
@@ -188,8 +220,8 @@ public class NavigationMenuItem {
 		}
 	}
 
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@GraphQLField(description = "A link to a page on the server.")
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String link;
 
 	@Schema
@@ -215,7 +247,7 @@ public class NavigationMenuItem {
 	}
 
 	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String name;
 
 	@Schema
@@ -245,7 +277,7 @@ public class NavigationMenuItem {
 	}
 
 	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Map<String, String> name_i18n;
 
 	@Schema
@@ -357,8 +389,36 @@ public class NavigationMenuItem {
 	}
 
 	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String url;
+
+	@Schema
+	public Boolean getUseCustomName() {
+		return useCustomName;
+	}
+
+	public void setUseCustomName(Boolean useCustomName) {
+		this.useCustomName = useCustomName;
+	}
+
+	@JsonIgnore
+	public void setUseCustomName(
+		UnsafeSupplier<Boolean, Exception> useCustomNameUnsafeSupplier) {
+
+		try {
+			useCustomName = useCustomNameUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Boolean useCustomName;
 
 	@Override
 	public boolean equals(Object object) {
@@ -389,6 +449,30 @@ public class NavigationMenuItem {
 
 		DateFormat liferayToJSONDateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+		if (availableLanguages != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"availableLanguages\": ");
+
+			sb.append("[");
+
+			for (int i = 0; i < availableLanguages.length; i++) {
+				sb.append("\"");
+
+				sb.append(_escape(availableLanguages[i]));
+
+				sb.append("\"");
+
+				if ((i + 1) < availableLanguages.length) {
+					sb.append(", ");
+				}
+			}
+
+			sb.append("]");
+		}
 
 		if (creator != null) {
 			if (sb.length() > 1) {
@@ -534,6 +618,16 @@ public class NavigationMenuItem {
 			sb.append("\"");
 		}
 
+		if (useCustomName != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"useCustomName\": ");
+
+			sb.append(useCustomName);
+		}
+
 		sb.append("}");
 
 		return sb.toString();
@@ -549,6 +643,16 @@ public class NavigationMenuItem {
 		String string = String.valueOf(object);
 
 		return string.replaceAll("\"", "\\\\\"");
+	}
+
+	private static boolean _isArray(Object value) {
+		if (value == null) {
+			return false;
+		}
+
+		Class<?> clazz = value.getClass();
+
+		return clazz.isArray();
 	}
 
 	private static String _toJSON(Map<String, ?> map) {
@@ -569,9 +673,7 @@ public class NavigationMenuItem {
 
 			Object value = entry.getValue();
 
-			Class<?> clazz = value.getClass();
-
-			if (clazz.isArray()) {
+			if (_isArray(value)) {
 				sb.append("[");
 
 				Object[] valueArray = (Object[])value;

@@ -84,7 +84,7 @@ portletURL.setParameter("delta", String.valueOf(delta));
 			<%
 			List<SyncDevice> syncDevices = new ArrayList<>();
 
-			OrderByComparator orderByComparator = null;
+			OrderByComparator<SyncDevice> orderByComparator = null;
 
 			if (orderByCol.equals("name")) {
 				orderByComparator = OrderByComparatorFactoryUtil.create("SyncDevice", "userName", orderByType.equals("asc"));
@@ -96,7 +96,7 @@ portletURL.setParameter("delta", String.valueOf(delta));
 				orderByComparator = OrderByComparatorFactoryUtil.create("SyncDevice", "modifiedDate", orderByType.equals("asc"));
 			}
 			else {
-				OrderByComparatorFactoryUtil.create("SyncDevice", orderByCol, orderByType.equals("asc"));
+				orderByComparator = OrderByComparatorFactoryUtil.create("SyncDevice", orderByCol, orderByType.equals("asc"));
 			}
 
 			String portletId = (String)request.getAttribute(WebKeys.PORTLET_ID);

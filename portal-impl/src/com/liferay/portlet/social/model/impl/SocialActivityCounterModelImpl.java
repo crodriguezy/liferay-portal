@@ -66,13 +66,14 @@ public class SocialActivityCounterModelImpl
 	public static final String TABLE_NAME = "SocialActivityCounter";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"mvccVersion", Types.BIGINT}, {"activityCounterId", Types.BIGINT},
-		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
-		{"classNameId", Types.BIGINT}, {"classPK", Types.BIGINT},
-		{"name", Types.VARCHAR}, {"ownerType", Types.INTEGER},
-		{"currentValue", Types.INTEGER}, {"totalValue", Types.INTEGER},
-		{"graceValue", Types.INTEGER}, {"startPeriod", Types.INTEGER},
-		{"endPeriod", Types.INTEGER}, {"active_", Types.BOOLEAN}
+		{"mvccVersion", Types.BIGINT}, {"ctCollectionId", Types.BIGINT},
+		{"activityCounterId", Types.BIGINT}, {"groupId", Types.BIGINT},
+		{"companyId", Types.BIGINT}, {"classNameId", Types.BIGINT},
+		{"classPK", Types.BIGINT}, {"name", Types.VARCHAR},
+		{"ownerType", Types.INTEGER}, {"currentValue", Types.INTEGER},
+		{"totalValue", Types.INTEGER}, {"graceValue", Types.INTEGER},
+		{"startPeriod", Types.INTEGER}, {"endPeriod", Types.INTEGER},
+		{"active_", Types.BOOLEAN}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -80,6 +81,7 @@ public class SocialActivityCounterModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("ctCollectionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("activityCounterId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
@@ -96,7 +98,7 @@ public class SocialActivityCounterModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table SocialActivityCounter (mvccVersion LONG default 0 not null,activityCounterId LONG not null primary key,groupId LONG,companyId LONG,classNameId LONG,classPK LONG,name VARCHAR(75) null,ownerType INTEGER,currentValue INTEGER,totalValue INTEGER,graceValue INTEGER,startPeriod INTEGER,endPeriod INTEGER,active_ BOOLEAN)";
+		"create table SocialActivityCounter (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,activityCounterId LONG not null,groupId LONG,companyId LONG,classNameId LONG,classPK LONG,name VARCHAR(75) null,ownerType INTEGER,currentValue INTEGER,totalValue INTEGER,graceValue INTEGER,startPeriod INTEGER,endPeriod INTEGER,active_ BOOLEAN,primary key (activityCounterId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table SocialActivityCounter";
@@ -113,20 +115,23 @@ public class SocialActivityCounterModelImpl
 
 	public static final String TX_MANAGER = "liferayTransactionManager";
 
-	public static final boolean ENTITY_CACHE_ENABLED = GetterUtil.getBoolean(
-		com.liferay.portal.util.PropsUtil.get(
-			"value.object.entity.cache.enabled.com.liferay.social.kernel.model.SocialActivityCounter"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean ENTITY_CACHE_ENABLED = true;
 
-	public static final boolean FINDER_CACHE_ENABLED = GetterUtil.getBoolean(
-		com.liferay.portal.util.PropsUtil.get(
-			"value.object.finder.cache.enabled.com.liferay.social.kernel.model.SocialActivityCounter"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean FINDER_CACHE_ENABLED = true;
 
-	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(
-		com.liferay.portal.util.PropsUtil.get(
-			"value.object.column.bitmask.enabled.com.liferay.social.kernel.model.SocialActivityCounter"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean COLUMN_BITMASK_ENABLED = true;
 
 	public static final long CLASSNAMEID_COLUMN_BITMASK = 1L;
 
@@ -199,9 +204,6 @@ public class SocialActivityCounterModelImpl
 				attributeName,
 				attributeGetterFunction.apply((SocialActivityCounter)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -286,6 +288,12 @@ public class SocialActivityCounterModelImpl
 			"mvccVersion",
 			(BiConsumer<SocialActivityCounter, Long>)
 				SocialActivityCounter::setMvccVersion);
+		attributeGetterFunctions.put(
+			"ctCollectionId", SocialActivityCounter::getCtCollectionId);
+		attributeSetterBiConsumers.put(
+			"ctCollectionId",
+			(BiConsumer<SocialActivityCounter, Long>)
+				SocialActivityCounter::setCtCollectionId);
 		attributeGetterFunctions.put(
 			"activityCounterId", SocialActivityCounter::getActivityCounterId);
 		attributeSetterBiConsumers.put(
@@ -378,6 +386,16 @@ public class SocialActivityCounterModelImpl
 	@Override
 	public void setMvccVersion(long mvccVersion) {
 		_mvccVersion = mvccVersion;
+	}
+
+	@Override
+	public long getCtCollectionId() {
+		return _ctCollectionId;
+	}
+
+	@Override
+	public void setCtCollectionId(long ctCollectionId) {
+		_ctCollectionId = ctCollectionId;
 	}
 
 	@Override
@@ -661,6 +679,7 @@ public class SocialActivityCounterModelImpl
 			new SocialActivityCounterImpl();
 
 		socialActivityCounterImpl.setMvccVersion(getMvccVersion());
+		socialActivityCounterImpl.setCtCollectionId(getCtCollectionId());
 		socialActivityCounterImpl.setActivityCounterId(getActivityCounterId());
 		socialActivityCounterImpl.setGroupId(getGroupId());
 		socialActivityCounterImpl.setCompanyId(getCompanyId());
@@ -696,17 +715,17 @@ public class SocialActivityCounterModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof SocialActivityCounter)) {
+		if (!(object instanceof SocialActivityCounter)) {
 			return false;
 		}
 
 		SocialActivityCounter socialActivityCounter =
-			(SocialActivityCounter)obj;
+			(SocialActivityCounter)object;
 
 		long primaryKey = socialActivityCounter.getPrimaryKey();
 
@@ -723,11 +742,19 @@ public class SocialActivityCounterModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
 		return ENTITY_CACHE_ENABLED;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
 		return FINDER_CACHE_ENABLED;
@@ -779,6 +806,8 @@ public class SocialActivityCounterModelImpl
 			new SocialActivityCounterCacheModel();
 
 		socialActivityCounterCacheModel.mvccVersion = getMvccVersion();
+
+		socialActivityCounterCacheModel.ctCollectionId = getCtCollectionId();
 
 		socialActivityCounterCacheModel.activityCounterId =
 			getActivityCounterId();
@@ -889,6 +918,7 @@ public class SocialActivityCounterModelImpl
 	}
 
 	private long _mvccVersion;
+	private long _ctCollectionId;
 	private long _activityCounterId;
 	private long _groupId;
 	private long _originalGroupId;

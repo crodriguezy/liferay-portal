@@ -63,6 +63,10 @@ public interface ListTypeLocalService
 	/**
 	 * Adds the list type to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect ListTypeLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param listType the list type
 	 * @return the list type that was added
 	 */
@@ -89,6 +93,10 @@ public interface ListTypeLocalService
 	/**
 	 * Deletes the list type from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect ListTypeLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param listType the list type
 	 * @return the list type that was removed
 	 */
@@ -97,6 +105,10 @@ public interface ListTypeLocalService
 
 	/**
 	 * Deletes the list type with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect ListTypeLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param listTypeId the primary key of the list type
 	 * @return the list type that was removed
@@ -245,6 +257,10 @@ public interface ListTypeLocalService
 
 	/**
 	 * Updates the list type in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect ListTypeLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param listType the list type
 	 * @return the list type that was updated

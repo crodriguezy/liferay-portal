@@ -17,11 +17,11 @@ package com.liferay.change.tracking.internal.conflict;
 import com.liferay.change.tracking.conflict.ConflictInfo;
 import com.liferay.change.tracking.constants.CTConstants;
 import com.liferay.change.tracking.internal.CTRowUtil;
-import com.liferay.change.tracking.internal.resolver.ConstraintResolverHelperImpl;
+import com.liferay.change.tracking.internal.resolver.ConstraintResolverContextImpl;
 import com.liferay.change.tracking.internal.resolver.ConstraintResolverKey;
 import com.liferay.change.tracking.model.CTEntry;
-import com.liferay.change.tracking.resolver.ConstraintResolver;
 import com.liferay.change.tracking.service.CTEntryLocalService;
+import com.liferay.change.tracking.spi.resolver.ConstraintResolver;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.dao.orm.common.SQLTransformer;
@@ -61,7 +61,7 @@ public class CTConflictChecker<T extends CTModel<T>> {
 	public CTConflictChecker(
 		CTEntryLocalService ctEntryLocalService, CTService<T> ctService,
 		long modelClassNameId,
-		ServiceTrackerMap<ConstraintResolverKey, ConstraintResolver>
+		ServiceTrackerMap<ConstraintResolverKey, ConstraintResolver<?>>
 			serviceTrackerMap,
 		long sourceCTCollectionId, long targetCTCollectionId) {
 
@@ -152,7 +152,7 @@ public class CTConflictChecker<T extends CTModel<T>> {
 		}
 
 		ConstraintResolver<T> constraintResolver =
-			_serviceTrackerMap.getService(
+			(ConstraintResolver<T>)_serviceTrackerMap.getService(
 				new ConstraintResolverKey(
 					ctPersistence.getModelClass(), columnNames));
 
@@ -178,9 +178,9 @@ public class CTConflictChecker<T extends CTModel<T>> {
 			return;
 		}
 
-		ConstraintResolverHelperImpl<T> constraintResolverHelperImpl =
-			new ConstraintResolverHelperImpl<>(
-				_ctService, _targetCTCollectionId);
+		ConstraintResolverContextImpl<T> constraintResolverContextImpl =
+			new ConstraintResolverContextImpl<>(
+				_ctService, _sourceCTCollectionId, _targetCTCollectionId);
 
 		Set<Map.Entry<Long, Long>> attemptedPrimaryKeys = new HashSet<>();
 		Set<Map.Entry<Long, Long>> resolvedPrimaryKeys = new HashSet<>(
@@ -189,10 +189,10 @@ public class CTConflictChecker<T extends CTModel<T>> {
 		while (!nextPrimaryKeys.isEmpty()) {
 			Map.Entry<Long, Long> currentPrimaryKeys = nextPrimaryKeys.get(0);
 
-			constraintResolverHelperImpl.setPrimaryKeys(
+			constraintResolverContextImpl.setPrimaryKeys(
 				currentPrimaryKeys.getKey(), currentPrimaryKeys.getValue());
 
-			constraintResolver.resolveConflict(constraintResolverHelperImpl);
+			constraintResolver.resolveConflict(constraintResolverContextImpl);
 
 			Session session = ctPersistence.getCurrentSession();
 
@@ -397,7 +397,7 @@ public class CTConflictChecker<T extends CTModel<T>> {
 		long tempCTCollectionId = -_sourceCTCollectionId;
 
 		StringBundler sb = new StringBundler(
-			2 * resolvedPrimaryKeys.size() + 9);
+			(2 * resolvedPrimaryKeys.size()) + 9);
 
 		sb.append("update ");
 		sb.append(ctPersistence.getTableName());
@@ -490,7 +490,7 @@ public class CTConflictChecker<T extends CTModel<T>> {
 		List<Long> unresolvedPrimaryKeys) {
 
 		StringBundler sb = new StringBundler(
-			2 * unresolvedPrimaryKeys.size() + 18);
+			(2 * unresolvedPrimaryKeys.size()) + 18);
 
 		sb.append("select t1.");
 		sb.append(primaryKeyName);
@@ -548,8 +548,8 @@ public class CTConflictChecker<T extends CTModel<T>> {
 	private final Set<Long> _ignorablePrimaryKeys = new HashSet<>();
 	private final long _modelClassNameId;
 	private Map<Serializable, CTEntry> _modificationCTEntries;
-	private final ServiceTrackerMap<ConstraintResolverKey, ConstraintResolver>
-		_serviceTrackerMap;
+	private final ServiceTrackerMap
+		<ConstraintResolverKey, ConstraintResolver<?>> _serviceTrackerMap;
 	private final long _sourceCTCollectionId;
 	private final long _targetCTCollectionId;
 

@@ -72,8 +72,8 @@ public class RedirectNotFoundEntryModelImpl
 		{"redirectNotFoundEntryId", Types.BIGINT}, {"groupId", Types.BIGINT},
 		{"companyId", Types.BIGINT}, {"userId", Types.BIGINT},
 		{"userName", Types.VARCHAR}, {"createDate", Types.TIMESTAMP},
-		{"modifiedDate", Types.TIMESTAMP}, {"hits", Types.BIGINT},
-		{"ignored", Types.BOOLEAN}, {"url", Types.VARCHAR}
+		{"modifiedDate", Types.TIMESTAMP}, {"ignored", Types.BOOLEAN},
+		{"url", Types.VARCHAR}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -88,13 +88,12 @@ public class RedirectNotFoundEntryModelImpl
 		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
-		TABLE_COLUMNS_MAP.put("hits", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("ignored", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("url", Types.VARCHAR);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table RedirectNotFoundEntry (mvccVersion LONG default 0 not null,redirectNotFoundEntryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,hits LONG,ignored BOOLEAN,url STRING null)";
+		"create table RedirectNotFoundEntry (mvccVersion LONG default 0 not null,redirectNotFoundEntryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,ignored BOOLEAN,url STRING null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table RedirectNotFoundEntry";
@@ -117,12 +116,18 @@ public class RedirectNotFoundEntryModelImpl
 
 	public static final long REDIRECTNOTFOUNDENTRYID_COLUMN_BITMASK = 4L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-		_entityCacheEnabled = entityCacheEnabled;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-		_finderCacheEnabled = finderCacheEnabled;
 	}
 
 	public RedirectNotFoundEntryModelImpl() {
@@ -176,9 +181,6 @@ public class RedirectNotFoundEntryModelImpl
 				attributeName,
 				attributeGetterFunction.apply((RedirectNotFoundEntry)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -306,11 +308,6 @@ public class RedirectNotFoundEntryModelImpl
 			"modifiedDate",
 			(BiConsumer<RedirectNotFoundEntry, Date>)
 				RedirectNotFoundEntry::setModifiedDate);
-		attributeGetterFunctions.put("hits", RedirectNotFoundEntry::getHits);
-		attributeSetterBiConsumers.put(
-			"hits",
-			(BiConsumer<RedirectNotFoundEntry, Long>)
-				RedirectNotFoundEntry::setHits);
 		attributeGetterFunctions.put(
 			"ignored", RedirectNotFoundEntry::getIgnored);
 		attributeSetterBiConsumers.put(
@@ -449,16 +446,6 @@ public class RedirectNotFoundEntryModelImpl
 	}
 
 	@Override
-	public long getHits() {
-		return _hits;
-	}
-
-	@Override
-	public void setHits(long hits) {
-		_hits = hits;
-	}
-
-	@Override
 	public boolean getIgnored() {
 		return _ignored;
 	}
@@ -545,7 +532,6 @@ public class RedirectNotFoundEntryModelImpl
 		redirectNotFoundEntryImpl.setUserName(getUserName());
 		redirectNotFoundEntryImpl.setCreateDate(getCreateDate());
 		redirectNotFoundEntryImpl.setModifiedDate(getModifiedDate());
-		redirectNotFoundEntryImpl.setHits(getHits());
 		redirectNotFoundEntryImpl.setIgnored(isIgnored());
 		redirectNotFoundEntryImpl.setUrl(getUrl());
 
@@ -570,17 +556,17 @@ public class RedirectNotFoundEntryModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof RedirectNotFoundEntry)) {
+		if (!(object instanceof RedirectNotFoundEntry)) {
 			return false;
 		}
 
 		RedirectNotFoundEntry redirectNotFoundEntry =
-			(RedirectNotFoundEntry)obj;
+			(RedirectNotFoundEntry)object;
 
 		long primaryKey = redirectNotFoundEntry.getPrimaryKey();
 
@@ -597,14 +583,22 @@ public class RedirectNotFoundEntryModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	@Override
@@ -666,8 +660,6 @@ public class RedirectNotFoundEntryModelImpl
 		else {
 			redirectNotFoundEntryCacheModel.modifiedDate = Long.MIN_VALUE;
 		}
-
-		redirectNotFoundEntryCacheModel.hits = getHits();
 
 		redirectNotFoundEntryCacheModel.ignored = isIgnored();
 
@@ -754,9 +746,6 @@ public class RedirectNotFoundEntryModelImpl
 
 	}
 
-	private static boolean _entityCacheEnabled;
-	private static boolean _finderCacheEnabled;
-
 	private long _mvccVersion;
 	private long _redirectNotFoundEntryId;
 	private long _groupId;
@@ -768,7 +757,6 @@ public class RedirectNotFoundEntryModelImpl
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private long _hits;
 	private boolean _ignored;
 	private String _url;
 	private String _originalUrl;

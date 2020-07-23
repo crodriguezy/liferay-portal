@@ -12,116 +12,96 @@
  * details.
  */
 
+import {DELETE_SEGMENTS_EXPERIENCE} from '../../plugins/experience/actions';
 import {
-	setUsedWidgets,
-	switchLayoutData,
-} from '../../plugins/experience/reducers/utils';
-import {
+	ADD_REDO_ACTION,
 	ADD_UNDO_ACTION,
-	UPDATE_MULTIPLE_UNDO_STATE,
+	UPDATE_REDO_ACTIONS,
 	UPDATE_UNDO_ACTIONS,
 } from '../actions/types';
 import {getDerivedStateForUndo} from '../components/undo/undoActions';
-import {getWidgetPath} from '../utils/getWidgetPath';
-import {setWidgetUsage} from '../utils/setWidgetUsage';
 
-const MAX_UNDO_ACTIONS = 20;
+const MAX_UNDO_ACTIONS = 100;
+
+let actionId = 0;
 
 export default function undoReducer(state, action) {
 	switch (action.type) {
-		case ADD_UNDO_ACTION: {
-			const {actionType} = action;
+		case ADD_REDO_ACTION: {
+			const {actionType, originalType} = action;
 
-			const nextUndoHistory = state.undoHistory || [];
+			const nextRedoHistory = state.redoHistory || [];
 
 			return {
 				...state,
+				redoHistory: [
+					{
+						...getDerivedStateForUndo({
+							action,
+							state,
+							type: actionType,
+						}),
+						actionId: actionId++,
+						originalType,
+					},
+					...nextRedoHistory,
+				],
+			};
+		}
+		case ADD_UNDO_ACTION: {
+			const {actionType, originalType} = action;
+
+			const nextUndoHistory = state.undoHistory || [];
+
+			const nextRedoHistory = action.isRedo ? state.redoHistory : [];
+
+			return {
+				...state,
+				redoHistory: nextRedoHistory,
 				undoHistory: [
-					getDerivedStateForUndo({action, state, type: actionType}),
+					{
+						...getDerivedStateForUndo({
+							action,
+							state,
+							type: actionType,
+						}),
+						actionId: actionId++,
+						originalType,
+					},
 					...nextUndoHistory.slice(0, MAX_UNDO_ACTIONS - 1),
 				],
 			};
 		}
-		case UPDATE_MULTIPLE_UNDO_STATE: {
-			const {
-				deletedFragmentEntryLinkIds,
-				fragmentEntryLinks,
-				languageId,
-				layoutData,
-				portletIds,
-				segmentsExperienceId,
-			} = action;
+		case DELETE_SEGMENTS_EXPERIENCE: {
+			const {segmentsExperienceId} = action.payload;
 
-			let nextState = {
+			const nextUndoHistory = state.undoHistory || [];
+			const nextRedoHistory = state.redoHistory || [];
+
+			return {
 				...state,
-				fragmentEntryLinks,
-				languageId,
-				layoutData,
-				segmentsExperienceId,
+				redoHistory: nextRedoHistory.filter(
+					(action) =>
+						action.segmentsExperienceId !== segmentsExperienceId &&
+						action.nextSegmentsExperienceId !== segmentsExperienceId
+				),
+				undoHistory: nextUndoHistory.filter(
+					(action) =>
+						action.segmentsExperienceId !== segmentsExperienceId &&
+						action.nextSegmentsExperienceId !== segmentsExperienceId
+				),
 			};
-
-			if (state.segmentsExperienceId !== segmentsExperienceId) {
-				nextState = switchLayoutData(nextState, {
-					currentExperienceId: state.segmentsExperienceId,
-					targetExperienceId: segmentsExperienceId,
-				});
-			}
-
-			if (portletIds) {
-				nextState = setUsedWidgets(nextState, {portletIds});
-			}
-
-			if (deletedFragmentEntryLinkIds.length) {
-				const nextFragmentEntryLinks = {...fragmentEntryLinks};
-
-				deletedFragmentEntryLinkIds.forEach((fragmentEntryLinkId) => {
-					delete nextFragmentEntryLinks[fragmentEntryLinkId];
-				});
-
-				nextState = {
-					...nextState,
-					fragmentEntryLinks: nextFragmentEntryLinks,
-				};
-
-				const deletedWidgets = deletedFragmentEntryLinkIds
-					.map(
-						(fragmentEntryLinkId) =>
-							fragmentEntryLinks[fragmentEntryLinkId]
-					)
-					.filter(
-						(fragmentEntryLink) =>
-							fragmentEntryLink.editableValues.portletId
-					);
-
-				if (deletedWidgets.length) {
-					let nextWidgets = state.widgets;
-
-					deletedWidgets.forEach((fragmentEntryLink) => {
-						if (
-							fragmentEntryLink.editableValues &&
-							fragmentEntryLink.editableValues.portletId &&
-							!fragmentEntryLink.editableValues.instanceable
-						) {
-							const widgetPath = getWidgetPath(
-								nextWidgets,
-								fragmentEntryLink.editableValues.portletId
-							);
-
-							nextWidgets = setWidgetUsage(
-								nextWidgets,
-								widgetPath,
-								{
-									used: false,
-								}
-							);
-						}
-					});
-
-					nextState = {...nextState, widgets: nextWidgets};
-				}
-			}
-
-			return nextState;
+		}
+		case UPDATE_REDO_ACTIONS: {
+			return {
+				...state,
+				redoHistory: action.redoHistory,
+			};
+		}
+		case 'UPDATE_STORE': {
+			return {
+				...action.store,
+			};
 		}
 		case UPDATE_UNDO_ACTIONS: {
 			return {

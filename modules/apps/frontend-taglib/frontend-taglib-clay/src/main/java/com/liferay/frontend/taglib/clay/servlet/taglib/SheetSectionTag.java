@@ -33,26 +33,12 @@ public class SheetSectionTag extends BaseContainerTag {
 	}
 
 	@Override
-	protected String getEndPage() {
-		return _END_PAGE;
-	}
+	protected String processCssClasses(Set<String> cssClasses) {
+		cssClasses.add("sheet-section");
 
-	@Override
-	protected String getStartPage() {
-		return _START_PAGE;
-	}
-
-	@Override
-	protected String processClassName(Set<String> className) {
-		className.add("sheet-section");
-
-		return super.processClassName(className);
+		return super.processCssClasses(cssClasses);
 	}
 
 	private static final String _ATTRIBUTE_NAMESPACE = "clay:sheet-section:";
-
-	private static final String _END_PAGE = "/sheet_section/end.jsp";
-
-	private static final String _START_PAGE = "/sheet_section/start.jsp";
 
 }

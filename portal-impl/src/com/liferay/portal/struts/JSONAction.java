@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.servlet.SharedSessionServletRequest;
+import com.liferay.portal.struts.constants.ActionConstants;
 import com.liferay.portal.struts.model.ActionForward;
 import com.liferay.portal.struts.model.ActionMapping;
 import com.liferay.portal.util.PropsValues;
@@ -127,9 +128,7 @@ public abstract class JSONAction implements Action {
 			try (OutputStream outputStream =
 					httpServletResponse.getOutputStream()) {
 
-				byte[] bytes = json.getBytes(StringPool.UTF8);
-
-				outputStream.write(bytes);
+				outputStream.write(json.getBytes(StringPool.UTF8));
 			}
 		}
 

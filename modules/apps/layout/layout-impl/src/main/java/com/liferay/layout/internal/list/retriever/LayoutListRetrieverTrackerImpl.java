@@ -14,9 +14,9 @@
 
 package com.liferay.layout.internal.list.retriever;
 
-import com.liferay.layout.internal.list.retriever.util.GenericsUtil;
 import com.liferay.layout.list.retriever.LayoutListRetriever;
 import com.liferay.layout.list.retriever.LayoutListRetrieverTracker;
+import com.liferay.petra.reflect.GenericUtil;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,7 +33,8 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 public class LayoutListRetrieverTrackerImpl
 	implements LayoutListRetrieverTracker {
 
-	public LayoutListRetriever getLayoutListRetriever(String type) {
+	@Override
+	public LayoutListRetriever<?, ?> getLayoutListRetriever(String type) {
 		return _layoutListRetrievers.get(type);
 	}
 
@@ -42,21 +43,21 @@ public class LayoutListRetrieverTrackerImpl
 		policy = ReferencePolicy.DYNAMIC
 	)
 	protected void setLayoutListRetrievers(
-		LayoutListRetriever layoutListRetriever) {
+		LayoutListRetriever<?, ?> layoutListRetriever) {
 
 		_layoutListRetrievers.put(
-			GenericsUtil.getItemClassName(layoutListRetriever),
+			GenericUtil.getGenericClassName(layoutListRetriever),
 			layoutListRetriever);
 	}
 
 	protected void unsetLayoutListRetrievers(
-		LayoutListRetriever layoutListRetriever) {
+		LayoutListRetriever<?, ?> layoutListRetriever) {
 
 		_layoutListRetrievers.remove(
-			GenericsUtil.getItemClassName(layoutListRetriever));
+			GenericUtil.getGenericClassName(layoutListRetriever));
 	}
 
-	private final Map<String, LayoutListRetriever> _layoutListRetrievers =
+	private final Map<String, LayoutListRetriever<?, ?>> _layoutListRetrievers =
 		new ConcurrentHashMap<>();
 
 }

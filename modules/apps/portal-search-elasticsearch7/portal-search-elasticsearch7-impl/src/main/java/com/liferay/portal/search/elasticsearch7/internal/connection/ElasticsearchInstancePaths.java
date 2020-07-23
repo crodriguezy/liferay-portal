@@ -21,6 +21,8 @@ import java.nio.file.Path;
  */
 public interface ElasticsearchInstancePaths {
 
+	public Path getDataPath();
+
 	public Path getHomePath();
 
 	public Path getWorkPath();

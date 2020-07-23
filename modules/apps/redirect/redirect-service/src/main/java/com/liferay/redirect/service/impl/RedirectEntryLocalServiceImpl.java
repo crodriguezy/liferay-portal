@@ -16,6 +16,7 @@ package com.liferay.redirect.service.impl;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.exception.LayoutFriendlyURLException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
@@ -26,7 +27,7 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.redirect.configuration.RedirectConfiguration;
+import com.liferay.portal.model.impl.LayoutImpl;
 import com.liferay.redirect.exception.CircularRedirectEntryException;
 import com.liferay.redirect.exception.DuplicateRedirectEntrySourceURLException;
 import com.liferay.redirect.exception.RequiredRedirectEntryDestinationURLException;
@@ -166,10 +167,6 @@ public class RedirectEntryLocalServiceImpl
 	public RedirectEntry fetchRedirectEntry(
 		long groupId, String sourceURL, boolean updateLastOccurrenceDate) {
 
-		if (!_redirectConfiguration.isEnabled()) {
-			return null;
-		}
-
 		RedirectEntry redirectEntry = redirectEntryPersistence.fetchByG_S(
 			groupId, sourceURL);
 
@@ -197,9 +194,10 @@ public class RedirectEntryLocalServiceImpl
 	@Override
 	public List<RedirectEntry> getRedirectEntries(
 		long groupId, int start, int end,
-		OrderByComparator<RedirectEntry> obc) {
+		OrderByComparator<RedirectEntry> orderByComparator) {
 
-		return redirectEntryPersistence.findByGroupId(groupId, start, end, obc);
+		return redirectEntryPersistence.findByGroupId(
+			groupId, start, end, orderByComparator);
 	}
 
 	@Override
@@ -256,9 +254,10 @@ public class RedirectEntryLocalServiceImpl
 		_checkDestinationURLMustNotBeEqualToSourceURL(
 			destinationURL, groupBaseURL, sourceURL);
 
-		RedirectEntry redirectEntry = updateRedirectEntry(
-			redirectEntryId, destinationURL, expirationDate, permanent,
-			sourceURL);
+		RedirectEntry redirectEntry =
+			redirectEntryLocalService.updateRedirectEntry(
+				redirectEntryId, destinationURL, expirationDate, permanent,
+				sourceURL);
 
 		_checkChainedRedirectEntries(groupBaseURL, redirectEntry);
 
@@ -361,12 +360,13 @@ public class RedirectEntryLocalServiceImpl
 				groupBaseURL + StringPool.SLASH + redirectEntry.getSourceURL());
 
 		for (RedirectEntry chainedRedirectEntry : chainedRedirectEntries) {
-			RedirectEntry updatedRedirectEntry = updateRedirectEntry(
-				chainedRedirectEntry.getRedirectEntryId(),
-				redirectEntry.getDestinationURL(),
-				chainedRedirectEntry.getExpirationDate(),
-				chainedRedirectEntry.isPermanent(),
-				chainedRedirectEntry.getSourceURL());
+			RedirectEntry updatedRedirectEntry =
+				redirectEntryLocalService.updateRedirectEntry(
+					chainedRedirectEntry.getRedirectEntryId(),
+					redirectEntry.getDestinationURL(),
+					chainedRedirectEntry.getExpirationDate(),
+					chainedRedirectEntry.isPermanent(),
+					chainedRedirectEntry.getSourceURL());
 
 			RedirectEntry destinationRedirectEntry =
 				redirectEntryLocalService.fetchRedirectEntry(
@@ -390,7 +390,7 @@ public class RedirectEntryLocalServiceImpl
 					groupBaseURL + StringPool.SLASH));
 
 		if (chainedRedirectEntry != null) {
-			return updateRedirectEntry(
+			return redirectEntryLocalService.updateRedirectEntry(
 				redirectEntry.getRedirectEntryId(),
 				chainedRedirectEntry.getDestinationURL(),
 				redirectEntry.getExpirationDate(), redirectEntry.isPermanent(),
@@ -410,10 +410,19 @@ public class RedirectEntryLocalServiceImpl
 		if (Validator.isNull(sourceURL)) {
 			throw new RequiredRedirectEntrySourceURLException();
 		}
-	}
 
-	@Reference
-	private RedirectConfiguration _redirectConfiguration;
+		if (sourceURL.startsWith(StringPool.SLASH)) {
+			throw new LayoutFriendlyURLException(
+				LayoutFriendlyURLException.DOES_NOT_START_WITH_SLASH);
+		}
+
+		int exceptionType = LayoutImpl.validateFriendlyURL(
+			StringPool.SLASH + sourceURL, true);
+
+		if (exceptionType != -1) {
+			throw new LayoutFriendlyURLException(exceptionType);
+		}
+	}
 
 	@Reference
 	private RedirectNotFoundEntryLocalService

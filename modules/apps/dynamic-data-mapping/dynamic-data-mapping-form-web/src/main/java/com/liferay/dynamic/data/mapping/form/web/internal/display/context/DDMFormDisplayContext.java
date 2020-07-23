@@ -52,11 +52,11 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalService;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
+import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -358,7 +358,7 @@ public class DDMFormDisplayContext {
 			return _hasAddFormInstanceRecordPermission;
 		}
 
-		_hasAddFormInstanceRecordPermission = true;
+		_hasAddFormInstanceRecordPermission = false;
 
 		DDMFormInstance ddmFormInstance = getFormInstance();
 
@@ -379,7 +379,7 @@ public class DDMFormDisplayContext {
 			return _hasViewPermission;
 		}
 
-		_hasViewPermission = true;
+		_hasViewPermission = false;
 
 		DDMFormInstance ddmFormInstance =
 			_ddmFormInstanceLocalService.fetchFormInstance(getFormInstanceId());
@@ -538,7 +538,9 @@ public class DDMFormDisplayContext {
 	}
 
 	public boolean isShowSuccessPage() throws PortalException {
-		if (SessionMessages.isEmpty(_renderRequest)) {
+		if (!SessionErrors.isEmpty(_renderRequest) ||
+			SessionMessages.isEmpty(_renderRequest)) {
+
 			return false;
 		}
 
@@ -549,13 +551,20 @@ public class DDMFormDisplayContext {
 	}
 
 	protected String createCaptchaResourceURL() {
-		LiferayPortletURL liferayPortletURL =
-			(LiferayPortletURL)_renderResponse.createResourceURL();
+		ThemeDisplay themeDisplay = (ThemeDisplay)_renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
-		liferayPortletURL.setCopyCurrentRenderParameters(false);
-		liferayPortletURL.setResourceID("captcha");
+		String captchaResourceURL =
+			themeDisplay.getPathMain() + "/portal/captcha/get_image";
 
-		return liferayPortletURL.toString();
+		String portletId = PortalUtil.getPortletId(_renderRequest);
+
+		if (Validator.isNotNull(portletId)) {
+			captchaResourceURL = captchaResourceURL.concat(
+				"?portletId=" + portletId);
+		}
+
+		return captchaResourceURL;
 	}
 
 	protected DDMFormRenderingContext createDDMFormRenderingContext(

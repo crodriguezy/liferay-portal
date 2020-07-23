@@ -18,7 +18,7 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.document.library.kernel.exception.NoSuchFileEntryException;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.editor.EditorConstants;
+import com.liferay.portal.kernel.editor.constants.EditorConstants;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil;
@@ -99,15 +99,13 @@ public class EntryAttachmentContentUpdaterTest {
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			_getInputStream(), ContentTypes.IMAGE_JPEG);
 
-		Map<String, String> attributes = HashMapBuilder.put(
-			"alt", "A big image"
-		).put(
-			"class", "image-big"
-		).build();
-
 		String tempFileEntryImgTag = _getTempEntryAttachmentFileEntryImgTag(
 			tempFileEntry.getFileEntryId(), _TEMP_FILE_ENTRY_IMAGE_URL,
-			attributes);
+			HashMapBuilder.put(
+				"alt", "A big image"
+			).put(
+				"class", "image-big"
+			).build());
 
 		String originalContent =
 			"<p>Sample Text</p><a href=\"www.liferay.com\">" +

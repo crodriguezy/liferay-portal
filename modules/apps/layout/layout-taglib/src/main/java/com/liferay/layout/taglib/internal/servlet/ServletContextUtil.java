@@ -17,6 +17,8 @@ package com.liferay.layout.taglib.internal.servlet;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
 import com.liferay.fragment.renderer.FragmentRendererTracker;
 import com.liferay.info.display.contributor.InfoDisplayContributorTracker;
+import com.liferay.info.item.InfoItemServiceTracker;
+import com.liferay.info.list.renderer.InfoListRendererTracker;
 import com.liferay.layout.list.retriever.LayoutListRetrieverTracker;
 import com.liferay.layout.list.retriever.ListObjectReferenceFactoryTracker;
 import com.liferay.layout.util.LayoutClassedModelUsageRecorder;
@@ -58,6 +60,14 @@ public class ServletContextUtil {
 		getInfoDisplayContributorTracker() {
 
 		return _infoDisplayContributorTracker;
+	}
+
+	public static final InfoItemServiceTracker getInfoItemServiceTracker() {
+		return _infoItemServiceTracker;
+	}
+
+	public static final InfoListRendererTracker getInfoListRendererTracker() {
+		return _infoListRendererTracker;
 	}
 
 	public static final Map<String, LayoutClassedModelUsageRecorder>
@@ -140,6 +150,20 @@ public class ServletContextUtil {
 	}
 
 	@Reference(unbind = "-")
+	protected void setInfoItemServiceTracker(
+		InfoItemServiceTracker infoItemServiceTracker) {
+
+		_infoItemServiceTracker = infoItemServiceTracker;
+	}
+
+	@Reference(unbind = "-")
+	protected void setInfoListRendererTracker(
+		InfoListRendererTracker infoListRendererTracker) {
+
+		_infoListRendererTracker = infoListRendererTracker;
+	}
+
+	@Reference(unbind = "-")
 	protected void setLayoutListRetrieverTracker(
 		LayoutListRetrieverTracker layoutListRetrieverTracker) {
 
@@ -165,6 +189,8 @@ public class ServletContextUtil {
 		_fragmentCollectionContributorTracker;
 	private static FragmentRendererTracker _fragmentRendererTracker;
 	private static InfoDisplayContributorTracker _infoDisplayContributorTracker;
+	private static InfoItemServiceTracker _infoItemServiceTracker;
+	private static InfoListRendererTracker _infoListRendererTracker;
 	private static final Map<String, LayoutClassedModelUsageRecorder>
 		_layoutClassedModelUsageRecorders = new ConcurrentHashMap<>();
 	private static LayoutListRetrieverTracker _layoutListRetrieverTracker;

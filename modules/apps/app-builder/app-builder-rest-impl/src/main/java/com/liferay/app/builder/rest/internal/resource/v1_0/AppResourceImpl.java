@@ -14,6 +14,7 @@
 
 package com.liferay.app.builder.rest.internal.resource.v1_0;
 
+import com.liferay.app.builder.constants.AppBuilderAppConstants;
 import com.liferay.app.builder.constants.AppBuilderConstants;
 import com.liferay.app.builder.deploy.AppDeployer;
 import com.liferay.app.builder.deploy.AppDeployerTracker;
@@ -121,7 +122,7 @@ public class AppResourceImpl
 	@Override
 	public Page<App> getAppsPage(
 			Boolean active, String[] deploymentTypes, String keywords,
-			Long[] userIds, Pagination pagination, Sort[] sorts)
+			String scope, Long[] userIds, Pagination pagination, Sort[] sorts)
 		throws Exception {
 
 		if (pagination.getPageSize() > 250) {
@@ -140,7 +141,8 @@ public class AppResourceImpl
 		}
 
 		if (Objects.isNull(active) && ArrayUtil.isEmpty(deploymentTypes) &&
-			Validator.isNull(keywords) && ArrayUtil.isEmpty(userIds)) {
+			Validator.isNull(keywords) && Validator.isNull(scope) &&
+			ArrayUtil.isEmpty(userIds)) {
 
 			return Page.of(
 				transform(
@@ -196,6 +198,16 @@ public class AppResourceImpl
 					booleanFilter.add(
 						userIdTermsFilter, BooleanClauseOccur.MUST);
 				}
+
+				if (Validator.isNotNull(scope)) {
+					BooleanQuery scopeBooleanQuery = new BooleanQueryImpl();
+
+					scopeBooleanQuery.addTerm("scope", scope);
+
+					booleanFilter.add(
+						new QueryFilter(scopeBooleanQuery),
+						BooleanClauseOccur.MUST);
+				}
 			},
 			null, AppBuilderApp.class, keywords, pagination,
 			queryConfig -> queryConfig.setSelectedFieldNames(
@@ -215,8 +227,8 @@ public class AppResourceImpl
 
 	@Override
 	public Page<App> getDataDefinitionAppsPage(
-			Long dataDefinitionId, String keywords, Pagination pagination,
-			Sort[] sorts)
+			Long dataDefinitionId, String keywords, String scope,
+			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
 		if (pagination.getPageSize() > 250) {
@@ -237,7 +249,7 @@ public class AppResourceImpl
 		DDMStructure ddmStructure = _ddmStructureLocalService.getStructure(
 			dataDefinitionId);
 
-		if (Validator.isNull(keywords)) {
+		if (Validator.isNull(keywords) && Validator.isNull(scope)) {
 			return Page.of(
 				transform(
 					_appBuilderAppLocalService.getAppBuilderApps(
@@ -257,6 +269,18 @@ public class AppResourceImpl
 		return SearchUtil.search(
 			Collections.emptyMap(),
 			booleanQuery -> {
+				BooleanFilter booleanFilter =
+					booleanQuery.getPreBooleanFilter();
+
+				if (Validator.isNotNull(scope)) {
+					BooleanQuery scopeBooleanQuery = new BooleanQueryImpl();
+
+					scopeBooleanQuery.addTerm("scope", scope);
+
+					booleanFilter.add(
+						new QueryFilter(scopeBooleanQuery),
+						BooleanClauseOccur.MUST);
+				}
 			},
 			null, AppBuilderApp.class, keywords, pagination,
 			queryConfig -> queryConfig.setSelectedFieldNames(
@@ -286,7 +310,8 @@ public class AppResourceImpl
 
 	@Override
 	public Page<App> getSiteAppsPage(
-			Long siteId, String keywords, Pagination pagination, Sort[] sorts)
+			Long siteId, String keywords, String scope, Pagination pagination,
+			Sort[] sorts)
 		throws Exception {
 
 		if (pagination.getPageSize() > 250) {
@@ -304,7 +329,7 @@ public class AppResourceImpl
 			};
 		}
 
-		if (Validator.isNull(keywords)) {
+		if (Validator.isNull(keywords) && Validator.isNull(scope)) {
 			return Page.of(
 				transform(
 					_appBuilderAppLocalService.getAppBuilderApps(
@@ -319,6 +344,18 @@ public class AppResourceImpl
 		return SearchUtil.search(
 			Collections.emptyMap(),
 			booleanQuery -> {
+				BooleanFilter booleanFilter =
+					booleanQuery.getPreBooleanFilter();
+
+				if (Validator.isNotNull(scope)) {
+					BooleanQuery scopeBooleanQuery = new BooleanQueryImpl();
+
+					scopeBooleanQuery.addTerm("scope", scope);
+
+					booleanFilter.add(
+						new QueryFilter(scopeBooleanQuery),
+						BooleanClauseOccur.MUST);
+				}
 			},
 			null, AppBuilderApp.class, keywords, pagination,
 			queryConfig -> queryConfig.setSelectedFieldNames(
@@ -357,13 +394,29 @@ public class AppResourceImpl
 		DDMStructure ddmStructure = _ddmStructureLocalService.getStructure(
 			dataDefinitionId);
 
-		AppBuilderApp appBuilderApp =
-			_appBuilderAppLocalService.addAppBuilderApp(
+		AppBuilderApp appBuilderApp = null;
+
+		if (Objects.isNull(app.getDataRecordCollectionId())) {
+			appBuilderApp = _appBuilderAppLocalService.addAppBuilderApp(
 				ddmStructure.getGroupId(), contextCompany.getCompanyId(),
 				PrincipalThreadLocal.getUserId(), app.getActive(),
 				dataDefinitionId, GetterUtil.getLong(app.getDataLayoutId()),
 				GetterUtil.getLong(app.getDataListViewId()),
-				LocalizedValueUtil.toLocaleStringMap(app.getName()));
+				LocalizedValueUtil.toLocaleStringMap(app.getName()),
+				GetterUtil.getString(
+					app.getScope(), AppBuilderAppConstants.SCOPE_STANDARD));
+		}
+		else {
+			appBuilderApp = _appBuilderAppLocalService.addAppBuilderApp(
+				ddmStructure.getGroupId(), contextCompany.getCompanyId(),
+				PrincipalThreadLocal.getUserId(), app.getActive(),
+				app.getDataRecordCollectionId(), dataDefinitionId,
+				GetterUtil.getLong(app.getDataLayoutId()),
+				GetterUtil.getLong(app.getDataListViewId()),
+				LocalizedValueUtil.toLocaleStringMap(app.getName()),
+				GetterUtil.getString(
+					app.getScope(), AppBuilderAppConstants.SCOPE_STANDARD));
+		}
 
 		app.setId(appBuilderApp.getAppBuilderAppId());
 

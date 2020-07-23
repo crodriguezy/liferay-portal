@@ -72,16 +72,14 @@ definition {
 		Button.click(button = "Publish");
 	}
 
-	macro clickPublishToChangeList {
-		Button.click(button = "Publish to Change List");
-	}
-
 	macro clickRemove {
 		Button.click(button = "Remove");
 	}
 
 	macro clickSave {
 		Button.click(button = "Save");
+
+		WaitForLiferayEvent.initializeLiferayEventLog();
 	}
 
 	macro clickSaveAsDraft {

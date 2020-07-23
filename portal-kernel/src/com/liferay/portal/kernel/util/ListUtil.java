@@ -109,9 +109,9 @@ public class ListUtil {
 		Iterator<? extends E> iterator = list.iterator();
 
 		while (iterator.hasNext()) {
-			E obj = iterator.next();
+			E object = iterator.next();
 
-			if (!set.add(obj)) {
+			if (!set.add(object)) {
 				iterator.remove();
 			}
 		}
@@ -289,9 +289,9 @@ public class ListUtil {
 		List<E> list = new ArrayList<>();
 
 		while (enumeration.hasMoreElements()) {
-			E obj = enumeration.nextElement();
+			E object = enumeration.nextElement();
 
-			list.add(obj);
+			list.add(object);
 		}
 
 		return list;
@@ -698,7 +698,7 @@ public class ListUtil {
 			return StringPool.BLANK;
 		}
 
-		StringBundler sb = new StringBundler(2 * list.size() - 1);
+		StringBundler sb = new StringBundler((2 * list.size()) - 1);
 
 		for (int i = 0; i < list.size(); i++) {
 			T bean = list.get(i);
@@ -734,7 +734,7 @@ public class ListUtil {
 			return StringPool.BLANK;
 		}
 
-		StringBundler sb = new StringBundler(2 * list.size() - 1);
+		StringBundler sb = new StringBundler((2 * list.size()) - 1);
 
 		for (int i = 0; i < list.size(); i++) {
 			Object bean = list.get(i);

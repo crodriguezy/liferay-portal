@@ -60,14 +60,17 @@ renderResponse.setTitle((workflowDefinition == null) ? LanguageUtil.get(request,
 			<div class="info-bar-item">
 				<c:choose>
 					<c:when test="<%= active %>">
-						<span class="label label-info label-lg">
-							<liferay-ui:message key="published" />
-						</span>
+						<clay:label
+							displayType="info"
+							label="published"
+							large="<%= true %>"
+						/>
 					</c:when>
 					<c:otherwise>
-						<span class="label label-lg label-secondary">
-							<liferay-ui:message key="not-published" />
-						</span>
+						<clay:label
+							label="not-published"
+							large="<%= true %>"
+						/>
 					</c:otherwise>
 				</c:choose>
 			</div>
@@ -115,15 +118,19 @@ renderResponse.setTitle((workflowDefinition == null) ? LanguageUtil.get(request,
 				</div>
 
 				<div class="sidebar-header">
-					<div class="autofit-row sidebar-section">
-						<div class="autofit-col autofit-col-expand">
+					<clay:content-row
+						cssClass="sidebar-section"
+					>
+						<clay:content-col
+							expand="<%= true %>"
+						>
 							<h4 class="component-title">
 								<span class="text-truncate-inline">
 									<span class="text-truncate"><%= HtmlUtil.escape(workflowDefinition.getTitle(LanguageUtil.getLanguageId(request))) %></span>
 								</span>
 							</h4>
-						</div>
-					</div>
+						</clay:content-col>
+					</clay:content-row>
 				</div>
 
 				<div class="sidebar-body">
@@ -171,7 +178,7 @@ renderResponse.setTitle((workflowDefinition == null) ? LanguageUtil.get(request,
 										<liferay-ui:message key="total-modifications" />
 									</dt>
 									<dd class="sidebar-dd">
-										<liferay-ui:message arguments='<%= new String[] {workflowDefinitionDisplayContext.getWorkflowDefinitionsCount(workflowDefinition) + ""} %>' key="x-revisions" translateArguments="<%= false %>" />
+										<liferay-ui:message arguments='<%= workflowDefinitionDisplayContext.getWorkflowDefinitionsCount(workflowDefinition) + "" %>' key="x-revisions" translateArguments="<%= false %>" />
 									</dd>
 									<dt class="sidebar-dt"></dt>
 									<dd class="sidebar-dd"></dd>
@@ -243,7 +250,7 @@ renderResponse.setTitle((workflowDefinition == null) ? LanguageUtil.get(request,
 							</clay:col>
 
 							<clay:col
-								className="workflow-definition-upload"
+								cssClass="workflow-definition-upload"
 								size="12"
 							>
 								<liferay-util:buffer
@@ -260,8 +267,8 @@ renderResponse.setTitle((workflowDefinition == null) ? LanguageUtil.get(request,
 							</clay:col>
 
 							<clay:col
-								className="workflow-definition-content-source-wrapper"
-								id='<%= renderResponse.getNamespace() + "contentSourceWrapper" %>'
+								cssClass="workflow-definition-content-source-wrapper"
+								id='<%= liferayPortletResponse.getNamespace() + "contentSourceWrapper" %>'
 								size="12"
 							>
 								<div class="workflow-definition-content-source" id="<portlet:namespace />contentEditor"></div>

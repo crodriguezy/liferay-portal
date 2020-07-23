@@ -58,6 +58,7 @@ public class FragmentEntryLinkWrapper
 		attributes.put("segmentsExperienceId", getSegmentsExperienceId());
 		attributes.put("classNameId", getClassNameId());
 		attributes.put("classPK", getClassPK());
+		attributes.put("plid", getPlid());
 		attributes.put("css", getCss());
 		attributes.put("html", getHtml());
 		attributes.put("js", getJs());
@@ -158,6 +159,12 @@ public class FragmentEntryLinkWrapper
 
 		if (classPK != null) {
 			setClassPK(classPK);
+		}
+
+		Long plid = (Long)attributes.get("plid");
+
+		if (plid != null) {
+			setPlid(plid);
 		}
 
 		String css = (String)attributes.get("css");
@@ -412,6 +419,16 @@ public class FragmentEntryLinkWrapper
 	}
 
 	/**
+	 * Returns the plid of this fragment entry link.
+	 *
+	 * @return the plid of this fragment entry link
+	 */
+	@Override
+	public long getPlid() {
+		return model.getPlid();
+	}
+
+	/**
 	 * Returns the position of this fragment entry link.
 	 *
 	 * @return the position of this fragment entry link
@@ -501,6 +518,13 @@ public class FragmentEntryLinkWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return model.isLatestVersion();
+	}
+
+	@Override
+	public boolean isSystem()
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return model.isSystem();
 	}
 
 	@Override
@@ -693,6 +717,16 @@ public class FragmentEntryLinkWrapper
 		long originalFragmentEntryLinkId) {
 
 		model.setOriginalFragmentEntryLinkId(originalFragmentEntryLinkId);
+	}
+
+	/**
+	 * Sets the plid of this fragment entry link.
+	 *
+	 * @param plid the plid of this fragment entry link
+	 */
+	@Override
+	public void setPlid(long plid) {
+		model.setPlid(plid);
 	}
 
 	/**

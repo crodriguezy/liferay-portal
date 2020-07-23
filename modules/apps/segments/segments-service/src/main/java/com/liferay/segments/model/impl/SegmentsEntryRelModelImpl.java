@@ -73,12 +73,12 @@ public class SegmentsEntryRelModelImpl
 	public static final String TABLE_NAME = "SegmentsEntryRel";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"mvccVersion", Types.BIGINT}, {"segmentsEntryRelId", Types.BIGINT},
-		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
-		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
-		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
-		{"segmentsEntryId", Types.BIGINT}, {"classNameId", Types.BIGINT},
-		{"classPK", Types.BIGINT}
+		{"mvccVersion", Types.BIGINT}, {"ctCollectionId", Types.BIGINT},
+		{"segmentsEntryRelId", Types.BIGINT}, {"groupId", Types.BIGINT},
+		{"companyId", Types.BIGINT}, {"userId", Types.BIGINT},
+		{"userName", Types.VARCHAR}, {"createDate", Types.TIMESTAMP},
+		{"modifiedDate", Types.TIMESTAMP}, {"segmentsEntryId", Types.BIGINT},
+		{"classNameId", Types.BIGINT}, {"classPK", Types.BIGINT}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -86,6 +86,7 @@ public class SegmentsEntryRelModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("ctCollectionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("segmentsEntryRelId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
@@ -99,7 +100,7 @@ public class SegmentsEntryRelModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table SegmentsEntryRel (mvccVersion LONG default 0 not null,segmentsEntryRelId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,segmentsEntryId LONG,classNameId LONG,classPK LONG)";
+		"create table SegmentsEntryRel (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,segmentsEntryRelId LONG not null,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,segmentsEntryId LONG,classNameId LONG,classPK LONG,primary key (segmentsEntryRelId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP = "drop table SegmentsEntryRel";
 
@@ -125,12 +126,18 @@ public class SegmentsEntryRelModelImpl
 
 	public static final long SEGMENTSENTRYRELID_COLUMN_BITMASK = 16L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-		_entityCacheEnabled = entityCacheEnabled;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-		_finderCacheEnabled = finderCacheEnabled;
 	}
 
 	/**
@@ -147,6 +154,7 @@ public class SegmentsEntryRelModelImpl
 		SegmentsEntryRel model = new SegmentsEntryRelImpl();
 
 		model.setMvccVersion(soapModel.getMvccVersion());
+		model.setCtCollectionId(soapModel.getCtCollectionId());
 		model.setSegmentsEntryRelId(soapModel.getSegmentsEntryRelId());
 		model.setGroupId(soapModel.getGroupId());
 		model.setCompanyId(soapModel.getCompanyId());
@@ -236,9 +244,6 @@ public class SegmentsEntryRelModelImpl
 				attributeGetterFunction.apply((SegmentsEntryRel)this));
 		}
 
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
-
 		return attributes;
 	}
 
@@ -320,6 +325,12 @@ public class SegmentsEntryRelModelImpl
 			(BiConsumer<SegmentsEntryRel, Long>)
 				SegmentsEntryRel::setMvccVersion);
 		attributeGetterFunctions.put(
+			"ctCollectionId", SegmentsEntryRel::getCtCollectionId);
+		attributeSetterBiConsumers.put(
+			"ctCollectionId",
+			(BiConsumer<SegmentsEntryRel, Long>)
+				SegmentsEntryRel::setCtCollectionId);
+		attributeGetterFunctions.put(
 			"segmentsEntryRelId", SegmentsEntryRel::getSegmentsEntryRelId);
 		attributeSetterBiConsumers.put(
 			"segmentsEntryRelId",
@@ -387,6 +398,17 @@ public class SegmentsEntryRelModelImpl
 	@Override
 	public void setMvccVersion(long mvccVersion) {
 		_mvccVersion = mvccVersion;
+	}
+
+	@JSON
+	@Override
+	public long getCtCollectionId() {
+		return _ctCollectionId;
+	}
+
+	@Override
+	public void setCtCollectionId(long ctCollectionId) {
+		_ctCollectionId = ctCollectionId;
 	}
 
 	@JSON
@@ -631,6 +653,7 @@ public class SegmentsEntryRelModelImpl
 		SegmentsEntryRelImpl segmentsEntryRelImpl = new SegmentsEntryRelImpl();
 
 		segmentsEntryRelImpl.setMvccVersion(getMvccVersion());
+		segmentsEntryRelImpl.setCtCollectionId(getCtCollectionId());
 		segmentsEntryRelImpl.setSegmentsEntryRelId(getSegmentsEntryRelId());
 		segmentsEntryRelImpl.setGroupId(getGroupId());
 		segmentsEntryRelImpl.setCompanyId(getCompanyId());
@@ -663,16 +686,16 @@ public class SegmentsEntryRelModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof SegmentsEntryRel)) {
+		if (!(object instanceof SegmentsEntryRel)) {
 			return false;
 		}
 
-		SegmentsEntryRel segmentsEntryRel = (SegmentsEntryRel)obj;
+		SegmentsEntryRel segmentsEntryRel = (SegmentsEntryRel)object;
 
 		long primaryKey = segmentsEntryRel.getPrimaryKey();
 
@@ -689,14 +712,22 @@ public class SegmentsEntryRelModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	@Override
@@ -734,6 +765,8 @@ public class SegmentsEntryRelModelImpl
 			new SegmentsEntryRelCacheModel();
 
 		segmentsEntryRelCacheModel.mvccVersion = getMvccVersion();
+
+		segmentsEntryRelCacheModel.ctCollectionId = getCtCollectionId();
 
 		segmentsEntryRelCacheModel.segmentsEntryRelId = getSegmentsEntryRelId();
 
@@ -848,10 +881,8 @@ public class SegmentsEntryRelModelImpl
 
 	}
 
-	private static boolean _entityCacheEnabled;
-	private static boolean _finderCacheEnabled;
-
 	private long _mvccVersion;
+	private long _ctCollectionId;
 	private long _segmentsEntryRelId;
 	private long _groupId;
 	private long _originalGroupId;

@@ -12,11 +12,13 @@
  * details.
  */
 
+import ClayLayout from '@clayui/layout';
 import React, {useEffect, useReducer, useState} from 'react';
 
 import ControlMenu from '../../../components/control-menu/ControlMenu.es';
 import {Loading} from '../../../components/loading/Loading.es';
 import MultiStepNav from '../../../components/multi-step-nav/MultiStepNav.es';
+import {toQuery} from '../../../hooks/useQuery.es';
 import {getItem} from '../../../utils/client.es';
 import DeployApp from './DeployApp.es';
 import EditAppBody from './EditAppBody.es';
@@ -25,9 +27,11 @@ import EditAppFooter from './EditAppFooter.es';
 import EditAppHeader from './EditAppHeader.es';
 
 export default ({
+	location: {search},
 	match: {
 		params: {appId, dataDefinitionId},
 	},
+	scope,
 }) => {
 	const [currentStep, setCurrentStep] = useState(0);
 	const [isLoading, setLoading] = useState(false);
@@ -41,8 +45,11 @@ export default ({
 			name: {
 				en_US: '',
 			},
+			scope,
 		},
 	});
+
+	const {backUrl} = toQuery(search, {backUrl: '../'});
 
 	useEffect(() => {
 		if (appId) {
@@ -79,23 +86,23 @@ export default ({
 
 	return (
 		<>
-			<ControlMenu backURL="../" title={title} />
+			<ControlMenu backURL={backUrl} title={title} />
 
 			<Loading isLoading={isLoading}>
 				<EditAppContext.Provider value={{dispatch, state}}>
-					<div className="container-fluid container-fluid-max-lg mt-4">
+					<ClayLayout.ContainerFluid className="mt-4" size="lg">
 						<div className="card card-root mb-0 shadowless-card">
 							<EditAppHeader />
 
 							<div className="card-body p-0 shadowless-card-body">
-								<div className="autofit-row">
-									<div className="col-md-12">
+								<ClayLayout.Row>
+									<ClayLayout.Col>
 										<MultiStepNav
 											currentStep={currentStep}
 											steps={['1', '2', '3']}
 										/>
-									</div>
-								</div>
+									</ClayLayout.Col>
+								</ClayLayout.Row>
 
 								{currentStep == 0 && (
 									<EditAppBody
@@ -143,7 +150,7 @@ export default ({
 								onCurrentStepChange={onCurrentStepChange}
 							/>
 						</div>
-					</div>
+					</ClayLayout.ContainerFluid>
 				</EditAppContext.Provider>
 			</Loading>
 		</>

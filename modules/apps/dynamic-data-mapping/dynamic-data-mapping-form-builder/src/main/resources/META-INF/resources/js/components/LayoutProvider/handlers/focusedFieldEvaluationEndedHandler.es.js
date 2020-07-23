@@ -14,16 +14,29 @@
 
 import {PagesVisitor} from 'dynamic-data-mapping-form-renderer';
 
+import {getField} from '../util/fields.es';
 import handleFieldEdited from './fieldEditedHandler.es';
 
 const handleFocusedFieldEvaluationEnded = (
 	props,
 	state,
+	changedFieldType = false,
 	instanceId,
 	settingsContext
 ) => {
-	const visitor = new PagesVisitor(settingsContext.pages);
+	const fieldName = getField(settingsContext.pages, 'name');
 	const {focusedField} = state;
+	const focusedFieldName = getField(
+		focusedField.settingsContext.pages,
+		'name'
+	);
+
+	if (
+		fieldName.instanceId !== focusedFieldName.instanceId &&
+		!changedFieldType
+	) {
+		return state;
+	}
 
 	state = {
 		...state,
@@ -33,6 +46,8 @@ const handleFocusedFieldEvaluationEnded = (
 			settingsContext,
 		},
 	};
+
+	const visitor = new PagesVisitor(settingsContext.pages);
 
 	visitor.mapFields(({fieldName, value}) => {
 		state = handleFieldEdited(

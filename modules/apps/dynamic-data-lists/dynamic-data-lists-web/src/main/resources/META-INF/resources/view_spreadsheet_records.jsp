@@ -29,7 +29,7 @@ DDMStructure ddmStructure = recordSet.getDDMStructure();
 %>
 
 <clay:container-fluid
-	className="lfr-spreadsheet-container"
+	cssClass="lfr-spreadsheet-container"
 >
 	<div id="<portlet:namespace />spreadsheet">
 		<div class="table-striped yui3-datatable yui3-widget" id="<portlet:namespace />dataTable">
@@ -166,6 +166,8 @@ DDMStructure ddmStructure = recordSet.getDDMStructure();
 			sortBy: '<liferay-ui:message arguments="{column}" key="sort-by-x" />',
 		},
 		structure: structure,
+		updateRecordURL:
+			'<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="/ddl/update_record" />',
 		width: '100%',
 	});
 

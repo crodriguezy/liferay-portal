@@ -26,8 +26,6 @@ import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONUtil;
-import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.util.Portal;
 
 import java.util.List;
 import java.util.Map;
@@ -79,8 +77,7 @@ public class DropZoneFragmentEntryProcessor implements FragmentEntryProcessor {
 			_layoutPageTemplateStructureLocalService.
 				fetchLayoutPageTemplateStructure(
 					fragmentEntryLink.getGroupId(),
-					_portal.getClassNameId(Layout.class.getName()),
-					fragmentEntryLink.getClassPK());
+					fragmentEntryLink.getPlid());
 
 		if (layoutPageTemplateStructure == null) {
 			return html;
@@ -127,7 +124,7 @@ public class DropZoneFragmentEntryProcessor implements FragmentEntryProcessor {
 				fragmentEntryProcessorContext.getHttpServletRequest(),
 				fragmentEntryProcessorContext.getHttpServletResponse(),
 				fieldValuesOptional.orElse(null),
-				fragmentEntryLink.getGroupId(), fragmentEntryLink.getClassPK(),
+				fragmentEntryLink.getGroupId(), fragmentEntryLink.getPlid(),
 				dropZoneItemIds.get(i), fragmentEntryProcessorContext.getMode(),
 				true);
 
@@ -165,8 +162,5 @@ public class DropZoneFragmentEntryProcessor implements FragmentEntryProcessor {
 	@Reference
 	private LayoutPageTemplateStructureLocalService
 		_layoutPageTemplateStructureLocalService;
-
-	@Reference
-	private Portal _portal;
 
 }

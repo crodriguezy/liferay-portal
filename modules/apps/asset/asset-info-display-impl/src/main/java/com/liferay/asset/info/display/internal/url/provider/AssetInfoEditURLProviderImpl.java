@@ -21,6 +21,9 @@ import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Http;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.portlet.PortletURL;
@@ -28,6 +31,7 @@ import javax.portlet.PortletURL;
 import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Jürgen Kappler
@@ -35,6 +39,7 @@ import org.osgi.service.component.annotations.Component;
 @Component(immediate = true, service = AssetInfoEditURLProvider.class)
 public class AssetInfoEditURLProviderImpl implements AssetInfoEditURLProvider {
 
+	@Override
 	public String getURL(
 		String className, long classPK, HttpServletRequest httpServletRequest) {
 
@@ -64,9 +69,19 @@ public class AssetInfoEditURLProviderImpl implements AssetInfoEditURLProvider {
 				return StringPool.BLANK;
 			}
 
+			String redirect = ParamUtil.getString(
+				httpServletRequest, "redirect");
+
+			if (Validator.isNull(redirect)) {
+				redirect = themeDisplay.getURLCurrent();
+			}
+
+			redirect = _http.addParameter(
+				redirect, "portletResource",
+				assetRendererFactory.getPortletId());
+
 			PortletURL editAssetEntryURL = assetRenderer.getURLEdit(
-				httpServletRequest, LiferayWindowState.NORMAL,
-				themeDisplay.getURLCurrent());
+				httpServletRequest, LiferayWindowState.NORMAL, redirect);
 
 			if (editAssetEntryURL == null) {
 				return StringPool.BLANK;
@@ -82,5 +97,8 @@ public class AssetInfoEditURLProviderImpl implements AssetInfoEditURLProvider {
 
 		return StringPool.BLANK;
 	}
+
+	@Reference
+	private Http _http;
 
 }

@@ -30,43 +30,42 @@ import org.osgi.service.component.annotations.Component;
  * @author Marcos Martins
  */
 @Component(
-	immediate = true, property = "ddm.form.field.type.name=checkbox_multiple",
+	immediate = true,
+	property = {
+		"ddm.form.field.type.name=checkbox_multiple",
+		"ddm.form.field.type.name=select"
+	},
 	service = DDMFormFieldTypeReportProcessor.class
 )
 public class CheckboxMultipleDDMFormFieldTypeReportProcessor
-	extends BaseDDMFormFieldTypeReportProcessor {
+	implements DDMFormFieldTypeReportProcessor {
 
 	@Override
-	protected JSONObject doProcess(
-			DDMFormFieldValue ddmFormFieldValue,
-			JSONObject formInstanceReportDataJSONObject,
-			String formInstanceReportEvent)
+	public JSONObject process(
+			DDMFormFieldValue ddmFormFieldValue, JSONObject fieldJSONObject,
+			long formInstanceRecordId, String ddmFormInstanceReportEvent)
 		throws Exception {
-
-		JSONObject fieldJSONObject =
-			formInstanceReportDataJSONObject.getJSONObject(
-				ddmFormFieldValue.getName());
 
 		JSONObject valuesJSONObject = fieldJSONObject.getJSONObject("values");
 
 		Value value = ddmFormFieldValue.getValue();
 
-		JSONArray keysJSONArray = JSONFactoryUtil.createJSONArray(
+		JSONArray valueJSONArray = JSONFactoryUtil.createJSONArray(
 			value.getString(value.getDefaultLocale()));
 
-		Iterator<String> iterator = keysJSONArray.iterator();
+		Iterator<String> iterator = valueJSONArray.iterator();
 
 		while (iterator.hasNext()) {
 			String key = iterator.next();
 
 			int count = valuesJSONObject.getInt(key, 0);
 
-			if (formInstanceReportEvent.equals(
+			if (ddmFormInstanceReportEvent.equals(
 					DDMFormInstanceReportConstants.EVENT_ADD_RECORD_VERSION)) {
 
 				count++;
 			}
-			else if (formInstanceReportEvent.equals(
+			else if (ddmFormInstanceReportEvent.equals(
 						DDMFormInstanceReportConstants.
 							EVENT_DELETE_RECORD_VERSION)) {
 
@@ -76,7 +75,7 @@ public class CheckboxMultipleDDMFormFieldTypeReportProcessor
 			valuesJSONObject.put(key, count);
 		}
 
-		return formInstanceReportDataJSONObject;
+		return fieldJSONObject;
 	}
 
 }

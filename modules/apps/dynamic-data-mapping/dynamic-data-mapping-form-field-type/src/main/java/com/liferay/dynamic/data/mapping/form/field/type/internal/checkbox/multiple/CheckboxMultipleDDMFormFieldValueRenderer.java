@@ -22,6 +22,7 @@ import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.util.HtmlUtil;
 
 import java.util.Locale;
 
@@ -52,14 +53,14 @@ public class CheckboxMultipleDDMFormFieldValueRenderer
 			ddmFormFieldValue);
 
 		StringBundler sb = new StringBundler(
-			optionsValuesJSONArray.length() * 2 - 1);
+			(optionsValuesJSONArray.length() * 2) - 1);
 
 		for (int i = 0; i < optionsValuesJSONArray.length(); i++) {
 			LocalizedValue optionLabel = ddmFormFieldOptions.getOptionLabels(
 				optionsValuesJSONArray.getString(i));
 
 			if (optionLabel != null) {
-				sb.append(optionLabel.getString(locale));
+				sb.append(HtmlUtil.escape(optionLabel.getString(locale)));
 
 				sb.append(StringPool.COMMA_AND_SPACE);
 			}

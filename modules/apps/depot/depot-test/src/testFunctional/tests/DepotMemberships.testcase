@@ -36,31 +36,28 @@ definition {
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 
-		Site.assignOrganizationAsMemberCP(orgName = "Organization Name");
+		Depot.assignOrganizationAsMember(orgName = "Organization Name");
 
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 
-		Site.viewMemberOrganizationCP(orgName = "Organization Name");
+		Depot.viewMemberOrganization(orgName = "Organization Name");
 
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 
 		Navigator.gotoNavItem(navItem = "Organizations");
 
-		Site.removeOrganizationCP(orgName = "Organization Name");
+		Depot.removeOrganization(orgName = "Organization Name");
 
 		AssertTextEquals(
 			locator1 = "Message#EMPTY_INFO",
@@ -71,6 +68,7 @@ definition {
 	@priority = "5"
 	test AddAndRemoveUser {
 		property portal.acceptance = "true";
+		property portal.upstream = "quarantine";
 
 		JSONUser.addUser(
 			userEmailAddress = "userea@liferay.com",
@@ -81,11 +79,10 @@ definition {
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 
-		Site.assignUserAsMemberCP(
+		Depot.assignUserAsMember(
 			depotName = "Test Depot Name",
 			userFirstName = "userfn",
 			userLastName = "userln",
@@ -94,11 +91,10 @@ definition {
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 
-		Site.removeMemberCP(
+		Depot.removeMember(
 			userFirstName = "userfn",
 			userLastName = "userln",
 			userScreenName = "usersn");
@@ -111,7 +107,7 @@ definition {
 	@description = "This ensures that a user group can be added and removed in the membership of an asset library."
 	@priority = "5"
 	test AddAndRemoveUserGroup {
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "User Groups");
@@ -121,31 +117,28 @@ definition {
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 
-		Site.assignUserGroupAsMemberCP(userGroupName = "User Group Name");
+		Depot.assignUserGroupAsMember(userGroupName = "User Group Name");
 
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 
-		Site.viewMemberUserGroupCP(userGroupName = "User Group Name");
+		Depot.viewMemberUserGroup(userGroupName = "User Group Name");
 
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 
 		Navigator.gotoNavItem(navItem = "User Groups");
 
-		Site.removeUserGroupCP(
+		Depot.removeUserGroup(
 			bulkEditing = "true",
 			userGroupNameList = "User Group Name");
 
@@ -163,7 +156,7 @@ definition {
 			userLastName = "userln",
 			userScreenName = "usersn");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -175,7 +168,6 @@ definition {
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 
@@ -196,7 +188,6 @@ definition {
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "Configuration",
 			depotName = "Test Depot Name",
 			portlet = "Settings");
 
@@ -205,7 +196,7 @@ definition {
 			language = "es-ES",
 			settings = "true");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -234,17 +225,16 @@ definition {
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 
-		Site.assignUserAsMemberCP(
+		Depot.assignUserAsMember(
 			depotName = "Test Depot Name",
 			userFirstName = "userfn",
 			userLastName = "userln",
 			userScreenName = "usersn");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -256,7 +246,6 @@ definition {
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 

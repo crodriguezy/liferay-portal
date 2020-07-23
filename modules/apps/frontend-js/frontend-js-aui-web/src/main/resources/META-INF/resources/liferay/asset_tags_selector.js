@@ -12,6 +12,9 @@
  * details.
  */
 
+/**
+ * @deprecated As of Athanasius (7.3.x), replaced by `import {AssetTagsSelector} from 'asset-taglib'`
+ */
 AUI.add(
 	'liferay-asset-tags-selector',
 	(A) => {

@@ -37,19 +37,16 @@ definition {
 				value1 = "${depotName}");
 		}
 
-		AssertTextNotEquals(
+		AssertTextEquals(
 			locator1 = "ControlMenu#HEADING",
 			value1 = "Asset Libraries");
 
-		if (IsElementPresent(locator1 = "ProductMenu#PRODUCT_MENU_CLOSED")) {
-			Click.clickNoSPARefresh(locator1 = "ProductMenu#TOGGLE");
+		for (var portletName : list "Web Content,Documents and Media,Collections,Categories,Tags,Recycle Bin,Memberships,Settings,Workflow") {
+			AssertTextEquals(
+				key_card = "${portletName}",
+				locator1 = "LexiconCard#CARD",
+				value1 = "${portletName}");
 		}
-
-		ProductMenuHelper.gotoPortlet(portlet = "${portlet}");
-
-		AssertTextEquals(
-			locator1 = "ControlMenu#HEADING",
-			value1 = "${portlet}");
 	}
 
 	macro gotoDepotPortlet {
@@ -77,21 +74,19 @@ definition {
 				value1 = "${depotName}");
 		}
 
-		ProductMenu.gotoPortlet(
-			category = "${category}",
-			panel = "Site Administration",
+		DepotNavigator.gotoPortlet(
+			depotName = "${depotName}",
 			portlet = "${portlet}");
 	}
 
 	macro gotoDepotViaSpaceIcon {
-		ProductMenuHelper.expandPanel(panel = "Site Administration");
+		if (IsElementNotPresent(locator1 = "ProductMenu#TOGGLE")) {
+			ApplicationsMenu.gotoSite(site = "Guest");
+		}
+
+		ProductMenuHelper.openProductMenu();
 
 		ProductMenuHelper.openWorkspace();
-
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
 
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
@@ -132,6 +127,23 @@ definition {
 			value1 = "Languages");
 	}
 
+	macro gotoPortlet {
+		Click(
+			key_card = "${portlet}",
+			locator1 = "LexiconCard#CARD");
+
+		if ("${portlet}" == "Settings") {
+			AssertTextEquals(
+				locator1 = "ControlMenu#HEADING",
+				value1 = "${depotName}");
+		}
+		else {
+			AssertTextEquals(
+				locator1 = "ControlMenu#HEADING",
+				value1 = "${portlet}");
+		}
+	}
+
 	macro gotoShare {
 		LexiconEntry.changeDisplayStyle(displayStyle = "list");
 
@@ -142,6 +154,8 @@ definition {
 		Click(
 			key_dmDocumentTitle = "${dmDocumentTitle}",
 			locator1 = "DocumentsAndMedia#DESCRIPTIVE_LIST_DOCUMENT_VERTICAL_ELLIPSIS");
+
+		WaitForLiferayEvent.initializeLiferayEventLog();
 
 		MenuItem.click(menuItem = "Share");
 	}
@@ -158,6 +172,10 @@ definition {
 
 	macro openDepotAdmin {
 		Navigator.openWithAppendToBaseURL(urlAppend = "group/control_panel/manage?p_p_id=com_liferay_depot_web_portlet_DepotAdminPortlet");
+	}
+
+	macro openDepotMembershipsAdmin {
+		Navigator.openWithAppendToBaseURL(urlAppend = "group/${depotURLKey}/~/control_panel/manage/-/site_memberships");
 	}
 
 }

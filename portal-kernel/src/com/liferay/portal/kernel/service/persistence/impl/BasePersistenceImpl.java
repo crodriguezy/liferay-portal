@@ -263,7 +263,7 @@ public class BasePersistenceImpl<T extends BaseModel<T>>
 		EntityCache entityCache = getEntityCache();
 
 		Serializable serializable = entityCache.getResult(
-			entityCacheEnabled, _modelImplClass, primaryKey);
+			_modelImplClass, primaryKey);
 
 		if (serializable == nullModel) {
 			return null;
@@ -281,17 +281,13 @@ public class BasePersistenceImpl<T extends BaseModel<T>>
 
 				if (model == null) {
 					entityCache.putResult(
-						entityCacheEnabled, _modelImplClass, primaryKey,
-						nullModel);
+						_modelImplClass, primaryKey, nullModel);
 				}
 				else {
 					cacheResult(model);
 				}
 			}
 			catch (Exception exception) {
-				entityCache.removeResult(
-					entityCacheEnabled, _modelImplClass, primaryKey);
-
 				throw processException(exception);
 			}
 			finally {
@@ -345,7 +341,7 @@ public class BasePersistenceImpl<T extends BaseModel<T>>
 
 		for (Serializable primaryKey : primaryKeys) {
 			Serializable serializable = entityCache.getResult(
-				entityCacheEnabled, _modelImplClass, primaryKey);
+				_modelImplClass, primaryKey);
 
 			if (serializable != nullModel) {
 				if (serializable == null) {
@@ -366,7 +362,7 @@ public class BasePersistenceImpl<T extends BaseModel<T>>
 		}
 
 		StringBundler sb = new StringBundler(
-			2 * uncachedPrimaryKeys.size() + 4);
+			(2 * uncachedPrimaryKeys.size()) + 4);
 
 		sb.append(getSelectSQL());
 		sb.append(" WHERE ");
@@ -418,8 +414,7 @@ public class BasePersistenceImpl<T extends BaseModel<T>>
 			}
 
 			for (Serializable primaryKey : uncachedPrimaryKeys) {
-				entityCache.putResult(
-					entityCacheEnabled, _modelImplClass, primaryKey, nullModel);
+				entityCache.putResult(_modelImplClass, primaryKey, nullModel);
 			}
 		}
 		catch (Exception exception) {
@@ -602,6 +597,10 @@ public class BasePersistenceImpl<T extends BaseModel<T>>
 		return model;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public void setConfiguration(Configuration configuration) {
 		String modelClassName = _modelClass.getName();
 
@@ -895,7 +894,17 @@ public class BasePersistenceImpl<T extends BaseModel<T>>
 
 	protected int databaseInMaxParameters;
 	protected Map<String, String> dbColumnNames;
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	protected boolean entityCacheEnabled;
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	protected boolean finderCacheEnabled;
 
 	private static Type _getType(Expression<?> expression) {
@@ -918,8 +927,8 @@ public class BasePersistenceImpl<T extends BaseModel<T>>
 		}
 
 		if (expression instanceof AggregateExpression) {
-			AggregateExpression aggregateExpression =
-				(AggregateExpression)expression;
+			AggregateExpression<?> aggregateExpression =
+				(AggregateExpression<?>)expression;
 
 			if (Objects.equals(aggregateExpression.getName(), "count")) {
 				return Type.LONG;
@@ -1070,6 +1079,10 @@ public class BasePersistenceImpl<T extends BaseModel<T>>
 			throw new UnsupportedOperationException();
 		}
 
+		/**
+		 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+		 */
+		@Deprecated
 		@Override
 		public boolean isEntityCacheEnabled() {
 			throw new UnsupportedOperationException();
@@ -1080,6 +1093,10 @@ public class BasePersistenceImpl<T extends BaseModel<T>>
 			throw new UnsupportedOperationException();
 		}
 
+		/**
+		 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+		 */
+		@Deprecated
 		@Override
 		public boolean isFinderCacheEnabled() {
 			throw new UnsupportedOperationException();

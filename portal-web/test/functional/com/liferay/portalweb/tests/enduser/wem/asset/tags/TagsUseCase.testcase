@@ -95,11 +95,6 @@ definition {
 
 		JSONGroup.addGroup(groupName = "Site Name");
 
-		ProductMenu.gotoPortlet(
-			category = "Site Builder",
-			panel = "Site Administration",
-			portlet = "Pages");
-
 		JSONLayout.addPublicLayout(
 			groupName = "Site Name",
 			layoutName = "Page Name");
@@ -222,6 +217,7 @@ definition {
 
 	@priority = "5"
 	test DisplayTagCloud {
+		property portal.acceptance = "true";
 		property testray.component.names = "Tags";
 
 		JSONLayout.addPublicLayout(
@@ -553,6 +549,7 @@ definition {
 
 	@priority = "5"
 	test ViewTagCloudDisplayConfiguration {
+		property portal.acceptance = "true";
 		property testray.component.names = "Tags";
 
 		JSONLayout.addPublicLayout(

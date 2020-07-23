@@ -27,7 +27,6 @@ exports[`ListApps renders 1`] = `
             <button
               class="dropdown-toggle nav-link btn btn-unstyled"
               id="filter-and-order"
-              style=""
               type="button"
             >
               <span
@@ -154,6 +153,28 @@ exports[`ListApps renders 1`] = `
             </svg>
           </button>
         </li>
+        <li
+          class="nav-item"
+        >
+          <a
+            href="#/custom-object/123/apps/deploy"
+          >
+            <button
+              class="nav-btn nav-btn-monospaced btn btn-monospaced btn-primary"
+              data-title="new-app"
+              type="button"
+            >
+              <svg
+                class="lexicon-icon lexicon-icon-plus"
+                role="presentation"
+              >
+                <use
+                  xlink:href="#plus"
+                />
+              </svg>
+            </button>
+          </a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -175,11 +196,6 @@ exports[`ListApps renders 1`] = `
                 class="table-cell-expand text-left"
               >
                 name
-              </th>
-              <th
-                class="table-cell-expand-smaller text-left"
-              >
-                object
               </th>
               <th
                 class="table-cell-expand-smaller text-left"
@@ -216,13 +232,12 @@ exports[`ListApps renders 1`] = `
                 <p
                   class="table-list-title"
                 >
-                  Item 1
+                  <a
+                    href="#/custom-object/123/apps/1?backUrl=/"
+                  >
+                    Item 1
+                  </a>
                 </p>
-              </td>
-              <td
-                class="table-cell-expand-smaller text-left"
-              >
-                Object
               </td>
               <td
                 class="table-cell-expand-smaller text-left"
@@ -260,7 +275,6 @@ exports[`ListApps renders 1`] = `
                 >
                   <button
                     class="dropdown-toggle page-link btn btn-unstyled"
-                    style=""
                     type="button"
                   >
                     <svg

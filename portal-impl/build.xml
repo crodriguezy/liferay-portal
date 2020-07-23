@@ -580,11 +580,19 @@ svn://svn.liferay.com/repos/public/alloy/trunk/sandbox/taglibs.
 		<if>
 			<or>
 				<equals arg1="${baseline.current.branch.file.names}" arg2="" />
+				<and>
+					<contains string="${baseline.current.branch.file.names}" substring="Loading file" />
+					<not>
+						<contains string="${baseline.current.branch.file.names}" substring="${line.separator}" />
+					</not>
+				</and>
 				<not>
 					<equals arg1="${baseline.current.branch.result}" arg2="0" />
 				</not>
 			</or>
 			<then>
+				<echo>No modified files found in the current branch. Running SourceFormatter on all files.</echo>
+
 				<antcall target="format-source-all" />
 			</then>
 			<else>
@@ -600,6 +608,34 @@ ant format-source-all
 	</target>
 
 	<target name="format-source-all">
+		<antcall target="format-source-files" />
+	</target>
+
+	<target name="format-source-bnd">
+		<antcall target="format-source-files">
+			<param name="source.file.extensions" value="bnd,gradle,json" />
+		</antcall>
+	</target>
+
+	<target name="format-source-current-branch">
+		<antcall target="format-source-files">
+			<param name="format.current.branch" value="true" />
+		</antcall>
+	</target>
+
+	<target name="format-source-current-branch-debug">
+		<antcall target="format-source-current-branch">
+			<param name="source.formatter.show.debug.information" value="true" />
+		</antcall>
+	</target>
+
+	<target name="format-source-debug">
+		<antcall target="format-source-files">
+			<param name="source.formatter.show.debug.information" value="true" />
+		</antcall>
+	</target>
+
+	<target name="format-source-files">
 		<property location="${project.dir}/modules" name="source.formatter.modules.dir.absolute.path" />
 
 		<if>
@@ -658,12 +694,6 @@ ant format-source-all
 						<var name="source.formatter.gradle.task" value="formatSourceLocalChanges" />
 					</then>
 				</if>
-
-				<echo>
-Please run the following command from ${source.formatter.modules.dir.absolute.path} to show status updates during the Source Formatter execution:
-
-../gradlew -b util.gradle ${source.formatter.gradle.task}${source.formatter.gradle.args}
-				</echo>
 			</then>
 		</if>
 
@@ -709,10 +739,11 @@ Please run the following command from ${source.formatter.modules.dir.absolute.pa
 			<arg value="source.auto.fix=${source.auto.fix}" />
 			<arg value="source.base.dir=${source.base.dir}" />
 			<arg value="source.check.name=${source.check.name}" />
+			<arg value="source.fail.on.auto.fix=${source.fail.on.auto.fix}" />
+			<arg value="source.fail.on.has.warning=${source.fail.on.has.warning}" />
 			<arg value="source.file.extensions=${source.file.extensions}" />
 			<arg value="source.files=${source.files}" />
 			<arg value="source.print.errors=${source.print.errors}" />
-			<arg value="source.throw.exception=${source.throw.exception}" />
 		</java>
 
 		<delete file="ServiceBuilder.temp" />
@@ -730,7 +761,7 @@ Please run the following command from ${source.formatter.modules.dir.absolute.pa
 					<fileset
 						dir="${project.dir}/modules"
 						excludes="**/.gradle/,**/bin/,**/build/,**/classes/,**/node_modules/,**/tmp/"
-						includes="**/yarn-*.js"
+						includes="**/yarn.lock"
 					/>
 				</resourcecount>
 			</and>
@@ -741,12 +772,12 @@ Please run the following command from ${source.formatter.modules.dir.absolute.pa
 						<isfalse value="${source.auto.fix}" />
 					</and>
 					<then>
-						<gradle-execute dir="${project.dir}/modules" task=":yarnCheckFormat">
+						<gradle-execute dir="${project.dir}/modules" task=":portalYarnCheckFormat">
 							<env key="LIFERAY_NPM_SCRIPTS_WORKING_BRANCH_NAME" value="${git.working.branch.name}" />
 						</gradle-execute>
 					</then>
 					<else>
-						<gradle-execute dir="${project.dir}/modules" task=":yarnFormat">
+						<gradle-execute dir="${project.dir}/modules" task=":portalYarnFormat">
 							<env key="LIFERAY_NPM_SCRIPTS_WORKING_BRANCH_NAME" value="${git.working.branch.name}" />
 						</gradle-execute>
 					</else>
@@ -755,32 +786,8 @@ Please run the following command from ${source.formatter.modules.dir.absolute.pa
 		</if>
 	</target>
 
-	<target name="format-source-bnd">
-		<antcall target="format-source-all">
-			<param name="source.file.extensions" value="bnd,gradle,json" />
-		</antcall>
-	</target>
-
-	<target name="format-source-current-branch">
-		<antcall target="format-source-all">
-			<param name="format.current.branch" value="true" />
-		</antcall>
-	</target>
-
-	<target name="format-source-current-branch-debug">
-		<antcall target="format-source-current-branch">
-			<param name="source.formatter.show.debug.information" value="true" />
-		</antcall>
-	</target>
-
-	<target name="format-source-debug">
-		<antcall target="format-source-all">
-			<param name="source.formatter.show.debug.information" value="true" />
-		</antcall>
-	</target>
-
 	<target name="format-source-latest-author">
-		<antcall target="format-source-all">
+		<antcall target="format-source-files">
 			<param name="format.latest.author" value="true" />
 		</antcall>
 	</target>
@@ -792,7 +799,7 @@ Please run the following command from ${source.formatter.modules.dir.absolute.pa
 	</target>
 
 	<target name="format-source-local-changes">
-		<antcall target="format-source-all">
+		<antcall target="format-source-files">
 			<param name="format.local.changes" value="true" />
 		</antcall>
 	</target>

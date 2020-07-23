@@ -35,6 +35,10 @@ public class ImageLocalServiceWrapper
 	/**
 	 * Adds the image to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect ImageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param image the image
 	 * @return the image that was added
 	 */
@@ -68,6 +72,10 @@ public class ImageLocalServiceWrapper
 	/**
 	 * Deletes the image from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect ImageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param image the image
 	 * @return the image that was removed
 	 */
@@ -78,6 +86,10 @@ public class ImageLocalServiceWrapper
 
 	/**
 	 * Deletes the image with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect ImageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param imageId the primary key of the image
 	 * @return the image that was removed
@@ -305,6 +317,10 @@ public class ImageLocalServiceWrapper
 	/**
 	 * Updates the image in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect ImageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param image the image
 	 * @return the image that was updated
 	 */
@@ -338,18 +354,20 @@ public class ImageLocalServiceWrapper
 	}
 
 	@Override
-	public Image updateImage(long imageId, java.io.InputStream is)
+	public Image updateImage(long imageId, java.io.InputStream inputStream)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _imageLocalService.updateImage(imageId, is);
+		return _imageLocalService.updateImage(imageId, inputStream);
 	}
 
 	@Override
 	public Image updateImage(
-			long imageId, java.io.InputStream is, boolean cleanUpStream)
+			long imageId, java.io.InputStream inputStream,
+			boolean cleanUpStream)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _imageLocalService.updateImage(imageId, is, cleanUpStream);
+		return _imageLocalService.updateImage(
+			imageId, inputStream, cleanUpStream);
 	}
 
 	@Override

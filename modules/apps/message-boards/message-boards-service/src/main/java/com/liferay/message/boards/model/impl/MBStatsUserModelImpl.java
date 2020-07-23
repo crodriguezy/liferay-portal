@@ -66,6 +66,7 @@ public class MBStatsUserModelImpl
 	public static final String TABLE_NAME = "MBStatsUser";
 
 	public static final Object[][] TABLE_COLUMNS = {
+		{"mvccVersion", Types.BIGINT}, {"ctCollectionId", Types.BIGINT},
 		{"statsUserId", Types.BIGINT}, {"groupId", Types.BIGINT},
 		{"companyId", Types.BIGINT}, {"userId", Types.BIGINT},
 		{"messageCount", Types.INTEGER}, {"lastPostDate", Types.TIMESTAMP}
@@ -75,6 +76,8 @@ public class MBStatsUserModelImpl
 		new HashMap<String, Integer>();
 
 	static {
+		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("ctCollectionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("statsUserId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
@@ -84,7 +87,7 @@ public class MBStatsUserModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table MBStatsUser (statsUserId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,messageCount INTEGER,lastPostDate DATE null)";
+		"create table MBStatsUser (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,statsUserId LONG not null,groupId LONG,companyId LONG,userId LONG,messageCount INTEGER,lastPostDate DATE null,primary key (statsUserId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP = "drop table MBStatsUser";
 
@@ -106,12 +109,18 @@ public class MBStatsUserModelImpl
 
 	public static final long USERID_COLUMN_BITMASK = 4L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-		_entityCacheEnabled = entityCacheEnabled;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-		_finderCacheEnabled = finderCacheEnabled;
 	}
 
 	public MBStatsUserModelImpl() {
@@ -165,9 +174,6 @@ public class MBStatsUserModelImpl
 				attributeName,
 				attributeGetterFunction.apply((MBStatsUser)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -242,6 +248,16 @@ public class MBStatsUserModelImpl
 			new LinkedHashMap<String, BiConsumer<MBStatsUser, ?>>();
 
 		attributeGetterFunctions.put(
+			"mvccVersion", MBStatsUser::getMvccVersion);
+		attributeSetterBiConsumers.put(
+			"mvccVersion",
+			(BiConsumer<MBStatsUser, Long>)MBStatsUser::setMvccVersion);
+		attributeGetterFunctions.put(
+			"ctCollectionId", MBStatsUser::getCtCollectionId);
+		attributeSetterBiConsumers.put(
+			"ctCollectionId",
+			(BiConsumer<MBStatsUser, Long>)MBStatsUser::setCtCollectionId);
+		attributeGetterFunctions.put(
 			"statsUserId", MBStatsUser::getStatsUserId);
 		attributeSetterBiConsumers.put(
 			"statsUserId",
@@ -271,6 +287,26 @@ public class MBStatsUserModelImpl
 			attributeGetterFunctions);
 		_attributeSetterBiConsumers = Collections.unmodifiableMap(
 			(Map)attributeSetterBiConsumers);
+	}
+
+	@Override
+	public long getMvccVersion() {
+		return _mvccVersion;
+	}
+
+	@Override
+	public void setMvccVersion(long mvccVersion) {
+		_mvccVersion = mvccVersion;
+	}
+
+	@Override
+	public long getCtCollectionId() {
+		return _ctCollectionId;
+	}
+
+	@Override
+	public void setCtCollectionId(long ctCollectionId) {
+		_ctCollectionId = ctCollectionId;
 	}
 
 	@Override
@@ -437,6 +473,8 @@ public class MBStatsUserModelImpl
 	public Object clone() {
 		MBStatsUserImpl mbStatsUserImpl = new MBStatsUserImpl();
 
+		mbStatsUserImpl.setMvccVersion(getMvccVersion());
+		mbStatsUserImpl.setCtCollectionId(getCtCollectionId());
 		mbStatsUserImpl.setStatsUserId(getStatsUserId());
 		mbStatsUserImpl.setGroupId(getGroupId());
 		mbStatsUserImpl.setCompanyId(getCompanyId());
@@ -473,16 +511,16 @@ public class MBStatsUserModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof MBStatsUser)) {
+		if (!(object instanceof MBStatsUser)) {
 			return false;
 		}
 
-		MBStatsUser mbStatsUser = (MBStatsUser)obj;
+		MBStatsUser mbStatsUser = (MBStatsUser)object;
 
 		long primaryKey = mbStatsUser.getPrimaryKey();
 
@@ -499,14 +537,22 @@ public class MBStatsUserModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	@Override
@@ -533,6 +579,10 @@ public class MBStatsUserModelImpl
 	public CacheModel<MBStatsUser> toCacheModel() {
 		MBStatsUserCacheModel mbStatsUserCacheModel =
 			new MBStatsUserCacheModel();
+
+		mbStatsUserCacheModel.mvccVersion = getMvccVersion();
+
+		mbStatsUserCacheModel.ctCollectionId = getCtCollectionId();
 
 		mbStatsUserCacheModel.statsUserId = getStatsUserId();
 
@@ -626,9 +676,8 @@ public class MBStatsUserModelImpl
 
 	}
 
-	private static boolean _entityCacheEnabled;
-	private static boolean _finderCacheEnabled;
-
+	private long _mvccVersion;
+	private long _ctCollectionId;
 	private long _statsUserId;
 	private long _groupId;
 	private long _originalGroupId;

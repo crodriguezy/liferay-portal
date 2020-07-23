@@ -21,20 +21,40 @@ import com.liferay.petra.sql.dsl.Column;
  */
 public class DataEngineNativeObjectField {
 
-	public DataEngineNativeObjectField(Column column, String customType) {
+	/**
+	 * @deprecated As of Athanasius (7.3.x)
+	 * @param column
+	 * @param customType
+	 */
+	@Deprecated
+	public DataEngineNativeObjectField(Column<?, ?> column, String customType) {
 		_column = column;
+		_customName = null;
 		_customType = customType;
 	}
 
-	public Column getColumn() {
+	public DataEngineNativeObjectField(
+		Column<?, ?> column, String customName, String customType) {
+
+		_column = column;
+		_customName = customName;
+		_customType = customType;
+	}
+
+	public Column<?, ?> getColumn() {
 		return _column;
+	}
+
+	public String getCustomName() {
+		return _customName;
 	}
 
 	public String getCustomType() {
 		return _customType;
 	}
 
-	private final Column _column;
+	private final Column<?, ?> _column;
+	private final String _customName;
 	private final String _customType;
 
 }

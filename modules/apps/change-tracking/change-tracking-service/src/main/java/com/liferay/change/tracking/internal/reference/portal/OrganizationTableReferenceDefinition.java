@@ -14,9 +14,9 @@
 
 package com.liferay.change.tracking.internal.reference.portal;
 
-import com.liferay.asset.kernel.model.AssetEntryTable;
-import com.liferay.change.tracking.reference.TableReferenceDefinition;
-import com.liferay.change.tracking.reference.builder.TableReferenceInfoBuilder;
+import com.liferay.change.tracking.spi.reference.TableReferenceDefinition;
+import com.liferay.change.tracking.spi.reference.builder.ChildTableReferenceInfoBuilder;
+import com.liferay.change.tracking.spi.reference.builder.ParentTableReferenceInfoBuilder;
 import com.liferay.portal.kernel.model.ClassNameTable;
 import com.liferay.portal.kernel.model.CompanyTable;
 import com.liferay.portal.kernel.model.CountryTable;
@@ -27,8 +27,6 @@ import com.liferay.portal.kernel.model.ListTypeTable;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.OrganizationTable;
 import com.liferay.portal.kernel.model.RegionTable;
-import com.liferay.portal.kernel.model.ResourcePermissionTable;
-import com.liferay.portal.kernel.model.UserTable;
 import com.liferay.portal.kernel.service.persistence.BasePersistence;
 import com.liferay.portal.kernel.service.persistence.OrganizationPersistence;
 
@@ -43,14 +41,11 @@ public class OrganizationTableReferenceDefinition
 	implements TableReferenceDefinition<OrganizationTable> {
 
 	@Override
-	public void defineTableReferences(
-		TableReferenceInfoBuilder<OrganizationTable>
-			tableReferenceInfoBuilder) {
+	public void defineChildTableReferences(
+		ChildTableReferenceInfoBuilder<OrganizationTable>
+			childTableReferenceInfoBuilder) {
 
-		tableReferenceInfoBuilder.nonreferenceColumns(
-			OrganizationTable.INSTANCE.uuid,
-			OrganizationTable.INSTANCE.externalReferenceCode
-		).referenceInnerJoin(
+		childTableReferenceInfoBuilder.referenceInnerJoin(
 			fromStep -> fromStep.from(
 				GroupTable.INSTANCE
 			).innerJoinON(
@@ -66,27 +61,6 @@ public class OrganizationTableReferenceDefinition
 						Organization.class.getName())
 				)
 			)
-		).singleColumnReference(
-			OrganizationTable.INSTANCE.companyId,
-			CompanyTable.INSTANCE.companyId
-		).singleColumnReference(
-			OrganizationTable.INSTANCE.userId, UserTable.INSTANCE.userId
-		).nonreferenceColumns(
-			OrganizationTable.INSTANCE.userName,
-			OrganizationTable.INSTANCE.createDate,
-			OrganizationTable.INSTANCE.modifiedDate
-		).parentColumnReference(
-			OrganizationTable.INSTANCE.organizationId,
-			OrganizationTable.INSTANCE.parentOrganizationId
-		).nonreferenceColumns(
-			OrganizationTable.INSTANCE.treePath,
-			OrganizationTable.INSTANCE.name, OrganizationTable.INSTANCE.type,
-			OrganizationTable.INSTANCE.recursable
-		).singleColumnReference(
-			OrganizationTable.INSTANCE.regionId, RegionTable.INSTANCE.regionId
-		).singleColumnReference(
-			OrganizationTable.INSTANCE.countryId,
-			CountryTable.INSTANCE.countryId
 		).referenceInnerJoin(
 			fromStep -> fromStep.from(
 				ListTypeTable.INSTANCE
@@ -99,41 +73,33 @@ public class OrganizationTableReferenceDefinition
 						ListTypeConstants.ORGANIZATION_STATUS)
 				)
 			)
-		).nonreferenceColumn(
-			OrganizationTable.INSTANCE.comments
 		).singleColumnReference(
 			OrganizationTable.INSTANCE.logoId, ImageTable.INSTANCE.imageId
-		).referenceInnerJoin(
-			fromStep -> fromStep.from(
-				ResourcePermissionTable.INSTANCE
-			).innerJoinON(
-				OrganizationTable.INSTANCE,
-				OrganizationTable.INSTANCE.companyId.eq(
-					ResourcePermissionTable.INSTANCE.companyId
-				).and(
-					ResourcePermissionTable.INSTANCE.name.eq(
-						Organization.class.getName())
-				).and(
-					ResourcePermissionTable.INSTANCE.primKeyId.eq(
-						OrganizationTable.INSTANCE.organizationId)
-				)
-			)
-		).referenceInnerJoin(
-			fromStep -> fromStep.from(
-				AssetEntryTable.INSTANCE
-			).innerJoinON(
-				OrganizationTable.INSTANCE,
-				OrganizationTable.INSTANCE.organizationId.eq(
-					AssetEntryTable.INSTANCE.classPK)
-			).innerJoinON(
-				ClassNameTable.INSTANCE,
-				ClassNameTable.INSTANCE.classNameId.eq(
-					AssetEntryTable.INSTANCE.classNameId
-				).and(
-					ClassNameTable.INSTANCE.value.eq(
-						Organization.class.getName())
-				)
-			)
+		).assetEntryReference(
+			OrganizationTable.INSTANCE.organizationId, Organization.class
+		).resourcePermissionReference(
+			OrganizationTable.INSTANCE.organizationId, Organization.class
+		).systemEventReference(
+			OrganizationTable.INSTANCE.organizationId, Organization.class
+		);
+	}
+
+	@Override
+	public void defineParentTableReferences(
+		ParentTableReferenceInfoBuilder<OrganizationTable>
+			parentTableReferenceInfoBuilder) {
+
+		parentTableReferenceInfoBuilder.singleColumnReference(
+			OrganizationTable.INSTANCE.companyId,
+			CompanyTable.INSTANCE.companyId
+		).parentColumnReference(
+			OrganizationTable.INSTANCE.organizationId,
+			OrganizationTable.INSTANCE.parentOrganizationId
+		).singleColumnReference(
+			OrganizationTable.INSTANCE.regionId, RegionTable.INSTANCE.regionId
+		).singleColumnReference(
+			OrganizationTable.INSTANCE.countryId,
+			CountryTable.INSTANCE.countryId
 		);
 	}
 

@@ -153,6 +153,15 @@ public class DDMFormInstanceServiceUtil {
 			companyId, groupId, names, descriptions, andOperator);
 	}
 
+	public static void sendEmail(
+			long formInstanceId, String message, String subject,
+			String[] toEmailAddresses)
+		throws Exception {
+
+		getService().sendEmail(
+			formInstanceId, message, subject, toEmailAddresses);
+	}
+
 	/**
 	 * Updates the the record set's settings.
 	 *

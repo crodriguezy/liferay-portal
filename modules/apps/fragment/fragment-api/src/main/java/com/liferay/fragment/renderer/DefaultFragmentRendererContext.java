@@ -36,6 +36,7 @@ public class DefaultFragmentRendererContext implements FragmentRendererContext {
 		return Optional.ofNullable(_displayObject);
 	}
 
+	@Override
 	public Optional<Map<String, Object>> getFieldValuesOptional() {
 		return Optional.ofNullable(_fieldValues);
 	}
@@ -75,6 +76,10 @@ public class DefaultFragmentRendererContext implements FragmentRendererContext {
 		return _segmentsExperienceIds;
 	}
 
+	public boolean isUseCachedContent() {
+		return _useCachedContent;
+	}
+
 	public void setDisplayObject(Object object) {
 		_displayObject = object;
 	}
@@ -107,6 +112,10 @@ public class DefaultFragmentRendererContext implements FragmentRendererContext {
 		_segmentsExperienceIds = segmentsExperienceIds;
 	}
 
+	public void setUseCachedContent(boolean useCachedContent) {
+		_useCachedContent = useCachedContent;
+	}
+
 	private Object _displayObject;
 	private Map<String, Object> _fieldValues;
 	private final FragmentEntryLink _fragmentEntryLink;
@@ -116,5 +125,6 @@ public class DefaultFragmentRendererContext implements FragmentRendererContext {
 	private long _previewClassPK;
 	private int _previewType;
 	private long[] _segmentsExperienceIds = new long[0];
+	private boolean _useCachedContent = true;
 
 }

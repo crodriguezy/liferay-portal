@@ -14,7 +14,10 @@
 
 package com.liferay.dynamic.data.mapping.service;
 
+import com.liferay.dynamic.data.mapping.model.DDMFormInstanceReport;
+import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.portal.kernel.service.ServiceWrapper;
+import com.liferay.portal.kernel.service.persistence.change.tracking.CTPersistence;
 
 /**
  * Provides a wrapper for {@link DDMFormInstanceReportLocalService}.
@@ -36,22 +39,23 @@ public class DDMFormInstanceReportLocalServiceWrapper
 	/**
 	 * Adds the ddm form instance report to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DDMFormInstanceReportLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param ddmFormInstanceReport the ddm form instance report
 	 * @return the ddm form instance report that was added
 	 */
 	@Override
-	public com.liferay.dynamic.data.mapping.model.DDMFormInstanceReport
-		addDDMFormInstanceReport(
-			com.liferay.dynamic.data.mapping.model.DDMFormInstanceReport
-				ddmFormInstanceReport) {
+	public DDMFormInstanceReport addDDMFormInstanceReport(
+		DDMFormInstanceReport ddmFormInstanceReport) {
 
 		return _ddmFormInstanceReportLocalService.addDDMFormInstanceReport(
 			ddmFormInstanceReport);
 	}
 
 	@Override
-	public com.liferay.dynamic.data.mapping.model.DDMFormInstanceReport
-			addFormInstanceReport(long formInstanceId)
+	public DDMFormInstanceReport addFormInstanceReport(long formInstanceId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _ddmFormInstanceReportLocalService.addFormInstanceReport(
@@ -65,8 +69,8 @@ public class DDMFormInstanceReportLocalServiceWrapper
 	 * @return the new ddm form instance report
 	 */
 	@Override
-	public com.liferay.dynamic.data.mapping.model.DDMFormInstanceReport
-		createDDMFormInstanceReport(long formInstanceReportId) {
+	public DDMFormInstanceReport createDDMFormInstanceReport(
+		long formInstanceReportId) {
 
 		return _ddmFormInstanceReportLocalService.createDDMFormInstanceReport(
 			formInstanceReportId);
@@ -87,14 +91,16 @@ public class DDMFormInstanceReportLocalServiceWrapper
 	/**
 	 * Deletes the ddm form instance report from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DDMFormInstanceReportLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param ddmFormInstanceReport the ddm form instance report
 	 * @return the ddm form instance report that was removed
 	 */
 	@Override
-	public com.liferay.dynamic.data.mapping.model.DDMFormInstanceReport
-		deleteDDMFormInstanceReport(
-			com.liferay.dynamic.data.mapping.model.DDMFormInstanceReport
-				ddmFormInstanceReport) {
+	public DDMFormInstanceReport deleteDDMFormInstanceReport(
+		DDMFormInstanceReport ddmFormInstanceReport) {
 
 		return _ddmFormInstanceReportLocalService.deleteDDMFormInstanceReport(
 			ddmFormInstanceReport);
@@ -103,13 +109,17 @@ public class DDMFormInstanceReportLocalServiceWrapper
 	/**
 	 * Deletes the ddm form instance report with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DDMFormInstanceReportLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param formInstanceReportId the primary key of the ddm form instance report
 	 * @return the ddm form instance report that was removed
 	 * @throws PortalException if a ddm form instance report with the primary key could not be found
 	 */
 	@Override
-	public com.liferay.dynamic.data.mapping.model.DDMFormInstanceReport
-			deleteDDMFormInstanceReport(long formInstanceReportId)
+	public DDMFormInstanceReport deleteDDMFormInstanceReport(
+			long formInstanceReportId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _ddmFormInstanceReportLocalService.deleteDDMFormInstanceReport(
@@ -226,8 +236,8 @@ public class DDMFormInstanceReportLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.dynamic.data.mapping.model.DDMFormInstanceReport
-		fetchDDMFormInstanceReport(long formInstanceReportId) {
+	public DDMFormInstanceReport fetchDDMFormInstanceReport(
+		long formInstanceReportId) {
 
 		return _ddmFormInstanceReportLocalService.fetchDDMFormInstanceReport(
 			formInstanceReportId);
@@ -248,8 +258,8 @@ public class DDMFormInstanceReportLocalServiceWrapper
 	 * @throws PortalException if a ddm form instance report with the primary key could not be found
 	 */
 	@Override
-	public com.liferay.dynamic.data.mapping.model.DDMFormInstanceReport
-			getDDMFormInstanceReport(long formInstanceReportId)
+	public DDMFormInstanceReport getDDMFormInstanceReport(
+			long formInstanceReportId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _ddmFormInstanceReportLocalService.getDDMFormInstanceReport(
@@ -268,9 +278,8 @@ public class DDMFormInstanceReportLocalServiceWrapper
 	 * @return the range of ddm form instance reports
 	 */
 	@Override
-	public java.util.List
-		<com.liferay.dynamic.data.mapping.model.DDMFormInstanceReport>
-			getDDMFormInstanceReports(int start, int end) {
+	public java.util.List<DDMFormInstanceReport> getDDMFormInstanceReports(
+		int start, int end) {
 
 		return _ddmFormInstanceReportLocalService.getDDMFormInstanceReports(
 			start, end);
@@ -288,8 +297,8 @@ public class DDMFormInstanceReportLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.dynamic.data.mapping.model.DDMFormInstanceReport
-			getFormInstanceReportByFormInstanceId(long formInstanceId)
+	public DDMFormInstanceReport getFormInstanceReportByFormInstanceId(
+			long formInstanceId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _ddmFormInstanceReportLocalService.
@@ -326,32 +335,63 @@ public class DDMFormInstanceReportLocalServiceWrapper
 			primaryKeyObj);
 	}
 
+	@Override
+	public void processFormInstanceReportEvent(
+		long formInstanceReportId, long formInstanceRecordVersionId,
+		String ddmFormInstanceReportEvent) {
+
+		_ddmFormInstanceReportLocalService.processFormInstanceReportEvent(
+			formInstanceReportId, formInstanceRecordVersionId,
+			ddmFormInstanceReportEvent);
+	}
+
 	/**
 	 * Updates the ddm form instance report in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DDMFormInstanceReportLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param ddmFormInstanceReport the ddm form instance report
 	 * @return the ddm form instance report that was updated
 	 */
 	@Override
-	public com.liferay.dynamic.data.mapping.model.DDMFormInstanceReport
-		updateDDMFormInstanceReport(
-			com.liferay.dynamic.data.mapping.model.DDMFormInstanceReport
-				ddmFormInstanceReport) {
+	public DDMFormInstanceReport updateDDMFormInstanceReport(
+		DDMFormInstanceReport ddmFormInstanceReport) {
 
 		return _ddmFormInstanceReportLocalService.updateDDMFormInstanceReport(
 			ddmFormInstanceReport);
 	}
 
 	@Override
-	public com.liferay.dynamic.data.mapping.model.DDMFormInstanceReport
-			updateFormInstanceReport(
-				long formInstanceReportId, long formInstanceRecordVersionId,
-				String formInstanceReportEvent)
+	public DDMFormInstanceReport updateFormInstanceReport(
+			long formInstanceReportId, long formInstanceRecordVersionId,
+			String ddmFormInstanceReportEvent)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _ddmFormInstanceReportLocalService.updateFormInstanceReport(
 			formInstanceReportId, formInstanceRecordVersionId,
-			formInstanceReportEvent);
+			ddmFormInstanceReportEvent);
+	}
+
+	@Override
+	public CTPersistence<DDMFormInstanceReport> getCTPersistence() {
+		return _ddmFormInstanceReportLocalService.getCTPersistence();
+	}
+
+	@Override
+	public Class<DDMFormInstanceReport> getModelClass() {
+		return _ddmFormInstanceReportLocalService.getModelClass();
+	}
+
+	@Override
+	public <R, E extends Throwable> R updateWithUnsafeFunction(
+			UnsafeFunction<CTPersistence<DDMFormInstanceReport>, R, E>
+				updateUnsafeFunction)
+		throws E {
+
+		return _ddmFormInstanceReportLocalService.updateWithUnsafeFunction(
+			updateUnsafeFunction);
 	}
 
 	@Override

@@ -106,6 +106,94 @@ definition {
 			parentPageName = "Test Page Name");
 	}
 
+	@description = "This is the test for LPS-107774. Can create a Collection Page based on Collections or Collection Providers in Pages Tree panel."
+	@priority = "5"
+	test AddCollectionPageViaPageFinder {
+		task ("Add three Web Content Articles based on Basic Web Content") {
+			for (var entryTitle : list "First Web Content,Second Web Content,Third Web Content") {
+				JSONWebcontent.addWebContent(
+					content = "Web Content Content",
+					groupName = "Test Site Name 3",
+					title = "${entryTitle}");
+			}
+		}
+
+		task ("Add a dynamic Collections and select Web Content Article as Asset Entry Type") {
+			JSONAssetlist.addDynamicAssetListEntryWithItemType(
+				groupName = "Test Site Name 3",
+				itemType = "Web Content Article",
+				title = "Dynamic Collection");
+		}
+
+		task ("Add a Collection Page based on Dynamic Collection via Pages Tree Panel") {
+			SitePages.openPagesAdmin(siteURLKey = "test-site-name-3");
+
+			PagesFinder.goToFindAPage();
+
+			PagesFinder.addPublicCollectionPage(
+				collectionName = "Dynamic Collection",
+				pageName = "Test Collection Page Name 1",
+				tabName = "Collections");
+
+			AssertTextEquals.assertPartialText(
+				locator1 = "ControlMenu#PAGE_TYPE",
+				value1 = "Collection Page");
+
+			AssertVisible(
+				key_elementHeader = "//div[contains(.,'Dynamic Collection') and contains(@id,'fragment-')]",
+				key_position = "1",
+				locator1 = "PageEditor#CONTAINER_CONTAINER_NESTED_ELEMENT");
+
+			var n = "1";
+
+			for (var title : list "Third Web Content,Second Web Content,First Web Content") {
+				AssertVisible(
+					key_colPosition = "1",
+					key_entryTitle = "${title}",
+					key_fragmentName = "Collection Display",
+					key_rowPosition = "${n}",
+					locator1 = "PageEditor#COLLECTION_ITEM_TITLE");
+
+				var n = ${n} + 1;
+			}
+
+			PagesFinder.viewPageNameInPagesFinder(pageName = "Test Collection Page Name 1");
+		}
+
+		task ("Add a Collection Page based on Highest Rated Assets via Pages Tree Panel") {
+			PagesFinder.goToFindAPage();
+
+			PagesFinder.addPublicCollectionPage(
+				collectionName = "Highest Rated Assets",
+				pageName = "Test Collection Page Name 2",
+				tabName = "Collection Providers");
+
+			AssertTextEquals.assertPartialText(
+				locator1 = "ControlMenu#PAGE_TYPE",
+				value1 = "Collection Page");
+
+			AssertVisible(
+				key_elementHeader = "//div[contains(.,'Highest Rated Assets') and contains(@id,'fragment-')]",
+				key_position = "1",
+				locator1 = "PageEditor#CONTAINER_CONTAINER_NESTED_ELEMENT");
+
+			var n = "1";
+
+			for (var title : list "Third Web Content,Second Web Content,First Web Content") {
+				AssertVisible(
+					key_colPosition = "1",
+					key_entryTitle = "${title}",
+					key_fragmentName = "Collection Display",
+					key_rowPosition = "${n}",
+					locator1 = "PageEditor#COLLECTION_ITEM_TITLE");
+
+				var n = ${n} + 1;
+			}
+
+			PagesFinder.viewPageNameInPagesFinder(pageName = "Test Collection Page Name 2");
+		}
+	}
+
 	@description = "This is the test for LPS-103104. Can add pages of different types via page tree panel."
 	@priority = "3"
 	test AddPagesOfDifferentTypesViaPageFinder {
@@ -173,7 +261,10 @@ definition {
 	}
 
 	@description = "This is a test for LPS-102544. Can navigate to both public and private pages from pages finder."
+	@priority = "5"
 	test NavigateToBothPageTypesViaPageFinder {
+		property portal.acceptance = "true";
+
 		task ("Navigate to Test site Name") {
 			Navigator.openSiteURL(siteName = "Test Site Name");
 		}
@@ -189,9 +280,25 @@ definition {
 		PagesFinder.navigateToPage(pageName = "Test Portlet Page");
 	}
 
+	@description = "This is a test for LPS-102544. Can quickly browse and go to different pages with sidebar tree."
+	@priority = "4"
+	test NavigateToDifferentPageViaPageFinder {
+		task ("Navigate to Test site Name") {
+			Navigator.openSiteURL(siteName = "Test Site Name");
+		}
+
+		PagesFinder.goToFindAPage();
+
+		for (var pageName : list "Test Portlet Page,Test Content Page,Test Embedded Page,Test Full Page Application,Test Panel Page,Test Default Page 1,Test Default Page 2,Test Default Page 3,Test Default Page 4") {
+			PagesFinder.navigateToPage(pageName = "${pageName}");
+		}
+	}
+
 	@description = "This is a test for LPS-90363. Assert that all page types can be found and counted in the pages finder."
 	@priority = "5"
 	test SearchAllPageTypes {
+		property portal.acceptance = "true";
+
 		task ("Navigate to Test site Name") {
 			Navigator.openSiteURL(siteName = "Test Site Name");
 		}
@@ -208,6 +315,30 @@ definition {
 			AssertTextEquals(
 				locator1 = "Search#SEARCH_INFO",
 				value1 = "11 Results for Test");
+		}
+	}
+
+	@description = "This is a test for LPS-102544. Can search for a page in sidebar."
+	@priority = "4"
+	test SearchPageAndViewViaSidebar {
+		task ("Navigate to Test site Name") {
+			Navigator.openSiteURL(siteName = "Test Site Name");
+		}
+
+		task ("Type search term in pages finder") {
+			PagesFinder.goToFindAPage();
+
+			PagesFinder.inputPageSearch(keyword = '''"Test Portlet Page"''');
+		}
+
+		task ("View 1 result via sidebar") {
+			AssertVisible(
+				key_pageName = "Test Portlet Page",
+				locator1 = "PagesFinder#PAGE_SEARCH_RESULT");
+
+			AssertElementNotPresent(
+				key_pageName = "Test Content Page",
+				locator1 = "PagesFinder#PAGE_SEARCH_RESULT");
 		}
 	}
 

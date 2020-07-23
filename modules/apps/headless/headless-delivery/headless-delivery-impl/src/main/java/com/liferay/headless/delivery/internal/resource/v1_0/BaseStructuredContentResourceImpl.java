@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.model.GroupedModel;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ResourceActionLocalService;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
@@ -926,7 +927,7 @@ public abstract class BaseStructuredContentResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'GET' 'http://localhost:8080/o/headless-delivery/v1.0/structured-contents/{structuredContentId}/rendered-content/{templateId}'  -u 'test@liferay.com:test'
+	 * curl -X 'GET' 'http://localhost:8080/o/headless-delivery/v1.0/structured-contents/{structuredContentId}/rendered-content/{contentTemplateId}'  -u 'test@liferay.com:test'
 	 */
 	@Override
 	@GET
@@ -936,19 +937,19 @@ public abstract class BaseStructuredContentResourceImpl
 	@Parameters(
 		value = {
 			@Parameter(in = ParameterIn.PATH, name = "structuredContentId"),
-			@Parameter(in = ParameterIn.PATH, name = "templateId")
+			@Parameter(in = ParameterIn.PATH, name = "contentTemplateId")
 		}
 	)
 	@Path(
-		"/structured-contents/{structuredContentId}/rendered-content/{templateId}"
+		"/structured-contents/{structuredContentId}/rendered-content/{contentTemplateId}"
 	)
 	@Produces("text/html")
 	@Tags(value = {@Tag(name = "StructuredContent")})
 	public String getStructuredContentRenderedContentTemplate(
 			@NotNull @Parameter(hidden = true) @PathParam("structuredContentId")
 				Long structuredContentId,
-			@NotNull @Parameter(hidden = true) @PathParam("templateId") Long
-				templateId)
+			@NotNull @Parameter(hidden = true) @PathParam("contentTemplateId")
+				String contentTemplateId)
 		throws Exception {
 
 		return StringPool.BLANK;
@@ -1155,6 +1156,15 @@ public abstract class BaseStructuredContentResourceImpl
 		return ActionUtil.addAction(
 			actionName, getClass(), id, methodName, contextScopeChecker,
 			ownerId, permissionName, siteId, contextUriInfo);
+	}
+
+	protected Map<String, String> addAction(
+		String actionName, Long id, String methodName,
+		ModelResourcePermission modelResourcePermission) {
+
+		return ActionUtil.addAction(
+			actionName, getClass(), id, methodName, contextScopeChecker,
+			modelResourcePermission, contextUriInfo);
 	}
 
 	protected Map<String, String> addAction(

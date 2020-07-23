@@ -28,9 +28,9 @@ import com.liferay.friendly.url.model.FriendlyURLEntryLocalization;
 import com.liferay.friendly.url.service.FriendlyURLEntryLocalService;
 import com.liferay.info.display.contributor.InfoDisplayContributor;
 import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
+import com.liferay.journal.constants.JournalArticleConstants;
 import com.liferay.journal.exception.NoSuchArticleException;
 import com.liferay.journal.model.JournalArticle;
-import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
@@ -50,6 +50,7 @@ import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.InheritableMap;
@@ -89,7 +90,7 @@ public class DefaultAssetDisplayPageFriendlyURLResolver
 		JournalArticle journalArticle = _getJournalArticle(
 			groupId, friendlyURL);
 
-		InfoDisplayObjectProvider infoDisplayObjectProvider =
+		InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
 			_getInfoDisplayObjectProvider(journalArticle);
 
 		if (Validator.isNull(journalArticle.getLayoutUuid()) &&
@@ -124,7 +125,7 @@ public class DefaultAssetDisplayPageFriendlyURLResolver
 		JournalArticle journalArticle = _getJournalArticle(
 			groupId, friendlyURL);
 
-		InfoDisplayObjectProvider infoDisplayObjectProvider =
+		InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
 			_getInfoDisplayObjectProvider(journalArticle);
 
 		if (Validator.isNull(journalArticle.getLayoutUuid()) &&
@@ -286,7 +287,7 @@ public class DefaultAssetDisplayPageFriendlyURLResolver
 			_portal.addPageDescription(pageDescription, httpServletRequest);
 		}
 
-		InfoDisplayObjectProvider infoDisplayObjectProvider =
+		InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
 			_getInfoDisplayObjectProvider(journalArticle);
 
 		if (infoDisplayObjectProvider == null) {
@@ -328,11 +329,21 @@ public class DefaultAssetDisplayPageFriendlyURLResolver
 		return friendlyURL.substring(urlSeparator.length());
 	}
 
-	private InfoDisplayObjectProvider _getInfoDisplayObjectProvider(
+	private long _getId(String friendlyURL) {
+		List<String> paths = StringUtil.split(friendlyURL, CharPool.SLASH);
+
+		if (paths.size() <= 2) {
+			return 0;
+		}
+
+		return GetterUtil.getLong(paths.get(paths.size() - 1));
+	}
+
+	private InfoDisplayObjectProvider<?> _getInfoDisplayObjectProvider(
 			JournalArticle journalArticle)
 		throws PortalException {
 
-		InfoDisplayContributor infoDisplayContributor =
+		InfoDisplayContributor<?> infoDisplayContributor =
 			infoDisplayContributorTracker.getInfoDisplayContributor(
 				JournalArticle.class.getName());
 
@@ -391,6 +402,18 @@ public class DefaultAssetDisplayPageFriendlyURLResolver
 		}
 
 		if (journalArticle == null) {
+			normalizedUrlTitle =
+				FriendlyURLNormalizerUtil.normalizeWithEncoding(
+					_getURLTitle(friendlyURL));
+
+			long id = _getId(friendlyURL);
+
+			if (id > 0) {
+				journalArticle = _journalArticleLocalService.fetchArticle(id);
+			}
+		}
+
+		if (journalArticle == null) {
 			PermissionChecker permissionChecker =
 				PermissionThreadLocal.getPermissionChecker();
 
@@ -444,7 +467,7 @@ public class DefaultAssetDisplayPageFriendlyURLResolver
 
 		String lastPath = paths.get(paths.size() - 1);
 
-		List<String> numbers = StringUtil.split(friendlyURL, CharPool.PERIOD);
+		List<String> numbers = StringUtil.split(lastPath, CharPool.PERIOD);
 
 		if ((numbers.size() == 2) && Validator.isDigit(numbers.get(0)) &&
 			Validator.isDigit(numbers.get(1))) {

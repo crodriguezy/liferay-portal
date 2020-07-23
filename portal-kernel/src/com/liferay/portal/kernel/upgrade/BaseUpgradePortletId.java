@@ -14,7 +14,7 @@
 
 package com.liferay.portal.kernel.upgrade;
 
-import com.liferay.exportimport.kernel.staging.StagingConstants;
+import com.liferay.exportimport.kernel.staging.constants.StagingConstants;
 import com.liferay.layout.admin.kernel.model.LayoutTypePortletConstants;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
@@ -387,6 +387,8 @@ public abstract class BaseUpgradePortletId extends UpgradeProcess {
 		try {
 			updatePortletId(oldRootPortletId, newRootPortletId);
 
+			updatePortletItem(oldRootPortletId, newRootPortletId);
+
 			updateResourceAction(oldRootPortletId, newRootPortletId);
 
 			updateResourcePermission(oldRootPortletId, newRootPortletId, true);
@@ -415,6 +417,16 @@ public abstract class BaseUpgradePortletId extends UpgradeProcess {
 				"' where portletId = '", oldRootPortletId, "'"));
 	}
 
+	protected void updatePortletItem(
+			String oldRootPortletId, String newRootPortletId)
+		throws Exception {
+
+		runSQL(
+			StringBundler.concat(
+				"update PortletItem set portletId = '", newRootPortletId,
+				"' where portletId = '", oldRootPortletId, "'"));
+	}
+
 	protected void updateResourceAction(String oldName, String newName)
 		throws Exception {
 
@@ -437,7 +449,7 @@ public abstract class BaseUpgradePortletId extends UpgradeProcess {
 					"' where name = '", oldName, "'"));
 		}
 		else {
-			StringBundler sb = new StringBundler(5 + 3 * actionIds.size());
+			StringBundler sb = new StringBundler(5 + (3 * actionIds.size()));
 
 			sb.append("update ResourceAction set name = '");
 			sb.append(newName);

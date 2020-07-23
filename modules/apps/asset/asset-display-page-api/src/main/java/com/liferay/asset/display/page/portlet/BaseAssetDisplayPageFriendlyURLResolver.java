@@ -30,6 +30,9 @@ import com.liferay.info.display.contributor.InfoDisplayContributorTracker;
 import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
 import com.liferay.info.display.url.provider.InfoEditURLProvider;
 import com.liferay.info.display.url.provider.InfoEditURLProviderTracker;
+import com.liferay.info.field.InfoFieldValue;
+import com.liferay.info.item.InfoItemServiceTracker;
+import com.liferay.info.item.provider.InfoItemFieldValuesProvider;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryService;
 import com.liferay.petra.string.CharPool;
@@ -51,6 +54,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Function;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -72,10 +76,10 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 		HttpServletRequest httpServletRequest =
 			(HttpServletRequest)requestContext.get("request");
 
-		InfoDisplayContributor infoDisplayContributor =
+		InfoDisplayContributor<?> infoDisplayContributor =
 			_getInfoDisplayContributor(friendlyURL);
 
-		InfoDisplayObjectProvider infoDisplayObjectProvider =
+		InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
 			_getInfoDisplayObjectProvider(
 				infoDisplayContributor, groupId, friendlyURL);
 
@@ -84,7 +88,7 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 				AssetDisplayPageWebKeys.INFO_DISPLAY_OBJECT_PROVIDER,
 				infoDisplayObjectProvider);
 
-			InfoEditURLProvider infoEditURLProvider =
+			InfoEditURLProvider<?> infoEditURLProvider =
 				infoEditURLProviderTracker.getInfoEditURLProvider(
 					portal.getClassName(
 						infoDisplayObjectProvider.getClassNameId()));
@@ -103,23 +107,30 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 			_getVersionClassPK(friendlyURL));
 
 		Locale locale = portal.getLocale(httpServletRequest);
+		Layout layout = _getInfoDisplayObjectProviderLayout(
+			infoDisplayObjectProvider);
 
 		portal.setPageDescription(
 			HtmlUtil.unescape(
 				HtmlUtil.stripHtml(
-					infoDisplayObjectProvider.getDescription(locale))),
+					_getMappedField(
+						infoDisplayObjectProvider, locale,
+						layout.getTypeSettingsProperty("mapped-description"),
+						infoDisplayObjectProvider::getDescription))),
 			httpServletRequest);
+
 		portal.setPageKeywords(
 			infoDisplayObjectProvider.getKeywords(locale), httpServletRequest);
 		portal.setPageTitle(
-			infoDisplayObjectProvider.getTitle(locale), httpServletRequest);
+			_getMappedField(
+				infoDisplayObjectProvider, locale,
+				layout.getTypeSettingsProperty("mapped-title"),
+				infoDisplayObjectProvider::getTitle),
+			httpServletRequest);
 
 		AssetEntry assetEntry = _getAssetEntry(infoDisplayObjectProvider);
 
 		httpServletRequest.setAttribute(WebKeys.LAYOUT_ASSET_ENTRY, assetEntry);
-
-		Layout layout = _getInfoDisplayObjectProviderLayout(
-			infoDisplayObjectProvider);
 
 		return portal.getLayoutActualURL(layout, mainPath);
 	}
@@ -131,10 +142,10 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 			Map<String, Object> requestContext)
 		throws PortalException {
 
-		InfoDisplayContributor infoDisplayContributor =
+		InfoDisplayContributor<?> infoDisplayContributor =
 			_getInfoDisplayContributor(friendlyURL);
 
-		InfoDisplayObjectProvider infoDisplayObjectProvider =
+		InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
 			_getInfoDisplayObjectProvider(
 				infoDisplayContributor, groupId, friendlyURL);
 
@@ -165,6 +176,9 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 	protected InfoEditURLProviderTracker infoEditURLProviderTracker;
 
 	@Reference
+	protected InfoItemServiceTracker infoItemServiceTracker;
+
+	@Reference
 	protected LayoutLocalService layoutLocalService;
 
 	@Reference
@@ -174,7 +188,7 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 	protected Portal portal;
 
 	private AssetEntry _getAssetEntry(
-		InfoDisplayObjectProvider infoDisplayObjectProvider) {
+		InfoDisplayObjectProvider<?> infoDisplayObjectProvider) {
 
 		String classNameId = PortalUtil.getClassName(
 			infoDisplayObjectProvider.getClassNameId());
@@ -214,13 +228,13 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 		return null;
 	}
 
-	private InfoDisplayContributor _getInfoDisplayContributor(
+	private InfoDisplayContributor<?> _getInfoDisplayContributor(
 			String friendlyURL)
 		throws PortalException {
 
 		String infoURLSeparator = _getInfoURLSeparator(friendlyURL);
 
-		InfoDisplayContributor infoDisplayContributor =
+		InfoDisplayContributor<?> infoDisplayContributor =
 			infoDisplayContributorTracker.
 				getInfoDisplayContributorByURLSeparator(infoURLSeparator);
 
@@ -233,8 +247,8 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 		return infoDisplayContributor;
 	}
 
-	private InfoDisplayObjectProvider _getInfoDisplayObjectProvider(
-			InfoDisplayContributor infoDisplayContributor, long groupId,
+	private InfoDisplayObjectProvider<?> _getInfoDisplayObjectProvider(
+			InfoDisplayContributor<?> infoDisplayContributor, long groupId,
 			String friendlyURL)
 		throws PortalException {
 
@@ -243,7 +257,7 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 	}
 
 	private Layout _getInfoDisplayObjectProviderLayout(
-		InfoDisplayObjectProvider infoDisplayObjectProvider) {
+		InfoDisplayObjectProvider<?> infoDisplayObjectProvider) {
 
 		AssetDisplayPageEntry assetDisplayPageEntry =
 			assetDisplayPageEntryLocalService.fetchAssetDisplayPageEntry(
@@ -280,6 +294,30 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 		List<String> paths = StringUtil.split(friendlyURL, CharPool.SLASH);
 
 		return CharPool.SLASH + paths.get(0) + CharPool.SLASH;
+	}
+
+	private String _getMappedField(
+		InfoDisplayObjectProvider<?> infoDisplayObjectProvider, Locale locale,
+		String mappedFieldName, Function<Locale, String> defaultValueFunction) {
+
+		if (infoDisplayObjectProvider != null) {
+			InfoItemFieldValuesProvider<Object> infoItemFieldValuesProvider =
+				infoItemServiceTracker.getFirstInfoItemService(
+					InfoItemFieldValuesProvider.class,
+					portal.getClassName(
+						infoDisplayObjectProvider.getClassNameId()));
+
+			InfoFieldValue<Object> infoFieldValue =
+				infoItemFieldValuesProvider.getInfoItemFieldValue(
+					infoDisplayObjectProvider.getDisplayObject(),
+					mappedFieldName);
+
+			if (infoFieldValue != null) {
+				return String.valueOf(infoFieldValue.getValue(locale));
+			}
+		}
+
+		return defaultValueFunction.apply(locale);
 	}
 
 	private String _getUrlTitle(String friendlyURL) {

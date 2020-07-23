@@ -29,6 +29,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>ANY</td>
+	<td>//div[label[contains(.,'${key_text}')]]//input</td>
+	<td></td>
+</tr>
+<tr>
 	<td>ASSET_PRIORITY</td>
 	<td>//input[contains(@id,'assetPriority')]</td>
 	<td></td>
@@ -516,6 +521,11 @@
 <tr>
 	<td>SEO_HTML_TITLE</td>
 	<td>//div[label[contains(.,'HTML')]]//input</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SEO_MAPPED_FIELD</td>
+	<td>//div[contains(@class,'form-group') and contains(.,'${key_mappedField}')]//input[contains(@id,'mapped')]</td>
 	<td></td>
 </tr>
 <tr>

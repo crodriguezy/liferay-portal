@@ -16,6 +16,7 @@ package com.liferay.portal.kernel.io;
 
 import com.liferay.petra.lang.ClassLoaderPool;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.io.constants.SerializationConstants;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayInputStream;
 import com.liferay.portal.kernel.io.unsync.UnsyncByteArrayOutputStream;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
@@ -364,7 +365,7 @@ public class SerializerTest {
 		newBytes = serializer.getBuffer(_COUNT + 1);
 
 		Assert.assertEquals(
-			Arrays.toString(newBytes), bytes.length * 2 + 1, newBytes.length);
+			Arrays.toString(newBytes), (bytes.length * 2) + 1, newBytes.length);
 
 		for (int i = 0; i < bytes.length; i++) {
 			Assert.assertEquals(bytes[i], newBytes[i]);
@@ -403,7 +404,7 @@ public class SerializerTest {
 
 		Assert.assertEquals(0, bufferQueue.count);
 		Assert.assertEquals(
-			chars.length * 2 + 5, unsyncByteArrayOutputStream.size());
+			(chars.length * 2) + 5, unsyncByteArrayOutputStream.size());
 	}
 
 	@Test
@@ -863,7 +864,7 @@ public class SerializerTest {
 		byteBuffer = serializer.toByteBuffer();
 
 		Assert.assertEquals(
-			6 + nonasciiString.length() * 2, byteBuffer.limit());
+			6 + (nonasciiString.length() * 2), byteBuffer.limit());
 		Assert.assertEquals(SerializationConstants.TC_STRING, byteBuffer.get());
 		Assert.assertEquals(0, byteBuffer.get());
 		Assert.assertEquals(nonasciiString.length(), byteBuffer.getInt());
@@ -941,7 +942,8 @@ public class SerializerTest {
 
 		serializer.writeString(nonasciiString);
 
-		Assert.assertEquals(serializer.index, 5 + nonasciiString.length() * 2);
+		Assert.assertEquals(
+			serializer.index, 5 + (nonasciiString.length() * 2));
 		Assert.assertFalse(BigEndianCodec.getBoolean(serializer.buffer, 0));
 
 		length = BigEndianCodec.getInt(serializer.buffer, 1);

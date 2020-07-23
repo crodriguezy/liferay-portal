@@ -119,6 +119,7 @@ definition {
 
 	@priority = "5"
 	test AddExistingPageAsDisplayPageInSiteCP {
+		property portal.acceptance = "true";
 		property testray.component.names = "Training,Web Content Administration";
 
 		JSONLayout.addPublicLayout(
@@ -163,6 +164,7 @@ definition {
 
 	@priority = "5"
 	test AddImageToWebContentViaItemSelector {
+		property portal.acceptance = "true";
 		property testray.component.names = "Training,Web Content Administration";
 
 		JSONLayout.addPublicLayout(
@@ -221,13 +223,17 @@ definition {
 			webContentContent = "WC WebContent Content",
 			webContentTitle = "WC WebContent Title");
 
-		WebContent.publishViaWCD();
+		PortletEntry.publish();
 
-		Navigator.gotoSitePage(
-			pageName = "Web Content Page",
-			siteName = "Test Site Name");
+		Click.clickAt(locator1 = "ControlMenu#ADD");
 
-		WebContent.viewPGViaWCD(webContentContent = "WC WebContent Content");
+		AssertElementPresent(locator1 = "ControlMenuAddPanel#SIDEBAR_HEADER");
+
+		Navigator.gotoNavTab(navTab = "Content");
+
+		AssertVisible(
+			key_entryTitle = "WC WebContent Title",
+			locator1 = "ControlMenuAddPanel#ASSET_ENTRY");
 	}
 
 	@priority = "4"
@@ -382,6 +388,7 @@ definition {
 
 	@priority = "5"
 	test AddWebContentViaAddContentPanel {
+		property portal.acceptance = "true";
 		property testray.component.names = "Web Content Display,Training";
 
 		JSONWebcontent.addWebContent(
@@ -533,7 +540,7 @@ definition {
 		property test.name.skip.portal.instance = "WebContentDisplay#ChangeTemplate";
 		property testray.component.names = "Web Content Display";
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "Search");
@@ -749,6 +756,7 @@ definition {
 	@description = "This is a use case for LPS-71941."
 	@priority = "5"
 	test UndeployWebContentDisplayModuleViaGogoShell {
+		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "WebContentDisplay#UndeployWebContentDisplayModuleViaGogoShell";
 
 		GogoShell.openGogoShellAdmin();
@@ -806,7 +814,7 @@ definition {
 
 		WebContent.viewPGViaWCD(webContentContent = "WC WebContent Content");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "System Settings");
@@ -1137,7 +1145,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Web Content");
 
 		WebContent.moveToRecycleBinCP(
@@ -1160,7 +1167,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Web Content");
 
 		WebContent.deleteCP(

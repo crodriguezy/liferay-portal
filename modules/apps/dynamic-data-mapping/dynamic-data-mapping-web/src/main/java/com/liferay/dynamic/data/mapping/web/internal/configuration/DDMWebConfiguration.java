@@ -61,4 +61,10 @@ public interface DDMWebConfiguration {
 	)
 	public boolean changeableDefaultLanguage();
 
+	@Meta.AD(
+		deflt = "true", description = "enable-template-creation-description",
+		name = "enable-template-creation", required = false
+	)
+	public boolean enableTemplateCreation();
+
 }

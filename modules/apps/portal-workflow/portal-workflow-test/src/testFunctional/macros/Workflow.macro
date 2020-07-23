@@ -199,6 +199,8 @@ definition {
 		Button.clickDone();
 
 		Alert.viewSuccessMessage();
+
+		WaitForLiferayEvent.initializeLiferayEventLog();
 	}
 
 	macro assignTaskToUser {
@@ -221,6 +223,8 @@ definition {
 			workflowAssetTitle = "${workflowAssetTitle}",
 			workflowAssetType = "${workflowAssetType}",
 			workflowTask = "${workflowTask}");
+
+		WaitForLiferayEvent.initializeLiferayEventLog();
 
 		Workflow.gotoTaskAssignedToMyRolesActionsCmd(
 			workflowAssetTitle = "${workflowAssetTitle}",
@@ -308,11 +312,11 @@ definition {
 
 		Click.pauseClickAt(locator1 = "Icon#INFO");
 
-		if (IsElementNotPresent(locator1 = "Icon#VERTICAL_ELLIPSIS_BUTTON")) {
+		if (IsElementNotPresent(locator1 = "Icon#SIDEBAR_HEADER_ACTION_VERTICAL_ELLIPSIS_BUTTON")) {
 			Click.pauseClickAt(locator1 = "Icon#INFO");
 		}
 
-		Click(locator1 = "Icon#VERTICAL_ELLIPSIS_BUTTON");
+		Click(locator1 = "Icon#SIDEBAR_HEADER_ACTION_VERTICAL_ELLIPSIS_BUTTON");
 
 		MenuItem.click(menuItem = "Edit");
 
@@ -324,18 +328,30 @@ definition {
 	}
 
 	macro configureWorkflow {
+		var key_workflowResourceValue = "${workflowResourceValue}";
+
 		AssertClick.pauseAssertTextClickAt(
 			key_rowEntry = "${workflowResourceValue}",
 			locator1 = "Button#EDIT_ROW",
 			value1 = "Edit");
 
+		if (IsNotVisible(locator1 = "WorkflowConfiguration#RESOURCE_TABLE_SELECT")) {
+
+			Refresh();
+
+			WaitForSPARefresh();
+
+			AssertClick.pauseAssertTextClickAt(
+				key_rowEntry = "${workflowResourceValue}",
+				locator1 = "Button#EDIT_ROW",
+				value1 = "Edit");
+		}
+
 		Select(
-			key_workflowResourceValue = "${workflowResourceValue}",
 			locator1 = "WorkflowConfiguration#RESOURCE_TABLE_SELECT",
 			value1 = "${workflowDefinition}");
 
 		AssertClick(
-			key_workflowResourceValue = "${workflowResourceValue}",
 			locator1 = "WorkflowConfiguration#RESOURCE_TABLE_SAVE",
 			value1 = "Save");
 
@@ -364,6 +380,8 @@ definition {
 		Click(locator1 = "Button#DONE");
 
 		Alert.viewSuccessMessage();
+
+		WaitForLiferayEvent.initializeLiferayEventLog();
 	}
 
 	macro createWorkflowBlogInstance {
@@ -395,6 +413,50 @@ definition {
 		Alert.viewSuccessMessage();
 
 		AssertElementNotPresent(locator1 = "WorkflowDefinition#DEFINITION_TABLE_TITLE");
+	}
+
+	macro deleteWorkflowDefinitionExtra {
+		Click(locator1 = "WorkflowDefinition#DEFINITION_TABLE_DEFINITION_UNPUBLISHED_EXTRA_ELLIPSIS");
+
+		MenuItem.clickNoError(menuItem = "Delete");
+
+		AssertTextEquals(
+			locator1 = "IFrame#DIALOG_BOX",
+			value1 = "Delete workflow?");
+
+		AssertTextEquals(
+			locator1 = "WorkflowDefinition#DIALOG_BOX_BODY",
+			value1 = "A deleted workflow cannot be recovered.");
+
+		Button.clickDelete();
+
+		Alert.viewSuccessMessage();
+	}
+
+	macro duplicateSingleApproverWorkflow {
+
+		ApplicationsMenu.gotoPortlet(
+			category = "Workflow",
+			panel = "Applications",
+			portlet = "Process Builder");
+
+		Click(
+			key_workflowDefinitionTitle = "Single Approver",
+			locator1 = "WorkflowDefinition#DEFINITION_TABLE_SPECIFIC_DEFINITION_ELLIPSIS");
+
+		MenuItem.clickNoError(menuItem = "Duplicate");
+
+		Button.click(button = "Duplicate");
+
+		Type(
+			locator1 = "WorkflowDefinition#DEFINITION_TITLE",
+			value1 = "${workflowName}");
+
+		ScrollWebElementIntoView(
+			key_text = "Update",
+			locator1 = "Button#ANY");
+
+		Button.click(button = "Update");
 	}
 
 	macro gotoAssetViaTableTitle {
@@ -435,11 +497,6 @@ definition {
 		var editAsset = "IFrame#EDIT_ASSET";
 
 		if (IsElementPresent(locator1 = "${editAsset}")) {
-			LiferayEvent.waitForLiferayEvent(
-				attributeName = "src",
-				attributeValue = "dialog-iframe-popup",
-				eventName = "modalIframeLoaded");
-
 			SelectFrame(locator1 = "${editAsset}");
 		}
 	}
@@ -634,9 +691,9 @@ definition {
 	}
 
 	macro tearDownPortalWorkflow {
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Workflow",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Process Builder");
 
 		Navigator.gotoNavItem(navItem = "Schemes");
@@ -676,32 +733,39 @@ definition {
 	}
 
 	macro tearDownSpecificWorkflowDefinition {
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Workflow",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Process Builder");
 
 		var key_workflowDefinitionTitle = "${workflowDefinitionTitle}";
 
 		while (IsElementPresent(locator1 = "WorkflowDefinition#DEFINITION_TABLE_SPECIFIC_DEFINITION_ELLIPSIS")) {
-			Workflow.unpublishWorkflowDefinition(workflowDefinitionTitle = "Join Xor");
+			Workflow.unpublishWorkflowDefinition(workflowDefinitionTitle = "${workflowDefinitionTitle}");
 
-			Workflow.deleteWorkflowDefinition(workflowDefinitionTitle = "Join Xor");
+			ApplicationsMenu.gotoPortlet(
+				category = "Workflow",
+				panel = "Applications",
+				portlet = "Process Builder");
+
+			Workflow.deleteWorkflowDefinition(workflowDefinitionTitle = "${workflowDefinitionTitle}");
 		}
 	}
 
 	macro tearDownWorkflowDefinitions {
-		var key_workflowDefinitionTitle = "${workflowDefinitionTitle}";
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Workflow",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Process Builder");
 
-		while (IsElementPresent(locator1 = "WorkflowDefinition#DEFINITION_TABLE_TITLE")) {
-			Workflow.unpublishWorkflowDefinition(workflowDefinitionTitle = "${workflowDefinitionTitle}");
+		while (IsElementPresent(locator1 = "WorkflowDefinition#DEFINITION_TABLE_EXTRA")) {
 
-			Workflow.deleteWorkflowDefinition(workflowDefinitionTitle = "${workflowDefinitionTitle}");
+			if (IsElementPresent(locator1 = "WorkflowDefinition#DEFINITION_TABLE_DEFINITION_EXTRA_ELLIPSIS")) {
+				Workflow.unpublishWorkflowDefinitionExtra();
+			}
+
+			Workflow.deleteWorkflowDefinitionExtra();
 		}
 	}
 
@@ -709,6 +773,14 @@ definition {
 		var key_workflowDefinitionTitle = "${workflowDefinitionTitle}";
 
 		Click(locator1 = "WorkflowDefinition#DEFINITION_TABLE_SPECIFIC_DEFINITION_ELLIPSIS");
+
+		MenuItem.clickNoError(menuItem = "Unpublish");
+
+		Alert.viewSuccessMessage();
+	}
+
+	macro unpublishWorkflowDefinitionExtra {
+		Click(locator1 = "WorkflowDefinition#DEFINITION_TABLE_DEFINITION_EXTRA_ELLIPSIS");
 
 		MenuItem.clickNoError(menuItem = "Unpublish");
 
@@ -784,17 +856,7 @@ definition {
 		var currentYear = DateUtil.getCurrentYear();
 		var futureYear = ${currentYear} + 1;
 
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "WorkflowDefinition#DIALOG_BOX_BODY");
-
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
 
 		SelectFrame(locator1 = "IFrame#IFRAME");
 
@@ -840,11 +902,7 @@ definition {
 			locator1 = "TextInput#FILE",
 			value1 = "${workflowDefinitionFile}");
 
-		AssertVisible(locator1 = "Message#SUCCESS");
-
-		AssertTextEquals.assertPartialText(
-			locator1 = "Message#SUCCESS",
-			value1 = "Definition imported successfully.");
+		Alert.viewSuccessMessageText(successMessage = "Definition imported successfully.");
 
 		Alert.closeMessage(messageType = "SUCCESS");
 
@@ -1097,7 +1155,7 @@ definition {
 			locator1 = "WorkflowSubmissionsTask#PREVIEW_CONTENT",
 			value1 = "${workflowAssetContent}");
 
-		Portlet.viewTitle(portletName = "${workflowDefinition}");
+		Portlet.viewTitle(portletName = "${workflowSubmissionTitle}");
 	}
 
 	macro viewNoDuplicateTaskAssignedToMyRoles {
@@ -1190,6 +1248,14 @@ definition {
 		AssertElementPresent(locator1 = "MyWorkflowTasks#ASSIGNED_TO_ME_ACTIVE");
 
 		Workflow._gotoPendingFilter();
+
+		while (IsElementNotPresent(locator1 = "MyWorkflowTasks#ASSIGNED_TO_ME_TABLE_TASK") && (maxIterations = "10")) {
+			Refresh();
+
+			Workflow._gotoPendingFilter();
+
+			Pause(locator1 = "1000");
+		}
 
 		AssertTextEquals(
 			locator1 = "MyWorkflowTasks#ASSIGNED_TO_ME_TABLE_TASK",
@@ -1303,6 +1369,22 @@ definition {
 			value1 = "${workflowTask}: ${kfProcessName}");
 	}
 
+	macro webContentGoToAddCP {
+		Pause(locator1 = "3000");
+
+		LexiconEntry.gotoAdd();
+
+		MenuItem.click(menuItem = "Basic Web Content");
+
+		WaitForElementPresent(locator1 = "TextInput#TITLE");
+
+		AssertVisible(locator1 = "TextInput#TITLE");
+
+		while (IsElementNotPresent(locator1 = "WCEditWebContent#SIDEBAR")) {
+			Pause(locator1 = "1000");
+		}
+	}
+
 	macro withdrawTaskByActions {
 		Workflow.viewMySubmissions(
 			workflowAssetTitle = "${workflowAssetTitle}",
@@ -1336,7 +1418,7 @@ definition {
 			workflowAssetContent = "${workflowAssetContent}",
 			workflowAssetTitle = "${workflowAssetTitle}",
 			workflowAssetType = "${workflowAssetType}",
-			workflowDefinition = "${workflowDefinition}");
+			workflowSubmissionTitle = "${workflowSubmissionTitle}");
 
 		LexiconEntry.gotoEllipsisMenuItem(menuItem = "Withdraw Submission");
 
@@ -1376,7 +1458,7 @@ definition {
 			workflowAssetContent = "${workflowAssetContent}",
 			workflowAssetTitle = "${workflowAssetTitle}",
 			workflowAssetType = "${workflowAssetType}",
-			workflowDefinition = "${workflowDefinition}");
+			workflowSubmissionTitle = "${workflowSubmissionTitle}");
 
 		AssertElementNotPresent(locator1 = "WorkflowSubmissionsTask#MENU_WITHDRAW_SUBMISSION");
 

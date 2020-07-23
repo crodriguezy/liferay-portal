@@ -15,11 +15,11 @@
 import {updateLanguageId} from '../../actions/index';
 
 function undoAction({action}) {
-	return (dispatch) => dispatch(updateLanguageId({...action, isUndo: true}));
+	return (dispatch) => dispatch(updateLanguageId({...action}));
 }
 
-function getDerivedStateForUndo({state}) {
-	return {languageId: state.languageId};
+function getDerivedStateForUndo({action, state}) {
+	return {languageId: state.languageId, nextLanguageId: action.languageId};
 }
 
 export {undoAction, getDerivedStateForUndo};

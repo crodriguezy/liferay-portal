@@ -186,15 +186,7 @@ if (!CKEDITOR.plugins.get('videoembed')) {
 		const wrapperElement = el.parentElement;
 
 		if (wrapperElement && width > 0 && height > 0) {
-			const rect = wrapperElement.getBoundingClientRect();
-
-			const pwidth =
-				width >= rect.width
-					? 100
-					: Math.floor((width / rect.width) * 100);
-			const style = `width:${pwidth}%;`;
-
-			wrapperElement.setAttribute('style', style);
+			wrapperElement.setAttribute('style', `width:${width}px;`);
 
 			const widgetElement = wrapperElement.querySelector(
 				'[data-widget="videoembed"]'
@@ -223,7 +215,7 @@ if (!CKEDITOR.plugins.get('videoembed')) {
 	};
 
 	const selectWidget = function (editor) {
-		setTimeout(() => {
+		requestAnimationFrame(() => {
 			const selection = editor.getSelection();
 
 			if (selection) {
@@ -246,6 +238,10 @@ if (!CKEDITOR.plugins.get('videoembed')) {
 						if (imageElement && widgetElement) {
 							const range = editor.createRange();
 
+							if (!range) {
+								return;
+							}
+
 							range.setStart(widgetElement, 0);
 							range.setEnd(imageElement, 1);
 
@@ -255,13 +251,12 @@ if (!CKEDITOR.plugins.get('videoembed')) {
 					}
 				}
 			}
-		}, 0);
+		});
 	};
 
 	let currentAlignment = null;
 	let currentElement = null;
 	let resizer = null;
-
 	const EMBED_VIDEO_WIDTH = 560;
 	const EMBED_VIDEO_HEIGHT = 315;
 
@@ -427,6 +422,11 @@ if (!CKEDITOR.plugins.get('videoembed')) {
 		},
 
 		afterInit(editor) {
+			editor.on('resize', () => {
+				resizer.hide();
+				selectWidget(editor);
+			});
+
 			ALIGN_VALUES.forEach((alignValue) => {
 				const command = editor.getCommand('justify' + alignValue);
 

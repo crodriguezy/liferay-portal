@@ -70,12 +70,6 @@ const withActionableFields = (ChildComponent) => {
 			}
 		}
 
-		isActionsEnabled() {
-			const {defaultLanguageId, editingLanguageId} = this.props;
-
-			return defaultLanguageId === editingLanguageId;
-		}
-
 		hasFocusedField() {
 			const {focusedField} = this.props;
 
@@ -101,7 +95,6 @@ const withActionableFields = (ChildComponent) => {
 
 					<FieldActionsDropDown
 						activePage={activePage}
-						disabled={!this.isActionsEnabled()}
 						events={{
 							mouseLeave: this._handleMouseLeaveActions.bind(
 								this
@@ -118,7 +111,6 @@ const withActionableFields = (ChildComponent) => {
 
 					<FieldActionsDropDown
 						activePage={activePage}
-						disabled={!this.isActionsEnabled()}
 						events={{
 							mouseLeave: this._handleMouseLeaveActions.bind(
 								this
@@ -259,20 +251,36 @@ const withActionableFields = (ChildComponent) => {
 
 			this.hideActions(hoveredFieldActions);
 
+			this._handleClosestParent({
+				delegateTarget,
+				hoveredFieldActions,
+				selectedFieldActions,
+			});
+
+			if (event.stopPropagation) {
+				event.stopPropagation();
+			}
+		}
+
+		_handleClosestParent({
+			delegateTarget,
+			hoveredFieldActions,
+			selectedFieldActions,
+		}) {
+			const {pages} = this.props;
 			const closestParent = this._getClosestParent(delegateTarget);
 
 			if (closestParent) {
 				const {fieldName} = closestParent.dataset;
 
-				if (selectedFieldActions.state.fieldName !== fieldName) {
+				if (
+					selectedFieldActions.state.fieldName !== fieldName &&
+					!isFieldSetChild(pages, fieldName)
+				) {
 					closestParent.classList.add(_CSS_HOVERED);
 
 					this.showActions(hoveredFieldActions, fieldName);
 				}
-			}
-
-			if (event.stopPropagation) {
-				event.stopPropagation();
 			}
 		}
 

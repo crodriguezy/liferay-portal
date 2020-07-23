@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch6.internal.connection.IndexName;
 import com.liferay.portal.search.elasticsearch6.internal.document.SingleFieldFixture;
+import com.liferay.portal.search.elasticsearch6.internal.index.constants.LiferayTypeMappingsConstants;
 import com.liferay.portal.search.elasticsearch6.internal.query.QueryBuilderFactories;
 import com.liferay.portal.search.elasticsearch6.internal.settings.BaseIndexSettingsContributor;
 import com.liferay.portal.search.elasticsearch6.internal.util.ResourceUtil;
@@ -31,7 +32,6 @@ import com.liferay.portal.search.spi.model.index.contributor.IndexContributor;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequestBuilder;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
@@ -127,17 +127,16 @@ public class CompanyIndexFactoryTest {
 
 	@Test
 	public void testCreateIndicesWithBlankStrings() throws Exception {
-		Map<String, Object> properties = HashMapBuilder.<String, Object>put(
-			"additionalIndexConfigurations", StringPool.BLANK
-		).put(
-			"additionalTypeMappings", StringPool.SPACE
-		).put(
-			"indexNumberOfReplicas", StringPool.BLANK
-		).put(
-			"indexNumberOfShards", StringPool.SPACE
-		).build();
-
-		_companyIndexFactory.activate(properties);
+		_companyIndexFactory.activate(
+			HashMapBuilder.<String, Object>put(
+				"additionalIndexConfigurations", StringPool.BLANK
+			).put(
+				"additionalTypeMappings", StringPool.SPACE
+			).put(
+				"indexNumberOfReplicas", StringPool.BLANK
+			).put(
+				"indexNumberOfShards", StringPool.SPACE
+			).build());
 
 		createIndices();
 	}
@@ -435,9 +434,8 @@ public class CompanyIndexFactoryTest {
 	}
 
 	protected void createIndex(long companyId) {
-		AdminClient adminClient = _elasticsearchFixture.getAdminClient();
-
-		_companyIndexFactory.createIndices(adminClient, companyId);
+		_companyIndexFactory.createIndices(
+			_elasticsearchFixture.getAdminClient(), companyId);
 	}
 
 	protected void createIndices() throws Exception {
@@ -447,10 +445,9 @@ public class CompanyIndexFactoryTest {
 	}
 
 	protected void deleteIndices() {
-		AdminClient adminClient = _elasticsearchFixture.getAdminClient();
-
 		_companyIndexFactory.deleteIndices(
-			adminClient, RandomTestUtil.randomLong());
+			_elasticsearchFixture.getAdminClient(),
+			RandomTestUtil.randomLong());
 	}
 
 	protected Settings getIndexSettings() {

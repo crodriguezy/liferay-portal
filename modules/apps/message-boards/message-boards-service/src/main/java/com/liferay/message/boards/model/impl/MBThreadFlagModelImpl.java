@@ -69,6 +69,7 @@ public class MBThreadFlagModelImpl
 	public static final String TABLE_NAME = "MBThreadFlag";
 
 	public static final Object[][] TABLE_COLUMNS = {
+		{"mvccVersion", Types.BIGINT}, {"ctCollectionId", Types.BIGINT},
 		{"uuid_", Types.VARCHAR}, {"threadFlagId", Types.BIGINT},
 		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
 		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
@@ -80,6 +81,8 @@ public class MBThreadFlagModelImpl
 		new HashMap<String, Integer>();
 
 	static {
+		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("ctCollectionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("uuid_", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("threadFlagId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
@@ -93,7 +96,7 @@ public class MBThreadFlagModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table MBThreadFlag (uuid_ VARCHAR(75) null,threadFlagId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,threadId LONG,lastPublishDate DATE null)";
+		"create table MBThreadFlag (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,uuid_ VARCHAR(75) null,threadFlagId LONG not null,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,threadId LONG,lastPublishDate DATE null,primary key (threadFlagId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP = "drop table MBThreadFlag";
 
@@ -121,12 +124,18 @@ public class MBThreadFlagModelImpl
 
 	public static final long THREADFLAGID_COLUMN_BITMASK = 32L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-		_entityCacheEnabled = entityCacheEnabled;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-		_finderCacheEnabled = finderCacheEnabled;
 	}
 
 	public MBThreadFlagModelImpl() {
@@ -180,9 +189,6 @@ public class MBThreadFlagModelImpl
 				attributeName,
 				attributeGetterFunction.apply((MBThreadFlag)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -256,6 +262,16 @@ public class MBThreadFlagModelImpl
 		Map<String, BiConsumer<MBThreadFlag, ?>> attributeSetterBiConsumers =
 			new LinkedHashMap<String, BiConsumer<MBThreadFlag, ?>>();
 
+		attributeGetterFunctions.put(
+			"mvccVersion", MBThreadFlag::getMvccVersion);
+		attributeSetterBiConsumers.put(
+			"mvccVersion",
+			(BiConsumer<MBThreadFlag, Long>)MBThreadFlag::setMvccVersion);
+		attributeGetterFunctions.put(
+			"ctCollectionId", MBThreadFlag::getCtCollectionId);
+		attributeSetterBiConsumers.put(
+			"ctCollectionId",
+			(BiConsumer<MBThreadFlag, Long>)MBThreadFlag::setCtCollectionId);
 		attributeGetterFunctions.put("uuid", MBThreadFlag::getUuid);
 		attributeSetterBiConsumers.put(
 			"uuid", (BiConsumer<MBThreadFlag, String>)MBThreadFlag::setUuid);
@@ -302,6 +318,26 @@ public class MBThreadFlagModelImpl
 			attributeGetterFunctions);
 		_attributeSetterBiConsumers = Collections.unmodifiableMap(
 			(Map)attributeSetterBiConsumers);
+	}
+
+	@Override
+	public long getMvccVersion() {
+		return _mvccVersion;
+	}
+
+	@Override
+	public void setMvccVersion(long mvccVersion) {
+		_mvccVersion = mvccVersion;
+	}
+
+	@Override
+	public long getCtCollectionId() {
+		return _ctCollectionId;
+	}
+
+	@Override
+	public void setCtCollectionId(long ctCollectionId) {
+		_ctCollectionId = ctCollectionId;
 	}
 
 	@Override
@@ -536,6 +572,8 @@ public class MBThreadFlagModelImpl
 	public Object clone() {
 		MBThreadFlagImpl mbThreadFlagImpl = new MBThreadFlagImpl();
 
+		mbThreadFlagImpl.setMvccVersion(getMvccVersion());
+		mbThreadFlagImpl.setCtCollectionId(getCtCollectionId());
 		mbThreadFlagImpl.setUuid(getUuid());
 		mbThreadFlagImpl.setThreadFlagId(getThreadFlagId());
 		mbThreadFlagImpl.setGroupId(getGroupId());
@@ -568,16 +606,16 @@ public class MBThreadFlagModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof MBThreadFlag)) {
+		if (!(object instanceof MBThreadFlag)) {
 			return false;
 		}
 
-		MBThreadFlag mbThreadFlag = (MBThreadFlag)obj;
+		MBThreadFlag mbThreadFlag = (MBThreadFlag)object;
 
 		long primaryKey = mbThreadFlag.getPrimaryKey();
 
@@ -594,14 +632,22 @@ public class MBThreadFlagModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	@Override
@@ -637,6 +683,10 @@ public class MBThreadFlagModelImpl
 	public CacheModel<MBThreadFlag> toCacheModel() {
 		MBThreadFlagCacheModel mbThreadFlagCacheModel =
 			new MBThreadFlagCacheModel();
+
+		mbThreadFlagCacheModel.mvccVersion = getMvccVersion();
+
+		mbThreadFlagCacheModel.ctCollectionId = getCtCollectionId();
 
 		mbThreadFlagCacheModel.uuid = getUuid();
 
@@ -764,9 +814,8 @@ public class MBThreadFlagModelImpl
 
 	}
 
-	private static boolean _entityCacheEnabled;
-	private static boolean _finderCacheEnabled;
-
+	private long _mvccVersion;
+	private long _ctCollectionId;
 	private String _uuid;
 	private String _originalUuid;
 	private long _threadFlagId;

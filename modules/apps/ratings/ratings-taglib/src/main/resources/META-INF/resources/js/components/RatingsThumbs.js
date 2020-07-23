@@ -14,9 +14,11 @@
 
 import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
+import {ClayTooltipProvider} from '@clayui/tooltip';
+import classNames from 'classnames';
 import {useIsMounted} from 'frontend-js-react-web';
 import PropTypes from 'prop-types';
-import React, {useCallback, useReducer} from 'react';
+import React, {useCallback, useReducer, useState} from 'react';
 
 import AnimatedCounter from './AnimatedCounter';
 
@@ -81,11 +83,26 @@ const RatingsThumbs = ({
 		positiveVotes: initialPositiveVotes,
 		pressed: thumbDown ? PRESSED_DOWN : thumbUp ? PRESSED_UP : null,
 	});
-	const isMounted = useIsMounted();
 
 	const {negativeVotes, positiveVotes, pressed} = state;
+	const [animatedButtonUp, setAnimatedButtonUp] = useState(false);
+	const [animatedButtonDown, setAnimatedButtonDown] = useState(false);
+
+	const isMounted = useIsMounted();
+
+	const handleAnimationEndUp = () => {
+		setAnimatedButtonUp(false);
+	};
+
+	const handleAnimationEndDown = () => {
+		setAnimatedButtonDown(false);
+	};
 
 	const voteUp = useCallback(() => {
+		if (pressed !== PRESSED_UP) {
+			setAnimatedButtonUp(true);
+		}
+
 		dispatch({type: VOTE_UP});
 
 		const score = pressed !== PRESSED_UP ? SCORE_UP : SCORE_UNVOTE;
@@ -93,6 +110,10 @@ const RatingsThumbs = ({
 	}, [handleSendVoteRequest, pressed]);
 
 	const voteDown = useCallback(() => {
+		if (pressed !== PRESSED_DOWN) {
+			setAnimatedButtonDown(true);
+		}
+
 		dispatch({type: VOTE_DOWN});
 
 		const score = pressed !== PRESSED_DOWN ? SCORE_DOWN : SCORE_UNVOTE;
@@ -145,38 +166,70 @@ const RatingsThumbs = ({
 	);
 
 	return (
-		<div className="ratings ratings-thumbs">
-			<ClayButton
-				aria-pressed={pressed === PRESSED_UP}
-				borderless
-				disabled={disabled}
-				displayType="secondary"
-				onClick={voteUp}
-				small
-				title={getTitleThumbsUp()}
-				value={positiveVotes}
-			>
-				<span className="inline-item inline-item-before">
-					<ClayIcon symbol="thumbs-up" />
-				</span>
-				<AnimatedCounter counter={positiveVotes} />
-			</ClayButton>
-			<ClayButton
-				aria-pressed={pressed === PRESSED_DOWN}
-				borderless
-				disabled={disabled}
-				displayType="secondary"
-				onClick={voteDown}
-				small
-				title={getTitleThumbsDown()}
-				value={negativeVotes}
-			>
-				<span className="inline-item inline-item-before">
-					<ClayIcon symbol="thumbs-down" />
-				</span>
-				<AnimatedCounter counter={negativeVotes} />
-			</ClayButton>
-		</div>
+		<ClayTooltipProvider>
+			<div className="ratings-thumbs">
+				<ClayButton
+					aria-pressed={pressed === PRESSED_UP}
+					borderless
+					className={classNames('btn-thumbs-up', {
+						'btn-animated': animatedButtonUp,
+					})}
+					disabled={disabled}
+					displayType="secondary"
+					onClick={voteUp}
+					small
+					title={getTitleThumbsUp()}
+					value={positiveVotes}
+				>
+					<span className="c-inner" tabIndex="-1">
+						<span className="inline-item inline-item-before">
+							<span className="off">
+								<ClayIcon symbol="thumbs-up" />
+							</span>
+							<span
+								className="on"
+								onAnimationEnd={handleAnimationEndUp}
+							>
+								<ClayIcon symbol="thumbs-up-full" />
+							</span>
+						</span>
+						<span className="inline-item">
+							<AnimatedCounter counter={positiveVotes} />
+						</span>
+					</span>
+				</ClayButton>
+				<ClayButton
+					aria-pressed={pressed === PRESSED_DOWN}
+					borderless
+					className={classNames('btn-thumbs-down', {
+						'btn-animated': animatedButtonDown,
+					})}
+					disabled={disabled}
+					displayType="secondary"
+					onClick={voteDown}
+					small
+					title={getTitleThumbsDown()}
+					value={negativeVotes}
+				>
+					<span className="c-inner" tabIndex="-1">
+						<span className="inline-item inline-item-before">
+							<span className="off">
+								<ClayIcon symbol="thumbs-down" />
+							</span>
+							<span
+								className="on"
+								onAnimationEnd={handleAnimationEndDown}
+							>
+								<ClayIcon symbol="thumbs-down-full" />
+							</span>
+						</span>
+						<span className="inline-item">
+							<AnimatedCounter counter={negativeVotes} />
+						</span>
+					</span>
+				</ClayButton>
+			</div>
+		</ClayTooltipProvider>
 	);
 };
 

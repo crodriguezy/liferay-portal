@@ -20,12 +20,10 @@
 long accountEntryId = ParamUtil.getLong(request, "accountEntryId");
 
 SearchContainer<Organization> organizationSearchContainer = AssignableAccountOrganizationSearchContainerFactory.create(accountEntryId, liferayPortletRequest, liferayPortletResponse);
-
-SelectAccountOrganizationsManagementToolbarDisplayContext selectAccountOrganizationsManagementToolbarDisplayContext = new SelectAccountOrganizationsManagementToolbarDisplayContext(request, liferayPortletRequest, liferayPortletResponse, organizationSearchContainer);
 %>
 
 <clay:management-toolbar
-	displayContext="<%= selectAccountOrganizationsManagementToolbarDisplayContext %>"
+	displayContext="<%= new SelectAccountOrganizationsManagementToolbarDisplayContext(request, liferayPortletRequest, liferayPortletResponse, organizationSearchContainer) %>"
 />
 
 <clay:container-fluid>
@@ -75,7 +73,7 @@ SelectAccountOrganizationsManagementToolbarDisplayContext selectAccountOrganizat
 		}
 
 		Liferay.Util.getOpener().Liferay.fire(
-			'<%= HtmlUtil.escapeJS(renderResponse.getNamespace() + "assignAccountOrganizations") %>',
+			'<%= HtmlUtil.escapeJS(liferayPortletResponse.getNamespace() + "assignAccountOrganizations") %>',
 			result
 		);
 	});

@@ -33,6 +33,8 @@ import java.util.Set;
 
 import javax.annotation.Generated;
 
+import javax.validation.Valid;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -161,6 +163,70 @@ public class PageRowDefinition {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Boolean reverseOrder;
 
+	@Schema(
+		description = "Deprecated as of Athanasius (7.3.x), replaced by rowViewports"
+	)
+	@Valid
+	public RowViewportConfig getRowViewportConfig() {
+		return rowViewportConfig;
+	}
+
+	public void setRowViewportConfig(RowViewportConfig rowViewportConfig) {
+		this.rowViewportConfig = rowViewportConfig;
+	}
+
+	@JsonIgnore
+	public void setRowViewportConfig(
+		UnsafeSupplier<RowViewportConfig, Exception>
+			rowViewportConfigUnsafeSupplier) {
+
+		try {
+			rowViewportConfig = rowViewportConfigUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Deprecated
+	@GraphQLField(
+		description = "Deprecated as of Athanasius (7.3.x), replaced by rowViewports"
+	)
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected RowViewportConfig rowViewportConfig;
+
+	@Schema
+	@Valid
+	public RowViewport[] getRowViewports() {
+		return rowViewports;
+	}
+
+	public void setRowViewports(RowViewport[] rowViewports) {
+		this.rowViewports = rowViewports;
+	}
+
+	@JsonIgnore
+	public void setRowViewports(
+		UnsafeSupplier<RowViewport[], Exception> rowViewportsUnsafeSupplier) {
+
+		try {
+			rowViewports = rowViewportsUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected RowViewport[] rowViewports;
+
 	@Schema
 	public String getVerticalAlignment() {
 		return verticalAlignment;
@@ -256,6 +322,36 @@ public class PageRowDefinition {
 			sb.append(reverseOrder);
 		}
 
+		if (rowViewportConfig != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"rowViewportConfig\": ");
+
+			sb.append(String.valueOf(rowViewportConfig));
+		}
+
+		if (rowViewports != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"rowViewports\": ");
+
+			sb.append("[");
+
+			for (int i = 0; i < rowViewports.length; i++) {
+				sb.append(String.valueOf(rowViewports[i]));
+
+				if ((i + 1) < rowViewports.length) {
+					sb.append(", ");
+				}
+			}
+
+			sb.append("]");
+		}
+
 		if (verticalAlignment != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -287,6 +383,16 @@ public class PageRowDefinition {
 		return string.replaceAll("\"", "\\\\\"");
 	}
 
+	private static boolean _isArray(Object value) {
+		if (value == null) {
+			return false;
+		}
+
+		Class<?> clazz = value.getClass();
+
+		return clazz.isArray();
+	}
+
 	private static String _toJSON(Map<String, ?> map) {
 		StringBuilder sb = new StringBuilder("{");
 
@@ -305,9 +411,7 @@ public class PageRowDefinition {
 
 			Object value = entry.getValue();
 
-			Class<?> clazz = value.getClass();
-
-			if (clazz.isArray()) {
+			if (_isArray(value)) {
 				sb.append("[");
 
 				Object[] valueArray = (Object[])value;

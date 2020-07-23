@@ -39,10 +39,9 @@
 	<c:if test="<%= selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeDefault() && selectAssetDisplayPageDisplayContext.isShowViewInContextLink() && selectAssetDisplayPageDisplayContext.isURLViewInContext() %>">
 		<div class="input-group-item input-group-item-shrink">
 			<clay:button
+				displayType="secondary"
 				icon="view"
 				id='<%= liferayPortletResponse.getNamespace() + "previewDefaultDisplayPageButton" %>'
-				monospaced="<%= true %>"
-				style="secondary"
 			/>
 		</div>
 	</c:if>
@@ -62,10 +61,9 @@
 		<c:if test="<%= selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeSpecific() && selectAssetDisplayPageDisplayContext.isShowViewInContextLink() && selectAssetDisplayPageDisplayContext.isURLViewInContext() %>">
 			<div class="input-group-item input-group-item-shrink">
 				<clay:button
-					elementClasses="btn-secondary"
+					displayType="secondary"
 					icon="view"
 					id='<%= liferayPortletResponse.getNamespace() + "previewSpecificDisplayPageButton" %>'
-					monospaced="<%= true %>"
 				/>
 			</div>
 		</c:if>
@@ -134,15 +132,9 @@
 
 	if (previewDefaultDisplayPageButton) {
 		previewDefaultDisplayPageButton.addEventListener('click', function (event) {
-			Liferay.Util.openWindow({
-				dialog: {
-					destroyOnHide: true,
-				},
-				dialogIframe: {
-					bodyCssClass: 'dialog-with-footer',
-				},
+			Liferay.Util.openModal({
 				title: '<liferay-ui:message key="preview" />',
-				uri:
+				url:
 					'<%= selectAssetDisplayPageDisplayContext.getURLViewInContext() %>',
 			});
 		});
@@ -152,15 +144,9 @@
 		previewSpecificDisplayPageButton.addEventListener('click', function (
 			event
 		) {
-			Liferay.Util.openWindow({
-				dialog: {
-					destroyOnHide: true,
-				},
-				dialogIframe: {
-					bodyCssClass: 'dialog-with-footer',
-				},
+			Liferay.Util.openModal({
 				title: '<liferay-ui:message key="preview" />',
-				uri:
+				url:
 					'<%= selectAssetDisplayPageDisplayContext.getURLViewInContext() %>',
 			});
 		});

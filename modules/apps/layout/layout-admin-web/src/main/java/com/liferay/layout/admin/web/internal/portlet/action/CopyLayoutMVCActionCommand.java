@@ -18,8 +18,7 @@ import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.admin.web.internal.handler.LayoutExceptionRequestHandler;
 import com.liferay.layout.util.LayoutCopyHelper;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
@@ -95,24 +94,22 @@ public class CopyLayoutMVCActionCommand extends BaseMVCActionCommand {
 			nameMap.put(LocaleUtil.getSiteDefault(), name);
 		}
 
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			Layout.class.getName(), actionRequest);
-
 		UnicodeProperties typeSettingsUnicodeProperties =
 			PropertiesParamUtil.getProperties(
 				actionRequest, "TypeSettingsProperties--");
 
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+		Layout sourceLayout = _layoutLocalService.fetchLayout(sourcePlid);
+
+		UnicodeProperties sourceTypeSettingsUnicodeProperties =
+			sourceLayout.getTypeSettingsProperties();
+
+		sourceTypeSettingsUnicodeProperties.putAll(
+			typeSettingsUnicodeProperties);
+
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+			Layout.class.getName(), actionRequest);
 
 		try {
-			Layout sourceLayout = _layoutLocalService.fetchLayout(sourcePlid);
-
-			UnicodeProperties sourceTypeSettingsUnicodeProperties =
-				sourceLayout.getTypeSettingsProperties();
-
-			sourceTypeSettingsUnicodeProperties.putAll(
-				typeSettingsUnicodeProperties);
-
 			Layout targetLayout = _layoutService.addLayout(
 				groupId, privateLayout, sourceLayout.getParentLayoutId(), 0, 0,
 				nameMap, sourceLayout.getTitleMap(),
@@ -121,8 +118,7 @@ public class CopyLayoutMVCActionCommand extends BaseMVCActionCommand {
 				sourceTypeSettingsUnicodeProperties.toString(), false, false,
 				new HashMap<>(), serviceContext);
 
-			Layout draftLayout = _layoutLocalService.fetchLayout(
-				_portal.getClassNameId(Layout.class), targetLayout.getPlid());
+			Layout draftLayout = targetLayout.fetchDraftLayout();
 
 			if (draftLayout != null) {
 				targetLayout = draftLayout;
@@ -152,10 +148,9 @@ public class CopyLayoutMVCActionCommand extends BaseMVCActionCommand {
 			redirectURL.setParameter(
 				"privateLayout", String.valueOf(privateLayout));
 
-			jsonObject.put("redirectURL", redirectURL.toString());
-
 			JSONPortletResponseUtil.writeJSON(
-				actionRequest, actionResponse, jsonObject);
+				actionRequest, actionResponse,
+				JSONUtil.put("redirectURL", redirectURL.toString()));
 		}
 		catch (PortalException portalException) {
 			if (_log.isDebugEnabled()) {

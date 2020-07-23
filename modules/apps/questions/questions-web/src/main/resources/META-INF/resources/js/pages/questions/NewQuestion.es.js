@@ -12,23 +12,27 @@
  * details.
  */
 
+import {useMutation} from '@apollo/client';
 import ClayButton from '@clayui/button';
 import ClayForm, {ClayInput, ClaySelect} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
-import {Editor} from 'frontend-editor-ckeditor-web';
 import React, {useContext, useEffect, useState} from 'react';
 import {withRouter} from 'react-router-dom';
 
 import {AppContext} from '../../AppContext.es';
+import Alert from '../../components/Alert.es';
 import Link from '../../components/Link.es';
+import QuestionsEditor from '../../components/QuestionsEditor';
 import TagSelector from '../../components/TagSelector.es';
+import TextLengthValidation from '../../components/TextLengthValidation.es';
 import useSection from '../../hooks/useSection.es';
-import {createQuestion} from '../../utils/client.es';
+import {client, createQuestionQuery} from '../../utils/client.es';
+import lang from '../../utils/lang.es';
 import {
-	getCKEditorConfig,
+	getContextLink,
 	historyPushWithSlug,
-	onBeforeLoadCKEditor,
 	slugToText,
+	stripHTML,
 	useDebounceCallback,
 } from '../../utils/utils.es';
 
@@ -41,6 +45,7 @@ export default withRouter(
 	}) => {
 		const [articleBody, setArticleBody] = useState('');
 		const [headline, setHeadline] = useState('');
+		const [error, setError] = useState({});
 		const [sectionId, setSectionId] = useState();
 		const [sections, setSections] = useState([]);
 		const [tags, setTags] = useState([]);
@@ -56,13 +61,13 @@ export default withRouter(
 			500
 		);
 
-		const submit = () =>
-			createQuestion(
-				articleBody,
-				headline,
-				sectionId || section.id,
-				tags.map((tag) => tag.label)
-			).then(() => debounceCallback());
+		const [createQuestion] = useMutation(createQuestionQuery, {
+			context: getContextLink(sectionTitle),
+			onCompleted() {
+				client.resetStore();
+				debounceCallback();
+			},
+		});
 
 		useEffect(() => {
 			if (section && section.parentSection) {
@@ -75,6 +80,22 @@ export default withRouter(
 				]);
 			}
 		}, [section, section.parentSection]);
+
+		const processError = (error) => {
+			if (error.message && error.message.includes('AssetTagException')) {
+				error.message = lang.sub(
+					Liferay.Language.get(
+						'the-x-cannot-contain-the-following-invalid-characters-x'
+					),
+					[
+						'Tag',
+						' & \' @ \\\\ ] } : , = > / < \\n [ {  | + # ` ? \\" \\r ; / * ~',
+					]
+				);
+			}
+
+			setError(error);
+		};
 
 		return (
 			<section className="c-mt-5 questions-section questions-section-new">
@@ -125,20 +146,12 @@ export default withRouter(
 										</span>
 									</label>
 
-									<Editor
-										config={getCKEditorConfig()}
-										onBeforeLoad={(editor) =>
-											onBeforeLoadCKEditor(
-												editor,
-												context.imageBrowseURL
-											)
-										}
-										onChange={(event) =>
+									<QuestionsEditor
+										onChange={(event) => {
 											setArticleBody(
 												event.editor.getData()
-											)
-										}
-										required
+											);
+										}}
 									/>
 
 									<ClayForm.FeedbackGroup>
@@ -148,33 +161,38 @@ export default withRouter(
 													'include-all-the-information-someone-would-need-to-answer-your-question'
 												)}
 											</span>
-										</ClayForm.FeedbackItem>
 
-										<ClayForm.Text>{''}</ClayForm.Text>
+											<TextLengthValidation
+												text={articleBody}
+											/>
+										</ClayForm.FeedbackItem>
 									</ClayForm.FeedbackGroup>
 								</ClayForm.Group>
 
-								<ClayForm.Group className="c-mt-4">
-									<label htmlFor="basicInput">
-										{Liferay.Language.get('topic')}
-									</label>
-									<ClaySelect
-										onChange={(event) =>
-											setSectionId(event.target.value)
-										}
-									>
-										{sections.map(({id, title}) => (
-											<ClaySelect.Option
-												key={id}
-												label={title}
-												selected={
-													section && section.id === id
-												}
-												value={id}
-											/>
-										))}
-									</ClaySelect>
-								</ClayForm.Group>
+								{sections.length > 1 && (
+									<ClayForm.Group className="c-mt-4">
+										<label htmlFor="basicInput">
+											{Liferay.Language.get('topic')}
+										</label>
+										<ClaySelect
+											onChange={(event) =>
+												setSectionId(event.target.value)
+											}
+										>
+											{sections.map(({id, title}) => (
+												<ClaySelect.Option
+													key={id}
+													label={title}
+													selected={
+														section &&
+														section.id === id
+													}
+													value={id}
+												/>
+											))}
+										</ClaySelect>
+									</ClayForm.Group>
+								)}
 
 								<TagSelector
 									className="c-mt-3"
@@ -188,10 +206,25 @@ export default withRouter(
 								<ClayButton
 									className="c-mt-4 c-mt-sm-0"
 									disabled={
-										!articleBody || !headline || !tagsLoaded
+										!articleBody ||
+										!headline ||
+										!tagsLoaded ||
+										stripHTML(articleBody).length < 15
 									}
 									displayType="primary"
-									onClick={submit}
+									onClick={() => {
+										createQuestion({
+											variables: {
+												articleBody,
+												headline,
+												keywords: tags.map(
+													(tag) => tag.label
+												),
+												messageBoardSectionId:
+													sectionId || section.id,
+											},
+										}).catch(processError);
+									}}
 								>
 									{Liferay.Language.get('post-your-question')}
 								</ClayButton>
@@ -206,6 +239,7 @@ export default withRouter(
 						</div>
 					</div>
 				</div>
+				<Alert info={error} />
 			</section>
 		);
 	}

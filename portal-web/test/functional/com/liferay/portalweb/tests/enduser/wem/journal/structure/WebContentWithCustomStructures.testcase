@@ -296,7 +296,11 @@ definition {
 			fieldName = "Text",
 			fieldValue = "Text Spanish");
 
-		AssertNotEditable(
+		FormFields.viewTextMultilineValue(
+			fieldName = "TextBox",
+			fieldValue = "Text Box");
+
+		AssertEditable(
 			key_fieldName = "TextBox",
 			locator1 = "DDMField#TEXT_BOX");
 	}
@@ -304,6 +308,7 @@ definition {
 	@description = "This is a use case for LPS-69560."
 	@priority = "5"
 	test AddStructureWithWebContentAndGeolocationFields {
+		property portal.acceptance = "true";
 		property testray.component.names = "Web Content Administration";
 
 		JSONWebcontent.addWebContent(
@@ -533,7 +538,8 @@ definition {
 			groupName = "Test Site Name",
 			userEmailAddress = "test1@liferay.com");
 
-		JSONRole.assignRoleToUser(
+		JSONRole.assignSiteRoleToUser(
+			groupName = "Test Site Name",
 			roleTitle = "Site Administrator",
 			userEmailAddress = "test1@liferay.com");
 
@@ -867,6 +873,7 @@ definition {
 
 	@priority = "5"
 	test EditContentWithTitleAndAllFieldsNull {
+		property portal.acceptance = "true";
 		property testray.component.names = "Training,Web Content Administration";
 
 		WebContentNavigator.openWebContentAdmin(siteURLKey = "test-site-name");

@@ -58,36 +58,22 @@ public class ContainerTag extends BaseContainerTag {
 	}
 
 	@Override
-	protected String getEndPage() {
-		return _END_PAGE;
-	}
-
-	@Override
-	protected String getStartPage() {
-		return _START_PAGE;
-	}
-
-	@Override
-	protected String processClassName(Set<String> className) {
+	protected String processCssClasses(Set<String> cssClasses) {
 		if (!_fluid) {
-			className.add("container");
+			cssClasses.add("container");
 		}
 		else {
-			className.add("container-fluid");
+			cssClasses.add("container-fluid");
 
 			if (Validator.isNotNull(_size)) {
-				className.add("container-fluid-max-" + _size);
+				cssClasses.add("container-fluid-max-" + _size);
 			}
 		}
 
-		return super.processClassName(className);
+		return super.processCssClasses(cssClasses);
 	}
 
 	private static final String _ATTRIBUTE_NAMESPACE = "clay:container:";
-
-	private static final String _END_PAGE = "/container/end.jsp";
-
-	private static final String _START_PAGE = "/container/start.jsp";
 
 	private boolean _fluid;
 	private String _size;

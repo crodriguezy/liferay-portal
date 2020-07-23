@@ -1,6 +1,6 @@
 {
 	"dependencies": {
-		"@clayui/css": "3.10.0"
+		"@clayui/css": "3.15.0"
 	},
 	"name": "frontend-compatibility-ie",
 	"private": true,
@@ -8,5 +8,5 @@
 		"checkFormat": "liferay-npm-scripts check",
 		"format": "liferay-npm-scripts fix"
 	},
-	"version": "4.0.8"
+	"version": "4.0.11"
 }

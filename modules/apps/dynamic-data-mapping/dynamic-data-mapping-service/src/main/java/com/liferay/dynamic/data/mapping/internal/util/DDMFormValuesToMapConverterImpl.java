@@ -14,6 +14,7 @@
 
 package com.liferay.dynamic.data.mapping.internal.util;
 
+import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMFormFieldType;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
@@ -27,6 +28,8 @@ import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,6 +59,11 @@ public class DDMFormValuesToMapConverterImpl
 			return Collections.emptyMap();
 		}
 
+		DDMForm ddmForm = ddmStructure.getDDMForm();
+
+		_addMissingDDMFormFieldValues(
+			ddmForm.getDDMFormFields(), ddmFormValues);
+
 		Map<String, DDMFormField> ddmFormFields =
 			ddmStructure.getFullHierarchyDDMFormFieldsMap(true);
 
@@ -68,6 +76,64 @@ public class DDMFormValuesToMapConverterImpl
 		}
 
 		return values;
+	}
+
+	private void _addMissingDDMFormFieldValues(
+		List<DDMFormField> ddmFormFields,
+		DDMFormFieldValue parentDDMFormFieldValue) {
+
+		Map<String, List<DDMFormFieldValue>> ddmFormFieldValues =
+			parentDDMFormFieldValue.getNestedDDMFormFieldValuesMap();
+
+		for (DDMFormField ddmFormField : ddmFormFields) {
+			if (!ddmFormFieldValues.containsKey(ddmFormField.getName())) {
+				DDMFormFieldValue ddmFormFieldValue = new DDMFormFieldValue() {
+					{
+						setInstanceId(StringUtil.randomString());
+						setName(ddmFormField.getName());
+					}
+				};
+
+				parentDDMFormFieldValue.addNestedDDMFormFieldValue(
+					ddmFormFieldValue);
+
+				if (ListUtil.isNotEmpty(
+						ddmFormField.getNestedDDMFormFields())) {
+
+					_addMissingDDMFormFieldValues(
+						ddmFormField.getNestedDDMFormFields(),
+						ddmFormFieldValue);
+				}
+			}
+		}
+	}
+
+	private void _addMissingDDMFormFieldValues(
+		List<DDMFormField> ddmFormFields, DDMFormValues ddmFormValues) {
+
+		Map<String, List<DDMFormFieldValue>> ddmFormFieldValues =
+			ddmFormValues.getDDMFormFieldValuesMap(false);
+
+		for (DDMFormField ddmFormField : ddmFormFields) {
+			if (!ddmFormFieldValues.containsKey(ddmFormField.getName())) {
+				DDMFormFieldValue ddmFormFieldValue = new DDMFormFieldValue() {
+					{
+						setInstanceId(StringUtil.randomString());
+						setName(ddmFormField.getName());
+					}
+				};
+
+				ddmFormValues.addDDMFormFieldValue(ddmFormFieldValue);
+
+				if (ListUtil.isNotEmpty(
+						ddmFormField.getNestedDDMFormFields())) {
+
+					_addMissingDDMFormFieldValues(
+						ddmFormField.getNestedDDMFormFields(),
+						ddmFormFieldValue);
+				}
+			}
+		}
 	}
 
 	private void _addValue(
@@ -139,12 +205,38 @@ public class DDMFormValuesToMapConverterImpl
 		DDMFormField ddmFormField = ddmFormFields.get(
 			ddmFormFieldValue.getName());
 
-		_addValue(ddmFormField, ddmFormFieldValue, values);
+		if (StringUtil.equals(ddmFormField.getType(), "fieldset")) {
+			if (ListUtil.isEmpty(
+					ddmFormFieldValue.getNestedDDMFormFieldValues())) {
 
-		for (DDMFormFieldValue nestedDDMFormFieldValue :
-				ddmFormFieldValue.getNestedDDMFormFieldValues()) {
+				return;
+			}
 
-			_addValues(ddmFormFields, nestedDDMFormFieldValue, values);
+			if (!values.containsKey(ddmFormField.getName())) {
+				values.put(ddmFormField.getName(), new HashMap<>());
+			}
+
+			Map<String, Object> fieldSetInstanceValues =
+				(Map<String, Object>)values.get(ddmFormField.getName());
+
+			if (!fieldSetInstanceValues.containsKey(
+					ddmFormFieldValue.getInstanceId())) {
+
+				fieldSetInstanceValues.put(
+					ddmFormFieldValue.getInstanceId(), new HashMap<>());
+			}
+
+			for (DDMFormFieldValue nestedDDMFormFieldValue :
+					ddmFormFieldValue.getNestedDDMFormFieldValues()) {
+
+				_addValues(
+					ddmFormFields, nestedDDMFormFieldValue,
+					(Map<String, Object>)fieldSetInstanceValues.get(
+						ddmFormFieldValue.getInstanceId()));
+			}
+		}
+		else {
+			_addValue(ddmFormField, ddmFormFieldValue, values);
 		}
 	}
 

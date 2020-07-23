@@ -14,9 +14,11 @@
 
 package com.liferay.source.formatter.checkstyle.checks;
 
+import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.TextFormatter;
 import com.liferay.portal.kernel.util.Validator;
 
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
@@ -337,14 +339,46 @@ public class VariableNameCheck extends BaseCheck {
 	private void _checkTypeName(
 		DetailAST detailAST, String variableName, String typeName) {
 
-		if (variableName.matches("(?i).*" + typeName + "[0-9]*")) {
+		if (variableName.matches("(?i).*" + typeName + "[0-9]*") ||
+			(typeName.equals("Object") &&
+			 !variableName.matches("(o|obj|(.*Obj))[0-9]*"))) {
+
 			return;
+		}
+
+		String expectedVariableName = getExpectedVariableName(typeName);
+
+		if (StringUtil.isUpperCase(variableName)) {
+			expectedVariableName = StringUtil.toUpperCase(
+				StringUtil.replace(
+					TextFormatter.format(expectedVariableName, TextFormatter.K),
+					CharPool.DASH, CharPool.UNDERLINE));
+
+			if (variableName.matches(
+					"(.*_)?" + expectedVariableName + "(_[0-9]+)?")) {
+
+				return;
+			}
+
+			if (variableName.matches(
+					"(.*_)?" + expectedVariableName + "[0-9]+")) {
+
+				log(
+					detailAST, MSG_RENAME_VARIABLE, variableName,
+					StringUtil.replaceLast(
+						variableName, expectedVariableName,
+						expectedVariableName + "_"));
+
+				return;
+			}
 		}
 
 		if (typeName.endsWith("Impl")) {
 			log(
 				detailAST, _MSG_INCORRECT_ENDING_VARIABLE, typeName,
-				getExpectedVariableName(typeName));
+				expectedVariableName);
+
+			return;
 		}
 
 		List<String> enforceTypeNames = getAttributeValues(
@@ -354,7 +388,7 @@ public class VariableNameCheck extends BaseCheck {
 			if (typeName.matches(enforceTypeName)) {
 				log(
 					detailAST, _MSG_INCORRECT_ENDING_VARIABLE, typeName,
-					getExpectedVariableName(typeName));
+					expectedVariableName);
 
 				return;
 			}

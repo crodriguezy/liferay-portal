@@ -16,7 +16,10 @@ package com.liferay.portal.search.contributor;
 
 /**
  * @author Michael C. Han
+ * @deprecated As of Athanasius (7.3.x), replaced by {@link
+ *             com.liferay.portal.search.contributor.constants.ContributorConstants}
  */
+@Deprecated
 public class ContributorConstants {
 
 	public static final String ENTRY_CLASS_NAME_PROPERTY_KEY =

@@ -42,8 +42,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
@@ -91,6 +93,7 @@ public class AccountRoleResourceTest extends BaseAccountRoleResourceTestCase {
 		_irrelevantAccount = _accountResource.postAccount(_randomAccount());
 	}
 
+	@After
 	@Override
 	public void tearDown() throws Exception {
 		super.tearDown();
@@ -100,6 +103,7 @@ public class AccountRoleResourceTest extends BaseAccountRoleResourceTestCase {
 	}
 
 	@Override
+	@Test
 	public void testDeleteAccountRoleUserAssociation() throws Exception {
 		AccountRole accountRole = _addAccountRole(_account);
 		AccountUser accountUser = _addAccountUser(_account);
@@ -123,6 +127,7 @@ public class AccountRoleResourceTest extends BaseAccountRoleResourceTestCase {
 	}
 
 	@Override
+	@Test
 	public void testPostAccountRoleUserAssociation() throws Exception {
 		AccountRole accountRole = _addAccountRole(_account);
 		AccountUser accountUser = _addAccountUser(_account);

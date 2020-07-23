@@ -483,13 +483,12 @@ public class UIItemsBuilder {
 		URLMenuItem urlMenuItem = _addURLUIItem(
 			new URLMenuItem(), menuItems, DLUIItemKeys.DOWNLOAD, label, url);
 
-		Map<String, Object> data = HashMapBuilder.<String, Object>put(
-			"analytics-file-entry-id", _fileEntry.getFileEntryId()
-		).put(
-			"senna-off", "true"
-		).build();
-
-		urlMenuItem.setData(data);
+		urlMenuItem.setData(
+			HashMapBuilder.<String, Object>put(
+				"analytics-file-entry-id", _fileEntry.getFileEntryId()
+			).put(
+				"senna-off", "true"
+			).build());
 
 		urlMenuItem.setMethod("get");
 	}
@@ -770,12 +769,11 @@ public class UIItemsBuilder {
 				"Unable to create permissions URL", exception);
 		}
 
-		StringBundler sb = new StringBundler(6);
+		StringBundler sb = new StringBundler(5);
 
-		sb.append("Liferay.Util.openWindow({dialogIframe: {bodyCssClass: ");
-		sb.append("'dialog-with-footer'}, title: '");
+		sb.append("Liferay.Util.openModal({title: '");
 		sb.append(UnicodeLanguageUtil.get(_resourceBundle, "permissions"));
-		sb.append("', uri: '");
+		sb.append("', url: '");
 		sb.append(HtmlUtil.escapeJS(permissionsURL));
 		sb.append("'});");
 
@@ -1341,9 +1339,10 @@ public class UIItemsBuilder {
 				return false;
 			}
 
-			StagedModelDataHandler stagedModelDataHandler =
-				StagedModelDataHandlerRegistryUtil.getStagedModelDataHandler(
-					FileEntry.class.getName());
+			StagedModelDataHandler<FileEntry> stagedModelDataHandler =
+				(StagedModelDataHandler<FileEntry>)
+					StagedModelDataHandlerRegistryUtil.
+						getStagedModelDataHandler(FileEntry.class.getName());
 
 			if (ArrayUtil.contains(
 					stagedModelDataHandler.getExportableStatuses(),

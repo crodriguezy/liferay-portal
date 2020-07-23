@@ -16,6 +16,7 @@ package com.liferay.data.engine.internal.nativeobject.tracker;
 
 import com.liferay.data.engine.nativeobject.DataEngineNativeObject;
 import com.liferay.data.engine.nativeobject.tracker.DataEngineNativeObjectTracker;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.util.Collection;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class DataEngineNativeObjectTrackerImpl
 
 	@Override
 	public DataEngineNativeObject getDataEngineNativeObject(String className) {
-		return _dataEngineNativeObjects.get(className);
+		return _dataEngineNativeObjects.get(StringUtil.toUpperCase(className));
 	}
 
 	@Override
@@ -54,13 +55,15 @@ public class DataEngineNativeObjectTrackerImpl
 		throws Exception {
 
 		_dataEngineNativeObjects.put(
-			dataEngineNativeObject.getClassName(), dataEngineNativeObject);
+			StringUtil.toUpperCase(dataEngineNativeObject.getClassName()),
+			dataEngineNativeObject);
 	}
 
 	protected void removeDataEngineNativeObject(
 		DataEngineNativeObject dataEngineNativeObject) {
 
-		_dataEngineNativeObjects.remove(dataEngineNativeObject.getClassName());
+		_dataEngineNativeObjects.remove(
+			StringUtil.toUpperCase(dataEngineNativeObject.getClassName()));
 	}
 
 	private final Map<String, DataEngineNativeObject> _dataEngineNativeObjects =

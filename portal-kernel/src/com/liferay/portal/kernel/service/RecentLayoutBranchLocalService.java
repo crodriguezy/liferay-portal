@@ -66,6 +66,10 @@ public interface RecentLayoutBranchLocalService
 	/**
 	 * Adds the recent layout branch to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect RecentLayoutBranchLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param recentLayoutBranch the recent layout branch
 	 * @return the recent layout branch that was added
 	 */
@@ -99,6 +103,10 @@ public interface RecentLayoutBranchLocalService
 	/**
 	 * Deletes the recent layout branch with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect RecentLayoutBranchLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param recentLayoutBranchId the primary key of the recent layout branch
 	 * @return the recent layout branch that was removed
 	 * @throws PortalException if a recent layout branch with the primary key could not be found
@@ -110,6 +118,10 @@ public interface RecentLayoutBranchLocalService
 
 	/**
 	 * Deletes the recent layout branch from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect RecentLayoutBranchLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param recentLayoutBranch the recent layout branch
 	 * @return the recent layout branch that was removed
@@ -255,6 +267,10 @@ public interface RecentLayoutBranchLocalService
 
 	/**
 	 * Updates the recent layout branch in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect RecentLayoutBranchLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param recentLayoutBranch the recent layout branch
 	 * @return the recent layout branch that was updated

@@ -34,8 +34,8 @@ renderResponse.setTitle(LanguageUtil.get(request, "new-import-process"));
 %>
 
 <clay:container-fluid
-	className="container-view"
-	id='<%= renderResponse.getNamespace() + "exportImportOptions" %>'
+	cssClass="container-view"
+	id='<%= liferayPortletResponse.getNamespace() + "exportImportOptions" %>'
 >
 
 	<%

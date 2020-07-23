@@ -34,7 +34,7 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(resourceBundle, "
 PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(resourceBundle, "edit-property"), currentURL);
 %>
 
-<portlet:actionURL name="/analytics/edit_channel" var="editChannelURL" />
+<portlet:actionURL name="/analytics_settings/edit_channel" var="editChannelURL" />
 
 <clay:container-fluid>
 	<clay:row>
@@ -57,8 +57,10 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(resourceBundle, "
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="channelId" type="hidden" value="<%= channelId %>" />
 
-	<div class="portlet-analytics-settings sheet sheet-lg">
-		<h2 class="autofit-row">
+	<clay:sheet
+		cssClass="portlet-analytics-settings"
+	>
+		<h2>
 			<liferay-ui:message arguments="<%= channelName %>" key="sites-to-sync-x" />
 		</h2>
 
@@ -127,5 +129,5 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(resourceBundle, "
 				<aui:button type="submit" value="done" />
 			</aui:button-row>
 		</div>
-	</div>
+	</clay:sheet>
 </aui:form>

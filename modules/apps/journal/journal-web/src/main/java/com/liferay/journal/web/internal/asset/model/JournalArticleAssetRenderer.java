@@ -22,9 +22,9 @@ import com.liferay.asset.kernel.model.BaseJSPAssetRenderer;
 import com.liferay.asset.kernel.model.DDMFormValuesReader;
 import com.liferay.dynamic.data.mapping.util.FieldsToDDMFormValuesConverter;
 import com.liferay.journal.configuration.JournalServiceConfiguration;
+import com.liferay.journal.constants.JournalArticleConstants;
 import com.liferay.journal.constants.JournalPortletKeys;
 import com.liferay.journal.model.JournalArticle;
-import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.model.JournalArticleDisplay;
 import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.journal.service.JournalContentSearchLocalServiceUtil;
@@ -424,6 +424,11 @@ public class JournalArticleAssetRenderer
 					getClassName(), getClassPK(), themeDisplay);
 
 			if (Validator.isNotNull(friendlyURL)) {
+				if (!_article.isApproved()) {
+					friendlyURL =
+						friendlyURL + StringPool.SLASH + _article.getId();
+				}
+
 				return friendlyURL;
 			}
 		}
@@ -441,7 +446,7 @@ public class JournalArticleAssetRenderer
 
 		if (!_article.isApproved()) {
 			sb.append(StringPool.SLASH);
-			sb.append(_article.getVersion());
+			sb.append(_article.getId());
 		}
 
 		return PortalUtil.addPreservedParameters(themeDisplay, sb.toString());

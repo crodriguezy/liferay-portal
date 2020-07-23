@@ -60,14 +60,14 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "new-cus
 
 <liferay-frontend:edit-form>
 	<liferay-frontend:edit-form-body>
-		<div class="sheet-header">
+		<clay:sheet-header>
 			<h2 class="sheet-title">
 				<liferay-ui:message key="new-custom-field" />
 			</h2>
-		</div>
+		</clay:sheet-header>
 
 		<clay:row
-			className="clay-site-row-spacer"
+			cssClass="clay-site-row-spacer"
 		>
 			<clay:col
 				size="12"

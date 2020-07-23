@@ -63,6 +63,16 @@ public class NavigationMenuSerDes {
 		DateFormat liferayToJSONDateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 
+		if (navigationMenu.getActions() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"actions\": ");
+
+			sb.append(_toJSON(navigationMenu.getActions()));
+		}
+
 		if (navigationMenu.getCreator() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -152,6 +162,20 @@ public class NavigationMenuSerDes {
 			sb.append("]");
 		}
 
+		if (navigationMenu.getNavigationType() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"navigationType\": ");
+
+			sb.append("\"");
+
+			sb.append(navigationMenu.getNavigationType());
+
+			sb.append("\"");
+		}
+
 		if (navigationMenu.getSiteId() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -183,6 +207,13 @@ public class NavigationMenuSerDes {
 
 		DateFormat liferayToJSONDateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+		if (navigationMenu.getActions() == null) {
+			map.put("actions", null);
+		}
+		else {
+			map.put("actions", String.valueOf(navigationMenu.getActions()));
+		}
 
 		if (navigationMenu.getCreator() == null) {
 			map.put("creator", null);
@@ -234,6 +265,15 @@ public class NavigationMenuSerDes {
 				String.valueOf(navigationMenu.getNavigationMenuItems()));
 		}
 
+		if (navigationMenu.getNavigationType() == null) {
+			map.put("navigationType", null);
+		}
+		else {
+			map.put(
+				"navigationType",
+				String.valueOf(navigationMenu.getNavigationType()));
+		}
+
 		if (navigationMenu.getSiteId() == null) {
 			map.put("siteId", null);
 		}
@@ -262,7 +302,14 @@ public class NavigationMenuSerDes {
 			NavigationMenu navigationMenu, String jsonParserFieldName,
 			Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "creator")) {
+			if (Objects.equals(jsonParserFieldName, "actions")) {
+				if (jsonParserFieldValue != null) {
+					navigationMenu.setActions(
+						(Map)NavigationMenuSerDes.toMap(
+							(String)jsonParserFieldValue));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "creator")) {
 				if (jsonParserFieldValue != null) {
 					navigationMenu.setCreator(
 						CreatorSerDes.toDTO((String)jsonParserFieldValue));
@@ -304,6 +351,13 @@ public class NavigationMenuSerDes {
 						).toArray(
 							size -> new NavigationMenuItem[size]
 						));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "navigationType")) {
+				if (jsonParserFieldValue != null) {
+					navigationMenu.setNavigationType(
+						NavigationMenu.NavigationType.create(
+							(String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "siteId")) {

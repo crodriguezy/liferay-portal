@@ -85,14 +85,11 @@ definition {
 	}
 
 	macro mergeTagsSelectAdditionalTags {
+		WaitForLiferayEvent.initializeLiferayEventLog();
+
 		Click(locator1 = "Button#SELECT");
 
 		SelectFrameTop();
-
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
 
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
@@ -103,9 +100,15 @@ definition {
 		Button.clickDone();
 	}
 
+	macro openTagsAdmin {
+		Navigator.openWithAppendToBaseURL(
+			baseURL = "${baseURL}",
+			urlAppend = "group/${siteURLKey}/~/control_panel/manage/-/tags_admin/");
+	}
+
 	macro tearDownCP {
 		if ("${stagingSite}" == "true") {
-			ProductMenu.gotoStagingSite();
+			ProductMenu.gotoStagingSite(site = "${site}");
 		}
 		else {
 			Navigator.openURL();
@@ -113,7 +116,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Categorization",
-			panel = "Site Administration",
 			portlet = "Tags");
 
 		while (IsElementNotPresent(locator1 = "Message#EMPTY_INFO")) {

@@ -12,14 +12,13 @@
  * details.
  */
 
-import updateItemConfig from '../actions/updateItemConfig';
+import updateRowColumnsAction from '../actions/updateRowColumns';
 import LayoutService from '../services/LayoutService';
 
 export default function updateRowColumns({
 	itemId,
 	numberOfColumns,
 	segmentsExperienceId,
-	viewportSizeId,
 }) {
 	return (dispatch) =>
 		LayoutService.updateRowColumns({
@@ -27,8 +26,12 @@ export default function updateRowColumns({
 			numberOfColumns,
 			onNetworkStatus: dispatch,
 			segmentsExperienceId,
-			viewportSizeId,
 		}).then(({layoutData}) => {
-			dispatch(updateItemConfig({layoutData}));
+			dispatch(
+				updateRowColumnsAction({
+					itemId,
+					layoutData,
+				})
+			);
 		});
 }

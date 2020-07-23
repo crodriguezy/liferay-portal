@@ -99,19 +99,21 @@ public class UpdateConfigurationValuesMVCActionCommand
 				continue;
 			}
 
-			Iterator<String> keys =
+			Iterator<String> iterator =
 				defaultEditableFragmentEntryProcessorJSONObject.keys();
 
-			while (keys.hasNext()) {
-				String key = keys.next();
+			while (iterator.hasNext()) {
+				String key = iterator.next();
 
-				if (!editableFragmentEntryProcessorJSONObject.has(key)) {
-					editableFragmentEntryProcessorJSONObject.put(
-						key,
-						defaultEditableFragmentEntryProcessorJSONObject.get(
-							key));
+				if (editableFragmentEntryProcessorJSONObject.has(key)) {
+					defaultEditableFragmentEntryProcessorJSONObject.put(
+						key, editableFragmentEntryProcessorJSONObject.get(key));
 				}
 			}
+
+			editableValuesJSONObject.put(
+				fragmentEntryProcessorKey,
+				defaultEditableFragmentEntryProcessorJSONObject);
 		}
 
 		return editableValuesJSONObject;

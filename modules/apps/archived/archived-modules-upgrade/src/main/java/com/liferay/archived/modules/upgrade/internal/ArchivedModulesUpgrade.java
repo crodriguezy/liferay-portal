@@ -50,6 +50,15 @@ public class ArchivedModulesUpgrade implements UpgradeStepRegistrator {
 
 			_removeModuleData(
 				_archivedModulesUpgradeConfiguration::
+					removeDictionaryModuleData,
+				"com.liferay.dictionary.web", UpgradeDictionary::new);
+
+			_removeModuleData(
+				_archivedModulesUpgradeConfiguration::removeDirectoryModuleData,
+				"com.liferay.directory.web", UpgradeDirectory::new);
+
+			_removeModuleData(
+				_archivedModulesUpgradeConfiguration::
 					removeInvitationModuleData,
 				"com.liferay.invitation.web", UpgradeInvitation::new);
 

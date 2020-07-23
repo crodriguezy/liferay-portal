@@ -71,17 +71,16 @@ public class AnalyticsTopHeadJSPDynamicInclude extends BaseJSPDynamicInclude {
 			AnalyticsWebKeys.ANALYTICS_CLIENT_CHANNEL_ID,
 			_getLiferayAnalyticsChannelId(httpServletRequest, themeDisplay));
 
-		Map<String, String> analyticsClientConfig = HashMapBuilder.put(
-			"dataSourceId",
-			_getLiferayAnalyticsDataSourceId(themeDisplay.getCompany())
-		).put(
-			"endpointUrl",
-			_getLiferayAnalyticsEndpointURL(themeDisplay.getCompany())
-		).build();
-
 		httpServletRequest.setAttribute(
 			AnalyticsWebKeys.ANALYTICS_CLIENT_CONFIG,
-			_serialize(analyticsClientConfig));
+			_serialize(
+				HashMapBuilder.put(
+					"dataSourceId",
+					_getLiferayAnalyticsDataSourceId(themeDisplay.getCompany())
+				).put(
+					"endpointUrl",
+					_getLiferayAnalyticsEndpointURL(themeDisplay.getCompany())
+				).build()));
 
 		httpServletRequest.setAttribute(
 			AnalyticsWebKeys.ANALYTICS_CLIENT_GROUP_IDS,
@@ -89,6 +88,12 @@ public class AnalyticsTopHeadJSPDynamicInclude extends BaseJSPDynamicInclude {
 				PrefsPropsUtil.getStringArray(
 					themeDisplay.getCompanyId(), "liferayAnalyticsGroupIds",
 					StringPool.COMMA)));
+
+		Layout layout = themeDisplay.getLayout();
+
+		httpServletRequest.setAttribute(
+			AnalyticsWebKeys.ANALYTICS_CLIENT_READABLE_CONTENT,
+			Boolean.toString(layout.isTypeAssetDisplay()));
 
 		super.include(httpServletRequest, httpServletResponse, key);
 	}
@@ -128,9 +133,14 @@ public class AnalyticsTopHeadJSPDynamicInclude extends BaseJSPDynamicInclude {
 		Group group = layout.getGroup();
 
 		if (Objects.equals(group.getGroupKey(), "Forms")) {
-			group = _groupLocalService.fetchGroup(
+			Group refererGroup = _groupLocalService.fetchGroup(
 				GetterUtil.getLong(
 					httpServletRequest.getAttribute("refererGroupId")));
+
+			if (refererGroup != null) {
+				return refererGroup.getTypeSettingsProperty(
+					"analyticsChannelId");
+			}
 		}
 
 		return group.getTypeSettingsProperty("analyticsChannelId");

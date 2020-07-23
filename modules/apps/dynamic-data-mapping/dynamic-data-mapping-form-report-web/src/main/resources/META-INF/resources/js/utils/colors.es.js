@@ -13,13 +13,13 @@
  */
 
 const COLORS = [
-	'#4b9fff',
+	'#4b9bff',
+	'#af78ff',
+	'#50d2a0',
 	'#ffb46e',
 	'#ff5f5f',
-	'#50d2a0',
 	'#ff73c3',
 	'#9be169',
-	'#af78ff',
 	'#ffd76e',
 	'#5fc8ff',
 	'#7785ff',
@@ -54,5 +54,14 @@ const COLORS = [
 	'#feefef',
 	'#393a4a',
 ];
+
+const NAMED_COLORS = {
+	blueDark: '#272833',
+	gray: '#cdced9',
+	lightBlue: '#4b9bff',
+	white: '#ffffff',
+};
+
+export {NAMED_COLORS};
 
 export default (index) => COLORS[index % COLORS.length];

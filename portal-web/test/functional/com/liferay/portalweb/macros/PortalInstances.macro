@@ -95,8 +95,8 @@ definition {
 
 		SignIn.signInSpecificURL(url = "${defaultPortalURL}");
 
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
+		ApplicationsMenu.gotoPortlet(
+			category = "System",
 			panel = "Control Panel",
 			portlet = "Virtual Instances");
 

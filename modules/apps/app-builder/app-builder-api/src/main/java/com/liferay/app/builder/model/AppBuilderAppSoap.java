@@ -40,10 +40,12 @@ public class AppBuilderAppSoap implements Serializable {
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
 		soapModel.setActive(model.isActive());
+		soapModel.setDdlRecordSetId(model.getDdlRecordSetId());
 		soapModel.setDdmStructureId(model.getDdmStructureId());
 		soapModel.setDdmStructureLayoutId(model.getDdmStructureLayoutId());
 		soapModel.setDeDataListViewId(model.getDeDataListViewId());
 		soapModel.setName(model.getName());
+		soapModel.setScope(model.getScope());
 
 		return soapModel;
 	}
@@ -173,6 +175,14 @@ public class AppBuilderAppSoap implements Serializable {
 		_active = active;
 	}
 
+	public long getDdlRecordSetId() {
+		return _ddlRecordSetId;
+	}
+
+	public void setDdlRecordSetId(long ddlRecordSetId) {
+		_ddlRecordSetId = ddlRecordSetId;
+	}
+
 	public long getDdmStructureId() {
 		return _ddmStructureId;
 	}
@@ -205,6 +215,14 @@ public class AppBuilderAppSoap implements Serializable {
 		_name = name;
 	}
 
+	public String getScope() {
+		return _scope;
+	}
+
+	public void setScope(String scope) {
+		_scope = scope;
+	}
+
 	private String _uuid;
 	private long _appBuilderAppId;
 	private long _groupId;
@@ -214,9 +232,11 @@ public class AppBuilderAppSoap implements Serializable {
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _active;
+	private long _ddlRecordSetId;
 	private long _ddmStructureId;
 	private long _ddmStructureLayoutId;
 	private long _deDataListViewId;
 	private String _name;
+	private String _scope;
 
 }

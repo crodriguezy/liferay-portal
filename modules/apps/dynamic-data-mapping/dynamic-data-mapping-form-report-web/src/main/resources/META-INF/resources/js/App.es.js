@@ -14,67 +14,22 @@
 
 import React from 'react';
 
-import Card from './components/card/Card.es';
-import BarChart from './components/chart/bar/BarChart.es';
-import PieChart from './components/chart/pie/PieChart.es';
-import EmptyState from './components/empty-state/EmptyState.es';
-import toDataArray, {sumTotalEntries} from './utils/data.es';
-import fieldTypes from './utils/fieldTypes.es';
+import CardList from './components/card/CardList.es';
+import Sidebar from './components/sidebar/Sidebar.es';
+import {SidebarContextProvider} from './components/sidebar/SidebarContext.es';
 
-const chartFactory = (type, values, totalEntries) => {
-	switch (type) {
-		case 'checkbox_multiple':
-			return (
-				<BarChart
-					data={toDataArray(values)}
-					totalEntries={totalEntries}
-				/>
-			);
+export default ({
+	data,
+	fields,
+	formReportRecordsFieldValuesURL,
+	portletNamespace,
+}) => (
+	<SidebarContextProvider
+		formReportRecordsFieldValuesURL={formReportRecordsFieldValuesURL}
+		portletNamespace={portletNamespace}
+	>
+		<CardList data={data} fields={fields} />
 
-		case 'radio':
-			return (
-				<PieChart
-					data={toDataArray(values)}
-					totalEntries={totalEntries}
-				/>
-			);
-
-		default:
-			return null;
-	}
-};
-
-export default ({data, fields}) => {
-	let hasCards = false;
-
-	const cards = fields.map(({name, type}, index) => {
-		const {values = {}} = data[name] || {};
-		const totalEntries = sumTotalEntries(values);
-		const chart = chartFactory(type, values, totalEntries);
-
-		if (chart === null) {
-			return null;
-		}
-		else {
-			hasCards = true;
-		}
-
-		const field = {
-			name,
-			type,
-			...fieldTypes[type],
-		};
-
-		return (
-			<Card field={field} key={index} totalEntries={totalEntries}>
-				{chart}
-			</Card>
-		);
-	});
-
-	if (!hasCards) {
-		return <EmptyState />;
-	}
-
-	return cards;
-};
+		<Sidebar />
+	</SidebarContextProvider>
+);

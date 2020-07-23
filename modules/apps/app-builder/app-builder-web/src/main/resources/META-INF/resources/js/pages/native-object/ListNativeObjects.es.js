@@ -14,57 +14,18 @@
 
 import React from 'react';
 
-import {AppNavigationBar} from '../../App.es';
-import ControlMenu from '../../components/control-menu/ControlMenu.es';
-import ListView from '../../components/list-view/ListView.es';
-import {fromNow} from '../../utils/time.es';
+import ListObjects from '../object/ListObjects.es';
 
-const COLUMNS = [
-	{
-		key: 'name',
-		sortable: true,
-		value: Liferay.Language.get('name'),
-	},
-	{
-		key: 'dateCreated',
-		sortable: true,
-		value: Liferay.Language.get('create-date'),
-	},
-	{
-		asc: false,
-		key: 'dateModified',
-		sortable: true,
-		value: Liferay.Language.get('modified-date'),
-	},
-];
-
-export default () => {
-	return (
-		<>
-			<ControlMenu
-				title={Liferay.Language.get(
-					'javax.portlet.title.com_liferay_app_builder_web_internal_portlet_ObjectsPortlet'
-				)}
-			/>
-
-			<AppNavigationBar />
-
-			<ListView
-				columns={COLUMNS}
-				emptyState={{
-					title: Liferay.Language.get(
-						'there-are-no-native-objects-yet'
-					),
-				}}
-				endpoint={`/o/data-engine/v2.0/data-definitions/by-content-type/native-object`}
-			>
-				{(item) => ({
-					...item,
-					dateCreated: fromNow(item.dateCreated),
-					dateModified: fromNow(item.dateModified),
-					name: item.name.en_US,
-				})}
-			</ListView>
-		</>
-	);
-};
+export default ({history}) => (
+	<ListObjects
+		history={history}
+		listViewProps={{
+			emptyState: {
+				title: Liferay.Language.get('there-are-no-native-objects-yet'),
+			},
+			endpoint:
+				'/o/data-engine/v2.0/data-definitions/by-content-type/native-object',
+		}}
+		objectType="native-object"
+	/>
+);

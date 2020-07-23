@@ -1,60 +1,66 @@
 definition {
 
-	macro addNewChangeList {
+	macro cancelPublicationCreation {
+		ApplicationsMenu.gotoPortlet(
+			category = "Content",
+			panel = "Applications",
+			portlet = "Manage Publications");
+
 		Click(locator1 = "Button#PLUS");
 
 		Type(
-			locator1 = "ChangeList#CHANGE_LIST_NAME",
-			value1 = "${changeListName}");
-
-		Type(
-			locator1 = "ChangeList#CHANGE_LIST_DESCRIPTION",
-			value1 = "${changeListDescription}");
-
-		Button.clickSave();
-	}
-
-	macro cancelChangeListCreation {
-		Click(locator1 = "Button#PLUS");
+			locator1 = "ChangeList#PUBLICATION_NAME",
+			value1 = "${publicationName}");
 
 		Button.clickCancel();
-
-		AssertTextEquals(
-			locator1 = "ChangeList#OVERVIEW_PAGE_TITLE",
-			value1 = "Select Change List");
 	}
 
-	macro changeUserSettingsPopuConfirmation {
-		Click(locator1 = "ChangeList#CHANGE_LIST_NAVIGATION_USER_SETTINGS");
+	macro createNewPublication {
+		if ("${gotoManagePublications}" == "true") {
+			ApplicationsMenu.gotoPortlet(
+				category = "Content",
+				panel = "Applications",
+				portlet = "Manage Publications");
 
-		if ("${changeUserPopupConfirmation}" == "enable") {
-			Check.checkToggleSwitch(locator1 = "ChangeList#CHANGE_LIST_USER_SETTINGS_POPUP_ENABLED");
+			Click(locator1 = "Button#PLUS");
 		}
 		else {
-			Uncheck.uncheckToggleSwitch(locator1 = "ChangeList#CHANGE_LIST_USER_SETTINGS_POPUP_ENABLED");
+			Click(locator1 = "ChangeList#CHANGE_LIST_INDICATOR_BUTTON");
+
+			MenuItem.click(menuItem = "Create New Publication");
 		}
 
-		Click(locator1 = "Button#SAVE");
+		if (isSet(publicationName)) {
+			Type(
+				locator1 = "ChangeList#PUBLICATION_NAME",
+				value1 = "${publicationName}");
+		}
 
-		Alert.viewSuccessMessage();
+		if (isSet(publicationDescription)) {
+			Type(
+				locator1 = "ChangeList#PUBLICATION_DESCRIPTION",
+				value1 = "${publicationDescription}");
+		}
 
-		Click(locator1 = "ChangeList#CHANGE_LIST_NAVIGATION_GLOBAL_SETTINGS");
+		Button.click(button = "Create");
+
+		Pause(locator1 = "5000");
 	}
 
-	macro confirmSwitchingChangeList {
-		AssertConfirm.assertPartialConfirmation(value1 = "Do you want to switch to ${changeListName} change list?");
-	}
+	macro deletePublication {
+		Click.waitForMenuToggleJSClick(locator1 = "Icon#BODY_VERTICAL_ELLIPSIS");
 
-	macro deleteChangeListFromOverviewScreen {
-		ClickNoError(locator1 = "Icon#DELETE");
+		ClickNoError(
+			key_menuItem = "Delete",
+			locator1 = "MenuItem#ANY_MENU_ITEM");
 
-		AssertConfirm(value1 = "Are you sure you want to delete '${changeListName}' change list?");
+		AssertConfirm(value1 = "Are you sure you want to delete this publication? You will permanently lose the changes in this publication. You will not be able to undo this operation.");
 
 		AssertTextEquals(
-			locator1 = "ChangeList#OVERVIEW_PAGE_TITLE",
-			value1 = "Select Change List");
+			locator1 = "ChangeList#MANGE_PUBLICATIONS_PAGE_TITLE",
+			value1 = "Manage Publications");
 
-		Alert.viewSuccessMessageText(successMessage = "Production has been checked out. All your modifications will be added to the live site immediately.");
+		Alert.viewSuccessMessage();
 	}
 
 	macro disableChangeList {
@@ -74,149 +80,54 @@ definition {
 			Click(locator1 = "ChangeListSettings#SAVE_AND_GO_TO_OVERVIEW_BUTTON");
 		}
 		else {
-			Click(locator1 = "Button#SAVE");
+			Click(locator1 = "Button#SUBMIT");
 		}
 
 		Alert.viewSuccessMessage();
 	}
 
-	macro gotoActivate {
-		Click.waitForMenuToggleJSClick(
-			key_rowEntry = "${rowEntry}",
-			locator1 = "Icon#TABLE_VERTICAL_ELLIPSIS");
+	macro publishPublication {
+		Click(locator1 = "ChangeList#CHANGE_LIST_INDICATOR_BUTTON");
 
-		MenuItem.clickNoError(menuItem = "Activate");
-	}
-
-	macro gotoDelete {
-		Click.waitForMenuToggleJSClick(
-			key_rowEntry = "${rowEntry}",
-			locator1 = "Icon#TABLE_VERTICAL_ELLIPSIS");
-
-		MenuItem.clickNoError(menuItem = "Delete");
-
-		AssertConfirm(value1 = "Are you sure you want to delete '${rowEntry}' change list?");
-	}
-
-	macro publishChangeList {
-		Click(locator1 = "Button#PUBLISH");
-
-		SelectFrame.selectFrameTop();
+		MenuItem.click(menuItem = "Prepare to Publish");
 
 		Click(locator1 = "ChangeList#PUBLISH_BUTTON");
 
 		Alert.viewSuccessMessage();
 
+		var key_navBarTitle = "History";
+
 		AssertTextEquals(
-			locator1 = "ChangeList#OVERVIEW_PAGE_TITLE",
+			locator1 = "ChangeList#MANGE_PUBLICATIONS_NAVBAR_TITLE",
 			value1 = "History");
 
-		Pause(locator1 = "5000");
+		// Workaround LPS-115320
 
 		Refresh();
 
-		var key_changeListName = "${changeListName}";
+		var key_publicationName = "${publicationName}";
 
 		AssertTextEquals(
-			locator1 = "ChangeList#HISTORY_CHANGE_LIST_STATUS",
+			locator1 = "ChangeList#HISTORY_PUBLICATION_STATUS",
 			value1 = "Published");
 	}
 
-	macro searchForChangeList {
-		Search.searchCP(searchTerm = "${changeListName}");
+	macro selectPublication {
+		Click(locator1 = "ChangeList#CHANGE_LIST_INDICATOR_BUTTON");
 
-		var key_changeListName = "${changeListName}";
+		MenuItem.click(menuItem = "Select a Publication");
+
+		SelectFrame(locator1 = "IFrame#DIALOG");
+
+		var key_publicationName = "${publicationName}";
+
+		Click(
+			locator1 = "ChangeList#SELECT_PUBLICATION_NAME",
+			value1 = "${publicationName}");
 
 		AssertTextPresent(
-			locator1 = "ChangeList#CHANGE_LIST_TABLE_ENTRY_NAME",
-			value1 = "${changeListName}");
-	}
-
-	macro selectChangeList {
-		Click(locator1 = "ChangeList#SELECT_CHANGE_LIST_DROPDOWN");
-
-		var key_changeListName = "${changeListName}";
-
-		if ("${changeListName}" == "Select Change List") {
-			Click(locator1 = "ChangeList#SELECT_CHANGE_LIST");
-
-			AssertTextEquals(
-				locator1 = "ChangeList#OVERVIEW_PAGE_TITLE",
-				value1 = "Select Change List");
-		}
-		else {
-			ClickNoError(
-				key_changeListName = "${changeListName}",
-				locator1 = "ChangeList#SELECT_CHANGE_LIST_VALUE");
-
-			if ( "${changeListConfirmEnabled}" == "true") {
-				ChangeList.confirmSwitchingChangeList(changeListName = "${changeListName}");
-			}
-
-			AssertTextEquals(
-				locator1 = "ChangeList#OVERVIEW_PAGE_TITLE",
-				value1 = "Overview");
-		}
-	}
-
-	macro selectChangeListMenuItem {
-		LexiconEntry.gotoEntryMenuItem(
-			menuItem = "${menuItem}",
-			rowEntry = "${rowEntry}");
-	}
-
-	macro viewAddedItemCounter {
-		AssertTextEquals(
-			locator1 = "ChangeList#CHANGE_LIST_ADDED",
-			value1 = "${nbrOfAddedItems}");
-	}
-
-	macro viewChangeOnOverview {
-		var key_contentTitle = "${contentTitle}";
-
-		AssertTextEquals(
-			locator1 = "ChangeList#LATEST_CHANGES_TITLE",
-			value1 = "${contentTitle}");
-
-		var key_contentType = "${contentType}";
-
-		AssertTextEquals(
-			locator1 = "ChangeList#LATEST_CHANGES_CONTENT_TYPE",
-			value1 = "${contentType}");
-
-		var key_contentChangeType = "${contentChangeType}";
-
-		AssertTextEquals(
-			locator1 = "ChangeList#LATEST_CHANGES_CHANGE_TYPE",
-			value1 = "${contentChangeType}");
-	}
-
-	macro viewContentTypeOnOverview {
-		var key_contentTitle = "${contentTitle}";
-
-		AssertTextEquals(
-			locator1 = "ChangeList#LATEST_CHANGES_CONTENT_TYPE",
-			value1 = "${contentType}");
-	}
-
-	macro viewDeletedItemCounter {
-		AssertTextEquals(
-			locator1 = "ChangeList#CHANGE_LIST_DELETED",
-			value1 = "${nbrOfDeletedItems}");
-	}
-
-	macro viewModifiedItemCounter {
-		AssertTextEquals(
-			locator1 = "ChangeList#CHANGE_LIST_MODIFIED",
-			value1 = "${nbrOfModifiedItems}");
-	}
-
-	macro viewNoChangeListInSelectDropdown {
-		Click(locator1 = "ChangeList#SELECT_CHANGE_LIST_DROPDOWN");
-
-		AssertElementNotPresent(
-			key_changeListName = "${changeListName}",
-			locator1 = "ChangeList#SELECT_CHANGE_LIST_VALUE");
+			locator1 = "ChangeList#CHANGE_LIST_INDICATOR_TITLE",
+			value1 = "${publicationName}");
 	}
 
 	macro viewNoStagingMenuitemsNotAvailable {
@@ -224,46 +135,31 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Publishing",
-			panel = "Site Administration",
-			portlet = "Staging");
+			portlet = "Staging",
+			site = "${site}");
 
 		Alert.viewWarningSpecific(warningMessage = "Change lists are enabled for the current virtual instance. Staging and change lists cannot be used together.");
 	}
 
-	macro viewPublishedChangeListDetails {
-		AssertTextEquals(
-			locator1 = "ChangeList#OVERVIEW_CHANGE_LIST_NAME",
-			value1 = "${changeListName}");
+	macro viewPublishedPublicationDetails {
+		key_publicationName = "${publicationName}";
 
 		AssertTextEquals(
-			locator1 = "ChangeList#OVERVIEW_DESCRIPTION",
-			value1 = "${changeListDescription}");
+			locator1 = "ChangeList#PUBLISHED_PUBLICATIONS_NAME",
+			value1 = "${publicationName}");
 
-		AssertTextPresent(
-			locator1 = "ChangeList#OVERVIEW_PUBLISHED_BY",
-			value1 = "${changeListPublishedBy}");
-	}
-
-	macro viewSpecificChangeListHistory {
-		var key_contentTitle = "${contentTitle}";
-
-		AssertTextEquals(
-			locator1 = "ChangeList#VIEW_CHANGE_LIST_NAME_HISTORY",
-			value1 = "${changeListName}");
+		AssertElementPresent(
+			key_publicationPublishedBy = "${publicationPublishedBy}",
+			locator1 = "ChangeList#PUBLICATIONS_PUBLISHED_BY");
 	}
 
 	macro viewWarningOnPortletExport {
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
-			portlet = "${portletName}");
+			portlet = "${portletName}",
+			site = "${site}");
 
 		LAR._gotoExportImport();
-
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
 
 		SelectFrame(locator1 = "IFrame#CONFIGURATION_DIALOG");
 
@@ -275,15 +171,10 @@ definition {
 	macro viewWarningOnPortletImport {
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
-			portlet = "${portletName}");
+			portlet = "${portletName}",
+			site = "${site}");
 
 		LAR._gotoExportImport();
-
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
 
 		SelectFrame(locator1 = "IFrame#CONFIGURATION_DIALOG");
 
@@ -297,38 +188,16 @@ definition {
 	macro viewWarningOnSiteExportImport {
 		ProductMenu.gotoPortlet(
 			category = "Publishing",
-			panel = "Site Administration",
-			portlet = "${portletName}");
+			portlet = "${portletName}",
+			site = "${site}");
 
 		Alert.viewWarningSpecific(warningMessage = "Change lists are enabled for the current virtual instance. Export/Import and change lists cannot be used together.");
 	}
 
 	macro workOnProduction {
-		if (IsTextEqual(locator1 = "ChangeList#OVERVIEW_PAGE_TITLE", value1 = "Overview")) {
-			Click(locator1 = "ChangeList#SELECT_CHANGE_LIST_DROPDOWN");
+		Click(locator1 = "ChangeList#CHANGE_LIST_INDICATOR_BUTTON");
 
-			ClickNoError(
-				key_changeListName = "Work on Production",
-				locator1 = "ChangeList#SELECT_CHANGE_LIST_VALUE");
-
-			if ("${changeListConfirmEnabled}" == "true") {
-				ChangeList.confirmSwitchingChangeList(changeListName = "Work on Production");
-			}
-
-			AssertTextEquals(
-				locator1 = "ChangeList#OVERVIEW_PAGE_TITLE",
-				value1 = "Select Change List");
-		}
-		else {
-			ClickNoError(
-				key_changeListName = "Work on Production",
-				locator1 = "ChangeList#CHANGE_LIST_NAME_CARD_VIEW");
-			if ("${changeListConfirmEnabled}" == "true") {
-				ChangeList.confirmSwitchingChangeList(changeListName = "Work on Production");
-			}
-		}
-
-		Alert.viewSuccessMessageText(successMessage = "Production has been checked out. All your modifications will be added to the live site immediately.");
+		MenuItem.click(menuItem = "Work on Production");
 	}
 
 }

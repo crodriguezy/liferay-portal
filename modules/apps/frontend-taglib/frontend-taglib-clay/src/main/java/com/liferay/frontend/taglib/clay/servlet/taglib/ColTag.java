@@ -85,49 +85,35 @@ public class ColTag extends BaseContainerTag {
 	}
 
 	@Override
-	protected String getEndPage() {
-		return _END_PAGE;
-	}
-
-	@Override
-	protected String getStartPage() {
-		return _START_PAGE;
-	}
-
-	@Override
-	protected String processClassName(Set<String> className) {
+	protected String processCssClasses(Set<String> cssClasses) {
 		if (Validator.isNotNull(_size)) {
-			className.add("col-" + _size);
+			cssClasses.add("col-" + _size);
 		}
 
 		if (Validator.isNotNull(_lg)) {
-			className.add("col-lg-" + _lg);
+			cssClasses.add("col-lg-" + _lg);
 		}
 
 		if (Validator.isNotNull(_md)) {
-			className.add("col-md-" + _md);
+			cssClasses.add("col-md-" + _md);
 		}
 
 		if (Validator.isNotNull(_sm)) {
-			className.add("col-sm-" + _sm);
+			cssClasses.add("col-sm-" + _sm);
 		}
 
 		if (Validator.isNotNull(_xl)) {
-			className.add("col-xl-" + _xl);
+			cssClasses.add("col-xl-" + _xl);
 		}
 
-		if (className.isEmpty()) {
-			className.add("col");
+		if (cssClasses.isEmpty()) {
+			cssClasses.add("col");
 		}
 
-		return super.processClassName(className);
+		return super.processCssClasses(cssClasses);
 	}
 
 	private static final String _ATTRIBUTE_NAMESPACE = "clay:col:";
-
-	private static final String _END_PAGE = "/col/end.jsp";
-
-	private static final String _START_PAGE = "/col/start.jsp";
 
 	private String _lg;
 	private String _md;

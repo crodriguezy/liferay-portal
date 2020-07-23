@@ -31,6 +31,10 @@ public class AccountLocalServiceWrapper
 	/**
 	 * Adds the account to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AccountLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param account the account
 	 * @return the account that was added
 	 */
@@ -68,6 +72,10 @@ public class AccountLocalServiceWrapper
 	/**
 	 * Deletes the account from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AccountLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param account the account
 	 * @return the account that was removed
 	 */
@@ -80,6 +88,10 @@ public class AccountLocalServiceWrapper
 
 	/**
 	 * Deletes the account with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AccountLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param accountId the primary key of the account
 	 * @return the account that was removed
@@ -291,6 +303,10 @@ public class AccountLocalServiceWrapper
 
 	/**
 	 * Updates the account in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AccountLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param account the account
 	 * @return the account that was updated

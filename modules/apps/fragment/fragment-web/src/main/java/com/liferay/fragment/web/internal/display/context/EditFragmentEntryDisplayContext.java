@@ -152,8 +152,18 @@ public class EditFragmentEntryDisplayContext {
 			return _fragmentEntryId;
 		}
 
-		_fragmentEntryId = ParamUtil.getLong(
+		long fragmentEntryId = ParamUtil.getLong(
 			_httpServletRequest, "fragmentEntryId");
+
+		FragmentEntry draftFragmentEntry =
+			FragmentEntryLocalServiceUtil.fetchDraft(fragmentEntryId);
+
+		if (draftFragmentEntry == null) {
+			_fragmentEntryId = fragmentEntryId;
+		}
+		else {
+			_fragmentEntryId = draftFragmentEntry.getFragmentEntryId();
+		}
 
 		return _fragmentEntryId;
 	}
@@ -247,16 +257,6 @@ public class EditFragmentEntryDisplayContext {
 
 		if (fragmentEntry != null) {
 			_cssContent = fragmentEntry.getCss();
-
-			if (Validator.isNull(_cssContent)) {
-				StringBundler sb = new StringBundler(3);
-
-				sb.append(".fragment_");
-				sb.append(fragmentEntry.getFragmentEntryId());
-				sb.append(" {\n}");
-
-				_cssContent = sb.toString();
-			}
 		}
 
 		return _cssContent;
@@ -294,16 +294,6 @@ public class EditFragmentEntryDisplayContext {
 
 		if (fragmentEntry != null) {
 			_htmlContent = fragmentEntry.getHtml();
-
-			if (Validator.isNull(_htmlContent)) {
-				StringBundler sb = new StringBundler(3);
-
-				sb.append("<div class=\"fragment_");
-				sb.append(fragmentEntry.getFragmentEntryId());
-				sb.append("\">\n</div>");
-
-				_htmlContent = sb.toString();
-			}
 		}
 
 		return _htmlContent;
@@ -474,12 +464,27 @@ public class EditFragmentEntryDisplayContext {
 				"preview",
 				_getFragmentEntryRenderURL("/fragment/preview_fragment_entry")
 			).put(
+				"publish", _getPublishFragmentEntryActionURL()
+			).put(
 				"redirect", getRedirect()
 			).put(
 				"render",
 				_getFragmentEntryRenderURL("/fragment/render_fragment_entry")
 			).build()
 		).build();
+	}
+
+	private String _getPublishFragmentEntryActionURL() {
+		PortletURL publishFragmentEntryURL = PortletURLFactoryUtil.create(
+			_httpServletRequest, FragmentPortletKeys.FRAGMENT,
+			PortletRequest.ACTION_PHASE);
+
+		publishFragmentEntryURL.setParameter(
+			ActionRequest.ACTION_NAME, "/fragment/publish_fragment_entry");
+		publishFragmentEntryURL.setParameter(
+			"fragmentEntryId", String.valueOf(getFragmentEntryId()));
+
+		return publishFragmentEntryURL.toString();
 	}
 
 	private boolean _isReadOnlyFragmentEntry() {

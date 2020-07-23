@@ -63,6 +63,7 @@ public class DefinitionPoshiElement extends PoshiElement {
 		return null;
 	}
 
+	@Override
 	public String getFileExtension() {
 		URL url = getURL();
 
@@ -78,6 +79,7 @@ public class DefinitionPoshiElement extends PoshiElement {
 		return getPoshiScriptLineNumber(false);
 	}
 
+	@Override
 	public URL getURL() {
 		return _url;
 	}
@@ -89,11 +91,12 @@ public class DefinitionPoshiElement extends PoshiElement {
 
 			URL url = getURL();
 
-			PoshiNode poshiNode = PoshiNodeFactory.newPoshiNodeFromFile(url);
+			PoshiNode<?, ?> poshiNode = PoshiNodeFactory.newPoshiNodeFromFile(
+				url);
 
 			String poshiScript = poshiNode.toPoshiScript();
 
-			PoshiNode generatedPoshiNode = PoshiNodeFactory.newPoshiNode(
+			PoshiNode<?, ?> generatedPoshiNode = PoshiNodeFactory.newPoshiNode(
 				poshiScript, url);
 
 			if (Dom4JUtil.elementsEqual(poshiNode, generatedPoshiNode)) {
@@ -186,6 +189,7 @@ public class DefinitionPoshiElement extends PoshiElement {
 		return "";
 	}
 
+	@Override
 	protected String getPoshiScriptKeyword() {
 		String fileExtension = getFileExtension();
 
@@ -200,6 +204,7 @@ public class DefinitionPoshiElement extends PoshiElement {
 		return isValidPoshiScriptBlock(_blockNamePattern, poshiScript);
 	}
 
+	@Override
 	protected void setFilePath(URL url) {
 		_url = url;
 	}

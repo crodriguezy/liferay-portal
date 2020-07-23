@@ -15,8 +15,6 @@
 package com.liferay.layout.page.template.admin.web.internal.portlet.configuration.icon;
 
 import com.liferay.layout.page.template.admin.constants.LayoutPageTemplateAdminPortletKeys;
-import com.liferay.layout.page.template.admin.web.internal.configuration.util.ExportImportLayoutPageTemplateConfigurationUtil;
-import com.liferay.layout.page.template.admin.web.internal.configuration.util.ExportImportMasterLayoutConfigurationUtil;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateActionKeys;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateConstants;
 import com.liferay.petra.string.StringBundler;
@@ -71,14 +69,12 @@ public class ImportPortletConfigurationIcon
 			portletURL.setParameter("mvcPath", "/view_import.jsp");
 			portletURL.setWindowState(LiferayWindowState.POP_UP);
 
-			StringBundler sb = new StringBundler(8);
+			StringBundler sb = new StringBundler(6);
 
-			sb.append("Liferay.Util.openWindow({dialog: {after: {destroy: ");
-			sb.append("function(event) {window.location.reload();}, }, ");
-			sb.append("destroyOnHide: true}, dialogIframe: {bodyCssClass: ");
-			sb.append("'dialog-with-footer'}, title: '");
+			sb.append("Liferay.Util.openModal({onClose: function(event){");
+			sb.append("window.location.reload();}, title: '");
 			sb.append(getMessage(portletRequest));
-			sb.append("', uri: '");
+			sb.append("', url: '");
 			sb.append(portletURL.toString());
 			sb.append("'});");
 
@@ -107,12 +103,6 @@ public class ImportPortletConfigurationIcon
 
 	@Override
 	public boolean isShow(PortletRequest portletRequest) {
-		if (!ExportImportLayoutPageTemplateConfigurationUtil.enabled() &&
-			!ExportImportMasterLayoutConfigurationUtil.enabled()) {
-
-			return false;
-		}
-
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 

@@ -176,7 +176,7 @@ public class CTTableMapperHelper {
 		int count = 0;
 
 		if (!entries.isEmpty()) {
-			StringBundler sb = new StringBundler(8 * entries.size() + 3);
+			StringBundler sb = new StringBundler((8 * entries.size()) + 3);
 
 			sb.append("delete from ");
 			sb.append(_tableName);

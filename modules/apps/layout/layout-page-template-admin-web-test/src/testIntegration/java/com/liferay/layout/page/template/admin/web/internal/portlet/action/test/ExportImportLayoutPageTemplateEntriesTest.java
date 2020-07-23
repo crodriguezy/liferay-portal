@@ -42,7 +42,6 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.Repository;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
 import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil;
@@ -59,7 +58,6 @@ import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
-import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.test.rule.Inject;
@@ -68,7 +66,6 @@ import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 
 import java.io.File;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Assert;
@@ -133,24 +130,21 @@ public class ExportImportLayoutPageTemplateEntriesTest {
 			_fragmentEntryLinkLocalService.addFragmentEntryLink(
 				TestPropsValues.getUserId(), _group1.getGroupId(), 0,
 				fragmentEntry.getFragmentEntryId(), 0,
-				_portal.getClassNameId(Layout.class),
 				layoutPageTemplateEntry1.getPlid(), StringPool.BLANK, html,
 				StringPool.BLANK,
 				_read("export_import_fragment_field_text_config.json"),
 				_read("export_import_fragment_field_text_editable_values.json"),
 				StringPool.BLANK, 0, null, _serviceContext1);
 
-		HashMap<String, String> valuesMap = HashMapBuilder.put(
-			"FRAGMENT_ENTRY_LINK1_ID",
-			String.valueOf(fragmentEntryLink.getFragmentEntryLinkId())
-		).build();
-
 		_layoutPageTemplateStructureLocalService.addLayoutPageTemplateStructure(
 			TestPropsValues.getUserId(), _group1.getGroupId(),
-			_portal.getClassNameId(Layout.class.getName()),
 			layoutPageTemplateEntry1.getPlid(),
 			StringUtil.replace(
-				_read("export_import_layout_data.json"), "${", "}", valuesMap),
+				_read("export_import_layout_data.json"), "${", "}",
+				HashMapBuilder.put(
+					"FRAGMENT_ENTRY_LINK1_ID",
+					String.valueOf(fragmentEntryLink.getFragmentEntryLinkId())
+				).build()),
 			_serviceContext1);
 
 		Repository repository = PortletFileRepositoryUtil.addPortletRepository(
@@ -227,13 +221,11 @@ public class ExportImportLayoutPageTemplateEntriesTest {
 			_layoutPageTemplateStructureLocalService.
 				fetchLayoutPageTemplateStructure(
 					layoutPageTemplateEntry1.getGroupId(),
-					_portal.getClassNameId(Layout.class.getName()),
 					layoutPageTemplateEntry1.getPlid());
 		LayoutPageTemplateStructure layoutPageTemplateStructure2 =
 			_layoutPageTemplateStructureLocalService.
 				fetchLayoutPageTemplateStructure(
 					layoutPageTemplateEntry2.getGroupId(),
-					_portal.getClassNameId(Layout.class.getName()),
 					layoutPageTemplateEntry2.getPlid());
 
 		LayoutStructure layoutStructure1 = LayoutStructure.of(
@@ -384,11 +376,17 @@ public class ExportImportLayoutPageTemplateEntriesTest {
 			expectedContainerLayoutStructureItem.getPaddingBottom(),
 			actualContainerLayoutStructureItem.getPaddingBottom());
 		Assert.assertEquals(
-			expectedContainerLayoutStructureItem.getPaddingHorizontal(),
-			actualContainerLayoutStructureItem.getPaddingHorizontal());
+			expectedContainerLayoutStructureItem.getPaddingLeft(),
+			actualContainerLayoutStructureItem.getPaddingLeft());
+		Assert.assertEquals(
+			expectedContainerLayoutStructureItem.getPaddingRight(),
+			actualContainerLayoutStructureItem.getPaddingRight());
 		Assert.assertEquals(
 			expectedContainerLayoutStructureItem.getPaddingTop(),
 			actualContainerLayoutStructureItem.getPaddingTop());
+		Assert.assertEquals(
+			expectedContainerLayoutStructureItem.getWidthType(),
+			actualContainerLayoutStructureItem.getWidthType());
 	}
 
 	private void _validateFragmentLayoutStructureItem(
@@ -530,9 +528,6 @@ public class ExportImportLayoutPageTemplateEntriesTest {
 		filter = "mvc.command.name=/layout_page_template/export_layout_page_template_entry"
 	)
 	private MVCResourceCommand _mvcResourceCommand;
-
-	@Inject
-	private Portal _portal;
 
 	private ServiceContext _serviceContext1;
 	private ServiceContext _serviceContext2;

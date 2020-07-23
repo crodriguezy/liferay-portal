@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.util.CamelCaseUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.TextFormatter;
 import com.liferay.portal.kernel.util.TreeMapBuilder;
@@ -27,24 +28,24 @@ import com.liferay.portal.tools.rest.builder.internal.freemarker.tool.java.JavaM
 import com.liferay.portal.tools.rest.builder.internal.freemarker.tool.java.JavaMethodSignature;
 import com.liferay.portal.tools.rest.builder.internal.freemarker.tool.java.parser.util.OpenAPIParserUtil;
 import com.liferay.portal.tools.rest.builder.internal.freemarker.util.OpenAPIUtil;
+import com.liferay.portal.tools.rest.builder.internal.yaml.config.ConfigYAML;
+import com.liferay.portal.tools.rest.builder.internal.yaml.openapi.Content;
+import com.liferay.portal.tools.rest.builder.internal.yaml.openapi.Delete;
+import com.liferay.portal.tools.rest.builder.internal.yaml.openapi.Get;
+import com.liferay.portal.tools.rest.builder.internal.yaml.openapi.OpenAPIYAML;
+import com.liferay.portal.tools.rest.builder.internal.yaml.openapi.Operation;
+import com.liferay.portal.tools.rest.builder.internal.yaml.openapi.Parameter;
+import com.liferay.portal.tools.rest.builder.internal.yaml.openapi.PathItem;
+import com.liferay.portal.tools.rest.builder.internal.yaml.openapi.Post;
+import com.liferay.portal.tools.rest.builder.internal.yaml.openapi.Put;
+import com.liferay.portal.tools.rest.builder.internal.yaml.openapi.RequestBody;
+import com.liferay.portal.tools.rest.builder.internal.yaml.openapi.Response;
+import com.liferay.portal.tools.rest.builder.internal.yaml.openapi.ResponseCode;
+import com.liferay.portal.tools.rest.builder.internal.yaml.openapi.Schema;
 import com.liferay.portal.vulcan.multipart.MultipartBody;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.portal.vulcan.permission.Permission;
-import com.liferay.portal.vulcan.yaml.config.ConfigYAML;
-import com.liferay.portal.vulcan.yaml.openapi.Content;
-import com.liferay.portal.vulcan.yaml.openapi.Delete;
-import com.liferay.portal.vulcan.yaml.openapi.Get;
-import com.liferay.portal.vulcan.yaml.openapi.OpenAPIYAML;
-import com.liferay.portal.vulcan.yaml.openapi.Operation;
-import com.liferay.portal.vulcan.yaml.openapi.Parameter;
-import com.liferay.portal.vulcan.yaml.openapi.PathItem;
-import com.liferay.portal.vulcan.yaml.openapi.Post;
-import com.liferay.portal.vulcan.yaml.openapi.Put;
-import com.liferay.portal.vulcan.yaml.openapi.RequestBody;
-import com.liferay.portal.vulcan.yaml.openapi.Response;
-import com.liferay.portal.vulcan.yaml.openapi.ResponseCode;
-import com.liferay.portal.vulcan.yaml.openapi.Schema;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -244,14 +245,42 @@ public class ResourceOpenAPIParser {
 
 		if (methodName.equals("delete" + schemaName) ||
 			methodName.equals("post" + parentSchemaName + schemaName) ||
+			methodName.equals(
+				StringBundler.concat(
+					"post", parentSchemaName, "Id", schemaName)) ||
 			methodName.equals("put" + schemaName)) {
 
-			String batchPath = StringUtil.removeSubstring(
-				javaMethodSignature.getPath(),
-				"/{" + StringUtil.lowerCaseFirstLetter(schemaName) + "Id}");
+			String batchPath = null;
+
+			String path = javaMethodSignature.getPath();
+
+			if (path.contains(StringUtil.lowerCaseFirstLetter(schemaName))) {
+				batchPath = StringUtil.removeSubstring(
+					path,
+					"/{" + StringUtil.lowerCaseFirstLetter(schemaName) + "Id}");
+			}
+			else {
+				batchPath = StringUtil.removeSubstring(path, "/{id}");
+			}
 
 			Operation batchOperation = _getBatchOperation(
 				javaMethodSignature, methodName, schemaName);
+
+			for (JavaMethodSignature existingJavaMethodSignature :
+					javaMethodSignatures) {
+
+				String httpMethod = OpenAPIParserUtil.getHTTPMethod(
+					existingJavaMethodSignature.getOperation());
+
+				if (Objects.equals(
+						existingJavaMethodSignature.getPath(),
+						batchPath + "/batch") &&
+					httpMethod.equals(
+						OpenAPIParserUtil.getHTTPMethod(batchOperation))) {
+
+					return;
+				}
+			}
 
 			List<JavaMethodParameter> javaMethodParameters = new ArrayList<>();
 
@@ -333,7 +362,10 @@ public class ResourceOpenAPIParser {
 
 		Operation operation = javaMethodSignature.getOperation();
 
-		batchOperation.setOperationId(operation.getOperationId() + "Batch");
+		if (batchOperation.getOperationId() != null) {
+			batchOperation.setOperationId(operation.getOperationId() + "Batch");
+		}
+
 		batchOperation.setParameters(
 			_getBatchParameters(operation, schemaName));
 		batchOperation.setTags(operation.getTags());
@@ -491,7 +523,13 @@ public class ResourceOpenAPIParser {
 		}
 
 		if (!requestBodyMediaTypes.isEmpty()) {
-			if (!requestBodyMediaTypes.contains("multipart/form-data")) {
+			if (requestBodyMediaTypes.contains(
+					"application/x-www-form-urlencoded")) {
+
+				throw new RuntimeException(
+					"application/x-www-form-urlencoded is not supported");
+			}
+			else if (!requestBodyMediaTypes.contains("multipart/form-data")) {
 				RequestBody requestBody = operation.getRequestBody();
 
 				Map<String, Content> contents = requestBody.getContent();
@@ -503,33 +541,25 @@ public class ResourceOpenAPIParser {
 				String parameterType = OpenAPIParserUtil.getJavaDataType(
 					javaDataTypeMap, content.getSchema());
 
-				if (Long.class.isInstance(parameterType)) {
-					javaMethodParameters.add(
-						new JavaMethodParameter("referenceId", parameterType));
+				String simpleClassName = parameterType.substring(
+					parameterType.lastIndexOf(".") + 1);
+
+				String parameterName = TextFormatter.format(
+					simpleClassName, TextFormatter.I);
+
+				if (parameterType.startsWith("[")) {
+					String elementClassName =
+						OpenAPIParserUtil.getElementClassName(parameterType);
+
+					simpleClassName = elementClassName.substring(
+						elementClassName.lastIndexOf(".") + 1);
+
+					parameterName = TextFormatter.formatPlural(
+						TextFormatter.format(simpleClassName, TextFormatter.I));
 				}
-				else if (parameterType != null) {
-					String simpleClassName = parameterType.substring(
-						parameterType.lastIndexOf(".") + 1);
 
-					String parameterName = TextFormatter.format(
-						simpleClassName, TextFormatter.I);
-
-					if (parameterType.startsWith("[")) {
-						String elementClassName =
-							OpenAPIParserUtil.getElementClassName(
-								parameterType);
-
-						simpleClassName = elementClassName.substring(
-							elementClassName.lastIndexOf(".") + 1);
-
-						parameterName = TextFormatter.formatPlural(
-							TextFormatter.format(
-								simpleClassName, TextFormatter.I));
-					}
-
-					javaMethodParameters.add(
-						new JavaMethodParameter(parameterName, parameterType));
-				}
+				javaMethodParameters.add(
+					new JavaMethodParameter(parameterName, parameterType));
 			}
 			else {
 				javaMethodParameters.add(
@@ -794,10 +824,12 @@ public class ResourceOpenAPIParser {
 			if ((get != null) && basePath.equals(entry.getKey())) {
 				List<String> tags = get.getTags();
 
-				String tag = tags.get(0);
+				if (!tags.isEmpty()) {
+					String tag = tags.get(0);
 
-				if (!tag.equals(schemaName)) {
-					return tag;
+					if (!tag.equals(schemaName)) {
+						return tag;
+					}
 				}
 			}
 		}
@@ -856,6 +888,8 @@ public class ResourceOpenAPIParser {
 			}
 		}
 
+		String returnType = String.class.getName();
+
 		if ((response != null) && (response.getContent() != null)) {
 			Map<String, Content> sortedContents =
 				TreeMapBuilder.<String, Content>putAll(
@@ -884,7 +918,7 @@ public class ResourceOpenAPIParser {
 					return javax.ws.rs.core.Response.class.getName();
 				}
 
-				String returnType = OpenAPIParserUtil.getJavaDataType(
+				returnType = OpenAPIParserUtil.getJavaDataType(
 					javaDataTypeMap, schema);
 
 				if (returnType.startsWith("[")) {
@@ -905,7 +939,7 @@ public class ResourceOpenAPIParser {
 		}
 
 		if (Get.class.isInstance(operation)) {
-			return String.class.getName();
+			return returnType;
 		}
 
 		return javax.ws.rs.core.Response.class.getName();

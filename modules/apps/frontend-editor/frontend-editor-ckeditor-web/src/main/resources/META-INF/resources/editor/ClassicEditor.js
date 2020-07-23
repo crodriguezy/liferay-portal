@@ -12,8 +12,10 @@
  * details.
  */
 
-import {isPhone, isTablet} from 'frontend-js-web';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {useEventListener} from 'frontend-js-react-web';
+import {debounce, isPhone, isTablet} from 'frontend-js-web';
+import PropTypes from 'prop-types';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {Editor} from './Editor';
 
@@ -29,43 +31,108 @@ const getToolbarSet = (toolbarSet) => {
 };
 
 const ClassicEditor = ({
-	contents,
-	cssClass,
+	contents = '',
 	editorConfig,
 	initialToolbarSet,
 	name,
+	onChangeMethodName,
+	title,
 }) => {
 	const editorRef = useRef();
 
-	const [toolbarSet, setToolbarSet] = useState();
+	const [toolbarSet, setToolbarSet] = useState(initialToolbarSet);
 
-	const config = useMemo(() => {
+	const getConfig = () => {
 		return {
 			toolbar: toolbarSet,
 			...editorConfig,
 		};
-	}, [editorConfig, toolbarSet]);
+	};
+
+	const getHTML = useCallback(() => {
+		let data = contents;
+
+		const editor = editorRef.current.editor;
+
+		if (editor && editor.instanceReady) {
+			data = editor.getData();
+
+			if (CKEDITOR.env.gecko && CKEDITOR.tools.trim(data) === '<br />') {
+				data = '';
+			}
+		}
+
+		return data;
+	}, [contents]);
+
+	const onChangeCallback = () => {
+		if (!onChangeMethodName) {
+			return;
+		}
+
+		const editor = editorRef.current.editor;
+
+		if (editor.checkDirty()) {
+			window[onChangeMethodName](getHTML());
+
+			editor.resetDirty();
+		}
+	};
 
 	useEffect(() => {
 		setToolbarSet(getToolbarSet(initialToolbarSet));
 	}, [initialToolbarSet]);
 
+	useEffect(() => {
+		window[name] = {
+			getHTML,
+			getText() {
+				return contents;
+			},
+		};
+	}, [contents, getHTML, name]);
+
+	const onResize = debounce(() => {
+		setToolbarSet(getToolbarSet(initialToolbarSet));
+	}, 200);
+
+	useEventListener('resize', onResize, true, window);
+
 	return (
-		<div className={cssClass} id={`${name}Container`}>
+		<div id={`${name}Container`}>
+			<label className="control-label" htmlFor={name}>
+				{title}
+			</label>
 			<Editor
 				className="lfr-editable"
-				config={config}
-				data={contents}
-				id={name}
+				config={getConfig()}
 				onBeforeLoad={(CKEDITOR) => {
 					CKEDITOR.disableAutoInline = true;
 					CKEDITOR.dtd.$removeEmpty.i = 0;
 					CKEDITOR.dtd.$removeEmpty.span = 0;
+
+					CKEDITOR.on('instanceCreated', ({editor}) => {
+						editor.name = name;
+
+						editor.on('instanceReady', () => {
+							editor.setData(contents);
+						});
+					});
 				}}
+				onChange={onChangeCallback}
 				ref={editorRef}
 			/>
 		</div>
 	);
+};
+
+ClassicEditor.propTypes = {
+	contents: PropTypes.string,
+	editorConfig: PropTypes.object,
+	initialToolbarSet: PropTypes.string,
+	name: PropTypes.string,
+	onChangeMethodName: PropTypes.string,
+	title: PropTypes.string,
 };
 
 export default ClassicEditor;

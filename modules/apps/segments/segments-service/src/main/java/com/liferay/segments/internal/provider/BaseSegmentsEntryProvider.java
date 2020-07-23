@@ -76,8 +76,8 @@ public abstract class BaseSegmentsEntryProvider
 			).toArray();
 		}
 
-		ODataRetriever oDataRetriever = serviceTrackerMap.getService(
-			segmentsEntry.getType());
+		ODataRetriever<BaseModel<?>> oDataRetriever =
+			serviceTrackerMap.getService(segmentsEntry.getType());
 
 		if (oDataRetriever == null) {
 			return new long[0];
@@ -113,8 +113,8 @@ public abstract class BaseSegmentsEntryProvider
 				segmentsEntryId);
 		}
 
-		ODataRetriever oDataRetriever = serviceTrackerMap.getService(
-			segmentsEntry.getType());
+		ODataRetriever<BaseModel<?>> oDataRetriever =
+			serviceTrackerMap.getService(segmentsEntry.getType());
 
 		if (oDataRetriever == null) {
 			return 0;
@@ -258,7 +258,8 @@ public abstract class BaseSegmentsEntryProvider
 
 		Criteria.Conjunction modelConjunction = getConjunction(
 			segmentsEntry, Criteria.Type.MODEL);
-		ODataRetriever oDataRetriever = serviceTrackerMap.getService(className);
+		ODataRetriever<BaseModel<?>> oDataRetriever =
+			serviceTrackerMap.getService(className);
 		String modelFilterString = getFilterString(
 			segmentsEntry, Criteria.Type.MODEL);
 
@@ -307,7 +308,7 @@ public abstract class BaseSegmentsEntryProvider
 	@Reference(
 		target = "(target.class.name=com.liferay.segments.context.Context)"
 	)
-	protected ODataMatcher oDataMatcher;
+	protected ODataMatcher<Context> oDataMatcher;
 
 	@Reference
 	protected Portal portal;
@@ -322,7 +323,8 @@ public abstract class BaseSegmentsEntryProvider
 	@Reference
 	protected SegmentsEntryRelLocalService segmentsEntryRelLocalService;
 
-	protected ServiceTrackerMap<String, ODataRetriever> serviceTrackerMap;
+	protected ServiceTrackerMap<String, ODataRetriever<BaseModel<?>>>
+		serviceTrackerMap;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		BaseSegmentsEntryProvider.class);

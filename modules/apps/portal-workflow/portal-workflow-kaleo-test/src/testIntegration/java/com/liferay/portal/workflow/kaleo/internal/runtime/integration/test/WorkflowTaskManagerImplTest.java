@@ -28,10 +28,10 @@ import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.document.library.kernel.service.DLAppService;
 import com.liferay.document.library.kernel.service.DLFileEntryTypeLocalService;
 import com.liferay.document.library.kernel.service.DLTrashService;
+import com.liferay.dynamic.data.lists.constants.DDLRecordConstants;
+import com.liferay.dynamic.data.lists.constants.DDLRecordSetConstants;
 import com.liferay.dynamic.data.lists.model.DDLRecord;
-import com.liferay.dynamic.data.lists.model.DDLRecordConstants;
 import com.liferay.dynamic.data.lists.model.DDLRecordSet;
-import com.liferay.dynamic.data.lists.model.DDLRecordSetConstants;
 import com.liferay.dynamic.data.lists.model.DDLRecordVersion;
 import com.liferay.dynamic.data.lists.service.DDLRecordLocalService;
 import com.liferay.dynamic.data.lists.service.DDLRecordSetLocalService;
@@ -47,10 +47,10 @@ import com.liferay.dynamic.data.mapping.test.util.DDMStructureTestHelper;
 import com.liferay.dynamic.data.mapping.test.util.DDMStructureTestUtil;
 import com.liferay.dynamic.data.mapping.test.util.DDMTemplateTestUtil;
 import com.liferay.dynamic.data.mapping.util.DDMBeanTranslatorUtil;
+import com.liferay.journal.constants.JournalArticleConstants;
+import com.liferay.journal.constants.JournalFolderConstants;
 import com.liferay.journal.model.JournalArticle;
-import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.model.JournalFolder;
-import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.service.JournalFolderLocalService;
 import com.liferay.petra.string.StringPool;
@@ -83,6 +83,7 @@ import com.liferay.portal.kernel.service.UserNotificationEventLocalService;
 import com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalService;
 import com.liferay.portal.kernel.service.WorkflowInstanceLinkLocalService;
 import com.liferay.portal.kernel.settings.LocalizedValuesMap;
+import com.liferay.portal.kernel.test.constants.TestDataConstants;
 import com.liferay.portal.kernel.test.randomizerbumpers.NumericStringRandomizerBumper;
 import com.liferay.portal.kernel.test.randomizerbumpers.UniqueStringRandomizerBumper;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
@@ -91,7 +92,6 @@ import com.liferay.portal.kernel.test.util.CompanyTestUtil;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
-import com.liferay.portal.kernel.test.util.TestDataConstants;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ContentTypes;
@@ -348,14 +348,12 @@ public class WorkflowTaskManagerImplTest {
 
 		Folder folder = _addFolder();
 
-		Map<String, String> dlFileEntryTypeMap = HashMapBuilder.put(
-			String.valueOf(DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_ALL),
-			"Single Approver@1"
-		).build();
-
 		folder = _updateFolder(
 			folder, DLFolderConstants.RESTRICTION_TYPE_WORKFLOW,
-			dlFileEntryTypeMap);
+			HashMapBuilder.put(
+				String.valueOf(DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_ALL),
+				"Single Approver@1"
+			).build());
 
 		FileVersion fileVersion1 = _addFileVersion(
 			DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
@@ -847,14 +845,12 @@ public class WorkflowTaskManagerImplTest {
 
 		Folder folder = _addFolder();
 
-		Map<String, String> dlFileEntryTypeMap = HashMapBuilder.put(
-			String.valueOf(DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_ALL),
-			"Single Approver@1"
-		).build();
-
 		folder = _updateFolder(
 			folder, DLFolderConstants.RESTRICTION_TYPE_WORKFLOW,
-			dlFileEntryTypeMap);
+			HashMapBuilder.put(
+				String.valueOf(DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_ALL),
+				"Single Approver@1"
+			).build());
 
 		FileVersion fileVersion = _addFileVersion(folder.getFolderId());
 
@@ -1065,7 +1061,7 @@ public class WorkflowTaskManagerImplTest {
 
 	private void _activateSingleApproverWorkflow(
 			long groupId, String className, long classPK, long typePK)
-		throws PortalException {
+		throws Exception {
 
 		_activateWorkflow(
 			groupId, className, classPK, typePK, "Single Approver", 1);
@@ -1073,7 +1069,7 @@ public class WorkflowTaskManagerImplTest {
 
 	private void _activateSingleApproverWorkflow(
 			String className, long classPK, long typePK)
-		throws PortalException {
+		throws Exception {
 
 		_activateWorkflow(
 			_group.getGroupId(), className, classPK, typePK, "Single Approver",
@@ -1083,7 +1079,7 @@ public class WorkflowTaskManagerImplTest {
 	private void _activateWorkflow(
 			long groupId, String className, long classPK, long typePK,
 			String workflowDefinitionName, int workflowDefinitionVersion)
-		throws PortalException {
+		throws Exception {
 
 		_workflowDefinitionLinkLocalService.updateWorkflowDefinitionLink(
 			_adminUser.getUserId(), _company.getCompanyId(), groupId, className,
@@ -1093,18 +1089,18 @@ public class WorkflowTaskManagerImplTest {
 	private void _activateWorkflow(
 			String className, long classPK, long typePK,
 			String workflowDefinitionName, int workflowDefinitionVersion)
-		throws PortalException {
+		throws Exception {
 
 		_activateWorkflow(
 			_group.getGroupId(), className, classPK, typePK,
 			workflowDefinitionName, workflowDefinitionVersion);
 	}
 
-	private BlogsEntry _addBlogsEntry() throws PortalException {
+	private BlogsEntry _addBlogsEntry() throws Exception {
 		return _addBlogsEntry(_adminUser);
 	}
 
-	private BlogsEntry _addBlogsEntry(User user) throws PortalException {
+	private BlogsEntry _addBlogsEntry(User user) throws Exception {
 		try (CaptureAppender captureAppender =
 				Log4JLoggerTestUtil.configureLog4JLogger(
 					_MAIL_ENGINE_CLASS_NAME, Level.OFF)) {
@@ -1163,7 +1159,7 @@ public class WorkflowTaskManagerImplTest {
 		}
 	}
 
-	private Folder _addFolder() throws PortalException {
+	private Folder _addFolder() throws Exception {
 		return _dlAppService.addFolder(
 			_group.getGroupId(), 0, RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), _serviceContext);
@@ -1205,7 +1201,7 @@ public class WorkflowTaskManagerImplTest {
 		}
 	}
 
-	private JournalFolder _addJournalFolder() throws PortalException {
+	private JournalFolder _addJournalFolder() throws Exception {
 		try (CaptureAppender captureAppender =
 				Log4JLoggerTestUtil.configureLog4JLogger(
 					_MAIL_ENGINE_CLASS_NAME, Level.OFF)) {
@@ -1220,7 +1216,7 @@ public class WorkflowTaskManagerImplTest {
 
 	private JournalFolder _addJournalFolder(
 			long ddmStructureId, int restrictionType)
-		throws PortalException {
+		throws Exception {
 
 		long[] ddmStructureIds = {ddmStructureId};
 
@@ -1233,9 +1229,7 @@ public class WorkflowTaskManagerImplTest {
 			ddmStructureIds, restrictionType, false, _serviceContext);
 	}
 
-	private DDLRecord _addRecord(DDLRecordSet recordSet)
-		throws PortalException {
-
+	private DDLRecord _addRecord(DDLRecordSet recordSet) throws Exception {
 		try (CaptureAppender captureAppender =
 				Log4JLoggerTestUtil.configureLog4JLogger(
 					_MAIL_ENGINE_CLASS_NAME, Level.OFF)) {
@@ -1264,14 +1258,13 @@ public class WorkflowTaskManagerImplTest {
 		DDMStructure ddmStructure = ddmStructureTestHelper.addStructure(
 			ddmForm, StorageType.JSON.toString());
 
-		Map<Locale, String> nameMap = HashMapBuilder.put(
-			LocaleUtil.US, RandomTestUtil.randomString()
-		).build();
-
 		return _ddlRecordSetLocalService.addRecordSet(
 			_adminUser.getUserId(), _group.getGroupId(),
-			ddmStructure.getStructureId(), null, nameMap, null,
-			DDLRecordSetConstants.MIN_DISPLAY_ROWS_DEFAULT,
+			ddmStructure.getStructureId(), null,
+			HashMapBuilder.put(
+				LocaleUtil.US, RandomTestUtil.randomString()
+			).build(),
+			null, DDLRecordSetConstants.MIN_DISPLAY_ROWS_DEFAULT,
 			DDLRecordSetConstants.SCOPE_DYNAMIC_DATA_LISTS, _serviceContext);
 	}
 
@@ -1401,16 +1394,14 @@ public class WorkflowTaskManagerImplTest {
 		}
 	}
 
-	private Organization _createOrganization(boolean site)
-		throws PortalException {
-
+	private Organization _createOrganization(boolean site) throws Exception {
 		return _createOrganization(
 			OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID, site);
 	}
 
 	private Organization _createOrganization(
 			long parentOrganizationId, boolean site)
-		throws PortalException {
+		throws Exception {
 
 		return _organizationLocalService.addOrganization(
 			_adminUser.getUserId(), parentOrganizationId,
@@ -1497,7 +1488,7 @@ public class WorkflowTaskManagerImplTest {
 
 	private void _deactivateWorkflow(
 			long groupId, String className, long classPK, long typePK)
-		throws PortalException {
+		throws Exception {
 
 		_workflowDefinitionLinkLocalService.updateWorkflowDefinitionLink(
 			_adminUser.getUserId(), _company.getCompanyId(), groupId, className,
@@ -1506,7 +1497,7 @@ public class WorkflowTaskManagerImplTest {
 
 	private void _deactivateWorkflow(
 			String className, long classPK, long typePK)
-		throws PortalException {
+		throws Exception {
 
 		_deactivateWorkflow(_group.getGroupId(), className, classPK, typePK);
 	}
@@ -1522,7 +1513,7 @@ public class WorkflowTaskManagerImplTest {
 
 	private WorkflowInstanceLink _fetchWorkflowInstanceLink(
 			String className, long classPK)
-		throws WorkflowException {
+		throws Exception {
 
 		return _workflowInstanceLinkLocalService.fetchWorkflowInstanceLink(
 			_adminUser.getCompanyId(), _adminUser.getGroupId(), className,
@@ -1540,14 +1531,14 @@ public class WorkflowTaskManagerImplTest {
 
 	private WorkflowInstance _getWorkflowInstance(
 			String className, long classPK)
-		throws WorkflowException {
+		throws Exception {
 
 		return _getWorkflowInstance(className, classPK, true);
 	}
 
 	private WorkflowInstance _getWorkflowInstance(
 			String className, long classPK, boolean completed)
-		throws WorkflowException {
+		throws Exception {
 
 		List<WorkflowInstance> workflowInstances =
 			_workflowInstanceManager.getWorkflowInstances(
@@ -1717,7 +1708,7 @@ public class WorkflowTaskManagerImplTest {
 	}
 
 	private Folder _updateFolder(Folder folder, int restrictionType)
-		throws PortalException {
+		throws Exception {
 
 		return _updateFolder(folder, restrictionType, -1, new HashMap<>());
 	}
@@ -1725,7 +1716,7 @@ public class WorkflowTaskManagerImplTest {
 	private Folder _updateFolder(
 			Folder folder, int restrictionType, long defaultFileEntryTypeId,
 			Map<String, String> dlFileEntryTypeMap)
-		throws PortalException {
+		throws Exception {
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
@@ -1755,7 +1746,7 @@ public class WorkflowTaskManagerImplTest {
 	private Folder _updateFolder(
 			Folder folder, int restrictionType,
 			Map<String, String> dlFileEntryTypeMap)
-		throws PortalException {
+		throws Exception {
 
 		return _updateFolder(folder, restrictionType, -1, dlFileEntryTypeMap);
 	}

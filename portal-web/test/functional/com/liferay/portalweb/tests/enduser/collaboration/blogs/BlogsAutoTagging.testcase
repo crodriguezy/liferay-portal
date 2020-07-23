@@ -107,7 +107,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Publishing",
-			panel = "Site Administration",
 			portlet = "Staging");
 
 		Staging.activateStagingCP(siteName = "Site Name");
@@ -136,7 +135,7 @@ definition {
 
 		Staging.publishToLive();
 
-		ProductMenu.gotoLiveSite();
+		ProductMenu.gotoLiveSite(site = "Site Name");
 
 		Navigator.gotoSitePage(
 			pageName = "Blogs Page",
@@ -171,7 +170,9 @@ definition {
 
 		SitePages.openPagesAdmin(siteURLKey = "Site AutoTag Disabled");
 
-		AutoTagging.disableAutoTagging(disableAutoTaggingFor = "Settings");
+		AutoTagging.disableAutoTagging(
+			disableAutoTaggingFor = "Settings",
+			site = "Site AutoTag Disabled");
 
 		BlogsNavigator.openBlogsAdmin(siteURLKey = "site-autotag-disabled");
 

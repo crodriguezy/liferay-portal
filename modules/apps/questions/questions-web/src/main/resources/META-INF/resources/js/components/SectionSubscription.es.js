@@ -12,29 +12,57 @@
  * details.
  */
 
+import {useMutation} from '@apollo/client';
 import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
 import React, {useEffect, useState} from 'react';
 
-import {subscribeSection, unsubscribeSection} from '../utils/client.es';
+import {
+	subscribeSectionQuery,
+	unsubscribeSectionQuery,
+} from '../utils/client.es';
 
-export default ({onSubscription, section: {id, subscribed}}) => {
+export default ({
+	onSubscription,
+	section: {id: messageBoardSectionId, parentSection, subscribed},
+}) => {
 	const [subscription, setSubscription] = useState(false);
 
 	useEffect(() => {
-		setSubscription(subscribed);
-	}, [subscribed]);
+		setSubscription(
+			subscribed || (parentSection && parentSection.subscribed)
+		);
+	}, [messageBoardSectionId, parentSection, subscribed]);
+
+	const onCompleted = () => {
+		setSubscription(!subscription);
+		if (onSubscription) {
+			onSubscription(!subscription);
+		}
+	};
+
+	const update = (proxy) => {
+		proxy.evict(`MessageBoardSection:${messageBoardSectionId}`);
+		proxy.gc();
+	};
+
+	const [subscribeSection] = useMutation(subscribeSectionQuery, {
+		onCompleted,
+		update,
+	});
+
+	const [unsubscribeSection] = useMutation(unsubscribeSectionQuery, {
+		onCompleted,
+		update,
+	});
 
 	const changeSubscription = () => {
-		const promise = subscription
-			? unsubscribeSection(id)
-			: subscribeSection(id);
-		promise.then(() => {
-			setSubscription(!subscription);
-			if (onSubscription) {
-				onSubscription(!subscription);
-			}
-		});
+		if (subscription) {
+			unsubscribeSection({variables: {messageBoardSectionId}});
+		}
+		else {
+			subscribeSection({variables: {messageBoardSectionId}});
+		}
 	};
 
 	const btnTitle = subscription

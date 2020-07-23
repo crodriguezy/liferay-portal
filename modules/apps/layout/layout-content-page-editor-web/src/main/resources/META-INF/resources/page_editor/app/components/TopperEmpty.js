@@ -19,15 +19,15 @@ import {
 	LayoutDataPropTypes,
 	getLayoutDataItemPropTypes,
 } from '../../prop-types/index';
-import selectCanUpdate from '../selectors/selectCanUpdate';
+import selectCanUpdatePageStructure from '../selectors/selectCanUpdatePageStructure';
 import {useSelector} from '../store/index';
+import getLayoutDataItemLabel from '../utils/getLayoutDataItemLabel';
 import {TARGET_POSITION, useDropTarget} from '../utils/useDragAndDrop';
-import getLabelName from './layout-data-items/getLabelName';
 
 export default function ({children, ...props}) {
-	const canUpdate = useSelector(selectCanUpdate);
+	const canUpdatePageStructure = useSelector(selectCanUpdatePageStructure);
 
-	return canUpdate ? (
+	return canUpdatePageStructure ? (
 		<TopperEmpty {...props}>{children}</TopperEmpty>
 	) : (
 		children
@@ -36,8 +36,7 @@ export default function ({children, ...props}) {
 
 function TopperEmpty({children, item, layoutData}) {
 	const containerRef = useRef(null);
-	const store = useSelector((state) => state);
-	const fragmentEntryLinks = store.fragmentEntryLinks;
+	const fragmentEntryLinks = useSelector((state) => state.fragmentEntryLinks);
 
 	const {
 		canDropOverTarget,
@@ -50,13 +49,13 @@ function TopperEmpty({children, item, layoutData}) {
 	const isFragment = children.type === React.Fragment;
 	const realChildren = isFragment ? children.props.children : children;
 
-	const dataAdvice =
+	const notDroppableMessage =
 		isOverTarget && !canDropOverTarget
 			? Liferay.Util.sub(
 					Liferay.Language.get('a-x-cannot-be-dropped-inside-a-x'),
 					[
-						getLabelName(sourceItem, fragmentEntryLinks),
-						getLabelName(item, fragmentEntryLinks),
+						getLayoutDataItemLabel(sourceItem, fragmentEntryLinks),
+						getLayoutDataItemLabel(item, fragmentEntryLinks),
 					]
 			  )
 			: null;
@@ -80,10 +79,10 @@ function TopperEmpty({children, item, layoutData}) {
 						'drag-over-top':
 							isOverTarget &&
 							targetPosition === TARGET_POSITION.TOP,
-						'not-droppable': !!dataAdvice,
+						'not-droppable': !!notDroppableMessage,
 						'page-editor__topper': true,
 					}),
-					'data-advice': dataAdvice,
+					'data-not-droppable-message': notDroppableMessage,
 					ref: (node) => {
 						containerRef.current = node;
 						targetRef(node);
@@ -92,6 +91,9 @@ function TopperEmpty({children, item, layoutData}) {
 
 						if (typeof child.ref === 'function') {
 							child.ref(node);
+						}
+						else if (child.ref && 'current' in child.ref) {
+							child.ref.current = node;
 						}
 					},
 				})}

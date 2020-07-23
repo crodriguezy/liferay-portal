@@ -9,15 +9,11 @@ definition {
 			Click.clickAt(locator1 = "ControlMenu#ADD");
 		}
 
-		AssertElementPresent(locator1 = "ControlMenuAddPanel#APPLICATIONS_ACCORDION_PANEL_TITLE");
+		AssertElementPresent(locator1 = "ControlMenuAddPanel#SIDEBAR_HEADER");
 
-		AssertVisible(
-			locator1 = "ControlMenuAddPanel#APPLICATIONS_ACCORDION_PANEL_TITLE",
-			value1 = "Widgets");
+		Navigator.gotoNavTab(navTab = "Widgets");
 
 		Pause(locator1 = "5000");
-
-		Panel.expandSidebarApplicationsPanel();
 
 		Type.sendKeysApplicationSearch(
 			locator1 = "NavBar#APPLICATION_SEARCH_FIELD",
@@ -46,11 +42,6 @@ definition {
 		Portlet.gotoPortletOptions(
 			portletName = "Custom Filter",
 			portletOption = "Configuration");
-
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
 
 		SelectFrame(locator1 = "IFrame#CONFIGURATION");
 
@@ -104,11 +95,6 @@ definition {
 	macro configureDestination {
 		SearchPortlets.gotoEmbeddedOptions(portletOption = "Configuration");
 
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "IFrame#CONFIGURATION");
 
 		if (isSet(destinationPage)) {
@@ -132,11 +118,6 @@ definition {
 		SearchPortlets.gotoEmbeddedOptions(portletOption = "Configuration");
 
 		if (("${searchScope}" == "Everything") || ("${searchScope}" == "Let the User Choose") || ("${searchScope}" == "This Site")) {
-			LiferayEvent.waitForLiferayEvent(
-				attributeName = "src",
-				attributeValue = "dialog-iframe-popup",
-				eventName = "modalIframeLoaded");
-
 			SelectFrame(locator1 = "IFrame#CONFIGURATION");
 
 			Select(
@@ -156,11 +137,6 @@ definition {
 		Portlet.gotoPortletOptions(
 			portletName = "Low Level Search Options",
 			portletOption = "Configuration");
-
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
 
 		SelectFrame(locator1 = "IFrame#CONFIGURATION");
 
@@ -195,10 +171,9 @@ definition {
 			portletName = "Search Options",
 			portletOption = "Configuration");
 
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
+		WaitForLiferayEvent.initializeLiferayEventLog();
+
+		SelectFrameTop();
 
 		SelectFrame(locator1 = "IFrame#CONFIGURATION");
 
@@ -230,11 +205,6 @@ definition {
 		Portlet.gotoPortletOptions(
 			portletName = "Similar Results",
 			portletOption = "Configuration");
-
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
 
 		SelectFrame(locator1 = "IFrame#CONFIGURATION");
 
@@ -329,11 +299,6 @@ definition {
 	macro configureWidgetParameterNames {
 		SearchPortlets.gotoWidgetOptions(portletOption = "Configuration");
 
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "IFrame#CONFIGURATION");
 
 		if (isSet(keywordsParameterName)) {
@@ -357,11 +322,6 @@ definition {
 		SearchPortlets.gotoWidgetOptions(portletOption = "Configuration");
 
 		if (("${searchScope}" == "Everything") || ("${searchScope}" == "Let the User Choose") || ("${searchScope}" == "This Site")) {
-			LiferayEvent.waitForLiferayEvent(
-				attributeName = "src",
-				attributeValue = "dialog-iframe-popup",
-				eventName = "modalIframeLoaded");
-
 			SelectFrame(locator1 = "IFrame#CONFIGURATION");
 
 			Select(
@@ -388,6 +348,14 @@ definition {
 		var searchURL = "${searchURL}${searchTerm}";
 
 		return "${searchURL}";
+	}
+
+	macro gotoConfigureSuggestionsOptions {
+		MouseOver.mouseOverNotVisible(locator1 = "Search#SUGGESTION_WIDGET_ELLIPSIS_ICON");
+
+		Click.waitForMenuToggleJSClick(locator1 = "Search#SUGGESTION_WIDGET_ELLIPSIS_ICON");
+
+		MenuItem.click(menuItem = "Configuration");
 	}
 
 	macro gotoEmbeddedOptions {
@@ -429,9 +397,18 @@ definition {
 			locator1 = "Search#EMBEDDED_SEARCH_BAR",
 			value1 = "${searchTerm}");
 
-		KeyPress(
-			locator1 = "Search#EMBEDDED_SEARCH_BAR",
-			value1 = "\RETURN");
+		var browserType = PropsUtil.get("browser.type");
+
+		if ("${browserType}" == "safari") {
+			Click(locator1 = "Icon#BASIC_SEARCH");
+		}
+		else {
+			KeyPress(
+				locator1 = "Search#EMBEDDED_SEARCH_BAR",
+				value1 = "\RETURN");
+		}
+
+		WaitForLiferayEvent.initializeLiferayEventLog();
 	}
 
 	macro searchWidget {
@@ -442,6 +419,8 @@ definition {
 		KeyPress(
 			locator1 = "Search#SEARCH_BAR_WIDGET",
 			value1 = "\RETURN");
+
+		WaitForLiferayEvent.initializeLiferayEventLog();
 	}
 
 	macro selectEmbeddedScopeInput {
@@ -477,14 +456,18 @@ definition {
 			layoutName = "Similar Results Page",
 			widgetName = "Asset Publisher");
 
-		Navigator.gotoPage(pageName = "Similar Results Page");
+		JSONLayout.addWidgetToPublicLayout(
+			column = "2",
+			groupName = "Guest",
+			layoutName = "Similar Results Page",
+			widgetName = "Similar Results");
 
-		Portlet.addPG(portletName = "Similar Results");
+		Navigator.gotoPage(pageName = "Similar Results Page");
 	}
 
 	macro viewResultDetails {
 		AssertTextEquals(
-			locator1 = "Portlet#H3_HEADER",
+			locator1 = "SearchResults#ASSET_DETAILS_TITLE",
 			value1 = "${searchAssetTitle}");
 	}
 

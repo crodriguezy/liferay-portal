@@ -168,38 +168,13 @@ AUI.add(
 		};
 
 		var showActionUndoneSuccessMessage = function () {
-			var instance = this;
-
-			var successMessage = Liferay.Language.get('action-undone');
-
-			var alert = instance._alert;
-
-			if (alert) {
-				alert.destroy();
-			}
-
-			alert = new Liferay.Alert({
-				closeable: true,
-				delay: {
-					hide: 5000,
-					show: 0,
-				},
-				message: successMessage,
-				type: 'success',
+			Liferay.Util.openToast({
+				container: document.querySelector('.lfr-alert-container'),
+				message: Liferay.Language.get('action-undone'),
 			});
-
-			if (!alert.get('rendered')) {
-				alert.render('.portlet-column');
-			}
-
-			alert.show();
-
-			instance._alert = alert;
 		};
 
 		var showDefinitionImportSuccessMessage = function (namespace) {
-			var instance = this;
-
 			var undo = Liferay.Language.get('undo');
 
 			var undoEvent = "'" + namespace + "undoDefinition'";
@@ -211,35 +186,17 @@ AUI.add(
 				undo +
 				'</a>';
 
-			var successMessage = Liferay.Language.get(
+			var message = Liferay.Language.get(
 				'definition-imported-sucessfully'
 			);
 
-			successMessage += undoLink;
+			message += undoLink;
 
-			var alert = instance._alert;
-
-			if (alert) {
-				alert.destroy();
-			}
-
-			alert = new Liferay.Alert({
-				closeable: true,
-				delay: {
-					hide: 10000,
-					show: 0,
-				},
-				message: successMessage,
-				type: 'success',
+			Liferay.Util.openToast({
+				container: document.querySelector('.lfr-alert-container'),
+				message,
+				messageType: 'html',
 			});
-
-			if (!alert.get('rendered')) {
-				alert.render('.portlet-column');
-			}
-
-			alert.show();
-
-			instance._alert = alert;
 		};
 
 		KaleoDesignerDialogs.openConfirmDeleteDialog = openConfirmDeleteDialog;

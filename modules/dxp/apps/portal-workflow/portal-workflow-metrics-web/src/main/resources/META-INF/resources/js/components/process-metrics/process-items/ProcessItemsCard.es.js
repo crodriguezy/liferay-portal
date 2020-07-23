@@ -11,6 +11,7 @@
  */
 
 import ClayIcon from '@clayui/icon';
+import ClayLayout from '@clayui/layout';
 import {ClayTooltipProvider} from '@clayui/tooltip';
 import React, {useMemo} from 'react';
 
@@ -27,20 +28,24 @@ const ProcessItemsCard = ({
 	completed,
 	description,
 	processId,
-	timeRange,
+	timeRange = {},
 	title,
 }) => {
-	const timeRangeParams = timeRange || {};
-
 	const {data, fetchData} = useFetch({
 		params: {
 			completed,
-			...timeRangeParams,
+			...timeRange,
 		},
 		url: `/processes/${processId}/metrics`,
 	});
 
-	const promises = useMemo(() => [fetchData()], [fetchData]);
+	const promises = useMemo(() => {
+		if (!completed || (timeRange.dateEnd && timeRange.dateStart)) {
+			return [fetchData()];
+		}
+
+		return [new Promise((_, reject) => reject())];
+	}, [fetchData, timeRange.dateEnd, timeRange.dateStart]);
 
 	return (
 		<PromisesResolver promises={promises}>
@@ -110,8 +115,8 @@ const Header = ({children, data, description, title}) => (
 	<Panel.Header
 		elementClasses={['dashboard-panel-header', children && 'pb-0']}
 	>
-		<div className="autofit-row">
-			<div className="autofit-col autofit-col-expand flex-row">
+		<ClayLayout.ContentRow>
+			<ClayLayout.ContentCol className="flex-row" expand>
 				<span className="mr-2">{title}</span>
 
 				<ClayTooltipProvider>
@@ -125,14 +130,14 @@ const Header = ({children, data, description, title}) => (
 						</span>
 					</span>
 				</ClayTooltipProvider>
-			</div>
+			</ClayLayout.ContentCol>
 
 			{children && data && (
-				<div className="autofit-col m-0 management-bar management-bar-light navbar">
+				<ClayLayout.ContentCol className="m-0 management-bar management-bar-light navbar">
 					<ul className="navbar-nav">{children}</ul>
-				</div>
+				</ClayLayout.ContentCol>
 			)}
-		</div>
+		</ClayLayout.ContentRow>
 	</Panel.Header>
 );
 

@@ -124,6 +124,10 @@ public class MBCategoryPersistenceTest {
 
 		MBCategory newMBCategory = _persistence.create(pk);
 
+		newMBCategory.setMvccVersion(RandomTestUtil.nextLong());
+
+		newMBCategory.setCtCollectionId(RandomTestUtil.nextLong());
+
 		newMBCategory.setUuid(RandomTestUtil.randomString());
 
 		newMBCategory.setGroupId(RandomTestUtil.nextLong());
@@ -146,12 +150,6 @@ public class MBCategoryPersistenceTest {
 
 		newMBCategory.setDisplayStyle(RandomTestUtil.randomString());
 
-		newMBCategory.setThreadCount(RandomTestUtil.nextInt());
-
-		newMBCategory.setMessageCount(RandomTestUtil.nextInt());
-
-		newMBCategory.setLastPostDate(RandomTestUtil.nextDate());
-
 		newMBCategory.setLastPublishDate(RandomTestUtil.nextDate());
 
 		newMBCategory.setStatus(RandomTestUtil.nextInt());
@@ -167,6 +165,12 @@ public class MBCategoryPersistenceTest {
 		MBCategory existingMBCategory = _persistence.findByPrimaryKey(
 			newMBCategory.getPrimaryKey());
 
+		Assert.assertEquals(
+			existingMBCategory.getMvccVersion(),
+			newMBCategory.getMvccVersion());
+		Assert.assertEquals(
+			existingMBCategory.getCtCollectionId(),
+			newMBCategory.getCtCollectionId());
 		Assert.assertEquals(
 			existingMBCategory.getUuid(), newMBCategory.getUuid());
 		Assert.assertEquals(
@@ -196,15 +200,6 @@ public class MBCategoryPersistenceTest {
 		Assert.assertEquals(
 			existingMBCategory.getDisplayStyle(),
 			newMBCategory.getDisplayStyle());
-		Assert.assertEquals(
-			existingMBCategory.getThreadCount(),
-			newMBCategory.getThreadCount());
-		Assert.assertEquals(
-			existingMBCategory.getMessageCount(),
-			newMBCategory.getMessageCount());
-		Assert.assertEquals(
-			Time.getShortTimestamp(existingMBCategory.getLastPostDate()),
-			Time.getShortTimestamp(newMBCategory.getLastPostDate()));
 		Assert.assertEquals(
 			Time.getShortTimestamp(existingMBCategory.getLastPublishDate()),
 			Time.getShortTimestamp(newMBCategory.getLastPublishDate()));
@@ -393,11 +388,11 @@ public class MBCategoryPersistenceTest {
 
 	protected OrderByComparator<MBCategory> getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create(
-			"MBCategory", "uuid", true, "categoryId", true, "groupId", true,
-			"companyId", true, "userId", true, "userName", true, "createDate",
-			true, "modifiedDate", true, "parentCategoryId", true, "name", true,
-			"description", true, "displayStyle", true, "threadCount", true,
-			"messageCount", true, "lastPostDate", true, "lastPublishDate", true,
+			"MBCategory", "mvccVersion", true, "ctCollectionId", true, "uuid",
+			true, "categoryId", true, "groupId", true, "companyId", true,
+			"userId", true, "userName", true, "createDate", true,
+			"modifiedDate", true, "parentCategoryId", true, "name", true,
+			"description", true, "displayStyle", true, "lastPublishDate", true,
 			"status", true, "statusByUserId", true, "statusByUserName", true,
 			"statusDate", true);
 	}
@@ -636,6 +631,10 @@ public class MBCategoryPersistenceTest {
 
 		MBCategory mbCategory = _persistence.create(pk);
 
+		mbCategory.setMvccVersion(RandomTestUtil.nextLong());
+
+		mbCategory.setCtCollectionId(RandomTestUtil.nextLong());
+
 		mbCategory.setUuid(RandomTestUtil.randomString());
 
 		mbCategory.setGroupId(RandomTestUtil.nextLong());
@@ -657,12 +656,6 @@ public class MBCategoryPersistenceTest {
 		mbCategory.setDescription(RandomTestUtil.randomString());
 
 		mbCategory.setDisplayStyle(RandomTestUtil.randomString());
-
-		mbCategory.setThreadCount(RandomTestUtil.nextInt());
-
-		mbCategory.setMessageCount(RandomTestUtil.nextInt());
-
-		mbCategory.setLastPostDate(RandomTestUtil.nextDate());
 
 		mbCategory.setLastPublishDate(RandomTestUtil.nextDate());
 

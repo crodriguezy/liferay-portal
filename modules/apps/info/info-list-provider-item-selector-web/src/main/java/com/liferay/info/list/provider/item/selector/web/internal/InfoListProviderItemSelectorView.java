@@ -14,6 +14,7 @@
 
 package com.liferay.info.list.provider.item.selector.web.internal;
 
+import com.liferay.info.list.provider.DefaultInfoListProviderContext;
 import com.liferay.info.list.provider.InfoListProvider;
 import com.liferay.info.list.provider.InfoListProviderTracker;
 import com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorCriterion;
@@ -26,7 +27,9 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.Language;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
+import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -116,13 +119,16 @@ public class InfoListProviderItemSelectorView
 	@Reference
 	private Language _language;
 
+	@Reference
+	private LayoutLocalService _layoutLocalService;
+
 	@Reference(
 		target = "(osgi.web.symbolicname=com.liferay.info.list.provider.item.selector.web)"
 	)
 	private ServletContext _servletContext;
 
 	private class InfoListProviderItemSelectorViewDescriptor
-		implements ItemSelectorViewDescriptor<InfoListProvider> {
+		implements ItemSelectorViewDescriptor<InfoListProvider<?>> {
 
 		public InfoListProviderItemSelectorViewDescriptor(
 			HttpServletRequest httpServletRequest,
@@ -138,7 +144,7 @@ public class InfoListProviderItemSelectorView
 
 		@Override
 		public ItemDescriptor getItemDescriptor(
-			InfoListProvider infoListProvider) {
+			InfoListProvider<?> infoListProvider) {
 
 			return new ItemDescriptor() {
 
@@ -194,7 +200,7 @@ public class InfoListProviderItemSelectorView
 		}
 
 		@Override
-		public SearchContainer<InfoListProvider> getSearchContainer() {
+		public SearchContainer<InfoListProvider<?>> getSearchContainer() {
 			PortletRequest portletRequest =
 				(PortletRequest)_httpServletRequest.getAttribute(
 					JavaConstants.JAVAX_PORTLET_REQUEST);
@@ -206,13 +212,13 @@ public class InfoListProviderItemSelectorView
 			ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
 				"content.Language", themeDisplay.getLocale(), getClass());
 
-			SearchContainer<InfoListProvider> searchContainer =
+			SearchContainer<InfoListProvider<?>> searchContainer =
 				new SearchContainer<>(
 					portletRequest, _portletURL, null,
 					_language.get(
 						resourceBundle, "there-are-no-collection-providers"));
 
-			List<InfoListProvider> infoListProviders = new ArrayList<>();
+			List<InfoListProvider<?>> infoListProviders = new ArrayList<>();
 
 			List<String> itemTypes =
 				_infoListProviderItemSelectorCriterion.getItemTypes();
@@ -229,6 +235,20 @@ public class InfoListProviderItemSelectorView
 					_infoListProviderTracker.getInfoListProviders();
 			}
 
+			Layout layout = _layoutLocalService.fetchLayout(
+				_infoListProviderItemSelectorCriterion.getPlid());
+
+			DefaultInfoListProviderContext defaultInfoListProviderContext =
+				new DefaultInfoListProviderContext(
+					themeDisplay.getScopeGroup(), themeDisplay.getUser());
+
+			defaultInfoListProviderContext.setLayout(layout);
+
+			infoListProviders = ListUtil.filter(
+				infoListProviders,
+				infoListProvider -> infoListProvider.isAvailable(
+					defaultInfoListProviderContext));
+
 			searchContainer.setResults(
 				ListUtil.subList(
 					infoListProviders, searchContainer.getStart(),
@@ -243,7 +263,7 @@ public class InfoListProviderItemSelectorView
 			return false;
 		}
 
-		private String _getClassName(InfoListProvider infoListProvider) {
+		private String _getClassName(InfoListProvider<?> infoListProvider) {
 			Class<?> clazz = infoListProvider.getClass();
 
 			Type[] genericInterfaceTypes = clazz.getGenericInterfaces();

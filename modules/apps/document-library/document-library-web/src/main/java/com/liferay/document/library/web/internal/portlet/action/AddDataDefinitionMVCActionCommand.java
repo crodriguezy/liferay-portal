@@ -16,10 +16,12 @@ package com.liferay.document.library.web.internal.portlet.action;
 
 import com.liferay.data.engine.rest.dto.v2_0.DataDefinition;
 import com.liferay.data.engine.rest.dto.v2_0.DataLayout;
+import com.liferay.data.engine.rest.resource.exception.DataDefinitionValidationException;
 import com.liferay.data.engine.rest.resource.v2_0.DataDefinitionResource;
 import com.liferay.document.library.constants.DLPortletKeys;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
+import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -67,8 +69,18 @@ public class AddDataDefinitionMVCActionCommand extends BaseMVCActionCommand {
 		dataDefinition.setDefaultDataLayout(
 			DataLayout.toDTO(ParamUtil.getString(actionRequest, "dataLayout")));
 
-		dataDefinitionResource.postSiteDataDefinitionByContentType(
-			groupId, "document-library", dataDefinition);
+		try {
+			dataDefinitionResource.postSiteDataDefinitionByContentType(
+				groupId, "document-library", dataDefinition);
+		}
+		catch (DataDefinitionValidationException
+					dataDefinitionValidationException) {
+
+			hideDefaultErrorMessage(actionRequest);
+
+			SessionErrors.add(
+				actionRequest, dataDefinitionValidationException.getClass());
+		}
 	}
 
 }

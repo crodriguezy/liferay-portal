@@ -156,10 +156,9 @@ public class WorkflowMetricsSLADefinitionLocalServiceImpl
 			workflowMetricsSLADefinitionPersistence.update(
 				workflowMetricsSLADefinition);
 
-		User user = userLocalService.getUser(serviceContext.getGuestOrUserId());
-
 		addWorkflowMetricsSLADefinitionVersion(
-			user, workflowMetricsSLADefinition);
+			userLocalService.getUser(serviceContext.getGuestOrUserId()),
+			workflowMetricsSLADefinition);
 
 		long companyId = workflowMetricsSLADefinition.getCompanyId();
 		long processId = workflowMetricsSLADefinition.getProcessId();
@@ -185,10 +184,12 @@ public class WorkflowMetricsSLADefinitionLocalServiceImpl
 	@Override
 	public List<WorkflowMetricsSLADefinition> getWorkflowMetricsSLADefinitions(
 		long companyId, boolean active, long processId, int status, int start,
-		int end, OrderByComparator<WorkflowMetricsSLADefinition> obc) {
+		int end,
+		OrderByComparator<WorkflowMetricsSLADefinition> orderByComparator) {
 
 		return workflowMetricsSLADefinitionPersistence.findByC_A_P_S(
-			companyId, active, processId, status, start, end, obc);
+			companyId, active, processId, status, start, end,
+			orderByComparator);
 	}
 
 	@Override
@@ -206,6 +207,14 @@ public class WorkflowMetricsSLADefinitionLocalServiceImpl
 
 		return workflowMetricsSLADefinitionPersistence.findByC_S(
 			companyId, status);
+	}
+
+	@Override
+	public List<WorkflowMetricsSLADefinition> getWorkflowMetricsSLADefinitions(
+		long companyId, String name, long processId) {
+
+		return workflowMetricsSLADefinitionPersistence.findByC_A_N_P(
+			companyId, true, name, processId);
 	}
 
 	@Override
@@ -326,7 +335,7 @@ public class WorkflowMetricsSLADefinitionLocalServiceImpl
 		workflowMetricsSLADefinitionVersion.setModifiedDate(now);
 
 		workflowMetricsSLADefinitionVersion.setActive(
-			workflowMetricsSLADefinition.getActive());
+			workflowMetricsSLADefinition.isActive());
 		workflowMetricsSLADefinitionVersion.setCalendarKey(
 			workflowMetricsSLADefinition.getCalendarKey());
 		workflowMetricsSLADefinitionVersion.setDescription(

@@ -135,6 +135,16 @@ public class AppSerDes {
 			sb.append(app.getDataListViewId());
 		}
 
+		if (app.getDataRecordCollectionId() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"dataRecordCollectionId\": ");
+
+			sb.append(app.getDataRecordCollectionId());
+		}
+
 		if (app.getDateCreated() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -181,6 +191,20 @@ public class AppSerDes {
 			sb.append("\"name\": ");
 
 			sb.append(_toJSON(app.getName()));
+		}
+
+		if (app.getScope() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"scope\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(app.getScope()));
+
+			sb.append("\"");
 		}
 
 		if (app.getSiteId() != null) {
@@ -269,6 +293,15 @@ public class AppSerDes {
 			map.put("dataListViewId", String.valueOf(app.getDataListViewId()));
 		}
 
+		if (app.getDataRecordCollectionId() == null) {
+			map.put("dataRecordCollectionId", null);
+		}
+		else {
+			map.put(
+				"dataRecordCollectionId",
+				String.valueOf(app.getDataRecordCollectionId()));
+		}
+
 		if (app.getDateCreated() == null) {
 			map.put("dateCreated", null);
 		}
@@ -299,6 +332,13 @@ public class AppSerDes {
 		}
 		else {
 			map.put("name", String.valueOf(app.getName()));
+		}
+
+		if (app.getScope() == null) {
+			map.put("scope", null);
+		}
+		else {
+			map.put("scope", String.valueOf(app.getScope()));
 		}
 
 		if (app.getSiteId() == null) {
@@ -376,6 +416,14 @@ public class AppSerDes {
 						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
+			else if (Objects.equals(
+						jsonParserFieldName, "dataRecordCollectionId")) {
+
+				if (jsonParserFieldValue != null) {
+					app.setDataRecordCollectionId(
+						Long.valueOf((String)jsonParserFieldValue));
+				}
+			}
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
 					app.setDateCreated(toDate((String)jsonParserFieldValue));
@@ -395,6 +443,11 @@ public class AppSerDes {
 				if (jsonParserFieldValue != null) {
 					app.setName(
 						(Map)AppSerDes.toMap((String)jsonParserFieldValue));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "scope")) {
+				if (jsonParserFieldValue != null) {
+					app.setScope((String)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "siteId")) {

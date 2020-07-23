@@ -15,7 +15,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(
@@ -114,9 +113,6 @@ definition {
 
 	@priority = "5"
 	test DeleteRepeatingAllFollowing {
-		property portal.upstream = "quarantine";
-
-		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "Calendar#DeleteEventRepeatingAllFollowing";
 
 		CalendarNavigator.gotoAddEvent();
@@ -498,8 +494,6 @@ definition {
 	@description = "This is a use case for LPS-50016."
 	@priority = "3"
 	test EditRepeatingAllEventsInTheSeries {
-		property portal.upstream = "quarantine";
-
 		CalendarNavigator.gotoAddEvent();
 
 		CalendarEvent.editTitle(eventTitle = "Original Event Title");
@@ -536,8 +530,6 @@ definition {
 	@description = "This is a use case for LPS-50017"
 	@priority = "2"
 	test EditRepeatingAllFollowing {
-		property portal.upstream = "quarantine";
-
 		CalendarNavigator.gotoAddEvent();
 
 		CalendarEvent.editTitle(eventTitle = "Original Event Title");
@@ -665,9 +657,7 @@ definition {
 
 	@priority = "4"
 	test ViewCalendarChange {
-		property portal.upstream = "quarantine";
-
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -678,7 +668,7 @@ definition {
 			userLastName = "userln",
 			userScreenName = "usersn");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -691,7 +681,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "People",
-			panel = "Site Administration",
 			portlet = "Memberships");
 
 		Site.assignUserAsMemberCP(

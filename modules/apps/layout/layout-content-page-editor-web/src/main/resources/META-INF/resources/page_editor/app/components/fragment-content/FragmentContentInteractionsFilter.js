@@ -19,8 +19,8 @@ import {EDITABLE_FRAGMENT_ENTRY_PROCESSOR} from '../../config/constants/editable
 import {ITEM_ACTIVATION_ORIGINS} from '../../config/constants/itemActivationOrigins';
 import {ITEM_TYPES} from '../../config/constants/itemTypes';
 import {config} from '../../config/index';
-import selectCanUpdate from '../../selectors/selectCanUpdate';
-import selectCanUpdateLayoutContent from '../../selectors/selectCanUpdateLayoutContent';
+import selectCanUpdateEditables from '../../selectors/selectCanUpdateEditables';
+import selectCanUpdatePageStructure from '../../selectors/selectCanUpdatePageStructure';
 import {useSelector} from '../../store/index';
 import {
 	useActivationOrigin,
@@ -47,7 +47,7 @@ const EDITABLE_CLASS_NAMES = {
 };
 
 const isTranslated = (defaultLanguageId, languageId, editableValue) =>
-	defaultLanguageId !== languageId && editableValue[languageId];
+	defaultLanguageId !== languageId && editableValue?.[languageId];
 
 export default function FragmentContentInteractionsFilter({
 	children,
@@ -65,11 +65,9 @@ export default function FragmentContentInteractionsFilter({
 	const hoveredItemType = useHoveredItemType();
 	const selectItem = useSelectItem();
 	const setEditableProcessorUniqueId = useSetEditableProcessorUniqueId();
-	const canUpdateLayoutContent = useSelector(selectCanUpdateLayoutContent);
-	const canUpdate = useSelector(selectCanUpdate);
+	const canUpdatePageStructure = useSelector(selectCanUpdatePageStructure);
+	const canUpdateEditables = useSelector(selectCanUpdateEditables);
 	const languageId = useSelector((state) => state.languageId);
-
-	const canOnlyUpdateInlineContent = !canUpdate && canUpdateLayoutContent;
 
 	const editableValues = useSelector((state) =>
 		state.fragmentEntryLinks[fragmentEntryLinkId]
@@ -144,7 +142,7 @@ export default function FragmentContentInteractionsFilter({
 		editableElements.forEach((editableElement) => {
 			if (editableValues) {
 				const editableValue =
-					editableValues[getEditableElementId(editableElement)];
+					editableValues[getEditableElementId(editableElement)] || {};
 
 				const editableUniqueId = getEditableUniqueId(
 					fragmentEntryLinkId,
@@ -161,7 +159,7 @@ export default function FragmentContentInteractionsFilter({
 					hovered = true;
 				}
 				else if (
-					siblingIds.some(isActive) &&
+					(siblingIds.some(isActive) || !canUpdatePageStructure) &&
 					isHovered(editableUniqueId)
 				) {
 					hovered = true;
@@ -178,6 +176,7 @@ export default function FragmentContentInteractionsFilter({
 			}
 		});
 	}, [
+		canUpdatePageStructure,
 		editableElements,
 		editableValues,
 		fragmentEntryLinkId,
@@ -231,7 +230,7 @@ export default function FragmentContentInteractionsFilter({
 			);
 
 			if (activeEditableElement) {
-				if (canUpdateLayoutContent) {
+				if (canUpdateEditables) {
 					requestAnimationFrame(() => {
 						activeEditableElement.addEventListener(
 							'dblclick',
@@ -264,7 +263,7 @@ export default function FragmentContentInteractionsFilter({
 		activationOrigin,
 		activeItemId,
 		activeItemType,
-		canUpdateLayoutContent,
+		canUpdateEditables,
 		editableElements,
 		editableValues,
 		fragmentEntryLinkId,
@@ -313,8 +312,12 @@ export default function FragmentContentInteractionsFilter({
 
 	const props = {};
 
-	if (siblingIds.some(isActive) || canOnlyUpdateInlineContent) {
+	if (
+		canUpdateEditables &&
+		(siblingIds.some(isActive) || !canUpdatePageStructure)
+	) {
 		props.onClickCapture = selectEditable;
+		props.onMouseLeave = () => hoverItem(null);
 		props.onMouseOverCapture = hoverEditable;
 	}
 

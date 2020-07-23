@@ -38,6 +38,11 @@ public class DataEngineNativeObjectDataDefinitionContentType
 	implements DataDefinitionContentType {
 
 	@Override
+	public boolean allowEmptyDataDefinition() {
+		return true;
+	}
+
+	@Override
 	public long getClassNameId() {
 		return _portal.getClassNameId(DataEngineNativeObject.class);
 	}
@@ -84,6 +89,11 @@ public class DataEngineNativeObjectDataDefinitionContentType
 
 		return _portletResourcePermission.contains(
 			permissionChecker, groupId, actionId);
+	}
+
+	@Override
+	public boolean isDataRecordCollectionPermissionCheckingEnabled() {
+		return true;
 	}
 
 	@Reference

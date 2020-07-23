@@ -244,10 +244,6 @@ public class EagerBlobEntityPersistenceImpl
 				}
 			}
 			catch (Exception exception) {
-				if (useFinderCache) {
-					finderCache.removeResult(finderPath, finderArgs);
-				}
-
 				throw processException(exception);
 			}
 			finally {
@@ -600,8 +596,6 @@ public class EagerBlobEntityPersistenceImpl
 				finderCache.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception exception) {
-				finderCache.removeResult(finderPath, finderArgs);
-
 				throw processException(exception);
 			}
 			finally {
@@ -759,11 +753,6 @@ public class EagerBlobEntityPersistenceImpl
 				}
 			}
 			catch (Exception exception) {
-				if (useFinderCache) {
-					finderCache.removeResult(
-						_finderPathFetchByUUID_G, finderArgs);
-				}
-
 				throw processException(exception);
 			}
 			finally {
@@ -852,8 +841,6 @@ public class EagerBlobEntityPersistenceImpl
 				finderCache.putResult(finderPath, finderArgs, count);
 			}
 			catch (Exception exception) {
-				finderCache.removeResult(finderPath, finderArgs);
-
 				throw processException(exception);
 			}
 			finally {
@@ -885,7 +872,6 @@ public class EagerBlobEntityPersistenceImpl
 
 		setModelImplClass(EagerBlobEntityImpl.class);
 		setModelPKClass(long.class);
-		setEntityCacheEnabled(EagerBlobEntityModelImpl.ENTITY_CACHE_ENABLED);
 
 		setTable(EagerBlobEntityTable.INSTANCE);
 	}
@@ -898,7 +884,6 @@ public class EagerBlobEntityPersistenceImpl
 	@Override
 	public void cacheResult(EagerBlobEntity eagerBlobEntity) {
 		entityCache.putResult(
-			EagerBlobEntityModelImpl.ENTITY_CACHE_ENABLED,
 			EagerBlobEntityImpl.class, eagerBlobEntity.getPrimaryKey(),
 			eagerBlobEntity);
 
@@ -921,7 +906,6 @@ public class EagerBlobEntityPersistenceImpl
 	public void cacheResult(List<EagerBlobEntity> eagerBlobEntities) {
 		for (EagerBlobEntity eagerBlobEntity : eagerBlobEntities) {
 			if (entityCache.getResult(
-					EagerBlobEntityModelImpl.ENTITY_CACHE_ENABLED,
 					EagerBlobEntityImpl.class,
 					eagerBlobEntity.getPrimaryKey()) == null) {
 
@@ -959,7 +943,6 @@ public class EagerBlobEntityPersistenceImpl
 	@Override
 	public void clearCache(EagerBlobEntity eagerBlobEntity) {
 		entityCache.removeResult(
-			EagerBlobEntityModelImpl.ENTITY_CACHE_ENABLED,
 			EagerBlobEntityImpl.class, eagerBlobEntity.getPrimaryKey());
 
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
@@ -976,7 +959,6 @@ public class EagerBlobEntityPersistenceImpl
 
 		for (EagerBlobEntity eagerBlobEntity : eagerBlobEntities) {
 			entityCache.removeResult(
-				EagerBlobEntityModelImpl.ENTITY_CACHE_ENABLED,
 				EagerBlobEntityImpl.class, eagerBlobEntity.getPrimaryKey());
 
 			clearUniqueFindersCache(
@@ -991,9 +973,7 @@ public class EagerBlobEntityPersistenceImpl
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 
 		for (Serializable primaryKey : primaryKeys) {
-			entityCache.removeResult(
-				EagerBlobEntityModelImpl.ENTITY_CACHE_ENABLED,
-				EagerBlobEntityImpl.class, primaryKey);
+			entityCache.removeResult(EagerBlobEntityImpl.class, primaryKey);
 		}
 	}
 
@@ -1228,7 +1208,6 @@ public class EagerBlobEntityPersistenceImpl
 		}
 
 		entityCache.putResult(
-			EagerBlobEntityModelImpl.ENTITY_CACHE_ENABLED,
 			EagerBlobEntityImpl.class, eagerBlobEntity.getPrimaryKey(),
 			eagerBlobEntity, false);
 
@@ -1416,10 +1395,6 @@ public class EagerBlobEntityPersistenceImpl
 				}
 			}
 			catch (Exception exception) {
-				if (useFinderCache) {
-					finderCache.removeResult(finderPath, finderArgs);
-				}
-
 				throw processException(exception);
 			}
 			finally {
@@ -1465,9 +1440,6 @@ public class EagerBlobEntityPersistenceImpl
 					_finderPathCountAll, FINDER_ARGS_EMPTY, count);
 			}
 			catch (Exception exception) {
-				finderCache.removeResult(
-					_finderPathCountAll, FINDER_ARGS_EMPTY);
-
 				throw processException(exception);
 			}
 			finally {
@@ -1508,27 +1480,19 @@ public class EagerBlobEntityPersistenceImpl
 	 */
 	public void afterPropertiesSet() {
 		_finderPathWithPaginationFindAll = new FinderPath(
-			EagerBlobEntityModelImpl.ENTITY_CACHE_ENABLED,
-			EagerBlobEntityModelImpl.FINDER_CACHE_ENABLED,
 			EagerBlobEntityImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
 			"findAll", new String[0]);
 
 		_finderPathWithoutPaginationFindAll = new FinderPath(
-			EagerBlobEntityModelImpl.ENTITY_CACHE_ENABLED,
-			EagerBlobEntityModelImpl.FINDER_CACHE_ENABLED,
 			EagerBlobEntityImpl.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findAll",
 			new String[0]);
 
 		_finderPathCountAll = new FinderPath(
-			EagerBlobEntityModelImpl.ENTITY_CACHE_ENABLED,
-			EagerBlobEntityModelImpl.FINDER_CACHE_ENABLED, Long.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countAll",
+			Long.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countAll",
 			new String[0]);
 
 		_finderPathWithPaginationFindByUuid = new FinderPath(
-			EagerBlobEntityModelImpl.ENTITY_CACHE_ENABLED,
-			EagerBlobEntityModelImpl.FINDER_CACHE_ENABLED,
 			EagerBlobEntityImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
 			"findByUuid",
 			new String[] {
@@ -1537,29 +1501,22 @@ public class EagerBlobEntityPersistenceImpl
 			});
 
 		_finderPathWithoutPaginationFindByUuid = new FinderPath(
-			EagerBlobEntityModelImpl.ENTITY_CACHE_ENABLED,
-			EagerBlobEntityModelImpl.FINDER_CACHE_ENABLED,
 			EagerBlobEntityImpl.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByUuid",
 			new String[] {String.class.getName()});
 
 		_finderPathCountByUuid = new FinderPath(
-			EagerBlobEntityModelImpl.ENTITY_CACHE_ENABLED,
-			EagerBlobEntityModelImpl.FINDER_CACHE_ENABLED, Long.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByUuid",
-			new String[] {String.class.getName()});
+			Long.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByUuid", new String[] {String.class.getName()});
 
 		_finderPathFetchByUUID_G = new FinderPath(
-			EagerBlobEntityModelImpl.ENTITY_CACHE_ENABLED,
-			EagerBlobEntityModelImpl.FINDER_CACHE_ENABLED,
 			EagerBlobEntityImpl.class, FINDER_CLASS_NAME_ENTITY,
 			"fetchByUUID_G",
 			new String[] {String.class.getName(), Long.class.getName()});
 
 		_finderPathCountByUUID_G = new FinderPath(
-			EagerBlobEntityModelImpl.ENTITY_CACHE_ENABLED,
-			EagerBlobEntityModelImpl.FINDER_CACHE_ENABLED, Long.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByUUID_G",
+			Long.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByUUID_G",
 			new String[] {String.class.getName(), Long.class.getName()});
 	}
 

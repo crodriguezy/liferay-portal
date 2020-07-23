@@ -23,6 +23,7 @@ import com.liferay.item.selector.constants.ItemSelectorPortletKeys;
 import com.liferay.item.selector.web.internal.util.ItemSelectorCriterionSerializerImpl;
 import com.liferay.item.selector.web.internal.util.ItemSelectorKeyUtil;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -41,6 +42,8 @@ import com.liferay.portal.util.PortalImpl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -280,8 +283,19 @@ public class ItemSelectorImplTest extends PowerMockito {
 			_itemSelectorImpl.getItemSelectorParameters(
 				itemSelectedEventName, itemSelectorCriteria);
 
-		String itemSelectorURL =
-			"http://localhost?p_p_state=popup&p_p_mode=view";
+		String itemSelectorURL = StringBundler.concat(
+			"http://localhost/select/",
+			Stream.of(
+				itemSelectorCriteria
+			).map(
+				itemSelectorCriterion ->
+					ItemSelectorKeyUtil.getItemSelectorCriterionKey(
+						itemSelectorCriterion.getClass())
+			).collect(
+				Collectors.joining(StringPool.COMMA)
+			),
+			StringPool.SLASH, itemSelectedEventName,
+			"?p_p_state=popup&p_p_mode=view");
 
 		String namespace = PortalUtil.getPortletNamespace(
 			ItemSelectorPortletKeys.ITEM_SELECTOR);

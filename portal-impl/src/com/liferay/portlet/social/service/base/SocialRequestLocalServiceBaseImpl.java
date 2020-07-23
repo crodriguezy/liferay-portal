@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.social.service.base;
 
+import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.petra.sql.dsl.query.DSLQuery;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.db.DB;
@@ -38,6 +39,7 @@ import com.liferay.portal.kernel.service.persistence.BasePersistence;
 import com.liferay.portal.kernel.service.persistence.ClassNamePersistence;
 import com.liferay.portal.kernel.service.persistence.UserFinder;
 import com.liferay.portal.kernel.service.persistence.UserPersistence;
+import com.liferay.portal.kernel.service.persistence.change.tracking.CTPersistence;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -75,6 +77,10 @@ public abstract class SocialRequestLocalServiceBaseImpl
 	/**
 	 * Adds the social request to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect SocialRequestLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param socialRequest the social request
 	 * @return the social request that was added
 	 */
@@ -101,6 +107,10 @@ public abstract class SocialRequestLocalServiceBaseImpl
 	/**
 	 * Deletes the social request with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect SocialRequestLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param requestId the primary key of the social request
 	 * @return the social request that was removed
 	 * @throws PortalException if a social request with the primary key could not be found
@@ -115,6 +125,10 @@ public abstract class SocialRequestLocalServiceBaseImpl
 
 	/**
 	 * Deletes the social request from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect SocialRequestLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param socialRequest the social request
 	 * @return the social request that was removed
@@ -404,6 +418,10 @@ public abstract class SocialRequestLocalServiceBaseImpl
 	/**
 	 * Updates the social request in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect SocialRequestLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param socialRequest the social request
 	 * @return the social request that was updated
 	 */
@@ -623,8 +641,23 @@ public abstract class SocialRequestLocalServiceBaseImpl
 		return SocialRequestLocalService.class.getName();
 	}
 
-	protected Class<?> getModelClass() {
+	@Override
+	public CTPersistence<SocialRequest> getCTPersistence() {
+		return socialRequestPersistence;
+	}
+
+	@Override
+	public Class<SocialRequest> getModelClass() {
 		return SocialRequest.class;
+	}
+
+	@Override
+	public <R, E extends Throwable> R updateWithUnsafeFunction(
+			UnsafeFunction<CTPersistence<SocialRequest>, R, E>
+				updateUnsafeFunction)
+		throws E {
+
+		return updateUnsafeFunction.apply(socialRequestPersistence);
 	}
 
 	protected String getModelClassName() {

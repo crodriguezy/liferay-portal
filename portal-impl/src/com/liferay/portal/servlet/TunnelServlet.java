@@ -64,12 +64,12 @@ public class TunnelServlet extends HttpServlet {
 			return;
 		}
 
-		ObjectInputStream ois = null;
+		ObjectInputStream objectInputStream = null;
 
 		Thread thread = Thread.currentThread();
 
 		try {
-			ois = new ProtectedClassLoaderObjectInputStream(
+			objectInputStream = new ProtectedClassLoaderObjectInputStream(
 				httpServletRequest.getInputStream(),
 				thread.getContextClassLoader());
 		}
@@ -81,7 +81,7 @@ public class TunnelServlet extends HttpServlet {
 			return;
 		}
 
-		Object returnObj = null;
+		Object returnObject = null;
 
 		boolean remoteAccess = AccessControlThreadLocal.isRemoteAccess();
 
@@ -89,7 +89,8 @@ public class TunnelServlet extends HttpServlet {
 			AccessControlThreadLocal.setRemoteAccess(true);
 
 			ObjectValuePair<HttpPrincipal, MethodHandler> ovp =
-				(ObjectValuePair<HttpPrincipal, MethodHandler>)ois.readObject();
+				(ObjectValuePair<HttpPrincipal, MethodHandler>)
+					objectInputStream.readObject();
 
 			MethodHandler methodHandler = ovp.getValue();
 
@@ -100,23 +101,23 @@ public class TunnelServlet extends HttpServlet {
 					return;
 				}
 
-				returnObj = methodHandler.invoke();
+				returnObject = methodHandler.invoke();
 			}
 		}
 		catch (InvocationTargetException invocationTargetException) {
-			returnObj = invocationTargetException.getCause();
+			returnObject = invocationTargetException.getCause();
 
-			if (!(returnObj instanceof PortalException)) {
+			if (!(returnObject instanceof PortalException)) {
 				_log.error(
 					invocationTargetException, invocationTargetException);
 
-				if (returnObj != null) {
-					Throwable throwable = (Throwable)returnObj;
+				if (returnObject != null) {
+					Throwable throwable = (Throwable)returnObject;
 
-					returnObj = new SystemException(throwable.getMessage());
+					returnObject = new SystemException(throwable.getMessage());
 				}
 				else {
-					returnObj = new SystemException();
+					returnObject = new SystemException();
 				}
 			}
 		}
@@ -127,11 +128,11 @@ public class TunnelServlet extends HttpServlet {
 			AccessControlThreadLocal.setRemoteAccess(remoteAccess);
 		}
 
-		if (returnObj != null) {
+		if (returnObject != null) {
 			try (ObjectOutputStream oos = new ObjectOutputStream(
 					httpServletResponse.getOutputStream())) {
 
-				oos.writeObject(returnObj);
+				oos.writeObject(returnObject);
 			}
 			catch (IOException ioException) {
 				_log.error(ioException, ioException);

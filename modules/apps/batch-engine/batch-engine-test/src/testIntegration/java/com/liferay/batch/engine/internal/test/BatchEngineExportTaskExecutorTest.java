@@ -59,7 +59,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,6 +78,7 @@ public class BatchEngineExportTaskExecutorTest
 		_objectMapper.addMixIn(BlogPosting.class, BlogPostingMixin.class);
 	}
 
+	@Before
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
@@ -85,6 +88,7 @@ public class BatchEngineExportTaskExecutorTest
 		).build();
 	}
 
+	@After
 	@Override
 	public void tearDown() throws Exception {
 		super.tearDown();

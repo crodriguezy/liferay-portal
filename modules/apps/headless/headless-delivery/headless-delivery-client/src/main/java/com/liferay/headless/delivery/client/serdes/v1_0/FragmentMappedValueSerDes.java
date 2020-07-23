@@ -55,6 +55,18 @@ public class FragmentMappedValueSerDes {
 
 		sb.append("{");
 
+		if (fragmentMappedValue.getDefaultFragmentInlineValue() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"defaultFragmentInlineValue\": ");
+
+			sb.append(
+				String.valueOf(
+					fragmentMappedValue.getDefaultFragmentInlineValue()));
+		}
+
 		if (fragmentMappedValue.getDefaultValue() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -96,6 +108,16 @@ public class FragmentMappedValueSerDes {
 
 		Map<String, String> map = new TreeMap<>();
 
+		if (fragmentMappedValue.getDefaultFragmentInlineValue() == null) {
+			map.put("defaultFragmentInlineValue", null);
+		}
+		else {
+			map.put(
+				"defaultFragmentInlineValue",
+				String.valueOf(
+					fragmentMappedValue.getDefaultFragmentInlineValue()));
+		}
+
 		if (fragmentMappedValue.getDefaultValue() == null) {
 			map.put("defaultValue", null);
 		}
@@ -134,11 +156,19 @@ public class FragmentMappedValueSerDes {
 			FragmentMappedValue fragmentMappedValue, String jsonParserFieldName,
 			Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "defaultValue")) {
+			if (Objects.equals(
+					jsonParserFieldName, "defaultFragmentInlineValue")) {
+
 				if (jsonParserFieldValue != null) {
-					fragmentMappedValue.setDefaultValue(
+					fragmentMappedValue.setDefaultFragmentInlineValue(
 						FragmentInlineValueSerDes.toDTO(
 							(String)jsonParserFieldValue));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "defaultValue")) {
+				if (jsonParserFieldValue != null) {
+					fragmentMappedValue.setDefaultValue(
+						DefaultValueSerDes.toDTO((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "mapping")) {

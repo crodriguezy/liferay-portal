@@ -605,10 +605,12 @@ public class JournalArticleWrapper
 	public java.util.List<com.liferay.portal.kernel.repository.model.FileEntry>
 			getImagesFileEntries(
 				int start, int end,
-				com.liferay.portal.kernel.util.OrderByComparator obc)
+				com.liferay.portal.kernel.util.OrderByComparator
+					<com.liferay.portal.kernel.repository.model.FileEntry>
+						orderByComparator)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return model.getImagesFileEntries(start, end, obc);
+		return model.getImagesFileEntries(start, end, orderByComparator);
 	}
 
 	@Override

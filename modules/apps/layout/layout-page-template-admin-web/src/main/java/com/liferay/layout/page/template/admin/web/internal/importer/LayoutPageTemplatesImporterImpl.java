@@ -208,7 +208,7 @@ public class LayoutPageTemplatesImporterImpl
 
 	private List<DisplayPageTemplateEntry> _getDisplayPageTemplateEntries(
 			long groupId, ZipFile zipFile)
-		throws IOException, PortalException {
+		throws Exception {
 
 		List<DisplayPageTemplateEntry> displayPageTemplateEntries =
 			new ArrayList<>();
@@ -427,7 +427,7 @@ public class LayoutPageTemplatesImporterImpl
 
 	private List<MasterPageEntry> _getMasterPageEntries(
 			long groupId, ZipFile zipFile)
-		throws IOException, PortalException {
+		throws Exception {
 
 		List<MasterPageEntry> masterPageEntries = new ArrayList<>();
 
@@ -528,7 +528,7 @@ public class LayoutPageTemplatesImporterImpl
 
 	private Map<String, PageTemplateCollectionEntry>
 			_getPageTemplateCollectionEntryMap(long groupId, ZipFile zipFile)
-		throws IOException, PortalException {
+		throws Exception {
 
 		Map<String, PageTemplateCollectionEntry> pageTemplateCollectionMap =
 			new HashMap<>();
@@ -1178,14 +1178,12 @@ public class LayoutPageTemplatesImporterImpl
 			Layout layout, LayoutStructure layoutStructure)
 		throws Exception {
 
-		long classNameId = _portal.getClassNameId(Layout.class.getName());
-
 		JSONObject jsonObject = layoutStructure.toJSONObject();
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			_layoutPageTemplateStructureLocalService.
 				fetchLayoutPageTemplateStructure(
-					layout.getGroupId(), classNameId, layout.getPlid());
+					layout.getGroupId(), layout.getPlid());
 
 		if (layoutPageTemplateStructure != null) {
 			_layoutPageTemplateStructureLocalService.
@@ -1193,8 +1191,8 @@ public class LayoutPageTemplatesImporterImpl
 		}
 
 		_layoutPageTemplateStructureLocalService.addLayoutPageTemplateStructure(
-			layout.getUserId(), layout.getGroupId(), classNameId,
-			layout.getPlid(), jsonObject.toString(),
+			layout.getUserId(), layout.getGroupId(), layout.getPlid(),
+			jsonObject.toString(),
 			ServiceContextThreadLocal.getServiceContext());
 	}
 
@@ -1204,8 +1202,7 @@ public class LayoutPageTemplatesImporterImpl
 		Layout layout = _layoutLocalService.fetchLayout(
 			layoutPageTemplateEntry.getPlid());
 
-		Layout draftLayout = _layoutLocalService.fetchLayout(
-			_portal.getClassNameId(Layout.class.getName()), layout.getPlid());
+		Layout draftLayout = layout.fetchDraftLayout();
 
 		draftLayout = _layoutCopyHelper.copyLayout(layout, draftLayout);
 
@@ -1221,6 +1218,15 @@ public class LayoutPageTemplatesImporterImpl
 
 		Map<String, String> themeSettings =
 			(Map<String, String>)settings.getThemeSettings();
+
+		Set<Map.Entry<String, String>> entrySet = unicodeProperties.entrySet();
+
+		entrySet.removeIf(
+			entry -> {
+				String key = entry.getKey();
+
+				return key.startsWith("lfr-theme:");
+			});
 
 		if (themeSettings != null) {
 			for (Map.Entry<String, String> entry : themeSettings.entrySet()) {

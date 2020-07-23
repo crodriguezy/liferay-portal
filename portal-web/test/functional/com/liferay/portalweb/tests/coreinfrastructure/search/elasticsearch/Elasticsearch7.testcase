@@ -1,9 +1,6 @@
 @component-name = "portal-search"
 definition {
 
-	property osgi.app.includes = "portal-search-elasticsearch7";
-	property osgi.module.configuration.file.names = "com.liferay.portal.bundle.blacklist.internal.BundleBlacklistConfiguration.config";
-	property osgi.module.configurations = "blacklistBundleSymbolicNames=&quot;com.liferay.portal.mobile.device.detection.fiftyonedegrees.api,com.liferay.portal.mobile.device.detection.fiftyonedegrees.enterprise,com.liferay.portal.mobile.device.detection.fiftyonedegrees.enterprise.test.data,com.liferay.portal.mobile.device.detection.fiftyonedegrees,com.liferay.portal.search.elasticsearch6.impl,com.liferay.portal.search.elasticsearch6.spi,com.liferay.portal.search.elasticsearch6.api,com.liferay.portal.search.elasticsearch6.xpack.security.impl&quot;";
 	property portal.release = "true";
 	property portal.suite.search.engine = "elasticsearch7";
 	property portal.upstream = "true";
@@ -30,10 +27,101 @@ definition {
 		}
 	}
 
+	@priority = "4"
+	test AssertIndexOnStartup {
+		property test.assert.warning.exceptions = "true";
+		property test.name.skip.portal.instance = "Elasticsearch7#AssertIndexOnStartup";
+
+		JSONWebcontent.addWebContent(
+			content = "WC WebContent Content",
+			groupName = "Guest",
+			title = "WC WebContent Title");
+
+		JSONDocument.addFile(
+			dmDocumentDescription = "DM Document Description",
+			dmDocumentTitle = "DM Document Title",
+			groupName = "Guest");
+
+		JSONBlog.addEntry(
+			entryContent = "Blogs Entry Content",
+			entryTitle = "Blogs Entry Title");
+
+		JSONLayout.addPublicLayout(
+			groupName = "Guest",
+			layoutName = "Asset Publisher Page");
+
+		var portalURL = PropsUtil.get("portal.url");
+
+		Navigator.openSpecificURL(url = "${portalURL}/web/guest/asset-publisher-page");
+
+		Portlet.addPG(portletName = "Asset Publisher");
+
+		Portlet.shutdownServer();
+
+		var liferayHome = PropsUtil.get("liferay.home.dir.name");
+
+		var elasticsearchDeleted = FileUtil.delete("${liferayHome}/data/elasticsearch7");
+
+		if ("${elasticsearchDeleted}" == "true") {
+			echo("Deleted ${liferayHome}/data/elasticsearch7");
+		}
+		else {
+			fail("Failed to delete elasticsearch7 directory");
+		}
+
+		var newProperty = "index.on.startup=true";
+
+		AntCommand(
+			locator1 = "build-test.xml",
+			value1 = "portal-ext-properties-update -Dadd.new.properties=true -Dupdate.properties=${newProperty}");
+
+		Portlet.startServer(deleteLiferayHome = "false");
+
+		Navigator.openSpecificURL(url = "${portalURL}/web/guest/asset-publisher-page");
+
+		// Workaround for LPS-113094
+
+		VerifyElementPresent(
+			key_assetTitle = "Blogs Entry Title",
+			locator1 = "AP#ASSET_ABSTRACT_TITLE");
+
+		VerifyElementPresent(
+			key_assetTitle = "DM Document Title",
+			locator1 = "AP#ASSET_ABSTRACT_TITLE");
+
+		VerifyElementPresent(
+			key_assetTitle = "WC WebContent Title",
+			locator1 = "AP#ASSET_ABSTRACT_TITLE");
+
+		SearchPortlets.searchEmbedded(searchTerm = "test");
+
+		// Workaround for LPS-89026 and LPS-113094
+
+		VerifyElementPresent(
+			key_searchAssetTitle = "Blogs Entry Title",
+			key_searchAssetType = "Blogs Entry",
+			locator1 = "SearchResults#ASSET_ENTRY_TABLE_TITLE_SPECIFIC");
+
+		VerifyElementPresent(
+			key_searchAssetTitle = "DM Document Title",
+			key_searchAssetType = "Document",
+			locator1 = "SearchResults#ASSET_ENTRY_TABLE_TITLE_SPECIFIC");
+
+		VerifyElementPresent(
+			key_searchAssetTitle = "Test Test",
+			key_searchAssetType = "User",
+			locator1 = "SearchResults#ASSET_ENTRY_TABLE_TITLE_SPECIFIC");
+
+		VerifyElementPresent(
+			key_searchAssetTitle = "WC WebContent Title",
+			key_searchAssetType = "Web Content Article",
+			locator1 = "SearchResults#ASSET_ENTRY_TABLE_TITLE_SPECIFIC");
+	}
+
 	test AssertSearchAdmin {
 		property test.name.skip.portal.instance = "Elasticsearch7#AssertSearchAdmin";
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "Search");
@@ -69,7 +157,6 @@ definition {
 
 	@priority = "4"
 	test AssertSearchInsightsExplain {
-		property portal.upstream = "quarantine";
 		property test.name.skip.portal.instance = "Elasticsearch7#AssertSearchInsightsExplain";
 
 		JSONWebcontent.addWebContent(
@@ -86,11 +173,6 @@ definition {
 		Portlet.gotoPortletOptions(
 			portletName = "Search Insights",
 			portletOption = "Configuration");
-
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
 
 		SelectFrame(locator1 = "IFrame#CONFIGURATION");
 
@@ -118,11 +200,6 @@ definition {
 			portletName = "Search Insights",
 			portletOption = "Configuration");
 
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "IFrame#CONFIGURATION");
 
 		Uncheck(
@@ -144,6 +221,24 @@ definition {
 			value1 = "_explanation");
 	}
 
+	test AssertSidecarAutoInstall {
+		property delete.sidecar.bundle = "true";
+		property test.assert.warning.exceptions = "true";
+
+		AssertConsoleTextPresent(value1 = "Sidecar Elasticsearch liferay is at 127.0.0.1:9201");
+
+		JSONWebcontent.addWebContent(
+			content = "WC Content",
+			groupName = "Guest",
+			title = "apple");
+
+		SearchPortlets.searchEmbedded(searchTerm = "apple");
+
+		SearchResultPortlet.viewSearchResults(
+			searchAssetTitle = "apple",
+			searchAssetType = "Web Content Article");
+	}
+
 	@ignore = "true"
 	@priority = "3"
 	test AssertSystemSettingsPropogateToModule {
@@ -152,7 +247,7 @@ definition {
 
 		property test.name.skip.portal.instance = "Elasticsearch7#AssertSystemSettingsPropogateToModule";
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "System Settings");
@@ -187,7 +282,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Message Boards");
 
 		MessageboardsThread.addCP(
@@ -198,7 +292,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Documents and Media");
 
 		DMDocument.addCP(
@@ -231,81 +324,6 @@ definition {
 			searchAssetType = "Message Boards Message");
 	}
 
-	test HotDeployElasticsearch7App {
-		property hot.deploy.osgi.app.includes = "portal-search-elasticsearch7";
-		property osgi.app.includes = "";
-		property test.name.skip.portal.instance = "Elasticsearch7#HotDeployElasticsearch7App";
-
-		if (IsTextEqual.isPartialText(locator1 = "HelloWorld#PORTLET_CONTENT", value1 = "Liferay Community Edition")) {
-			var appName = "Liferay CE Connector to Elasticsearch 7";
-		}
-		else {
-			var appName = "Liferay Connector to Elasticsearch 7";
-		}
-
-		AssertConsoleTextNotPresent(value1 = "The portal instance needs to be restarted");
-
-		AssertConsoleTextPresent(value1 = "STARTED ${appName}");
-
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
-			panel = "Control Panel",
-			portlet = "Search");
-
-		SearchAdministration.assertEngineVendorAndVersions(
-			clientVersion = "7.3.0",
-			engineVendor = "Elasticsearch",
-			serverVersion = "7.3.0");
-
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
-			panel = "Control Panel",
-			portlet = "System Settings");
-
-		SystemSettings.gotoConfiguration(
-			configurationCategory = "Search",
-			configurationName = "Elasticsearch 7",
-			configurationScope = "System Scope");
-
-		ProductMenu.gotoPortlet(
-			category = "Apps",
-			panel = "Control Panel",
-			portlet = "App Manager");
-
-		AppManager.viewAppCP(
-			appName = "${appName}",
-			appStatus = "Active",
-			searchTerm = "Elasticsearch");
-
-		AppManager.deactivateAppCP(appName = "${appName}");
-
-		AppManager.viewAppCP(
-			appName = "${appName}",
-			appStatus = "Resolved",
-			searchTerm = "Elasticsearch");
-
-		AssertConsoleTextPresent(value1 = "STOPPED com.liferay.portal.search.elasticsearch7");
-
-		AppManager.activateAppCP(appName = "${appName}");
-
-		AssertConsoleTextPresent(value1 = "STARTED com.liferay.portal.search.elasticsearch7");
-
-		AssertConsoleTextNotPresent(value1 = "The portal instance needs to be restarted");
-
-		JSONWebcontent.addWebContent(
-			content = "WC Content",
-			groupName = "Guest",
-			title = "apple");
-
-		Navigator.openURL();
-
-		SearchPortlets.searchEmbedded(searchTerm = "apple");
-
-		SearchResultPortlet.viewSearchResults(
-			searchAssetTitle = "apple",
-			searchAssetType = "Web Content Article");
-	}
-
 	test MultipleConnectionsSmokeTest {
 		property portal.upstream = "quarantine";
 		property remote.elasticsearch.clusters.enabled = "true";
@@ -315,9 +333,9 @@ definition {
 			OSGiConfigFileName = "com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConnectionConfiguration-connection2.config",
 			OSGiConfigs = "active=&quot;true&quot;,connectionId=&quot;connection2&quot;,networkHostAddresses=[&quot;http://localhost:9202&quot;]");
 
-		Pause(locator1 = "5000");
+		Pause(locator1 = "10000");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "Search");
@@ -409,8 +427,8 @@ definition {
 
 	@priority = "5"
 	test OSGiConfigSmokeTest {
-		property osgi.module.configuration.file.names = "com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config:com.liferay.portal.bundle.blacklist.internal.BundleBlacklistConfiguration.config";
-		property osgi.module.configurations = "clusterName=&quot;LiferayElasticsearchCluster1&quot;:blacklistBundleSymbolicNames=&quot;com.liferay.portal.mobile.device.detection.fiftyonedegrees.api,com.liferay.portal.mobile.device.detection.fiftyonedegrees.enterprise,com.liferay.portal.mobile.device.detection.fiftyonedegrees.enterprise.test.data,com.liferay.portal.mobile.device.detection.fiftyonedegrees,com.liferay.portal.search.elasticsearch6.impl,com.liferay.portal.search.elasticsearch6.spi,com.liferay.portal.search.elasticsearch6.api,com.liferay.portal.search.elasticsearch6.xpack.security.impl&quot;";
+		property osgi.module.configuration.file.names = "com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration.config";
+		property osgi.module.configurations = "clusterName=&quot;LiferayElasticsearchCluster1&quot;";
 		property portal.acceptance = "true";
 
 		Navigator.openSpecificURL(url = "http://localhost:9201");
@@ -423,22 +441,13 @@ definition {
 
 		Navigator.openSpecificURL(url = "http://localhost:9201");
 
-		if (IsTextEqual.isPartialText(locator1 = "//body", value1 = "&quot;number&quot; : &quot;7")) {
-			AntCommand(
-				locator1 = "build-test-elasticsearch7.xml",
-				value1 = "add-boston-dataset-index -Dbackup.index=boston311 -Delasticsearch.port=9201");
-		}
-		else {
-			Navigator.openSpecificURL(url = "http://localhost:9200");
-
-			AntCommand(
-				locator1 = "build-test-elasticsearch6.xml",
-				value1 = "add-boston-dataset-index -Dbackup.index=boston311 -Delasticsearch.port=9200");
-		}
+		AntCommand(
+			locator1 = "build-test-elasticsearch7.xml",
+			value1 = "add-boston-dataset-index -Dbackup.index=boston311 -Delasticsearch.port=9201");
 
 		Navigator.openURL();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "Search");

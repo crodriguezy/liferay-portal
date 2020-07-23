@@ -37,17 +37,17 @@ public class DDMFormInstanceVersionCacheModel
 	implements CacheModel<DDMFormInstanceVersion>, Externalizable, MVCCModel {
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof DDMFormInstanceVersionCacheModel)) {
+		if (!(object instanceof DDMFormInstanceVersionCacheModel)) {
 			return false;
 		}
 
 		DDMFormInstanceVersionCacheModel ddmFormInstanceVersionCacheModel =
-			(DDMFormInstanceVersionCacheModel)obj;
+			(DDMFormInstanceVersionCacheModel)object;
 
 		if ((formInstanceVersionId ==
 				ddmFormInstanceVersionCacheModel.formInstanceVersionId) &&
@@ -78,10 +78,12 @@ public class DDMFormInstanceVersionCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(35);
+		StringBundler sb = new StringBundler(37);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
+		sb.append(", ctCollectionId=");
+		sb.append(ctCollectionId);
 		sb.append(", formInstanceVersionId=");
 		sb.append(formInstanceVersionId);
 		sb.append(", groupId=");
@@ -125,6 +127,7 @@ public class DDMFormInstanceVersionCacheModel
 			new DDMFormInstanceVersionImpl();
 
 		ddmFormInstanceVersionImpl.setMvccVersion(mvccVersion);
+		ddmFormInstanceVersionImpl.setCtCollectionId(ctCollectionId);
 		ddmFormInstanceVersionImpl.setFormInstanceVersionId(
 			formInstanceVersionId);
 		ddmFormInstanceVersionImpl.setGroupId(groupId);
@@ -204,6 +207,8 @@ public class DDMFormInstanceVersionCacheModel
 
 		mvccVersion = objectInput.readLong();
 
+		ctCollectionId = objectInput.readLong();
+
 		formInstanceVersionId = objectInput.readLong();
 
 		groupId = objectInput.readLong();
@@ -218,7 +223,7 @@ public class DDMFormInstanceVersionCacheModel
 
 		structureVersionId = objectInput.readLong();
 		name = objectInput.readUTF();
-		description = objectInput.readUTF();
+		description = (String)objectInput.readObject();
 		settings = (String)objectInput.readObject();
 		version = objectInput.readUTF();
 
@@ -232,6 +237,8 @@ public class DDMFormInstanceVersionCacheModel
 	@Override
 	public void writeExternal(ObjectOutput objectOutput) throws IOException {
 		objectOutput.writeLong(mvccVersion);
+
+		objectOutput.writeLong(ctCollectionId);
 
 		objectOutput.writeLong(formInstanceVersionId);
 
@@ -262,10 +269,10 @@ public class DDMFormInstanceVersionCacheModel
 		}
 
 		if (description == null) {
-			objectOutput.writeUTF("");
+			objectOutput.writeObject("");
 		}
 		else {
-			objectOutput.writeUTF(description);
+			objectOutput.writeObject(description);
 		}
 
 		if (settings == null) {
@@ -297,6 +304,7 @@ public class DDMFormInstanceVersionCacheModel
 	}
 
 	public long mvccVersion;
+	public long ctCollectionId;
 	public long formInstanceVersionId;
 	public long groupId;
 	public long companyId;

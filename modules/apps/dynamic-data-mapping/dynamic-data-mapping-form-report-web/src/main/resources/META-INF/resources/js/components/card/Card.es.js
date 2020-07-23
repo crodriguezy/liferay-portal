@@ -14,15 +14,42 @@
 
 import ClayCard from '@clayui/card';
 import ClayIcon from '@clayui/icon';
+import ClayLayout from '@clayui/layout';
 import {ClayTooltipProvider} from '@clayui/tooltip';
 import React from 'react';
 
 import EmptyState from '../empty-state/EmptyState.es';
+import Summary from '../summary/Summary.es';
 
-export default ({children, field: {icon, name, title}, totalEntries}) => (
-	<div className="col-md-8">
-		<div className="sheet">
-			<div className="col-md-12">
+const TotalEntriesLabel = ({totalEntries}) => {
+	let label = Liferay.Language.get('there-are-no-entries');
+
+	if (totalEntries == 1) {
+		label = `1 ${Liferay.Language.get('entry').toLowerCase()}`;
+	}
+
+	if (totalEntries > 1) {
+		label = `${totalEntries} ${Liferay.Language.get(
+			'entries'
+		).toLowerCase()}`;
+	}
+
+	return (
+		<ClayCard.Description displayType="text" truncate={false}>
+			{label}
+		</ClayCard.Description>
+	);
+};
+
+export default ({
+	children,
+	field: {icon, label, title},
+	summary,
+	totalEntries,
+}) => (
+	<div className="report-cards-area">
+		<ClayLayout.Sheet>
+			<ClayLayout.Col>
 				<ClayCard displayType="image">
 					<ClayCard.AspectRatio className="card-header card-item-first">
 						<ClayTooltipProvider>
@@ -38,22 +65,15 @@ export default ({children, field: {icon, name, title}, totalEntries}) => (
 
 						<div className="field-info">
 							<ClayCard.Description displayType="title">
-								{name}
+								{label}
 							</ClayCard.Description>
 
-							<ClayCard.Description
-								displayType="text"
-								truncate={false}
-							>
-								{totalEntries > 0
-									? `${totalEntries} ${Liferay.Language.get(
-											'entries'
-									  ).toLowerCase()}`
-									: Liferay.Language.get(
-											'there-are-no-entries'
-									  )}
-							</ClayCard.Description>
+							<TotalEntriesLabel totalEntries={totalEntries} />
 						</div>
+
+						{!!Object.entries(summary).length && (
+							<Summary summary={summary} />
+						)}
 					</ClayCard.AspectRatio>
 
 					<ClayCard.Body>
@@ -68,7 +88,7 @@ export default ({children, field: {icon, name, title}, totalEntries}) => (
 						)}
 					</ClayCard.Body>
 				</ClayCard>
-			</div>
-		</div>
+			</ClayLayout.Col>
+		</ClayLayout.Sheet>
 	</div>
 );

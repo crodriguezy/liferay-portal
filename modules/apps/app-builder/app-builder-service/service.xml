@@ -24,10 +24,12 @@
 		<!-- Other fields -->
 
 		<column name="active" type="boolean" />
+		<column name="ddlRecordSetId" type="long" />
 		<column name="ddmStructureId" type="long" />
 		<column name="ddmStructureLayoutId" type="long" />
 		<column name="deDataListViewId" type="long" />
 		<column localized="true" name="name" type="String" />
+		<column name="scope" type="String" />
 
 		<!-- Finder methods -->
 
@@ -40,19 +42,56 @@
 		<finder name="DDMStructureId" return-type="Collection">
 			<finder-column name="ddmStructureId" />
 		</finder>
+		<finder name="G_S" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="scope" />
+		</finder>
 		<finder name="C_A" return-type="Collection">
 			<finder-column name="companyId" />
 			<finder-column name="active" />
+		</finder>
+		<finder name="C_S" return-type="Collection">
+			<finder-column name="companyId" />
+			<finder-column name="scope" />
 		</finder>
 		<finder name="G_C_D" return-type="Collection">
 			<finder-column name="groupId" />
 			<finder-column name="companyId" />
 			<finder-column name="ddmStructureId" />
 		</finder>
+		<finder name="C_A_S" return-type="Collection">
+			<finder-column name="companyId" />
+			<finder-column name="active" />
+			<finder-column name="scope" />
+		</finder>
 
 		<!-- References -->
 
 		<reference entity="User" package-path="com.liferay.portal" />
+	</entity>
+	<entity local-service="true" name="AppBuilderAppDataRecordLink" remote-service="false">
+
+		<!-- PK fields -->
+
+		<column name="appBuilderAppDataRecordLinkId" primary="true" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+
+		<!-- Other fields -->
+
+		<column name="appBuilderAppId" type="long" />
+		<column name="ddlRecordId" type="long" />
+
+		<!-- Finder methods -->
+
+		<finder name="AppBuilderAppId" return-type="Collection">
+			<finder-column name="appBuilderAppId" />
+		</finder>
+		<finder name="DDLRecordId" return-type="AppBuilderAppDataRecordLink">
+			<finder-column name="ddlRecordId" />
+		</finder>
 	</entity>
 	<entity local-service="true" name="AppBuilderAppDeployment" remote-service="false">
 

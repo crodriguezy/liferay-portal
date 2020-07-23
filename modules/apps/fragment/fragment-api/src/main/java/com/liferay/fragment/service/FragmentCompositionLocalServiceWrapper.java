@@ -36,6 +36,10 @@ public class FragmentCompositionLocalServiceWrapper
 	/**
 	 * Adds the fragment composition to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect FragmentCompositionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param fragmentComposition the fragment composition
 	 * @return the fragment composition that was added
 	 */
@@ -92,6 +96,10 @@ public class FragmentCompositionLocalServiceWrapper
 	/**
 	 * Deletes the fragment composition from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect FragmentCompositionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param fragmentComposition the fragment composition
 	 * @return the fragment composition that was removed
 	 * @throws PortalException
@@ -109,6 +117,10 @@ public class FragmentCompositionLocalServiceWrapper
 
 	/**
 	 * Deletes the fragment composition with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect FragmentCompositionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param fragmentCompositionId the primary key of the fragment composition
 	 * @return the fragment composition that was removed
@@ -492,6 +504,10 @@ public class FragmentCompositionLocalServiceWrapper
 
 	/**
 	 * Updates the fragment composition in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect FragmentCompositionLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param fragmentComposition the fragment composition
 	 * @return the fragment composition that was updated

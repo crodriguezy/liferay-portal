@@ -332,10 +332,10 @@ public class FileUtil {
 						pathMap.putAll(_getFilesFromClasspath(pathString));
 					}
 					else {
-						InputStream is = FileUtil.class.getResourceAsStream(
-							pathString);
+						InputStream inputStream =
+							FileUtil.class.getResourceAsStream(pathString);
 
-						pathMap.put(pathString, is);
+						pathMap.put(pathString, inputStream);
 					}
 				}
 			}
@@ -373,9 +373,7 @@ public class FileUtil {
 		return pathMap;
 	}
 
-	private static FileSystem _getJarFileSystem()
-		throws IOException, URISyntaxException {
-
+	private static FileSystem _getJarFileSystem() throws Exception {
 		URI jarUri = _getJarUri();
 
 		Path jarPath = Paths.get(jarUri);

@@ -27,7 +27,7 @@ long ddmStructureId = BeanParamUtil.getLong(formInstance, request, "structureId"
 
 boolean disableCopyButton = false;
 
-if (!ddmFormAdminDisplayContext.isFormPublished() && (formInstance != null)) {
+if (!ddmFormAdminDisplayContext.isFormPublished()) {
 	disableCopyButton = true;
 }
 
@@ -42,35 +42,58 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 </portlet:actionURL>
 
 <div class="lfr-alert-container">
-	<clay:container-fluid className="lfr-alert-wrapper"></clay:container-fluid>
+	<clay:container-fluid cssClass="lfr-alert-wrapper"></clay:container-fluid>
 </div>
 
 <div class="portlet-forms" id="<portlet:namespace />formContainer">
-	<clay:navigation-bar
-		componentId="formsNavigationBar"
-		elementClasses="forms-management-bar"
-		inverted="<%= true %>"
-		navigationItems="<%= ddmFormAdminDisplayContext.getFormBuilderNavigationItems() %>"
-	/>
+	<div class="forms-navigation-bar">
+		<clay:navigation-bar
+			id="formsNavigationBar"
+			inverted="<%= true %>"
+			navigationItems="<%= ddmFormAdminDisplayContext.getFormBuilderNavigationItems() %>"
+		/>
+	</div>
 
-	<nav class="management-bar management-bar-light navbar navbar-expand-md toolbar-group-field" id="<portlet:namespace />managementToolbar">
+	<nav class="hide management-bar management-bar-light navbar navbar-expand-md toolbar-group-field" id="<portlet:namespace />managementToolbar">
 		<clay:container-fluid
-			className="autosave-bar toolbar"
+			cssClass="autosave-bar toolbar"
 		>
-			<div class="navbar-form navbar-form-autofit navbar-overlay toolbar-group-content">
+			<div class="autosave-feedback-container navbar-form navbar-form-autofit navbar-overlay toolbar-group-content">
 				<span class="autosave-feedback management-bar-text" id="<portlet:namespace />autosaveMessage"></span>
 			</div>
 
 			<ul class="navbar-nav toolbar-group-field">
-				<li class="nav-item">
-					<button class="btn btn-secondary <%= disableCopyButton ? "ddm-btn-disabled" : "" %> <%= (!ddmFormAdminDisplayContext.isFormPublished() && (formInstance == null)) ? "hide" : "" %> lfr-ddm-share-url-button nav-btn nav-btn-monospaced share-form-icon" data-original-title="<liferay-ui:message key="copy-url" />" id="<portlet:namespace />publishIcon" title="<%= disableCopyButton ? LanguageUtil.get(request, "publish-the-form-to-get-its-shareable-link") : LanguageUtil.get(request, "copy-url") %>" type="button">
-						<svg class="lexicon-icon">
-							<use xlink:href="<%= ddmFormAdminDisplayContext.getLexiconIconsPath() %>link" />
-						</svg>
+				<li class="nav-item pr-2">
+					<c:choose>
+						<c:when test="<%= disableCopyButton %>">
+							<button class="btn btn-secondary btn-sm disabled lfr-ddm-button lfr-ddm-share-url-button share-form-icon" data-original-title="<liferay-ui:message key="share" />" id="<portlet:namespace />publishIcon" title="<%= disableCopyButton ? LanguageUtil.get(request, "publish-the-form-to-get-its-shareable-link") : "" %>" type="button">
+								<%= LanguageUtil.get(request, "share") %>
+							</button>
+						</c:when>
+						<c:otherwise>
+							<button class="btn btn-secondary btn-sm lfr-ddm-button lfr-ddm-share-url-button share-form-icon" id="<portlet:namespace />publishIcon" type="button">
+								<%= LanguageUtil.get(request, "share") %>
+							</button>
+						</c:otherwise>
+					</c:choose>
+				</li>
+				<li class="nav-item pr-2">
+					<button class="btn btn-secondary btn-sm lfr-ddm-button lfr-ddm-preview-button">
+						<%= LanguageUtil.get(request, "preview") %>
+					</button>
+				</li>
+				<li class="nav-item pl-2 pr-2">
+					<button class="btn btn-secondary btn-sm lfr-ddm-button lfr-ddm-save-button">
+						<%= LanguageUtil.get(request, "save") %>
+					</button>
+				</li>
+				<li class="nav-item pr-2">
+					<button class="btn <%= ddmFormAdminDisplayContext.isFormPublished() ? "btn-secondary" : "btn-primary" %> btn-sm lfr-ddm-button lfr-ddm-publish-button">
+						<%= ddmFormAdminDisplayContext.isFormPublished() ? LanguageUtil.get(request, "unpublish") : LanguageUtil.get(request, "publish") %>
 					</button>
 				</li>
 				<li class="nav-item">
-					<button class="btn btn-primary lfr-ddm-add-field lfr-ddm-plus-button nav-btn nav-btn-monospaced" id="addFieldButton">
+					<button class="btn btn-primary btn-sm lfr-ddm-add-field lfr-ddm-plus-button nav-btn nav-btn-monospaced" id="addFieldButton" title="<%= LanguageUtil.get(request, "add-elements") %>">
 						<svg class="lexicon-icon">
 							<use xlink:href="<%= ddmFormAdminDisplayContext.getLexiconIconsPath() %>plus" />
 						</svg>
@@ -81,7 +104,7 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 	</nav>
 
 	<clay:container-fluid
-		className="ddm-translation-manager"
+		cssClass="ddm-translation-manager hide"
 	>
 		<liferay-frontend:translation-manager
 			availableLocales="<%= ddmFormAdminDisplayContext.getAvailableLocales() %>"
@@ -96,7 +119,7 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 		<aui:input name="formInstanceId" type="hidden" value="<%= formInstanceId %>" />
 		<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
 		<aui:input name="ddmStructureId" type="hidden" value="<%= ddmStructureId %>" />
-		<aui:input name="name" type="hidden" value="<%= ddmFormAdminDisplayContext.getFormLocalizedName() %>" />
+		<aui:input name="name" type="hidden" value="<%= ddmFormAdminDisplayContext.getFormLocalizedName(formInstance) %>" />
 		<aui:input name="description" type="hidden" value="<%= ddmFormAdminDisplayContext.getFormLocalizedDescription() %>" />
 		<aui:input name="serializedFormBuilderContext" type="hidden" value="<%= serializedFormBuilderContext %>" />
 		<aui:input name="serializedSettingsContext" type="hidden" value="" />
@@ -135,8 +158,8 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 	</aui:form>
 
 	<clay:container-fluid
-		className="ddm-form-instance-settings hide"
-		id='<%= renderResponse.getNamespace() + "settings" %>'
+		cssClass="ddm-form-instance-settings hide"
+		id='<%= liferayPortletResponse.getNamespace() + "settings" %>'
 	>
 		<%= ddmFormAdminDisplayContext.serializeSettingsForm(pageContext) %>
 	</clay:container-fluid>
@@ -148,12 +171,10 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 
 <liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="saveFormInstance" var="autoSaveFormInstanceURL" />
 
-<c:if test="<%= ddmFormAdminDisplayContext.isShowReport() %>">
-	<liferay-portlet:runtime
-		portletName="<%= DDMPortletKeys.DYNAMIC_DATA_MAPPING_FORM_REPORT %>"
-		queryString='<%= "formInstanceId=" + formInstanceId %>'
-	/>
-</c:if>
+<liferay-portlet:runtime
+	portletName="<%= DDMPortletKeys.DYNAMIC_DATA_MAPPING_FORM_REPORT %>"
+	queryString='<%= "formInstanceId=" + formInstanceId %>'
+/>
 
 <aui:script>
 	Liferay.namespace('DDM').FormSettings = {
@@ -197,6 +218,8 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 
 					Liferay.Forms.instance = new packageName.Form(
 						{
+							autocompleteUserURL:
+								'<%= ddmFormAdminDisplayContext.getAutocompleteUserURL() %>',
 							context: context,
 							dataProviderInstanceParameterSettingsURL:
 								'<%= dataProviderInstanceParameterSettingsURL %>',
@@ -213,12 +236,14 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 							functionsURL: '<%= functionsURL %>',
 							groupId: <%= groupId %>,
 							localizedDescription: <%= ddmFormAdminDisplayContext.getFormLocalizedDescription() %>,
-							localizedName: <%= ddmFormAdminDisplayContext.getFormLocalizedName() %>,
+							localizedName: <%= ddmFormAdminDisplayContext.getFormLocalizedName(formInstance) %>,
 							namespace: '<portlet:namespace />',
 							published: <%= ddmFormAdminDisplayContext.isFormPublished() %>,
 							rolesURL: '<%= rolesURL %>',
 							rules: <%= serializedDDMFormRules %>,
 							saved: <%= formInstance != null %>,
+							shareFormInstanceURL:
+								'<%= ddmFormAdminDisplayContext.getShareFormInstanceURL(formInstance) %>',
 							showPublishAlert: <%= ddmFormAdminDisplayContext.isShowPublishAlert() %>,
 							spritemap: Liferay.DDM.FormSettings.spritemap,
 							strings: Liferay.DDM.FormSettings.strings,
@@ -258,14 +283,7 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 
 	Liferay.on('destroyPortlet', clearPortletHandlers);
 
-	if (Liferay.DMMFieldTypesReady) {
-		Liferay.Forms.App.start();
-	}
-	else {
-		Liferay.onceAfter('DMMFieldTypesReady', function () {
-			Liferay.Forms.App.start();
-		});
-	}
+	Liferay.Forms.App.start();
 </aui:script>
 
 <aui:script use="aui-base">

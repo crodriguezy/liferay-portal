@@ -121,7 +121,7 @@ List<LayoutRevision> rootLayoutRevisions = LayoutRevisionLocalServiceUtil.getChi
 										<span class="current-version"><liferay-ui:message key="current-version" /></span>
 									</c:when>
 									<c:otherwise>
-										<a class="layout-revision selection-handle" data-layoutRevisionId="<%= curLayoutRevision.getLayoutRevisionId() %>" data-layoutSetBranchId="<%= curLayoutRevision.getLayoutSetBranchId() %>" href="javascript:;" onclick="<%= renderResponse.getNamespace() + "selectRevision(" + curLayoutRevision.getLayoutRevisionId() + ", " + curLayoutRevision.getLayoutSetBranchId() + ");" %>" title="<liferay-ui:message key="go-to-this-version" />">
+										<a class="layout-revision selection-handle" data-layoutRevisionId="<%= curLayoutRevision.getLayoutRevisionId() %>" data-layoutSetBranchId="<%= curLayoutRevision.getLayoutSetBranchId() %>" href="javascript:;" onclick="<%= liferayPortletResponse.getNamespace() + "selectRevision(" + curLayoutRevision.getLayoutRevisionId() + ", " + curLayoutRevision.getLayoutSetBranchId() + ");" %>" title="<liferay-ui:message key="go-to-this-version" />">
 											<%= curLayoutRevision.getLayoutRevisionId() %>
 										</a>
 									</c:otherwise>
@@ -172,67 +172,67 @@ List<LayoutRevision> rootLayoutRevisions = LayoutRevisionLocalServiceUtil.getChi
 </clay:container-fluid>
 
 <script>
-function <portlet:namespace />selectRevision(
-	layoutRevisionId,
-	layoutSetBranchId
-) {
-	var updateLayoutData = {
-		cmd: 'select_layout_revision',
-		doAsUserId: themeDisplay.getDoAsUserIdEncoded(),
-		layoutRevisionId: layoutRevisionId,
-		layoutSetBranchId: layoutSetBranchId,
-		p_auth: Liferay.authToken,
-		p_l_id: themeDisplay.getPlid(),
-		p_v_l_s_g_id: themeDisplay.getSiteGroupId(),
-	};
+	function <portlet:namespace />selectRevision(
+		layoutRevisionId,
+		layoutSetBranchId
+	) {
+		var updateLayoutData = {
+			cmd: 'select_layout_revision',
+			doAsUserId: themeDisplay.getDoAsUserIdEncoded(),
+			layoutRevisionId: layoutRevisionId,
+			layoutSetBranchId: layoutSetBranchId,
+			p_auth: Liferay.authToken,
+			p_l_id: themeDisplay.getPlid(),
+			p_v_l_s_g_id: themeDisplay.getSiteGroupId(),
+		};
 
-	Liferay.Util.fetch(themeDisplay.getPathMain() + '/portal/update_layout', {
-		body: Liferay.Util.objectToFormData(updateLayoutData),
-		method: 'POST',
-	}).then(function () {
-		var parentWindow = Liferay.Util.getOpener();
+		Liferay.Util.fetch(themeDisplay.getPathMain() + '/portal/update_layout', {
+			body: Liferay.Util.objectToFormData(updateLayoutData),
+			method: 'POST',
+		}).then(function () {
+			var parentWindow = Liferay.Util.getOpener();
 
-		parentWindow.location = parentWindow.location.href.split('?')[0];
-	});
-}
-
-(function () {
-	var layoutBranchesContainers = document.querySelectorAll(
-		'.layout-variation-container'
-	);
-	var variationsSelector = document.getElementById(
-		'<portlet:namespace />variationsSelector'
-	);
-
-	if (layoutBranchesContainers && variationsSelector) {
-		variationsSelector.addEventListener('change', function () {
-			var variation = variationsSelector.value;
-
-			if (variation === 'all') {
-				Array.prototype.forEach.call(
-					layoutBranchesContainers,
-					function (layoutBranchesContainer) {
-						layoutBranchesContainer.classList.remove('hide');
-					}
-				);
-			}
-			else {
-				Array.prototype.forEach.call(
-					layoutBranchesContainers,
-					function (layoutBranchesContainer) {
-						layoutBranchesContainer.classList.add('hide');
-					}
-				);
-
-				var variationElement = document.getElementById(
-					'<portlet:namespace />' + variation
-				);
-
-				if (variationElement) {
-					variationElement.classList.remove('hide');
-				}
-			}
+			parentWindow.location = parentWindow.location.href.split('?')[0];
 		});
 	}
-})();
+
+	(function () {
+		var layoutBranchesContainers = document.querySelectorAll(
+			'.layout-variation-container'
+		);
+		var variationsSelector = document.getElementById(
+			'<portlet:namespace />variationsSelector'
+		);
+
+		if (layoutBranchesContainers && variationsSelector) {
+			variationsSelector.addEventListener('change', function () {
+				var variation = variationsSelector.value;
+
+				if (variation === 'all') {
+					Array.prototype.forEach.call(
+						layoutBranchesContainers,
+						function (layoutBranchesContainer) {
+							layoutBranchesContainer.classList.remove('hide');
+						}
+					);
+				}
+				else {
+					Array.prototype.forEach.call(
+						layoutBranchesContainers,
+						function (layoutBranchesContainer) {
+							layoutBranchesContainer.classList.add('hide');
+						}
+					);
+
+					var variationElement = document.getElementById(
+						'<portlet:namespace />' + variation
+					);
+
+					if (variationElement) {
+						variationElement.classList.remove('hide');
+					}
+				}
+			});
+		}
+	})();
 </script>

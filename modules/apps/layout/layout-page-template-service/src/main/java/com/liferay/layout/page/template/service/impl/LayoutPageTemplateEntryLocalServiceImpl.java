@@ -46,6 +46,7 @@ import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.Theme;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portletfilerepository.PortletFileRepository;
+import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.CompanyLocalService;
@@ -105,20 +106,8 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 		Company company = _companyLocalService.getCompany(
 			layoutPrototype.getCompanyId());
 
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
-		long groupId = company.getGroupId();
-
-		if (serviceContext != null) {
-			long scopeGroupId = serviceContext.getScopeGroupId();
-
-			if (scopeGroupId != 0) {
-				groupId = scopeGroupId;
-			}
-		}
-
-		return addLayoutPageTemplateEntry(groupId, layoutPrototype);
+		return addLayoutPageTemplateEntry(
+			company.getGroupId(), layoutPrototype);
 	}
 
 	/**
@@ -190,6 +179,29 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 		User user = userLocalService.getUser(userId);
 
 		validate(groupId, name, type);
+
+		if ((type == LayoutPageTemplateEntryTypeConstants.TYPE_WIDGET_PAGE) &&
+			(layoutPrototypeId == 0)) {
+
+			LayoutPrototype layoutPrototype =
+				_layoutPrototypeLocalService.addLayoutPrototype(
+					userId, user.getCompanyId(),
+					Collections.singletonMap(
+						LocaleUtil.getMostRelevantLocale(), name),
+					Collections.emptyMap(), true, serviceContext);
+
+			LayoutPageTemplateEntry layoutPageTemplateEntry =
+				fetchFirstLayoutPageTemplateEntry(
+					layoutPrototype.getLayoutPrototypeId());
+
+			if (layoutPageTemplateEntry != null) {
+				layoutPageTemplateEntry.setLayoutPageTemplateCollectionId(
+					layoutPageTemplateCollectionId);
+
+				return layoutPageTemplateEntryPersistence.update(
+					layoutPageTemplateEntry);
+			}
+		}
 
 		long layoutPageTemplateEntryId = counterLocalService.increment();
 
@@ -382,6 +394,13 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 						layoutPrototypeId);
 				}
 			}
+		}
+
+		// Portlet file entry
+
+		if (layoutPageTemplateEntry.getPreviewFileEntryId() > 0) {
+			PortletFileRepositoryUtil.deletePortletFileEntry(
+				layoutPageTemplateEntry.getPreviewFileEntryId());
 		}
 
 		// Dynamic data mapping structure link
@@ -693,8 +712,7 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 		Map<Locale, String> titleMap = Collections.singletonMap(
 			LocaleUtil.getSiteDefault(), name);
 
-		Layout draftLayout = layoutLocalService.fetchLayout(
-			classNameLocalService.getClassNameId(Layout.class),
+		Layout draftLayout = layoutLocalService.fetchDraftLayout(
 			layoutPageTemplateEntry.getPlid());
 
 		ServiceContext serviceContext =
@@ -748,7 +766,6 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 
 		_fragmentEntryLinkLocalService.updateFragmentEntryLinks(
 			serviceContext.getUserId(), layoutPageTemplateEntry.getGroupId(),
-			classNameLocalService.getClassNameId(Layout.class.getName()),
 			layoutPageTemplateEntry.getPlid(), fragmentEntryIds, editableValues,
 			serviceContext);
 

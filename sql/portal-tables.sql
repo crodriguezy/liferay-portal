@@ -349,6 +349,7 @@ create table DLFileEntryType (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
+	dataDefinitionId LONG,
 	fileEntryTypeKey VARCHAR(75) null,
 	name STRING null,
 	description STRING null,
@@ -470,42 +471,50 @@ create table EmailAddress (
 
 create table ExpandoColumn (
 	mvccVersion LONG default 0 not null,
-	columnId LONG not null primary key,
+	ctCollectionId LONG default 0 not null,
+	columnId LONG not null,
 	companyId LONG,
 	tableId LONG,
 	name VARCHAR(75) null,
 	type_ INTEGER,
 	defaultData TEXT null,
-	typeSettings TEXT null
+	typeSettings TEXT null,
+	primary key (columnId, ctCollectionId)
 );
 
 create table ExpandoRow (
 	mvccVersion LONG default 0 not null,
-	rowId_ LONG not null primary key,
+	ctCollectionId LONG default 0 not null,
+	rowId_ LONG not null,
 	companyId LONG,
 	modifiedDate DATE null,
 	tableId LONG,
-	classPK LONG
+	classPK LONG,
+	primary key (rowId_, ctCollectionId)
 );
 
 create table ExpandoTable (
 	mvccVersion LONG default 0 not null,
-	tableId LONG not null primary key,
+	ctCollectionId LONG default 0 not null,
+	tableId LONG not null,
 	companyId LONG,
 	classNameId LONG,
-	name VARCHAR(75) null
+	name VARCHAR(75) null,
+	primary key (tableId, ctCollectionId)
 );
 
 create table ExpandoValue (
 	mvccVersion LONG default 0 not null,
-	valueId LONG not null primary key,
+	ctCollectionId LONG default 0 not null,
+	valueId LONG not null,
 	companyId LONG,
 	tableId LONG,
 	columnId LONG,
 	rowId_ LONG,
 	classNameId LONG,
 	classPK LONG,
-	data_ TEXT null
+	data_ TEXT null,
+	primary key (valueId, ctCollectionId)
 );
 
 create table ExportImportConfiguration (
@@ -980,8 +989,9 @@ create table PortletPreferences (
 
 create table RatingsEntry (
 	mvccVersion LONG default 0 not null,
+	ctCollectionId LONG default 0 not null,
 	uuid_ VARCHAR(75) null,
-	entryId LONG not null primary key,
+	entryId LONG not null,
 	companyId LONG,
 	userId LONG,
 	userName VARCHAR(75) null,
@@ -989,12 +999,14 @@ create table RatingsEntry (
 	modifiedDate DATE null,
 	classNameId LONG,
 	classPK LONG,
-	score DOUBLE
+	score DOUBLE,
+	primary key (entryId, ctCollectionId)
 );
 
 create table RatingsStats (
 	mvccVersion LONG default 0 not null,
-	statsId LONG not null primary key,
+	ctCollectionId LONG default 0 not null,
+	statsId LONG not null,
 	companyId LONG,
 	createDate DATE null,
 	modifiedDate DATE null,
@@ -1002,7 +1014,8 @@ create table RatingsStats (
 	classPK LONG,
 	totalEntries INTEGER,
 	totalScore DOUBLE,
-	averageScore DOUBLE
+	averageScore DOUBLE,
+	primary key (statsId, ctCollectionId)
 );
 
 create table RecentLayoutBranch (
@@ -1150,7 +1163,8 @@ create table ServiceComponent (
 
 create table SocialActivity (
 	mvccVersion LONG default 0 not null,
-	activityId LONG not null primary key,
+	ctCollectionId LONG default 0 not null,
+	activityId LONG not null,
 	groupId LONG,
 	companyId LONG,
 	userId LONG,
@@ -1163,23 +1177,27 @@ create table SocialActivity (
 	parentClassPK LONG,
 	type_ INTEGER,
 	extraData STRING null,
-	receiverUserId LONG
+	receiverUserId LONG,
+	primary key (activityId, ctCollectionId)
 );
 
 create table SocialActivityAchievement (
 	mvccVersion LONG default 0 not null,
-	activityAchievementId LONG not null primary key,
+	ctCollectionId LONG default 0 not null,
+	activityAchievementId LONG not null,
 	groupId LONG,
 	companyId LONG,
 	userId LONG,
 	createDate LONG,
 	name VARCHAR(75) null,
-	firstInGroup BOOLEAN
+	firstInGroup BOOLEAN,
+	primary key (activityAchievementId, ctCollectionId)
 );
 
 create table SocialActivityCounter (
 	mvccVersion LONG default 0 not null,
-	activityCounterId LONG not null primary key,
+	ctCollectionId LONG default 0 not null,
+	activityCounterId LONG not null,
 	groupId LONG,
 	companyId LONG,
 	classNameId LONG,
@@ -1191,12 +1209,14 @@ create table SocialActivityCounter (
 	graceValue INTEGER,
 	startPeriod INTEGER,
 	endPeriod INTEGER,
-	active_ BOOLEAN
+	active_ BOOLEAN,
+	primary key (activityCounterId, ctCollectionId)
 );
 
 create table SocialActivityLimit (
 	mvccVersion LONG default 0 not null,
-	activityLimitId LONG not null primary key,
+	ctCollectionId LONG default 0 not null,
+	activityLimitId LONG not null,
 	groupId LONG,
 	companyId LONG,
 	userId LONG,
@@ -1204,12 +1224,14 @@ create table SocialActivityLimit (
 	classPK LONG,
 	activityType INTEGER,
 	activityCounterName VARCHAR(75) null,
-	value VARCHAR(75) null
+	value VARCHAR(75) null,
+	primary key (activityLimitId, ctCollectionId)
 );
 
 create table SocialActivitySet (
 	mvccVersion LONG default 0 not null,
-	activitySetId LONG not null primary key,
+	ctCollectionId LONG default 0 not null,
+	activitySetId LONG not null,
 	groupId LONG,
 	companyId LONG,
 	userId LONG,
@@ -1219,35 +1241,41 @@ create table SocialActivitySet (
 	classPK LONG,
 	type_ INTEGER,
 	extraData STRING null,
-	activityCount INTEGER
+	activityCount INTEGER,
+	primary key (activitySetId, ctCollectionId)
 );
 
 create table SocialActivitySetting (
 	mvccVersion LONG default 0 not null,
-	activitySettingId LONG not null primary key,
+	ctCollectionId LONG default 0 not null,
+	activitySettingId LONG not null,
 	groupId LONG,
 	companyId LONG,
 	classNameId LONG,
 	activityType INTEGER,
 	name VARCHAR(75) null,
-	value VARCHAR(1024) null
+	value VARCHAR(1024) null,
+	primary key (activitySettingId, ctCollectionId)
 );
 
 create table SocialRelation (
 	mvccVersion LONG default 0 not null,
+	ctCollectionId LONG default 0 not null,
 	uuid_ VARCHAR(75) null,
-	relationId LONG not null primary key,
+	relationId LONG not null,
 	companyId LONG,
 	createDate LONG,
 	userId1 LONG,
 	userId2 LONG,
-	type_ INTEGER
+	type_ INTEGER,
+	primary key (relationId, ctCollectionId)
 );
 
 create table SocialRequest (
 	mvccVersion LONG default 0 not null,
+	ctCollectionId LONG default 0 not null,
 	uuid_ VARCHAR(75) null,
-	requestId LONG not null primary key,
+	requestId LONG not null,
 	groupId LONG,
 	companyId LONG,
 	userId LONG,
@@ -1258,12 +1286,14 @@ create table SocialRequest (
 	type_ INTEGER,
 	extraData STRING null,
 	receiverUserId LONG,
-	status INTEGER
+	status INTEGER,
+	primary key (requestId, ctCollectionId)
 );
 
 create table SystemEvent (
 	mvccVersion LONG default 0 not null,
-	systemEventId LONG not null primary key,
+	ctCollectionId LONG default 0 not null,
+	systemEventId LONG not null,
 	groupId LONG,
 	companyId LONG,
 	userId LONG,
@@ -1276,7 +1306,8 @@ create table SystemEvent (
 	parentSystemEventId LONG,
 	systemEventSetKey LONG,
 	type_ INTEGER,
-	extraData TEXT null
+	extraData TEXT null,
+	primary key (systemEventId, ctCollectionId)
 );
 
 create table Team (
@@ -1552,7 +1583,8 @@ create table Website (
 
 create table WorkflowDefinitionLink (
 	mvccVersion LONG default 0 not null,
-	workflowDefinitionLinkId LONG not null primary key,
+	ctCollectionId LONG default 0 not null,
+	workflowDefinitionLinkId LONG not null,
 	groupId LONG,
 	companyId LONG,
 	userId LONG,
@@ -1563,12 +1595,14 @@ create table WorkflowDefinitionLink (
 	classPK LONG,
 	typePK LONG,
 	workflowDefinitionName VARCHAR(75) null,
-	workflowDefinitionVersion INTEGER
+	workflowDefinitionVersion INTEGER,
+	primary key (workflowDefinitionLinkId, ctCollectionId)
 );
 
 create table WorkflowInstanceLink (
 	mvccVersion LONG default 0 not null,
-	workflowInstanceLinkId LONG not null primary key,
+	ctCollectionId LONG default 0 not null,
+	workflowInstanceLinkId LONG not null,
 	groupId LONG,
 	companyId LONG,
 	userId LONG,
@@ -1577,5 +1611,6 @@ create table WorkflowInstanceLink (
 	modifiedDate DATE null,
 	classNameId LONG,
 	classPK LONG,
-	workflowInstanceId LONG
+	workflowInstanceId LONG,
+	primary key (workflowInstanceLinkId, ctCollectionId)
 );

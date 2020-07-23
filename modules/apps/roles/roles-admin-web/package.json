@@ -2,7 +2,7 @@
 	"dependencies": {
 		"@clayui/button": "3.3.1",
 		"@clayui/icon": "3.0.5",
-		"@clayui/label": "3.3.0",
+		"@clayui/label": "3.3.1",
 		"frontend-js-react-web": "*",
 		"frontend-js-web": "*",
 		"prop-types": "15.7.2",
@@ -14,5 +14,5 @@
 		"checkFormat": "liferay-npm-scripts check",
 		"format": "liferay-npm-scripts fix"
 	},
-	"version": "4.0.20"
+	"version": "4.0.23"
 }

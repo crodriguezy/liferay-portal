@@ -17,11 +17,9 @@ package com.liferay.layout.content.page.editor.web.internal.portlet.action;
 import com.liferay.fragment.processor.PortletRegistry;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
 import com.liferay.layout.content.page.editor.listener.ContentPageEditorListenerTracker;
-import com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration;
 import com.liferay.layout.content.page.editor.web.internal.util.layout.structure.LayoutStructureUtil;
 import com.liferay.layout.util.LayoutCopyHelper;
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
@@ -44,14 +42,11 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 
 import java.util.Collections;
-import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -59,7 +54,6 @@ import org.osgi.service.component.annotations.Reference;
  * @author Pavel Savinov
  */
 @Component(
-	configurationPid = "com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration",
 	immediate = true,
 	property = {
 		"javax.portlet.name=" + ContentPageEditorPortletKeys.CONTENT_PAGE_EDITOR_PORTLET,
@@ -77,15 +71,6 @@ public class PublishLayoutMVCActionCommand
 		throws PortletException {
 
 		return super.processAction(actionRequest, actionResponse);
-	}
-
-	@Activate
-	protected void activate(
-		BundleContext bundleContext, Map<String, Object> properties) {
-
-		_ffLayoutContentPageEditorConfiguration =
-			ConfigurableUtil.createConfigurable(
-				FFLayoutContentPageEditorConfiguration.class, properties);
 	}
 
 	@Override
@@ -127,52 +112,11 @@ public class PublishLayoutMVCActionCommand
 			}
 		}
 
-		if (_ffLayoutContentPageEditorConfiguration.undoEnabled()) {
-			LayoutStructureUtil.deleteMarkedForDeletionItems(
-				draftLayout.getCompanyId(), _contentPageEditorListenerTracker,
-				draftLayout.getGroupId(), draftLayout.getPlid(),
-				_portletRegistry);
-		}
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+			actionRequest);
 
-		if (_workflowDefinitionLinkLocalService.hasWorkflowDefinitionLink(
-				layout.getCompanyId(), layout.getGroupId(),
-				Layout.class.getName())) {
-
-			ServiceContext serviceContext = ServiceContextFactory.getInstance(
-				actionRequest);
-
-			WorkflowHandlerRegistryUtil.startWorkflowInstance(
-				layout.getCompanyId(), layout.getGroupId(),
-				themeDisplay.getUserId(), Layout.class.getName(),
-				layout.getPlid(), layout, serviceContext,
-				Collections.emptyMap());
-		}
-		else {
-			layout = _layoutCopyHelper.copyLayout(draftLayout, layout);
-
-			layout.setType(draftLayout.getType());
-			layout.setStatus(WorkflowConstants.STATUS_APPROVED);
-
-			String layoutPrototypeUuid = layout.getLayoutPrototypeUuid();
-
-			layout.setLayoutPrototypeUuid(null);
-
-			_layoutLocalService.updateLayout(layout);
-
-			draftLayout = _layoutLocalService.getLayout(themeDisplay.getPlid());
-
-			UnicodeProperties typeSettingsUnicodeProperties =
-				draftLayout.getTypeSettingsProperties();
-
-			if (Validator.isNotNull(layoutPrototypeUuid)) {
-				typeSettingsUnicodeProperties.setProperty(
-					"layoutPrototypeUuid", layoutPrototypeUuid);
-			}
-
-			draftLayout.setStatus(WorkflowConstants.STATUS_APPROVED);
-
-			_layoutLocalService.updateLayout(draftLayout);
-		}
+		_publishLayout(
+			draftLayout, layout, serviceContext, themeDisplay.getUserId());
 
 		String portletId = _portal.getPortletId(actionRequest);
 
@@ -189,11 +133,54 @@ public class PublishLayoutMVCActionCommand
 		sendRedirect(actionRequest, actionResponse);
 	}
 
+	private void _publishLayout(
+			Layout draftLayout, Layout layout, ServiceContext serviceContext,
+			long userId)
+		throws Exception {
+
+		LayoutStructureUtil.deleteMarkedForDeletionItems(
+			draftLayout.getCompanyId(), _contentPageEditorListenerTracker,
+			draftLayout.getGroupId(), draftLayout.getPlid(), _portletRegistry);
+
+		if (_workflowDefinitionLinkLocalService.hasWorkflowDefinitionLink(
+				layout.getCompanyId(), layout.getGroupId(),
+				Layout.class.getName())) {
+
+			WorkflowHandlerRegistryUtil.startWorkflowInstance(
+				layout.getCompanyId(), layout.getGroupId(), userId,
+				Layout.class.getName(), layout.getPlid(), layout,
+				serviceContext, Collections.emptyMap());
+		}
+		else {
+			layout = _layoutCopyHelper.copyLayout(draftLayout, layout);
+
+			layout.setType(draftLayout.getType());
+			layout.setStatus(WorkflowConstants.STATUS_APPROVED);
+
+			String layoutPrototypeUuid = layout.getLayoutPrototypeUuid();
+
+			layout.setLayoutPrototypeUuid(null);
+
+			_layoutLocalService.updateLayout(layout);
+
+			draftLayout = _layoutLocalService.getLayout(draftLayout.getPlid());
+
+			UnicodeProperties typeSettingsUnicodeProperties =
+				draftLayout.getTypeSettingsProperties();
+
+			if (Validator.isNotNull(layoutPrototypeUuid)) {
+				typeSettingsUnicodeProperties.setProperty(
+					"layoutPrototypeUuid", layoutPrototypeUuid);
+			}
+
+			draftLayout.setStatus(WorkflowConstants.STATUS_APPROVED);
+
+			_layoutLocalService.updateLayout(draftLayout);
+		}
+	}
+
 	@Reference
 	private ContentPageEditorListenerTracker _contentPageEditorListenerTracker;
-
-	private volatile FFLayoutContentPageEditorConfiguration
-		_ffLayoutContentPageEditorConfiguration;
 
 	@Reference
 	private LayoutCopyHelper _layoutCopyHelper;

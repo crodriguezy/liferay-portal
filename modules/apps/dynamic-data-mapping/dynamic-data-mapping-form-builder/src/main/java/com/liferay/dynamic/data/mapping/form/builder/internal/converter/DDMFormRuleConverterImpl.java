@@ -151,6 +151,10 @@ public class DDMFormRuleConverterImpl implements SPIDDMFormRuleConverter {
 			return value;
 		}
 
+		if (Objects.equals("string", operand.getType())) {
+			return StringUtil.quote(value);
+		}
+
 		String[] values = StringUtil.split(value);
 
 		UnaryOperator<String> quoteOperation = StringUtil::quote;
@@ -224,7 +228,8 @@ public class DDMFormRuleConverterImpl implements SPIDDMFormRuleConverter {
 		String functionName, List<SPIDDMFormRuleCondition.Operand> operands) {
 
 		if (Objects.equals(functionName, "belongsTo")) {
-			operands.remove(0);
+			operands.removeIf(
+				operand -> StringUtil.equals(operand.getType(), "user"));
 		}
 
 		return String.format(

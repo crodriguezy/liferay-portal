@@ -1693,6 +1693,7 @@ public class VerifyProperties extends VerifyProcess {
 			"edit_message.html.jsp",
 		"editor.wysiwyg.portal-web.docroot.html.portlet.portal_settings." +
 			"email_notifications.jsp",
+		"ehcache.blocking.cache.allowed",
 		"ehcache.bootstrap.cache.loader.enabled",
 		"ehcache.bootstrap.cache.loader.factory",
 		"ehcache.bootstrap.cache.loader.properties",
@@ -1812,7 +1813,8 @@ public class VerifyProperties extends VerifyProcess {
 		"organizations.form.update.main",
 		"organizations.form.update.miscellaneous",
 		"organizations.indexer.enabled", "organizations.rootable",
-		"organizations.types", "portal.cache.manager.type.multi.vm",
+		"organizations.types", "permissions.object.blocking.cache",
+		"portal.cache.manager.type.multi.vm",
 		"portal.cache.manager.type.single.vm", "portal.ctx",
 		"portal.resiliency.enabled", "portal.resiliency.portlet.show.footer",
 		"portal.resiliency.spi.agent.client.pool.max.size",
@@ -1855,6 +1857,7 @@ public class VerifyProperties extends VerifyProcess {
 		"users.image.default.use.initials", "users.image.max.height",
 		"users.image.max.size", "users.image.max.width",
 		"vaadin.resources.path", "vaadin.theme", "vaadin.widgetset",
+		"value.object.entity.blocking.cache",
 		"value.object.finder.blocking.cache", "verify.database.transactions",
 		"verify.frequency", "verify.processes", "webdav.storage.class",
 		"webdav.storage.show.edit.url", "webdav.storage.show.view.url",
@@ -1951,6 +1954,43 @@ public class VerifyProperties extends VerifyProcess {
 		{
 			"journal.template.velocity.restricted.variables",
 			"velocity.engine.restricted.variables"
+		},
+		{
+			"module.framework.properties.felix.fileinstall.bundles.new.start",
+			"module.framework.properties.file.install.bundles.new.start"
+		},
+		{
+			"module.framework.properties.felix.fileinstall.bundles." +
+				"startActivationPolicy",
+			"module.framework.properties.file.install.bundles." +
+				"startActivationPolicy"
+		},
+		{
+			"module.framework.properties.felix.fileinstall.bundles." +
+				"startTransient",
+			"module.framework.properties.file.install.bundles.startTransient"
+		},
+		{
+			"module.framework.properties.felix.fileinstall.disableNio2",
+			"module.framework.properties.file.install.disableNio2"
+		},
+		{
+			"module.framework.properties.felix.fileinstall.log.level",
+			"module.framework.properties.file.install.log.level"
+		},
+		{
+			"module.framework.properties.felix.fileinstall.noInitialDelay",
+			"module.framework.properties.file.install.noInitialDelay"
+		},
+		{
+			"module.framework.properties.felix.fileinstall." +
+				"optionalImportRefreshScope",
+			"module.framework.properties.file.install." +
+				"optionalImportRefreshScope"
+		},
+		{
+			"module.framework.properties.felix.fileinstall.subdir.mode",
+			"module.framework.properties.file.install.subdir.mode"
 		},
 		{
 			"passwords.passwordpolicytoolkit.charset.lowercase",

@@ -20,6 +20,7 @@ import com.liferay.expando.kernel.model.ExpandoColumnConstants;
 import com.liferay.expando.kernel.model.ExpandoTable;
 import com.liferay.expando.kernel.service.ExpandoColumnLocalService;
 import com.liferay.expando.kernel.service.ExpandoTableLocalService;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.model.Group;
@@ -39,6 +40,8 @@ import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.search.document.DocumentBuilderFactory;
+import com.liferay.portal.search.model.uid.UIDFactory;
 import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
 import com.liferay.portal.search.searcher.Searcher;
 import com.liferay.portal.search.test.util.ExpandoTableSearchFixture;
@@ -104,7 +107,8 @@ public class OrganizationIndexerIndexedFieldsTest {
 		_groups = groupSearchFixture.getGroups();
 
 		_indexedFieldsFixture = new IndexedFieldsFixture(
-			resourcePermissionLocalService, searchEngineHelper);
+			resourcePermissionLocalService, searchEngineHelper, uidFactory,
+			documentBuilderFactory);
 
 		_organizationFixture = organizationFixture;
 		_organizations = organizationFixture.getOrganizations();
@@ -129,15 +133,13 @@ public class OrganizationIndexerIndexedFieldsTest {
 			Organization.class, ExpandoColumnConstants.INDEX_TYPE_KEYWORD,
 			expandoColumnObs, expandoColumnName);
 
-		Map<String, Serializable> expandoValues =
+		Organization organization = _organizationFixture.createOrganization(
+			"My Organization",
 			HashMapBuilder.<String, Serializable>put(
 				expandoColumnName, "Software Developer"
 			).put(
 				expandoColumnObs, "Software Engineer"
-			).build();
-
-		Organization organization = _organizationFixture.createOrganization(
-			"My Organization", expandoValues);
+			).build());
 
 		String searchTerm = "Developer";
 
@@ -169,6 +171,9 @@ public class OrganizationIndexerIndexedFieldsTest {
 
 	@Inject
 	protected CountryService countryService;
+
+	@Inject
+	protected DocumentBuilderFactory documentBuilderFactory;
 
 	@Inject
 	protected ExpandoColumnLocalService expandoColumnLocalService;
@@ -203,6 +208,9 @@ public class OrganizationIndexerIndexedFieldsTest {
 	protected SearchRequestBuilderFactory searchRequestBuilderFactory;
 
 	@Inject
+	protected UIDFactory uidFactory;
+
+	@Inject
 	protected UserLocalService userLocalService;
 
 	private Map<String, Object> _expectedFieldValues(Organization organization)
@@ -210,9 +218,7 @@ public class OrganizationIndexerIndexedFieldsTest {
 
 		Map<String, String> map = new HashMap<>();
 
-		_indexedFieldsFixture.populateUID(
-			Organization.class.getName(), organization.getOrganizationId(),
-			map);
+		_indexedFieldsFixture.populateUID(organization, map);
 
 		_populateDates(organization, map);
 		_populateRoles(organization, map);
@@ -260,6 +266,10 @@ public class OrganizationIndexerIndexedFieldsTest {
 
 				return StringUtil.toLowerCase(region.getName());
 			}
+		).put(
+			Field.getSortableFieldName(
+				StringBundler.concat("type", StringPool.UNDERLINE, "String")),
+			organization.getType()
 		).build();
 	}
 

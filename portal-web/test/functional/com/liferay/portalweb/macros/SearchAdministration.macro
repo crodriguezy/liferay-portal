@@ -1,34 +1,19 @@
 definition {
 
 	macro assertEngineVendorAndVersions {
-		if (IsElementNotPresent(locator1 = "SearchAdmin#ELASTICSEARCH6_ENGINE_VENDOR")) {
-			AssertTextEquals.assertPartialText(
-				locator1 = "SearchAdmin#SEARCH_ENGINE_VENDOR",
-				value1 = "${engineVendor}");
+		AssertTextEquals.assertPartialText(
+			locator1 = "SearchAdmin#SEARCH_ENGINE_VENDOR",
+			value1 = "${engineVendor}");
 
-			AssertTextEquals.assertPartialText(
-				locator1 = "SearchAdmin#CLIENT_VERSION",
-				value1 = "${clientVersion}");
+		AssertTextEquals.assertPartialText(
+			locator1 = "SearchAdmin#CLIENT_VERSION",
+			value1 = "${clientVersion}");
 
-			Panel.expandPanel(panel = "Nodes (1)");
+		Panel.expandPanel(panel = "Nodes (1)");
 
-			AssertTextEquals.assertPartialText(
-				locator1 = "SearchAdmin#SERVER_VERSION",
-				value1 = "${serverVersion}");
-		}
-		else {
-			AssertTextEquals.assertPartialText(
-				locator1 = "SearchAdmin#ELASTICSEARCH6_ENGINE_VENDOR",
-				value1 = "${engineVendor}");
-
-			AssertTextEquals.assertPartialText(
-				locator1 = "SearchAdmin#ELASTICSEARCH6_CLIENT_VERSION",
-				value1 = "${clientVersion}");
-
-			AssertTextEquals.assertPartialText(
-				locator1 = "SearchAdmin#ELASTICSEARCH6_NODES",
-				value1 = "${serverVersion}");
-		}
+		AssertTextEquals.assertPartialText(
+			locator1 = "SearchAdmin#SERVER_VERSION",
+			value1 = "${serverVersion}");
 	}
 
 	macro executeSearchActions {
@@ -36,17 +21,11 @@ definition {
 			locator1 = "Portlet#HEADER",
 			value1 = "Search");
 
-		if (IsElementPresent(locator1 = "SearchAdmin#ELASTICSEARCH6_ENGINE_VENDOR")) {
-			var searchClientVersion = selenium.getText("SearchAdmin#ELASTICSEARCH6_CLIENT_VERSION");
-			var searchEngineVendor = selenium.getText("SearchAdmin#ELASTICSEARCH6_ENGINE_VENDOR");
-		}
-		else {
-			var searchClientVersion = selenium.getText("SearchAdmin#CLIENT_VERSION");
-			var searchEngineVendor = selenium.getText("SearchAdmin#SEARCH_ENGINE_VENDOR");
-		}
+		var searchClientVersion = selenium.getText("SearchAdmin#CLIENT_VERSION");
+		var searchEngineVendor = selenium.getText("SearchAdmin#SEARCH_ENGINE_VENDOR");
 
 		if (contains("${searchEngineVendor}", "Elasticsearch")) {
-			if (contains("${searchClientVersion}", "7.") && contains("${searchEngineVendor}", "Embedded")) {
+			if (contains("${searchEngineVendor}", "Sidecar")) {
 				var curl = "http://localhost:9201/_tasks";
 			}
 			else {
@@ -60,10 +39,9 @@ definition {
 
 			Navigator.gotoNavItem(navItem = "Index Actions");
 
-			AssertClick.assertTextClickAt(
+			Click(
 				key_actionsDescription = "${actionsDescription}",
-				locator1 = "Button#EXECUTE_ACTION",
-				value1 = "Execute");
+				locator1 = "Button#EXECUTE_ACTION");
 
 			var reindexElapsedTime = "0";
 			var reindexStartTime = "0";

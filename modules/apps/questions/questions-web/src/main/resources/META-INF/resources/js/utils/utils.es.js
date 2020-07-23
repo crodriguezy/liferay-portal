@@ -17,45 +17,6 @@ import {useRef} from 'react';
 
 import lang from './lang.es';
 
-export function getCKEditorConfig() {
-	const config = {
-		allowedContent: true,
-		codeSnippet_theme: 'monokai_sublime',
-		extraPlugins: 'codesnippet,itemselector',
-		height: 216,
-		removePlugins: 'elementspath',
-	};
-
-	config.toolbar = [
-		['Bold', 'Italic', 'Underline', 'Strike'],
-		['NumberedList', 'BulletedList'],
-		['Outdent', 'Indent'],
-		['Blockquote'],
-		['CodeSnippet', 'ImageSelector'],
-		['Link', 'Unlink'],
-		['Undo', 'Redo'],
-		['Source'],
-	];
-
-	return config;
-}
-
-export function onBeforeLoadCKEditor(CKEditor, url) {
-	if (CKEditor) {
-		CKEditor.disableAutoInline = true;
-		CKEditor.getNextZIndex = () => 1000;
-
-		if (url) {
-			CKEditor.on('instanceCreated', ({editor}) => {
-				editor.config.filebrowserImageBrowseUrl = url.replace(
-					'EDITOR_NAME_',
-					editor.name
-				);
-			});
-		}
-	}
-}
-
 export function dateToInternationalHuman(
 	ISOString,
 	localeKey = navigator.language
@@ -68,6 +29,10 @@ export function dateToInternationalHuman(
 		minute: '2-digit',
 		month: 'short',
 	};
+
+	if (date.getFullYear() !== new Date().getFullYear()) {
+		options.year = 'numeric';
+	}
 
 	const intl = new Intl.DateTimeFormat(localeKey, options);
 
@@ -139,7 +104,10 @@ export function useDebounceCallback(callback, milliseconds) {
 export function normalizeRating(aggregateRating) {
 	return (
 		aggregateRating &&
-		aggregateRating.ratingCount * normalize(aggregateRating.ratingAverage)
+		Math.trunc(
+			aggregateRating.ratingCount *
+				normalize(aggregateRating.ratingAverage)
+		)
 	);
 }
 
@@ -164,7 +132,37 @@ export function historyPushWithSlug(push) {
 }
 
 export function stripHTML(text) {
-	const htmlTags = /<([^>]+>)/g;
+	if (!text) {
+		return '';
+	}
 
-	return text.replace(htmlTags, '');
+	const htmlTags = /<([^>]+>)/g;
+	const nonBreakableSpace = '&nbsp;';
+	const newLines = /\r?\n|\r/g;
+
+	return (
+		text
+			.replace(htmlTags, '')
+			.replace(nonBreakableSpace, ' ')
+			.replace(newLines, '') || ''
+	);
+}
+
+export function getFullPath() {
+	return window.location.href.substring(0, window.location.href.indexOf('#'));
+}
+
+export function getBasePath() {
+	return window.location.href.substring(
+		window.location.origin.length,
+		window.location.href.indexOf('#')
+	);
+}
+
+export function getContextLink(url) {
+	return {
+		headers: {
+			Link: `${getFullPath()}?redirectTo=/%23/questions/${url}/`,
+		},
+	};
 }

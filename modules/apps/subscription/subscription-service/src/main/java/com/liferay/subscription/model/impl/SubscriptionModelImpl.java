@@ -68,12 +68,12 @@ public class SubscriptionModelImpl
 	public static final String TABLE_NAME = "Subscription";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"mvccVersion", Types.BIGINT}, {"subscriptionId", Types.BIGINT},
-		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
-		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
-		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
-		{"classNameId", Types.BIGINT}, {"classPK", Types.BIGINT},
-		{"frequency", Types.VARCHAR}
+		{"mvccVersion", Types.BIGINT}, {"ctCollectionId", Types.BIGINT},
+		{"subscriptionId", Types.BIGINT}, {"groupId", Types.BIGINT},
+		{"companyId", Types.BIGINT}, {"userId", Types.BIGINT},
+		{"userName", Types.VARCHAR}, {"createDate", Types.TIMESTAMP},
+		{"modifiedDate", Types.TIMESTAMP}, {"classNameId", Types.BIGINT},
+		{"classPK", Types.BIGINT}, {"frequency", Types.VARCHAR}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -81,6 +81,7 @@ public class SubscriptionModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("ctCollectionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("subscriptionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
@@ -94,7 +95,7 @@ public class SubscriptionModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table Subscription (mvccVersion LONG default 0 not null,subscriptionId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,frequency VARCHAR(75) null)";
+		"create table Subscription (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,subscriptionId LONG not null,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,frequency VARCHAR(75) null,primary key (subscriptionId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP = "drop table Subscription";
 
@@ -122,12 +123,18 @@ public class SubscriptionModelImpl
 
 	public static final long SUBSCRIPTIONID_COLUMN_BITMASK = 32L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-		_entityCacheEnabled = entityCacheEnabled;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-		_finderCacheEnabled = finderCacheEnabled;
 	}
 
 	public SubscriptionModelImpl() {
@@ -181,9 +188,6 @@ public class SubscriptionModelImpl
 				attributeName,
 				attributeGetterFunction.apply((Subscription)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -263,6 +267,11 @@ public class SubscriptionModelImpl
 			"mvccVersion",
 			(BiConsumer<Subscription, Long>)Subscription::setMvccVersion);
 		attributeGetterFunctions.put(
+			"ctCollectionId", Subscription::getCtCollectionId);
+		attributeSetterBiConsumers.put(
+			"ctCollectionId",
+			(BiConsumer<Subscription, Long>)Subscription::setCtCollectionId);
+		attributeGetterFunctions.put(
 			"subscriptionId", Subscription::getSubscriptionId);
 		attributeSetterBiConsumers.put(
 			"subscriptionId",
@@ -319,6 +328,16 @@ public class SubscriptionModelImpl
 	@Override
 	public void setMvccVersion(long mvccVersion) {
 		_mvccVersion = mvccVersion;
+	}
+
+	@Override
+	public long getCtCollectionId() {
+		return _ctCollectionId;
+	}
+
+	@Override
+	public void setCtCollectionId(long ctCollectionId) {
+		_ctCollectionId = ctCollectionId;
 	}
 
 	@Override
@@ -570,6 +589,7 @@ public class SubscriptionModelImpl
 		SubscriptionImpl subscriptionImpl = new SubscriptionImpl();
 
 		subscriptionImpl.setMvccVersion(getMvccVersion());
+		subscriptionImpl.setCtCollectionId(getCtCollectionId());
 		subscriptionImpl.setSubscriptionId(getSubscriptionId());
 		subscriptionImpl.setGroupId(getGroupId());
 		subscriptionImpl.setCompanyId(getCompanyId());
@@ -602,16 +622,16 @@ public class SubscriptionModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof Subscription)) {
+		if (!(object instanceof Subscription)) {
 			return false;
 		}
 
-		Subscription subscription = (Subscription)obj;
+		Subscription subscription = (Subscription)object;
 
 		long primaryKey = subscription.getPrimaryKey();
 
@@ -628,14 +648,22 @@ public class SubscriptionModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	@Override
@@ -675,6 +703,8 @@ public class SubscriptionModelImpl
 			new SubscriptionCacheModel();
 
 		subscriptionCacheModel.mvccVersion = getMvccVersion();
+
+		subscriptionCacheModel.ctCollectionId = getCtCollectionId();
 
 		subscriptionCacheModel.subscriptionId = getSubscriptionId();
 
@@ -795,10 +825,8 @@ public class SubscriptionModelImpl
 
 	}
 
-	private static boolean _entityCacheEnabled;
-	private static boolean _finderCacheEnabled;
-
 	private long _mvccVersion;
+	private long _ctCollectionId;
 	private long _subscriptionId;
 	private long _groupId;
 	private long _originalGroupId;

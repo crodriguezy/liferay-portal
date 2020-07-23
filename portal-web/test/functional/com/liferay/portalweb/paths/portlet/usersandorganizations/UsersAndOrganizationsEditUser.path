@@ -65,6 +65,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>DETAILS_CATEGORY_SELECT</td>
+	<td>//label[contains(.,'Categorization')]//following-sibling::div//button[contains(.,'Select')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>DETAILS_TAG_FIELD</td>
 	<td>//input[contains(@class,'form-control-inset')]</td>
 	<td></td>
@@ -151,6 +156,11 @@
 <tr>
 	<td>DEPOT_ROLES_TITLE</td>
 	<td>//tr/td[normalize-space(text())='${key_roleTitle}']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>DEPOT_ROLES_TABLE_NAME</td>
+	<td>//div[contains(@class,'table')]//tr[contains(.,'${key_depotRoleName}')]/td[1]</td>
 	<td></td>
 </tr>
 <tr>
@@ -293,6 +303,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>VOCABULARY_LABEL</td>
+	<td>//div/label[contains(.,'${key_vocabularyName}')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td></td>
 	<td></td>
 	<td></td>
@@ -312,6 +327,11 @@
 <tr>
 	<td>UPLOAD_IMAGE_SELECT</td>
 	<td>//label[contains(@id,'uploadImage')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>USER_PORTRAIT_CROPPER</td>
+	<td>//div[contains(@class,'image-cropper')]//div</td>
 	<td></td>
 </tr>
 <tr>

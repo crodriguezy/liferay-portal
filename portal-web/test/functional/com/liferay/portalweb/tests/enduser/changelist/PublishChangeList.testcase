@@ -1,5 +1,4 @@
 @component-name = "portal-change-list"
-@ignore = "true"
 definition {
 
 	property portal.release = "true";
@@ -11,23 +10,14 @@ definition {
 
 		User.firstLoginPG();
 
-		ProductMenu.gotoPortlet(
-			category = "Change Lists",
-			panel = "Control Panel",
+		ApplicationsMenu.gotoPortlet(
+			category = "Content",
+			panel = "Applications",
 			portlet = "Settings");
 
 		ChangeList.enableChangeList();
 
-		ChangeList.changeUserSettingsPopuConfirmation(changeUserPopupConfirmation = "disable");
-
-		ProductMenu.gotoPortlet(
-			category = "Change Lists",
-			panel = "Control Panel",
-			portlet = "Overview");
-
-		ChangeList.addNewChangeList(
-			changeListDescription = "Change List Description",
-			changeListName = "Change List Name");
+		ChangeList.createNewPublication(publicationName = "Publication Name");
 	}
 
 	tearDown {
@@ -37,24 +27,23 @@ definition {
 			PortalInstances.tearDownCP();
 		}
 		else {
-			ProductMenu.gotoPortlet(
-				category = "Change Lists",
-				panel = "Control Panel",
+			ApplicationsMenu.gotoPortlet(
+				category = "Content",
+				panel = "Applications",
 				portlet = "Settings");
-
-			ChangeList.changeUserSettingsPopuConfirmation(changeUserPopupConfirmation = "enable");
 
 			ChangeList.disableChangeList();
 		}
 	}
 
 	@priority = "5"
-	test PublishChangeList {
-		property portal.acceptance = "true";
+	test PublishPublication {
+		property test.name.skip.portal.instance = "PublishChangeList#PublishPublication";
+
+		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Web Content");
 
 		WebContentNavigator.gotoAddCP();
@@ -63,35 +52,28 @@ definition {
 			webContentContent = "WC WebContent Content",
 			webContentTitle = "Web Content Title");
 
-		Button.clickPublishToChangeList();
+		PortletEntry.publish();
+
+		ChangeList.publishPublication(publicationName = "Publication Name");
+
+		ChangeList.viewPublishedPublicationDetails(
+			publicationName = "Publication Name",
+			publicationPublishedBy = "Test Test");
+
+		AssertTextPresent(
+			key_publicationName = "Production",
+			locator1 = "ChangeList#CHANGE_LIST_INDICATOR_TITLE",
+			value1 = "Production");
+
+		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
-			category = "Change Lists",
-			panel = "Control Panel",
-			portlet = "Overview");
+			category = "Content &amp; Data",
+			portlet = "Web Content");
 
-		ChangeList.publishChangeList(changeListName = "Change List Name");
-
-		ProductMenu.gotoPortlet(
-			category = "Change Lists",
-			panel = "Control Panel",
-			portlet = "Overview");
-
-		ChangeList.addNewChangeList(
-			changeListDescription = "Change List Description",
-			changeListName = "New Change List Name");
-
-		ChangeList.viewPublishedChangeListDetails(
-			changeListDescription = "Change List Description",
-			changeListName = "Change List Name",
-			changeListPublishedBy = "Test Test");
-
-		ProductMenu.gotoPortlet(
-			category = "Change Lists",
-			panel = "Control Panel",
-			portlet = "Overview");
-
-		ChangeList.viewNoChangeListInSelectDropdown(changeListName = "Change List Name");
+		AssertElementPresent(
+			key_webContentTitle = "Web Content Title",
+			locator1 = "WC#ENTRY_LIST_TITLE");
 	}
 
 }

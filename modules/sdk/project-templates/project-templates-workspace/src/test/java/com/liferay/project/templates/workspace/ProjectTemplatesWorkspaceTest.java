@@ -27,6 +27,9 @@ import java.io.FileOutputStream;
 
 import java.net.URI;
 
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+
 import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -73,11 +76,9 @@ public class ProjectTemplatesWorkspaceTest
 		testExists(workspaceProjectDir, "gradle.properties");
 		testExists(workspaceProjectDir, "modules");
 		testExists(workspaceProjectDir, "themes");
-		testExists(workspaceProjectDir, "wars");
 
 		testNotExists(workspaceProjectDir, "modules/pom.xml");
 		testNotExists(workspaceProjectDir, "themes/pom.xml");
-		testNotExists(workspaceProjectDir, "wars/pom.xml");
 
 		File moduleProjectDir = buildTemplateWithGradle(
 			new File(workspaceProjectDir, "modules"), "", "foo-portlet");
@@ -114,6 +115,39 @@ public class ProjectTemplatesWorkspaceTest
 	}
 
 	@Test
+	public void testBuildTemplateWorkspaceLegacyWarsDirProperty()
+		throws Exception {
+
+		File workspaceProjectDir = buildWorkspace(
+			temporaryFolder, "gradle", "foows", getDefaultLiferayVersion(),
+			mavenExecutor);
+
+		File gradleProperties = new File(
+			workspaceProjectDir, "gradle.properties");
+
+		Assert.assertTrue(gradleProperties.exists());
+
+		String configLine =
+			System.lineSeparator() + "liferay.workspace.wars.dir=wars";
+
+		Files.write(
+			gradleProperties.toPath(), configLine.getBytes(),
+			StandardOpenOption.APPEND);
+
+		File warsProjectDir = buildTemplateWithGradle(
+			new File(workspaceProjectDir, "wars"), "war-mvc-portlet",
+			"foo-portlet");
+
+		if (isBuildProjects()) {
+			executeGradle(
+				workspaceProjectDir, _gradleDistribution,
+				":wars:foo-portlet" + GRADLE_TASK_PATH_BUILD);
+
+			testExists(warsProjectDir, "build/libs/foo-portlet.war");
+		}
+	}
+
+	@Test
 	public void testBuildTemplateWorkspaceLocalProperties() throws Exception {
 		assumeTrue(isBuildProjects());
 
@@ -147,7 +181,7 @@ public class ProjectTemplatesWorkspaceTest
 		executeGradle(
 			workspaceProjectDir, _gradleDistribution,
 			":" + modulesDirName.replace('/', ':') + ":foo-portlet" +
-				BaseProjectTemplatesTestCase.GRADLE_TASK_PATH_DEPLOY);
+				GRADLE_TASK_PATH_DEPLOY);
 
 		testExists(
 			workspaceProjectDir, homeDirName + "/osgi/modules/foo.portlet.jar");
@@ -212,9 +246,8 @@ public class ProjectTemplatesWorkspaceTest
 
 		String gradleAntBndVersion = null;
 
-		Matcher matcher =
-			BaseProjectTemplatesTestCase.antBndPluginVersionPattern.matcher(
-				gradleResult.get());
+		Matcher matcher = antBndPluginVersionPattern.matcher(
+			gradleResult.get());
 
 		if (matcher.matches()) {
 			gradleAntBndVersion = matcher.group(1);
@@ -247,9 +280,8 @@ public class ProjectTemplatesWorkspaceTest
 		Optional<String> result = executeGradle(
 			workspaceDir, true, _gradleDistribution, ":tasks");
 
-		Matcher matcher =
-			BaseProjectTemplatesTestCase.portalToolsBundleSupportVersionPattern.
-				matcher(result.get());
+		Matcher matcher = portalToolsBundleSupportVersionPattern.matcher(
+			result.get());
 
 		String portalToolsBundleSupportVersion = null;
 

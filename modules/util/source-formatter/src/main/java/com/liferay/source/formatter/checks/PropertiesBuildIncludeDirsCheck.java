@@ -14,6 +14,7 @@
 
 package com.liferay.source.formatter.checks;
 
+import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -31,6 +32,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -132,7 +134,7 @@ public class PropertiesBuildIncludeDirsCheck extends BaseFileCheck {
 	}
 
 	private String _getModuleDirName(Path dirPath) {
-		String absolutePath = SourceUtil.getAbsolutePath(dirPath) + "/";
+		String absolutePath = SourceUtil.getAbsolutePath(dirPath);
 
 		int x = absolutePath.indexOf("/modules/");
 
@@ -140,26 +142,37 @@ public class PropertiesBuildIncludeDirsCheck extends BaseFileCheck {
 			return null;
 		}
 
-		int y = absolutePath.indexOf("/", x + 9);
+		String directoryPath = absolutePath.substring(x + 9);
 
-		if (y == -1) {
+		String[] directoryNames = StringUtil.split(
+			directoryPath, CharPool.SLASH);
+
+		if (directoryNames.length < 2) {
 			return null;
 		}
 
-		y = absolutePath.indexOf("/", y + 1);
+		List<String> buildIncludeCategoryNames = getAttributeValues(
+			_BUILD_INCLUDE_CATEGORY_NAMES, absolutePath);
 
-		if (y != -1) {
-			return absolutePath.substring(x + 9, y);
+		for (int i = 0; i < (directoryNames.length - 1); i++) {
+			if (buildIncludeCategoryNames.contains(directoryNames[i])) {
+				return StringUtil.merge(
+					ArrayUtil.subset(directoryNames, 0, i + 2),
+					StringPool.SLASH);
+			}
 		}
 
 		return null;
 	}
 
+	private static final String _BUILD_INCLUDE_CATEGORY_NAMES =
+		"buildIncludeCategoryNames";
+
 	private static final String[] _SKIP_DIR_NAMES = {
-		".git", ".gradle", ".idea", ".m2", ".settings", "bin", "build",
-		"classes", "dependencies", "node_modules", "node_modules_cache",
-		"private", "sql", "src", "test", "test-classes", "test-coverage",
-		"test-results", "tmp"
+		".git", ".gradle", ".idea", ".m2", ".releng", ".settings", "bin",
+		"build", "classes", "dependencies", "node_modules",
+		"node_modules_cache", "private", "sql", "src", "test", "test-classes",
+		"test-coverage", "test-results", "tmp"
 	};
 
 	private static final Pattern _pattern = Pattern.compile(

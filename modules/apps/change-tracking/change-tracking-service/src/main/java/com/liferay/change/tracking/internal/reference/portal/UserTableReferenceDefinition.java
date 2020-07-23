@@ -14,9 +14,9 @@
 
 package com.liferay.change.tracking.internal.reference.portal;
 
-import com.liferay.change.tracking.reference.TableReferenceDefinition;
-import com.liferay.change.tracking.reference.builder.TableReferenceInfoBuilder;
-import com.liferay.portal.kernel.model.ClassNameTable;
+import com.liferay.change.tracking.spi.reference.TableReferenceDefinition;
+import com.liferay.change.tracking.spi.reference.builder.ChildTableReferenceInfoBuilder;
+import com.liferay.change.tracking.spi.reference.builder.ParentTableReferenceInfoBuilder;
 import com.liferay.portal.kernel.model.CompanyTable;
 import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.ContactTable;
@@ -36,58 +36,27 @@ public class UserTableReferenceDefinition
 	implements TableReferenceDefinition<UserTable> {
 
 	@Override
-	public void defineTableReferences(
-		TableReferenceInfoBuilder<UserTable> tableReferenceInfoBuilder) {
+	public void defineChildTableReferences(
+		ChildTableReferenceInfoBuilder<UserTable>
+			childTableReferenceInfoBuilder) {
 
-		tableReferenceInfoBuilder.nonreferenceColumns(
-			UserTable.INSTANCE.uuid, UserTable.INSTANCE.externalReferenceCode
-		).referenceInnerJoin(
-			fromStep -> fromStep.from(
-				ContactTable.INSTANCE
-			).innerJoinON(
-				UserTable.INSTANCE,
-				UserTable.INSTANCE.userId.eq(ContactTable.INSTANCE.classPK)
-			).innerJoinON(
-				ClassNameTable.INSTANCE,
-				ClassNameTable.INSTANCE.value.eq(
-					Contact.class.getName()
-				).and(
-					ClassNameTable.INSTANCE.classNameId.eq(
-						ContactTable.INSTANCE.classNameId)
-				)
-			)
-		).singleColumnReference(
-			UserTable.INSTANCE.companyId, CompanyTable.INSTANCE.companyId
-		).nonreferenceColumns(
-			UserTable.INSTANCE.createDate, UserTable.INSTANCE.modifiedDate,
-			UserTable.INSTANCE.defaultUser
+		childTableReferenceInfoBuilder.classNameReference(
+			UserTable.INSTANCE.userId, ContactTable.INSTANCE.classPK,
+			Contact.class
 		).singleColumnReference(
 			UserTable.INSTANCE.contactId, ContactTable.INSTANCE.contactId
-		).nonreferenceColumns(
-			UserTable.INSTANCE.password, UserTable.INSTANCE.passwordEncrypted,
-			UserTable.INSTANCE.passwordReset,
-			UserTable.INSTANCE.passwordModifiedDate, UserTable.INSTANCE.digest,
-			UserTable.INSTANCE.reminderQueryQuestion,
-			UserTable.INSTANCE.reminderQueryAnswer,
-			UserTable.INSTANCE.graceLoginCount, UserTable.INSTANCE.screenName,
-			UserTable.INSTANCE.emailAddress, UserTable.INSTANCE.facebookId,
-			UserTable.INSTANCE.googleUserId, UserTable.INSTANCE.ldapServerId,
-			UserTable.INSTANCE.openId
 		).singleColumnReference(
 			UserTable.INSTANCE.portraitId, ImageTable.INSTANCE.imageId
-		).nonreferenceColumns(
-			UserTable.INSTANCE.languageId, UserTable.INSTANCE.timeZoneId,
-			UserTable.INSTANCE.greeting, UserTable.INSTANCE.comments,
-			UserTable.INSTANCE.firstName, UserTable.INSTANCE.middleName,
-			UserTable.INSTANCE.lastName, UserTable.INSTANCE.jobTitle,
-			UserTable.INSTANCE.loginDate, UserTable.INSTANCE.loginIP,
-			UserTable.INSTANCE.lastLoginDate, UserTable.INSTANCE.lastLoginIP,
-			UserTable.INSTANCE.lastFailedLoginDate,
-			UserTable.INSTANCE.failedLoginAttempts, UserTable.INSTANCE.lockout,
-			UserTable.INSTANCE.lockoutDate,
-			UserTable.INSTANCE.agreedToTermsOfUse,
-			UserTable.INSTANCE.emailAddressVerified, UserTable.INSTANCE.status
 		);
+	}
+
+	@Override
+	public void defineParentTableReferences(
+		ParentTableReferenceInfoBuilder<UserTable>
+			parentTableReferenceInfoBuilder) {
+
+		parentTableReferenceInfoBuilder.singleColumnReference(
+			UserTable.INSTANCE.companyId, CompanyTable.INSTANCE.companyId);
 	}
 
 	@Override

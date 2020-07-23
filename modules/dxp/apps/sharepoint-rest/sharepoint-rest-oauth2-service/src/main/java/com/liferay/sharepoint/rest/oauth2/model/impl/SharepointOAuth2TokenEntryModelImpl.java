@@ -114,12 +114,18 @@ public class SharepointOAuth2TokenEntryModelImpl
 
 	public static final long SHAREPOINTOAUTH2TOKENENTRYID_COLUMN_BITMASK = 4L;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setEntityCacheEnabled(boolean entityCacheEnabled) {
-		_entityCacheEnabled = entityCacheEnabled;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static void setFinderCacheEnabled(boolean finderCacheEnabled) {
-		_finderCacheEnabled = finderCacheEnabled;
 	}
 
 	public SharepointOAuth2TokenEntryModelImpl() {
@@ -174,9 +180,6 @@ public class SharepointOAuth2TokenEntryModelImpl
 				attributeGetterFunction.apply(
 					(SharepointOAuth2TokenEntry)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -543,17 +546,17 @@ public class SharepointOAuth2TokenEntryModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof SharepointOAuth2TokenEntry)) {
+		if (!(object instanceof SharepointOAuth2TokenEntry)) {
 			return false;
 		}
 
 		SharepointOAuth2TokenEntry sharepointOAuth2TokenEntry =
-			(SharepointOAuth2TokenEntry)obj;
+			(SharepointOAuth2TokenEntry)object;
 
 		long primaryKey = sharepointOAuth2TokenEntry.getPrimaryKey();
 
@@ -570,14 +573,22 @@ public class SharepointOAuth2TokenEntryModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	@Override
@@ -742,9 +753,6 @@ public class SharepointOAuth2TokenEntryModelImpl
 					_getProxyProviderFunction();
 
 	}
-
-	private static boolean _entityCacheEnabled;
-	private static boolean _finderCacheEnabled;
 
 	private long _sharepointOAuth2TokenEntryId;
 	private long _companyId;

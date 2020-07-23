@@ -6,15 +6,15 @@ $defaultTransitionDuration: 0.5s;
 
 $pageEditorSpacing: 8px;
 
-$controlMenuHeight: 48px;
-$desktopControlMenuHeight: 56px;
-$managementBarHeight: 112px;
-$sidebarButtonWidth: 40px;
+$sidebarButtonWidth: 42px;
 $sidebarContentWidth: 280px;
 $toolbarBorderWidth: 1px;
-$toolbarHeight: 64px;
 
-$floatingToolbarPanelMinWidth: 288px;
+$floatingToolbarPanelMaxHeight: 408px;
+$floatingToolbarPanelMinWidth: 278px;
+
+$controlMenuHeight: 48px;
+$desktopControlMenuHeight: 56px;
 
 $dropTargetWidth: 5px;
 
@@ -28,4 +28,5 @@ $floatingToolbarPanelZIndex: 987;
 $floatingToolbarZIndex: 987;
 $sidebarZIndex: 988;
 $dragPreviewLayer: 991;
-$shimZIndex: 9999;
+$undoHistoryOverlayZIndex: 1001;
+$modalZIndex: 1050;

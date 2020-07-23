@@ -20,10 +20,12 @@ import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.FragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
+import com.liferay.info.type.WebImage;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -147,6 +149,14 @@ public class BackgroundImageFragmentEntryProcessor
 
 						value = fieldValueJSONObject.getString("url");
 					}
+					else if (fieldValue instanceof WebImage) {
+						WebImage webImage = (WebImage)fieldValue;
+
+						JSONObject fieldValueJSONObject =
+							webImage.toJSONObject();
+
+						value = fieldValueJSONObject.toString();
+					}
 					else {
 						value = String.valueOf(fieldValue);
 					}
@@ -160,7 +170,7 @@ public class BackgroundImageFragmentEntryProcessor
 			}
 
 			if (Validator.isNotNull(value)) {
-				if (value.startsWith(StringPool.OPEN_CURLY_BRACE)) {
+				if (JSONUtil.isValid(value)) {
 					JSONObject valueJSONObject =
 						JSONFactoryUtil.createJSONObject(value);
 

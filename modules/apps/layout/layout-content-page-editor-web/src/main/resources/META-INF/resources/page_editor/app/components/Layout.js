@@ -14,32 +14,23 @@
 
 import ClayAlert from '@clayui/alert';
 import classNames from 'classnames';
-import {useEventListener, useIsMounted} from 'frontend-js-react-web';
+import {useIsMounted} from 'frontend-js-react-web';
 import {closest} from 'metal-dom';
 import PropTypes from 'prop-types';
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 
 import {
 	LayoutDataPropTypes,
 	getLayoutDataItemPropTypes,
 } from '../../prop-types/index';
 import {ITEM_ACTIVATION_ORIGINS} from '../config/constants/itemActivationOrigins';
-import {
-	ARROW_DOWN_KEYCODE,
-	ARROW_UP_KEYCODE,
-} from '../config/constants/keycodes';
 import {LAYOUT_DATA_ITEM_TYPES} from '../config/constants/layoutDataItemTypes';
-import {MOVE_ITEM_DIRECTIONS} from '../config/constants/moveItemDirections';
 import {PAGE_TYPES} from '../config/constants/pageTypes';
 import {config} from '../config/index';
-import {useDispatch, useSelector} from '../store/index';
-import moveItem from '../thunks/moveItem';
-import {
-	useActivationOrigin,
-	useActiveItemId,
-	useIsActive,
-	useSelectItem,
-} from './Controls';
+import {useSelector} from '../store/index';
+import {deepEqual} from '../utils/checkDeepEqual';
+import {useActivationOrigin, useIsActive, useSelectItem} from './Controls';
+import ShortcutManager from './ShortcutManager';
 import {EditableProcessorContextProvider} from './fragment-content/EditableProcessorContext';
 import FragmentWithControls from './layout-data-items/FragmentWithControls';
 import {
@@ -65,89 +56,20 @@ const LAYOUT_DATA_ITEMS = {
 };
 
 export default function Layout({mainItemId}) {
-	const activeItemId = useActiveItemId();
-	const dispatch = useDispatch();
-	const fragmentEntryLinks = useSelector((state) => state.fragmentEntryLinks);
 	const layoutData = useSelector((state) => state.layoutData);
 	const mainItem = layoutData.items[mainItemId];
 	const layoutRef = useRef(null);
+
 	const selectItem = useSelectItem();
 	const sidebarOpen = useSelector(
 		(state) => state.sidebar.panelId && state.sidebar.open
 	);
-	const store = useSelector((state) => state);
 
 	const onClick = (event) => {
 		if (event.target === event.currentTarget) {
 			selectItem(null);
 		}
 	};
-
-	const getDirection = (keycode) => {
-		let direction = null;
-
-		if (keycode === ARROW_UP_KEYCODE) {
-			direction = MOVE_ITEM_DIRECTIONS.UP;
-		}
-		else if (keycode === ARROW_DOWN_KEYCODE) {
-			direction = MOVE_ITEM_DIRECTIONS.DOWN;
-		}
-
-		return direction;
-	};
-
-	const onKeyUp = useCallback(
-		(event) => {
-			event.preventDefault();
-
-			if (!activeItemId) {
-				return;
-			}
-
-			const item = layoutData.items[activeItemId];
-
-			if (!item) {
-				return;
-			}
-
-			const {itemId, parentId} = item;
-
-			const direction = getDirection(event.keyCode);
-			const parentItem = layoutData.items[parentId];
-
-			if (direction) {
-				const numChildren = parentItem.children.length;
-				const currentPosition = parentItem.children.indexOf(itemId);
-
-				if (
-					(direction === MOVE_ITEM_DIRECTIONS.UP &&
-						currentPosition === 0) ||
-					(direction === MOVE_ITEM_DIRECTIONS.DOWN &&
-						currentPosition === numChildren - 1)
-				) {
-					return;
-				}
-
-				let position;
-				if (direction === MOVE_ITEM_DIRECTIONS.UP) {
-					position = currentPosition - 1;
-				}
-				else if (direction === MOVE_ITEM_DIRECTIONS.DOWN) {
-					position = currentPosition + 1;
-				}
-
-				dispatch(
-					moveItem({
-						itemId,
-						parentItemId: parentId,
-						position,
-						store,
-					})
-				);
-			}
-		},
-		[activeItemId, dispatch, layoutData.items, store]
-	);
 
 	useEffect(() => {
 		const layout = layoutRef.current;
@@ -173,8 +95,6 @@ export default function Layout({mainItemId}) {
 			}
 		};
 	}, [layoutRef]);
-
-	useEventListener('keyup', onKeyUp, false, document.body);
 
 	const isPageConversion = config.pageType === PAGE_TYPES.conversion;
 	const hasWarningMessages =
@@ -213,6 +133,8 @@ export default function Layout({mainItemId}) {
 				</div>
 			)}
 
+			<ShortcutManager />
+
 			<div
 				className={classNames('page-editor')}
 				id="page-editor"
@@ -220,11 +142,7 @@ export default function Layout({mainItemId}) {
 				ref={layoutRef}
 			>
 				<EditableProcessorContextProvider>
-					<LayoutDataItem
-						fragmentEntryLinks={fragmentEntryLinks}
-						item={mainItem}
-						layoutData={layoutData}
-					/>
+					<LayoutDataItem item={mainItem} layoutData={layoutData} />
 				</EditableProcessorContextProvider>
 			</div>
 		</>
@@ -235,9 +153,21 @@ Layout.propTypes = {
 	mainItemId: PropTypes.string.isRequired,
 };
 
-class LayoutDataItem extends React.PureComponent {
+class LayoutDataItem extends React.Component {
 	static getDerivedStateFromError(error) {
 		return {error};
+	}
+
+	static destructureItem(item, layoutData) {
+		return {
+			...item,
+			children: item.children.map((child) =>
+				LayoutDataItem.destructureItem(
+					layoutData.items[child],
+					layoutData
+				)
+			),
+		};
 	}
 
 	constructor(props) {
@@ -246,6 +176,23 @@ class LayoutDataItem extends React.PureComponent {
 		this.state = {
 			error: null,
 		};
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return (
+			nextState.error ||
+			!deepEqual(this.props.item, nextProps.item) ||
+			!deepEqual(
+				LayoutDataItem.destructureItem(
+					this.props.item,
+					this.props.layoutData
+				),
+				LayoutDataItem.destructureItem(
+					nextProps.item,
+					nextProps.layoutData
+				)
+			)
+		);
 	}
 
 	render() {
@@ -265,22 +212,45 @@ class LayoutDataItem extends React.PureComponent {
 }
 
 LayoutDataItem.propTypes = {
-	fragmentEntryLinks: PropTypes.object.isRequired,
 	item: getLayoutDataItemPropTypes().isRequired,
 	layoutData: LayoutDataPropTypes.isRequired,
 };
 
-function LayoutDataItemContent({
-	fragmentEntryLinks,
-	item,
-	layoutData,
-	...otherProps
-}) {
+function LayoutDataItemContent({item, layoutData}) {
 	const Component = LAYOUT_DATA_ITEMS[item.type];
+	const componentRef = useRef(null);
+
+	return (
+		<>
+			<LayoutDataItemInteractionFilter
+				componentRef={componentRef}
+				item={item}
+			/>
+
+			<Component item={item} layoutData={layoutData} ref={componentRef}>
+				{item.children.map((childId) => {
+					return (
+						<LayoutDataItem
+							item={layoutData.items[childId]}
+							key={childId}
+							layoutData={layoutData}
+						/>
+					);
+				})}
+			</Component>
+		</>
+	);
+}
+
+LayoutDataItemContent.propTypes = {
+	item: getLayoutDataItemPropTypes().isRequired,
+	layoutData: LayoutDataPropTypes.isRequired,
+};
+
+const LayoutDataItemInteractionFilter = ({componentRef, item}) => {
 	const activationOrigin = useActivationOrigin();
 	const isActive = useIsActive()(item.itemId);
 	const isMounted = useIsMounted();
-	const componentRef = useRef(null);
 
 	useEffect(() => {
 		if (
@@ -297,25 +267,10 @@ function LayoutDataItemContent({
 		}
 	}, [activationOrigin, componentRef, isActive, isMounted]);
 
-	return (
-		<Component item={item} layoutData={layoutData} ref={componentRef}>
-			{item.children.map((childId) => {
-				return (
-					<LayoutDataItem
-						{...otherProps}
-						fragmentEntryLinks={fragmentEntryLinks}
-						item={layoutData.items[childId]}
-						key={childId}
-						layoutData={layoutData}
-					/>
-				);
-			})}
-		</Component>
-	);
-}
+	return null;
+};
 
-LayoutDataItemContent.propTypes = {
-	fragmentEntryLinks: PropTypes.object.isRequired,
+LayoutDataItemInteractionFilter.propTypes = {
+	componentRef: PropTypes.object.isRequired,
 	item: getLayoutDataItemPropTypes().isRequired,
-	layoutData: LayoutDataPropTypes.isRequired,
 };

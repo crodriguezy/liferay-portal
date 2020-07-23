@@ -14,13 +14,28 @@
 	<td></td>
 </tr>
 <tr>
+	<td>FIELD_ADD_DUPLICATE</td>
+	<td>//div[contains(@class,'ddm-field')]//button[contains(@class,'ddm-form-field-repeatable-add-button')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>FIELD_ADD_SPECIFIC</td>
-	<td>//div[contains(@class,'lfr-ddm-form-container')][1]//div[contains(@data-field-name,'${key_fieldName}')]//div[contains(@class,'lfr-ddm-form-field-repeatable-toolbar')]//*[contains(@class,'btn')]</td>
+	<td>//div[contains(@class,'lfr-ddm-form-container')]//div[contains(@data-field-name,'${key_fieldName}')][${key_repeatableFieldNumber}]//div[contains(@class,'lfr-ddm-form-field-repeatable-toolbar')]//button[contains(@class,'btn') and contains(@title,'Duplicate')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>FIELD_NAME_EDIT</td>
 	<td>//input[contains(@name,'name') and contains(@class,'ddm-field-text')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>FIELD_HELPER_EDIT</td>
+	<td>xpath=(//input[contains(@class,'ddm-field-text')])[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>PROPERTIES</td>
+	<td>//div[contains(@class,'nav-item')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -72,7 +87,7 @@
 </tr>
 <tr>
 	<td>REPEATABLE_HELP_TEXT</td>
-	<td>//div[contains(@class,'form-container')]//div[contains(@data-field-name,'${key_fieldName}')][${key_repeatableFieldNumber}]//p[@class='liferay-ddm-form-field-tip'] | //div[contains(@class,'form-container')]//div[contains(@data-field-name,'${key_fieldName}')][${key_repeatableFieldNumber}]/span</td>
+	<td>//div[contains(@class,'form-container')]//div[contains(@data-field-name,'${key_fieldName}')][${key_repeatableFieldNumber}]//p[@class='liferay-ddm-form-field-tip'] | //div[contains(@class,'form-container')]//div[contains(@data-field-name,'${key_fieldName}')][${key_repeatableFieldNumber}]//span</td>
 	<td></td>
 </tr>
 <tr>
@@ -203,12 +218,12 @@
 <!--TEXT-->
 <tr>
 	<td>REPEATABLE_TEXT_MULTILINE_FIELD</td>
-	<td>//div[contains(@class,'form-group')][${key_repeatableFieldNumber}]//textarea[contains(@id,'${key_fieldName}') or contains(@name,'${key_fieldName}')]</td>
+	<td>//div[contains(@class,'form-group')][${key_repeatableFieldNumber}]//textarea[contains(@id,'${key_fieldName}') or contains(@name,'${key_fieldName}')] | //div[contains(@class,'form-container')]//div[contains(@data-field-name,'${key_fieldName}')][${key_repeatableFieldNumber}]//textarea[contains(@id,'${key_fieldName}') or contains(@name,'${key_fieldName}')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>REPEATABLE_TEXT_MULTILINE_LABEL</td>
-	<td>//div[contains(@class,'form-container')]//div[contains(@data-field-name,'${key_fieldName}')][${key_repeatableFieldNumber}]//label[contains(.,'${key_fieldLabel}')]</td>
+	<td>//div[contains(@class,'form-container')]//div[contains(@data-field-name,'${key_fieldName}')][${key_repeatableFieldNumber}]//label[contains(.,'${key_fieldLabel}')] | //div[contains(@class,'form-container')]//div[contains(@data-field-name,'${key_fieldName}')][${key_repeatableFieldNumber}]//p[contains(.,'${key_fieldLabel}')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -223,12 +238,12 @@
 </tr>
 <tr>
 	<td>TEXT_FIELD_2</td>
-	<td>xpath=(//input[@type='text' and contains(@name,'${key_fieldName}')])[2]</td>
+	<td>//div[contains(@class,'lfr-ddm-form-container')]//div[contains(@data-field-name,'${key_fieldName}')][2]//input[@type='text' and contains(@name,'${key_fieldName}')]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>TEXT_LABEL_2</td>
-	<td>xpath=(//div[contains(@class,'form-group')]//p[contains(.,'${key_fieldLabel}')])[2]</td>
+	<td>//div[contains(@class,'lfr-ddm-form-container')]//div[contains(@data-field-name,'${key_fieldName}')][2]//p[contains(.,'${key_fieldLabel}')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -410,6 +425,21 @@
 	<td></td>
 </tr>
 <tr>
+	<td>UPLOAD_PREDEFINED_VALUE</td>
+	<td>//div[@class='col-md-12']//button[contains(text(),'Select')]</td>	
+	<td></td>
+</tr>
+<tr>
+	<td>UPLOAD_ON_WIDGET</td>
+	<td>//div[@class='ddm-field'][1]//button[contains(text(),'Select')]</td>	
+	<td></td>
+</tr>
+<tr>
+	<td>UPLOAD_ON_DUPLICATE_FIELD</td>
+	<td>//div[@class='ddm-field'][2]//button[contains(text(),'Select')]</td>	
+	<td></td>
+</tr>
+<tr>
 	<td>UPLOAD_FILE_NAME</td>
 	<td>//div[contains(@data-field-name,'${key_fieldName}')]//h4[contains(.,'${key_uploadFileName}')]</td>
 	<td></td>
@@ -444,6 +474,11 @@
 <tr>
 	<td>USER_NOTIFICATION_TIMEOUT</td>
 	<td>//input[contains(@name,'userNotificationTimeout')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>IMAGE_TABLE_ENTRY</td>
+	<td>//td[contains(@class,'lfr-image-column')]</td>
 	<td></td>
 </tr>
 </tbody>

@@ -4,8 +4,9 @@ definition {
 	var rowIndexNumber = "1";
 
 	macro enableLocalNetworkDataProvider {
+		Navigator.openURL();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "System Settings");
@@ -14,6 +15,10 @@ definition {
 			configurationCategory = "Data Providers",
 			configurationName = "Data Providers",
 			configurationScope = "Site Scope");
+
+		WaitForElementPresent(
+			key_checkboxOption = "Access Local Network",
+			locator1 = "Checkbox#ENABLE_CHECKBOX_VIA_SPAN");
 
 		if (IsElementPresent(locator1 = "Button#UPDATE")) {
 			Button.clickUpdate();
@@ -30,6 +35,10 @@ definition {
 	}
 
 	macro gotoAddDataProvider {
+		LexiconEntry.gotoAdd();
+	}
+
+	macro gotoAddElementSet {
 		LexiconEntry.gotoAdd();
 	}
 
@@ -60,6 +69,8 @@ definition {
 	macro gotoEditField {
 		var key_fieldName = "${fieldName}";
 
+		WaitForElementPresent(locator1 = "Form#FIELD_BODY");
+
 		Click(locator1 = "Form#FIELD_BODY");
 
 		AssertElementPresent(locator1 = "Form#SIDEBAR_BASIC_TAB");
@@ -75,8 +86,12 @@ definition {
 	macro gotoFormBuilder {
 		var key_assetTitle = "Form";
 
+		WaitForElementPresent(
+			locator1 = "NavBar#ASSET_TITLE",
+			value1 = "Form");
+
 		AssertClick(
-			locator1 = "NavBar#ASSET_TITLE_LINK",
+			locator1 = "NavBar#ASSET_TITLE",
 			value1 = "Form");
 	}
 
@@ -85,21 +100,22 @@ definition {
 			menuItem = "Permissions",
 			rowEntry = "${formName}");
 
-		LiferayEvent.waitForLiferayEvent(
-			attributeName = "src",
-			attributeValue = "dialog-iframe-popup",
-			eventName = "modalIframeLoaded");
-
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 	}
 
 	macro gotoPreviewForm {
+		WaitForElementPresent(
+			locator1 = "Form#PREVIEW_FORM_BUTTON",
+			value1 = "Preview");
+
 		AssertClick(
-			locator1 = "Button#PREVIEW",
-			value1 = "Preview Form");
+			locator1 = "Form#PREVIEW_FORM_BUTTON",
+			value1 = "Preview");
 	}
 
 	macro gotoPublishCopyURLLink {
+		WaitForElementPresent(locator1 = "Form#PUBLISH_ICON");
+
 		Click(locator1 = "Form#PUBLISH_ICON");
 	}
 
@@ -116,8 +132,12 @@ definition {
 	macro gotoRules {
 		var key_assetTitle = "Rules";
 
+		WaitForElementPresent(
+			locator1 = "NavBar#ASSET_TITLE",
+			value1 = "Rules");
+
 		AssertClick(
-			locator1 = "NavBar#ASSET_TITLE_LINK",
+			locator1 = "NavBar#ASSET_TITLE",
 			value1 = "Rules");
 	}
 

@@ -45,7 +45,6 @@ import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HashMapDictionary;
-import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -144,10 +143,10 @@ public class WidgetInstanceDefinitionDTOConverterTest {
 		FragmentEntryLink fragmentEntryLink =
 			_fragmentEntryLinkLocalService.addFragmentEntryLink(
 				_serviceContext.getUserId(), _serviceContext.getScopeGroupId(),
-				0, 0, 0, _portal.getClassNameId(Layout.class), layout.getPlid(),
-				StringPool.BLANK, StringPool.BLANK, StringPool.BLANK,
-				StringPool.BLANK, editableValueJSONObject.toString(), namespace,
-				0, null, _serviceContext);
+				0, 0, 0, layout.getPlid(), StringPool.BLANK, StringPool.BLANK,
+				StringPool.BLANK, StringPool.BLANK,
+				editableValueJSONObject.toString(), namespace, 0, null,
+				_serviceContext);
 
 		String testPortletId = PortletIdCodec.encode(
 			_testPortletName, instanceId);
@@ -155,15 +154,14 @@ public class WidgetInstanceDefinitionDTOConverterTest {
 		String configProperty1Value = RandomTestUtil.randomString();
 		String configProperty2Value = RandomTestUtil.randomString();
 
-		Map<String, Object> portletConfig = HashMapBuilder.<String, Object>put(
-			"config-property-1", configProperty1Value
-		).put(
-			"config-property-2", configProperty2Value
-		).build();
-
 		_portletPreferencesPortletConfigurationImporter.
 			importPortletConfiguration(
-				layout.getPlid(), testPortletId, portletConfig);
+				layout.getPlid(), testPortletId,
+				HashMapBuilder.<String, Object>put(
+					"config-property-1", configProperty1Value
+				).put(
+					"config-property-2", configProperty2Value
+				).build());
 
 		ResourceAction resourceAction =
 			_resourceActionLocalService.addResourceAction(
@@ -261,9 +259,6 @@ public class WidgetInstanceDefinitionDTOConverterTest {
 
 	@Inject
 	private LayoutLocalService _layoutLocalService;
-
-	@Inject
-	private Portal _portal;
 
 	@Inject
 	private PortletPermission _portletPermission;

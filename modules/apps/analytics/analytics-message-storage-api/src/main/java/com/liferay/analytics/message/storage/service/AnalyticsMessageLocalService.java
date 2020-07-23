@@ -67,6 +67,10 @@ public interface AnalyticsMessageLocalService
 	/**
 	 * Adds the analytics message to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AnalyticsMessageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param analyticsMessage the analytics message
 	 * @return the analytics message that was added
 	 */
@@ -96,6 +100,10 @@ public interface AnalyticsMessageLocalService
 	/**
 	 * Deletes the analytics message from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AnalyticsMessageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param analyticsMessage the analytics message
 	 * @return the analytics message that was removed
 	 */
@@ -105,6 +113,10 @@ public interface AnalyticsMessageLocalService
 
 	/**
 	 * Deletes the analytics message with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AnalyticsMessageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param analyticsMessageId the primary key of the analytics message
 	 * @return the analytics message that was removed
@@ -268,6 +280,10 @@ public interface AnalyticsMessageLocalService
 
 	/**
 	 * Updates the analytics message in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect AnalyticsMessageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param analyticsMessage the analytics message
 	 * @return the analytics message that was updated

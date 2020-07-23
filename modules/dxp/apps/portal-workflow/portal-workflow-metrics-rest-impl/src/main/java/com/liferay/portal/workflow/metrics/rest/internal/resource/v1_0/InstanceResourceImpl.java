@@ -174,7 +174,7 @@ public class InstanceResourceImpl extends BaseInstanceResourceImpl {
 				contextCompany.getCompanyId()));
 
 		BooleanQuery booleanQuery = _createBooleanQuery(
-			new Long[0], null, processId);
+			new Long[0], new Long[0], null, processId);
 
 		searchSearchRequest.setQuery(
 			booleanQuery.addMustQueryClauses(
@@ -233,21 +233,21 @@ public class InstanceResourceImpl extends BaseInstanceResourceImpl {
 
 	@Override
 	public Page<Instance> getProcessInstancesPage(
-			Long processId, Long[] assigneeIds, Boolean completed, Date dateEnd,
-			Date dateStart, String[] slaStatuses, String[] taskNames,
-			Pagination pagination)
+			Long processId, Long[] assigneeIds, Long[] classPKs,
+			Boolean completed, Date dateEnd, Date dateStart,
+			String[] slaStatuses, String[] taskNames, Pagination pagination)
 		throws Exception {
 
 		SearchSearchResponse searchSearchResponse = _getSearchSearchResponse(
-			assigneeIds, completed, dateEnd, dateStart, processId, slaStatuses,
-			taskNames);
+			assigneeIds, classPKs, completed, dateEnd, dateStart, processId,
+			slaStatuses, taskNames);
 
 		int instanceCount = _getInstanceCount(searchSearchResponse);
 
 		if (instanceCount > 0) {
 			return Page.of(
 				_getInstances(
-					assigneeIds, completed, dateEnd, dateStart,
+					assigneeIds, classPKs, completed, dateEnd, dateStart,
 					searchSearchResponse.getCount(), pagination, processId,
 					slaStatuses, taskNames),
 				pagination, instanceCount);
@@ -256,6 +256,7 @@ public class InstanceResourceImpl extends BaseInstanceResourceImpl {
 		return Page.of(Collections.emptyList());
 	}
 
+	@Override
 	public void patchProcessInstance(
 			Long processId, Long instanceId, Instance instance)
 		throws Exception {
@@ -382,7 +383,8 @@ public class InstanceResourceImpl extends BaseInstanceResourceImpl {
 	}
 
 	private BooleanQuery _createBooleanQuery(
-		Long[] assigneeIds, Boolean completed, long processId) {
+		Long[] assigneeIds, Long[] classPKs, Boolean completed,
+		long processId) {
 
 		BooleanQuery booleanQuery = _queries.booleanQuery();
 
@@ -396,7 +398,7 @@ public class InstanceResourceImpl extends BaseInstanceResourceImpl {
 				_instanceWorkflowMetricsIndexNameBuilder.getIndexName(
 					contextCompany.getCompanyId())));
 		instancesBooleanQuery.addMustQueryClauses(
-			_createInstancesBooleanQuery(completed, processId));
+			_createInstancesBooleanQuery(classPKs, completed, processId));
 
 		BooleanQuery slaInstanceResultsBooleanQuery = _queries.booleanQuery();
 
@@ -460,6 +462,7 @@ public class InstanceResourceImpl extends BaseInstanceResourceImpl {
 				assetTitle = document.getString(
 					_getLocalizedName("assetTitle"));
 				assetType = document.getString(_getLocalizedName("assetType"));
+				classPK = document.getLong("classPK");
 				completed = document.getBoolean("completed");
 				creator = _toCreator(document.getLong("userId"));
 				dateCompletion = _parseDate(document.getDate("completionDate"));
@@ -478,6 +481,7 @@ public class InstanceResourceImpl extends BaseInstanceResourceImpl {
 					sourcesMap.get(_getLocalizedName("assetTitle")));
 				assetType = GetterUtil.getString(
 					sourcesMap.get(_getLocalizedName("assetType")));
+				classPK = GetterUtil.getLong(sourcesMap.get("classPK"));
 				completed = GetterUtil.getBoolean(sourcesMap.get("completed"));
 				creator = _toCreator(
 					GetterUtil.getLong(sourcesMap.get("userId")));
@@ -494,11 +498,26 @@ public class InstanceResourceImpl extends BaseInstanceResourceImpl {
 	}
 
 	private BooleanQuery _createInstancesBooleanQuery(
-		Boolean completed, long processId) {
+		Long[] classPKs, Boolean completed, long processId) {
 
 		BooleanQuery booleanQuery = _queries.booleanQuery();
 
 		booleanQuery.addMustNotQueryClauses(_queries.term("instanceId", 0));
+
+		if (ArrayUtil.isNotEmpty(classPKs)) {
+			TermsQuery termsQuery = _queries.terms("classPK");
+
+			termsQuery.addValues(
+				Stream.of(
+					classPKs
+				).map(
+					String::valueOf
+				).toArray(
+					Object[]::new
+				));
+
+			booleanQuery.addMustQueryClauses(termsQuery);
+		}
 
 		if (completed != null) {
 			booleanQuery.addMustQueryClauses(
@@ -665,9 +684,9 @@ public class InstanceResourceImpl extends BaseInstanceResourceImpl {
 	}
 
 	private List<Instance> _getInstances(
-		Long[] assigneeIds, Boolean completed, Date dateEnd, Date dateStart,
-		long instanceCount, Pagination pagination, long processId,
-		String[] slaStatuses, String[] taskNames) {
+		Long[] assigneeIds, Long[] classPKs, Boolean completed, Date dateEnd,
+		Date dateStart, long instanceCount, Pagination pagination,
+		long processId, String[] slaStatuses, String[] taskNames) {
 
 		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
 
@@ -750,7 +769,7 @@ public class InstanceResourceImpl extends BaseInstanceResourceImpl {
 				contextCompany.getCompanyId()));
 
 		searchSearchRequest.setQuery(
-			_createBooleanQuery(assigneeIds, completed, processId));
+			_createBooleanQuery(assigneeIds, classPKs, completed, processId));
 
 		return Stream.of(
 			_searchRequestExecutor.executeSearchRequest(searchSearchRequest)
@@ -904,8 +923,9 @@ public class InstanceResourceImpl extends BaseInstanceResourceImpl {
 	}
 
 	private SearchSearchResponse _getSearchSearchResponse(
-		Long[] assigneeIds, Boolean completed, Date dateEnd, Date dateStart,
-		long processId, String[] slaStatuses, String[] taskNames) {
+		Long[] assigneeIds, Long[] classPKs, Boolean completed, Date dateEnd,
+		Date dateStart, long processId, String[] slaStatuses,
+		String[] taskNames) {
 
 		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
 
@@ -922,7 +942,7 @@ public class InstanceResourceImpl extends BaseInstanceResourceImpl {
 			_taskWorkflowMetricsIndexNameBuilder.getIndexName(
 				contextCompany.getCompanyId()));
 		searchSearchRequest.setQuery(
-			_createBooleanQuery(assigneeIds, completed, processId));
+			_createBooleanQuery(assigneeIds, classPKs, completed, processId));
 
 		return _searchRequestExecutor.executeSearchRequest(searchSearchRequest);
 	}

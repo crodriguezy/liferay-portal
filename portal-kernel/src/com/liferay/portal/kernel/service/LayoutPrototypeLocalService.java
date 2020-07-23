@@ -69,6 +69,10 @@ public interface LayoutPrototypeLocalService
 	/**
 	 * Adds the layout prototype to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect LayoutPrototypeLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param layoutPrototype the layout prototype
 	 * @return the layout prototype that was added
 	 */
@@ -99,6 +103,10 @@ public interface LayoutPrototypeLocalService
 	/**
 	 * Deletes the layout prototype from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect LayoutPrototypeLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param layoutPrototype the layout prototype
 	 * @return the layout prototype that was removed
 	 * @throws PortalException
@@ -114,6 +122,10 @@ public interface LayoutPrototypeLocalService
 
 	/**
 	 * Deletes the layout prototype with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect LayoutPrototypeLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param layoutPrototypeId the primary key of the layout prototype
 	 * @return the layout prototype that was removed
@@ -306,13 +318,17 @@ public interface LayoutPrototypeLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<LayoutPrototype> search(
 		long companyId, Boolean active, int start, int end,
-		OrderByComparator<LayoutPrototype> obc);
+		OrderByComparator<LayoutPrototype> orderByComparator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int searchCount(long companyId, Boolean active);
 
 	/**
 	 * Updates the layout prototype in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect LayoutPrototypeLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param layoutPrototype the layout prototype
 	 * @return the layout prototype that was updated

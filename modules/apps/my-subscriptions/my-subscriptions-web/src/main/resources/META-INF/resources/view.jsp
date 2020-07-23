@@ -35,7 +35,7 @@ int subscriptionsCount = mySubscriptionsManagementToolbarDisplayContext.getTotal
 />
 
 <clay:container-fluid>
-	<aui:form action="<%= unsubscribeURL %>" method="get" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "unsubscribe();" %>'>
+	<aui:form action="<%= unsubscribeURL %>" method="get" name="fm" onSubmit='<%= "event.preventDefault(); " + liferayPortletResponse.getNamespace() + "unsubscribe();" %>'>
 		<liferay-portlet:renderURLParams varImpl="portletURL" />
 		<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 		<aui:input name="subscriptionIds" type="hidden" />
@@ -114,28 +114,14 @@ int subscriptionsCount = mySubscriptionsManagementToolbarDisplayContext.getTotal
 </clay:container-fluid>
 
 <aui:script>
-	Liferay.provide(
-		window,
-		'<portlet:namespace />displayPopup',
-		function (url, title) {
-			Liferay.Util.Window.getWindow({
-				dialog: {
-					align: {
-						node: null,
-						points: ['tc', 'tc'],
-					},
-					constrain2view: true,
-					cssClass: 'portlet-my-subscription',
-					modal: true,
-					resizable: true,
-					width: 950,
-				},
-				title: title,
-				uri: url,
-			});
-		},
-		['liferay-util-window']
-	);
+	window['<portlet:namespace />displayPopup'] = function (url, title) {
+		Liferay.Util.openModal({
+			iframeBodyCssClass: 'portlet-my-subscription',
+			size: 'full-screen',
+			title: title,
+			url: url,
+		});
+	};
 </aui:script>
 
 <aui:script sandbox="<%= true %>">

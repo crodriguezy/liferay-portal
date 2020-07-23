@@ -1687,7 +1687,7 @@ public class TableMapperTest {
 				new HashSet<String>() {
 
 					@Override
-					public boolean contains(Object o) {
+					public boolean contains(Object object) {
 						return true;
 					}
 
@@ -2073,10 +2073,8 @@ public class TableMapperTest {
 
 			Class<T> modelClass = getModelClass();
 
-			ClassLoader classLoader = modelClass.getClassLoader();
-
 			return (T)ProxyUtil.newProxyInstance(
-				classLoader, new Class<?>[] {modelClass},
+				modelClass.getClassLoader(), new Class<?>[] {modelClass},
 				new GetPrimaryKeyObjInvocationHandler(primaryKey));
 		}
 

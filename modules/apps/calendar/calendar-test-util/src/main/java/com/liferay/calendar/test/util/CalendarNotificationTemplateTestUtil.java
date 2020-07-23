@@ -14,9 +14,9 @@
 
 package com.liferay.calendar.test.util;
 
+import com.liferay.calendar.constants.CalendarNotificationTemplateConstants;
 import com.liferay.calendar.model.Calendar;
 import com.liferay.calendar.model.CalendarNotificationTemplate;
-import com.liferay.calendar.model.CalendarNotificationTemplateConstants;
 import com.liferay.calendar.notification.NotificationTemplateType;
 import com.liferay.calendar.notification.NotificationType;
 import com.liferay.calendar.service.CalendarNotificationTemplateLocalServiceUtil;
@@ -46,15 +46,14 @@ public class CalendarNotificationTemplateTestUtil {
 		notificationTypeSettingsUnicodeProperties.put(
 			CalendarNotificationTemplateConstants.PROPERTY_FROM_NAME, fromName);
 
-		User user = UserLocalServiceUtil.getUser(calendar.getUserId());
-
 		return CalendarNotificationTemplateLocalServiceUtil.
 			addCalendarNotificationTemplate(
 				calendar.getUserId(), calendar.getCalendarId(),
 				NotificationType.EMAIL,
 				notificationTypeSettingsUnicodeProperties.toString(),
 				notificationTemplateType, subject, body,
-				createServiceContext(user));
+				createServiceContext(
+					UserLocalServiceUtil.getUser(calendar.getUserId())));
 	}
 
 	protected static ServiceContext createServiceContext(User user) {

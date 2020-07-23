@@ -16,13 +16,19 @@ package com.liferay.product.navigation.product.menu.web.internal.display.context
 
 import com.liferay.application.list.GroupProvider;
 import com.liferay.application.list.constants.ApplicationListWebKeys;
+import com.liferay.asset.list.constants.AssetListPortletKeys;
+import com.liferay.asset.list.model.AssetListEntry;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
+import com.liferay.portal.kernel.portlet.PortletProvider;
+import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -37,6 +43,7 @@ import java.util.Map;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
+import javax.portlet.WindowStateException;
 
 /**
  * @author Pavel Savinov
@@ -54,11 +61,46 @@ public class LayoutsTreeDisplayContext {
 			WebKeys.THEME_DISPLAY);
 	}
 
+	public String getAddChildCollectionURLTemplate() throws Exception {
+		return StringBundler.concat(
+			getAddCollectionLayoutURL(), StringPool.AMPERSAND,
+			PortalUtil.getPortletNamespace(LayoutAdminPortletKeys.GROUP_PAGES),
+			"selPlid={plid}");
+	}
+
 	public String getAddChildURLTemplate() throws Exception {
 		return StringBundler.concat(
 			getAddLayoutURL(), StringPool.AMPERSAND,
 			PortalUtil.getPortletNamespace(LayoutAdminPortletKeys.GROUP_PAGES),
 			"selPlid={plid}");
+	}
+
+	public String getAddCollectionLayoutURL() throws Exception {
+		Group scopeGroup = _themeDisplay.getScopeGroup();
+
+		if (scopeGroup.isStaged() && !scopeGroup.isStagingGroup()) {
+			return StringPool.BLANK;
+		}
+
+		PortletURL addLayoutURL = PortalUtil.getControlPanelPortletURL(
+			_liferayPortletRequest, LayoutAdminPortletKeys.GROUP_PAGES,
+			PortletRequest.RENDER_PHASE);
+
+		addLayoutURL.setParameter("mvcPath", "/select_layout_collections.jsp");
+
+		Layout layout = _themeDisplay.getLayout();
+
+		addLayoutURL.setParameter(
+			"redirect", PortalUtil.getLayoutFullURL(layout, _themeDisplay));
+		addLayoutURL.setParameter(
+			"backURL", PortalUtil.getLayoutFullURL(layout, _themeDisplay));
+
+		addLayoutURL.setParameter(
+			"groupId", String.valueOf(_themeDisplay.getSiteGroupId()));
+		addLayoutURL.setParameter(
+			"privateLayout", String.valueOf(isPrivateLayout()));
+
+		return addLayoutURL.toString();
 	}
 
 	public String getAddLayoutURL() throws Exception {
@@ -102,17 +144,21 @@ public class LayoutsTreeDisplayContext {
 		return administrationPortletURL.toString();
 	}
 
-	public String getConfigureLayoutSetURL() {
+	public String getConfigureLayoutSetURL() throws PortalException {
 		PortletURL configureLayoutSetURL = PortalUtil.getControlPanelPortletURL(
 			_liferayPortletRequest, LayoutAdminPortletKeys.GROUP_PAGES,
 			PortletRequest.RENDER_PHASE);
 
 		configureLayoutSetURL.setParameter(
 			"mvcRenderCommandName", "/layout/edit_layout_set");
+
+		Layout layout = _themeDisplay.getLayout();
+
 		configureLayoutSetURL.setParameter(
-			"redirect", _themeDisplay.getURLCurrent());
+			"redirect", PortalUtil.getLayoutFullURL(layout, _themeDisplay));
 		configureLayoutSetURL.setParameter(
-			"backURL", _themeDisplay.getURLCurrent());
+			"backURL", PortalUtil.getLayoutFullURL(layout, _themeDisplay));
+
 		configureLayoutSetURL.setParameter(
 			"groupId", String.valueOf(_themeDisplay.getScopeGroupId()));
 		configureLayoutSetURL.setParameter(
@@ -121,23 +167,27 @@ public class LayoutsTreeDisplayContext {
 		return configureLayoutSetURL.toString();
 	}
 
-	public String getConfigureLayoutURL() {
-		PortletURL configureLayoutSetURL = PortalUtil.getControlPanelPortletURL(
+	public String getConfigureLayoutURL() throws PortalException {
+		PortletURL configureLayoutURL = PortalUtil.getControlPanelPortletURL(
 			_liferayPortletRequest, LayoutAdminPortletKeys.GROUP_PAGES,
 			PortletRequest.RENDER_PHASE);
 
-		configureLayoutSetURL.setParameter(
+		configureLayoutURL.setParameter(
 			"mvcRenderCommandName", "/layout/edit_layout");
-		configureLayoutSetURL.setParameter(
-			"redirect", _themeDisplay.getURLCurrent());
-		configureLayoutSetURL.setParameter(
-			"backURL", _themeDisplay.getURLCurrent());
-		configureLayoutSetURL.setParameter(
+
+		Layout layout = _themeDisplay.getLayout();
+
+		configureLayoutURL.setParameter(
+			"redirect", PortalUtil.getLayoutFullURL(layout, _themeDisplay));
+		configureLayoutURL.setParameter(
+			"backURL", PortalUtil.getLayoutFullURL(layout, _themeDisplay));
+
+		configureLayoutURL.setParameter(
 			"groupId", String.valueOf(_themeDisplay.getScopeGroupId()));
-		configureLayoutSetURL.setParameter(
+		configureLayoutURL.setParameter(
 			"privateLayout", String.valueOf(isPrivateLayout()));
 
-		return configureLayoutSetURL.toString();
+		return configureLayoutURL.toString();
 	}
 
 	public String getConfigureLayoutURLTemplate() throws Exception {
@@ -197,6 +247,8 @@ public class LayoutsTreeDisplayContext {
 
 	public Map<String, Object> getPageTypeSelectorData() throws Exception {
 		return HashMapBuilder.<String, Object>put(
+			"addCollectionLayoutURL", getAddCollectionLayoutURL()
+		).put(
 			"addLayoutURL", getAddLayoutURL()
 		).put(
 			"configureLayoutSetURL", getConfigureLayoutSetURL()
@@ -205,6 +257,33 @@ public class LayoutsTreeDisplayContext {
 		).put(
 			"privateLayout", isPrivateLayout()
 		).build();
+	}
+
+	public String getViewCollectionItemsURL()
+		throws PortalException, WindowStateException {
+
+		PortletURL portletURL = PortletProviderUtil.getPortletURL(
+			_liferayPortletRequest, AssetListEntry.class.getName(),
+			PortletProvider.Action.BROWSE);
+
+		if (portletURL == null) {
+			return StringPool.BLANK;
+		}
+
+		portletURL.setParameter(
+			"redirect",
+			PortalUtil.getLayoutRelativeURL(
+				_themeDisplay.getLayout(), _themeDisplay));
+		portletURL.setParameter("showActions", String.valueOf(Boolean.TRUE));
+
+		portletURL.setWindowState(LiferayWindowState.POP_UP);
+
+		return StringBundler.concat(
+			portletURL, StringPool.AMPERSAND,
+			PortalUtil.getPortletNamespace(AssetListPortletKeys.ASSET_LIST),
+			"collectionPK={collectionPK}", StringPool.AMPERSAND,
+			PortalUtil.getPortletNamespace(AssetListPortletKeys.ASSET_LIST),
+			"collectionType={collectionType}");
 	}
 
 	public boolean isPrivateLayout() {

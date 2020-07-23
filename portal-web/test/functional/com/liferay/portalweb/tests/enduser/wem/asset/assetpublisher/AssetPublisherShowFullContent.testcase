@@ -76,6 +76,7 @@ definition {
 
 	@priority = "5"
 	test AddAPMultiplePortlet {
+		property portal.acceptance = "true";
 		property testray.component.names = "Asset Publisher,Training";
 
 		Navigator.gotoSitePage(
@@ -106,6 +107,7 @@ definition {
 	@priority = "5"
 	test AddAssetTypesViaAPAndAddRespectivePortletsToSamePage {
 		property plugins.deployment.type = "osgi";
+		property portal.acceptance = "true";
 
 		Navigator.gotoSitePage(
 			pageName = "Asset Publisher Page",
@@ -159,7 +161,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Dynamic Data Lists");
 
 		DDLDataDefinition.addCP(ddlDataDefinitionName = "Data Definition");
@@ -175,7 +176,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Dynamic Data Lists");
 
 		DDLList.addCP(ddlListName = "List Name");
@@ -424,6 +424,7 @@ definition {
 
 	@priority = "5"
 	test ConfigureAPPortletScopeMultipleSites {
+		property portal.acceptance = "true";
 		property testray.component.names = "Asset Publisher,Training";
 
 		JSONGroup.addGroup(groupName = "Site Name 2");
@@ -792,7 +793,6 @@ definition {
 		for (var i : list "1,5,3") {
 			ProductMenu.gotoPortlet(
 				category = "Content &amp; Data",
-				panel = "Site Administration",
 				portlet = "Web Content");
 
 			WebContentNavigator.gotoAddCP();
@@ -934,6 +934,7 @@ definition {
 
 	@priority = "5"
 	test RestoreAPArchivedSetup {
+		property portal.acceptance = "true";
 		property testray.component.names = "Asset Publisher,Training";
 
 		JSONWebcontent.addWebContent(

@@ -34,6 +34,10 @@ public class LayoutBranchLocalServiceWrapper
 	/**
 	 * Adds the layout branch to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect LayoutBranchLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param layoutBranch the layout branch
 	 * @return the layout branch that was added
 	 */
@@ -93,6 +97,10 @@ public class LayoutBranchLocalServiceWrapper
 	/**
 	 * Deletes the layout branch from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect LayoutBranchLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param layoutBranch the layout branch
 	 * @return the layout branch that was removed
 	 */
@@ -105,6 +113,10 @@ public class LayoutBranchLocalServiceWrapper
 
 	/**
 	 * Deletes the layout branch with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect LayoutBranchLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param layoutBranchId the primary key of the layout branch
 	 * @return the layout branch that was removed
@@ -357,6 +369,10 @@ public class LayoutBranchLocalServiceWrapper
 
 	/**
 	 * Updates the layout branch in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect LayoutBranchLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param layoutBranch the layout branch
 	 * @return the layout branch that was updated

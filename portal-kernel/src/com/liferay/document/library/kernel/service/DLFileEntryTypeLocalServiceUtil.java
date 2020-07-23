@@ -44,6 +44,10 @@ public class DLFileEntryTypeLocalServiceUtil {
 	/**
 	 * Adds the document library file entry type to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DLFileEntryTypeLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dlFileEntryType the document library file entry type
 	 * @return the document library file entry type that was added
 	 */
@@ -86,6 +90,25 @@ public class DLFileEntryTypeLocalServiceUtil {
 
 	public static com.liferay.document.library.kernel.model.DLFileEntryType
 			addFileEntryType(
+				long userId, long groupId, long dataDefinitionId,
+				String fileEntryTypeKey,
+				java.util.Map<java.util.Locale, String> nameMap,
+				java.util.Map<java.util.Locale, String> descriptionMap,
+				com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return getService().addFileEntryType(
+			userId, groupId, dataDefinitionId, fileEntryTypeKey, nameMap,
+			descriptionMap, serviceContext);
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 #addFileEntryType(long, long, String, Map, Map, long, ServiceContext)}
+	 */
+	@Deprecated
+	public static com.liferay.document.library.kernel.model.DLFileEntryType
+			addFileEntryType(
 				long userId, long groupId, String fileEntryTypeKey,
 				java.util.Map<java.util.Locale, String> nameMap,
 				java.util.Map<java.util.Locale, String> descriptionMap,
@@ -98,6 +121,11 @@ public class DLFileEntryTypeLocalServiceUtil {
 			ddmStructureIds, serviceContext);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 #addFileEntryType(long, long, String, Map, Map, long, ServiceContext)}
+	 */
+	@Deprecated
 	public static com.liferay.document.library.kernel.model.DLFileEntryType
 			addFileEntryType(
 				long userId, long groupId, String name, String description,
@@ -153,6 +181,10 @@ public class DLFileEntryTypeLocalServiceUtil {
 	/**
 	 * Deletes the document library file entry type from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DLFileEntryTypeLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dlFileEntryType the document library file entry type
 	 * @return the document library file entry type that was removed
 	 */
@@ -166,6 +198,10 @@ public class DLFileEntryTypeLocalServiceUtil {
 
 	/**
 	 * Deletes the document library file entry type with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DLFileEntryTypeLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param fileEntryTypeId the primary key of the document library file entry type
 	 * @return the document library file entry type that was removed
@@ -638,6 +674,10 @@ public class DLFileEntryTypeLocalServiceUtil {
 	/**
 	 * Updates the document library file entry type in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect DLFileEntryTypeLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param dlFileEntryType the document library file entry type
 	 * @return the document library file entry type that was updated
 	 */
@@ -660,6 +700,11 @@ public class DLFileEntryTypeLocalServiceUtil {
 			dlFileEntry, serviceContext);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 #updateFileEntryType(long, Map, Map)}
+	 */
+	@Deprecated
 	public static void updateFileEntryType(
 			long userId, long fileEntryTypeId,
 			java.util.Map<java.util.Locale, String> nameMap,
@@ -673,6 +718,11 @@ public class DLFileEntryTypeLocalServiceUtil {
 			serviceContext);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 #updateFileEntryType(long, Map, Map)}
+	 */
+	@Deprecated
 	public static void updateFileEntryType(
 			long userId, long fileEntryTypeId, String name, String description,
 			long[] ddmStructureIds,
@@ -682,6 +732,17 @@ public class DLFileEntryTypeLocalServiceUtil {
 		getService().updateFileEntryType(
 			userId, fileEntryTypeId, name, description, ddmStructureIds,
 			serviceContext);
+	}
+
+	public static com.liferay.document.library.kernel.model.DLFileEntryType
+			updateFileEntryType(
+				long fileEntryTypeId,
+				java.util.Map<java.util.Locale, String> nameMap,
+				java.util.Map<java.util.Locale, String> descriptionMap)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return getService().updateFileEntryType(
+			fileEntryTypeId, nameMap, descriptionMap);
 	}
 
 	public static void updateFolderFileEntryTypes(

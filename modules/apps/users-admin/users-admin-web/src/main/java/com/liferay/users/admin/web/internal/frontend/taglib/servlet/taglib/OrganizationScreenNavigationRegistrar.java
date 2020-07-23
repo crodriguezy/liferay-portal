@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.service.OrganizationService;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.users.admin.constants.UserScreenNavigationEntryConstants;
+import com.liferay.users.admin.web.internal.frontend.taglib.servlet.taglib.ui.OrganizationScreenNavigationCategory;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -194,17 +195,19 @@ public class OrganizationScreenNavigationRegistrar {
 	}
 
 	private void _registerScreenNavigationEntry(
-		ScreenNavigationEntry screenNavigationEntry,
+		ScreenNavigationEntry<?> screenNavigationEntry,
 		Dictionary<String, Object> properties) {
 
 		_screenNavigationEntryServiceRegistrations.add(
 			_bundleContext.registerService(
-				ScreenNavigationEntry.class, screenNavigationEntry,
-				properties));
+				(Class<ScreenNavigationEntry<?>>)
+					(Class<?>)ScreenNavigationEntry.class,
+				screenNavigationEntry, properties));
 	}
 
 	private void _registerScreenNavigationEntry(
-		ScreenNavigationEntry screenNavigationEntry, Integer serviceRanking) {
+		ScreenNavigationEntry<?> screenNavigationEntry,
+		Integer serviceRanking) {
 
 		_registerScreenNavigationEntry(
 			screenNavigationEntry, _getProperties(serviceRanking));
@@ -232,7 +235,7 @@ public class OrganizationScreenNavigationRegistrar {
 
 	private final List<ServiceRegistration<ScreenNavigationCategory>>
 		_screenNavigationCategoryServiceRegistrations = new ArrayList<>();
-	private final List<ServiceRegistration<ScreenNavigationEntry>>
+	private final List<ServiceRegistration<ScreenNavigationEntry<?>>>
 		_screenNavigationEntryServiceRegistrations = new ArrayList<>();
 
 }

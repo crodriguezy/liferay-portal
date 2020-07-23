@@ -56,21 +56,20 @@ definition {
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 
-		Site.assignUserAsMemberCP(
+		Depot.assignUserAsMember(
 			depotName = "Test Depot Name",
 			userFirstName = "userfn",
 			userLastName = "userln",
 			userScreenName = "usersn");
 
-		Site.assignSiteRoleCP(
+		Depot.assignAssetLibraryRole(
 			resourceName = "userfn userln",
 			roleTitle = "Asset Library Administrator");
 
-		Site.removeMemberCP(
+		Depot.removeMember(
 			userFirstName = "userfn",
 			userLastName = "userln",
 			userScreenName = "usersn");
@@ -89,17 +88,17 @@ definition {
 		UserNavigator.gotoRoles();
 
 		AssertElementNotPresent(
-			key_roleTitle = "Asset Library Administrator",
-			locator1 = "UsersAndOrganizationsEditUser#DEPOT_ROLES_TITLE",
+			key_depotRoleName = "Asset Library Administrator",
+			locator1 = "UsersAndOrganizationsEditUser#DEPOT_ROLES_TABLE_NAME",
 			value1 = "Asset Library Administrator");
 
 		User.logoutAndLoginPG(
 			userLoginEmailAddress = "userea@liferay.com",
 			userLoginFullName = "userfn userln");
 
-		ProductMenu.gotoPortlet(
-			category = "Asset Libraries",
-			panel = "Control Panel",
+		ApplicationsMenu.gotoPortlet(
+			category = "Content",
+			panel = "Applications",
 			portlet = "Asset Libraries");
 
 		AssertElementNotPresent(
@@ -107,10 +106,13 @@ definition {
 			locator1 = "LexiconCard#CARD_ELLIPSIS");
 
 		Click(
+			key_card = "Test Depot Name",
 			locator1 = "LexiconCard#CARD_TITLE",
 			value1 = "Test Depot Name");
 
-		AssertVisible(locator1 = "LexiconCard#CARD");
+		AssertVisible(
+			key_card = "Test Depot Name",
+			locator1 = "LexiconCard#CARD");
 	}
 
 	@description = "This ensures that the Asset Library Connected Site Members role does not appear in user roles even after it is automatically assigned to a connected site member. This test also covers permissions and makes sure the library asset can be updated by the role."
@@ -136,7 +138,7 @@ definition {
 			userLastName = "userln",
 			userScreenName = "usersn");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -150,7 +152,7 @@ definition {
 			userLoginEmailAddress = "test@liferay.com",
 			userLoginFullName = "Test Test");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -159,7 +161,7 @@ definition {
 			siteName = "Site Name",
 			userScreenName = "usersn");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -233,7 +235,7 @@ definition {
 
 		DepotNavigator.openDepotAdmin();
 
-		DepotNavigator.gotoDepot(
+		DepotNavigator.gotoDepotPortlet(
 			depotName = "Test Depot Name",
 			portlet = "Web Content");
 
@@ -313,7 +315,7 @@ definition {
 			resourceName = "com.liferay.portal.kernel.model.Group",
 			roleTitle = "Depot Regrole Name");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -325,11 +327,10 @@ definition {
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 
-		Site.assignSiteRoleCP(
+		Depot.assignAssetLibraryRole(
 			resourceName = "userfn userln",
 			roleTitle = "AL Role Name");
 
@@ -431,7 +432,7 @@ definition {
 			resourceName = "com.liferay.portal.kernel.model.Group",
 			roleTitle = "Depot Regrole Name");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -443,11 +444,10 @@ definition {
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 
-		Site.assignSiteRoleCP(
+		Depot.assignAssetLibraryRole(
 			resourceName = "userfn userln",
 			roleTitle = "AL Role Name");
 
@@ -536,62 +536,32 @@ definition {
 	@description = "This ensures that an asset library role can be edited."
 	@priority = "5"
 	test ViewALAdminRole {
-		JSONGroup.addGroup(groupName = "Site Name");
+		property custom.properties = "jsonws.web.service.paths.excludes=";
 
-		JSONLayout.addPublicLayout(
-			groupName = "Site Name",
-			layoutName = "Test Page Name");
-
-		DepotNavigator.openDepotAdmin();
-
-		DepotNavigator.gotoEdit(depotName = "Test Depot Name");
-
-		DepotNavigator.gotoSites(depotName = "Test Depot Name");
-
-		Depot.connectSite(siteList = "Site Name");
-
-		Permissions.setUpRegRoleLoginUserCP(
-			roleTitle = "Depot Regrole Name",
-			userEmailAddress = "user1@liferay.com",
+		JSONUser.addUser(
+			userEmailAddress = "userea@liferay.com",
 			userFirstName = "userfn",
 			userLastName = "userln",
-			userLoginEmailAddress = "test@liferay.com",
-			userLoginFullName = "test test",
 			userScreenName = "usersn");
 
-		Permissions.definePermissionViaJSONAPI(
-			resourceAction = "VIEW_CONTROL_PANEL",
-			resourceName = "90",
-			roleTitle = "Depot Regrole Name");
-
-		for (var resourceActionIndex : list "ACCESS_IN_CONTROL_PANEL,VIEW") {
-			Permissions.definePermissionViaJSONAPI(
-				resourceAction = "${resourceActionIndex}",
-				resourceName = "com_liferay_depot_web_portlet_DepotAdminPortlet",
-				roleTitle = "Depot Regrole Name");
-		}
-
-		for (var resourceActionIndex : list "ASSIGN_MEMBERS,ASSIGN_USER_ROLES,VIEW,VIEW_MEMBERS,VIEW_SITE_ADMINISTRATION") {
-			Permissions.definePermissionViaJSONAPI(
-				resourceAction = "${resourceActionIndex}",
-				resourceName = "com.liferay.depot.model.DepotEntry",
-				roleTitle = "Depot Regrole Name");
-		}
+		JSONUser.setFirstPassword(
+			agreeToTermsAndAnswerReminderQuery = "true",
+			requireReset = "false",
+			userEmailAddress = "userea@liferay.com");
 
 		DepotNavigator.openDepotAdmin();
 
 		DepotNavigator.gotoDepotPortlet(
-			category = "People",
 			depotName = "Test Depot Name",
 			portlet = "Memberships");
 
-		Site.assignUserAsMemberCP(
+		Depot.assignUserAsMember(
 			depotName = "Test Depot Name",
 			userFirstName = "userfn",
 			userLastName = "userln",
 			userScreenName = "usersn");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -600,18 +570,23 @@ definition {
 			roleTitle = "Asset Library Administrator",
 			userScreenName = "usersn");
 
+		Role.openRolesAdmin();
+
+		Navigator.gotoNavItem(navItem = "Asset Library Roles");
+
+		PermissionsInline.gotoRolePermissions(roleName = "Asset Library Content Reviewer");
+
+		Role.definePermissionPG(
+			permissionDefinitionKey = "CONTENT_PERMISSIONS_ASSIGN_MEMBERS_CHECKBOX",
+			roleTitle = "Asset Library Administrator");
+
 		User.logoutPG();
 
 		User.loginUserPG(
-			password = "password",
-			userEmailAddress = "user1@liferay.com");
+			password = "test",
+			userEmailAddress = "userea@liferay.com");
 
-		DepotNavigator.openDepotAdmin();
-
-		DepotNavigator.gotoDepotPortlet(
-			category = "People",
-			depotName = "Test Depot Name",
-			portlet = "Memberships");
+		DepotNavigator.openDepotMembershipsAdmin(depotURLKey = "test-depot-name");
 
 		LexiconCard.clickEllipsisItem(
 			card = "userfn userln",
@@ -642,7 +617,7 @@ definition {
 			userLastName = "userln",
 			userScreenName = "usersn");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -658,7 +633,7 @@ definition {
 
 		JSONGroup.addGroup(groupName = "Site Name");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -675,7 +650,7 @@ definition {
 
 		Depot.connectSite(siteList = "Site Name");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -700,7 +675,7 @@ definition {
 
 		Navigator.openURL();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -709,7 +684,7 @@ definition {
 			depotName = "Test Depot Name",
 			userScreenName = "usersn");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");

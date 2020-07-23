@@ -11,8 +11,8 @@ definition {
 	test MarketplacePortletSmoke {
 		var appName = "Marketplace";
 
-		ProductMenu.gotoPortlet(
-			category = "Apps",
+		ApplicationsMenu.gotoPortlet(
+			category = "System",
 			panel = "Control Panel",
 			portlet = "App Manager");
 

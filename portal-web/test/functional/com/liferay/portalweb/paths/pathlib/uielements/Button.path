@@ -65,7 +65,7 @@
 </tr>
 <tr>
 	<td>ANY</td>
-	<td>//*[contains(@class,'btn')][normalize-space(text())='${key_text}']</td>
+	<td>//*[contains(@class,'btn')][normalize-space(text())='${key_text}'] | //button[normalize-space(text())='${key_text}']</td>
 	<td></td>
 </tr>
 <tr>
@@ -91,6 +91,11 @@
 <tr>
 	<td>BACK</td>
 	<td>//a[@title='Back'] | //a[contains(@id,'back')] | //button[contains(.,'Back')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>BORDER_BOTTOM_PALETTE_ITEM</td>
+	<td>//label[normalize-space(text())='${key_borderBottom}']/following-sibling::div[1]//li[contains(@class,'palette-item')]//button[contains(@class,'bg-${key_paletteItem}')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -160,7 +165,7 @@
 </tr>
 <tr>
 	<td>CLOSE_MODAL</td>
-	<td>//h3[contains(@class,'modal-title') and contains(.,'${key_modalTitle}')]/../div/button[contains(@class,'close')]</td>
+	<td>//h3[contains(@class,'modal-title') and contains(.,'${key_modalTitle}')]/../div/button[contains(@class,'close')] | //button[contains(@class,'close')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -214,18 +219,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>CREATE_CERTIFICATE</td>
-	<td>//button[contains(@onclick,'${key_certificateUsage}')]/span[contains(.,'Create Certificate')]</td>
-	<td></td>
-</tr>
-<tr>
 	<td>DELETE</td>
 	<td>//*[@data-qa-id='deleteButton'] | //div[contains(@class,'show')]//button[contains(.,'Delete')] | //button[contains(.,'delete')] | //button[contains(@class,'delete-logo')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>DELETE_CERTIFICATE</td>
-	<td>//button[contains(.,'Delete Certificate')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -261,11 +256,6 @@
 <tr>
 	<td>DOWNLOAD</td>
 	<td>//a[2][contains(@class,'btn') and contains(.,'Download')] | //button[contains(.,'Download')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>DOWNLOAD_CERTIFICATE</td>
-	<td>//a[contains(@href,'${key_certificateUsage}')]/span[contains(.,'Download Certificate')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -306,6 +296,16 @@
 <tr>
 	<td>EXPORT</td>
 	<td>//div[contains(@class,'footer')]//button[contains(.,'Export')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>EXPORT_MODAL</td>
+	<td>//div[contains(@class,'btn-group-item')]/button[contains(@class,'btn') and contains(.,'Export')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>EXPORT_MODAL_DISABLED</td>
+	<td>//div[contains(@class,'btn-group-item')]/button[@disabled and contains(.,'Export')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -465,7 +465,7 @@
 </tr>
 <tr>
 	<td>PLUS</td>
-	<td>//*[@data-qa-id='addButton'] | //a[contains(@class,'btn') and @aria-label='add'] | //a[contains(@class,'btn') and *[contains(@class,'icon-plus')]] | //button[*[contains(@class,'icon-plus')]]</td>
+	<td>//*[@data-qa-id='addButton'] | //a[contains(@class,'btn') and @aria-label='add'] | //a[contains(@class,'nav-btn') and *[contains(@class,'icon-plus')]] | //button[*[contains(@class,'icon-plus')]]</td>
 	<td></td>
 </tr>
 <tr>
@@ -526,11 +526,6 @@
 <tr>
 	<td>REOPEN</td>
 	<td>//button/span[*[name()='svg'][contains(@class,'lexicon-icon-check-circle-full')]]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>REPLACE_CERTIFICATE</td>
-	<td>//button[contains(@onclick,'${key_certificateUsage}')]/span[contains(.,'Replace Certificate')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -775,7 +770,7 @@
 </tr>
 <tr>
 	<td>UNSUBSCRIBE</td>
-	<td>//button[contains(.,'Unsubscribe')] | //li[contains(@class,'nav-item')]/button[contains(@class,'nav-link')]</td>
+	<td>//button[contains(.,'Unsubscribe')] | //li[contains(@class,'nav-item')]/*[contains(@class,'nav-link')]</td>
 	<td></td>
 </tr>
 <tr>

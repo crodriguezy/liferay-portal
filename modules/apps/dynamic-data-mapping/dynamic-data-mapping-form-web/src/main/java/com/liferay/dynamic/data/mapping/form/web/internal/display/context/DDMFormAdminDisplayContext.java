@@ -28,13 +28,12 @@ import com.liferay.dynamic.data.mapping.form.renderer.DDMFormRenderingContext;
 import com.liferay.dynamic.data.mapping.form.renderer.DDMFormTemplateContextFactory;
 import com.liferay.dynamic.data.mapping.form.values.factory.DDMFormValuesFactory;
 import com.liferay.dynamic.data.mapping.form.web.internal.configuration.DDMFormWebConfiguration;
-import com.liferay.dynamic.data.mapping.form.web.internal.configuration.FFDDMFormWebConfigurationUtil;
 import com.liferay.dynamic.data.mapping.form.web.internal.constants.DDMFormWebKeys;
 import com.liferay.dynamic.data.mapping.form.web.internal.display.context.util.DDMFormAdminRequestHelper;
 import com.liferay.dynamic.data.mapping.form.web.internal.display.context.util.FormInstancePermissionCheckerHelper;
 import com.liferay.dynamic.data.mapping.form.web.internal.instance.lifecycle.AddDefaultSharedFormLayoutPortalInstanceLifecycleListener;
-import com.liferay.dynamic.data.mapping.form.web.internal.search.FormInstanceRowChecker;
-import com.liferay.dynamic.data.mapping.form.web.internal.search.FormInstanceSearch;
+import com.liferay.dynamic.data.mapping.form.web.internal.search.DDMFormInstanceRowChecker;
+import com.liferay.dynamic.data.mapping.form.web.internal.search.DDMFormInstanceSearch;
 import com.liferay.dynamic.data.mapping.io.DDMFormFieldTypesSerializer;
 import com.liferay.dynamic.data.mapping.io.DDMFormFieldTypesSerializerSerializeRequest;
 import com.liferay.dynamic.data.mapping.io.DDMFormFieldTypesSerializerSerializeResponse;
@@ -84,6 +83,7 @@ import com.liferay.portal.kernel.json.JSONSerializer;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletProvider;
@@ -115,6 +115,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import javax.portlet.ActionRequest;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
@@ -196,6 +197,16 @@ public class DDMFormAdminDisplayContext {
 				dropdownItem.setQuickAction(true);
 			}
 		).build();
+	}
+
+	public String getAutocompleteUserURL() {
+		LiferayPortletURL autocompleteUserURL =
+			(LiferayPortletURL)renderResponse.createResourceURL();
+
+		autocompleteUserURL.setCopyCurrentRenderParameters(false);
+		autocompleteUserURL.setResourceID("/admin/autocomplete_user");
+
+		return autocompleteUserURL.toString();
 	}
 
 	public int getAutosaveInterval() {
@@ -432,7 +443,6 @@ public class DDMFormAdminDisplayContext {
 		return NavigationItemListBuilder.add(
 			navigationItem -> {
 				navigationItem.setActive(true);
-				navigationItem.setHref(StringPool.BLANK);
 
 				HttpServletRequest httpServletRequest =
 					formAdminRequestHelper.getRequest();
@@ -474,8 +484,7 @@ public class DDMFormAdminDisplayContext {
 			formAdminRequestHelper.getRequest();
 
 		return LanguageUtil.get(
-			httpServletRequest,
-			"click-on-the-plus-button-to-add-the-first-one");
+			httpServletRequest, "create-forms-to-start-collecting-data");
 	}
 
 	public String getEmptyResultsMessage() {
@@ -527,26 +536,39 @@ public class DDMFormAdminDisplayContext {
 		HttpServletRequest httpServletRequest =
 			formAdminRequestHelper.getRequest();
 
+		int activeNavItem = ParamUtil.getInteger(
+			httpServletRequest, "activeNavItem");
+
 		return NavigationItemListBuilder.add(
 			navigationItem -> {
 				navigationItem.putData("action", "showForm");
-				navigationItem.setActive(true);
-				navigationItem.setHref(StringPool.BLANK);
+
+				if (activeNavItem == _NAV_ITEM_FORM) {
+					navigationItem.setActive(true);
+				}
+
 				navigationItem.setLabel(
 					LanguageUtil.get(httpServletRequest, "form"));
 			}
 		).add(
 			navigationItem -> {
 				navigationItem.putData("action", "showRules");
-				navigationItem.setHref(StringPool.BLANK);
+
+				if (activeNavItem == _NAV_ITEM_RULES) {
+					navigationItem.setActive(true);
+				}
+
 				navigationItem.setLabel(
 					LanguageUtil.get(httpServletRequest, "rules"));
 			}
 		).add(
-			this::isShowReport,
 			navigationItem -> {
 				navigationItem.putData("action", "showReport");
-				navigationItem.setHref(StringPool.BLANK);
+
+				if (activeNavItem == _NAV_ITEM_REPORT) {
+					navigationItem.setActive(true);
+				}
+
 				navigationItem.setLabel(
 					LanguageUtil.get(httpServletRequest, "entries"));
 			}
@@ -585,10 +607,10 @@ public class DDMFormAdminDisplayContext {
 		return jsonObject.toString();
 	}
 
-	public String getFormLocalizedName() throws PortalException {
-		JSONObject jsonObject = jsonFactory.createJSONObject();
+	public <T> String getFormLocalizedName(T object) throws PortalException {
+		DDMFormInstance formInstance = (DDMFormInstance)object;
 
-		DDMFormInstance formInstance = getDDMFormInstance();
+		JSONObject jsonObject = jsonFactory.createJSONObject();
 
 		if (formInstance == null) {
 			jsonObject.put(getDefaultLanguageId(), "");
@@ -839,7 +861,7 @@ public class DDMFormAdminDisplayContext {
 
 		portletURL.setParameter("displayStyle", displayStyle);
 
-		FormInstanceSearch formInstanceSearch = new FormInstanceSearch(
+		DDMFormInstanceSearch ddmFormInstanceSearch = new DDMFormInstanceSearch(
 			renderRequest, portletURL);
 
 		String orderByCol = getOrderByCol();
@@ -848,24 +870,24 @@ public class DDMFormAdminDisplayContext {
 		OrderByComparator<DDMFormInstance> orderByComparator =
 			getDDMFormInstanceOrderByComparator(orderByCol, orderByType);
 
-		formInstanceSearch.setOrderByCol(orderByCol);
-		formInstanceSearch.setOrderByComparator(orderByComparator);
-		formInstanceSearch.setOrderByType(orderByType);
+		ddmFormInstanceSearch.setOrderByCol(orderByCol);
+		ddmFormInstanceSearch.setOrderByComparator(orderByComparator);
+		ddmFormInstanceSearch.setOrderByType(orderByType);
 
-		if (formInstanceSearch.isSearch()) {
-			formInstanceSearch.setEmptyResultsMessage("no-forms-were-found");
+		if (ddmFormInstanceSearch.isSearch()) {
+			ddmFormInstanceSearch.setEmptyResultsMessage("no-forms-were-found");
 		}
 		else {
-			formInstanceSearch.setEmptyResultsMessage("there-are-no-forms");
+			ddmFormInstanceSearch.setEmptyResultsMessage("there-are-no-forms");
 		}
 
-		formInstanceSearch.setRowChecker(
-			new FormInstanceRowChecker(renderResponse));
+		ddmFormInstanceSearch.setRowChecker(
+			new DDMFormInstanceRowChecker(renderResponse));
 
-		setDDMFormInstanceSearchResults(formInstanceSearch);
-		setDDMFormInstanceSearchTotal(formInstanceSearch);
+		setDDMFormInstanceSearchResults(ddmFormInstanceSearch);
+		setDDMFormInstanceSearchTotal(ddmFormInstanceSearch);
 
-		return formInstanceSearch;
+		return ddmFormInstanceSearch;
 	}
 
 	public String getSearchActionURL() {
@@ -921,13 +943,39 @@ public class DDMFormAdminDisplayContext {
 		DDMFormBuilderContextResponse ddmFormBuilderContextResponse =
 			_ddmFormBuilderContextFactory.create(ddmFormBuilderContextRequest);
 
-		return jsonSerializer.serializeDeep(
-			ddmFormBuilderContextResponse.getContext());
+		Map<String, Object> context =
+			ddmFormBuilderContextResponse.getContext();
+
+		context.put(
+			"activeNavItem",
+			ParamUtil.getInteger(
+				renderRequest, "activeNavItem", _NAV_ITEM_FORM));
+
+		return jsonSerializer.serializeDeep(context);
 	}
 
 	public String getSharedFormURL() {
 		return _addDefaultSharedFormLayoutPortalInstanceLifecycleListener.
 			getFormLayoutURL(formAdminRequestHelper.getThemeDisplay(), false);
+	}
+
+	public String getShareFormInstanceURL(DDMFormInstance formInstance) {
+		if (formInstance == null) {
+			return StringPool.BLANK;
+		}
+
+		PortletURL shareFormInstanceURL = renderResponse.createActionURL();
+
+		shareFormInstanceURL.setParameter(
+			ActionRequest.ACTION_NAME, "/admin/share_form_instance");
+
+		if (formInstance != null) {
+			shareFormInstanceURL.setParameter(
+				"formInstanceId",
+				String.valueOf(formInstance.getFormInstanceId()));
+		}
+
+		return shareFormInstanceURL.toString();
 	}
 
 	public String getSortingURL() throws Exception {
@@ -1011,10 +1059,6 @@ public class DDMFormAdminDisplayContext {
 
 	public boolean isShowPublishAlert() {
 		return ParamUtil.getBoolean(renderRequest, "showPublishAlert");
-	}
-
-	public boolean isShowReport() {
-		return FFDDMFormWebConfigurationUtil.reportEnabled();
 	}
 
 	public String serializeSettingsForm(PageContext pageContext)
@@ -1181,6 +1225,13 @@ public class DDMFormAdminDisplayContext {
 	}
 
 	protected Locale getDefaultLocale() {
+		String i18nLanguageId = (String)renderRequest.getAttribute(
+			WebKeys.I18N_LANGUAGE_ID);
+
+		if (Validator.isNotNull(i18nLanguageId)) {
+			return LocaleUtil.fromLanguageId(i18nLanguageId);
+		}
+
 		ThemeDisplay themeDisplay = formAdminRequestHelper.getThemeDisplay();
 
 		return Optional.ofNullable(
@@ -1401,7 +1452,7 @@ public class DDMFormAdminDisplayContext {
 	}
 
 	protected void setDDMFormInstanceSearchResults(
-		FormInstanceSearch ddmFormInstanceSearch) {
+		DDMFormInstanceSearch ddmFormInstanceSearch) {
 
 		List<DDMFormInstance> results = _ddmFormInstanceService.search(
 			formAdminRequestHelper.getCompanyId(),
@@ -1413,7 +1464,7 @@ public class DDMFormAdminDisplayContext {
 	}
 
 	protected void setDDMFormInstanceSearchTotal(
-		FormInstanceSearch ddmFormInstanceSearch) {
+		DDMFormInstanceSearch ddmFormInstanceSearch) {
 
 		int total = _ddmFormInstanceService.searchCount(
 			formAdminRequestHelper.getCompanyId(),
@@ -1517,6 +1568,12 @@ public class DDMFormAdminDisplayContext {
 	}
 
 	private static final String[] _DISPLAY_VIEWS = {"descriptive", "list"};
+
+	private static final int _NAV_ITEM_FORM = 0;
+
+	private static final int _NAV_ITEM_REPORT = 2;
+
+	private static final int _NAV_ITEM_RULES = 1;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		DDMFormAdminDisplayContext.class);

@@ -17,12 +17,11 @@ import ClayDropDown from '@clayui/drop-down';
 import {ClayInput} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import ClayLabel from '@clayui/label';
+import ClayLayout from '@clayui/layout';
 import classNames from 'classnames';
 import React, {forwardRef, useState} from 'react';
 
-import {FieldBaseProxy} from '../FieldBase/ReactFieldBase.es';
-import getConnectedReactComponentAdapter from '../util/ReactComponentAdapter.es';
-import {connectStore} from '../util/connectStore.es';
+import {FieldBase} from '../FieldBase/ReactFieldBase.es';
 import InputComponent from './InputComponent.es';
 import {
 	convertValueToJSON,
@@ -107,7 +106,7 @@ const LocalesDropdown = ({
 							localeId,
 						}) => (
 							<ClayDropDown.Item
-								className="autofit-row custom-dropdown-item-row"
+								className="custom-dropdown-item-row"
 								data-testid={`availableLocalesDropdown${localeId}`}
 								key={localeId}
 								onClick={(event) => {
@@ -115,21 +114,26 @@ const LocalesDropdown = ({
 									setDropdownActive(false);
 								}}
 							>
-								<span className="autofit-col autofit-col-expand">
-									<span className="autofit-section">
-										<span className="inline-item inline-item-before">
-											<ClayIcon symbol={icon} />
-										</span>
-										{displayName}
-									</span>
-								</span>
+								<ClayLayout.ContentRow containerElement="span">
+									<ClayLayout.ContentCol
+										containerElement="span"
+										expand
+									>
+										<ClayLayout.ContentSection containerElement="span">
+											<span className="inline-item inline-item-before">
+												<ClayIcon symbol={icon} />
+											</span>
+											{displayName}
+										</ClayLayout.ContentSection>
+									</ClayLayout.ContentCol>
 
-								<span className="autofit-col">
-									<AvailableLocaleLabel
-										isDefault={isDefault}
-										isTranslated={isTranslated}
-									/>
-								</span>
+									<ClayLayout.ContentCol containerElement="span">
+										<AvailableLocaleLabel
+											isDefault={isDefault}
+											isTranslated={isTranslated}
+										/>
+									</ClayLayout.ContentCol>
+								</ClayLayout.ContentRow>
 							</ClayDropDown.Item>
 						)
 					)}
@@ -241,16 +245,16 @@ const Main = ({
 	editingLocale,
 	id,
 	name,
-	onFieldBlurred,
-	onFieldChanged,
-	onFieldFocused,
+	onBlur,
+	onChange,
+	onFocus,
 	placeholder,
 	predefinedValue,
 	readOnly,
 	value = {},
 	...otherProps
 }) => (
-	<FieldBaseProxy {...otherProps} id={id} name={name} readOnly={readOnly}>
+	<FieldBase {...otherProps} id={id} name={name} readOnly={readOnly}>
 		<LocalizableText
 			{...transformAvailableLocalesAndValue({
 				availableLocales,
@@ -261,33 +265,16 @@ const Main = ({
 			editingLocale={editingLocale}
 			id={id}
 			name={name}
-			onFieldBlurred={onFieldBlurred}
-			onFieldChanged={onFieldChanged}
-			onFieldFocused={onFieldFocused}
+			onFieldBlurred={onBlur}
+			onFieldChanged={({event, value}) => onChange(event, value)}
+			onFieldFocused={onFocus}
 			placeholder={placeholder}
 			predefinedValue={predefinedValue}
 			readOnly={readOnly}
 		/>
-	</FieldBaseProxy>
+	</FieldBase>
 );
 
-const LocalizableTextProxy = connectStore(({emit, ...otherProps}) => (
-	<Main
-		{...otherProps}
-		onFieldBlurred={(event) =>
-			emit('fieldBlurred', event, event.target.value)
-		}
-		onFieldChanged={({event, value}) => emit('fieldEdited', event, value)}
-		onFieldFocused={(event) =>
-			emit('fieldFocused', event, event.target.value)
-		}
-	/>
-));
+Main.displayName = 'LocalizableText';
 
-const ReactLocalizableTextAdapter = getConnectedReactComponentAdapter(
-	LocalizableTextProxy,
-	'localizable_text'
-);
-
-export {ReactLocalizableTextAdapter, Main};
-export default ReactLocalizableTextAdapter;
+export default Main;

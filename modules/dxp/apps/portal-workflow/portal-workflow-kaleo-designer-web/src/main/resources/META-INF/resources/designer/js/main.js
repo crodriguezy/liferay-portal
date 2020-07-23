@@ -205,6 +205,19 @@ AUI.add(
 						if (tabContentNode === instance.sourceNode) {
 							instance.showEditor();
 						}
+						else {
+							if (
+								!XMLUtil.validateDefinition(
+									instance.getEditorContent()
+								)
+							) {
+								instance.showErrorMessage(
+									Liferay.Language.get(
+										'please-enter-valid-content'
+									)
+								);
+							}
+						}
 					}
 				},
 
@@ -498,37 +511,14 @@ AUI.add(
 					}
 				},
 
-				showSuccessMessage() {
-					var instance = this;
-
-					var successMessage = Liferay.Language.get(
-						'definition-imported-sucessfully'
-					);
-
-					var alert = instance._alert;
-
-					if (alert) {
-						alert.destroy();
-					}
-
-					alert = new Liferay.Alert({
-						closeable: true,
-						delay: {
-							hide: 3000,
-							show: 0,
-						},
-						icon: 'check',
-						message: successMessage,
-						type: 'success',
+				showErrorMessage(message) {
+					Liferay.Util.openToast({
+						container: document.querySelector(
+							'.lfr-alert-container'
+						),
+						message,
+						type: 'danger',
 					});
-
-					if (!alert.get('rendered')) {
-						alert.render('.portlet-column');
-					}
-
-					alert.show();
-
-					instance._alert = alert;
 				},
 			},
 		});

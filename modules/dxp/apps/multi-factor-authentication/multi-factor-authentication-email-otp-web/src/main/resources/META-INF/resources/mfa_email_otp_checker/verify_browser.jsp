@@ -17,12 +17,20 @@
 <%@ include file="/init.jsp" %>
 
 <%
-long mfaEmailOTPSetAtTime = (Long)request.getAttribute(MFAEmailOTPWebKeys.MFA_EMAIL_OTP_SET_AT_TIME);
+long mfaEmailOTPFailedAttemptsRetryTimeout = GetterUtil.getLong(request.getAttribute(MFAEmailOTPWebKeys.MFA_EMAIL_OTP_FAILED_ATTEMPTS_RETRY_TIMEOUT));
+String mfaEmailOTPSendToAddressObfuscated = GetterUtil.getString(request.getAttribute(MFAEmailOTPWebKeys.MFA_EMAIL_OTP_SEND_TO_ADDRESS_OBFUSCATED));
+long mfaEmailOTPSetAtTime = GetterUtil.getLong(request.getAttribute(MFAEmailOTPWebKeys.MFA_EMAIL_OTP_SET_AT_TIME));
 %>
+
+<c:if test="<%= mfaEmailOTPFailedAttemptsRetryTimeout > 0 %>">
+	<div class="alert alert-danger">
+		<liferay-ui:message arguments="<%= mfaEmailOTPFailedAttemptsRetryTimeout %>" key="maximum-allowed-attempts-error" translateArguments="<%= false %>" />
+	</div>
+</c:if>
 
 <div id="<portlet:namespace />phaseOne">
 	<div class="portlet-msg-info">
-		<liferay-ui:message key="your-one-time-password-will-be-sent-to-your-email-address" />
+		<liferay-ui:message arguments="<%= mfaEmailOTPSendToAddressObfuscated %>" key="press-the-button-below-to-obtain-your-one-time-password-it-will-be-sent-to-x" translateArguments="<%= false %>" />
 	</div>
 
 	<aui:button-row>
@@ -33,17 +41,25 @@ long mfaEmailOTPSetAtTime = (Long)request.getAttribute(MFAEmailOTPWebKeys.MFA_EM
 <div id="<portlet:namespace />messageContainer"></div>
 
 <div id="<portlet:namespace />phaseTwo">
-	<aui:input label="please-enter-the-otp-from-the-email" name="otp" showRequiredLabel="yes" />
+	<aui:input label="enter-the-otp-from-the-email" name="otp" showRequiredLabel="yes" />
 </div>
+
+<aui:button-row>
+	<aui:button id="submitEmailButton" type="submit" value="submit" />
+</aui:button-row>
 
 <aui:script use="aui-base,aui-io-request">
 	<liferay-portlet:resourceURL id="/mfa_email_otp_verify/send_mfa_email_otp" portletName="<%= MFAEmailOTPPortletKeys.MFA_EMAIL_OTP_VERIFY_PORTLET %>" var="sendEmailOTPURL" />
 
 	var configuredResendDuration = <%= mfaEmailOTPConfiguration.resendEmailTimeout() %>;
 
+	var failedAttemptsRetryTimeout = <%=mfaEmailOTPFailedAttemptsRetryTimeout %>;
+
 	var countdown;
 
 	var sendEmailButton = A.one('#<portlet:namespace />sendEmailButton');
+
+	var submitEmailButton = A.one('#<portlet:namespace />submitEmailButton');
 
 	var originalButtonText = sendEmailButton.text();
 
@@ -85,6 +101,31 @@ long mfaEmailOTPSetAtTime = (Long)request.getAttribute(MFAEmailOTPWebKeys.MFA_EM
 			resendDuration,
 			1000
 		);
+	}
+
+	if (failedAttemptsRetryTimeout > 0) {
+		sendEmailButton.setAttribute('disabled', 'disabled');
+		submitEmailButton.setAttribute('disabled', 'disabled');
+
+		var originalSubmitButtonText = submitEmailButton.text();
+
+		setInterval(function () {
+			--failedAttemptsRetryTimeout;
+			{
+				if (failedAttemptsRetryTimeout < 1) {
+					sendEmailButton.removeAttribute('disabled');
+
+					submitEmailButton.text(originalSubmitButtonText);
+
+					submitEmailButton.removeAttribute('disabled');
+
+					clearInterval(failedAttemptsRetryTimeout);
+				}
+				else {
+					submitEmailButton.text(failedAttemptsRetryTimeout);
+				}
+			}
+		}, 1000);
 	}
 
 	A.one('#<portlet:namespace />sendEmailButton').on('click', function (event) {

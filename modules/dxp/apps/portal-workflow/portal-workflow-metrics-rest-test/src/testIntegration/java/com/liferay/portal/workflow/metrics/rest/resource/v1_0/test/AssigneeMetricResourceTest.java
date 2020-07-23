@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.model.role.RoleConstants;
 import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.UserGroupRoleLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.portal.kernel.test.rule.DataGuard;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
@@ -55,6 +56,7 @@ import org.junit.runner.RunWith;
 /**
  * @author Rafael Praxedes
  */
+@DataGuard(scope = DataGuard.Scope.METHOD)
 @RunWith(Arquillian.class)
 public class AssigneeMetricResourceTest
 	extends BaseAssigneeMetricResourceTestCase {
@@ -533,8 +535,9 @@ public class AssigneeMetricResourceTest
 
 		for (NodeMetric nodeMetric : nodeMetrics) {
 			_workflowMetricsRESTTestHelper.addNodeMetric(
-				assignee, testGroup.getCompanyId(), instanceSupplier, processId,
-				status, nodeMetric, "1.0");
+				assignee, testGroup.getCompanyId(), instanceSupplier,
+				nodeMetric, processId, status, TestPropsValues.getUser(),
+				"1.0");
 		}
 	}
 

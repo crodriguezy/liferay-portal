@@ -13,15 +13,14 @@ definition {
 		Page.tearDownCP();
 	}
 
-	@ignore = "true"
 	@priority = "5"
 	test InstallUninstallApp {
 		property test.name.skip.portal.instance = "AppManagerUsecase#InstallUninstallApp";
 
 		var appName = "test-app-portlet";
 
-		ProductMenu.gotoPortlet(
-			category = "Apps",
+		ApplicationsMenu.gotoPortlet(
+			category = "System",
 			panel = "Control Panel",
 			portlet = "App Manager");
 
@@ -44,8 +43,8 @@ definition {
 	test ViewIndependentModulesIsNotNestedWithinItself {
 		property test.name.skip.portal.instance = "AppManagerUsecase#ViewIndependentModulesIsNotNestedWithinItself";
 
-		ProductMenu.gotoPortlet(
-			category = "Apps",
+		ApplicationsMenu.gotoPortlet(
+			category = "System",
 			panel = "Control Panel",
 			portlet = "App Manager");
 
@@ -61,8 +60,8 @@ definition {
 	test ViewLicenseManager {
 		property test.name.skip.portal.instance = "AppManagerUsecase#ViewLicenseManager";
 
-		ProductMenu.gotoPortlet(
-			category = "Apps",
+		ApplicationsMenu.gotoPortlet(
+			category = "Marketplace",
 			panel = "Control Panel",
 			portlet = "License Manager");
 

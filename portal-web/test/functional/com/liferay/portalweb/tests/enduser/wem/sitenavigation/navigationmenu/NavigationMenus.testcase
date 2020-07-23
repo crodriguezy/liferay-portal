@@ -118,6 +118,8 @@ definition {
 	@description = "This is a test for LPS-107833. Assert no option to add displayed page in Global Navigation Menu."
 	@priority = "5"
 	test CannotAddPageItemInGlobalNavigationMenu {
+		property portal.acceptance = "true";
+
 		task ("Add a navigation menu in Global site") {
 			NavigationMenusAdmin.openNavigationMenusAdmin(siteURLKey = "global");
 
@@ -152,6 +154,8 @@ definition {
 	@description = "This is a test for LPS-107833. Don't support Add page to Global Navigation Menu when creating a new page."
 	@priority = "5"
 	test CannotAddPageToGlobalNavigationMenuWhenCreatingPageInNormalSite {
+		property portal.acceptance = "true";
+
 		task ("Assert no Add New Pages column in Global Navigation Menu entry") {
 			NavigationMenusAdmin.openNavigationMenusAdmin(siteURLKey = "global");
 
@@ -167,11 +171,6 @@ definition {
 			LexiconEntry.gotoAddMenuItem(menuItem = "Public Page");
 
 			LexiconCard.clickCard(card = "Widget Page");
-
-			LiferayEvent.waitForLiferayEvent(
-				attributeName = "src",
-				attributeValue = "dialog-iframe-popup",
-				eventName = "modalIframeLoaded");
 
 			SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
@@ -317,6 +316,8 @@ definition {
 	@description = "User can rename a navigation menu."
 	@priority = "5"
 	test RenameNavigationMenu {
+		property portal.acceptance = "true";
+
 		task ("Add a navigation menu") {
 			JSONSitenavigation.addSiteNavigationMenu(
 				groupName = "Test Site Name",
@@ -343,6 +344,8 @@ definition {
 	@description = "This is a test for LPS-87134. We assert that the option to automatically add new pages to a navigation menu works as expected."
 	@priority = "5"
 	test ToggleAutomaticallyAddNewPagesToNavigationMenu {
+		property portal.acceptance = "true";
+
 		task ("Add a navigation menu with option to offer new pages flagged") {
 			JSONSitenavigation.addSiteNavigationMenu(
 				groupName = "Test Site Name",
@@ -436,6 +439,8 @@ definition {
 	@description = "This is a test for LPS-85566. A user can enter translations for navigation menu items."
 	@priority = "5"
 	test TranslateItemName {
+		property portal.acceptance = "true";
+
 		task ("Add a page to the site") {
 			JSONLayout.addPublicLayout(
 				groupName = "Test Site Name",
@@ -550,6 +555,8 @@ definition {
 	@description = "This is a use case for LPS-67191."
 	@priority = "5"
 	test ViewNavigationMenuPropertiesSidebar {
+		property portal.acceptance = "true";
+
 		task ("Add a navigation menu") {
 			JSONSitenavigation.addSiteNavigationMenu(
 				groupName = "Test Site Name",
@@ -581,6 +588,8 @@ definition {
 	@description = "This is a test for LPS-85566. A navigation menu page item will be prepopulated with existing translations for a page."
 	@priority = "5"
 	test ViewPageItemPrepopulatedWithTranslation {
+		property portal.acceptance = "true";
+
 		task ("Add a page to the site") {
 			JSONLayout.addPublicLayout(
 				groupName = "Test Site Name",

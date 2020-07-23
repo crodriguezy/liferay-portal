@@ -40,10 +40,10 @@ public class FastExtendedProperties extends ExtendedProperties {
 
 		//putAll(extendedProperties);
 
-		Enumeration<String> keys = extendedProperties.keys();
+		Enumeration<String> enumeration = extendedProperties.keys();
 
-		while (keys.hasMoreElements()) {
-			String key = keys.nextElement();
+		while (enumeration.hasMoreElements()) {
+			String key = enumeration.nextElement();
 
 			Object value = extendedProperties.get(key);
 
@@ -94,8 +94,8 @@ public class FastExtendedProperties extends ExtendedProperties {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		return _map.equals(o);
+	public boolean equals(Object object) {
+		return _map.equals(object);
 	}
 
 	@Override

@@ -11,10 +11,18 @@
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
 		<field name="active" type="boolean" />
+		<field name="ddlRecordSetId" type="long" />
 		<field name="ddmStructureId" type="long" />
 		<field name="ddmStructureLayoutId" type="long" />
 		<field name="deDataListViewId" type="long" />
 		<field localized="true" name="name" type="String" />
+		<field name="scope" type="String" />
+	</model>
+	<model name="com.liferay.app.builder.model.AppBuilderAppDataRecordLink">
+		<field name="appBuilderAppDataRecordLinkId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="appBuilderAppId" type="long" />
+		<field name="ddlRecordId" type="long" />
 	</model>
 	<model name="com.liferay.app.builder.model.AppBuilderAppDeployment">
 		<field name="appBuilderAppDeploymentId" type="long" />

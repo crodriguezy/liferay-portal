@@ -14,8 +14,32 @@
 
 import {ClayButtonWithIcon} from '@clayui/button';
 import {ClayInput} from '@clayui/form';
+import ClayLayout from '@clayui/layout';
 import {Treeview} from 'frontend-js-components-web';
 import React, {useCallback, useState} from 'react';
+
+function findSiteNavigationMenuItem(
+	siteNavigationMenuItemId,
+	siteNavigationMenuItems = []
+) {
+	// eslint-disable-next-line no-for-of-loops/no-for-of-loops
+	for (const siteNavigationMenuItem of siteNavigationMenuItems) {
+		if (siteNavigationMenuItem.id === siteNavigationMenuItemId) {
+			return siteNavigationMenuItem;
+		}
+
+		const childrenSiteNavigationMenuItem = findSiteNavigationMenuItem(
+			siteNavigationMenuItemId,
+			siteNavigationMenuItem.children
+		);
+
+		if (childrenSiteNavigationMenuItem) {
+			return childrenSiteNavigationMenuItem;
+		}
+	}
+
+	return null;
+}
 
 const SelectSiteNavigationMenuItem = ({itemSelectorSaveEvent, nodes}) => {
 	const [filterQuery, setFilterQuery] = useState('');
@@ -30,8 +54,9 @@ const SelectSiteNavigationMenuItem = ({itemSelectorSaveEvent, nodes}) => {
 		const selectedNodeId = [...selectedNodeIds][0];
 
 		if (selectedNodeId) {
-			const {id, name} = nodes[0].children.find(
-				(node) => node.id === selectedNodeId
+			const {id, name} = findSiteNavigationMenuItem(
+				selectedNodeId,
+				nodes
 			);
 
 			const data = {
@@ -46,7 +71,7 @@ const SelectSiteNavigationMenuItem = ({itemSelectorSaveEvent, nodes}) => {
 	};
 
 	return (
-		<div className="container-fluid-1280">
+		<ClayLayout.ContainerFluid>
 			<nav className="collapse-basic-search navbar navbar-default navbar-no-collapse">
 				<ClayInput.Group className="basic-search">
 					<ClayInput.GroupItem prepend>
@@ -73,7 +98,7 @@ const SelectSiteNavigationMenuItem = ({itemSelectorSaveEvent, nodes}) => {
 				nodes={nodes}
 				onSelectedNodesChange={handleSelectionChange}
 			/>
-		</div>
+		</ClayLayout.ContainerFluid>
 	);
 };
 

@@ -610,14 +610,14 @@ public class JournalArticleServiceSoap {
 	public static com.liferay.journal.model.JournalArticleSoap[] getArticles(
 			long groupId, long folderId, String locale, int start, int end,
 			com.liferay.portal.kernel.util.OrderByComparator
-				<com.liferay.journal.model.JournalArticle> obc)
+				<com.liferay.journal.model.JournalArticle> orderByComparator)
 		throws RemoteException {
 
 		try {
 			java.util.List<com.liferay.journal.model.JournalArticle>
 				returnValue = JournalArticleServiceUtil.getArticles(
 					groupId, folderId, LocaleUtil.fromLanguageId(locale), start,
-					end, obc);
+					end, orderByComparator);
 
 			return com.liferay.journal.model.JournalArticleSoap.toSoapModels(
 				returnValue);
@@ -649,7 +649,7 @@ public class JournalArticleServiceSoap {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
@@ -657,13 +657,14 @@ public class JournalArticleServiceSoap {
 			getArticlesByArticleId(
 				long groupId, String articleId, int start, int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.journal.model.JournalArticle> obc)
+					<com.liferay.journal.model.JournalArticle>
+						orderByComparator)
 		throws RemoteException {
 
 		try {
 			java.util.List<com.liferay.journal.model.JournalArticle>
 				returnValue = JournalArticleServiceUtil.getArticlesByArticleId(
-					groupId, articleId, start, end, obc);
+					groupId, articleId, start, end, orderByComparator);
 
 			return com.liferay.journal.model.JournalArticleSoap.toSoapModels(
 				returnValue);
@@ -703,6 +704,76 @@ public class JournalArticleServiceSoap {
 	}
 
 	/**
+	 * Returns all the web content articles that the user has permission to view
+	 * matching the group and layout UUID.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end -
+	 * start</code> instances. <code>start</code> and <code>end</code> are not
+	 * primary keys, they are indexes in the result set. Thus, <code>0</code>
+	 * refers to the first result in the set. Setting both <code>start</code>
+	 * and <code>end</code> to {@link
+	 * com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full
+	 * result set.
+	 * </p>
+	 *
+	 * @param groupId the primary key of the web content article's group
+	 * @param layoutUuid the unique string identifying the web content
+	 article's display page
+	 * @param start the lower bound of the range of web content articles to
+	 return
+	 * @param end the upper bound of the range of web content articles to
+	 return (not inclusive)
+	 * @return the range of matching web content articles
+	 */
+	public static com.liferay.journal.model.JournalArticleSoap[]
+			getArticlesByLayoutUuid(
+				long groupId, String layoutUuid, int start, int end)
+		throws RemoteException {
+
+		try {
+			java.util.List<com.liferay.journal.model.JournalArticle>
+				returnValue = JournalArticleServiceUtil.getArticlesByLayoutUuid(
+					groupId, layoutUuid, start, end);
+
+			return com.liferay.journal.model.JournalArticleSoap.toSoapModels(
+				returnValue);
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	/**
+	 * Returns the number of web content articles that the user has permission
+	 * to view matching the group and layout UUID.
+	 *
+	 * @param groupId the primary key of the web content article's group
+	 * @param layoutUuid the unique string identifying the web content
+	 article's display page
+	 * @return the matching web content articles
+	 */
+	public static int getArticlesByLayoutUuidCount(
+			long groupId, String layoutUuid)
+		throws RemoteException {
+
+		try {
+			int returnValue =
+				JournalArticleServiceUtil.getArticlesByLayoutUuidCount(
+					groupId, layoutUuid);
+
+			return returnValue;
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	/**
 	 * Returns an ordered range of all the web content articles matching the
 	 * group, class name ID, DDM structure key, and workflow status.
 	 *
@@ -731,7 +802,7 @@ public class JournalArticleServiceSoap {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
@@ -740,7 +811,8 @@ public class JournalArticleServiceSoap {
 				long groupId, long classNameId, String ddmStructureKey,
 				int status, int start, int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.journal.model.JournalArticle> obc)
+					<com.liferay.journal.model.JournalArticle>
+						orderByComparator)
 		throws RemoteException {
 
 		try {
@@ -748,7 +820,7 @@ public class JournalArticleServiceSoap {
 				returnValue =
 					JournalArticleServiceUtil.getArticlesByStructureId(
 						groupId, classNameId, ddmStructureKey, status, start,
-						end, obc);
+						end, orderByComparator);
 
 			return com.liferay.journal.model.JournalArticleSoap.toSoapModels(
 				returnValue);
@@ -789,7 +861,7 @@ public class JournalArticleServiceSoap {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
@@ -798,7 +870,8 @@ public class JournalArticleServiceSoap {
 				long groupId, long classNameId, String ddmStructureKey,
 				String locale, int status, int start, int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.journal.model.JournalArticle> obc)
+					<com.liferay.journal.model.JournalArticle>
+						orderByComparator)
 		throws RemoteException {
 
 		try {
@@ -807,7 +880,7 @@ public class JournalArticleServiceSoap {
 					JournalArticleServiceUtil.getArticlesByStructureId(
 						groupId, classNameId, ddmStructureKey,
 						LocaleUtil.fromLanguageId(locale), status, start, end,
-						obc);
+						orderByComparator);
 
 			return com.liferay.journal.model.JournalArticleSoap.toSoapModels(
 				returnValue);
@@ -843,7 +916,7 @@ public class JournalArticleServiceSoap {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
@@ -852,14 +925,16 @@ public class JournalArticleServiceSoap {
 				long groupId, String ddmStructureKey, int status, int start,
 				int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.journal.model.JournalArticle> obc)
+					<com.liferay.journal.model.JournalArticle>
+						orderByComparator)
 		throws RemoteException {
 
 		try {
 			java.util.List<com.liferay.journal.model.JournalArticle>
 				returnValue =
 					JournalArticleServiceUtil.getArticlesByStructureId(
-						groupId, ddmStructureKey, status, start, end, obc);
+						groupId, ddmStructureKey, status, start, end,
+						orderByComparator);
 
 			return com.liferay.journal.model.JournalArticleSoap.toSoapModels(
 				returnValue);
@@ -892,7 +967,7 @@ public class JournalArticleServiceSoap {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
@@ -900,14 +975,16 @@ public class JournalArticleServiceSoap {
 			getArticlesByStructureId(
 				long groupId, String ddmStructureKey, int start, int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.journal.model.JournalArticle> obc)
+					<com.liferay.journal.model.JournalArticle>
+						orderByComparator)
 		throws RemoteException {
 
 		try {
 			java.util.List<com.liferay.journal.model.JournalArticle>
 				returnValue =
 					JournalArticleServiceUtil.getArticlesByStructureId(
-						groupId, ddmStructureKey, start, end, obc);
+						groupId, ddmStructureKey, start, end,
+						orderByComparator);
 
 			return com.liferay.journal.model.JournalArticleSoap.toSoapModels(
 				returnValue);
@@ -944,7 +1021,7 @@ public class JournalArticleServiceSoap {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
@@ -953,7 +1030,8 @@ public class JournalArticleServiceSoap {
 				long groupId, String ddmStructureKey, String locale, int status,
 				int start, int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.journal.model.JournalArticle> obc)
+					<com.liferay.journal.model.JournalArticle>
+						orderByComparator)
 		throws RemoteException {
 
 		try {
@@ -962,7 +1040,7 @@ public class JournalArticleServiceSoap {
 					JournalArticleServiceUtil.getArticlesByStructureId(
 						groupId, ddmStructureKey,
 						LocaleUtil.fromLanguageId(locale), status, start, end,
-						obc);
+						orderByComparator);
 
 			return com.liferay.journal.model.JournalArticleSoap.toSoapModels(
 				returnValue);
@@ -1593,13 +1671,14 @@ public class JournalArticleServiceSoap {
 			getLatestArticles(
 				long groupId, int status, int start, int end,
 				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.journal.model.JournalArticle> obc)
+					<com.liferay.journal.model.JournalArticle>
+						orderByComparator)
 		throws RemoteException {
 
 		try {
 			java.util.List<com.liferay.journal.model.JournalArticle>
 				returnValue = JournalArticleServiceUtil.getLatestArticles(
-					groupId, status, start, end, obc);
+					groupId, status, start, end, orderByComparator);
 
 			return com.liferay.journal.model.JournalArticleSoap.toSoapModels(
 				returnValue);
@@ -1627,6 +1706,13 @@ public class JournalArticleServiceSoap {
 		}
 	}
 
+	/**
+	 * Returns all the web content articles that the user has permission to view
+	 * matching the group.
+	 *
+	 * @param groupId the primary key of the web content article's group
+	 * @return The matching web content articles
+	 */
 	public static com.liferay.journal.model.JournalArticleSoap[]
 			getLayoutArticles(long groupId)
 		throws RemoteException {
@@ -1638,6 +1724,69 @@ public class JournalArticleServiceSoap {
 
 			return com.liferay.journal.model.JournalArticleSoap.toSoapModels(
 				returnValue);
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	/**
+	 * Returns all the web content articles that the user has permission to view
+	 * matching the group.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end -
+	 * start</code> instances. <code>start</code> and <code>end</code> are not
+	 * primary keys, they are indexes in the result set. Thus, <code>0</code>
+	 * refers to the first result in the set. Setting both <code>start</code>
+	 * and <code>end</code> to {@link
+	 * com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full
+	 * result set.
+	 * </p>
+	 *
+	 * @param groupId the primary key of the web content article's group
+	 * @param start the lower bound of the range of web content articles to
+	 return
+	 * @param end the upper bound of the range of web content articles to
+	 return (not inclusive)
+	 * @return the range of matching web content articles
+	 */
+	public static com.liferay.journal.model.JournalArticleSoap[]
+			getLayoutArticles(long groupId, int start, int end)
+		throws RemoteException {
+
+		try {
+			java.util.List<com.liferay.journal.model.JournalArticle>
+				returnValue = JournalArticleServiceUtil.getLayoutArticles(
+					groupId, start, end);
+
+			return com.liferay.journal.model.JournalArticleSoap.toSoapModels(
+				returnValue);
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	/**
+	 * Returns the number of web content articles that the user has permission
+	 * to view matching the group.
+	 *
+	 * @param groupId the primary key of the web content article's group
+	 * @return the number of matching web content articles
+	 */
+	public static int getLayoutArticlesCount(long groupId)
+		throws RemoteException {
+
+		try {
+			int returnValue = JournalArticleServiceUtil.getLayoutArticlesCount(
+				groupId);
+
+			return returnValue;
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -1936,7 +2085,7 @@ public class JournalArticleServiceSoap {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
@@ -1947,7 +2096,7 @@ public class JournalArticleServiceSoap {
 			java.util.Date displayDateLT, int status, java.util.Date reviewDate,
 			int start, int end,
 			com.liferay.portal.kernel.util.OrderByComparator
-				<com.liferay.journal.model.JournalArticle> obc)
+				<com.liferay.journal.model.JournalArticle> orderByComparator)
 		throws RemoteException {
 
 		try {
@@ -1956,7 +2105,7 @@ public class JournalArticleServiceSoap {
 					companyId, groupId, ListUtil.toList(folderIds), classNameId,
 					keywords, version, ddmStructureKey, ddmTemplateKey,
 					displayDateGT, displayDateLT, status, reviewDate, start,
-					end, obc);
+					end, orderByComparator);
 
 			return com.liferay.journal.model.JournalArticleSoap.toSoapModels(
 				returnValue);
@@ -2026,7 +2175,7 @@ public class JournalArticleServiceSoap {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
@@ -2038,7 +2187,7 @@ public class JournalArticleServiceSoap {
 			int status, java.util.Date reviewDate, boolean andOperator,
 			int start, int end,
 			com.liferay.portal.kernel.util.OrderByComparator
-				<com.liferay.journal.model.JournalArticle> obc)
+				<com.liferay.journal.model.JournalArticle> orderByComparator)
 		throws RemoteException {
 
 		try {
@@ -2048,7 +2197,7 @@ public class JournalArticleServiceSoap {
 					articleId, version, title, description, content,
 					ddmStructureKey, ddmTemplateKey, displayDateGT,
 					displayDateLT, status, reviewDate, andOperator, start, end,
-					obc);
+					orderByComparator);
 
 			return com.liferay.journal.model.JournalArticleSoap.toSoapModels(
 				returnValue);
@@ -2120,7 +2269,7 @@ public class JournalArticleServiceSoap {
 	 return
 	 * @param end the upper bound of the range of web content articles to
 	 return (not inclusive)
-	 * @param obc the comparator to order the web content articles
+	 * @param orderByComparator the comparator to order the web content articles
 	 * @return the range of matching web content articles ordered by the
 	 comparator
 	 */
@@ -2132,7 +2281,7 @@ public class JournalArticleServiceSoap {
 			int status, java.util.Date reviewDate, boolean andOperator,
 			int start, int end,
 			com.liferay.portal.kernel.util.OrderByComparator
-				<com.liferay.journal.model.JournalArticle> obc)
+				<com.liferay.journal.model.JournalArticle> orderByComparator)
 		throws RemoteException {
 
 		try {
@@ -2142,7 +2291,7 @@ public class JournalArticleServiceSoap {
 					articleId, version, title, description, content,
 					ddmStructureKeys, ddmTemplateKeys, displayDateGT,
 					displayDateLT, status, reviewDate, andOperator, start, end,
-					obc);
+					orderByComparator);
 
 			return com.liferay.journal.model.JournalArticleSoap.toSoapModels(
 				returnValue);

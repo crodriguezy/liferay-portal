@@ -25,7 +25,11 @@ AUI.add(
 
 		var InputMoveBoxes = A.Component.create({
 			ATTRS: {
+				leftBoxMaxItems: Infinity,
+
 				leftReorder: {},
+
+				rightBoxMaxItems: Infinity,
 
 				rightReorder: {},
 
@@ -131,6 +135,13 @@ AUI.add(
 						fromBox: from,
 						toBox: to,
 					});
+				},
+
+				_onSelectChange(event) {
+					var instance = this;
+
+					instance._toggleBtnMove(event);
+					instance._toggleBtnSort(event);
 				},
 
 				_onSelectFocus(event, box) {
@@ -271,32 +282,28 @@ AUI.add(
 				_toggleBtnMove(event) {
 					var instance = this;
 
+					var sourceBox = event.target;
+
+					var selectedOptions = sourceBox
+						.get('options')
+						.getDOMNodes()
+						.filter((option) => option.selected);
+
+					var direction =
+						sourceBox === instance._rightBox ? 'left' : 'right';
+
+					var destinationBox = instance[`_${direction}Box`];
+					var destinationBoxMaxItems = instance.get(
+						`${direction}BoxMaxItems`
+					);
+
 					var contentBox = instance.get('contentBox');
 
-					var moveBtnLeft = contentBox.one('.move-left');
-					var moveBtnRight = contentBox.one('.move-right');
-
-					var target = event.target;
-
-					if (moveBtnLeft && moveBtnRight && target) {
-						var btnDisabledLeft = true;
-						var btnDisabledRight = true;
-
-						if (target.get('length') > 0) {
-							if (target == instance._rightBox) {
-								btnDisabledLeft = false;
-							}
-							else if (target == instance._leftBox) {
-								btnDisabledRight = false;
-							}
-						}
-
-						instance._toggleBtnState(moveBtnLeft, btnDisabledLeft);
-						instance._toggleBtnState(
-							moveBtnRight,
-							btnDisabledRight
-						);
-					}
+					instance._toggleBtnState(
+						contentBox.one(`.move-${direction}`),
+						destinationBox.get('length') + selectedOptions.length >
+							destinationBoxMaxItems
+					);
 				},
 
 				_toggleBtnSort(event) {
@@ -407,18 +414,20 @@ AUI.add(
 					);
 
 					instance._leftBox.after(
-						'valuechange',
-						A.bind('_toggleBtnSort', instance)
+						'change',
+						A.bind('_onSelectChange', instance)
 					);
+
 					instance._leftBox.on(
 						'focus',
 						A.rbind('_onSelectFocus', instance, instance._rightBox)
 					);
 
 					instance._rightBox.after(
-						'valuechange',
-						A.bind('_toggleBtnSort', instance)
+						'change',
+						A.bind('_onSelectChange', instance)
 					);
+
 					instance._rightBox.on(
 						'focus',
 						A.rbind('_onSelectFocus', instance, instance._leftBox)

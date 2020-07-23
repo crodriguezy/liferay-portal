@@ -12,6 +12,7 @@
  * details.
  */
 
+import ClayLayout from '@clayui/layout';
 import React from 'react';
 
 import ProductMenuSettings from './settings/ProductMenuSettings.es';
@@ -20,50 +21,56 @@ import WidgetSettings from './settings/WidgetSettings.es';
 
 const Divider = () => {
 	return (
-		<div className="autofit-row mb-4 pl-2 pr-2">
-			<div className="col-md-12">
+		<div className="mb-4 pl-4 pr-4">
+			<div className="d-flex flex-column">
 				<h4 className="card-divider"></h4>
 			</div>
 		</div>
 	);
 };
 
+export const DeploySettings = () => (
+	<>
+		<Settings
+			deploymentType="widget"
+			settings={WidgetSettings}
+			subtitle={Liferay.Language.get('deploy-a-widget')}
+			title={Liferay.Language.get('widget')}
+		/>
+
+		<Divider />
+
+		<Settings
+			deploymentType="standalone"
+			subtitle={Liferay.Language.get(
+				'deploy-a-standalone-app-with-a-direct-link'
+			)}
+			title={Liferay.Language.get('standalone')}
+		/>
+
+		<Divider />
+
+		<Settings
+			deploymentType="productMenu"
+			settings={ProductMenuSettings}
+			subtitle={Liferay.Language.get(
+				'deploy-into-applications-or-a-site-menu'
+			)}
+			title={Liferay.Language.get('product-menu')}
+		/>
+	</>
+);
+
 export default () => {
 	return (
 		<>
-			<div className="autofit-row mb-4 pl-4 pr-4">
-				<div className="autofit-col-expand">
+			<ClayLayout.ContentRow className="mb-4 pl-4 pr-4">
+				<ClayLayout.ContentCol>
 					<h2>{`${Liferay.Language.get('deploy-as')}...`}</h2>
-				</div>
-			</div>
+				</ClayLayout.ContentCol>
+			</ClayLayout.ContentRow>
 
-			<Settings
-				deploymentType="widget"
-				settings={WidgetSettings}
-				subtitle={Liferay.Language.get('deploy-a-widget')}
-				title={Liferay.Language.get('widget')}
-			/>
-
-			<Divider />
-
-			<Settings
-				deploymentType="standalone"
-				subtitle={Liferay.Language.get(
-					'deploy-a-standalone-app-with-a-direct-link'
-				)}
-				title={Liferay.Language.get('standalone')}
-			/>
-
-			<Divider />
-
-			<Settings
-				deploymentType="productMenu"
-				settings={ProductMenuSettings}
-				subtitle={Liferay.Language.get(
-					'deploy-to-the-control-panel-or-a-site-menu'
-				)}
-				title={Liferay.Language.get('product-menu')}
-			/>
+			<DeploySettings />
 
 			<Divider />
 		</>

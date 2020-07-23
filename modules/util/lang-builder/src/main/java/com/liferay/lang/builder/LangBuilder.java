@@ -20,8 +20,9 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.io.unsync.UnsyncBufferedReader;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringReader;
-import com.liferay.portal.kernel.language.LanguageConstants;
+import com.liferay.portal.kernel.language.LanguageBuilderUtil;
 import com.liferay.portal.kernel.language.LanguageValidator;
+import com.liferay.portal.kernel.language.constants.LanguageConstants;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.NaturalOrderStringComparator;
@@ -37,7 +38,6 @@ import io.github.firemaples.translate.Translate;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -59,12 +59,6 @@ import org.apache.commons.io.FileUtils;
  * @author Hugo Huijser
  */
 public class LangBuilder {
-
-	public static final String AUTOMATIC_COPY =
-		com.liferay.portal.tools.LangBuilder.AUTOMATIC_COPY;
-
-	public static final String AUTOMATIC_TRANSLATION =
-		com.liferay.portal.tools.LangBuilder.AUTOMATIC_TRANSLATION;
 
 	public static void main(String[] args) throws Exception {
 		Map<String, String> arguments = ArgumentsUtil.parseArguments(args);
@@ -281,14 +275,14 @@ public class LangBuilder {
 	}
 
 	private void _createProperties(String content, String languageId)
-		throws IOException {
+		throws Exception {
 
 		_createProperties(content, languageId, null);
 	}
 
 	private void _createProperties(
 			String content, String languageId, String parentLanguageId)
-		throws IOException {
+		throws Exception {
 
 		File propertiesFile = new File(
 			StringBundler.concat(
@@ -366,7 +360,8 @@ public class LangBuilder {
 				}
 
 				if ((translatedText != null) &&
-					translatedText.endsWith(AUTOMATIC_COPY)) {
+					translatedText.endsWith(
+						LanguageBuilderUtil.AUTOMATIC_COPY)) {
 
 					translatedText = "";
 				}
@@ -381,7 +376,8 @@ public class LangBuilder {
 							 ArrayUtil.contains(
 								 _AUTOMATIC_COPY_LANGUAGE_IDS, languageId)) {
 
-						translatedText = value + AUTOMATIC_COPY;
+						translatedText =
+							value + LanguageBuilderUtil.AUTOMATIC_COPY;
 					}
 					else if (line.contains("[")) {
 						int pos = line.indexOf("[");
@@ -395,7 +391,8 @@ public class LangBuilder {
 							translatedText = translatedBaseKey;
 						}
 						else {
-							translatedText = value + AUTOMATIC_COPY;
+							translatedText =
+								value + LanguageBuilderUtil.AUTOMATIC_COPY;
 						}
 					}
 					else if (languageId.equals("el") &&
@@ -430,13 +427,15 @@ public class LangBuilder {
 							"en", languageId, key, value, 0);
 
 						if (Validator.isNull(translatedText)) {
-							translatedText = value + AUTOMATIC_COPY;
+							translatedText =
+								value + LanguageBuilderUtil.AUTOMATIC_COPY;
 						}
 						else if (!key.startsWith("country.") &&
 								 !key.startsWith("language.")) {
 
 							translatedText =
-								translatedText + AUTOMATIC_TRANSLATION;
+								translatedText +
+									LanguageBuilderUtil.AUTOMATIC_TRANSLATION;
 						}
 					}
 				}
@@ -485,6 +484,8 @@ public class LangBuilder {
 
 	private String _fixTranslation(String value) {
 		value = StringUtil.replace(value, "\n", "\\n");
+		value = StringUtil.replace(
+			value, CharPool.NO_BREAK_SPACE, CharPool.SPACE);
 
 		value = StringUtil.replace(
 			value.trim(),
@@ -688,7 +689,7 @@ public class LangBuilder {
 			s, StringPool.RETURN_NEW_LINE, StringPool.NEW_LINE);
 	}
 
-	private Properties _readProperties(File file) throws IOException {
+	private Properties _readProperties(File file) throws Exception {
 		try (FileInputStream fileInputStream = new FileInputStream(file)) {
 			return PropertiesUtil.load(fileInputStream, StringPool.UTF8);
 		}
@@ -756,7 +757,7 @@ public class LangBuilder {
 		return toText;
 	}
 
-	private void _write(File file, String s) throws IOException {
+	private void _write(File file, String s) throws Exception {
 		FileUtils.writeStringToFile(file, s, StringPool.UTF8);
 	}
 

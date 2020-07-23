@@ -21,14 +21,15 @@ public class DepotAdminWebKeys {
 
 	public static final String ACTION_COMMAND_NAME = "ACTION_COMMAND_NAME";
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static final String CONNECTED_SITE_DROPDOWN_DEFAULT_EVENT_HANDLER =
 		"CONNECTED_SITE_DROPDOWN_DEFAULT_EVENT_HANDLER";
 
 	public static final String DEPOT_ADMIN_DETAILS_DISPLAY_CONTEXT =
 		"DEPOT_ADMIN_DETAILS_DISPLAY_CONTEXT";
-
-	public static final String DEPOT_ADMIN_GROUP_URL_PROVIDER =
-		"DEPOT_ADMIN_GROUP_URL_PROVIDER";
 
 	public static final String DEPOT_ADMIN_SELECT_ROLE_DISPLAY_CONTEXT =
 		"DEPOT_ADMIN_SELECT_ROLE_DISPLAY_CONTEXT";

@@ -32,23 +32,43 @@ import java.util.Map;
  */
 public class FinderPath {
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 * 				#FinderPath(Class, String, String, String[])}
+	 */
+	@Deprecated
 	public FinderPath(
 		boolean entityCacheEnabled, boolean finderCacheEnabled,
 		Class<?> resultClass, String cacheName, String methodName,
 		String[] params) {
 
-		this(
-			entityCacheEnabled, finderCacheEnabled, resultClass, cacheName,
-			methodName, params, -1);
+		this(resultClass, cacheName, methodName, params);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 * 				#FinderPath(Class, String, String, String[], long)}
+	 */
+	@Deprecated
 	public FinderPath(
 		boolean entityCacheEnabled, boolean finderCacheEnabled,
 		Class<?> resultClass, String cacheName, String methodName,
 		String[] params, long columnBitmask) {
 
-		_entityCacheEnabled = entityCacheEnabled;
-		_finderCacheEnabled = finderCacheEnabled;
+		this(resultClass, cacheName, methodName, params, columnBitmask);
+	}
+
+	public FinderPath(
+		Class<?> resultClass, String cacheName, String methodName,
+		String[] params) {
+
+		this(resultClass, cacheName, methodName, params, -1);
+	}
+
+	public FinderPath(
+		Class<?> resultClass, String cacheName, String methodName,
+		String[] params, long columnBitmask) {
+
 		_resultClass = resultClass;
 		_cacheName = cacheName;
 		_columnBitmask = columnBitmask;
@@ -158,11 +178,15 @@ public class FinderPath {
 	 */
 	@Deprecated
 	public boolean isEntityCacheEnabled() {
-		return _entityCacheEnabled;
+		return true;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public boolean isFinderCacheEnabled() {
-		return _finderCacheEnabled;
+		return true;
 	}
 
 	private static Map<String, String> _getEncodedTypes() {
@@ -199,7 +223,7 @@ public class FinderPath {
 	}
 
 	private void _initCacheKeyPrefix(String methodName, String[] params) {
-		StringBundler sb = new StringBundler(params.length * 2 + 3);
+		StringBundler sb = new StringBundler((params.length * 2) + 3);
 
 		sb.append(methodName);
 		sb.append(_PARAMS_SEPARATOR);
@@ -228,8 +252,6 @@ public class FinderPath {
 	private String _cacheKeyPrefix;
 	private final String _cacheName;
 	private final long _columnBitmask;
-	private final boolean _entityCacheEnabled;
-	private final boolean _finderCacheEnabled;
 	private final Class<?> _resultClass;
 
 }

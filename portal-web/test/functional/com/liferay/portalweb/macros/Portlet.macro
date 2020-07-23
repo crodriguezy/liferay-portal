@@ -1,20 +1,9 @@
 definition {
 
 	macro _clickAddPortlet {
-		var browserType = PropsUtil.get("browser.type");
-
-		if ("${browserType}" == "safari") {
-			Click(locator1 = "ControlMenuAddPanel#ADD_PORTLET_DRAG_LINK");
-		}
-		else {
-			MouseOver(locator1 = "ControlMenuAddPanel#ADD_PORTLET_DRAG_LINK");
-		}
-
-		MouseOver(locator1 = "ControlMenuAddPanel#ADD_PORTLET_LINK");
-
-		Click(
-			locator1 = "ControlMenuAddPanel#ADD_PORTLET_LINK",
-			value1 = "Add");
+		Click.clickNoWaitForVisible(
+			key_portletName = "${portletName}",
+			locator1 = "ControlMenuAddPanel#ADD_PORTLET_LINK");
 	}
 
 	macro addDuplicatePG {
@@ -69,6 +58,8 @@ definition {
 			Portlet.addPGCmd(portletName = "${portletName}");
 		}
 
+		Click.clickAt(locator1 = "ControlMenuAddPanel#CLOSE_ADD_PANEL");
+
 		AssertElementPresent(locator1 = "Home#PORTLET");
 	}
 
@@ -78,18 +69,21 @@ definition {
 		}
 
 		if (IsNotVisible(locator1 = "ControlMenuAddPanel#CLOSE_ADD_PANEL")) {
-			Click.clickAt(locator1 = "ControlMenu#ADD");
+			var browserType = PropsUtil.get("browser.type");
+
+			if ("${browserType}" == "safari") {
+				Click.clickNoMouseOver(locator1 = "ControlMenu#ADD");
+			}
+			else {
+				Click.clickAt(locator1 = "ControlMenu#ADD");
+			}
 		}
 
-		AssertElementPresent(locator1 = "ControlMenuAddPanel#APPLICATIONS_ACCORDION_PANEL_TITLE");
+		AssertElementPresent(locator1 = "ControlMenuAddPanel#SIDEBAR_HEADER");
 
-		AssertVisible(
-			locator1 = "ControlMenuAddPanel#APPLICATIONS_ACCORDION_PANEL_TITLE",
-			value1 = "Widgets");
+		Navigator.gotoNavTab(navTab = "Widgets");
 
 		Pause(locator1 = "5000");
-
-		Panel.expandSidebarApplicationsPanel();
 
 		Type.sendKeysApplicationSearch(
 			locator1 = "NavBar#APPLICATION_SEARCH_FIELD",
@@ -157,6 +151,13 @@ definition {
 
 			AssertVisible(locator1 = "Portlet#ICON_PLUS_SIGN");
 		}
+
+		else if ("${browserType}" == "safari") {
+			Click.javaScriptClick(locator1 = "Portlet#ICON_PLUS_SIGN");
+
+			AssertVisible(locator1 = "Portlet#ICON_PLUS_SIGN");
+		}
+
 		else {
 			MouseOver.mouseOverNotVisible(
 				key_portletName = "${portletName}",
@@ -268,6 +269,13 @@ definition {
 
 				AssertVisible(locator1 = "Portlet#SPECIFIC_BORDERLESS_ELLIPSIS_ICON");
 			}
+
+			else if ("${browserType}" == "safari") {
+				Click.javaScriptClick(locator1 = "Portlet#SPECIFIC_BORDERLESS_ELLIPSIS_ICON");
+
+				AssertVisible(locator1 = "Portlet#SPECIFIC_BORDERLESS_ELLIPSIS_ICON");
+			}
+
 			else if ("${siteTemplate}" == "true") {
 				MouseOver.mouseOverNotVisible(locator1 = "Portlet#SPECIFIC_BORDERLESS_ELLIPSIS_ICON");
 
@@ -325,6 +333,8 @@ definition {
 	}
 
 	macro selectScopePG {
+		WaitForLiferayEvent.initializeLiferayEventLog();
+
 		Portlet.gotoPortletOptions(
 			portletName = "${portletName}",
 			portletOption = "Configuration");
@@ -366,11 +376,6 @@ definition {
 				locator1 = "build-test.xml",
 				value1 = "start-app-server -Dkeep.cached.app.server.data=true");
 		}
-		else if ("${deleteindexdata}" == "true") {
-			AntCommand(
-				locator1 = "build-test.xml",
-				value1 = "start-app-server -Ddelete.index.data=true");
-		}
 		else {
 			AntCommand(
 				locator1 = "build-test.xml",
@@ -406,23 +411,19 @@ definition {
 			Click.clickAt(locator1 = "ControlMenu#ADD");
 		}
 
-		AssertElementPresent(locator1 = "ControlMenuAddPanel#APPLICATIONS_ACCORDION_PANEL_TITLE");
+		AssertElementPresent(locator1 = "ControlMenuAddPanel#SIDEBAR_HEADER");
 
-		AssertVisible(
-			locator1 = "ControlMenuAddPanel#APPLICATIONS_ACCORDION_PANEL_TITLE",
-			value1 = "Widgets");
+		Navigator.gotoNavTab(navTab = "Widgets");
 
 		Pause(locator1 = "5000");
-
-		Panel.expandSidebarApplicationsPanel();
 
 		Type.sendKeysApplicationSearch(
 			locator1 = "NavBar#APPLICATION_SEARCH_FIELD",
 			value1 = "${portletName}");
 
 		AssertElementNotPresent(
-			locator1 = "ControlMenuAddPanel#ADD_PORTLET_DRAG_LINK",
-			portletName = "${portletName}");
+			key_portletName = "${portletName}",
+			locator1 = "ControlMenuAddPanel#ADD_PORTLET_LINK");
 	}
 
 	macro viewCannotEdit {
@@ -464,13 +465,14 @@ definition {
 	}
 
 	macro viewNoPortletsPresentCP {
-		ProductMenuHelper.expandPanel(panel = "${panel}");
+		ApplicationsMenuHelper.openApplicationsMenu();
 
-		ProductMenuHelper.expandCategory(category = "${category}");
+		Navigator.gotoNavTab(navTab = "${panel}");
 
 		AssertElementNotPresent(
+			key_category = "${category}",
 			key_portlet = "${portlet}",
-			locator1 = "ProductMenu#PORTLET",
+			locator1 = "ApplicationsMenu#PORTLET",
 			value1 = "${portlet}");
 	}
 
@@ -539,6 +541,12 @@ definition {
 			key_menuItem = "Remove",
 			locator1 = "MenuItem#ANY_MENU_ITEM",
 			value1 = "Remove");
+	}
+
+	macro viewPortletPresentPG {
+		AssertTextEquals.assertPartialText(
+			locator1 = "Portlet#PORTLET_CONTENT",
+			value1 = "${portletContent}");
 	}
 
 	macro viewSpecificPG {

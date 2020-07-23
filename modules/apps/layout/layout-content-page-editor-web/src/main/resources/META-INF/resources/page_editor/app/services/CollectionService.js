@@ -20,22 +20,29 @@ export default {
 	/**
 	 * Get an asset's value
 	 * @param {object} options
-	 * @param {string} options.layoutObjectReference
+	 * @param {string} options.listItemStyle
+	 * @param {string} options.listStyle
 	 * @param {function} options.onNetworkStatus
 	 */
 	getCollectionField({
 		collection,
+		listItemStyle,
+		listStyle,
 		onNetworkStatus,
 		segmentsExperienceId,
 		size,
+		templateKey,
 	}) {
 		return serviceFetch(
 			config.getCollectionFieldURL,
 			{
 				body: {
 					layoutObjectReference: JSON.stringify(collection),
+					listItemStyle,
+					listStyle,
 					segmentsExperienceId,
 					size,
+					templateKey,
 				},
 			},
 			onNetworkStatus

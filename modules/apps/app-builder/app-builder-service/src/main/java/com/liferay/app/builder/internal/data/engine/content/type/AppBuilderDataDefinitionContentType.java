@@ -38,6 +38,11 @@ public class AppBuilderDataDefinitionContentType
 	implements DataDefinitionContentType {
 
 	@Override
+	public boolean allowEmptyDataDefinition() {
+		return true;
+	}
+
+	@Override
 	public long getClassNameId() {
 		return _portal.getClassNameId(AppBuilderApp.class);
 	}

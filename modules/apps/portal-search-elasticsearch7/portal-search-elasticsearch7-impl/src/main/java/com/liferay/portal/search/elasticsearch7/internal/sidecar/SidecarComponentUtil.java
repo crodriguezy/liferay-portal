@@ -14,8 +14,6 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.sidecar;
 
-import com.liferay.portal.search.elasticsearch7.internal.connection.SidecarElasticsearchConnectionManager;
-
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -26,14 +24,16 @@ import org.osgi.service.component.annotations.Component;
 @Component(immediate = true, service = {})
 public class SidecarComponentUtil {
 
-	public static void disableSidecarElasticsearchConnectionManager() {
-		_componentContext.disableComponent(
-			SidecarElasticsearchConnectionManager.class.getName());
+	public static void disableSidecarManager() {
+		if (_componentContext != null) {
+			_componentContext.disableComponent(SidecarManager.class.getName());
+		}
 	}
 
-	public static void enableSidecarElasticsearchConnectionManager() {
-		_componentContext.enableComponent(
-			SidecarElasticsearchConnectionManager.class.getName());
+	public static void enableSidecarManager() {
+		if (_componentContext != null) {
+			_componentContext.enableComponent(SidecarManager.class.getName());
+		}
 	}
 
 	@Activate

@@ -316,7 +316,7 @@ public class SelectAssetDisplayPageDisplayContext {
 				InfoDisplayContributorTrackerUtil.
 					getInfoDisplayContributorTracker();
 
-			InfoDisplayContributor infoDisplayContributor =
+			InfoDisplayContributor<?> infoDisplayContributor =
 				infoDisplayContributorTracker.getInfoDisplayContributor(
 					PortalUtil.getClassName(_classNameId));
 
@@ -324,7 +324,7 @@ public class SelectAssetDisplayPageDisplayContext {
 				return false;
 			}
 
-			InfoDisplayObjectProvider infoDisplayObjectProvider =
+			InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
 				infoDisplayContributor.getInfoDisplayObjectProvider(_classPK);
 
 			if (infoDisplayObjectProvider == null) {
@@ -416,7 +416,7 @@ public class SelectAssetDisplayPageDisplayContext {
 
 		List<Layout> ancestors = layout.getAncestors();
 
-		StringBundler sb = new StringBundler(4 * ancestors.size() + 5);
+		StringBundler sb = new StringBundler((4 * ancestors.size()) + 5);
 
 		if (layout.isPrivateLayout()) {
 			sb.append(LanguageUtil.get(_httpServletRequest, "private-pages"));

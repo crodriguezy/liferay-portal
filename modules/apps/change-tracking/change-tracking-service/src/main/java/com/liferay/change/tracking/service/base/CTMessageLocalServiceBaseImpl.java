@@ -74,6 +74,10 @@ public abstract class CTMessageLocalServiceBaseImpl
 	/**
 	 * Adds the ct message to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect CTMessageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param ctMessage the ct message
 	 * @return the ct message that was added
 	 */
@@ -100,6 +104,10 @@ public abstract class CTMessageLocalServiceBaseImpl
 	/**
 	 * Deletes the ct message with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect CTMessageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param ctMessageId the primary key of the ct message
 	 * @return the ct message that was removed
 	 * @throws PortalException if a ct message with the primary key could not be found
@@ -112,6 +120,10 @@ public abstract class CTMessageLocalServiceBaseImpl
 
 	/**
 	 * Deletes the ct message from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect CTMessageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param ctMessage the ct message
 	 * @return the ct message that was removed
@@ -334,6 +346,10 @@ public abstract class CTMessageLocalServiceBaseImpl
 
 	/**
 	 * Updates the ct message in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect CTMessageLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param ctMessage the ct message
 	 * @return the ct message that was updated

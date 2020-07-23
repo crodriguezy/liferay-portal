@@ -71,12 +71,12 @@ public class WorkflowInstanceLinkModelImpl
 	public static final String TABLE_NAME = "WorkflowInstanceLink";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"mvccVersion", Types.BIGINT}, {"workflowInstanceLinkId", Types.BIGINT},
-		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
-		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
-		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
-		{"classNameId", Types.BIGINT}, {"classPK", Types.BIGINT},
-		{"workflowInstanceId", Types.BIGINT}
+		{"mvccVersion", Types.BIGINT}, {"ctCollectionId", Types.BIGINT},
+		{"workflowInstanceLinkId", Types.BIGINT}, {"groupId", Types.BIGINT},
+		{"companyId", Types.BIGINT}, {"userId", Types.BIGINT},
+		{"userName", Types.VARCHAR}, {"createDate", Types.TIMESTAMP},
+		{"modifiedDate", Types.TIMESTAMP}, {"classNameId", Types.BIGINT},
+		{"classPK", Types.BIGINT}, {"workflowInstanceId", Types.BIGINT}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -84,6 +84,7 @@ public class WorkflowInstanceLinkModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("ctCollectionId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("workflowInstanceLinkId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
@@ -97,7 +98,7 @@ public class WorkflowInstanceLinkModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table WorkflowInstanceLink (mvccVersion LONG default 0 not null,workflowInstanceLinkId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,workflowInstanceId LONG)";
+		"create table WorkflowInstanceLink (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,workflowInstanceLinkId LONG not null,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,classNameId LONG,classPK LONG,workflowInstanceId LONG,primary key (workflowInstanceLinkId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table WorkflowInstanceLink";
@@ -114,20 +115,23 @@ public class WorkflowInstanceLinkModelImpl
 
 	public static final String TX_MANAGER = "liferayTransactionManager";
 
-	public static final boolean ENTITY_CACHE_ENABLED = GetterUtil.getBoolean(
-		com.liferay.portal.util.PropsUtil.get(
-			"value.object.entity.cache.enabled.com.liferay.portal.kernel.model.WorkflowInstanceLink"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean ENTITY_CACHE_ENABLED = true;
 
-	public static final boolean FINDER_CACHE_ENABLED = GetterUtil.getBoolean(
-		com.liferay.portal.util.PropsUtil.get(
-			"value.object.finder.cache.enabled.com.liferay.portal.kernel.model.WorkflowInstanceLink"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean FINDER_CACHE_ENABLED = true;
 
-	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(
-		com.liferay.portal.util.PropsUtil.get(
-			"value.object.column.bitmask.enabled.com.liferay.portal.kernel.model.WorkflowInstanceLink"),
-		true);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	public static final boolean COLUMN_BITMASK_ENABLED = true;
 
 	public static final long CLASSNAMEID_COLUMN_BITMASK = 1L;
 
@@ -194,9 +198,6 @@ public class WorkflowInstanceLinkModelImpl
 				attributeName,
 				attributeGetterFunction.apply((WorkflowInstanceLink)this));
 		}
-
-		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
-		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
 
 		return attributes;
 	}
@@ -281,6 +282,12 @@ public class WorkflowInstanceLinkModelImpl
 			(BiConsumer<WorkflowInstanceLink, Long>)
 				WorkflowInstanceLink::setMvccVersion);
 		attributeGetterFunctions.put(
+			"ctCollectionId", WorkflowInstanceLink::getCtCollectionId);
+		attributeSetterBiConsumers.put(
+			"ctCollectionId",
+			(BiConsumer<WorkflowInstanceLink, Long>)
+				WorkflowInstanceLink::setCtCollectionId);
+		attributeGetterFunctions.put(
 			"workflowInstanceLinkId",
 			WorkflowInstanceLink::getWorkflowInstanceLinkId);
 		attributeSetterBiConsumers.put(
@@ -355,6 +362,16 @@ public class WorkflowInstanceLinkModelImpl
 	@Override
 	public void setMvccVersion(long mvccVersion) {
 		_mvccVersion = mvccVersion;
+	}
+
+	@Override
+	public long getCtCollectionId() {
+		return _ctCollectionId;
+	}
+
+	@Override
+	public void setCtCollectionId(long ctCollectionId) {
+		_ctCollectionId = ctCollectionId;
 	}
 
 	@Override
@@ -593,6 +610,7 @@ public class WorkflowInstanceLinkModelImpl
 			new WorkflowInstanceLinkImpl();
 
 		workflowInstanceLinkImpl.setMvccVersion(getMvccVersion());
+		workflowInstanceLinkImpl.setCtCollectionId(getCtCollectionId());
 		workflowInstanceLinkImpl.setWorkflowInstanceLinkId(
 			getWorkflowInstanceLinkId());
 		workflowInstanceLinkImpl.setGroupId(getGroupId());
@@ -627,16 +645,17 @@ public class WorkflowInstanceLinkModelImpl
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
+	public boolean equals(Object object) {
+		if (this == object) {
 			return true;
 		}
 
-		if (!(obj instanceof WorkflowInstanceLink)) {
+		if (!(object instanceof WorkflowInstanceLink)) {
 			return false;
 		}
 
-		WorkflowInstanceLink workflowInstanceLink = (WorkflowInstanceLink)obj;
+		WorkflowInstanceLink workflowInstanceLink =
+			(WorkflowInstanceLink)object;
 
 		long primaryKey = workflowInstanceLink.getPrimaryKey();
 
@@ -653,11 +672,19 @@ public class WorkflowInstanceLinkModelImpl
 		return (int)getPrimaryKey();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isEntityCacheEnabled() {
 		return ENTITY_CACHE_ENABLED;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public boolean isFinderCacheEnabled() {
 		return FINDER_CACHE_ENABLED;
@@ -698,6 +725,8 @@ public class WorkflowInstanceLinkModelImpl
 			new WorkflowInstanceLinkCacheModel();
 
 		workflowInstanceLinkCacheModel.mvccVersion = getMvccVersion();
+
+		workflowInstanceLinkCacheModel.ctCollectionId = getCtCollectionId();
 
 		workflowInstanceLinkCacheModel.workflowInstanceLinkId =
 			getWorkflowInstanceLinkId();
@@ -818,6 +847,7 @@ public class WorkflowInstanceLinkModelImpl
 	}
 
 	private long _mvccVersion;
+	private long _ctCollectionId;
 	private long _workflowInstanceLinkId;
 	private long _groupId;
 	private long _originalGroupId;

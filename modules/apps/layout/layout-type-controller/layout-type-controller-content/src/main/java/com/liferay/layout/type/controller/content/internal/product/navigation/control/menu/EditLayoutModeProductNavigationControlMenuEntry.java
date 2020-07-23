@@ -17,7 +17,6 @@ package com.liferay.layout.type.controller.content.internal.product.navigation.c
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorWebKeys;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.security.permission.resource.LayoutContentModelResourcePermission;
-import com.liferay.layout.type.controller.content.internal.layout.type.controller.ContentLayoutTypeController;
 import com.liferay.layout.util.LayoutCopyHelper;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -101,8 +100,7 @@ public class EditLayoutModeProductNavigationControlMenuEntry
 					themeDisplay);
 			}
 			else {
-				Layout draftLayout = _layoutLocalService.fetchLayout(
-					_portal.getClassNameId(Layout.class), layout.getPlid());
+				Layout draftLayout = layout.fetchDraftLayout();
 
 				if (draftLayout == null) {
 					UnicodeProperties unicodeProperties =
@@ -171,10 +169,6 @@ public class EditLayoutModeProductNavigationControlMenuEntry
 			return false;
 		}
 
-		if (!(layoutTypeController instanceof ContentLayoutTypeController)) {
-			return false;
-		}
-
 		String className = (String)httpServletRequest.getAttribute(
 			ContentPageEditorWebKeys.CLASS_NAME);
 
@@ -185,6 +179,10 @@ public class EditLayoutModeProductNavigationControlMenuEntry
 		}
 
 		Layout layout = themeDisplay.getLayout();
+
+		if (!layout.isTypeContent()) {
+			return false;
+		}
 
 		if (layout.isSystem() && layout.isTypeContent()) {
 			layout = _layoutLocalService.getLayout(layout.getClassPK());

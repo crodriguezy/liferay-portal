@@ -36,6 +36,10 @@ public class EagerBlobEntityLocalServiceWrapper
 	/**
 	 * Adds the eager blob entity to the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect EagerBlobEntityLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param eagerBlobEntity the eager blob entity
 	 * @return the eager blob entity that was added
 	 */
@@ -76,6 +80,10 @@ public class EagerBlobEntityLocalServiceWrapper
 	/**
 	 * Deletes the eager blob entity from the database. Also notifies the appropriate model listeners.
 	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect EagerBlobEntityLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
+	 *
 	 * @param eagerBlobEntity the eager blob entity
 	 * @return the eager blob entity that was removed
 	 */
@@ -91,6 +99,10 @@ public class EagerBlobEntityLocalServiceWrapper
 
 	/**
 	 * Deletes the eager blob entity with the primary key from the database. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect EagerBlobEntityLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param eagerBlobEntityId the primary key of the eager blob entity
 	 * @return the eager blob entity that was removed
@@ -336,6 +348,10 @@ public class EagerBlobEntityLocalServiceWrapper
 
 	/**
 	 * Updates the eager blob entity in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
+	 *
+	 * <p>
+	 * <strong>Important:</strong> Inspect EagerBlobEntityLocalServiceImpl for overloaded versions of the method. If provided, use these entry points to the API, as the implementation logic may require the additional parameters defined there.
+	 * </p>
 	 *
 	 * @param eagerBlobEntity the eager blob entity
 	 * @return the eager blob entity that was updated

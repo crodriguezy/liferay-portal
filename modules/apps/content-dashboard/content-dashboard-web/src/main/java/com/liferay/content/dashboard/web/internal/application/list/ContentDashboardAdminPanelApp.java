@@ -16,8 +16,15 @@ package com.liferay.content.dashboard.web.internal.application.list;
 
 import com.liferay.application.list.BasePanelApp;
 import com.liferay.application.list.PanelApp;
+import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.content.dashboard.web.internal.constants.ContentDashboardPortletKeys;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Portlet;
+import com.liferay.portal.kernel.util.Portal;
+
+import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -28,8 +35,8 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"panel.app.order:Integer=100",
-		"panel.category.key=" + ContentDashboardAdminPanelCategory.CONTROL_PANEL_CONTENT_DASHBOARD_ADMIN
+		"panel.app.order:Integer=200",
+		"panel.category.key=" + PanelCategoryKeys.APPLICATIONS_MENU_APPLICATIONS_CONTENT
 	},
 	service = PanelApp.class
 )
@@ -41,6 +48,18 @@ public class ContentDashboardAdminPanelApp extends BasePanelApp {
 	}
 
 	@Override
+	public PortletURL getPortletURL(HttpServletRequest httpServletRequest)
+		throws PortalException {
+
+		PortletURL portletURL = super.getPortletURL(httpServletRequest);
+
+		portletURL.setParameter(
+			"authorIds", String.valueOf(_portal.getUserId(httpServletRequest)));
+
+		return portletURL;
+	}
+
+	@Override
 	@Reference(
 		target = "(javax.portlet.name=" + ContentDashboardPortletKeys.CONTENT_DASHBOARD_ADMIN + ")",
 		unbind = "-"
@@ -48,5 +67,8 @@ public class ContentDashboardAdminPanelApp extends BasePanelApp {
 	public void setPortlet(Portlet portlet) {
 		super.setPortlet(portlet);
 	}
+
+	@Reference
+	private Portal _portal;
 
 }

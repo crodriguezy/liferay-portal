@@ -1,114 +1,20 @@
-@import './animations';
 @import 'atlas-variables';
 
 .ratings {
 	.btn {
 		overflow: hidden;
-	}
 
-	.animated-counter {
-		$animation-duration: 300ms;
-
-		display: inline-flex;
-		justify-content: center;
-		position: relative;
-
-		&.animating-down {
-			.current {
-				animation-duration: $animation-duration;
-				animation-name: fadeInDown;
-			}
-
-			.previous {
-				animation-duration: $animation-duration;
-				animation-name: fadeOutDown;
-			}
-		}
-
-		&.animating-up {
-			.current {
-				animation-duration: $animation-duration;
-				animation-name: fadeInUp;
-			}
-
-			.previous {
-				animation-duration: $animation-duration;
-				animation-name: fadeOutUp;
-			}
-		}
-
-		.previous {
-			position: absolute;
+		.inline-item .counter {
+			font-size: 0.875rem;
 		}
 	}
+
+	@import './counter';
 }
 
-.ratings-like {
-	button {
-		&:hover:not(:disabled) .lexicon-icon {
-			transform: scale(1.3);
-		}
-	}
+@import './ratings_animated';
+@import './ratings_like';
+@import './ratings_thumbs';
 
-	.lexicon-icon {
-		transition: all 0.3s ease-in-out;
-	}
-
-	.lexicon-icon-heart-full {
-		fill: red;
-	}
-
-	.likes {
-		margin-left: 0.5rem;
-	}
-}
-
-.ratings-thumbs {
-	.btn {
-		&:hover:not(:disabled) .lexicon-icon {
-			transform: scale(1.3);
-		}
-
-		&[aria-pressed='true'] {
-			.lexicon-icon {
-				color: $primary;
-			}
-		}
-	}
-
-	.lexicon-icon {
-		transition: all 0.2s ease-in-out;
-	}
-}
-
-.ratings-stars {
-	.btn[aria-pressed='true'] .lexicon-icon {
-		color: $primary;
-	}
-
-	.ratings-stars-button-text {
-		font-size: 0.875rem;
-		justify-content: center;
-		min-width: 1ch;
-	}
-
-	.ratings-stars-average {
-		line-height: 1;
-		margin-top: -0.125rem;
-	}
-
-	.ratings-stars-average-text {
-		color: $secondary;
-		font-size: 0.875rem;
-		font-weight: 600;
-	}
-
-	.ratings-stars-average-icon {
-		color: $yellow;
-		font-size: 1rem;
-	}
-}
-
-.ratings-stars-dropdown {
-	min-width: auto;
-}
+@import './ratings_stacked_stars';
+@import './ratings_stars';

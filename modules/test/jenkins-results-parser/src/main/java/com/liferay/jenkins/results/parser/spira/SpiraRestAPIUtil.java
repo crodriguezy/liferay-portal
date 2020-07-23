@@ -20,6 +20,7 @@ import com.liferay.jenkins.results.parser.JenkinsResultsParserUtil.HttpRequestMe
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -74,6 +75,11 @@ public class SpiraRestAPIUtil {
 			request(
 				urlPath, urlParameters, urlPathReplacements, httpRequestMethod,
 				requestData));
+	}
+
+	protected static String toDateString(long timestamp) {
+		return JenkinsResultsParserUtil.toDateString(
+			new Date(timestamp), "yyyy-MM-dd'T'HH:mm:ss", "UTC");
 	}
 
 	private static String _applyURLPathReplacements(

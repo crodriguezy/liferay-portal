@@ -12,61 +12,56 @@
  * details.
  */
 
+import ClayLayout from '@clayui/layout';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import {getLayoutDataItemPropTypes} from '../../../prop-types/index';
-import {LAYOUT_DATA_ITEM_DEFAULT_CONFIGURATIONS} from '../../config/constants/layoutDataItemDefaultConfigurations';
-import {LAYOUT_DATA_ITEM_TYPES} from '../../config/constants/layoutDataItemTypes';
+import selectCanUpdateItemConfiguration from '../../selectors/selectCanUpdateItemConfiguration';
+import selectCanUpdatePageStructure from '../../selectors/selectCanUpdatePageStructure';
 import {useSelector} from '../../store/index';
-import {getResponsiveConfig} from '../../utils/getResponsiveConfig';
+import {getResponsiveColumnSize} from '../../utils/getResponsiveColumnSize';
+import {useUpdatedLayoutDataContext} from '../ResizeContext';
 
-const Column = React.forwardRef(
-	({children, className, item, ...props}, ref) => {
-		const {
-			config: {
-				size = LAYOUT_DATA_ITEM_DEFAULT_CONFIGURATIONS[
-					LAYOUT_DATA_ITEM_TYPES.column
-				].size,
-			},
-		} = item;
+const Column = React.forwardRef(({children, className, item}, ref) => {
+	const canUpdateItemConfiguration = useSelector(
+		selectCanUpdateItemConfiguration
+	);
+	const canUpdatePageStructure = useSelector(selectCanUpdatePageStructure);
+	const selectedViewportSize = useSelector(
+		(state) => state.selectedViewportSize
+	);
+	const updatedLayoutData = useUpdatedLayoutDataContext();
 
-		const layoutData = useSelector((state) => state.layoutData);
-		const parentItem = layoutData.items[item.parentId];
-		const selectedViewportSize = useSelector(
-			(state) => state.selectedViewportSize
+	const itemConfig = updatedLayoutData
+		? updatedLayoutData.items[item.itemId].config
+		: item.config;
+
+	const columnSize = getResponsiveColumnSize(
+		itemConfig,
+		selectedViewportSize
+	);
+
+	const columnContent =
+		canUpdatePageStructure || canUpdateItemConfiguration ? (
+			<div className="page-editor__col__border">{children}</div>
+		) : (
+			children
 		);
 
-		const parentItemConfig = getResponsiveConfig(
-			parentItem.config,
-			selectedViewportSize
-		);
-
-		const {modulesPerRow, numberOfColumns} = parentItemConfig;
-
-		let columnSize = (size * numberOfColumns) / modulesPerRow;
-
-		if (numberOfColumns === 5 && modulesPerRow !== numberOfColumns) {
-			columnSize = parentItem.children.indexOf(item.itemId) > 2 ? 6 : 4;
-		}
-
-		return (
-			<div
-				{...props}
-				className={classNames(className, 'col', {
-					[`col-${columnSize}`]: columnSize,
-					empty:
-						modulesPerRow !== numberOfColumns &&
-						!item.children.length,
-				})}
-				ref={ref}
-			>
-				<div className="page-editor__col__border">{children}</div>
-			</div>
-		);
-	}
-);
+	return (
+		<ClayLayout.Col
+			className={classNames(className, {
+				empty: !item.children.length,
+			})}
+			ref={ref}
+			size={columnSize}
+		>
+			{columnContent}
+		</ClayLayout.Col>
+	);
+});
 
 Column.propTypes = {
 	item: getLayoutDataItemPropTypes({

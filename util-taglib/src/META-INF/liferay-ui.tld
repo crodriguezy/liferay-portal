@@ -1973,6 +1973,13 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Sets the maximum number of items on the left box. The default value is <![CDATA[<code>null</code>]]> that represents unlimited items.</description>
+			<name>leftBoxMaxItems</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
+		</attribute>
+		<attribute>
 			<description>A name for the left box.</description>
 			<name>leftBoxName</name>
 			<required>true</required>
@@ -2003,6 +2010,13 @@
 			<name>leftTitle</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Sets the maximum number of items on the right box. The default value is <![CDATA[<code>null</code>]]> that represents unlimited items.</description>
+			<name>rightBoxMaxItems</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
 		</attribute>
 		<attribute>
 			<description>A name for the right box.</description>
@@ -4005,7 +4019,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>A design type for the tabs. Possible values are <![CDATA[<code>tabs</code>]]> and <![CDATA[<code>pills</code>]]>.</description>
+			<description>A design type for the tabs. Possible values are <![CDATA[<code>tabs</code>]]>, <![CDATA[<code>underline</code>]]>, <![CDATA[<code>stacked</code>]]>, <![CDATA[<code>justified</code>]]>, <![CDATA[<code>dropdown</code>]]> and <![CDATA[<code>pills</code>]]>.</description>
 			<name>type</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>

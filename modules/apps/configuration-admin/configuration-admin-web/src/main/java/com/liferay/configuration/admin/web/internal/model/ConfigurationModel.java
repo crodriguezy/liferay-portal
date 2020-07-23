@@ -72,8 +72,8 @@ public class ConfigurationModel implements ExtendedObjectClassDefinition {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		ConfigurationModel configurationModel = (ConfigurationModel)obj;
+	public boolean equals(Object object) {
+		ConfigurationModel configurationModel = (ConfigurationModel)object;
 
 		return Objects.equals(getID(), configurationModel.getID());
 	}
@@ -334,14 +334,14 @@ public class ConfigurationModel implements ExtendedObjectClassDefinition {
 			Dictionary<String, Object> properties =
 				_configuration.getProperties();
 
-			Object valueObj = properties.get(factoryInstanceLabelAttribute);
+			Object valueObject = properties.get(factoryInstanceLabelAttribute);
 
-			if (valueObj instanceof Object[]) {
+			if (valueObject instanceof Object[]) {
 				value = StringUtil.merge(
-					(Object[])valueObj, StringPool.COMMA_AND_SPACE);
+					(Object[])valueObject, StringPool.COMMA_AND_SPACE);
 			}
 			else {
-				value = String.valueOf(valueObj);
+				value = String.valueOf(valueObject);
 			}
 		}
 

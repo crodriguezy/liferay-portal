@@ -22,6 +22,10 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
  */
 public interface DataDefinitionContentType {
 
+	public default boolean allowEmptyDataDefinition() {
+		return false;
+	}
+
 	public long getClassNameId();
 
 	public default String getContentType() {

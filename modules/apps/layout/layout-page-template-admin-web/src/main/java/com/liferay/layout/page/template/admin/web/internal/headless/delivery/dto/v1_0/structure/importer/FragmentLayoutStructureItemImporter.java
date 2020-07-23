@@ -37,7 +37,6 @@ import com.liferay.layout.page.template.admin.web.internal.headless.delivery.dto
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -172,7 +171,8 @@ public class FragmentLayoutStructureItemImporter
 		JSONObject fragmentEntryProcessorValuesJSONObject = JSONUtil.put(
 			"com.liferay.fragment.entry.processor.background.image." +
 				"BackgroundImageFragmentEntryProcessor",
-			JSONFactoryUtil.createJSONObject());
+			_toBackgroundImageFragmentEntryProcessorJSONObject(
+				(List<Object>)definitionMap.get("fragmentFields")));
 
 		JSONObject editableFragmentEntryProcessorJSONObject =
 			_toEditableFragmentEntryProcessorJSONObject(
@@ -211,7 +211,6 @@ public class FragmentLayoutStructureItemImporter
 		FragmentEntryLink fragmentEntryLink =
 			_fragmentEntryLinkLocalService.addFragmentEntryLink(
 				layout.getUserId(), layout.getGroupId(), 0, fragmentEntryId, 0,
-				_portal.getClassNameId(Layout.class.getName()),
 				layout.getPlid(), css, html, js, configuration,
 				jsonObject.toString(), StringUtil.randomId(), position,
 				fragmentKey, ServiceContextThreadLocal.getServiceContext());
@@ -247,11 +246,17 @@ public class FragmentLayoutStructureItemImporter
 			return jsonObject;
 		}
 
-		Map<String, Object> defaultValueMap = (Map<String, Object>)map.get(
-			"defaultValue");
+		Map<String, Object> defaultFragmentInlineValueMap =
+			(Map<String, Object>)map.get("defaultFragmentInlineValue");
 
-		if (defaultValueMap != null) {
-			jsonObject.put("defaultValue", defaultValueMap.get("value"));
+		if (defaultFragmentInlineValueMap == null) {
+			defaultFragmentInlineValueMap = (Map<String, Object>)map.get(
+				"defaultValue");
+		}
+
+		if (defaultFragmentInlineValueMap != null) {
+			jsonObject.put(
+				"defaultValue", defaultFragmentInlineValueMap.get("value"));
 		}
 
 		_processMapping(jsonObject, (Map<String, Object>)map.get("mapping"));
@@ -275,8 +280,13 @@ public class FragmentLayoutStructureItemImporter
 			return jsonObject;
 		}
 
-		Map<String, Object> defaultValueMap = (Map<String, Object>)hrefMap.get(
-			"defaultValue");
+		Map<String, Object> defaultFragmentInlineValueMap =
+			(Map<String, Object>)hrefMap.get("defaultFragmentInlineValue");
+
+		if (defaultFragmentInlineValueMap == null) {
+			defaultFragmentInlineValueMap = (Map<String, Object>)hrefMap.get(
+				"defaultValue");
+		}
 
 		String target = (String)fragmentLinkMap.get("target");
 
@@ -293,8 +303,8 @@ public class FragmentLayoutStructureItemImporter
 			return jsonObject;
 		}
 
-		if (defaultValueMap != null) {
-			value = defaultValueMap.get("value");
+		if (defaultFragmentInlineValueMap != null) {
+			value = defaultFragmentInlineValueMap.get("value");
 		}
 
 		if (value != null) {
@@ -452,7 +462,7 @@ public class FragmentLayoutStructureItemImporter
 	}
 
 	private String _getWarningMessage(long groupId, String fragmentKey)
-		throws PortalException {
+		throws Exception {
 
 		Locale locale = null;
 
@@ -614,6 +624,56 @@ public class FragmentLayoutStructureItemImporter
 		}
 
 		return html;
+	}
+
+	private JSONObject _toBackgroundImageFragmentEntryProcessorJSONObject(
+		List<Object> fragmentFields) {
+
+		JSONObject backgroundImageFragmentEntryProcessorValuesJSONObject =
+			JSONFactoryUtil.createJSONObject();
+
+		for (Object fragmentField : fragmentFields) {
+			Map<String, Object> fragmentFieldMap =
+				(Map<String, Object>)fragmentField;
+
+			Map<String, Object> fragmentFieldValueMap =
+				(Map<String, Object>)fragmentFieldMap.get("value");
+
+			Map<String, Object> backgroundFragmentImageMap =
+				(Map<String, Object>)fragmentFieldValueMap.get(
+					"backgroundFragmentImage");
+
+			if (backgroundFragmentImageMap == null) {
+				backgroundFragmentImageMap =
+					(Map<String, Object>)fragmentFieldValueMap.get(
+						"backgroundImage");
+			}
+
+			if (backgroundFragmentImageMap == null) {
+				continue;
+			}
+
+			Map<String, Object> urlMap =
+				(Map<String, Object>)backgroundFragmentImageMap.get("url");
+
+			JSONObject fragmentFieldValueJSONObject =
+				_createBaseFragmentFieldJSONObject(urlMap);
+
+			Map<String, Object> titleMap =
+				(Map<String, Object>)backgroundFragmentImageMap.get("title");
+
+			if (titleMap != null) {
+				fragmentFieldValueJSONObject.put(
+					"config",
+					JSONUtil.put("imageTitle", titleMap.get("value")));
+			}
+
+			backgroundImageFragmentEntryProcessorValuesJSONObject.put(
+				(String)fragmentFieldMap.get("id"),
+				fragmentFieldValueJSONObject);
+		}
+
+		return backgroundImageFragmentEntryProcessorValuesJSONObject;
 	}
 
 	private JSONObject _toEditableFragmentEntryProcessorJSONObject(

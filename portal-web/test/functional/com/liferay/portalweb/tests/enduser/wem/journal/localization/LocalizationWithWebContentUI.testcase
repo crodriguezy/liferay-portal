@@ -30,6 +30,7 @@ definition {
 
 	@priority = "5"
 	test AddLocalizedWebContentViaSourceEditor {
+		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "LocalizationWithWebContentUI#AddLocalizedWebContentViaSourceEditor";
 		property testray.component.names = "Training,Web Content Administration";
 

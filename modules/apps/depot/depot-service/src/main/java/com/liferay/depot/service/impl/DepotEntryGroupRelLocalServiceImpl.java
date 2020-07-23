@@ -84,6 +84,12 @@ public class DepotEntryGroupRelLocalServiceImpl
 	}
 
 	@Override
+	public int getDepotEntryGroupRelsCount(DepotEntry depotEntry) {
+		return depotEntryGroupRelPersistence.countByDepotEntryId(
+			depotEntry.getDepotEntryId());
+	}
+
+	@Override
 	public int getDepotEntryGroupRelsCount(long groupId) {
 		return depotEntryGroupRelPersistence.countByToGroupId(groupId);
 	}
@@ -99,6 +105,19 @@ public class DepotEntryGroupRelLocalServiceImpl
 	@Override
 	public int getSearchableDepotEntryGroupRelsCount(long groupId) {
 		return depotEntryGroupRelPersistence.countByS_TGI(true, groupId);
+	}
+
+	@Override
+	public DepotEntryGroupRel updateDDMStructuresAvailable(
+			long depotEntryGroupRelId, boolean ddmStructuresAvailable)
+		throws PortalException {
+
+		DepotEntryGroupRel depotEntryGroupRel = getDepotEntryGroupRel(
+			depotEntryGroupRelId);
+
+		depotEntryGroupRel.setDdmStructuresAvailable(ddmStructuresAvailable);
+
+		return depotEntryGroupRelPersistence.update(depotEntryGroupRel);
 	}
 
 	@Override

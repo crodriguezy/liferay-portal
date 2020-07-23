@@ -60,4 +60,8 @@ public interface RedirectNotFoundEntry
 
 			};
 
+	public long getHits();
+
+	public long getRequestCount();
+
 }

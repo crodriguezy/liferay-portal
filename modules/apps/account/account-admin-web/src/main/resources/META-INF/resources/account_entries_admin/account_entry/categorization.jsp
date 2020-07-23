@@ -24,7 +24,7 @@ AccountEntryDisplay accountEntryDisplay = (AccountEntryDisplay)request.getAttrib
 
 <liferay-asset:asset-tags-error />
 
-<div class="sheet-section">
+<clay:sheet-section>
 	<h3 class="sheet-subtitle">
 		<%= LanguageUtil.get(request, "more-information") %>
 	</h3>
@@ -32,15 +32,15 @@ AccountEntryDisplay accountEntryDisplay = (AccountEntryDisplay)request.getAttrib
 	<div class="form-group">
 		<liferay-asset:asset-categories-selector
 			className="<%= AccountEntry.class.getName() %>"
-			classPK="<%= (accountEntryDisplay != null) ? accountEntryDisplay.getAccountEntryId() : 0 %>"
+			classPK="<%= accountEntryDisplay.getAccountEntryId() %>"
 		/>
 	</div>
 
 	<div class="form-group">
 		<liferay-asset:asset-tags-selector
 			className="<%= AccountEntry.class.getName() %>"
-			classPK="<%= (accountEntryDisplay != null) ? accountEntryDisplay.getAccountEntryId() : 0 %>"
+			classPK="<%= accountEntryDisplay.getAccountEntryId() %>"
 			groupIds="<%= new long[] {themeDisplay.getCompanyGroupId()} %>"
 		/>
 	</div>
-</div>
+</clay:sheet-section>

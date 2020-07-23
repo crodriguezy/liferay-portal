@@ -1,0 +1,142 @@
+@import 'atlas-variables';
+
+$control-menu-height: 56px;
+$tab-header-height: 38px;
+
+.applications-menu-modal {
+	.applications-menu-header {
+		.autofit-row {
+			@include media-breakpoint-down(xs) {
+				flex-wrap: wrap;
+			}
+		}
+
+		.applications-menu-tabs {
+			@include media-breakpoint-down(xs) {
+				order: 1;
+				width: 100%;
+			}
+		}
+
+		.control-menu-level-1-heading {
+			@include media-breakpoint-down(xs) {
+				flex-grow: 1;
+				flex-shrink: 1;
+				min-height: 3.25rem;
+			}
+		}
+
+		.nav-link {
+			line-height: 1.6rem;
+
+			@include media-breakpoint-up(sm) {
+				line-height: 2.15rem;
+			}
+		}
+	}
+
+	.modal-full {
+		margin-top: 0;
+		width: 100%;
+
+		@include media-breakpoint-down(xs) {
+			margin: 0;
+		}
+
+		.modal-body {
+			padding: 0;
+		}
+
+		.modal-content {
+			border-radius: 0;
+			box-shadow: none;
+		}
+	}
+
+	.tab-pane {
+		max-height: calc(100vh - #{$control-menu-height + $tab-header-height});
+		overflow-y: auto;
+	}
+}
+
+.applications-menu-nav {
+	margin: 0;
+	padding: 0.2rem;
+
+	@include media-breakpoint-down(xs) {
+		@at-root {
+			.mobile #{&} {
+				padding-bottom: 7rem;
+			}
+		}
+	}
+
+	@include media-breakpoint-up(sm) {
+		padding: 1.5rem 2.5rem 1.5rem 1.75rem;
+	}
+
+	.applications-menu-nav-header {
+		color: $secondary;
+		font-size: 0.875rem;
+		font-weight: 700;
+		line-height: 3rem;
+		text-transform: uppercase;
+	}
+
+	.applications-menu-nav-subheader {
+		color: $secondary;
+		font-size: 0.75rem;
+		font-weight: 600;
+		margin-bottom: 0.25rem;
+		text-transform: uppercase;
+	}
+
+	.applications-menu-nav-item {
+		margin-bottom: 0.5rem;
+	}
+
+	.applications-menu-nav-link {
+		color: $dark;
+		line-height: 1.5rem;
+
+		&.active {
+			font-weight: 600;
+		}
+	}
+
+	.applications-menu-nav-columns {
+		column-count: 1;
+		orphans: 1;
+		widows: 1;
+
+		@include media-breakpoint-up(sm) {
+			column-count: 2;
+		}
+
+		@include media-breakpoint-up(md) {
+			column-count: 3;
+		}
+
+		@include media-breakpoint-up(lg) {
+			column-count: 4;
+		}
+
+		.col-md {
+			display: inline-block;
+		}
+	}
+}
+
+.applications-menu-sites {
+	margin-bottom: 0;
+	width: 100%;
+
+	@include media-breakpoint-up(md) {
+		width: 270px;
+	}
+
+	> ul {
+		margin-bottom: 0;
+		padding: 0 1.5rem 1rem;
+	}
+}

@@ -17,23 +17,37 @@ package com.liferay.headless.delivery.internal.resource.v1_0;
 import com.liferay.asset.kernel.service.AssetCategoryLocalService;
 import com.liferay.asset.kernel.service.AssetTagLocalService;
 import com.liferay.document.library.kernel.model.DLFileEntry;
+import com.liferay.document.library.kernel.model.DLFileEntryType;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.model.DLVersionNumberIncrease;
 import com.liferay.document.library.kernel.service.DLAppService;
+import com.liferay.document.library.kernel.service.DLFileEntryService;
+import com.liferay.document.library.kernel.service.DLFileEntryTypeLocalService;
+import com.liferay.dynamic.data.mapping.kernel.DDMFormValues;
+import com.liferay.dynamic.data.mapping.kernel.DDMStructure;
+import com.liferay.dynamic.data.mapping.service.DDMStructureService;
+import com.liferay.dynamic.data.mapping.util.DDMBeanTranslator;
 import com.liferay.expando.kernel.service.ExpandoColumnLocalService;
 import com.liferay.expando.kernel.service.ExpandoTableLocalService;
 import com.liferay.headless.common.spi.resource.SPIRatingResource;
 import com.liferay.headless.common.spi.service.context.ServiceContextUtil;
+import com.liferay.headless.delivery.dto.v1_0.ContentField;
 import com.liferay.headless.delivery.dto.v1_0.CustomField;
 import com.liferay.headless.delivery.dto.v1_0.Document;
+import com.liferay.headless.delivery.dto.v1_0.DocumentType;
 import com.liferay.headless.delivery.dto.v1_0.Rating;
 import com.liferay.headless.delivery.internal.dto.v1_0.converter.DocumentDTOConverter;
 import com.liferay.headless.delivery.internal.dto.v1_0.util.CustomFieldsUtil;
+import com.liferay.headless.delivery.internal.dto.v1_0.util.DDMFormValuesUtil;
 import com.liferay.headless.delivery.internal.dto.v1_0.util.EntityFieldsUtil;
 import com.liferay.headless.delivery.internal.dto.v1_0.util.RatingUtil;
 import com.liferay.headless.delivery.internal.odata.entity.v1_0.DocumentEntityModel;
 import com.liferay.headless.delivery.resource.v1_0.DocumentResource;
+import com.liferay.journal.service.JournalArticleService;
 import com.liferay.petra.function.UnsafeConsumer;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
@@ -43,6 +57,8 @@ import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.search.filter.TermFilter;
+import com.liferay.portal.kernel.service.LayoutLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -61,8 +77,10 @@ import com.liferay.ratings.kernel.service.RatingsEntryLocalService;
 
 import java.io.Serializable;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.MultivaluedMap;
@@ -107,7 +125,7 @@ public class DocumentResourceImpl
 		Folder folder = _dlAppService.getFolder(documentFolderId);
 
 		return _getDocumentsPage(
-			HashMapBuilder.<String, Map<String, String>>put(
+			HashMapBuilder.put(
 				"create",
 				addAction(
 					"ADD_DOCUMENT", folder.getFolderId(),
@@ -121,24 +139,23 @@ public class DocumentResourceImpl
 					"com.liferay.document.library", folder.getGroupId())
 			).build(),
 			booleanQuery -> {
-				if (documentFolderId != null) {
-					BooleanFilter booleanFilter =
-						booleanQuery.getPreBooleanFilter();
+				BooleanFilter booleanFilter =
+					booleanQuery.getPreBooleanFilter();
 
-					String field = Field.FOLDER_ID;
+				String field = Field.FOLDER_ID;
 
-					if (GetterUtil.getBoolean(flatten)) {
-						field = "treePath";
-					}
-
-					booleanFilter.add(
-						new TermFilter(field, String.valueOf(documentFolderId)),
-						BooleanClauseOccur.MUST);
+				if (GetterUtil.getBoolean(flatten)) {
+					field = "treePath";
 				}
+
+				booleanFilter.add(
+					new TermFilter(field, String.valueOf(documentFolderId)),
+					BooleanClauseOccur.MUST);
 			},
 			filter, search, pagination, sorts);
 	}
 
+	@Override
 	public Rating getDocumentMyRating(Long documentId) throws Exception {
 		SPIRatingResource<Rating> spiRatingResource = _getSPIRatingResource();
 
@@ -214,20 +231,8 @@ public class DocumentResourceImpl
 			multipartBody.getValueAsInstanceOptional(
 				"document", Document.class);
 
-		Long[] categoryIds = documentOptional.map(
-			Document::getTaxonomyCategoryIds
-		).orElseGet(
-			() -> ArrayUtil.toArray(
-				_assetCategoryLocalService.getCategoryIds(
-					DLFileEntry.class.getName(), documentId))
-		);
-
-		String[] keywords = documentOptional.map(
-			Document::getKeywords
-		).orElseGet(
-			() -> _assetTagLocalService.getTagNames(
-				DLFileEntry.class.getName(), documentId)
-		);
+		existingFileEntry = _moveDocument(
+			documentId, documentOptional, existingFileEntry);
 
 		return _toDocument(
 			_dlAppService.updateFileEntry(
@@ -245,17 +250,14 @@ public class DocumentResourceImpl
 				),
 				null, DLVersionNumberIncrease.AUTOMATIC,
 				binaryFile.getInputStream(), binaryFile.getSize(),
-				ServiceContextUtil.createServiceContext(
-					categoryIds, keywords,
-					_getExpandoBridgeAttributes1(documentOptional),
-					existingFileEntry.getGroupId(),
-					documentOptional.map(
-						Document::getViewableBy
-					).map(
-						Document.ViewableBy::getValue
-					).orElse(
-						null
-					))));
+				_getServiceContext(
+					() -> ArrayUtil.toArray(
+						_assetCategoryLocalService.getCategoryIds(
+							DLFileEntry.class.getName(), documentId)),
+					() -> _assetTagLocalService.getTagNames(
+						DLFileEntry.class.getName(), documentId),
+					existingFileEntry.getFolderId(), documentOptional,
+					existingFileEntry.getGroupId())));
 	}
 
 	@Override
@@ -270,6 +272,7 @@ public class DocumentResourceImpl
 			multipartBody);
 	}
 
+	@Override
 	public Rating postDocumentMyRating(Long documentId, Rating rating)
 		throws Exception {
 
@@ -312,6 +315,9 @@ public class DocumentResourceImpl
 				existingFileEntry.getSize())
 		);
 
+		existingFileEntry = _moveDocument(
+			documentId, documentOptional, existingFileEntry);
+
 		return _toDocument(
 			_dlAppService.updateFileEntry(
 				documentId, binaryFile.getFileName(),
@@ -328,24 +334,10 @@ public class DocumentResourceImpl
 				),
 				null, DLVersionNumberIncrease.AUTOMATIC,
 				binaryFile.getInputStream(), binaryFile.getSize(),
-				ServiceContextUtil.createServiceContext(
-					documentOptional.map(
-						Document::getTaxonomyCategoryIds
-					).orElse(
-						new Long[0]
-					),
-					documentOptional.map(
-						Document::getKeywords
-					).orElse(
-						new String[0]
-					),
-					_getExpandoBridgeAttributes1(documentOptional),
-					existingFileEntry.getGroupId(),
-					documentOptional.map(
-						Document::getViewableByAsString
-					).orElse(
-						Document.ViewableBy.OWNER.getValue()
-					))));
+				_getServiceContext(
+					() -> new Long[0], () -> new String[0],
+					existingFileEntry.getFolderId(), documentOptional,
+					existingFileEntry.getGroupId())));
 	}
 
 	@Override
@@ -388,23 +380,46 @@ public class DocumentResourceImpl
 					null
 				),
 				null, binaryFile.getInputStream(), binaryFile.getSize(),
-				ServiceContextUtil.createServiceContext(
-					documentOptional.map(
-						Document::getTaxonomyCategoryIds
-					).orElse(
-						null
-					),
-					documentOptional.map(
-						Document::getKeywords
-					).orElse(
-						null
-					),
-					_getExpandoBridgeAttributes1(documentOptional), groupId,
-					documentOptional.map(
-						Document::getViewableByAsString
-					).orElse(
-						Document.ViewableBy.OWNER.getValue()
-					))));
+				_getServiceContext(
+					() -> new Long[0], () -> new String[0], documentFolderId,
+					documentOptional, groupId)));
+	}
+
+	private Optional<DLFileEntryType> _getDLFileEntryTypeOptional(
+		long documentFolderId, Optional<Document> documentOptional,
+		Long groupId) {
+
+		return documentOptional.map(
+			Document::getDocumentType
+		).map(
+			DocumentType::getName
+		).map(
+			name -> {
+				try {
+					for (DLFileEntryType dlFileEntryType :
+							_dlFileEntryTypeLocalService.
+								getFolderFileEntryTypes(
+									new long[] {groupId}, documentFolderId,
+									true)) {
+
+						if (name.equals(
+								dlFileEntryType.getName(
+									contextAcceptLanguage.
+										getPreferredLocale()))) {
+
+							return dlFileEntryType;
+						}
+					}
+				}
+				catch (Exception exception) {
+					if (_log.isDebugEnabled()) {
+						_log.debug(exception, exception);
+					}
+				}
+
+				return null;
+			}
+		);
 	}
 
 	private Page<Document> _getDocumentsPage(
@@ -445,6 +460,76 @@ public class DocumentResourceImpl
 			contextAcceptLanguage.getPreferredLocale());
 	}
 
+	private ServiceContext _getServiceContext(
+			Supplier<Long[]> defaultCategoriesSupplier,
+			Supplier<String[]> defaultKeywordsSupplier, Long documentFolderId,
+			Optional<Document> documentOptional, Long groupId)
+		throws Exception {
+
+		ServiceContext serviceContext = ServiceContextUtil.createServiceContext(
+			documentOptional.map(
+				Document::getTaxonomyCategoryIds
+			).orElseGet(
+				defaultCategoriesSupplier
+			),
+			documentOptional.map(
+				Document::getKeywords
+			).orElseGet(
+				defaultKeywordsSupplier
+			),
+			_getExpandoBridgeAttributes1(documentOptional), groupId,
+			documentOptional.map(
+				Document::getViewableByAsString
+			).orElse(
+				Document.ViewableBy.OWNER.getValue()
+			));
+
+		serviceContext.setUserId(contextUser.getUserId());
+
+		Optional<DLFileEntryType> dlFileEntryTypeOptional =
+			_getDLFileEntryTypeOptional(
+				documentFolderId, documentOptional, groupId);
+
+		if (dlFileEntryTypeOptional.isPresent()) {
+			DLFileEntryType dlFileEntryType = dlFileEntryTypeOptional.get();
+
+			serviceContext.setAttribute(
+				"fileEntryTypeId", dlFileEntryType.getFileEntryTypeId());
+
+			Document document = documentOptional.get();
+
+			List<DDMStructure> ddmStructures =
+				dlFileEntryType.getDDMStructures();
+
+			DocumentType documentType = document.getDocumentType();
+
+			ContentField[] contentFields = documentType.getContentFields();
+
+			for (DDMStructure ddmStructure : ddmStructures) {
+				com.liferay.dynamic.data.mapping.model.DDMStructure
+					modelDDMStructure = _ddmStructureService.getStructure(
+						ddmStructure.getStructureId());
+
+				com.liferay.dynamic.data.mapping.storage.DDMFormValues
+					ddmFormValues = DDMFormValuesUtil.toDDMFormValues(
+						contentFields, modelDDMStructure.getDDMForm(),
+						_dlAppService, groupId, _journalArticleService,
+						_layoutLocalService,
+						contextAcceptLanguage.getPreferredLocale(),
+						transform(
+							ddmStructure.getRootFieldNames(),
+							modelDDMStructure::getDDMFormField));
+
+				serviceContext.setAttribute(
+					DDMFormValues.class.getName() + StringPool.POUND +
+						ddmStructure.getStructureId(),
+					_ddmBeanTranslator.translate(ddmFormValues));
+			}
+		}
+
+		return serviceContext;
+	}
+
 	private SPIRatingResource<Rating> _getSPIRatingResource() {
 		return new SPIRatingResource<>(
 			DLFileEntry.class.getName(), _ratingsEntryLocalService,
@@ -483,11 +568,30 @@ public class DocumentResourceImpl
 			contextUser);
 	}
 
+	private FileEntry _moveDocument(
+			Long documentId, Optional<Document> documentOptional,
+			FileEntry existingFileEntry)
+		throws Exception {
+
+		Optional<Long> folderIdOptional = documentOptional.map(
+			Document::getDocumentFolderId
+		).filter(
+			folderId -> folderId != existingFileEntry.getFolderId()
+		);
+
+		if (folderIdOptional.isPresent()) {
+			return _dlAppService.moveFileEntry(
+				documentId, folderIdOptional.get(), new ServiceContext());
+		}
+
+		return existingFileEntry;
+	}
+
 	private Document _toDocument(FileEntry fileEntry) throws Exception {
 		return _documentDTOConverter.toDTO(
 			new DefaultDTOConverterContext(
 				contextAcceptLanguage.isAcceptAllLanguages(),
-				HashMapBuilder.<String, Map<String, String>>put(
+				HashMapBuilder.put(
 					"delete",
 					addAction(
 						"DELETE", fileEntry.getPrimaryKey(), "deleteDocument",
@@ -516,9 +620,13 @@ public class DocumentResourceImpl
 						"com.liferay.document.library.kernel.model.DLFileEntry",
 						fileEntry.getGroupId())
 				).build(),
-				_dtoConverterRegistry, fileEntry.getFileEntryId(), null,
-				contextUriInfo, contextUser));
+				_dtoConverterRegistry, fileEntry.getFileEntryId(),
+				contextAcceptLanguage.getPreferredLocale(), contextUriInfo,
+				contextUser));
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		DocumentResourceImpl.class);
 
 	@Reference
 	private AssetCategoryLocalService _assetCategoryLocalService;
@@ -527,7 +635,19 @@ public class DocumentResourceImpl
 	private AssetTagLocalService _assetTagLocalService;
 
 	@Reference
+	private DDMBeanTranslator _ddmBeanTranslator;
+
+	@Reference
+	private DDMStructureService _ddmStructureService;
+
+	@Reference
 	private DLAppService _dlAppService;
+
+	@Reference
+	private DLFileEntryService _dlFileEntryService;
+
+	@Reference
+	private DLFileEntryTypeLocalService _dlFileEntryTypeLocalService;
 
 	@Reference
 	private DocumentDTOConverter _documentDTOConverter;
@@ -540,6 +660,12 @@ public class DocumentResourceImpl
 
 	@Reference
 	private ExpandoTableLocalService _expandoTableLocalService;
+
+	@Reference
+	private JournalArticleService _journalArticleService;
+
+	@Reference
+	private LayoutLocalService _layoutLocalService;
 
 	@Reference
 	private Portal _portal;

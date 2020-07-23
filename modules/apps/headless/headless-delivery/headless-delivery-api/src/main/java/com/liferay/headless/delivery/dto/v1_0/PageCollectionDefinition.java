@@ -82,6 +82,62 @@ public class PageCollectionDefinition {
 	protected CollectionConfig collectionConfig;
 
 	@Schema
+	public String getListItemStyle() {
+		return listItemStyle;
+	}
+
+	public void setListItemStyle(String listItemStyle) {
+		this.listItemStyle = listItemStyle;
+	}
+
+	@JsonIgnore
+	public void setListItemStyle(
+		UnsafeSupplier<String, Exception> listItemStyleUnsafeSupplier) {
+
+		try {
+			listItemStyle = listItemStyleUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String listItemStyle;
+
+	@Schema
+	public String getListStyle() {
+		return listStyle;
+	}
+
+	public void setListStyle(String listStyle) {
+		this.listStyle = listStyle;
+	}
+
+	@JsonIgnore
+	public void setListStyle(
+		UnsafeSupplier<String, Exception> listStyleUnsafeSupplier) {
+
+		try {
+			listStyle = listStyleUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String listStyle;
+
+	@Schema
 	public Integer getNumberOfColumns() {
 		return numberOfColumns;
 	}
@@ -137,6 +193,34 @@ public class PageCollectionDefinition {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Integer numberOfItems;
 
+	@Schema
+	public String getTemplateKey() {
+		return templateKey;
+	}
+
+	public void setTemplateKey(String templateKey) {
+		this.templateKey = templateKey;
+	}
+
+	@JsonIgnore
+	public void setTemplateKey(
+		UnsafeSupplier<String, Exception> templateKeyUnsafeSupplier) {
+
+		try {
+			templateKey = templateKeyUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String templateKey;
+
 	@Override
 	public boolean equals(Object object) {
 		if (this == object) {
@@ -175,6 +259,34 @@ public class PageCollectionDefinition {
 			sb.append(String.valueOf(collectionConfig));
 		}
 
+		if (listItemStyle != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"listItemStyle\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(listItemStyle));
+
+			sb.append("\"");
+		}
+
+		if (listStyle != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"listStyle\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(listStyle));
+
+			sb.append("\"");
+		}
+
 		if (numberOfColumns != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -195,6 +307,20 @@ public class PageCollectionDefinition {
 			sb.append(numberOfItems);
 		}
 
+		if (templateKey != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"templateKey\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(templateKey));
+
+			sb.append("\"");
+		}
+
 		sb.append("}");
 
 		return sb.toString();
@@ -210,6 +336,16 @@ public class PageCollectionDefinition {
 		String string = String.valueOf(object);
 
 		return string.replaceAll("\"", "\\\\\"");
+	}
+
+	private static boolean _isArray(Object value) {
+		if (value == null) {
+			return false;
+		}
+
+		Class<?> clazz = value.getClass();
+
+		return clazz.isArray();
 	}
 
 	private static String _toJSON(Map<String, ?> map) {
@@ -230,9 +366,7 @@ public class PageCollectionDefinition {
 
 			Object value = entry.getValue();
 
-			Class<?> clazz = value.getClass();
-
-			if (clazz.isArray()) {
+			if (_isArray(value)) {
 				sb.append("[");
 
 				Object[] valueArray = (Object[])value;

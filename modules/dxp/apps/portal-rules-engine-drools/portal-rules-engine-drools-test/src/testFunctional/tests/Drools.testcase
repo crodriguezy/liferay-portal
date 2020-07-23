@@ -27,6 +27,8 @@ definition {
 	test ViewWebContentInSampleDrools {
 		property portal.acceptance = "true";
 
+		var siteName = TestCase.getSiteName(siteName = "${siteName}");
+
 		property osgi.modules.includes = "portal-rules-engine-sample-web";
 
 		Navigator.openURL();
@@ -45,14 +47,13 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Categorization",
-			panel = "Site Administration",
-			portlet = "Tags");
+			portlet = "Tags",
+			site = "${siteName}");
 
 		Tag.addCP(tagName = "americas");
 
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
-			panel = "Site Administration",
 			portlet = "Web Content");
 
 		WebContentNavigator.gotoAddCP();
@@ -66,7 +67,6 @@ definition {
 
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
-			panel = "Site Administration",
 			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Drools Page");

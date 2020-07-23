@@ -288,10 +288,6 @@ export default function Chart({
 		'line-chart-wrapper--loading': chartState.loading,
 	});
 
-	const publishedTodayClasses = className({
-		'line-chart-wrapper--published-today text-center text-secondary': publishedToday,
-	});
-
 	return (
 		<>
 			{timeSpanOptions.length && (
@@ -316,32 +312,26 @@ export default function Chart({
 						/>
 					)}
 
-					{validAnalyticsConnection &&
-						publishedToday &&
-						!hasHistoricalWarning && (
-							<div className={publishedTodayClasses}>
-								{Liferay.Language.get(
-									'no-data-is-available-yet'
-								)}
-							</div>
-						)}
+					{title && <h5 className="mb-3">{title}</h5>}
 
-					{title && <h5>{title}</h5>}
-
-					<div className="line-chart mt-3">
+					<div className="line-chart">
 						<LineChart
 							data={histogram}
 							height={CHART_SIZES.height}
 							width={CHART_SIZES.width}
 						>
+							<Legend
+								formatter={legendFormatter}
+								iconSize={0}
+								layout="vertical"
+								verticalAlign="top"
+								wrapperStyle={{
+									left: 0,
+									top: 0,
+								}}
+							/>
+
 							<CartesianGrid
-								horizontalPoints={
-									validAnalyticsConnection &&
-									publishedToday &&
-									!hasHistoricalWarning
-										? [CHART_SIZES.dotRadius]
-										: []
-								}
 								stroke={CHART_COLORS.cartesianGrid}
 								strokeDasharray="0 0"
 								vertical={true}
@@ -409,43 +399,37 @@ export default function Chart({
 								/>
 							)}
 
-							<Tooltip
-								content={
-									<CustomTooltip
-										publishDateFill={
-											CHART_COLORS.publishDate
-										}
-										showPublishedDateLabel={
-											disabledPreviousPeriodButton
-										}
-									/>
-								}
-								cursor={
-									validAnalyticsConnection &&
-									histogram.length !== 0 &&
-									!publishedToday
-								}
-								formatter={(value, name) => {
-									return [
-										numberFormat(languageTag, value),
-										keyToTranslatedLabelValue(name),
-										keyToIconType(name),
-									];
-								}}
-								labelFormatter={dateFormatters.formatLongDate}
-								separator={': '}
-							/>
-
-							<Legend
-								formatter={legendFormatter}
-								iconSize={0}
-								layout="vertical"
-								wrapperStyle={{
-									left: 0,
-									paddingBottom: 0,
-									paddingTop: '8px',
-								}}
-							/>
+							{validAnalyticsConnection && !publishedToday && (
+								<Tooltip
+									animationDuration={0}
+									content={
+										<CustomTooltip
+											publishDateFill={
+												CHART_COLORS.publishDate
+											}
+											showPublishedDateLabel={
+												disabledPreviousPeriodButton
+											}
+										/>
+									}
+									cursor={
+										validAnalyticsConnection &&
+										histogram.length !== 0 &&
+										!publishedToday
+									}
+									formatter={(value, name) => {
+										return [
+											numberFormat(languageTag, value),
+											keyToTranslatedLabelValue(name),
+											keyToIconType(name),
+										];
+									}}
+									labelFormatter={
+										dateFormatters.formatLongDate
+									}
+									separator={': '}
+								/>
+							)}
 
 							{keyList.map((keyName) => {
 								const color = keyToHexColor(keyName);

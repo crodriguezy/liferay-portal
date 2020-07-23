@@ -124,6 +124,14 @@ public class DEDataDefinitionFieldLinkLocalServiceImpl
 			ddmStructureId);
 	}
 
+	@Override
+	public List<DEDataDefinitionFieldLink> getDEDataDefinitionFieldLinks(
+		long classNameId, long ddmStructureId) {
+
+		return deDataDefinitionFieldLinkPersistence.findByC_DDMSI(
+			classNameId, ddmStructureId);
+	}
+
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 * DEDataDefinitionFieldLinkLocalServiceImpl#getDEDataDefinitionFieldLinks(long, long, String[])}
@@ -143,6 +151,14 @@ public class DEDataDefinitionFieldLinkLocalServiceImpl
 
 		return deDataDefinitionFieldLinkPersistence.findByC_DDMSI_F(
 			classNameId, ddmStructureId, fieldNames);
+	}
+
+	@Override
+	public List<DEDataDefinitionFieldLink> getDEDataDefinitionFieldLinks(
+		long ddmStructureId, String[] fieldNames) {
+
+		return deDataDefinitionFieldLinkPersistence.findByDDMSI_F(
+			ddmStructureId, fieldNames);
 	}
 
 }

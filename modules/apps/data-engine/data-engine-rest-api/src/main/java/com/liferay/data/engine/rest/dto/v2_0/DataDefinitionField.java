@@ -316,7 +316,9 @@ public class DataDefinitionField {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String name;
 
-	@Schema
+	@Schema(
+		description = "A list of child data definition fields that depend on this resource."
+	)
 	@Valid
 	public DataDefinitionField[] getNestedDataDefinitionFields() {
 		return nestedDataDefinitionFields;
@@ -345,7 +347,9 @@ public class DataDefinitionField {
 		}
 	}
 
-	@GraphQLField
+	@GraphQLField(
+		description = "A list of child data definition fields that depend on this resource."
+	)
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected DataDefinitionField[] nestedDataDefinitionFields;
 
@@ -778,6 +782,16 @@ public class DataDefinitionField {
 		return string.replaceAll("\"", "\\\\\"");
 	}
 
+	private static boolean _isArray(Object value) {
+		if (value == null) {
+			return false;
+		}
+
+		Class<?> clazz = value.getClass();
+
+		return clazz.isArray();
+	}
+
 	private static String _toJSON(Map<String, ?> map) {
 		StringBuilder sb = new StringBuilder("{");
 
@@ -796,9 +810,7 @@ public class DataDefinitionField {
 
 			Object value = entry.getValue();
 
-			Class<?> clazz = value.getClass();
-
-			if (clazz.isArray()) {
+			if (_isArray(value)) {
 				sb.append("[");
 
 				Object[] valueArray = (Object[])value;

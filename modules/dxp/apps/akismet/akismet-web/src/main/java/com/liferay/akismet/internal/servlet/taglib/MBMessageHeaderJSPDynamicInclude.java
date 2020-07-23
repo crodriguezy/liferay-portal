@@ -27,7 +27,7 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Jamie Sammons
  */
-@Component(immediate = true, service = DynamicInclude.class)
+@Component(enabled = false, immediate = true, service = DynamicInclude.class)
 public class MBMessageHeaderJSPDynamicInclude extends BaseJSPDynamicInclude {
 
 	@Override
@@ -39,8 +39,7 @@ public class MBMessageHeaderJSPDynamicInclude extends BaseJSPDynamicInclude {
 
 	@Override
 	protected String getJspPath() {
-		return "/dynamic_include/com.liferay.message.boards.web" +
-			"/spam_header.jsp";
+		return "/dynamic_include/spam_header.jsp";
 	}
 
 	@Override

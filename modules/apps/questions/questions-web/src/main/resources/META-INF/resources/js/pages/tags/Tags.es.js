@@ -12,24 +12,25 @@
  * details.
  */
 
+import {useQuery} from '@apollo/client';
 import {ClayButtonWithIcon} from '@clayui/button';
-import ClayCard, {ClayCardWithNavigation} from '@clayui/card';
 import {ClayInput} from '@clayui/form';
-import {ClayPaginationWithBasicItems} from '@clayui/pagination';
+import ClayLoadingIndicator from '@clayui/loading-indicator';
 import React, {useContext, useEffect, useState} from 'react';
 import {withRouter} from 'react-router-dom';
 
 import {AppContext} from '../../AppContext.es';
 import Link from '../../components/Link.es';
-import {getTags} from '../../utils/client.es';
+import PaginatedList from '../../components/PaginatedList.es';
+import useQueryParams from '../../hooks/useQueryParams.es';
+import {getTagsQuery} from '../../utils/client.es';
 import lang from '../../utils/lang.es';
-import {
-	dateToInternationalHuman,
-	useDebounceCallback,
-} from '../../utils/utils.es';
+import {historyPushWithSlug, useDebounceCallback} from '../../utils/utils.es';
 
 export default withRouter(
 	({
+		history,
+		location,
 		match: {
 			params: {sectionTitle},
 		},
@@ -37,16 +38,33 @@ export default withRouter(
 		const context = useContext(AppContext);
 
 		const [page, setPage] = useState(1);
-		const [tags, setTags] = useState({});
+		const [pageSize, setPageSize] = useState(20);
+		const [search, setSearch] = useState('');
+
+		const {data, loading} = useQuery(getTagsQuery, {
+			variables: {page, pageSize, search, siteKey: context.siteKey},
+		});
+
+		const queryParams = useQueryParams(location);
 
 		useEffect(() => {
-			getTags(page, context.siteKey).then((data) => setTags(data || []));
-		}, [page, context.siteKey]);
+			setPage(+queryParams.get('page') || 1);
+		}, [queryParams]);
+
+		useEffect(() => {
+			setPageSize(+queryParams.get('pagesize') || 20);
+		}, [queryParams]);
+
+		const historyPushParser = historyPushWithSlug(history.push);
+
+		const changePage = (page, pageSize) => {
+			historyPushParser(
+				`/questions/${context.section}/tags?page=${page}&pagesize=${pageSize}`
+			);
+		};
 
 		const [debounceCallback] = useDebounceCallback((search) => {
-			getTags(page, context.siteKey, search).then((data) =>
-				setTags(data || [])
-			);
+			setSearch(search);
 		}, 500);
 
 		return (
@@ -58,6 +76,12 @@ export default withRouter(
 								<ClayInput.GroupItem>
 									<ClayInput
 										className="bg-transparent form-control input-group-inset input-group-inset-after"
+										disabled={
+											!search &&
+											data &&
+											data.keywordsRanked &&
+											!data.keywordsRanked.items.length
+										}
 										onChange={(event) =>
 											debounceCallback(event.target.value)
 										}
@@ -72,66 +96,73 @@ export default withRouter(
 										className="bg-transparent"
 										tag="span"
 									>
-										<ClayButtonWithIcon
-											displayType="unstyled"
-											symbol="search"
-											type="submit"
-										/>
+										{loading && (
+											<ClayLoadingIndicator small />
+										)}
+										{!loading && (
+											<ClayButtonWithIcon
+												displayType="unstyled"
+												symbol="search"
+												type="submit"
+											/>
+										)}
 									</ClayInput.GroupInsetItem>
 								</ClayInput.GroupItem>
 							</ClayInput.Group>
 						</div>
 					</div>
+
 					<div className="c-mt-3 row">
-						{tags.items &&
-							tags.items.map((tag) => (
+						<PaginatedList
+							activeDelta={pageSize}
+							activePage={page}
+							changeDelta={(pageSize) =>
+								changePage(page, pageSize)
+							}
+							changePage={(page) => changePage(page, pageSize)}
+							data={data && data.keywordsRanked}
+							loading={loading}
+						>
+							{(tag) => (
 								<div
 									className="col-md-3 question-tags"
 									key={tag.id}
 								>
 									<Link
+										title={tag.name}
 										to={`/questions/${sectionTitle}/tag/${tag.name}`}
 									>
-										<ClayCardWithNavigation>
-											<ClayCard.Body>
-												<ClayCard.Description displayType="title">
-													{tag.name}
-												</ClayCard.Description>
-												<ClayCard.Description displayType="text">
-													{lang.sub(
-														Liferay.Language.get(
-															'used-x-times'
-														),
-														[tag.keywordUsageCount]
-													)}
-												</ClayCard.Description>
-												<ClayCard.Description displayType="text">
-													{lang.sub(
-														Liferay.Language.get(
-															'latest-usage'
-														),
-														[
-															dateToInternationalHuman(
-																tag.dateCreated
-															),
-														]
-													)}
-												</ClayCard.Description>
-											</ClayCard.Body>
-										</ClayCardWithNavigation>
+										<div className="card card-interactive card-interactive-primary card-type-template template-card-horizontal">
+											<div className="card-body">
+												<div className="card-row">
+													<div className="autofit-col autofit-col-expand">
+														<div className="autofit-section">
+															<div className="card-title">
+																<span className="text-truncate">
+																	{tag.name}
+																</span>
+															</div>
+															<div>
+																{lang.sub(
+																	Liferay.Language.get(
+																		'used-x-times'
+																	),
+																	[
+																		tag.keywordUsageCount,
+																	]
+																)}
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
 									</Link>
 								</div>
-							))}
+							)}
+						</PaginatedList>
 					</div>
 				</div>
-				{tags.lastPage > 1 && (
-					<ClayPaginationWithBasicItems
-						activePage={page}
-						ellipsisBuffer={2}
-						onPageChange={setPage}
-						totalPages={Math.ceil(tags.totalCount / tags.pageSize)}
-					/>
-				)}
 			</>
 		);
 	}

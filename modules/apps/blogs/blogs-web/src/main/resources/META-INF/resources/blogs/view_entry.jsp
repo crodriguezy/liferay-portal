@@ -73,7 +73,7 @@ BlogsPortletInstanceConfiguration blogsPortletInstanceConfiguration = BlogsPortl
 
 <portlet:actionURL name="/blogs/edit_entry" var="editEntryURL" />
 
-<aui:form action="<%= editEntryURL %>" method="post" name="fm1" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveEntry();" %>'>
+<aui:form action="<%= editEntryURL %>" method="post" name="fm1" onSubmit='<%= "event.preventDefault(); " + liferayPortletResponse.getNamespace() + "saveEntry();" %>'>
 	<aui:input name="<%= Constants.CMD %>" type="hidden" />
 	<aui:input name="entryId" type="hidden" value="<%= String.valueOf(entryId) %>" />
 
@@ -95,7 +95,7 @@ BlogsPortletInstanceConfiguration blogsPortletInstanceConfiguration = BlogsPortl
 		<c:if test="<%= (previousEntry != null) || (nextEntry != null) %>">
 			<clay:row>
 				<clay:col
-					className="col-md-offset-1 entry-navigation"
+					cssClass="col-md-offset-1 entry-navigation"
 					md="10"
 				>
 					<h2>
@@ -103,7 +103,7 @@ BlogsPortletInstanceConfiguration blogsPortletInstanceConfiguration = BlogsPortl
 					</h2>
 
 					<clay:row
-						className="widget-mode-card"
+						cssClass="widget-mode-card"
 					>
 
 						<%
@@ -125,7 +125,7 @@ BlogsPortletInstanceConfiguration blogsPortletInstanceConfiguration = BlogsPortl
 
 	<clay:row>
 		<clay:col
-			className="col-md-offset-2"
+			cssClass="col-md-offset-2"
 			md="8"
 		>
 			<c:if test="<%= blogsPortletInstanceConfiguration.enableComments() %>">
