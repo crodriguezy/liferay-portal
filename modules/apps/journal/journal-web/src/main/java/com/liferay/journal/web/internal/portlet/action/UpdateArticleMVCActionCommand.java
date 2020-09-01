@@ -412,7 +412,7 @@ public class UpdateArticleMVCActionCommand extends BaseMVCActionCommand {
 		// Asset display page
 
 		_assetDisplayPageEntryFormProcessor.process(
-			JournalArticle.class.getName(), article.getResourcePrimKey(),
+			JournalArticle.class.getName(), article.getId(),
 			actionRequest);
 
 		int workflowAction = ParamUtil.getInteger(
