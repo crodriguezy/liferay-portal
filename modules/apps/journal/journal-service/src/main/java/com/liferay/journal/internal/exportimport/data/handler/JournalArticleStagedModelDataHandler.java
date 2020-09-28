@@ -1005,9 +1005,8 @@ public class JournalArticleStagedModelDataHandler
 				serviceContext.getAssetPriority());
 
 			if (article.isExpired() && !importedArticle.isExpired()) {
-				_journalArticleLocalService.expireArticle(
-					userId, importedArticle.getGroupId(),
-					importedArticle.getArticleId(), articleURL, serviceContext);
+				_expireArticle(
+					userId, importedArticle, articleURL, serviceContext);
 			}
 
 			serviceContext.setModifiedDate(importedArticle.getModifiedDate());
@@ -1335,6 +1334,35 @@ public class JournalArticleStagedModelDataHandler
 			if (update) {
 				_journalArticleLocalService.updateJournalArticle(curArticle);
 			}
+		}
+	}
+
+	private void _expireArticle(
+			long userId, JournalArticle article, String articleURL,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		boolean expireAllArticleVersions = isExpireAllArticleVersions(
+			article.getCompanyId());
+
+		if (expireAllArticleVersions) {
+			List<JournalArticle> articles =
+				_journalArticleLocalService.getArticles(
+					article.getGroupId(), article.getArticleId());
+
+			for (JournalArticle curArticle : articles) {
+				if (!article.isExpired()) {
+					_journalArticleLocalService.expireArticle(
+						userId, curArticle.getGroupId(),
+						curArticle.getArticleId(), curArticle.getVersion(),
+						articleURL, serviceContext);
+				}
+			}
+		}
+		else {
+			_journalArticleLocalService.expireArticle(
+				userId, article.getGroupId(), article.getArticleId(),
+				article.getVersion(), articleURL, serviceContext);
 		}
 	}
 
