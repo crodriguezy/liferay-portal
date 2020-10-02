@@ -382,7 +382,7 @@ public class DDMStructureStagedModelDataHandler
 				portletDataContext.getCompanyGroupId());
 
 			if ((companyGroupId == null) || (groupId != companyGroupId)) {
-				groupId = portletDataContext.getCompanyGroupId();
+				groupId = portletDataContext.getScopeGroupId();
 			}
 		}
 
