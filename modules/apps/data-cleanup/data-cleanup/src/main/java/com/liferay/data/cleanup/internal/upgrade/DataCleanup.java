@@ -19,7 +19,6 @@ import com.liferay.message.boards.service.MBThreadLocalService;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.cache.CacheRegistryUtil;
-import com.liferay.portal.kernel.model.Release;
 import com.liferay.portal.kernel.service.ImageLocalService;
 import com.liferay.portal.kernel.service.ReleaseLocalService;
 import com.liferay.portal.kernel.upgrade.UpgradeException;
@@ -47,42 +46,39 @@ public class DataCleanup implements UpgradeStepRegistrator {
 		try {
 			_cleanUpModuleData(
 				_dataCleanupConfiguration::cleanUpChatModuleData,
-				"com.liferay.chat.service", UpgradeChat::new);
+				UpgradeChat::new);
 
 			_cleanUpModuleData(
 				_dataCleanupConfiguration::cleanUpDictionaryModuleData,
-				"com.liferay.dictionary.web", UpgradeDictionary::new);
+				UpgradeDictionary::new);
 
 			_cleanUpModuleData(
 				_dataCleanupConfiguration::cleanUpDirectoryModuleData,
-				"com.liferay.directory.web", UpgradeDirectory::new);
+				UpgradeDirectory::new);
 
 			_cleanUpModuleData(
 				_dataCleanupConfiguration::cleanUpImageEditorModuleData,
-				"com.liferay.frontend.image.editor.web",
 				UpgradeImageEditor::new);
 
 			_cleanUpModuleData(
 				_dataCleanupConfiguration::cleanUpInvitationModuleData,
-				"com.liferay.invitation.web", UpgradeInvitation::new);
+				UpgradeInvitation::new);
 
 			_cleanUpModuleData(
 				_dataCleanupConfiguration::cleanUpMailReaderModuleData,
-				"com.liferay.mail.reader.service", UpgradeMailReader::new);
+				UpgradeMailReader::new);
 
 			_cleanUpModuleData(
 				_dataCleanupConfiguration::cleanUpPrivateMessagingModuleData,
-				"com.liferay.social.privatemessaging.service",
 				() -> new UpgradePrivateMessaging(_mbThreadLocalService));
 
 			_cleanUpModuleData(
 				_dataCleanupConfiguration::cleanUpShoppingModuleData,
-				"com.liferay.shopping.service",
 				() -> new UpgradeShopping(_imageLocalService));
 
 			_cleanUpModuleData(
 				_dataCleanupConfiguration::cleanUpTwitterModuleData,
-				"com.liferay.twitter.service", UpgradeTwitter::new);
+				UpgradeTwitter::new);
 		}
 		catch (UpgradeException upgradeException) {
 			ReflectionUtil.throwException(upgradeException);
@@ -96,21 +92,16 @@ public class DataCleanup implements UpgradeStepRegistrator {
 	}
 
 	private void _cleanUpModuleData(
-			Supplier<Boolean> booleanSupplier, String servletContextName,
+			Supplier<Boolean> booleanSupplier,
 			Supplier<UpgradeProcess> upgradeProcessSupplier)
 		throws UpgradeException {
 
 		if (booleanSupplier.get()) {
-			Release release = _releaseLocalService.fetchRelease(
-				servletContextName);
+			UpgradeProcess upgradeProcess = upgradeProcessSupplier.get();
 
-			if (release != null) {
-				UpgradeProcess upgradeProcess = upgradeProcessSupplier.get();
+			upgradeProcess.upgrade();
 
-				upgradeProcess.upgrade();
-
-				CacheRegistryUtil.clear();
-			}
+			CacheRegistryUtil.clear();
 		}
 	}
 
