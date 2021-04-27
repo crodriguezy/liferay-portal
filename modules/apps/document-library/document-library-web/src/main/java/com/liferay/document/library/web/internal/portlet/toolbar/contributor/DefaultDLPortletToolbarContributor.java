@@ -78,6 +78,12 @@ public class DefaultDLPortletToolbarContributor
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		if (!_dlPortletToolbarContributorHelper.isShowActionsEnabled(
+				themeDisplay, portletRequest)) {
+
+			return null;
+		}
+
 		Folder folder = _dlPortletToolbarContributorHelper.getFolder(
 			themeDisplay, portletRequest);
 
@@ -161,6 +167,9 @@ public class DefaultDLPortletToolbarContributor
 	@Reference
 	private DLPortletToolbarContributorHelper
 		_dlPortletToolbarContributorHelper;
+
+	/*@Reference
+	private DLRequestHelper _dlRequestHelper;*/
 
 	private final MenuItemProvider _menuItemProvider = new MenuItemProvider();
 
