@@ -94,10 +94,6 @@ public class AMImageFinderImpl implements AMImageFinder {
 
 		String mimeType = fileVersion.getMimeType();
 
-		if (mimeType.equals(ContentTypes.IMAGE_SVG_XML)) {
-			return Stream.of(new SVGAdaptiveMedia(fileVersion));
-		}
-
 		BiFunction<FileVersion, AMImageConfigurationEntry, URI> uriFactory =
 			_getURIFactory(amImageQueryBuilderImpl);
 
@@ -230,38 +226,5 @@ public class AMImageFinderImpl implements AMImageFinder {
 
 	@Reference
 	private AMImageURLFactory _amImageURLFactory;
-
-	private static class SVGAdaptiveMedia
-		implements AdaptiveMedia<AMImageProcessor> {
-
-		public SVGAdaptiveMedia(FileVersion fileVersion) {
-			_fileVersion = fileVersion;
-		}
-
-		@Override
-		public InputStream getInputStream() {
-			try {
-				return _fileVersion.getContentStream(false);
-			}
-			catch (PortalException portalException) {
-				throw new AMRuntimeException.IOException(portalException);
-			}
-		}
-
-		@Override
-		public URI getURI() {
-			return null;
-		}
-
-		@Override
-		public <V> Optional<V> getValueOptional(
-			AMAttribute<AMImageProcessor, V> amAttribute) {
-
-			return Optional.empty();
-		}
-
-		private final FileVersion _fileVersion;
-
-	}
 
 }
