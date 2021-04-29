@@ -17,7 +17,6 @@ package com.liferay.adaptive.media.image.internal.finder;
 import com.liferay.adaptive.media.AMAttribute;
 import com.liferay.adaptive.media.AMDistanceComparator;
 import com.liferay.adaptive.media.AdaptiveMedia;
-import com.liferay.adaptive.media.exception.AMRuntimeException;
 import com.liferay.adaptive.media.finder.AMFinder;
 import com.liferay.adaptive.media.finder.AMQuery;
 import com.liferay.adaptive.media.image.configuration.AMImageConfigurationEntry;
@@ -34,15 +33,11 @@ import com.liferay.adaptive.media.image.service.AMImageEntryLocalService;
 import com.liferay.adaptive.media.image.url.AMImageURLFactory;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.FileVersion;
-import com.liferay.portal.kernel.util.ContentTypes;
-
-import java.io.InputStream;
 
 import java.net.URI;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -91,8 +86,6 @@ public class AMImageFinderImpl implements AMImageFinder {
 
 			return Stream.empty();
 		}
-
-		String mimeType = fileVersion.getMimeType();
 
 		BiFunction<FileVersion, AMImageConfigurationEntry, URI> uriFactory =
 			_getURIFactory(amImageQueryBuilderImpl);
