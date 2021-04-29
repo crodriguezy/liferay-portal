@@ -1432,46 +1432,6 @@ public class AMImageFinderImplTest {
 	}
 
 	@Test
-	public void testGetSVGMediaInputStream() throws Exception {
-		InputStream inputStream = Mockito.mock(InputStream.class);
-
-		Mockito.when(
-			_fileVersion.getContentStream(Mockito.anyBoolean())
-		).thenReturn(
-			inputStream
-		);
-
-		Mockito.when(
-			_fileVersion.getMimeType()
-		).thenReturn(
-			ContentTypes.IMAGE_SVG_XML
-		);
-
-		Mockito.when(
-			_amImageMimeTypeProvider.isMimeTypeSupported(
-				ContentTypes.IMAGE_SVG_XML)
-		).thenReturn(
-			true
-		);
-
-		Stream<AdaptiveMedia<AMImageProcessor>> adaptiveMediaStream =
-			_amImageFinderImpl.getAdaptiveMediaStream(
-				amImageQueryBuilder -> amImageQueryBuilder.forFileVersion(
-					_fileVersion
-				).done());
-
-		List<AdaptiveMedia<AMImageProcessor>> adaptiveMedias =
-			adaptiveMediaStream.collect(Collectors.toList());
-
-		Assert.assertEquals(
-			adaptiveMedias.toString(), 1, adaptiveMedias.size());
-
-		AdaptiveMedia<AMImageProcessor> adaptiveMedia = adaptiveMedias.get(0);
-
-		Assert.assertSame(inputStream, adaptiveMedia.getInputStream());
-	}
-
-	@Test
 	public void testMediaLazilyDelegatesOnStorageInputStream()
 		throws Exception {
 
