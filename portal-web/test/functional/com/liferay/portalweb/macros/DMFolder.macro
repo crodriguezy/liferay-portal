@@ -50,6 +50,8 @@ definition {
 			LexiconEntry.gotoAdd();
 		}
 		else {
+			DMDocument.enableActionsMenuOnPortlet();
+
 			Portlet.clickPortletPlusIconPG(portletName = "Documents and Media");
 		}
 
@@ -101,6 +103,8 @@ definition {
 	}
 
 	macro addPGViaMG {
+		DMDocument.enableActionsMenuOnPortlet();
+
 		Portlet.clickPortletPlusIconPG(portletName = "Media Gallery");
 
 		AssertClick.assertTextClickAt(

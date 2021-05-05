@@ -314,6 +314,8 @@ definition {
 	macro addDocumentTypePG {
 		var key_dmDocumentTypeName = "${dmDocumentTypeName}";
 
+		DMDocument.enableActionsMenuOnPortlet();
+
 		Portlet.clickPortletPlusIconPG(portletName = "Documents and Media");
 
 		MenuItem.click(menuItem = "${dmDocumentTypeName}");
@@ -492,6 +494,8 @@ definition {
 			LexiconEntry.gotoAdd();
 		}
 		else {
+			DMDocument.enableActionsMenuOnPortlet();
+
 			Portlet.clickPortletPlusIconPG(portletName = "Documents and Media");
 		}
 
@@ -547,6 +551,8 @@ definition {
 		if ("${stagingActivated}" == "true") {
 			AssertElementNotPresent(locator1 = "Message#WORKFLOW_UNAPPROVED");
 		}
+
+		DMDocument.enableActionsMenuOnPortlet();
 
 		Portlet.clickPortletPlusIconPG(portletName = "Documents and Media");
 
@@ -653,6 +659,8 @@ definition {
 	}
 
 	macro addPGViaMG {
+		DMDocument.enableActionsMenuOnPortlet();
+
 		Portlet.clickPortletPlusIconPG(portletName = "Media Gallery");
 
 		MenuItem.click(menuItem = "File Upload");
@@ -2021,6 +2029,8 @@ definition {
 	}
 
 	macro viewCannotAddRepository {
+		DMDocument.enableActionsMenuOnPortlet();
+
 		Portlet.clickPortletPlusIconPG(portletName = "Documents and Media");
 
 		AssertElementNotPresent(locator1 = "HOME_MENULIST_ADD_REPOSITORY");
@@ -3021,6 +3031,8 @@ definition {
 	}
 
 	macro viewStagingDetailsPG {
+		DMDocument.enableActionsMenuOnPortlet();
+
 		Portlet.clickPortletPlusIconPG(portletName = "Documents and Media");
 
 		MenuItem.viewPresent(menuItem = "Folder");
