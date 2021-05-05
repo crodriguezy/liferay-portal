@@ -83,30 +83,32 @@ public class DefaultDLPortletToolbarContributor
 
 		List<MenuItem> menuItems = new ArrayList<>();
 
-		_add(
-			menuItems,
-			_menuItemProvider.getAddFileMenuItem(
-				folder, themeDisplay, portletRequest));
+		if (menuItems != null) {
+			_add(
+				menuItems,
+				_menuItemProvider.getAddFileMenuItem(
+					folder, themeDisplay, portletRequest));
 
-		_add(
-			menuItems,
-			_menuItemProvider.getAddMultipleFilesMenuItem(
-				folder, themeDisplay, portletRequest));
+			_add(
+				menuItems,
+				_menuItemProvider.getAddMultipleFilesMenuItem(
+					folder, themeDisplay, portletRequest));
 
-		_add(
-			menuItems,
-			_menuItemProvider.getAddFolderMenuItem(
-				folder, themeDisplay, portletRequest));
+			_add(
+				menuItems,
+				_menuItemProvider.getAddFolderMenuItem(
+					folder, themeDisplay, portletRequest));
 
-		_add(
-			menuItems,
-			_menuItemProvider.getAddRepositoryMenuItem(
-				folder, themeDisplay, portletRequest));
+			_add(
+				menuItems,
+				_menuItemProvider.getAddRepositoryMenuItem(
+					folder, themeDisplay, portletRequest));
 
-		_add(
-			menuItems,
-			_menuItemProvider.getAddShortcutMenuItem(
-				folder, themeDisplay, portletRequest));
+			_add(
+				menuItems,
+				_menuItemProvider.getAddShortcutMenuItem(
+					folder, themeDisplay, portletRequest));
+		}
 
 		MenuItem lastStaticMenuItem = null;
 
