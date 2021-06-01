@@ -437,6 +437,9 @@ public class ExpandoBridgeImpl implements ExpandoBridge {
 			ExportImportThreadLocal.isImportInProcess()) {
 
 			secure = false;
+		} else {
+			secure = 
+				PropsValues.PERMISSIONS_CUSTOM_ATTRIBUTE_WRITE_CHECK_BY_DEFAULT;
 		}
 
 		setAttribute(name, value, secure);

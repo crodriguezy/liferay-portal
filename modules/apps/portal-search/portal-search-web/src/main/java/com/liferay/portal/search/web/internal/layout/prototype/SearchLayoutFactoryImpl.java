@@ -261,6 +261,7 @@ public class SearchLayoutFactoryImpl implements SearchLayoutFactory {
 		UnicodeProperties unicodeProperties = group.getTypeSettingsProperties();
 
 		if (unicodeProperties.get("searchLayoutCreated") != null) {
+			unicodeProperties = null;
 			return false;
 		}
 

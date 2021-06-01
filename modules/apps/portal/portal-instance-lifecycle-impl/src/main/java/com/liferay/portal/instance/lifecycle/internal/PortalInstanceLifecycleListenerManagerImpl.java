@@ -147,7 +147,7 @@ public class PortalInstanceLifecycleListenerManagerImpl
 		catch (Exception exception) {
 			if (_log.isWarnEnabled()) {
 				_log.warn(
-					"Unable to register portal instance " + company, exception);
+					"Unable to register portal instance t" + company, exception);
 			}
 		}
 		finally {
