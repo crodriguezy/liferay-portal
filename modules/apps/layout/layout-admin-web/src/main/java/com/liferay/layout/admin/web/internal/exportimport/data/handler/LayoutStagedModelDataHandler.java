@@ -548,6 +548,7 @@ public class LayoutStagedModelDataHandler
 		String uuid = layout.getUuid();
 		String friendlyURL = layout.getFriendlyURL();
 
+		//LPS-134955 Here we may want to redefine the layoutsImportMode to LAYOUTS_IMPORT_MODE_ADD_AS_NEW_PROTOTYPE in SitesImpl
 		String layoutsImportMode = MapUtil.getString(
 			portletDataContext.getParameterMap(),
 			PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE,
@@ -1800,6 +1801,7 @@ public class LayoutStagedModelDataHandler
 
 				// Portlet data
 
+				// LPS-134955 Again we need this to be true
 				if (importPortletControlsMap.get(
 						PortletDataHandlerKeys.PORTLET_DATA)) {
 

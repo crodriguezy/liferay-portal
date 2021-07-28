@@ -1402,6 +1402,9 @@ public class SitesImpl implements Sites {
 			long lastResetTime = GetterUtil.getLong(
 				settingsUnicodeProperties.getProperty(LAST_RESET_TIME));
 
+			// LPS-134955
+			// importData = false is preventing GroupPagesPortlet's templates entries to be exported.
+			// lastMergeTime & lastResetTime are 0 only during first publication, which is not our case.
 			if ((lastMergeTime > 0) || (lastResetTime > 0)) {
 				importData = false;
 			}
@@ -1417,6 +1420,10 @@ public class SitesImpl implements Sites {
 				return;
 			}
 
+			//LPS-134955 parameterMap has to be "tuned" according to our future needs during the propagation:
+			// 		PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE -> LAYOUTS_IMPORT_MODE_ADD_AS_NEW_PROTOTYPE ?
+			//		PortletDataHandlerKeys.PORTLET_DATA -> TRUE?
+			//		PortletDataHandlerKeys.PORTLET_DATA_ALL -> TRUE?
 			Map<String, String[]> parameterMap =
 				getLayoutSetPrototypesParameters(importData);
 
