@@ -593,6 +593,8 @@ public class StagedGroupStagedModelDataHandler
 
 				// Portlet data
 
+				// LPS-134955 -> IMPORT
+				// Because of the parameterMap defined in SitesImpl, this is false and preventing GroupPagesPortlet's layoutTemplateEntries to be imported
 				if (importPortletControlsMap.get(
 						PortletDataHandlerKeys.PORTLET_DATA)) {
 

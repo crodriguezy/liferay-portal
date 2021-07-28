@@ -1800,6 +1800,7 @@ public class LayoutStagedModelDataHandler
 
 				// Portlet data
 
+				// LPS-134955 Again we need this to be true
 				if (importPortletControlsMap.get(
 						PortletDataHandlerKeys.PORTLET_DATA)) {
 
