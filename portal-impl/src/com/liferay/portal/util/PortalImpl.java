@@ -6861,7 +6861,7 @@ public class PortalImpl implements Portal {
 	public void setPortalInetSocketAddresses(
 		HttpServletRequest httpServletRequest) {
 
-		boolean secure = httpServletRequest.isSecure();
+		boolean secure = isSecure(httpServletRequest);
 
 		if ((secure && (_securePortalLocalInetSocketAddress.get() != null) &&
 			 (_securePortalServerInetSocketAddress.get() != null)) ||
