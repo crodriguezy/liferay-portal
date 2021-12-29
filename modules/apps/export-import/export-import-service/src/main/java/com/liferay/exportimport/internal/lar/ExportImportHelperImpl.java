@@ -357,6 +357,7 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 
 			if (!layouts.contains(layout)) {
 				layouts.add(layout);
+				_log.debug("dummy_change");
 			}
 
 			if (layout.getPlid() == LayoutConstants.DEFAULT_PLID) {
