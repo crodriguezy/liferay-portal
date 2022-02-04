@@ -141,6 +141,7 @@ import com.liferay.portal.kernel.util.GroupThreadLocal;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.LinkedHashMapBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.MethodHandler;
@@ -3901,6 +3902,8 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 				Locale defaultLocale = LocaleUtil.fromLanguageId(
 					defaultLanguageId);
+
+				LocaleThreadLocal.setSiteDefaultLocale(defaultLocale);
 
 				Map<Locale, String> oldNameMap = group.getNameMap();
 
