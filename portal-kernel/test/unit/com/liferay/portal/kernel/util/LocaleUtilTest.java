@@ -28,6 +28,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 
 /**
  * @author Wesley Gong
@@ -107,9 +108,9 @@ public class LocaleUtilTest {
 
 	@Test
 	public void testFromLanguageIdConsistency() {
-		mockStatic(LanguageUtil.class);
+		PowerMockito.mockStatic(LanguageUtil.class);
 
-		when(
+		Mockito.when(
 			LanguageUtil.isAvailableLocale(Locale.GERMANY)
 		).thenReturn(
 			false
@@ -125,9 +126,9 @@ public class LocaleUtilTest {
 
 	@Test
 	public void testFromLanguageIdLocaleIsCreatedAndRetrievableWhenNoValidationDone() {
-		mockStatic(LanguageUtil.class);
+		PowerMockito.mockStatic(LanguageUtil.class);
 
-		when(
+		Mockito.when(
 			LanguageUtil.isAvailableLocale(Locale.ITALY)
 		).thenReturn(
 			false
