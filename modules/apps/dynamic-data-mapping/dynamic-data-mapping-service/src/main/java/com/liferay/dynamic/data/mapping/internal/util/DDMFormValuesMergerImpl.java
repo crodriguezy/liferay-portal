@@ -145,17 +145,19 @@ public class DDMFormValuesMergerImpl implements DDMFormValuesMerger {
 		for (Locale locale : existingValue.getAvailableLocales()) {
 			String value = newValue.getString(locale);
 
-			if (StringUtil.equals(ddmFormField.getDataType(), "double") &&
-				!GetterUtil.getBoolean(ddmFormField.getProperty("inputMask"))) {
-
-				DecimalFormat decimalFormat =
-					NumericDDMFormFieldUtil.getDecimalFormat(locale);
-
-				newValue.addString(
-					locale,
-					decimalFormat.format(
-						GetterUtil.getDouble(
-							value, newValue.getDefaultLocale())));
+			if (ddmFormField != null) {
+				if (StringUtil.equals(ddmFormField.getDataType(), "double") &&
+					!GetterUtil.getBoolean(ddmFormField.getProperty("inputMask"))) {
+	
+					DecimalFormat decimalFormat =
+						NumericDDMFormFieldUtil.getDecimalFormat(locale);
+	
+					newValue.addString(
+						locale,
+						decimalFormat.format(
+							GetterUtil.getDouble(
+								value, newValue.getDefaultLocale())));
+				}
 			}
 
 			if (value == null) {
