@@ -40,7 +40,7 @@ PortletURL redirectURL = PortletURLBuilder.createRenderURL(
 	message="<%= StringPool.BLANK %>"
 	showExpanded="<%= row == null %>"
 >
-	<c:if test="<%= !workflowTask.isCompleted() %>">
+	<c:if test="<%= !workflowTask.isCompleted() && true%>">
 		<c:choose>
 			<c:when test="<%= workflowTaskDisplayContext.isAssignedToUser(workflowTask) %>">
 
