@@ -93,7 +93,7 @@ PortletURL redirectURL = PortletURLBuilder.createRenderURL(
 
 		<liferay-portlet:renderURL copyCurrentRenderParameters="<%= false %>" var="assignURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 			<portlet:param name="mvcPath" value="/workflow_task_assign.jsp" />
-			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="redirect" value="<%= redirectURL.toString() %>" />
 			<portlet:param name="workflowTaskId" value="<%= String.valueOf(workflowTask.getWorkflowTaskId()) %>" />
 		</liferay-portlet:renderURL>
 
