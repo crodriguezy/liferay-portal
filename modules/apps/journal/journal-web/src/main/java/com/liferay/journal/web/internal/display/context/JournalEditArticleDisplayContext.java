@@ -227,7 +227,7 @@ public class JournalEditArticleDisplayContext {
 			return _ddmFormValues;
 		}
 
-		if (_article == null) {
+		if (_article == null || _article.getVersion() == 0.0) {
 			DDMFormValuesFactory ddmFormValuesFactory =
 				_getDDMFormValuesFactory();
 
