@@ -685,6 +685,11 @@ public class AssetCategoriesDisplayContext {
 		_vocabularyId = ParamUtil.getLong(
 			_httpServletRequest, "vocabularyId", _getDefaultVocabularyId());
 
+		if (_vocabularyId == 0) {
+			_vocabularyId = _getDefaultVocabularyId();
+			_categoryId = 0L;
+		}
+
 		return _vocabularyId;
 	}
 
