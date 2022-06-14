@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -46,6 +47,8 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -153,6 +156,26 @@ public class ExpandoPortlet extends MVCPortlet {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
+		int type = ParamUtil.getInteger(actionRequest, "type");
+
+		Serializable defaultValue = _getDefaultValue(actionRequest, type);
+
+		if (type == ExpandoColumnConstants.STRING_LOCALIZED) {
+			Locale defaultLocale = LocaleUtil.getDefault();
+
+			Map<Locale, String> defaultValuesMap =
+				(Map<Locale, String>)defaultValue;
+
+			String valueDefaultLocale = defaultValuesMap.get(defaultLocale);
+
+			if (_anyDefaultValueInformed(defaultValuesMap) &&
+				Validator.isNull(valueDefaultLocale)) {
+
+				throw new ValueDataException.MustInformDefaultLocale(
+					defaultLocale);
+			}
+		}
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -162,10 +185,6 @@ public class ExpandoPortlet extends MVCPortlet {
 			actionRequest, "resourcePrimKey");
 
 		String name = ParamUtil.getString(actionRequest, "name");
-
-		int type = ParamUtil.getInteger(actionRequest, "type");
-
-		Serializable defaultValue = _getDefaultValue(actionRequest, type);
 
 		ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(
 			themeDisplay.getCompanyId(), modelResource, resourcePrimKey);
@@ -223,6 +242,18 @@ public class ExpandoPortlet extends MVCPortlet {
 		ExpandoColumnService expandoColumnService) {
 
 		_expandoColumnService = expandoColumnService;
+	}
+
+	private boolean _anyDefaultValueInformed(
+		Map<Locale, String> defaultValues) {
+
+		for (String value : defaultValues.values()) {
+			if (Validator.isNotNull(value)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private Serializable _getDefaultValue(ActionRequest actionRequest, int type)
