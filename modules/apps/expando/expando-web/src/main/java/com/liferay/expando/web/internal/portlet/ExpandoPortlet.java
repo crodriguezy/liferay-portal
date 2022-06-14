@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -46,6 +47,8 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -109,6 +112,16 @@ public class ExpandoPortlet extends MVCPortlet {
 			throw new ColumnNameException.MustValidate();
 		}
 
+		Serializable defaultValue = _getDefaultValue(actionRequest, type);
+
+		if ((type == ExpandoColumnConstants.STRING_LOCALIZED) &&
+			!_checkDefaultLocaleValueInformed(
+				(Map<Locale, String>)defaultValue)) {
+
+			throw new ValueDataException.MustInformDefaultLocale(
+				LocaleUtil.getDefault());
+		}
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -122,8 +135,7 @@ public class ExpandoPortlet extends MVCPortlet {
 
 		expandoBridge.addAttribute(name, type);
 
-		expandoBridge.setAttributeDefault(
-			name, _getDefaultValue(actionRequest, type));
+		expandoBridge.setAttributeDefault(name, defaultValue);
 
 		_updateProperties(actionRequest, expandoBridge, name);
 	}
@@ -153,6 +165,18 @@ public class ExpandoPortlet extends MVCPortlet {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
+		int type = ParamUtil.getInteger(actionRequest, "type");
+
+		Serializable defaultValue = _getDefaultValue(actionRequest, type);
+
+		if ((type == ExpandoColumnConstants.STRING_LOCALIZED) &&
+			!_checkDefaultLocaleValueInformed(
+				(Map<Locale, String>)defaultValue)) {
+
+			throw new ValueDataException.MustInformDefaultLocale(
+				LocaleUtil.getDefault());
+		}
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -162,10 +186,6 @@ public class ExpandoPortlet extends MVCPortlet {
 			actionRequest, "resourcePrimKey");
 
 		String name = ParamUtil.getString(actionRequest, "name");
-
-		int type = ParamUtil.getInteger(actionRequest, "type");
-
-		Serializable defaultValue = _getDefaultValue(actionRequest, type);
 
 		ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(
 			themeDisplay.getCompanyId(), modelResource, resourcePrimKey);
@@ -223,6 +243,20 @@ public class ExpandoPortlet extends MVCPortlet {
 		ExpandoColumnService expandoColumnService) {
 
 		_expandoColumnService = expandoColumnService;
+	}
+
+	private boolean _checkDefaultLocaleValueInformed(
+		Map<Locale, String> defaultValues) {
+
+		String valueDefaultLocale = defaultValues.get(LocaleUtil.getDefault());
+
+		for (String value : defaultValues.values()) {
+			if (Validator.isNotNull(value)) {
+				return Validator.isNotNull(valueDefaultLocale);
+			}
+		}
+
+		return true;
 	}
 
 	private Serializable _getDefaultValue(ActionRequest actionRequest, int type)
