@@ -112,6 +112,16 @@ public class ExpandoPortlet extends MVCPortlet {
 			throw new ColumnNameException.MustValidate();
 		}
 
+		Serializable defaultValue = _getDefaultValue(actionRequest, type);
+
+		if ((type == ExpandoColumnConstants.STRING_LOCALIZED) &&
+			!_checkDefaultLocaleValueInformed(
+				(Map<Locale, String>)defaultValue)) {
+
+			throw new ValueDataException.MustInformDefaultLocale(
+				LocaleUtil.getDefault());
+		}
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -125,8 +135,7 @@ public class ExpandoPortlet extends MVCPortlet {
 
 		expandoBridge.addAttribute(name, type);
 
-		expandoBridge.setAttributeDefault(
-			name, _getDefaultValue(actionRequest, type));
+		expandoBridge.setAttributeDefault(name, defaultValue);
 
 		_updateProperties(actionRequest, expandoBridge, name);
 	}
@@ -160,20 +169,12 @@ public class ExpandoPortlet extends MVCPortlet {
 
 		Serializable defaultValue = _getDefaultValue(actionRequest, type);
 
-		if (type == ExpandoColumnConstants.STRING_LOCALIZED) {
-			Locale defaultLocale = LocaleUtil.getDefault();
+		if ((type == ExpandoColumnConstants.STRING_LOCALIZED) &&
+			!_checkDefaultLocaleValueInformed(
+				(Map<Locale, String>)defaultValue)) {
 
-			Map<Locale, String> defaultValuesMap =
-				(Map<Locale, String>)defaultValue;
-
-			String valueDefaultLocale = defaultValuesMap.get(defaultLocale);
-
-			if (_anyDefaultValueInformed(defaultValuesMap) &&
-				Validator.isNull(valueDefaultLocale)) {
-
-				throw new ValueDataException.MustInformDefaultLocale(
-					defaultLocale);
-			}
+			throw new ValueDataException.MustInformDefaultLocale(
+				LocaleUtil.getDefault());
 		}
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
@@ -244,16 +245,18 @@ public class ExpandoPortlet extends MVCPortlet {
 		_expandoColumnService = expandoColumnService;
 	}
 
-	private boolean _anyDefaultValueInformed(
+	private boolean _checkDefaultLocaleValueInformed(
 		Map<Locale, String> defaultValues) {
+
+		String valueDefaultLocale = defaultValues.get(LocaleUtil.getDefault());
 
 		for (String value : defaultValues.values()) {
 			if (Validator.isNotNull(value)) {
-				return true;
+				return Validator.isNotNull(valueDefaultLocale);
 			}
 		}
 
-		return false;
+		return true;
 	}
 
 	private Serializable _getDefaultValue(ActionRequest actionRequest, int type)
