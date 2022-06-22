@@ -91,6 +91,14 @@ public class SiteInitializerUtil {
 		Map<String, String> valuesMap = ObjectMapperUtil.readValue(
 			HashMap.class, values);
 
+		String defaultLanguageId = LocaleUtil.toLanguageId(
+			LocaleUtil.getDefault());
+
+		if (!valuesMap.containsKey(defaultLanguageId)) {
+			valuesMap.put(defaultLanguageId, valuesMap.get("en_US"));
+			valuesMap.remove("en_US");
+		}
+
 		for (Map.Entry<String, String> entry : valuesMap.entrySet()) {
 			map.put(
 				LocaleUtil.fromLanguageId(entry.getKey()),
