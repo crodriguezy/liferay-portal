@@ -291,7 +291,7 @@ public class LocaleUtil {
 		}
 
 		if ((locale == null) && useDefault) {
-			locale = _locale;
+			locale = _getDefault();
 		}
 
 		return locale;
