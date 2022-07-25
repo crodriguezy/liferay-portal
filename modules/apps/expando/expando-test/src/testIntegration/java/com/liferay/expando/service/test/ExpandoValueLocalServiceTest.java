@@ -164,10 +164,10 @@ public class ExpandoValueLocalServiceTest {
 
 			Assert.fail();
 		}
-		catch (ValueDataException valueDataException) {
+		catch (PortalException portalException) {
 			Assert.assertEquals(
-				ValueDataException.MustInformDefaultLocale.class,
-				valueDataException.getClass());
+				MustInformDefaultLocaleException.class,
+				portalException.getClass());
 
 			if (_log.isDebugEnabled()) {
 				_log.debug(valueDataException);
