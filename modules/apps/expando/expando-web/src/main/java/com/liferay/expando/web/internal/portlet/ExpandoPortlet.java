@@ -17,7 +17,6 @@ package com.liferay.expando.web.internal.portlet;
 import com.liferay.expando.constants.ExpandoPortletKeys;
 import com.liferay.expando.kernel.exception.ColumnNameException;
 import com.liferay.expando.kernel.exception.ColumnTypeException;
-import com.liferay.expando.kernel.exception.DefaultLocaleValueException;
 import com.liferay.expando.kernel.exception.DuplicateColumnNameException;
 import com.liferay.expando.kernel.exception.NoSuchColumnException;
 import com.liferay.expando.kernel.exception.ValueDataException;
@@ -183,8 +182,6 @@ public class ExpandoPortlet extends MVCPortlet {
 			SessionErrors.contains(
 				renderRequest, ColumnTypeException.class.getName()) ||
 			SessionErrors.contains(
-				renderRequest, DefaultLocaleValueException.class.getName()) ||
-			SessionErrors.contains(
 				renderRequest, DuplicateColumnNameException.class.getName()) ||
 			SessionErrors.contains(
 				renderRequest, ValueDataException.class.getName())) {
@@ -207,7 +204,6 @@ public class ExpandoPortlet extends MVCPortlet {
 	protected boolean isSessionErrorException(Throwable throwable) {
 		if (throwable instanceof ColumnNameException ||
 			throwable instanceof ColumnTypeException ||
-			throwable instanceof DefaultLocaleValueException ||
 			throwable instanceof DuplicateColumnNameException ||
 			throwable instanceof NoSuchColumnException ||
 			throwable instanceof PrincipalException ||
