@@ -20,6 +20,7 @@ import com.liferay.expando.kernel.exception.ColumnTypeException;
 import com.liferay.expando.kernel.exception.DuplicateColumnNameException;
 import com.liferay.expando.kernel.exception.NoSuchColumnException;
 import com.liferay.expando.kernel.exception.ValueDataException;
+import com.liferay.expando.kernel.exception.ValueDataException.MustInformDefaultLocale;
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.model.ExpandoColumnConstants;
 import com.liferay.expando.kernel.service.ExpandoColumnService;
@@ -183,6 +184,8 @@ public class ExpandoPortlet extends MVCPortlet {
 				renderRequest, ColumnTypeException.class.getName()) ||
 			SessionErrors.contains(
 				renderRequest, DuplicateColumnNameException.class.getName()) ||
+			SessionErrors.contains(
+				renderRequest, MustInformDefaultLocale.class.getName()) ||
 			SessionErrors.contains(
 				renderRequest, ValueDataException.class.getName())) {
 
