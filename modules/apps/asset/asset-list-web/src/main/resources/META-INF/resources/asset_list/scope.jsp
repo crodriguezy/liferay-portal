@@ -156,7 +156,7 @@ List<Group> selectedGroups = editAssetListDisplayContext.getSelectedGroups();
 				},
 				selectEventName:
 					'<%= editAssetListDisplayContext.getSelectGroupEventName() %>',
-				title: '<liferay-ui:message key="scopes" />',
+				title: '<liferay-ui:message escape="<%= true %>" key="scopes" />',
 				url: '<%= editAssetListDisplayContext.getGroupItemSelectorURL() %>',
 			});
 		});
