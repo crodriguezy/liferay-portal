@@ -94,7 +94,7 @@ LayoutSet selLayoutSet = layoutsAdminDisplayContext.getSelLayoutSet();
 				},
 				selectEventName:
 					'<%= layoutsAdminDisplayContext.getSelectFaviconEventName() %>',
-				title: '<liferay-ui:message key="change-favicon" />',
+				title: '<liferay-ui:message escape="true" key="change-favicon" />',
 				url: '<%= layoutsAdminDisplayContext.getFileEntryItemSelectorURL() %>',
 			});
 		});

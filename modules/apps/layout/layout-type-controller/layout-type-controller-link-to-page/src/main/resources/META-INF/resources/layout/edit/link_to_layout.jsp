@@ -49,7 +49,7 @@
 				},
 				selectEventName:
 					'<%= linkToPageLayoutTypeControllerDisplayContext.getEventName() %>',
-				title: '<liferay-ui:message key="select-layout" />',
+				title: '<liferay-ui:message escape="true" key="select-layout" />',
 				url:
 					'<%= linkToPageLayoutTypeControllerDisplayContext.getItemSelectorURL() %>',
 			});

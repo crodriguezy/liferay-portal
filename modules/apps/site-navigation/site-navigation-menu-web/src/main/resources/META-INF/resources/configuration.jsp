@@ -409,7 +409,7 @@ SiteNavigationMenu siteNavigationMenu = siteNavigationMenuDisplayContext.getSite
 				},
 				selectEventName:
 					'<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuEventName() %>',
-				title: '<liferay-ui:message key="select-site-navigation-menu" />',
+				title: '<liferay-ui:message escape="true" key="select-site-navigation-menu" />',
 				url:
 					'<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuItemSelectorURL() %>',
 			});

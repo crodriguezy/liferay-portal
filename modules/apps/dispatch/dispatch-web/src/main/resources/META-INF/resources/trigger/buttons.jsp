@@ -81,7 +81,7 @@ String runNowButton = "runNowButton" + row.getRowId();
 								message:
 									'<liferay-ui:message key="an-unexpected-error-occurred" />',
 								render: true,
-								title: '<liferay-ui:message key="danger" />',
+								title: '<liferay-ui:message escape="true" key="danger" />',
 								type: 'danger',
 							});
 						}

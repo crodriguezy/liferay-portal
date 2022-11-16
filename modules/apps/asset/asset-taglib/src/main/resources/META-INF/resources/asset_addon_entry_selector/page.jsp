@@ -96,7 +96,7 @@
 
 	new Liferay.AssetAddonEntrySelector({
 		assetAddonEntries: assetAddonEntries,
-		dialogTitle: '<liferay-ui:message key="<%= title %>" />',
+		dialogTitle: '<liferay-ui:message escape="true" key="<%= title %>" />',
 		rootNode: '#<%= namespace + id %>assetAddonEntrySelector',
 		selectedAssetAddonEntries: selectedAssetAddonEntries,
 	});

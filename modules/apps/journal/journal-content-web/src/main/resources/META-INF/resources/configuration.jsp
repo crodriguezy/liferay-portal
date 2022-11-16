@@ -71,7 +71,7 @@
 				}
 			},
 			selectEventName: '<portlet:namespace />selectedItem',
-			title: '<liferay-ui:message key="select-web-content" />',
+			title: '<liferay-ui:messageescape="true" key="select-web-content" />',
 			url: '<%= journalContentDisplayContext.getItemSelectorURL() %>',
 		});
 	});

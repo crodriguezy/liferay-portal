@@ -231,7 +231,7 @@ groupSearchContainer.setResultsAndTotal(() -> groups, groups.size());
 							});
 					},
 					selectEventName: '<%= selectEventName %>',
-					title: '<liferay-ui:message key="default-file-permissions" />',
+					title: '<liferay-ui:message escape="true" key="default-file-permissions" />',
 					url: url,
 				});
 			}

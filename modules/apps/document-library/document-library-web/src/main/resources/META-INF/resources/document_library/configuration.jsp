@@ -184,7 +184,7 @@ DLPortletInstanceSettingsHelper dlPortletInstanceSettingsHelper = new DLPortletI
 
 								rootFolderNotFoundWarning.classList.add('hide');
 							},
-							title: '<liferay-ui:message arguments="folder" key="select-x" />',
+							title: '<liferay-ui:message arguments="folder" escape="true" key="select-x" />',
 
 							<%
 							PortletURL selectFolderURL = dlAdminDisplayContext.getSelectFolderURL(request);
