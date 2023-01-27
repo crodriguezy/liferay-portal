@@ -330,6 +330,8 @@ public class DDMDataDefinitionConverterImpl
 			}
 		}
 
+		System.out.println("dummy");
+
 		return false;
 	}
 
