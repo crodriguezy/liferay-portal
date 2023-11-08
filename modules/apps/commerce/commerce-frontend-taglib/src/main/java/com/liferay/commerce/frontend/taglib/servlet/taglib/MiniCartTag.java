@@ -62,6 +62,10 @@ public class MiniCartTag extends IncludeTag {
 			(CommerceContext)httpServletRequest.getAttribute(
 				CommerceWebKeys.COMMERCE_CONTEXT);
 
+		if (commerceContext == null) {
+			return super.doStartTag();
+		}
+
 		try {
 			AccountEntry accountEntry = commerceContext.getAccountEntry();
 
